@@ -1,0 +1,1 @@
+# from .file import func1, func2
