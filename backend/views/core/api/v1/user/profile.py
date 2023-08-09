@@ -20,8 +20,6 @@ from backend.models import *
 
 from django.contrib.auth import get_user_model, logout
 
-User = get_user_model()
-
 @login_required
 @require_POST
 def toggle_theme(request):

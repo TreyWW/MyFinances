@@ -1,5 +1,6 @@
 from django.http import HttpResponse, HttpRequest, HttpResponseBadRequest, HttpResponseForbidden, \
     HttpResponseServerError, JsonResponse
+from django.views.decorators.http import require_POST
 
 from backend.decorators import *
 from backend.utils import Notification, Toast
@@ -12,33 +13,32 @@ from datetime import date, timedelta
 from django.utils import timezone
 
 
-User = get_user_model()
-
-
 @not_authenticated
+@require_POST
 def set_password_set(request: HttpRequest, secret):
     password = request.POST.get('password')
-    if password:
+    if len(password) > 7:
         SECRET_RETURNED = PasswordSecrets.objects.all()
 
         for SECRET in SECRET_RETURNED:
             if SECRET.expires < timezone.now():
                 SECRET.delete()
+                continue
             elif check_password(secret, SECRET.secret):
                 USER = SECRET.user
                 USER.set_password(password)
                 USER.save()
                 SECRET.delete()
-                return JsonResponse({
-                    'success': "Successfully set your password! Please login with the password you just set "
-                               "and the email."})
+                messages.success(request, "Successfully changed your password.")
+                return redirect('login')
 
-        return JsonResponse({
-            'error': "Invalid password code. The code has either expired or was not entered correctly."
-                     "Please contact an administrator for support."},
-            status=500)
+        messages.error(request, "Invalid password code. The code has either expired or was not entered correctly."
+                                "Please contact an administrator for support.")
+        return redirect('login')
 
     else:
-        return JsonResponse({'error': "No code provided. Please contact an administrator for support."}, status=400)
+        messages.error(request, "No code provided. Please contact an administrator for support.")
+        return redirect('login')
 
+    messages.error(request, "Sorry, somethging went wrong!")
     return redirect('login')

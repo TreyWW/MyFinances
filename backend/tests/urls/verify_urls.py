@@ -3,7 +3,7 @@ import json
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth import get_user_model
-User = get_user_model()
+from backend.models import *
 
 class UrlTestCase(TestCase):
     was_logged_in = False
@@ -26,7 +26,9 @@ class UrlTestCase(TestCase):
     def _test_url(self, url, url_name, status_codes):
         response = self.client.get(url)
         expected_status_code = status_codes[0] if status_codes else 200
-        print(f"Testing URL: {url} || {expected_status_code} | {response.status_code}")
+        star = '***' if expected_status_code != response.status_code else ''
+
+        print(f"{star}  Testing URL (Logged Out) - {url} || exp: {expected_status_code} - actual: {response.status_code}")
         self.assertEqual(response.status_code, expected_status_code)
 
     def test_logged_in_urls(self):
@@ -43,6 +45,7 @@ class UrlTestCase(TestCase):
         self.client.logout()
 
     def _test_logged_in_url(self, url, url_name, status_codes):
+        self.client.login(username='testuser', password='testpassword')
         response = self.client.get(url)
         expected_status_code = status_codes[0] if status_codes else 200
         star = '***' if expected_status_code != response.status_code else ''

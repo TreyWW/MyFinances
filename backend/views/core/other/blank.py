@@ -18,5 +18,3 @@ import json
 from backend.models import *
 
 from django.contrib.auth import get_user_model, logout
-
-User = get_user_model()
