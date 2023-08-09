@@ -32,10 +32,7 @@ from django.core.validators import validate_email
 from django_ratelimit.decorators import ratelimit
 from datetime import date, timedelta
 
-User = get_user_model()
 
-
-@staff_only
 def set_password_generate(request: HttpRequest):
     if request.user.is_superuser and request.user.is_staff:
         pass
@@ -45,24 +42,23 @@ def set_password_generate(request: HttpRequest):
     USER = request.GET.get('id')
     NEXT = request.GET.get('next') or 'index'
 
+    if not USER.isnumeric():
+        messages.error(request, "User ID must be a valid integer")
+        return redirect('index')
+
+    USER = User.objects.filter(id=USER).first()
     if USER:
-        USER = User.objects.filter(id=USER).first()
-        if USER:
-            CODE = RandomCode(40)
-            HASHED_CODE = make_password(CODE, salt="bu11ingd0nS3crEt5")
-            PWD_SECRET, created = PasswordSecrets.objects.update_or_create(
-                user=USER,
-                secret=HASHED_CODE,
-                expires=date.today() + timedelta(days=3)
-            )
-            PWD_SECRET.save()
-            Notification('success',
-                         f'Successfully created a code. <a href="{reverse("user set password", args=(CODE,))}">{CODE}</a>',
-                         colour='success').add_to_request(request)
+        CODE = RandomCode(40)
+        HASHED_CODE = make_password(CODE, salt=settings.SECRET_KEY)
+
+        PWD_SECRET, created = PasswordSecrets.objects.update_or_create(
+            user=USER,
+            defaults={"expires": date.today() + timedelta(days=3), "secret" :HASHED_CODE}
+        )
+        PWD_SECRET.save()
+        messages.error(request, f'Successfully created a code. <a href="{reverse("user set password", args=(CODE,))}">{CODE}</a>')
     else:
-        Notification('error',
-                     f'No user provided.',
-                     colour='danger').add_to_request(request)
+        messages.error(request, f'User not found')
 
     return redirect(NEXT)
 
@@ -81,7 +77,7 @@ def password_reset(request: HttpRequest):
         USER = User.objects.filter(email=EMAIL).first()
         if USER:
             CODE = RandomCode(40)
-            HASHED_CODE = make_password(CODE, salt="bu11ingd0nS3crEt5")
+            HASHED_CODE = make_password(CODE, salt=settings.SECRET_KEY)
             PasswordSecrets.objects.filter(user=USER).all().delete()
 
             PWD_SECRET = PasswordSecrets(

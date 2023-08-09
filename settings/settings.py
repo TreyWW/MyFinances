@@ -41,11 +41,11 @@ mimetypes.add_type("text/javascript", ".js", True)
 MESSAGE_STORAGE = "django.contrib.messages.storage.cookie.CookieStorage"
 
 MESSAGE_TAGS = {
-    messages.DEBUG: 'alert-info',
-    messages.INFO: 'alert-info',
-    messages.SUCCESS: 'alert-success',
-    messages.WARNING: 'alert-warning',
-    messages.ERROR: 'alert-danger',
+    messages.DEBUG: 'border-blue-300 bg-blue-50 text-blue-800 dark:border-blue-800 dark:text-blue-400',
+    messages.INFO: 'border-blue-300 bg-red-50 text-blue-800 dark:border-blue-800 dark:text-blue-400',
+    messages.SUCCESS: 'border-green-300 bg-green-50 text-green-800 dark:border-green-800 dark:text-green-400',
+    messages.WARNING: 'border-yellow-300 bg-yellow-50 text-yellow-800 dark:border-yellow-800 dark:text-yellow-400',
+    messages.ERROR: 'border-red-300 bg-red-50 text-red-800 dark:border-red-800 dark:text-red-400',
 }
 
 TEMPLATES = [

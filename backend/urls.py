@@ -18,9 +18,7 @@ urlpatterns = [
                   path('login/forgot_password', other.login.forgot_password_page, name='login forgot_password'),
                   path('login/reset-password/', passwords.generate.password_reset, name='user set password reset')
                   ,
-                  path('api/v1/user/profile/toggle_theme', api.v1.user.profile.toggle_theme, name='api v1 user toggle_theme'),
-
-                  path('login/set-password/<str:secret>', passwords.view.set_password, name='user set password'),
+                  # path('api/v1/user/profile/toggle_theme', api.v1.user.profile.toggle_theme, name='api v1 user toggle_theme'),
 
                   path('login/set-password/<str:secret>', passwords.view.set_password, name='user set password'),
                   path('login/set-password/<str:secret>/set', passwords.set.set_password_set,

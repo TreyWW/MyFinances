@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Suggest an idea for this project
+about: Suggest a new feature for this project
 title: "[FEATURE] "
 labels: ''
 assignees: ''
@@ -13,9 +13,11 @@ Some description about the idea
 Past issue has finished to allow blah blah
 
 ## Acceptance Criteria:
-- please do task a
-- please do task b
+- Please do task a
+- Please do task b
 
 ## Definition of Done:
-- [ ]  code has been tested
-- [ ] all tasks are completed
+- [ ] Created tests/urls logged_in and unlogged_in json objects for any added URLS
+- [ ] Created tests/views for any added VIEWS
+- [ ] Code has been tested with both `python manage.py urls_test` and ` python manage.py test_views`
+- [ ] All of Acceptance Criteria is complete

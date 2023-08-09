@@ -11,33 +11,29 @@ from backend.models import *
 
 from django.contrib.auth import get_user_model, logout
 
-User = get_user_model()
-
 
 @csrf_exempt
 @not_authenticated
 def login_page(request):
+    if request.user.is_authenticated:
+        return redirect('index')
+    # user = User.objects.first()
+    # login(request, user)
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
         remember_me = request.POST.get('remember_me')
 
-        user = authenticate(request, email=email, password=password)
+        user = authenticate(request, username=email, password=password)
 
         if user is not None:
             login(request, user)
-            if remember_me:
-                request.session.set_expiry()
             LoginLog.objects.create(user=user)
             AuditLog.objects.create(user=user, action="Login")
             return redirect('index')
         else:
-            # Add error message to be displayed in the login form
-            return render(request, 'core/pages/login.html', {'attempted_email': email, 'error_messages': [{
-                "colour": "danger",
-                "level": "Error",
-                "message": "Invalid username or password."
-            }]})
+            messages.error(request, "Invalid username or password")
+            return render(request, 'core/pages/login.html', {'attempted_email': email})
     return render(request, 'core/pages/login.html')
 
 
@@ -51,10 +47,35 @@ def logout_view(request, messages_constants=None):
         return redirect('index')
     return redirect('index')
 
-
 def create_account_page(request: HttpRequest):
+    if request.user.is_authenticated:
+        return redirect('index')
+    if request.method == "POST":
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        password_confirm = request.POST.get('confirm_password')
+
+        if password != password_confirm:
+            messages.error(request, "Passwords don't match")
+            return render(request, 'core/pages/create_account.html', {'attempted_email': email})
+
+        emails_taken = (User.objects.filter(email=email).count() > 0) or (User.objects.filter(username=email).count() > 0)
+        if emails_taken:
+            messages.error(request, "Email is already taken")
+            return render(request, 'core/pages/create_account.html')
+
+        user = User.objects.create_user(email=email, username=email, password=password)
+        user = authenticate(request, username=email, password=password)
+        login(request, user)
+
+        return redirect('index')
     return render(request, 'core/pages/create_account.html')
 
 
+@not_authenticated
 def forgot_password_page(request: HttpRequest):
+    if request.user.is_authenticated:
+        return redirect('index')
+    code = request.GET.get('secret')
+
     return render(request, 'core/pages/forgot_password.html')

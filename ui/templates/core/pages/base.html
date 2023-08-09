@@ -1,9 +1,12 @@
 {% load static %}
 <!DOCTYPE html>
-<html :class="{ 'theme-dark': dark }" x-data="data()" lang="en">
+<html :class="{ 'theme-dark': dark }"
+      x-data="data()"
+      lang="en">
 {% include 'core/partials/base/_head.html' %}
 <body>
-<div class="flex h-screen bg-gray-50 dark:bg-gray-900" :class="{ 'overflow-hidden': isSideMenuOpen}">
+<div class="flex h-screen bg-gray-50 dark:bg-gray-900"
+     :class="{ 'overflow-hidden': isSideMenuOpen}">
     {% include 'core/partials/base/navbar/_sidebar_pc.html' %}
     {% include 'core/partials/base/navbar/_sidebar_mobile.html' %}
 
@@ -12,8 +15,9 @@
         {% include 'core/partials/base/_topbar.html' %}
 
         <main class="h-full overflow-y-auto pb-16">
-            <div class="container mx-auto grid px-6">
+            <div class="container  grid px-6 pt-6">
                 <!-- MAIN PAGE -->
+                {% include 'core/partials/base/toasts.html' %}
                 {% block content %}
 
                 {% endblock content %}
