@@ -21,14 +21,15 @@ def navbar(request: HttpRequest):
         "navbar_items": navbarItems
     }
 
-    context["modal_data_extra"] = [Modals.logout_confirm()]
+    context["modal_data_extra"] = []
 
     return context
 
 
 def extras(request: HttpRequest):
     data = {
-        "modal_data_extra": [Modals.create_customer(id="create_customer_nav", success_message="Customer created with the name of ${$('#nameInput').val()}.", toasts=[])]}
+        "modal_data_extra": []
+    }
 
     data['git_branch'] = os.environ.get('BRANCH')
     data['git_version'] = os.environ.get('VERSION')

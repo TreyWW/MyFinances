@@ -8,4 +8,4 @@ User = get_user_model()
 
 
 def index(request: HttpRequest):
-    return render(request, 'core/pages/blank.html')
+    return render(request, 'core/pages/index.html')

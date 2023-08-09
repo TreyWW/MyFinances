@@ -18,19 +18,22 @@ User = get_user_model()
 @not_authenticated
 def login_page(request):
     if request.method == 'POST':
-        username = request.POST.get('username')
+        email = request.POST.get('email')
         password = request.POST.get('password')
+        remember_me = request.POST.get('remember_me')
 
-        user = authenticate(request, username=username, password=password)
+        user = authenticate(request, email=email, password=password)
 
         if user is not None:
             login(request, user)
+            if remember_me:
+                request.session.set_expiry()
             LoginLog.objects.create(user=user)
             AuditLog.objects.create(user=user, action="Login")
             return redirect('index')
         else:
             # Add error message to be displayed in the login form
-            return render(request, 'core/pages/login.html', {'attempted_username': username, 'error_messages': [{
+            return render(request, 'core/pages/login.html', {'attempted_email': email, 'error_messages': [{
                 "colour": "danger",
                 "level": "Error",
                 "message": "Invalid username or password."
@@ -47,3 +50,11 @@ def logout_view(request, messages_constants=None):
     if request.method == "POST":
         return redirect('index')
     return redirect('index')
+
+
+def create_account_page(request: HttpRequest):
+    return render(request, 'core/pages/create_account.html')
+
+
+def forgot_password_page(request: HttpRequest):
+    return render(request, 'core/pages/forgot_password.html')
