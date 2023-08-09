@@ -19,8 +19,21 @@ function data() {
   return {
     dark: getThemeFromLocalStorage(),
     toggleTheme() {
-      this.dark = !this.dark
-      setThemeToLocalStorage(this.dark)
+      // Update local state
+      this.dark = !this.dark;
+      setThemeToLocalStorage(this.dark);
+
+      // Send AJAX request to toggle theme on the server
+      if (this.$el.getAttribute('data-authenticated') === 'true') {
+        fetch('/api/v1/user/profile/toggle_theme', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': this.$el.getAttribute('data-csrf'),
+          },
+          body: JSON.stringify({ dark: this.dark }),
+        });
+      }
     },
     isSideMenuOpen: false,
     toggleSideMenu() {

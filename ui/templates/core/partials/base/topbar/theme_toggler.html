@@ -1,0 +1,14 @@
+<li class="flex">
+    <button
+            class="rounded-md focus:outline-none focus:shadow-outline-purple"
+            @click="toggleTheme"
+            aria-label="Toggle color mode"
+    >
+        <template x-if="!dark">
+            <i class="fas fa-sun text-yellow-400"></i>
+        </template>
+        <template x-if="dark">
+            <i class="fas fa-moon text-gray-500"></i>
+        </template>
+    </button>
+</li>
