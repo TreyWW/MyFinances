@@ -16,6 +16,7 @@ CMD ["git","--version"]
 RUN pip install -r requirements.txt
 
 # Set the entrypoint
+RUN mkdir /scripts
 COPY ../../scripts /scripts
 RUN chmod +x /scripts/*
 RUN chmod +x /scripts/tests/*
