@@ -19,7 +19,7 @@ jobs:
           sudo apt-get install -y docker-compose
 
       - name: Set up environment variables
-        run: cp env.sample .env
+        run: cp .env.sample .env
 
       - name: Build and run docker-compose.ci.yml
         run: docker-compose -f docker-compose.ci.yml up -d
