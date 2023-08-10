@@ -16,10 +16,9 @@ CMD ["git","--version"]
 RUN pip install -r requirements.txt
 
 # Set the entrypoint
-RUN mkdir /scripts
-COPY ../../scripts /scripts
-RUN chmod +x /scripts/*
-RUN chmod +x /scripts/tests/*
+COPY ../../scripts /infrastructure/scripts/
+RUN chmod +x /infrastructure/scripts/*
+RUN chmod +x /infrastructure/scripts/tests/*
 ENTRYPOINT ["sh", "/scripts/entrypoint.sh"]
 
 # Expose ports
