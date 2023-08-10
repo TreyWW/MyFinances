@@ -33,7 +33,7 @@ SESSION_COOKIE_AGE = 1800
 SESSION_ENGINE = "django.contrib.sessions.backends.db"
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = [BASE_DIR / "ui/static", ]
+STATICFILES_DIRS = [BASE_DIR / "frontend/static", ]
 mimetypes.add_type("text/javascript", ".js", True)
 
 
@@ -50,7 +50,7 @@ MESSAGE_TAGS = {
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'ui/templates']
+        'DIRS': [BASE_DIR / 'frontend/templates']
         ,
         'APP_DIRS': True,
         'OPTIONS': {
