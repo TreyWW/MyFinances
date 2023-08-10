@@ -3,10 +3,8 @@ name: CI Tests
 on:
   push:
     branches:
-      - master
+      - main
       - develop
-      - stable
-      - stable-production
 
 jobs:
   build:
