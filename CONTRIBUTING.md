@@ -1,62 +1,62 @@
 # Contributing
 
+Thank you for considering contributing to the MyFinances project! Your contributions help make the project better for everyone.
+
 ## Issue Tracker
 
-- Before submitting a new issue, please:
+### Reporting Issues
 
-    - check for existing related issues
+Before submitting a new issue, please:
 
-    - check the issue tracker for a specific upstream project that may be more appropriate
+- Check for existing related issues.
+- Check the issue tracker for a specific upstream project that may be more appropriate.
+- Check against supported versions of this project (i.e., the latest).
 
-    - check against supported versions of this project (i.e. the latest)
-
-- Please comment with a "+1" to help vote for issues that are important to you
-
-- Please DO NOT comment with a "+1", use the Subscribe button instead
-
-- Please keep discussions on-topic, and respect the opinions of others
-
-- Please report urgent issues, or issues with confidential details to myself directly
-
+Please comment with a "+1" to help vote for issues that are important to you. Use the Subscribe button instead of "+1" comments. Keep discussions on-topic and respect the opinions of others. For urgent issues or those involving confidential details, please report them directly to the maintainers.
 
 ### Security Vulnerabilities
 
-__coming soon__
+We take security seriously. If you discover a security vulnerability within MyFinances, please reach out to us directly via [email](mailto:security-myfinances@strelix.org). We will promptly address and resolve the issue.
 
 ### Bug Reports
 
-__coming soon__
+If you encounter a bug, please report it by opening an issue on the issue tracker. Be sure to include detailed information about the issue, steps to reproduce, and relevant environment details.
 
 ### Feature Requests
 
-__coming soon__
-
-### Personal Support Requests
-
-__coming soon__
+We welcome feature requests! If you have an idea for a new feature or enhancement, please open an issue on the issue tracker. Describe the feature, its potential benefits, and any relevant use cases.
 
 ## Pull Requests / Merge Requests
 
-__coming soon__
+We encourage you to contribute code to MyFinances. To do so, please:
+
+1. Fork the repository.
+2. Create a new branch for your changes.
+3. Make your changes, following the coding style guidelines.
+4. Test your changes thoroughly.
+5. Submit a pull request to the main repository's `main` branch.
+
+We will review your pull request, provide feedback, and work with you to get your changes merged into the project.
 
 ## Code Style and Code Quality
 
-- Django
-  - [https://docs.djangoproject.com/es/1.9/internals/contributing/writing-code/coding-style/](https://docs.djangoproject.com/en/4.2/internals/contributing/writing-code/coding-style/)
+Please adhere to the coding style guidelines of the Django project. You can find the Django coding style guide [here](https://docs.djangoproject.com/en/4.2/internals/contributing/writing-code/coding-style/).
 
 ## Version Control
 
-__coming soon__
-
+We use Git for version control. When contributing, make sure your commits are clear, concise, and well-documented. Follow the conventional commit message style for meaningful commit messages.
 
 ## Development
 
-
 ### Prerequisites
 
-__coming soon__
-
+Make sure you have the necessary prerequisites for development. These will be detailed in the project's main README.md file.
 
 ### Getting Started
 
-__coming soon__
+Refer to the project's main README.md for instructions on setting up the development environment and running the application locally.
+
+We value your contributions and appreciate your effort in making MyFinances better for everyone. Thank you!
+
+---
+__Note:__ This CONTRIBUTING.md file is a living document and may be updated over time. Make sure to refer to the latest version when contributing.
