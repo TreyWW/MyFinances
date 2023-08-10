@@ -26,5 +26,5 @@ jobs:
 
       - name: Run the test scripts
         run: |
-          docker-compose -f docker-compose.ci.yml exec -T myfinances_django /scripts/tests/urls.sh
-          docker-compose -f docker-compose.ci.yml exec -T myfinances_django /scripts/tests/views.sh
+          docker-compose -f infrastructure/docker/docker-compose.ci.yml exec -T myfinances_django /scripts/tests/urls.sh
+          docker-compose -f infrastructure/docker/docker-compose.ci.yml exec -T myfinances_django /scripts/tests/views.sh
