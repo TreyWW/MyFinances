@@ -88,7 +88,7 @@ def password_reset(request: HttpRequest):
 
             # [i.delete() for i in found]
 
-            SEND_SENDGRID_EMAIL(USER.email, "Bullingdon Bookings | Password Reset",
+            SEND_SENDGRID_EMAIL(USER.email, "My Finances | Password Reset",
                                 f"You've now got a new password reset code. \n\n Reset Here: {request.build_absolute_uri(reverse('user set password', args=(CODE,)))}",
                                 request=request)
         messages.success(request,
