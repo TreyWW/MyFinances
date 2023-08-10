@@ -10,18 +10,17 @@ DEBUG = True if os.environ.get("DEBUG") in ["True", "true", "TRUE", True] else F
 
 try:
     if DEBUG:
-        print("[DJANGO APP] Using local settings")
+        print("[BACKEND] Using local settings")
         from .local_settings import *
     else:
-        print("[DJANGO APP] Using production settings")
+        print("[BACKEND] Using production settings")
         from .prod_settings.py import *
 except ImportError:
-    exit("[DJANGO APP] Couldn't import settings")
+    exit("[BACKEND] Couldn't import settings")
 
 INSTALLED_APPS = ['django.contrib.staticfiles', 'django_extensions', 'django.contrib.admin', 'django.contrib.auth',
                   'django.contrib.contenttypes', 'django.contrib.sessions', 'django.contrib.messages', 'social_django',
                   'backend', 'mathfilters', 'django.contrib.humanize', 'django_htmx']
-
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -29,9 +28,9 @@ EMAIL_WHITELIST = []
 AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend']
 SECRET_KEY = os.environ.get("SECRET_KEY")
 LOGIN_URL = '/login/'
-SESSION_ENGINE = 'django.contrib.sessions.backends.file'
 ROOT_URLCONF = 'backend.urls'
-
+SESSION_COOKIE_AGE = 1800
+SESSION_ENGINE = "django.contrib.sessions.backends.db"
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [BASE_DIR / "ui/static", ]
@@ -94,7 +93,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django_htmx.middleware.HtmxMiddleware'
+    'django_htmx.middleware.HtmxMiddleware',
+    # 'django_browser_reload.middleware.BrowserReloadMiddleware'
 ]
 GOOGLE_OAUTH2_CLIENT_DETAILS = {
     'web': {

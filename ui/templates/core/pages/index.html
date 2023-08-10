@@ -1,4 +1,19 @@
-{% extends 'core/pages/base.html' %}
-{% block content %}
-
-{% endblock content %}
+{% load static %}
+<!DOCTYPE html>
+<html :class="{ 'theme-dark': dark }"
+      x-data="data()"
+      lang="en">
+{% include 'core/partials/base/_head.html' %}
+<body>
+    <div class="flex h-screen bg-gray-50 dark:bg-gray-900"
+         :class="{ 'overflow-hidden': isSideMenuOpen}">
+                <main class="h-full overflow-y-auto pb-16">
+            <div class="container  grid px-6 pt-6">
+                <p class="text-white font-medium text-2xl">Welcome to <span class="text-purple-600">MyFinances</span></p>
+                <p class="underline text-white">Coming Soon</p>
+                <a href="{% url 'dashboard' %}" class="text-white bg-purple-600 hover:bg-purple-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Visit dashboard</a>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

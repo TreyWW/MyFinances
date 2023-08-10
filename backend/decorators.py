@@ -14,7 +14,7 @@ from django.shortcuts import redirect
 def not_authenticated(view_func):
     def wrapper_func(request, *args, **kwargs):
         if request.user.is_authenticated:
-            return redirect('index')
+            return redirect('dashboard')
         else:
             return view_func(request, *args, **kwargs)
 
@@ -27,7 +27,7 @@ def staff_only(view_func):
         else:
             notification = Notification('warning', "You don't have permission to view this page.", colour='danger')
             notification.add_to_request(request)
-            return redirect('index')
+            return redirect('dashboard')
 
     return wrapper_func
 
@@ -38,7 +38,7 @@ def superuser_only(view_func):
         else:
             notification = Notification('warning', "You don't have permission to view this page.", colour='danger')
             notification.add_to_request(request)
-            return redirect('index')
+            return redirect('dashboard')
     return wrapper_func
 
 not_logged_in = not_authenticated

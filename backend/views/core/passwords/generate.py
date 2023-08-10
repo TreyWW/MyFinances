@@ -37,14 +37,14 @@ def set_password_generate(request: HttpRequest):
     if request.user.is_superuser and request.user.is_staff:
         pass
     else:
-        return redirect('index')
+        return redirect('dashboard')
 
     USER = request.GET.get('id')
     NEXT = request.GET.get('next') or 'index'
 
     if not USER.isnumeric():
         messages.error(request, "User ID must be a valid integer")
-        return redirect('index')
+        return redirect('dashboard')
 
     USER = User.objects.filter(id=USER).first()
     if USER:
