@@ -17,6 +17,8 @@ RUN pip install -r requirements.txt
 
 # Set the entrypoint
 COPY ../scripts /scripts
+RUN ls
+RUN ls ../
 RUN chmod +x /scripts/*
 RUN chmod +x /scripts/tests/*
 ENTRYPOINT ["sh", "/scripts/entrypoint.sh"]
