@@ -4,11 +4,12 @@ from django.http import HttpResponse, HttpRequest, HttpResponseBadRequest, HttpR
     HttpResponseServerError
 from django.shortcuts import render, redirect
 
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, login
+from backend.models import *
+from django.contrib.sessions.models import Session
 
 
 def index(request: HttpRequest):
-    messages.warning(request, f"logged in {request.user.username}" if request.user.is_authenticated else "not logged in")
     return render(request, 'core/pages/index.html')
 
 @login_required

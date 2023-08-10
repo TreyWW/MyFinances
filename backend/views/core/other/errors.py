@@ -25,7 +25,7 @@ def universal(request: HttpRequest, exception=None):
     else:
         TracebackErrors(error=exec_error).save()
 
-    return redirect('index')
+    return redirect('dashboard')
 
 
 def e_403(request: HttpRequest, exception=None):
@@ -53,5 +53,5 @@ def e_403(request: HttpRequest, exception=None):
         else:
             TracebackErrors(error=exec_error).save()
 
-        return redirect('index')
-    return redirect('index')
+        return redirect('dashboard')
+    return redirect('dashboard')

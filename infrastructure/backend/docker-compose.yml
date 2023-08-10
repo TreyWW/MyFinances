@@ -4,7 +4,8 @@ services:
   myfinances_django:
     restart: always
     build:
-      context: .
+      context: ../docker
+      dockerfile: Dockerfile
     ports:
       - '9012:9012'
     volumes:
@@ -12,14 +13,8 @@ services:
       - myfinances_static_volume:/mnt/static/
     networks:
       - myfinances_network
-    environment:
-      TEST: "True"
-      SECRET_KEY: mysecretkey
-      URL: 127.0.0.1
-      PROXY_IP: localhost
-      BRANCH: debug
-      DEBUG: "True"
-
+    env_file:
+      - ../../../.env
   nginx:
     restart: always
     image: nginx:latest

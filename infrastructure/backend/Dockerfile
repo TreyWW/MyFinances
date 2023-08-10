@@ -1,12 +1,10 @@
+# Dockerfile
 FROM python:3.9-alpine
 
 # Set the working directory
-COPY requirements.txt /myfinances/requirements.txt
 WORKDIR /myfinances
-RUN pip install -r /myfinances/requirements.txt
-
 # Copy the project files
-COPY . /myfinances
+COPY . .
 
 # Install dependencies
 RUN apk add --update mariadb-connector-c-dev
@@ -15,12 +13,13 @@ RUN pip install --upgrade pip
 RUN pip install mysql
 RUN apk add --no-cache git
 CMD ["git","--version"]
+RUN pip install -r requirements.txt
 
 # Set the entrypoint
 #COPY ../scripts /infrastructure/scripts/
-RUN chmod +x /infrastructure/scripts/*
-RUN chmod +x /infrastructure/scripts/tests/*
-ENTRYPOINT ["sh", "/infrastructure/scripts/entrypoint.sh"]
+RUN chmod +x scripts/*
+RUN chmod +x scripts/tests/*
+ENTRYPOINT ["sh", "scripts/entrypoint.sh"]
 
 # Expose ports
 EXPOSE 10012

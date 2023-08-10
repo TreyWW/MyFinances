@@ -16,7 +16,7 @@ from django.contrib.auth import get_user_model, logout
 @not_authenticated
 def login_page(request):
     if request.user.is_authenticated:
-        return redirect('index')
+        return redirect('dashboard')
     # user = User.objects.first()
     # login(request, user)
     if request.method == 'POST':
@@ -30,7 +30,7 @@ def login_page(request):
             login(request, user)
             LoginLog.objects.create(user=user)
             AuditLog.objects.create(user=user, action="Login")
-            return redirect('index')
+            return redirect('dashboard')
         else:
             messages.error(request, "Invalid username or password")
             return render(request, 'core/pages/login.html', {'attempted_email': email})
@@ -44,12 +44,12 @@ def logout_view(request, messages_constants=None):
     messages.success(request, "You've now been logged out.")
 
     if request.method == "POST":
-        return redirect('index')
-    return redirect('index')
+        return redirect('dashboard')
+    return redirect('dashboard')
 
 def create_account_page(request: HttpRequest):
     if request.user.is_authenticated:
-        return redirect('index')
+        return redirect('dashboard')
     if request.method == "POST":
         email = request.POST.get('email')
         password = request.POST.get('password')
@@ -68,14 +68,14 @@ def create_account_page(request: HttpRequest):
         user = authenticate(request, username=email, password=password)
         login(request, user)
 
-        return redirect('index')
+        return redirect('dashboard')
     return render(request, 'core/pages/create_account.html')
 
 
 @not_authenticated
 def forgot_password_page(request: HttpRequest):
     if request.user.is_authenticated:
-        return redirect('index')
+        return redirect('dashboard')
     code = request.GET.get('secret')
 
     return render(request, 'core/pages/forgot_password.html')
