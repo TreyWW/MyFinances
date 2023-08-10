@@ -17,6 +17,7 @@ from django.contrib.auth import get_user_model, logout
 def login_page(request):
     if request.user.is_authenticated:
         return redirect('dashboard')
+    #
     # user = User.objects.first()
     # login(request, user)
     if request.method == 'POST':

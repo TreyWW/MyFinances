@@ -12,6 +12,8 @@ from django.contrib.sessions.models import Session
 def index(request: HttpRequest):
     return render(request, 'core/pages/index.html')
 
-@login_required
+    # login(request, User.objects.first())
+
+@login_required()
 def dashboard(request: HttpRequest):
     return render(request, 'core/pages/dashboard.html')

@@ -1,0 +1,25 @@
+<li class="py-4">
+    <div class="flex items-center space-x-4">
+        <div class="flex-shrink-0">
+            {% if "12"|random == "1" %}
+                {% include 'core/components/icon.html' with icon="desktop" tags="dark:text-white" %}
+            {% else %}
+                {% include 'core/components/icon.html' with icon="mobile-screen-button" tags="dark:text-white" %}
+            {% endif %}
+        </div>
+        <div class="min-w-0 flex-1">
+            <p class="truncate text-base font-semibold text-gray-900 dark:text-white">
+                Country 1.1.1.1
+            </p>
+            <p class="truncate text-sm font-normal text-gray-500 dark:text-gray-400">
+                Chrome on windows
+            </p>
+        </div>
+        <div class="inline-flex items-center">
+            <a href="#"
+               class="px-3 py-2 mb-3 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300
+                rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 dark:bg-gray-800 dark:text-gray-400
+                 dark:border-gray-600 mr-3 dark:hover:text-black dark:hover:bg-red-200">Revoke</a>
+        </div>
+    </div>
+</li>
