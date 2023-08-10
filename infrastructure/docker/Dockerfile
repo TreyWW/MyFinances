@@ -16,7 +16,7 @@ CMD ["git","--version"]
 RUN pip install -r requirements.txt
 
 # Set the entrypoint
-COPY ../scripts /infrastructure/scripts/
+#COPY ../scripts /infrastructure/scripts/
 RUN chmod +x /infrastructure/scripts/*
 RUN chmod +x /infrastructure/scripts/tests/*
 ENTRYPOINT ["sh", "/infrastructure/scripts/entrypoint.sh"]
