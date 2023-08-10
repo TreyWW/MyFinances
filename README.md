@@ -49,5 +49,5 @@ We welcome contributions from the open-source community! If you're interested in
 2. Fork the repository and create your own branch.
 3. Make your changes and ensure the code follows our coding standards.
 4. Submit a pull request, describing the changes you've made.
-5. 
+
 Please refer to our [Contribution Guidelines](https://github.com/TreyWW/MyFinances/blob/main/CONTRIBUTING.md) for more details.
