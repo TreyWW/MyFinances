@@ -1,5 +1,7 @@
 *.html linguist-detectable=true
 *.py linguist-detectable=true
 
-*.html linguist-vendored
+*.html linguist-vendored=false
 *.py linguist-vendored=false
+
+/backend/views/**.py linguist-language=Django
