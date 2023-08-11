@@ -6,5 +6,6 @@
   "login create_account": [200],
   "login forgot_password": [200],
   "user settings": [302],
-  "user settings change_password": [302]
+  "user settings change_password": [302],
+  "invoices dashboard": [302]
 }

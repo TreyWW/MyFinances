@@ -28,4 +28,4 @@ def invoices_dashboard(request: HttpRequest):
 
 @login_required
 def invoices_dashboard_id(request: HttpRequest, id):
-    return render(request, 'core/pages/invoices/dashboard/dashboard.html', {"page": 123})
+    return render(request, 'core/pages/invoices/dashboard/dashboard.html', )
