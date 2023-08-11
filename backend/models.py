@@ -14,7 +14,7 @@ def RandomCode(length=6):
     characters = string.ascii_letters + string.digits
     return ''.join(random.choice(characters) for _ in range(length))
 
-class UserProfile(models.Model):
+class UserSettings(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_profile')
     dark_mode = models.BooleanField(default=True)
 
