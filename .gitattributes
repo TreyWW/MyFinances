@@ -2,7 +2,5 @@
 *.py linguist-detectable=true
 
 *.html linguist-vendored=false
-*.py linguist-vendored=false
 
-/backend/views/**/*.py linguist-detectable=true
-/backend/views/**/*.py linguist-vendored=false
+/backend/views/*.py linguist-language=Python
