@@ -2,5 +2,3 @@
 *.py linguist-detectable=true
 
 *.html linguist-vendored=false
-
-/backend/views/*.py linguist-language=Python
