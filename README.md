@@ -43,11 +43,64 @@ MyFinances is an open-source web application designed to empower individuals and
 5. Visit the website; `http://127.0.0.1:10012`
 
 ## Contributing
-We welcome contributions from the open-source community! If you're interested in improving MyFinances, here's how you can get involved:
 
-1. Find an existing issue, or create one with the correct category.
-2. Fork the repository and create your own branch.
-3. Make your changes and ensure the code follows our coding standards.
-4. Submit a pull request, describing the changes you've made.
+Thank you for considering contributing to the MyFinances project! Your contributions help make the project better for everyone.
 
-Please refer to our [Contribution Guidelines](https://github.com/TreyWW/MyFinances/blob/main/CONTRIBUTING.md) for more details.
+### Issue Tracker
+
+#### Reporting Issues
+
+Before submitting a new issue, please:
+
+- Check for existing related issues.
+- Check the issue tracker for a specific upstream project that may be more appropriate.
+- Check against supported versions of this project (i.e., the latest).
+
+Use the Subscribe button to stay updated on discussions. Keep conversations on-topic and respect the opinions of others. For urgent issues or those involving confidential details, please report them directly to the maintainers.
+
+#### Security Vulnerabilities
+
+We take security seriously. If you discover a security vulnerability within MyFinances, please reach out to us directly via [email](mailto:security-myfinances@strelix.org). We will promptly address and resolve the issue.
+
+#### Bug Reports
+
+If you encounter a bug, please report it by opening an issue on the issue tracker. Include details about the issue, steps to reproduce, and relevant environment details.
+
+#### Feature Requests
+
+We welcome feature requests! If you have an idea for a new feature or enhancement, open an issue on the issue tracker. Describe the feature, its potential benefits, and any relevant use cases.
+
+### Pull Requests / Merge Requests
+
+To contribute code:
+
+1. Fork the repository.
+2. Create a new branch for your changes.
+3. Make your changes, following the coding style guidelines.
+4. Test your changes thoroughly.
+5. Submit a pull request to the main repository's `main` branch.
+
+We'll review your pull request, provide feedback, and work with you to get your changes merged.
+
+### Code Style and Quality
+
+Adhere to the coding style guidelines of the Django project. Find the Django coding style guide [here](https://docs.djangoproject.com/en/4.2/internals/contributing/writing-code/coding-style/).
+
+### Version Control
+
+We use Git. Make sure your commits are clear, concise, and well-documented. Follow conventional commit message style.
+
+### Development
+
+#### Prerequisites
+
+Make sure you have the necessary prerequisites for development. These are detailed above in this README.md file.
+
+#### Getting Started
+
+Refer to the "Getting Started" section in this README.md for setting up the development environment and running the application locally.
+
+Thank you for your contributions!
+
+---
+__Note:__ This README.md is a living document and might be updated over time. Always refer to the latest version when contributing and developing.
