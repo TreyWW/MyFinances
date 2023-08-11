@@ -4,8 +4,9 @@ from django.views.static import serve
 from django.urls import re_path as url
 from django.urls import path, include
 
-from backend.views.core import other, passwords, api, settings as settings_v
+from backend.views.core import other, passwords, api, settings as settings_v, invoices
 from backend.views.core.other.index import index, dashboard
+
 # from backend.views.core.api.v1.user import settings
 
 url(r'^frontend/static/(?P<path>.*)$', serve, {'document_root': settings.STATICFILES_DIRS[0]})
@@ -15,6 +16,11 @@ urlpatterns = [
                   path('dashboard', dashboard, name='dashboard'),
                   path('dashboard/settings', settings_v.view.settings_page, name='user settings'),
                   path('dashboard/profile/change_password', settings_v.view.change_password, name='user settings change_password'),
+                  path('dashboard/invoices/', invoices.dashboard.invoices_dashboard, name='invoices dashboard'),
+                  path('dashboard/invoices/create/', invoices.dashboard.invoices_dashboard, name='invoices dashboard create'),
+                  path('dashboard/invoices/<str:id>', invoices.dashboard.invoices_dashboard_id, name='invoices dashboard'),
+                  path('dashboard/invoices/<str:id>/edit', invoices.dashboard.invoices_dashboard_id, name='invoices dashboard'),
+
                   path('login/', other.login.login_page, name='login'),
                   path('logout/', other.login.logout_view, name='logout'),
                   path('login/create_account', other.login.create_account_page, name='login create_account'),
@@ -29,7 +35,6 @@ urlpatterns = [
 
                   path('admin/generate-password', passwords.generate.set_password_generate,
                        name='admin set password generate'),
-                # path("__reload__/", include("django_browser_reload.urls")),
               ] + static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
 
 handler500 = "backend.views.core.other.errors.universal"

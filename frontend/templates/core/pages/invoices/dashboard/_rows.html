@@ -1,0 +1,36 @@
+{% for invoice in invoices %}
+<tr class="text-gray-700 dark:text-gray-400">
+    <td class="px-4 py-3 text-sm">{{ invoice.id }}</td>
+    <td class="px-4 py-3">
+    <div class="flex items-center text-sm">
+      <div>
+        <p class="font-semibold">{{ invoice.client.name | default:"No name" }}</p>
+      </div>
+    </div>
+  </td>
+    <td class="px-4 py-3 text-sm">
+    £{{ invoice.total }}
+  </td>
+    <td class="px-4 py-3 text-sm">
+    {{ invoice.date_due | date:"d/m/Y" }}
+  </td>
+    <td class="px-4 py-3 text-xs title">
+        <span class="text-xs mr-2 px-2.5 font-medium py-0.5 rounded
+        {% if status == "sent" %}
+        bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300
+        {% elif status == "seen" or 1 == 1 %}
+        bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-300
+        {% else %}
+        {% endif %}
+">
+         {{ invoice.status | default:"pending" | title }}
+        </span>
+  </td>
+    <td class="px-4 py-3">
+    <div class="flex items-center text-sm space-x-4">
+        {% include "core/components/table/actions/icon_button.html" with icon="pencil" action="edit" href="dashboard" %}
+        {% include "core/components/table/actions/icon_button.html" with icon="trash-can" action="delete" href="dashboard"%}
+    </div>
+  </td>
+</tr>
+{% endfor %}
