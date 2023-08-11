@@ -23,7 +23,7 @@ from django.contrib.auth import get_user_model, logout
 @login_required
 @require_POST
 def toggle_theme(request):
-    user_profile = UserProfile.objects.get_or_create(user=request.user).first()
+    user_profile = UserSettings.objects.get_or_create(user=request.user).first()
 
     # Toggle the dark_mode value
     user_profile.dark_mode = not user_profile.dark_mode

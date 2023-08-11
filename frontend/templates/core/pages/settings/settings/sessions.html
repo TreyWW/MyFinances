@@ -4,7 +4,7 @@
         <h3 class="text-xl font-semibold dark:text-white">Sessions</h3>
         <ul class="divide-y divide-gray-200 dark:divide-gray-700">
             {% for session in sessions|slice:":3" %}
-                {% include 'core/pages/profile/settings/session.html' with session=session %}
+                {% include 'core/pages/settings/settings/session.html' with session=session %}
             {% endfor %}
         </ul>
         {% if sessions.count > 3 %}
