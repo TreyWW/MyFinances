@@ -4,4 +4,5 @@
 *.html linguist-vendored=false
 *.py linguist-vendored=false
 
-/backend/views/**.py linguist-language=Django
+/backend/views/**/*.py linguist-detectable=true
+/backend/views/**/*.py linguist-vendored=false
