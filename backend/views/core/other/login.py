@@ -5,6 +5,8 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login
+
+import settings.settings
 from backend.decorators import *
 from backend.utils import Notification, Toast
 from backend.models import *
@@ -35,7 +37,9 @@ def login_page(request):
         else:
             messages.error(request, "Invalid username or password")
             return render(request, 'core/pages/login.html', {'attempted_email': email})
-    return render(request, 'core/pages/login.html')
+
+    github_enabled = True if settings.SOCIAL_AUTH_GITHUB_KEY and settings.SOCIAL_AUTH_GITHUB_SECRET else False
+    return render(request, 'core/pages/login.html', {"github_enabled": github_enabled})
 
 
 @login_required

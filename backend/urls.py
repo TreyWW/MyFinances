@@ -19,6 +19,8 @@ urlpatterns = [
                   path('dashboard/invoices/', invoices.dashboard.invoices_dashboard, name='invoices dashboard'),
                   path('dashboard/invoices/create/', invoices.dashboard.invoices_dashboard, name='invoices dashboard create'),
                   path('dashboard/invoices/<str:id>', invoices.dashboard.invoices_dashboard_id, name='invoices dashboard edit'),
+
+                  path('social-auth/', include('social_django.urls', namespace='social')),
                   # path('dashboard/invoices/<str:id>/edit', invoices.dashboard.invoices_dashboard_id, name='invoices dashboard'),
 
                   path('login/', other.login.login_page, name='login'),
