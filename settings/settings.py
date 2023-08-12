@@ -25,9 +25,10 @@ INSTALLED_APPS = ['django.contrib.staticfiles', 'django_extensions', 'django.con
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 EMAIL_WHITELIST = []
-AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend']
+AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend', 'social_core.backends.github.GithubOAuth2',]
 SECRET_KEY = os.environ.get("SECRET_KEY")
 LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/dashboard'
 ROOT_URLCONF = 'backend.urls'
 SESSION_COOKIE_AGE = 1800
 SESSION_ENGINE = "django.contrib.sessions.backends.db"
@@ -62,7 +63,8 @@ TEMPLATES = [
                 'backend.context_processors.notifications',
                 'backend.context_processors.extras',
                 'backend.context_processors.navbar',
-                'backend.context_processors.toasts'
+                'backend.context_processors.toasts',
+                'social_django.context_processors.backends',
             ],
         },
     },
@@ -122,6 +124,10 @@ USE_I18N = True
 USE_TZ = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+SOCIAL_AUTH_GITHUB_SCOPE = ['user:email']
+SOCIAL_AUTH_GITHUB_KEY = os.environ.get('GITHUB_KEY')
+SOCIAL_AUTH_GITHUB_SECRET = os.environ.get('GITHUB_SECRET')
 
 SENDGRID_TEMPLATE = os.environ.get("SENDGRID_TEMPLATE")
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

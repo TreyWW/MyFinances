@@ -3,7 +3,7 @@
 <html :class="{ 'theme-dark': dark }"
       x-data="data()"
       lang="en">
-{% include 'core/partials/base/_head.html' %}
+{% include 'core/partials/base/_head.html' with title="Login" %}
 <body>
 <div class="flex min-h-screen items-center bg-gray-50 p-6 dark:bg-gray-900">
     <div
@@ -26,56 +26,57 @@
             </div>
             <div class="flex items-center justify-center p-6 sm:p-12 md:w-1/2">
 
-              {% csrf_token %}
+                {% csrf_token %}
                 <form class="w-full group" method="post" novalidate>
-                {% include 'core/partials/base/toasts.html' %}
+                    {% include 'core/partials/base/toasts.html' %}
                     <h1
                             class="mb-4 text-xl font-semibold text-gray-700 dark:text-gray-200"
                     >
                         Login
                     </h1>
-              <label class="block text-sm">
-                <span class="text-gray-700 dark:text-gray-400">Email<span class="IF_INPUT_NOT_VALID:hidden hidden text-red-500">*</span></span>
-                <input
-                        name="email"
-                        type="email"
-                        class="mt-1 block w-full text-sm peer form-input focus:shadow-outline-purple focus:border-purple-400 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:focus:shadow-outline-gray"
-                        placeholder="jane@example.com"
-                        required
-                        pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
-                        value="{{ attempted_email }}"
-                />
-                <span class="mt-2 hidden text-sm text-red-500 peer-[&:not(:placeholder-shown):not(:focus):invalid]:block">
+                    <label class="block text-sm">
+                        <span class="text-gray-700 dark:text-gray-400">Email<span class="IF_INPUT_NOT_VALID:hidden hidden text-red-500">*</span></span>
+                        <input
+                                name="email"
+                                type="email"
+                                class="mt-1 block w-full text-sm peer form-input focus:shadow-outline-purple focus:border-purple-400 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:focus:shadow-outline-gray"
+                                placeholder="jane@example.com"
+                                required
+                                pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
+                                value="{{ attempted_email }}"
+                        />
+                        <span class="mt-2 hidden text-sm text-red-500 peer-[&:not(:placeholder-shown):not(:focus):invalid]:block">
     Please enter a valid email address
   </span>
-              </label>
-              <label class="mt-4 block text-sm">
-                <span class="text-gray-700 dark:text-gray-400">Password</span>
-                <input
-                        name="password"
-                        type="password"
-                        class="mt-1 block w-full text-sm peer form-input focus:shadow-outline-purple focus:border-purple-400 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:focus:shadow-outline-gray"
-                        placeholder="***************"
-                        required
-                        minlength="8"
-                />
-                <span class="mt-2 hidden text-sm text-red-500 peer-[&:not(:placeholder-shown):not(:focus):invalid]:block">
+                    </label>
+                    <label class="mt-4 block text-sm">
+                        <span class="text-gray-700 dark:text-gray-400">Password</span>
+                        <input
+                                name="password"
+                                type="password"
+                                class="mt-1 block w-full text-sm peer form-input focus:shadow-outline-purple focus:border-purple-400 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:focus:shadow-outline-gray"
+                                placeholder="***************"
+                                required
+                                minlength="8"
+                        />
+                        <span class="mt-2 hidden text-sm text-red-500 peer-[&:not(:placeholder-shown):not(:focus):invalid]:block">
                       Password should be at least 8 characters long
                 </span>
-              </label>
+                    </label>
 
                     <!-- You should use a button here, as the anchor is only used for the example  -->
-              <button
-                      type="submit"
-                      class="group-invalid:pointer-events-none mt-4 block w-full rounded-lg border border-transparent bg-purple-600 px-4 py-2 text-center text-sm font-medium leading-5 text-white group-invalid:opacity-30 transition-colors duration-150 group-invalid:disabled hover:bg-purple-700 focus:shadow-outline-purple focus:outline-none active:bg-purple-600"
-              >
-  Log in
-</button>
+                    <button
+                            type="submit"
+                            class="group-invalid:pointer-events-none mt-4 block w-full rounded-lg border border-transparent bg-purple-600 px-4 py-2 text-center text-sm font-medium leading-5 text-white group-invalid:opacity-30 transition-colors duration-150 group-invalid:disabled hover:bg-purple-700 focus:shadow-outline-purple focus:outline-none active:bg-purple-600"
+                    >
+                        Log in
+                    </button>
 
                     <hr class="my-8"/>
-
-                            {% include 'core/components/buttons/brand-button.html' with disabled=True brand="Github" %}
-              {% include 'core/components/buttons/brand-button.html' with disabled=True brand="Microsoft" %}
+                    {% if github_enabled %}
+                        {% include 'core/components/buttons/brand-button.html' with brand="Github" %}
+                    {% endif %}
+                    {% include 'core/components/buttons/brand-button.html' with disabled=True brand="Microsoft" %}
 
 
                     <p class="mt-4">
