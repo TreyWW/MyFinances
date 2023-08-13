@@ -20,7 +20,7 @@ except ImportError:
 
 INSTALLED_APPS = ['django.contrib.staticfiles', 'django_extensions', 'django.contrib.admin', 'django.contrib.auth',
                   'django.contrib.contenttypes', 'django.contrib.sessions', 'django.contrib.messages', 'social_django',
-                  'backend', 'mathfilters', 'django.contrib.humanize', 'django_htmx']
+                  'backend', 'mathfilters', 'django.contrib.humanize', 'django_htmx', 'debug_toolbar']
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -60,7 +60,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'backend.context_processors.notifications',
+                # 'backend.context_processors.notifications',
                 'backend.context_processors.extras',
                 'backend.context_processors.navbar',
                 'backend.context_processors.toasts',
@@ -96,8 +96,21 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_htmx.middleware.HtmxMiddleware',
-    # 'django_browser_reload.middleware.BrowserReloadMiddleware'
+    'debug_toolbar.middleware.DebugToolbarMiddleware'
 ]
+INTERNAL_IPS = [
+    # ...
+    "127.0.0.1",
+    "localhost"
+    # ...
+]
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': '/tmp/cache/',  # Set the path to a directory for caching
+    }
+}
+
 GOOGLE_OAUTH2_CLIENT_DETAILS = {
     'web': {
         'client_id': os.environ.get("GOOGLE_CLIENT_ID"),

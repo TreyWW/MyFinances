@@ -1,0 +1,38 @@
+[
+    {
+        "name": "Invoices",
+        "urls": ["invoices dashboard"],
+        "url": "invoices dashboard",
+        "icon": "file-invoice"
+    },
+    {
+        "name": "Receipts",
+        "urls": ["invoices dashboard"],
+        "url": "",
+        "icon": "receipt"
+    },
+    {
+        "name": "Expenses",
+        "urls": ["expenses"],
+        "url": "",
+        "icon": "money-bill"
+    },
+    {
+        "name": "Reports",
+        "urls": ["expenses"],
+        "url": "",
+        "icon": "chart-pie"
+    },
+    {
+        "name": "Goals",
+        "urls": ["expenses  "],
+        "url": "",
+        "icon": "trophy"
+    },
+    {
+        "name": "Tax Estimates",
+        "urls": [""],
+        "url": "",
+        "icon": "money-bill"
+    }
+]
