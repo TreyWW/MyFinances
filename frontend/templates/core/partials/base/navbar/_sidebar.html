@@ -8,6 +8,8 @@
 
         </ul>
         <ul>
-            {% include 'core/partials/base/navbar/items.html' %}
+            {% for item in navbar_items %}
+                {% include 'core/partials/base/navbar/item.html' with name=item.name names=item.urls url=item.url icon=item.icon %}
+            {% endfor %}
         </ul>
     </div>

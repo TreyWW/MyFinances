@@ -1,5 +1,16 @@
 from django.urls import reverse
+import os, json
 
+def load_navbar_items():
+    json_file_path = os.path.join(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+        'frontend/templates/core/partials/base/navbar/items.json'
+    )
+
+    with open(json_file_path) as json_file:
+        navbar_items = json.load(json_file)
+
+    return navbar_items
 
 class Notification:
     def __init__(self, level, message, extra_tags='', colour='danger', time=False, buttons=None):
