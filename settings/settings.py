@@ -18,9 +18,18 @@ try:
 except ImportError:
     exit("[BACKEND] Couldn't import settings")
 
-INSTALLED_APPS = ['django.contrib.staticfiles', 'django_extensions', 'django.contrib.admin', 'django.contrib.auth',
-                  'django.contrib.contenttypes', 'django.contrib.sessions', 'django.contrib.messages', 'social_django',
-                  'backend', 'mathfilters', 'django.contrib.humanize', 'django_htmx']
+INSTALLED_APPS = ['django.contrib.staticfiles',
+                  'django_extensions',
+                  'django.contrib.admin',
+                  'django.contrib.auth',
+                  'django.contrib.contenttypes',
+                  'django.contrib.sessions',
+                  'django.contrib.messages',
+                  'social_django',
+                  'backend',
+                  'mathfilters',
+                  'django.contrib.humanize',
+                  'django_htmx']
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
