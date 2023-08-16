@@ -27,7 +27,7 @@ services:
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - myfinances_static_volume:/srv/http/static/
-      - ./nginx/default.conf:/etc/nginx/conf.d/myfinances.conf
+      - ../nginx/default.conf:/etc/nginx/conf.d/myfinances.conf
     command: /bin/bash -c "nginx -g 'daemon off;'"
 volumes:
   myfinances_static_volume:
