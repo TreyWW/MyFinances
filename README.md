@@ -36,11 +36,19 @@ MyFinances is an open-source web application designed to empower individuals and
    ```bash
    cp .env.sample /env/MyFinances.env
    ```
-4. Start the docker-compose server
+4. Move to the infrastructure directory
+   ```bash
+   cd MyFinances/infrastructure/backend
+   ```
+5. Build the docker image
+   ```bash
+   docker-compose build
+   ```
+6. Start the docker-compose server
    ```bash
    docker-compose up -d
    ```
-5. Visit the website; `http://127.0.0.1:10012`
+7. Visit the website; `http://127.0.0.1:10012`
 
 ## Contributing
 
