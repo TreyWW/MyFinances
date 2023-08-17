@@ -39,6 +39,13 @@ urlpatterns = [
                        name='admin set password generate'),
               ] + static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
 
+if settings.DEBUG:
+    import debug_toolbar
+
+    urlpatterns += [
+        url(r'^__debug__/', include(debug_toolbar.urls)),
+    ]
+
 handler500 = "backend.views.core.other.errors.universal"
 handler404 = "backend.views.core.other.errors.universal"
 handler403 = "backend.views.core.other.errors.e_403"
