@@ -22,9 +22,9 @@ jobs:
         run: cp .env.sample .env
 
       - name: Build and run docker-compose.ci.yml
-        run: docker-compose -f infrastructure/docker/docker-compose.ci.yml up -d
+        run: docker-compose -f infrastructure/backend/docker-compose.ci.yml up -d
 
       - name: Run the test scripts
         run: |
-          docker-compose -f infrastructure/docker/docker-compose.ci.yml exec -T myfinances_django /infrastructure/scripts/tests/urls.sh
-          docker-compose -f infrastructure/docker/docker-compose.ci.yml exec -T myfinances_django /infrastructure/scripts/tests/views.sh
+          docker-compose -f infrastructure/backend/docker-compose.ci.yml exec -T myfinances_django ./infrastructure/backend/scripts/tests/urls.sh
+          docker-compose -f infrastructure/backend/docker-compose.ci.yml exec -T myfinances_django ./infrastructure/backend/scripts/tests/views.sh

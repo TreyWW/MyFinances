@@ -29,14 +29,16 @@ INSTALLED_APPS = ['django.contrib.staticfiles',
                   'backend',
                   'mathfilters',
                   'django.contrib.humanize',
-                  'django_htmx']
+                  'django_htmx',
+                  'debug_toolbar']
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 EMAIL_WHITELIST = []
-AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend']
+AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend', 'social_core.backends.github.GithubOAuth2',]
 SECRET_KEY = os.environ.get("SECRET_KEY")
 LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/dashboard'
 ROOT_URLCONF = 'backend.urls'
 SESSION_COOKIE_AGE = 1800
 SESSION_ENGINE = "django.contrib.sessions.backends.db"
@@ -68,10 +70,11 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'backend.context_processors.notifications',
+                # 'backend.context_processors.notifications',
                 'backend.context_processors.extras',
                 'backend.context_processors.navbar',
-                'backend.context_processors.toasts'
+                'backend.context_processors.toasts',
+                'social_django.context_processors.backends',
             ],
         },
     },
@@ -103,8 +106,21 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_htmx.middleware.HtmxMiddleware',
-    # 'django_browser_reload.middleware.BrowserReloadMiddleware'
+    'debug_toolbar.middleware.DebugToolbarMiddleware'
 ]
+INTERNAL_IPS = [
+    # ...
+    "127.0.0.1",
+    "localhost"
+    # ...
+]
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': '/tmp/cache/',  # Set the path to a directory for caching
+    }
+}
+
 GOOGLE_OAUTH2_CLIENT_DETAILS = {
     'web': {
         'client_id': os.environ.get("GOOGLE_CLIENT_ID"),
@@ -131,6 +147,10 @@ USE_I18N = True
 USE_TZ = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+SOCIAL_AUTH_GITHUB_SCOPE = ['user:email']
+SOCIAL_AUTH_GITHUB_KEY = os.environ.get('GITHUB_KEY')
+SOCIAL_AUTH_GITHUB_SECRET = os.environ.get('GITHUB_SECRET')
 
 SENDGRID_TEMPLATE = os.environ.get("SENDGRID_TEMPLATE")
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

@@ -14,9 +14,48 @@ def RandomCode(length=6):
     characters = string.ascii_letters + string.digits
     return ''.join(random.choice(characters) for _ in range(length))
 
-class UserProfile(models.Model):
+class UserSettings(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_profile')
     dark_mode = models.BooleanField(default=True)
+
+
+class Client(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+
+    def __str__(self):
+        return self.name
+
+
+class Invoice(models.Model):
+    STATUS_CHOICES = (
+        ('pending', 'Pending'),
+        ('paid', 'Paid'),
+        ('overdue', 'Overdue'),
+    )
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    invoice_id = models.CharField(max_length=20, unique=True)
+    client = models.ForeignKey(Client, on_delete=models.CASCADE)
+    services = models.TextField()
+    hourly_rate = models.DecimalField(max_digits=10, decimal_places=2)
+    hours_worked = models.DecimalField(max_digits=5, decimal_places=2)
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_due = models.DateField()
+    payment_status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
+
+    def __str__(self):
+        return f"Invoice {self.invoice_id} for {self.client}"
+
+    def total(self):
+        amount = self.hourly_rate * self.hours_worked
+        if amount % 1 == 0:
+            return int(amount)
+        else:
+            return amount
+
 
 
 class PasswordSecrets(models.Model):
