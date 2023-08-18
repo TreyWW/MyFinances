@@ -17,8 +17,8 @@ def navbar(request):
     if cached_navbar_items is None:
         navbar_items = load_navbar_items()
 
-        # Cache the navbar items for a certain time (e.g., 3600 seconds)
-        cache.set('navbar_items', navbar_items, 3600)
+        # Cache the sidebar items for a certain time (e.g., 3600 seconds)
+        cache.set('navbar_items', navbar_items, 60 * 60 * 3)
     else:
         navbar_items = cached_navbar_items
     context = {"navbar_items": navbar_items}

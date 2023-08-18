@@ -1,6 +1,11 @@
 {% extends 'core/pages/base.html' %}
 {% block content %}
-    <p class="text-white font-bold">{{ page }}</p>
+<p class="text-white font-bold">{{ page }}</p>
+    {# TODO SEARCH BAR #}
+<button class="mb-2 justify-between px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+    {% include 'core/components/icon.html' with icon="file-invoice" %}
+    <span>Create Invoice</span>
+</button>
 <div class="w-full overflow-hidden rounded-lg shadow-xs">
   <div class="w-full overflow-x-auto">
     <table class="w-full whitespace-no-wrap">
