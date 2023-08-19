@@ -20,7 +20,7 @@ urlpatterns = [
                   path('dashboard/invoices/create/', invoices.create.create_invoice_page, name='invoices dashboard create'),
                   path('dashboard/invoices/<str:id>', invoices.dashboard.invoices_dashboard_id, name='invoices dashboard edit'),
 
-                  path('social-auth/', include('social_django.urls', namespace='social')),
+                  path('login/external/', include('social_django.urls', namespace='social')),
                   # path('dashboard/invoices/<str:id>/edit', invoices.dashboard.invoices_dashboard_id, name='invoices dashboard'),
 
                   path('login/', other.login.login_page, name='login'),
