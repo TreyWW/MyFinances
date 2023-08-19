@@ -2,7 +2,7 @@
 title: Issue # |
 ---
 
-<!-- Please enusure your PR title follows the pattern:
+<!-- Please ensure your PR title follows the pattern:
 [Issue ID] | Short description of the changes made
 -->
 
