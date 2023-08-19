@@ -15,15 +15,16 @@
     {{ invoice.date_due | date:"d/m/Y" }}
   </td>
     <td class="px-4 py-3 text-xs title">
-        <span class="text-xs mr-2 px-2.5 font-medium py-0.5 rounded
-        {% if status == "sent" %}
-        bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300
-        {% elif status == "seen" or 1 == 1 %}
-        bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-300
+        <span class="badge badge-square rounded
+        {% if invoice.status == "sent" %}
+        badge-outline text-gray-400 border-gray-600
+        {% elif invoice.status == "seen" %}
+        badge-outline text-white border-white
         {% else %}
+        badge-outline-success
         {% endif %}
 ">
-         {{ invoice.status | default:"pending" | title }}
+         {{ invoice.status | default:"sent" | title }}
         </span>
   </td>
     <td class="px-4 py-3">

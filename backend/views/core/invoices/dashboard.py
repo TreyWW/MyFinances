@@ -28,4 +28,12 @@ def invoices_dashboard(request: HttpRequest):
 
 @login_required
 def invoices_dashboard_id(request: HttpRequest, id):
+    if id == "create":
+        return redirect("invoices dashboard create")
+    elif type(id) != "int":
+        messages.error(request, "Invalid invoice ID")
+        return redirect("invoices dashboard")
+    invoices = Invoice.objects.get(id=id)
+    if not invoices:
+        return redirect('invoices dashboard')
     return render(request, 'core/pages/invoices/dashboard/dashboard.html', )

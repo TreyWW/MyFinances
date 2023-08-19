@@ -1,7 +1,9 @@
+from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest
 from django.shortcuts import render
 
 
+@login_required
 def create_invoice_page(request: HttpRequest):
     if request.method == "POST":
         for key, value in request.POST.items():
