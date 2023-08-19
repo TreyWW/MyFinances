@@ -59,20 +59,26 @@
         <div class="divider my-4">STEP 3</div>
         <div class="my-4 max-w-screen-xl card">
             <div class="card-body">
-                <button type="button" class="btn btn-outline-success"
-                ">Add Service</button>
+                <label class="btn btn-primary" for="modal-1">Add Service</label>
                 <input class="modal-state" id="modal-1" type="checkbox"/>
                 <div class="modal">
                     <label class="modal-overlay" for="modal-1"></label>
                     <div class="modal-content flex flex-col gap-5">
                         <label for="modal-1" class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</label>
-                        <h2 class="text-xl">Modal title 1</h2>
-                        <span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Tenetur dolorum voluptate ratione dicta. Maxime cupiditate, est commodi consectetur earum iure, optio, obcaecati in nulla saepe maiores nobis iste quasi alias!</span>
-                        <div class="flex gap-3">
-                            <button class="btn btn-error btn-block">Delete</button>
-
-                            <button class="btn btn-block">Cancel</button>
+                        <h2 class="text-xl">Add Service</h2>
+                        <div class="form-field">
+                            <label for="service" class="form-label">Service Name</label>
+                            <input id="service" type="text" class="input input-bordered">
                         </div>
+                        <div class="form-field">
+                            <label for="hours" class="form-label">Hours</label>
+                            <input id="hours" type="number" class="input input-bordered">
+                        </div>
+                        <div class="form-field">
+                            <label for="pricePerHour" class="form-label">Price Per Hour</label>
+                            <input id="pricePerHour" type="number" class="input input-bordered">
+                        </div>
+                        <button class="btn btn-primary" id="saveServiceBtn">Save Service</button>
                     </div>
                 </div>
 
