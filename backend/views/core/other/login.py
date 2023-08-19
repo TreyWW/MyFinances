@@ -35,11 +35,13 @@ def login_page(request):
             AuditLog.objects.create(user=user, action="Login")
             return redirect('dashboard')
         else:
-            messages.error(request, "Invalid username or password")
+            messages.error(request, "Invalid email or password")
             return render(request, 'core/pages/login.html', {'attempted_email': email})
 
     github_enabled = True if settings.SOCIAL_AUTH_GITHUB_KEY and settings.SOCIAL_AUTH_GITHUB_SECRET else False
-    return render(request, 'core/pages/login.html', {"github_enabled": github_enabled})
+    google_enabled = True if settings.SOCIAL_AUTH_GOOGLE_OAUTH2_KEY and settings.SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET else False
+
+    return render(request, 'core/pages/login.html', {"github_enabled": github_enabled, "google_enabled": google_enabled})
 
 
 @login_required

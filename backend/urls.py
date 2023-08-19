@@ -17,10 +17,10 @@ urlpatterns = [
                   path('dashboard/settings', settings_v.view.settings_page, name='user settings'),
                   path('dashboard/profile/change_password', settings_v.view.change_password, name='user settings change_password'),
                   path('dashboard/invoices/', invoices.dashboard.invoices_dashboard, name='invoices dashboard'),
-                  path('dashboard/invoices/create/', invoices.dashboard.invoices_dashboard, name='invoices dashboard create'),
+                  path('dashboard/invoices/create/', invoices.create.create_invoice_page, name='invoices dashboard create'),
                   path('dashboard/invoices/<str:id>', invoices.dashboard.invoices_dashboard_id, name='invoices dashboard edit'),
 
-                  path('social-auth/', include('social_django.urls', namespace='social')),
+                  path('login/external/', include('social_django.urls', namespace='social')),
                   # path('dashboard/invoices/<str:id>/edit', invoices.dashboard.invoices_dashboard_id, name='invoices dashboard'),
 
                   path('login/', other.login.login_page, name='login'),

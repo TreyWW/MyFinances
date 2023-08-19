@@ -35,7 +35,11 @@ INSTALLED_APPS = ['django.contrib.staticfiles',
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 EMAIL_WHITELIST = []
-AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend', 'social_core.backends.github.GithubOAuth2',]
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'social_core.backends.github.GithubOAuth2',
+    'social_core.backends.google.GoogleOAuth2',
+]
 SECRET_KEY = os.environ.get("SECRET_KEY")
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/dashboard'
@@ -151,6 +155,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SOCIAL_AUTH_GITHUB_SCOPE = ['user:email']
 SOCIAL_AUTH_GITHUB_KEY = os.environ.get('GITHUB_KEY')
 SOCIAL_AUTH_GITHUB_SECRET = os.environ.get('GITHUB_SECRET')
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get('GOOGLE_CLIENT_IDY')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET')
 
 SENDGRID_TEMPLATE = os.environ.get("SENDGRID_TEMPLATE")
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

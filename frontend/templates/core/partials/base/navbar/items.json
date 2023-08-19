@@ -1,7 +1,7 @@
 [
     {
         "name": "Invoices",
-        "urls": ["invoices dashboard"],
+        "urls": ["invoices dashboard", "invoices dashboard create"],
         "url": "invoices dashboard",
         "icon": "file-invoice"
     },
