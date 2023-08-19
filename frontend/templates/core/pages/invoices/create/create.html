@@ -1,38 +1,116 @@
 {% extends 'core/pages/base.html' %}
 {% block content %}
-    <div class="flex flex-col w-full my-4">
-        <div class="flex justify-between mb-2">
-            <h3 class="text-sm text-gray-400 font-medium ms-2">From</h3>
-            <h3 class="text-sm text-gray-400 font-medium me-2">To</h3>
+    <form method="post">
+        <div class="divider mt-8">STEP 1</div>
+        <div class="my-4 flex w-full flex-col">
+
+            <div class="mb-2 flex justify-between">
+                <h3 class="text-sm font-medium text-gray-400 ms-2">From</h3>
+                <h3 class="text-sm font-medium text-gray-400 me-2">To</h3>
+            </div>
+            <div class="flex w-full">
+                <a class="max-w-screen-xl border border-gray-900 card me-3 hover:border-gray-500" href="{% url 'index' %}">
+                    <div class="card-body">
+                        <p class="text-base font-medium">My Company</p>
+                        <p class="text-sm">John Smith</p>
+                        <p class="text-sm">128 Road</p>
+                        <p class="text-sm">Street</p>
+                        <p class="text-sm">England</p>
+                    </div>
+                </a>
+                <a class="max-w-screen-xl border border-gray-900 card ms-3 hover:border-gray-500" href="{% url 'index' %}">
+                    <div class="card-body">
+                        <p class="text-base font-medium">Another Company</p>
+                        <p class="text-sm">Jane Doe</p>
+                        <p class="text-sm">456 Avenue</p>
+                        <p class="text-sm">Boulevard</p>
+                        <p class="text-sm">USA</p>
+                    </div>
+                </a>
+            </div>
         </div>
-        <div class="flex w-full">
-            <a class="card max-w-screen-xl me-3 border border-gray-900 hover:border-gray-500" href="{% url 'index' %}">
-                <div class="card-body">
-                    <p class="text-base font-medium">My Company</p>
-                    <p class="text-sm">John Smith</p>
-                    <p class="text-sm">128 Road</p>
-                    <p class="text-sm">Street</p>
-                    <p class="text-sm">England</p>
+        <div class="divider my-4">STEP 2</div>
+        <div class="my-4 flex w-full flex-col">
+            <div class="flex w-full">
+                <div class="max-w-screen-xl border border-gray-900 card me-3 hover:border-gray-500" href="{% url 'index' %}">
+                    <div class="card-body">
+                        <div class="form-field">
+                            <label class="form-label">Issue date</label>
+                            <input required id="dateIssued" name="date_issued" placeholder="" type="date" class="peer input input-ghost-secondary input-block">
+                            <label class="form-label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden ">
+                                <span class="form-label-alt">Please enter a valid date.</span>
+                            </label>
+                        </div>
+                    </div>
                 </div>
-            </a>
-            <a class="card max-w-screen-xl ms-3 border border-gray-900 hover:border-gray-500" href="{% url 'index' %}">
-                <div class="card-body">
-                    <p class="text-base font-medium">Another Company</p>
-                    <p class="text-sm">Jane Doe</p>
-                    <p class="text-sm">456 Avenue</p>
-                    <p class="text-sm">Boulevard</p>
-                    <p class="text-sm">USA</p>
+                <div class="max-w-screen-xl border border-gray-900 card ms-3 hover:border-gray-500" href="{% url 'index' %}">
+                    <div class="card-body">
+                        <div class="form-field">
+                            <label class="form-label">Due date</label>
+                            <input required name="date_due" id="dueDate" placeholder="" type="date" class="peer input-ghost-secondary input input-block">
+                            <label class="form-label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden ">
+                                <span class="form-label-alt">Please enter a valid date.</span>
+                            </label>
+                        </div>
+                    </div>
                 </div>
-            </a>
+            </div>
         </div>
-    </div>
-    <div class="form-field">
-        <label class="form-label">Issue date</label>
-        <input autocomplete="off" id="date" placeholder="" type="date" class="input max-w-50">
-    </div>
-    <div class="form-field">
-        <label class="form-label">Due date</label>
-        <input autocomplete="off" id="date" placeholder="" type="date" class="input max-w-50">
-    </div>
+        <div class="divider my-4">STEP 3</div>
+        <div class="my-4 max-w-screen-xl card">
+            <div class="card-body">
+                <button type="button" class="btn btn-outline-success"
+                ">Add Service</button>
+                <input class="modal-state" id="modal-1" type="checkbox"/>
+                <div class="modal">
+                    <label class="modal-overlay" for="modal-1"></label>
+                    <div class="modal-content flex flex-col gap-5">
+                        <label for="modal-1" class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</label>
+                        <h2 class="text-xl">Modal title 1</h2>
+                        <span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Tenetur dolorum voluptate ratione dicta. Maxime cupiditate, est commodi consectetur earum iure, optio, obcaecati in nulla saepe maiores nobis iste quasi alias!</span>
+                        <div class="flex gap-3">
+                            <button class="btn btn-error btn-block">Delete</button>
+
+                            <button class="btn btn-block">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex w-full overflow-x-auto">
+                    <table class="table max-w-4xl table-compact">
+                        <thead>
+                        <tr>
+                            <th>Service</th>
+                            <th>Hours</th>
+                            <th>Price Per Hour</th>
+                            <th>Total Price</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <th>Something</th>
+                            <td>2</td>
+                            <td>£5</td>
+                            <td>£10</td>
+                            <td>
+                                <button type="button" class="btn btn-outline-success btn-xs">
+                                    {% include 'core/components/icon.html' with icon="pen" tags="pe-2" %}
+                                    Edit
+                                </button>
+                                <button type="button" class="btn btn-outline-error btn-xs">
+                                    {% include 'core/components/icon.html' with icon="trash-can" tags="pe-2" %}
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn btn-primary hover:bg-purple-800 hover:border hover:border-gray-200 hover:text-gray-900">Create Invoice</button>
+    </form>
 
 {% endblock content %}
