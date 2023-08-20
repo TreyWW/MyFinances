@@ -21,10 +21,15 @@ from backend.models import *
 from django.contrib.auth import get_user_model, logout
 
 
+
+
 @login_required
 def settings_page(request: HttpRequest):
     context = {}
     context['sessions'] = Session.objects.filter()
+
+    if request.method == "POST":
+        print(f"Select data: {request.POST.get('currency')}")
     return render(request, "core/pages/settings/main.html", context)
 
 @login_required
@@ -42,3 +47,4 @@ def change_password(request: HttpRequest):
         return redirect("user settings")
 
     return render(request, "core/pages/reset_password.html", {"type": "change"})
+
