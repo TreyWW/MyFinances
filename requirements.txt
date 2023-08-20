@@ -25,3 +25,4 @@ python-memcached
 django-htmx
 django-debug-toolbar
 pytailwindcss
+environ

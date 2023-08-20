@@ -1,8 +1,11 @@
 from pathlib import Path
-import os, mimetypes, json
+import os, mimetypes, json, environ
 from django.contrib.messages import constants as messages
 
 DEBUG = True if os.environ.get("DEBUG") in ["True", "true", "TRUE", True] else False
+
+env = environ.Env()
+env.read_env()
 print(f"[BACKEND] Debug is: {DEBUG} // {os.environ.get('DEBUG')}")
 
 try:
