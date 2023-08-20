@@ -2,16 +2,14 @@ from pathlib import Path
 import os, mimetypes, json
 from django.contrib.messages import constants as messages
 
-import environ
-
-env = environ.Env()
-environ.Env.read_env()
 DEBUG = True if os.environ.get("DEBUG") in ["True", "true", "TRUE", True] else False
 
 try:
     if DEBUG:
         print("[BACKEND] Using local settings")
         from .local_settings import *
+    elif os.environ.get("DEBUG") == "":
+        exit("[BACKEND] No ENV found, or debug not set.")
     else:
         print("[BACKEND] Using production settings")
         from .prod_settings.py import *
