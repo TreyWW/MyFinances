@@ -1,6 +1,11 @@
 from pathlib import Path
 import os, mimetypes, json, environ
 from django.contrib.messages import constants as messages
+import environ
+env = environ.Env(DEBUG=(bool, False))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+print(f"test: {env('DEBUG')}")
 
 DEBUG = True if os.environ.get("DEBUG") in ["True", "true", "TRUE", True] else False
 
