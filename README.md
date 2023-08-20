@@ -2,6 +2,10 @@
 
 MyFinances is an open-source web application designed to empower individuals and teams to efficiently manage their finances. Whether you're tracking personal expenses, managing client invoices, or planning your financial goals, MyFinances provides a user-friendly platform to streamline these tasks.
 
+| PLEASE NOTE: This project is still in development, and has only just started! So none of the key features or descriptions have been fully implemented. We are beginner friendly and looking for contributors! |
+| --- |
+
+
 ## Key Features
 
 - **Expense Tracking:** Easily record and categorize your expenses, upload photos of receipts, and visualize spending patterns.
