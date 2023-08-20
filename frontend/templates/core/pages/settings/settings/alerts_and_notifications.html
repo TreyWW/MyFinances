@@ -1,0 +1,98 @@
+<div class="grid grid-cols-1 xl:grid-cols-2 xl:gap-4">
+    <div class="my-4 max-w-screen-xl card border border-gray-700 dark:border-gray-700">
+        <div class="card-body">
+            <div class="card-header">Account preferences</div>
+            <p class="text-content2">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam</p>
+            <div class="divide-y divide-gray-200 dark:divide-gray-700">
+                <!-- Item 1 -->
+
+                <div class="flex items-center justify-between py-4">
+                    <div class="flex flex-col flex-grow">
+                        <div class="text-lg font-semibold text-gray-900 dark:text-white">Company News</div>
+                        <div class="text-base font-normal text-gray-500 dark:text-gray-400">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam</div>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox"
+                               value=""
+                               class="sr-only peer">
+                        <span class="form--toggler"></span>
+                    </label>
+                    {% include 'core/components/form/toggle.html' with toggled=True %}
+
+
+                </div>
+                <!-- Item 2 -->
+                <div class="flex items-center justify-between py-4">
+                    <div class="flex flex-col flex-grow">
+                        <div class="text-lg font-semibold text-gray-900 dark:text-white">Account Activity</div>
+                        <div class="text-base font-normal text-gray-500 dark:text-gray-400">Get important notifications about you or activity you've missed</div>
+                    </div>
+                    {% include 'core/components/form/toggle.html' %}
+                </div>
+                <!-- Item 3 -->
+                <div class="flex items-center justify-between py-4">
+                    <div class="flex flex-col flex-grow">
+                        <div class="text-lg font-semibold text-gray-900 dark:text-white">Meetups Near You</div>
+                        <div class="text-base font-normal text-gray-500 dark:text-gray-400">Get an email when a Dribbble Meetup is posted close to my location</div>
+                    </div>
+                    {% include 'core/components/form/toggle.html' %}
+
+                </div>
+                <!-- Item 4 -->
+                <div class="flex items-center justify-between pt-4">
+                    <div class="flex flex-col flex-grow">
+                        <div class="text-lg font-semibold text-gray-900 dark:text-white">New Messages</div>
+                        <div class="text-base font-normal text-gray-500 dark:text-gray-400">Get Themsberg news, announcements, and product updates</div>
+                    </div>
+                    {% include 'core/components/form/toggle.html' %}
+                </div>
+            </div>
+            <button class="btn btn-primary mt-3">Save All</button>
+        </div>
+    </div>
+    <div class="my-4 max-w-screen-xl card border border-gray-700 dark:border-gray-700">
+        <div class="card-body">
+            <div class="card-header">Email Notifications</div>
+            <p class="text-content2">You can set up Themesberg to get email notifications </p>
+            <div class="divide-y divide-gray-200 dark:divide-gray-700">
+                <!-- Item 1 -->
+                <div class="flex items-center justify-between py-4">
+                    <div class="flex flex-col flex-grow">
+                        <div class="text-lg font-semibold text-gray-900 dark:text-white">Rating reminders</div>
+                        <div class="text-base font-normal text-gray-500 dark:text-gray-400">Send an email reminding me to rate an item a week after purchase</div>
+                    </div>
+                    {% include 'core/components/form/toggle.html' %}
+                </div>
+                <!-- Item 2 -->
+                <div class="flex items-center justify-between py-4">
+                    <div class="flex flex-col flex-grow">
+                        <div class="text-lg font-semibold text-gray-900 dark:text-white">Item update notifications</div>
+                        <div class="text-base font-normal text-gray-500 dark:text-gray-400">Send user and product notifications for you</div>
+                    </div>
+                    {% include 'core/components/form/toggle.html' %}
+
+                </div>
+                <!-- Item 3 -->
+                <div class="flex items-center justify-between py-4">
+                    <div class="flex flex-col flex-grow">
+                        <div class="text-lg font-semibold text-gray-900 dark:text-white">Item comment notifications</div>
+                        <div class="text-base font-normal text-gray-500 dark:text-gray-400">Send me an email when someone comments on one of my items</div>
+                    </div>
+                    {% include 'core/components/form/toggle.html' %}
+
+                </div>
+                <!-- Item 4 -->
+                <div class="flex items-center justify-between pt-4">
+                    <div class="flex flex-col flex-grow">
+                        <div class="text-lg font-semibold text-gray-900 dark:text-white">Buyer review notifications</div>
+                        <div class="text-base font-normal text-gray-500 dark:text-gray-400">Send me an email when someone leaves a review with their rating</div>
+                    </div>
+                    {% include 'core/components/form/toggle.html' %}
+
+                </div>
+            </div>
+            <button class="btn btn-primary mt-6">Save All</button>
+
+        </div>
+    </div>
+</div>
