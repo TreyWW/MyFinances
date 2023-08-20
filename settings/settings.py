@@ -3,6 +3,7 @@ import os, mimetypes, json
 from django.contrib.messages import constants as messages
 
 DEBUG = True if os.environ.get("DEBUG") in ["True", "true", "TRUE", True] else False
+print(f"[BACKEND] Debug is: {DEBUG}")
 
 try:
     if DEBUG:
