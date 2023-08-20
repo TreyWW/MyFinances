@@ -2,59 +2,61 @@
     <div class="my-4 max-w-screen-xl card border border-gray-700 dark:border-gray-700">
         <div class="card-body">
             <div class="card-header">Account preferences</div>
-                <p class="text-content2">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam</p>
-                <div class="divide-y divide-gray-200 dark:divide-gray-700">
+            <p class="text-content2">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam</p>
+            <div class="divide-y divide-gray-200 dark:divide-gray-700">
                 <form method="POST">
-                <!-- Item 1 -->
+                    {% csrf_token %}
+                    <!-- Item 1 -->
 
-                <div class="flex items-center justify-between py-4">
-                    <div class="flex flex-col flex-grow">
-                        <div class="text-lg font-semibold text-gray-900 dark:text-white">Currency</div>
-                        <div class="text-base font-normal text-gray-500 dark:text-gray-400">This will change the default currency</div>
-                    </div>
-                    
-                   <select name="currency" class="select select-solid-primary">
-							<option value="GBP">£ - GBP</option>
-							<option value="EUR">€ - EUR</option>
-							<option value="USD">$ - USD</option>
-							<option value="JPY">¥ - JPY</option>
-							<option value="IRN">₹ - IRN</option>
-							<option value="AUD">$ - AUD</option>
-							<option value="CAD">$ - CAD</option>
-						</select>
+                    <div class="flex items-center justify-between py-4">
+                        <div class="flex flex-col flex-grow">
+                            <div class="text-lg font-semibold text-gray-900 dark:text-white">Currency</div>
+                            <div class="text-base font-normal text-gray-500 dark:text-gray-400">This will change the default currency</div>
+                        </div>
 
-                </div>
-                <!-- Item 2 -->
-                <div class="flex items-center justify-between py-4">
-                    <div class="flex flex-col flex-grow">
-                        <div class="text-lg font-semibold text-gray-900 dark:text-white">Account Activity</div>
-                        <div class="text-base font-normal text-gray-500 dark:text-gray-400">Get important notifications about you or activity you've missed</div>
-                    </div>
-                    {% include 'core/components/form/toggle.html' %}
-                </div>
-                <!-- Item 3 -->
-                <div class="flex items-center justify-between py-4">
-                    <div class="flex flex-col flex-grow">
-                        <div class="text-lg font-semibold text-gray-900 dark:text-white">Meetups Near You</div>
-                        <div class="text-base font-normal text-gray-500 dark:text-gray-400">Get an email when a Dribbble Meetup is posted close to my location</div>
-                    </div>
-                    {% include 'core/components/form/toggle.html' %}
+                        <select name="currency" class="select select-solid-primary">
+                            <option value="GBP">£ - GBP</option>
+                            <option value="EUR">€ - EUR</option>
+                            <option value="USD">$ - USD</option>
+                            <option value="JPY">¥ - JPY</option>
+                            <option value="IRN">₹ - IRN</option>
+                            <option value="AUD">$ - AUD</option>
+                            <option value="CAD">$ - CAD</option>
+                        </select>
 
-                </div>
-                <!-- Item 4 -->
-                <div class="flex items-center justify-between pt-4">
-                    <div class="flex flex-col flex-grow">
-                        <div class="text-lg font-semibold text-gray-900 dark:text-white">New Messages</div>
-                        <div class="text-base font-normal text-gray-500 dark:text-gray-400">Get Themsberg news, announcements, and product updates</div>
                     </div>
-                    {% include 'core/components/form/toggle.html' %}
-                </div>
+                    <!-- Item 2 -->
+                    <div class="flex items-center justify-between py-4">
+                        <div class="flex flex-col flex-grow">
+                            <div class="text-lg font-semibold text-gray-900 dark:text-white">Account Activity</div>
+                            <div class="text-base font-normal text-gray-500 dark:text-gray-400">Get important notifications about you or activity you've missed</div>
+                        </div>
+                        {% include 'core/components/form/toggle.html' %}
+                    </div>
+                    <!-- Item 3 -->
+                    <div class="flex items-center justify-between py-4">
+                        <div class="flex flex-col flex-grow">
+                            <div class="text-lg font-semibold text-gray-900 dark:text-white">Meetups Near You</div>
+                            <div class="text-base font-normal text-gray-500 dark:text-gray-400">Get an email when a Dribbble Meetup is posted close to my location</div>
+                        </div>
+                        {% include 'core/components/form/toggle.html' %}
+
+                    </div>
+                    <!-- Item 4 -->
+                    <div class="flex items-center justify-between pt-4">
+                        <div class="flex flex-col flex-grow">
+                            <div class="text-lg font-semibold text-gray-900 dark:text-white">New Messages</div>
+                            <div class="text-base font-normal text-gray-500 dark:text-gray-400">Get Themsberg news, announcements, and product updates</div>
+                        </div>
+                        {% include 'core/components/form/toggle.html' %}
+                    </div>
+                    <button class="btn btn-primary mt-3 btn-block">Save All</button>
+                </form>
             </div>
-            <button type="submit" class="btn btn-primary mt-3">Save All</button>
         </div>
     </div>
     {% csrf_token %}
-</form>
+    </form>
     <div class="my-4 max-w-screen-xl card border border-gray-700 dark:border-gray-700">
         <div class="card-body">
             <div class="card-header">Email Notifications</div>
@@ -97,7 +99,7 @@
                 </div>
             </div>
             <button class="btn btn-primary mt-6">Save All</button>
-        
+
         </div>
     </div>
 </div>
