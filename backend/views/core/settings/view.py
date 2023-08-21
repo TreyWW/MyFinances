@@ -11,7 +11,7 @@ from backend.models import *
 @login_required
 def settings_page(request: HttpRequest):
     context = {}
-
+    
     usersettings, created = UserSettings.objects.get_or_create(user=request.user)
 
     if request.method == "POST":

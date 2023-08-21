@@ -45,6 +45,8 @@ class Invoice(models.Model):
         ('overdue', 'Overdue'),
     )
 
+
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     invoice_id = models.CharField(max_length=20, unique=True)
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
@@ -55,6 +57,7 @@ class Invoice(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     date_due = models.DateField()
     payment_status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
+    
 
     def __str__(self):
         return f"Invoice {self.invoice_id} for {self.client}"
