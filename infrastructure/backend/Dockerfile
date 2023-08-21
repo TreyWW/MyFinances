@@ -13,7 +13,10 @@ RUN pip install --upgrade pip
 RUN pip install mysql
 RUN apk add --no-cache git
 CMD ["git","--version"]
+RUN pip install mariadb
+RUN pip install mysqlclient
 RUN pip install -r infrastructure/backend/requirements.txt
+
 
 # Set the entrypoint
 #COPY ../scripts /infrastructure/scripts/
