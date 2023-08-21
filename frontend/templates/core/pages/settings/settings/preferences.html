@@ -11,13 +11,11 @@
                 </div>
 
                 <select name="currency" class="select select-solid-primary w-[125px]">
-                    <option value="GBP">£ - GBP</option>
-                    <option value="EUR">€ - EUR</option>
-                    <option value="USD">$ - USD</option>
-                    <option value="JPY">¥ - JPY</option>
-                    <option value="IRN">₹ - IRN</option>
-                    <option value="AUD">$ - AUD</option>
-                    <option value="CAD">$ - CAD</option>
+                    {% for code, info in currency_signs.items %}
+                        <option value="{{ code }}" {% if currency == code %}selected{% endif %}>
+                            {{ info.symbol }} - {{ code }}
+                        </option>
+                    {% endfor %}
                 </select>
             </div>
         </div>

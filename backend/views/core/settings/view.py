@@ -1,36 +1,33 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.sessions.models import Session
-from django.http import HttpResponse, HttpRequest, HttpResponseBadRequest, HttpResponseForbidden, \
-    HttpResponseServerError
+from django.http import HttpRequest
 from django.shortcuts import render, redirect
-import google_auth_oauthlib.flow
-from django.urls import reverse
-from googleapiclient.discovery import build
-from django.shortcuts import redirect
-from django.contrib.auth import authenticate, login, update_session_auth_hash
-from django.conf import settings
-from django.utils.crypto import get_random_string
-from google.oauth2 import id_token
-from google.auth.transport import requests as google_requests
+from django.contrib.auth import update_session_auth_hash
 
 from backend.decorators import *
-from backend.utils import Notification, Toast
-import json
 from backend.models import *
-
-from django.contrib.auth import get_user_model, logout
-
-
 
 
 @login_required
 def settings_page(request: HttpRequest):
     context = {}
-    context['sessions'] = Session.objects.filter()
+
+    usersettings, created = UserSettings.objects.get_or_create(user=request.user)
 
     if request.method == "POST":
-        print(f"Select data: {request.POST.get('currency')}")
+        currency = request.POST.get('currency')
+        if currency:
+            usersettings.currency = currency
+            usersettings.save()
+
+    context.update ({
+        'sessions': Session.objects.filter(),
+        'currency': usersettings.currency,
+        'currency_signs': usersettings.CURRENCIES
+    })
+
     return render(request, "core/pages/settings/main.html", context)
+
 
 @login_required
 def change_password(request: HttpRequest):
@@ -47,4 +44,3 @@ def change_password(request: HttpRequest):
         return redirect("user settings")
 
     return render(request, "core/pages/reset_password.html", {"type": "change"})
-
