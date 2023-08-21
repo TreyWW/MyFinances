@@ -1,33 +1,26 @@
-<div class="grid grid-cols-1 xl:grid-cols-2 xl:gap-4">
-    <div class="my-4 max-w-screen-xl card border border-gray-700 dark:border-gray-700">
-        <div class="card-body">
-            <div class="card-header">Account preferences</div>
-                <p class="text-content2">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam</p>
-                <div class="divide-y divide-gray-200 dark:divide-gray-700">
-                
+<form method="post" class="my-4 max-w-screen-xl card border border-gray-700 dark:border-gray-700">
+    {% csrf_token %}
+    <div class="card-body">
+        <div class="card-header">Account preferences</div>
+        <p class="text-content2">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam</p>
+        <div class="divide-y divide-gray-200 dark:divide-gray-700">
+            <div class="flex items-center justify-between py-4">
+                <div class="flex flex-col flex-grow">
+                    <div class="text-lg font-semibold text-gray-900 dark:text-white">Currency</div>
+                    <div class="text-base font-normal text-gray-500 dark:text-gray-400 whitespace-nowrap">This will change the default currency</div>
+                </div>
 
-                <div class="flex items-center justify-between py-4">
-                    <div class="flex flex-col flex-grow">
-                        <div class="text-lg font-semibold text-gray-900 dark:text-white">Currency</div>
-                        <div class="text-base font-normal text-gray-500 dark:text-gray-400">This will change the default currency</div>
-                    </div>
-					
-					<form method="POST">
-                   		<select name="currency" class="select select-solid-primary">
-							<option value="GBP">£ - GBP</option>
-							<option value="EUR">€ - EUR</option>
-							<option value="USD">$ - USD</option>
-							<option value="JPY">¥ - JPY</option>
-							<option value="IRN">₹ - IRN</option>
-							<option value="AUD">$ - AUD</option>
-							<option value="CAD">$ - CAD</option>
-						</select>
-					</div>
-					</div>
-					<button type="submit" class="btn btn-primary mt-6">Save All</button>
-					</div>
-
-					{% csrf_token %}
-				</form>
-		</div>
-	</div>
+                <select name="currency" class="select select-solid-primary w-[125px]">
+                    <option value="GBP">£ - GBP</option>
+                    <option value="EUR">€ - EUR</option>
+                    <option value="USD">$ - USD</option>
+                    <option value="JPY">¥ - JPY</option>
+                    <option value="IRN">₹ - IRN</option>
+                    <option value="AUD">$ - AUD</option>
+                    <option value="CAD">$ - CAD</option>
+                </select>
+            </div>
+        </div>
+        <button class="btn btn-primary mb-2">Save All</button>
+    </div>
+</form>
