@@ -26,10 +26,18 @@ from django.contrib.auth import get_user_model, logout
 @login_required
 def settings_page(request: HttpRequest):
     context = {}
+    
+    usersettings, created = UserSettings.objects.get_or_create(user=request.user)
+    
     context['sessions'] = Session.objects.filter()
+    context['currency'] = usersettings.currency
 
     if request.method == "POST":
-        print(f"Select data: {request.POST.get('currency')}")
+        currency = request.POST.get('currency')
+        if currency:
+            usersettings.currency = currency
+            usersettings.save()
+
     return render(request, "core/pages/settings/main.html", context)
 
 @login_required

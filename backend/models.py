@@ -15,8 +15,19 @@ def RandomCode(length=6):
     return ''.join(random.choice(characters) for _ in range(length))
 
 class UserSettings(models.Model):
+    CURRENCY_CHOICES = [
+        ("GBP", "British Pound Sterling"),
+        ("EUR", "Euro"),
+        ("USD", "United States Dollar"),
+        ("JPY", "Japanese Yen"),
+        ("INR", "Indian Rupee"),
+        ("AUD", "Australian Dollar"),
+        ("CAD", "Canadian Dollar"),
+    ]
+    
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_profile')
     dark_mode = models.BooleanField(default=True)
+    currency = models.CharField(max_length=3, default="GBP", choices=CURRENCY_CHOICES)
 
 
 class Client(models.Model):
@@ -35,6 +46,8 @@ class Invoice(models.Model):
         ('overdue', 'Overdue'),
     )
 
+
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     invoice_id = models.CharField(max_length=20, unique=True)
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
@@ -45,6 +58,7 @@ class Invoice(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     date_due = models.DateField()
     payment_status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
+    
 
     def __str__(self):
         return f"Invoice {self.invoice_id} for {self.client}"
