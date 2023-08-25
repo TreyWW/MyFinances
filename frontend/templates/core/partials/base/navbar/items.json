@@ -7,8 +7,8 @@
     },
     {
         "name": "Receipts",
-        "urls": ["invoices dashboard"],
-        "url": "",
+        "urls": ["receipts dashboard"],
+        "url": "receipts dashboard",
         "icon": "receipt"
     },
     {

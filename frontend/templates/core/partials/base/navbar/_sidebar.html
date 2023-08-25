@@ -1,15 +1,15 @@
 <div class="py-4 text-gray-500 dark:text-gray-400">
-        <a class="ml-6 text-lg font-bold text-gray-800 dark:text-gray-200" href="#"
-        >
-            My Finances
-        </a>
-        <ul class="mt-6">
-            {% include 'core/partials/base/navbar/item.html' with name="Dashboard" names="dashboard," icon="house" url="dashboard" %}
+    <a class="ml-6 text-lg font-bold text-gray-800 dark:text-gray-200" href="#"
+    >
+        My Finances
+    </a>
+    <ul class="mt-6">
+        {% include 'core/partials/base/navbar/item.html' with name="Dashboard" names="dashboard," icon="house" url="dashboard" %}
 
-        </ul>
-        <ul>
-            {% for item in navbar_items %}
-                {% include 'core/partials/base/navbar/item.html' with name=item.name names=item.urls url=item.url icon=item.icon %}
-            {% endfor %}
-        </ul>
-    </div>
+    </ul>
+    <ul>
+        {% for item in navbar_items %}
+            {% include 'core/partials/base/navbar/item.html' with name=item.name names=item.urls url=item.url icon=item.icon %}
+        {% endfor %}
+    </ul>
+</div>
