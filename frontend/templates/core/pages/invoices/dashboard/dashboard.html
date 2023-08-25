@@ -2,51 +2,44 @@
 {% block content %}
     <p class="text-white font-bold">{{ page }}</p>
     {# TODO SEARCH BAR #}
-    <a class="btn btn-primary mb-4" href="{% url 'invoices dashboard create' %}">
+    <a class="btn btn-primary mb-4 btn-block" href="{% url 'invoices dashboard create' %}">
         {% include 'core/components/icon.html' with icon="file-invoice" tags="me-2" %}
         Create Invoice
     </a>
-    <div class="w-full overflow-hidden rounded-lg shadow-xs">
-        <div class="w-full overflow-x-auto">
-            <table class="w-full whitespace-no-wrap">
-                <thead>
-                <tr
-                        class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800"
-                >
-                    <th class="px-4 py-3">Invoice ID</th>
-                    <th class="px-4 py-3">Client Name</th>
-                    <th class="px-4 py-3">Amount</th>
-                    <th class="px-4 py-3">Date</th>
-                    <th class="px-4 py-3">Payment Status</th>
-                    <th class="px-4 py-3">Actions</th>
-                </tr>
-                </thead>
-                <tbody
-                        class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800"
-                >
-                {% include 'core/pages/invoices/dashboard/_rows.html' %}
-                </tbody>
-            </table>
-        </div>
-        <div
-
-                class="grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800"
-        >
-            <span class="flex items-center col-span-3">
+    <div class="flex w-full overflow-x-auto">
+        <table class="table-zebra table">
+            <thead>
+            <tr>
+                <th>Invoice ID</th>
+                <th>Client Name</th>
+                <th>Amount</th>
+                <th>Date</th>
+                <th>Payment Status</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% include 'core/pages/invoices/dashboard/_rows.html' %}
+            <tr>
+                <td colspan="2"><span class="flex items-center col-span-3">
               Showing {{ invoices.count }} of {{ invoices.count }}
-            </span>
-            <span class="col-span-2"></span>
-            <!-- Pagination -->
-            <span class="flex col-span-4 mt-2 sm:mt-auto sm:justify-end">
-                <div class="pagination pagination-compact pagination-bordered">
-                    <input type="radio" name="pagination-3" id="pgn-7"/>
-                    <label for="pgn-7" class="btn">1</label>
-                    <input type="radio" name="pagination-3" id="pgn-8"/>
-                    <label for="pgn-8" class="btn">2</label>
-                    <input type="radio" name="pagination-3" id="pgn-9"/>
-                    <label for="pgn-9" class="btn">3</label>
-                </div>
-            </span>
-        </div>
+            </span></td>
+                <td></td>
+                <td colspan="3">
+                    <span class="flex col-span-4 mt-2 sm:mt-auto sm:justify-end">
+                        <div class="pagination pagination-compact pagination-bordered">
+                            <input type="radio" name="pagination-3" id="pgn-7"/>
+                            <label for="pgn-7" class="btn">1</label>
+                            <input type="radio" name="pagination-3" id="pgn-8"/>
+                            <label for="pgn-8" class="btn">2</label>
+                            <input type="radio" name="pagination-3" id="pgn-9"/>
+                            <label for="pgn-9" class="btn">3</label>
+                            <input type="radio" name="pagination-3" id="pgn-9"/>
+                        </div>
+                    </span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 {% endblock content %}

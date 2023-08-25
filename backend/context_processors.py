@@ -18,7 +18,7 @@ def navbar(request):
         navbar_items = load_navbar_items()
 
         # Cache the sidebar items for a certain time (e.g., 3600 seconds = 1 hr)
-        cache.set('navbar_items', navbar_items, 60 * 60 * 3) # 3 hrs
+        cache.set('navbar_items', navbar_items, 60 * 60 * 3)  # 3 hrs
     else:
         navbar_items = cached_navbar_items
     context = {"navbar_items": navbar_items}
@@ -41,7 +41,6 @@ def toasts(request):
             'toasts': toasts,
         }
     return {}
-
 
 # def notifications(request: HttpRequest):
 #     if request.user.is_authenticated:
