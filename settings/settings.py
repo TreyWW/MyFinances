@@ -187,8 +187,10 @@ AWS_S3_REGION_NAME = os.environ.get('AWS_S3_REGION_NAME')
 AWS_S3_FILE_OVERWRITE = False
 AWS_DEFAULT_ACL = None
 AWS_S3_VERITY = True
+AWS_ENABLED = True if os.environ.get('AWS_ENABLED') in [True, "True", "true", "TRUE"] else False
 
-if AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY:
+if (AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY) and AWS_ENABLED:
+    print("[BACKEND] AWS S3 Media storage is enabled.")
     DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 SENDGRID_TEMPLATE = os.environ.get("SENDGRID_TEMPLATE")

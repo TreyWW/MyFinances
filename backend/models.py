@@ -19,10 +19,12 @@ class UserSettings(models.Model):
     dark_mode = models.BooleanField(default=True)
 
 
-class Receipts(models.Model):
+class Receipt(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     image = models.ImageField(upload_to='receipts')
+    date = models.DateField(null=True, blank=True)
+    date_uploaded = models.DateTimeField(auto_now=True)
 
 class Client(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
