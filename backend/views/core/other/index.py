@@ -23,14 +23,4 @@ from django.conf import settings
 
 @login_required()
 def dashboard(request: HttpRequest):
-    if request.method == "POST":
-        img = request.FILES.get('filename')
-        if img:
-            receipt = Receipts.objects.create(
-                user=request.user,
-                name="test",
-                image=img
-            )
-        else:
-            print(f"No image found: {request.FILES}")
-    return render(request, 'core/pages/dashboard.html', {'receipts': Receipts.objects.all()})
+    return render(request, 'core/pages/dashboard.html', {})

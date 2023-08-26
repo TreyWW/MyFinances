@@ -22,7 +22,9 @@ urlpatterns = [
     path('dashboard/receipts', receipts.dashboard.receipts_dashboard, name='receipts dashboard'),
 
     path('login/external/', include('social_django.urls', namespace='social')),
-    # path('dashboard/invoices/<str:id>/edit', invoices.dashboard.invoices_dashboard_id, name='invoices dashboard'),
+
+    path('api/v1/receipts/delete/<int:id>', v1.receipts.delete.receipt_delete, name='api v1 receipts delete'),
+    path('api/v1/receipts/new', v1.receipts.new.receipt_create, name='api v1 receipts new'),
 
     path('login/', other.login.login_page, name='login'),
     path('logout/', other.login.logout_view, name='logout'),

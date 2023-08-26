@@ -29,10 +29,12 @@ class UserSettings(models.Model):
     currency = models.CharField(max_length=3, default="GBP", choices=[(code, info["name"]) for code, info in CURRENCIES.items()])
 
 
-class Receipts(models.Model):
+class Receipt(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     image = models.ImageField(upload_to='receipts')
+    date = models.DateField(null=True, blank=True)
+    date_uploaded = models.DateTimeField(auto_now=True)
 
 class Client(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
