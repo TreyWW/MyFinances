@@ -52,3 +52,6 @@
         event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
     })
 </script>
+<div hx-swap-oob="beforeend:#toasts">
+    {% include 'core/partials/base/toasts.html' %}
+</div>
