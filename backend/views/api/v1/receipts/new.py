@@ -1,3 +1,7 @@
+import os
+from pathlib import Path
+
+import requests
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, JsonResponse
@@ -32,6 +36,16 @@ def receipt_create(request: HttpRequest):
         image=file,
         date=date
     )
-    print("created")
+    r = requests.post('https://ocr.asprise.com/api/v1/receipt', data={
+        'api_key': 'TEST',
+        'recognizer': 'auto'},
+      files=
+      {"file":
+           open(os.path.join(Path(__file__).resolve().parent.parent.parent.parent.parent.parent, f"media/receipts/{file}"), "rb")
+       }
+      )
+
+    print(r.json())
+
     messages.success(request, f"Receipt added with the name of {receipt.name}")
     return render(request, 'core/pages/receipts/_search_results.html', {'receipts': Receipt.objects.filter(user=request.user)})

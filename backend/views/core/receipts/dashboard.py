@@ -4,7 +4,6 @@ from django.db.models import Q
 from django.http import HttpRequest
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from networkx import reverse
 
 from backend.models import Receipt
 
@@ -17,17 +16,17 @@ def receipts_dashboard(request: HttpRequest):
         return render(request, 'core/pages/receipts/_search_results.html', {'receipts': results})
 
     reversed_new = reverse_lazy('api v1 receipts new')
-    print(reversed_new)
+
     context = {"modal_data": [{
         "id": "receipt-modal",
         "title": "Upload a receipt",
         "action": {
             "text": "Add Receipt", "method": "post",
-            "extra": f"enctype=multipart/form-data hx-post={reversed_new} hx-target=#results",
+            "extra": f"enctype=multipart/form-data hx-post={reversed_new} hx-target=#items",
             "fields": [
                 {
                     "type": "text", "name": "receipt_name",
-                    "required": False, "label": "Receipt name", "placeholder": "Black Pen",
+                    "required": False, "label": "Receipt name", "placeholder": "Black Pen"
                 },
                 {
                     "type": "file", "name": "receipt_image",
@@ -40,6 +39,8 @@ def receipts_dashboard(request: HttpRequest):
 
             ]
         }
-    }], 'receipts': Receipt.objects.filter(user=request.user).order_by('date')}
+    }],
+        'receipts': Receipt.objects.filter(user=request.user).order_by('date')
+    }
 
     return render(request, "core/pages/receipts/dashboard.html", context)
