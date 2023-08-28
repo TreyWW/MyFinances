@@ -1,6 +1,7 @@
 from pathlib import Path
 import os, mimetypes, json, environ
 from django.contrib.messages import constants as messages
+
 import environ
 
 env = environ.Env(DEBUG=(bool, False))
@@ -55,6 +56,8 @@ ROOT_URLCONF = 'backend.urls'
 SESSION_COOKIE_AGE = 1800
 SESSION_ENGINE = "django.contrib.sessions.backends.db"
 STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 STATICFILES_DIRS = [BASE_DIR / "frontend/static", ]
 mimetypes.add_type("text/javascript", ".js", True)
