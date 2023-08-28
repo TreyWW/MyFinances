@@ -33,6 +33,7 @@ class Receipt(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     image = models.ImageField(upload_to='receipts')
+    total_price = models.FloatField(null=True, blank=True)
     date = models.DateField(null=True, blank=True)
     date_uploaded = models.DateTimeField(auto_now=True)
 

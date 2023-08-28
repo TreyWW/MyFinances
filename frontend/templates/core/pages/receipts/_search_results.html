@@ -3,6 +3,7 @@
     <table class="table">
         <thead>
         <tr>
+            <th>ID</th>
             <th>Date</th>
             <th>Name</th>
             <th>Amount</th>
@@ -12,10 +13,13 @@
         <tbody>
         {% if receipts %}
             {% for row in receipts %}
-                <tr>
+                <tr id="row-{{ row.id }}">
+                    <td>
+                        <label class="link link-primary" for="modal-receipt-{{ row.id }}">{{ row.id }}</label>
+                    </td>
                     <td>{{ row.date }}</td>
                     <td>{{ row.name }}</td>
-                    <td></td>
+                    <td>{{ currency }}{{ row.total_price }}</td>
                     <td>
                         <form method="post">
                             <label class="btn btn-outline-success btn-sm" for="modal-receipt-{{ row.id }}">Preview</label>

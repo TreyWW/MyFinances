@@ -45,7 +45,12 @@ def receipt_create(request: HttpRequest):
        }
       )
 
-    print(r.json())
+    receipt_json = r.json()
+
+    if receipt_json.get("total"):
+        # Todo: add currency option
+        receipt.total_price = receipt_json.get("total")
+        receipt.save()
 
     messages.success(request, f"Receipt added with the name of {receipt.name}")
     return render(request, 'core/pages/receipts/_search_results.html', {'receipts': Receipt.objects.filter(user=request.user)})
