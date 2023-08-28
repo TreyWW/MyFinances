@@ -4,11 +4,10 @@ about: Suggest an enhancement or improvement for the project
 title: "[Enhance] "
 labels: enhance
 assignees: ''
-
 ---
 
+# Before you add this enhance issue, please check all of the issues in this project to ensure it doesn't already exist
 
-##before you add this enhance issue, please check all of the issues in this project to ensure it doesn't already exists
 I believe `this enhancement` should be added!
 
 ## What can this enhancement add to the project?
