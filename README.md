@@ -124,7 +124,7 @@ Thank you for your contributions!
 <table>
   <tbody>
     <tr>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/tomkinane"><img src="https://avatars.githubusercontent.com/u/92635361?v=4?s=100" width="100px;" alt="Tom"/><br /><sub><b>Tom</b></sub></a><br /><a href="#code-tomkinane" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/tomkinane"><img src="https://avatars.githubusercontent.com/u/92635361?v=4?s=100" width="100px;" alt="Tom"/><br /><sub><b>Tom</b></sub></a><br /><a href="#code-tomkinane" title="Code">💻</a> <a href="#design-tomkinane" title="Design">🎨</a></td>
     </tr>
   </tbody>
 </table>
