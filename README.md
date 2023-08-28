@@ -3,8 +3,7 @@
 MyFinances is an open-source web application designed to empower individuals and teams to efficiently manage their finances. Whether you're tracking personal expenses, managing client invoices, or planning your financial goals, MyFinances provides a user-friendly platform to streamline these tasks.
 
 | PLEASE NOTE: This project is still in development, and has only just started! So none of the key features or descriptions have been fully implemented. We are beginner friendly and looking for contributors! |
-| --- |
-
+|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 
 ## Key Features
 
@@ -116,24 +115,65 @@ Thank you for your contributions!
 
 ---
 
-## Contributors
+#### 🌟 A very special thank you to all of our contributors 🌟
 
-<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore-start -->
-<!-- markdownlint-disable -->
 <table>
-  <tbody>
-    <tr>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/TreyWW"><img src="https://avatars.githubusercontent.com/u/73353716?v=4?s=100" width="100px;" alt="Trey"/><br /><sub><b>Trey</b></sub></a><br /><a href="#test-TreyWW" title="Tests">⚠️</a> <a href="#projectManagement-TreyWW" title="Project Management">📆</a> <a href="#maintenance-TreyWW" title="Maintenance">🚧</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/tomkinane"><img src="https://avatars.githubusercontent.com/u/92635361?v=4?s=100" width="100px;" alt="Tom"/><br /><sub><b>Tom</b></sub></a><br /><a href="#code-tomkinane" title="Code">💻</a></td>
-    </tr>
-  </tbody>
+  <tr>
+     <td align="center">
+       <a href="https://github.com/TreyWW">
+          <img src="https://github.com/TreyWW.png" width="100px;" alt=""/>
+          <br />
+          <sub>
+             <b>
+                Trey WW
+             </b>
+          </sub>
+       </a>
+       <br />
+       <a href="https://github.com/TreyWW/MyFinances" title="Project Lead">👑</a>
+       <a href="https://github.com/TreyWW/MyFinances/commits?author=TreyWW" title="Backend">🖥</a>
+    </td>
+    <td align="center">
+       <a href="https://github.com/tomkinane">
+          <img src="https://github.com/tomkinane.png" width="100px;" alt=""/>
+          <br />
+          <sub>
+             <b>
+                Tom
+             </b>
+          </sub>
+       </a>
+       <br />
+       <a href="https://github.com/TreyWW/MyFinances/commits?author=tomkinane" title="Frontend">🎨</a>
+    </td>
+       <td align="center">
+           <a href="https://github.com/Z3nKrypt">
+               <img src="https://github.com/Z3nKrypt.png" width="100px;" alt=""/>
+               <br/>
+               <sub>
+                   <b>
+                       Jacob
+                   </b>
+               </sub>
+           </a>
+           <br/>
+           <a href="https://github.com/TreyWW/MyFinances/commits?author=Z3nKrypt" title="Documentation">📖</a>
+       </td>
+       <td align="center">
+           <a href="https://github.com/chavi362">
+               <img src="https://github.com/chavi362.png" width="100px;" alt=""/>
+               <br/>
+               <sub>
+                   <b>
+                       chavi362
+                   </b>
+               </sub>
+           </a>
+           <br/>
+           <a href="https://github.com/TreyWW/MyFinances/commits?author=chavi362" title="Documentation">📖</a>
+       </td>
+  </tr>
 </table>
-
-<!-- markdownlint-restore -->
-<!-- prettier-ignore-end -->
-
-<!-- ALL-CONTRIBUTORS-LIST:END -->
 
 ---
 __Note:__ This README.md is a living document and might be updated over time. Always refer to the latest version when contributing and developing.
