@@ -121,6 +121,13 @@ Thank you for your contributions!
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Z3nKrypt"><img src="https://avatars.githubusercontent.com/u/129528690?v=4?s=100" width="100px;" alt="Z3nKrypt"/><br /><sub><b>Z3nKrypt</b></sub></a><br /><a href="#doc-Z3nKrypt" title="Documentation">📖</a></td>
+    </tr>
+  </tbody>
+</table>
 
 <!-- markdownlint-restore -->
 <!-- prettier-ignore-end -->
