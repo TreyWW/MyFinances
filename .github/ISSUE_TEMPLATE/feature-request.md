@@ -1,23 +1,21 @@
 ---
-name: Feature request
-about: Suggest a new feature for this project
-title: "[Feature RQ] "
-labels: new feature
+name: Feature Request
+about: Describe this issue template's purpose here.
+title: "[IDEA] "
+labels: discussion, idea
 assignees: ''
 
 ---
 
-Some description about the idea
+I believe `this idea` should be added! 
 
-## Preconditions:
-Past issue has finished to allow blah blah
+## What can this idea add to the project?
+- 
+- 
 
-## Acceptance Criteria:
-- Please do task a
-- Please do task b
-
-## Definition of Done:
-- [ ] Created tests/urls logged_in and unlogged_in json objects for any added URLS
-- [ ] Created tests/views for any added VIEWS
-- [ ] Code has been tested with both `python manage.py urls_test` and ` python manage.py test_views`
-- [ ] All of Acceptance Criteria is complete
+## What areas does this idea come under? <!-- remove all that dont apply -->
+- Frontend <!-- (UI, Design) -->
+- Backend <!-- (Logic) -->
+- Test Cases
+- Documentation Updates or Github Content
+<!-- Add any others you think are neccessary! -->

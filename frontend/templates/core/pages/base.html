@@ -10,7 +10,6 @@
      :class="{ 'overflow-hidden': isSideMenuOpen}">
     {% include 'core/partials/base/navbar/_sidebar_pc.html' %}
     {% include 'core/partials/base/navbar/_sidebar_mobile.html' %}
-
     <div class="flex flex-1 flex-col">
         <!-- header -->
         {% include 'core/partials/base/topbar/topbar.html' %}
@@ -20,6 +19,8 @@
                 <!-- MAIN PAGE -->
                 {% include 'core/partials/base/tabinator.html' %}
                 {% include 'core/partials/base/toasts.html' %}
+                {% include 'core/components/modal.html' with modals=modals %}
+
                 {% block content %}
 
                 {% endblock content %}

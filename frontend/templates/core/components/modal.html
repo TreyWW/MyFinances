@@ -1,16 +1,21 @@
 {% for modal in modals %}
-<label class="btn btn-primary" for="modal-1">Open Modal</label>
-<input class="modal-state" id="{{ modal.id }}" type="checkbox" />
-<div class="modal">
-	<label class="modal-overlay" for="{{ modal.id }}"></label>
-	<div class="modal-content flex flex-col gap-5">
-		<label for="{{ modal.id }}" class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</label>
-		<h2 class="text-xl">{{ modal.title }}</h2>
-		<span>{{ modal.text }}</span>
-		<div class="flex gap-3">
-			<button class="btn btn-error btn-block">Delete</button>
-			<button class="btn btn-block" for="{{ modal.id }}">Cancel</button>
-		</div>
-	</div>
-</div>
+    <input class="modal-state" id="{{ modal.id }}" type="checkbox"/>
+    <div class="modal">
+        <label class="modal-overlay" for="{{ modal.id }}"></label>
+        <div class="modal-content flex flex-col gap-5 w-full">
+            <label for="{{ modal.id }}" class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</label>
+            <h2 class="text-xl">{{ modal.title }}</h2>
+            <span>{{ modal.text }}</span>
+            <div class="flex gap-3">
+                {% if modal.action.type == "anchor" %}
+                    <a href="{{ modal.action.href }}" class="btn btn-{{ modal.action.color | default:"primary" }} btn-block">{{ modal.action.text }}</a>
+                    <label class="btn btn-block" for="{{ modal.id }}">Cancel</label>
+                {% else %}
+                    <button class="btn btn-{{ modal.action.color | default:"primary" }} btn-block">{{ modal.action.text }}</button>
+                    <label class="btn btn-block" for="{{ modal.id }}">Cancel</label>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
 {% endfor %}
