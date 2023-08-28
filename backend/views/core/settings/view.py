@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.sessions.models import Session
+from django.core.cache import cache
 from django.http import HttpRequest
 from django.shortcuts import render, redirect
 from django.contrib.auth import update_session_auth_hash
@@ -19,6 +20,8 @@ def settings_page(request: HttpRequest):
         if currency:
             usersettings.currency = currency
             usersettings.save()
+            cache.set("currency", currency)
+            cache.set("currency_symbol", usersettings.CURRENCIES.get(currency, {}).get('symbol'))
 
     context.update ({
         'sessions': Session.objects.filter(),

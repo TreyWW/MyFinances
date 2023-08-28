@@ -29,6 +29,25 @@ def navbar(request):
 def extras(request: HttpRequest):
     data = {}
 
+    currency_symbol_cache = cache.get("currency_symbol")
+    currency_cache = cache.get("currency")
+
+    if currency_cache is None or currency_symbol_cache is None:
+        user_settings, _ = UserSettings.objects.get_or_create(user=request.user)
+        currency = user_settings.currency
+        currency_symbol = UserSettings.CURRENCIES.get(currency, {}).get('symbol', '£')
+
+        cache.set("currency_symbol", currency_symbol)
+        cache.set("currency", currency)
+    else:
+        currency = currency_cache
+        currency_symbol = currency_symbol_cache
+
+    data.update({
+        "currency": currency,
+        "currency_symbol": currency_symbol
+    })
+
     data['git_branch'] = os.environ.get('BRANCH')
     data['git_version'] = os.environ.get('VERSION')
     data['modals'] = [
@@ -45,7 +64,6 @@ def toasts(request):
             'toasts': toasts,
         }
     return {}
-
 
 # def notifications(request: HttpRequest):
 #     if request.user.is_authenticated:

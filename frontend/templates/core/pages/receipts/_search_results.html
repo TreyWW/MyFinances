@@ -19,7 +19,7 @@
                     </td>
                     <td>{{ row.date }}</td>
                     <td>{{ row.name }}</td>
-                    <td>{{ currency }}{{ row.total_price }}</td>
+                    <td>{{ currency_symbol }}{{ row.total_price | default:"0.00" }}</td>
                     <td>
                         <form method="post">
                             <label class="btn btn-outline-success btn-sm" for="modal-receipt-{{ row.id }}">Preview</label>

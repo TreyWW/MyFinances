@@ -5,7 +5,7 @@ from django.http import HttpRequest
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 
-from backend.models import Receipt
+from backend.models import Receipt, UserSettings
 
 
 @login_required
