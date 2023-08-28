@@ -6,7 +6,7 @@ labels: enhance
 assignees: ''
 ---
 
-# Before you add this enhance issue, please check all of the issues in this project to ensure it doesn't already exist
+## Before you add this enhance issue, please check all of the issues in this project to ensure it doesn't already exist
 
 I believe `this enhancement` should be added!
 
