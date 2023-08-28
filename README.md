@@ -125,6 +125,7 @@ Thank you for your contributions!
   <tbody>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/TreyWW"><img src="https://avatars.githubusercontent.com/u/73353716?v=4?s=100" width="100px;" alt="Trey"/><br /><sub><b>Trey</b></sub></a><br /><a href="#test-TreyWW" title="Tests">⚠️</a> <a href="#projectManagement-TreyWW" title="Project Management">📆</a> <a href="#maintenance-TreyWW" title="Maintenance">🚧</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/tomkinane"><img src="https://avatars.githubusercontent.com/u/92635361?v=4?s=100" width="100px;" alt="Tom"/><br /><sub><b>Tom</b></sub></a><br /><a href="#code-tomkinane" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
