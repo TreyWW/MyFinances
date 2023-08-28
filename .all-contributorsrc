@@ -14,11 +14,12 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/73353716?v=4",
       "profile": "https://github.com/TreyWW",
       "contributions": [
-        "test",
         "projectManagement",
+        "code",
         "maintenance"
-        },
-        {
+      ]
+    },
+    {
       "login": "tomkinane",
       "name": "Tom",
       "avatar_url": "https://avatars.githubusercontent.com/u/92635361?v=4",
