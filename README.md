@@ -115,4 +115,17 @@ Refer to the "Getting Started" section in this README.md for setting up the deve
 Thank you for your contributions!
 
 ---
+
+## Contributors
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+---
 __Note:__ This README.md is a living document and might be updated over time. Always refer to the latest version when contributing and developing.
