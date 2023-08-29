@@ -29,6 +29,9 @@ def navbar(request):
 def extras(request: HttpRequest):
     data = {}
 
+    if not request.user.is_authenticated:
+        return data
+
     currency_symbol_cache = cache.get("currency_symbol")
     currency_cache = cache.get("currency")
 

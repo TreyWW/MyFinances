@@ -15,4 +15,4 @@ def receipt_delete(request: HttpRequest, id: int):
         return JsonResponse(status=404)
 
     receipt.delete()
-    return render(request, 'core/pages/receipts/_search_results.html', {'receipts': Receipt.objects.filter(user=request.user)})
+    return render(request, 'core/pages/receipts/_search_results.html', {'receipts': Receipt.objects.filter(user=request.user).order_by('-date')})

@@ -10,19 +10,23 @@ from backend.models import Receipt, UserSettings
 
 @login_required
 def receipts_dashboard(request: HttpRequest):
+    context = {}
+
     if request.htmx:
         search_text = request.POST.get('search')
-        results = Receipt.objects.filter(user=request.user).filter(Q(name__icontains=search_text) | Q(date__icontains=search_text))
-        return render(request, 'core/pages/receipts/_search_results.html', {'receipts': results})
-
-    reversed_new = reverse_lazy('api v1 receipts new')
+        results = (Receipt.objects.filter(user=request.user)
+                   .filter(Q(name__icontains=search_text) | Q(date__icontains=search_text)).order_by('-date'))
+        context.update({
+            'receipts': results
+        })
+        return render(request, 'core/pages/receipts/_search_results.html', context)
 
     context = {"modal_data": [{
         "id": "receipt-modal",
         "title": "Upload a receipt",
         "action": {
             "text": "Add Receipt", "method": "post",
-            "extra": f"enctype=multipart/form-data hx-post={reversed_new} hx-target=#items",
+            "extra": f"enctype=multipart/form-data hx-post={reverse_lazy('api v1 receipts new')} hx-target=#items hx-refresh=true",
             "fields": [
                 {
                     "type": "text", "name": "receipt_name",
@@ -40,7 +44,7 @@ def receipts_dashboard(request: HttpRequest):
             ]
         }
     }],
-        'receipts': Receipt.objects.filter(user=request.user).order_by('date')
+        'receipts': Receipt.objects.filter(user=request.user).order_by('-date')
     }
 
     return render(request, "core/pages/receipts/dashboard.html", context)
