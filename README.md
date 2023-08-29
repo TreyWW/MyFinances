@@ -26,32 +26,7 @@ MyFinances is an open-source web application designed to empower individuals and
 - Additional requirements can be found in the `requirements.txt` file.
 
 ### Installation
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/MyFinances.git
-   ```
-2. Move to the directory
-   ```bash
-   cd MyFinances
-   ```
-3. Create an ENV file in `coming_soon` by using:
-   ```bash
-   cp .env.sample /env/MyFinances.env
-   ```
-4. Move to the infrastructure directory
-   ```bash
-   cd MyFinances/infrastructure/backend
-   ```
-5. Build the docker image
-   ```bash
-   docker-compose build
-   ```
-6. Start the docker-compose server
-   ```bash
-   docker-compose up -d
-   ```
-7. Visit the website; `http://127.0.0.1:10012`
+Go to [SETUP.md](https://github.com/TreyWW/MyFinances/blob/main/documentation/SETUP.md)
 
 ## Contributing
 
