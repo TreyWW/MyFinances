@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - develop
+      - fix/github_ci_actions
 
 jobs:
   build:
