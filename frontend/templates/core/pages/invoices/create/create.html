@@ -1,7 +1,6 @@
 {% extends 'core/pages/base.html' %}
 {% load static %}
 {% block content %}
-    <script src="{% static 'js/pages/invoices/create.js' %}"></script>
     <form method="post">
         <div class="divider mt-8">STEP 1</div>
         <div class="my-4 flex w-full flex-col">
@@ -62,7 +61,8 @@
         <div class="my-4 max-w-screen-xl card">
             <div class="card-body">
                 <label class="btn btn-primary" for="modal-1">Add Service</label>
-                <input class="modal-state" id="modal-1" type="checkbox"/>
+                <input class="modal-state" id="modal-1" type="checkbox" id="modal-checkbox" />
+                {# START MODAL #}
                 <div class="modal">
                     <label class="modal-overlay" for="modal-1"></label>
                     <div class="modal-content flex flex-col gap-5">
@@ -70,23 +70,29 @@
                         <h2 class="text-xl">Add Service</h2>
                         <div class="form-field">
                             <label for="service" class="form-label">Service Name</label>
-                            <input id="modal_input-service_name" type="text" class="input input-bordered">
+                            <input id="modal_input-service_name" name="post_service_name" type="text" class="input input-bordered">
                         </div>
                         <div class="form-field">
                             <label for="hours" class="form-label">Hours</label>
-                            <input id="modal_input-hours" type="number" class="input input-bordered">
+                            <input id="modal_input-hours" type="number" name="post_hours" class="input input-bordered">
                         </div>
                         <div class="form-field">
                             <label for="pricePerHour" class="form-label">Price Per Hour</label>
-                            <input id="modal_input-price_per_hour" type="number" class="input input-bordered">
+                            <input id="modal_input-price_per_hour" type="number" name="post_price_per_hour" class="input input-bordered">
                         </div>
-                        <button class="btn btn-primary" id="saveServiceBtn">Save Service</button>
+                        <button class="btn btn-primary"
+                                hx-post="{% url 'api v1 invoices create services add' %}"
+{#                                hx-swap="outerHTML"#}
+
+                                hx-target="#services_table_body">
+                            Save Service
+                        </button>
                     </div>
                 </div>
                 {# END MODAL #}
 
                 <div class="flex w-full overflow-x-auto">
-                    <table class="table table-zebra max-w-full" id="table">
+                    <table class="table table-zebra max-w-full" id="services_table">
                         <thead>
                         <tr>
                             <th>Service</th>
@@ -96,8 +102,8 @@
                             <th>Actions</th>
                         </tr>
                         </thead>
-                        <tbody>
-                        {# rows #}
+                        <tbody id="services_table_body">
+                            {% include 'core/pages/invoices/create/_services_table_body.html' %}
                         </tbody>
                     </table>
                 </div>
