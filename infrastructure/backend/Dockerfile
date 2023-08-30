@@ -15,7 +15,7 @@ RUN apk add --no-cache git
 CMD ["git","--version"]
 RUN pip install mariadb
 RUN pip install mysqlclient
-RUN pip install -r infrastructure/backend/requirements.txt
+RUN pip install -r requirements.txt
 
 
 # Set the entrypoint
