@@ -2,6 +2,7 @@
 {% load static %}
 {% block content %}
     <form method="post">
+        {% csrf_token %}
         <div class="divider mt-8">STEP 1</div>
         <div class="my-4 flex w-full flex-col">
 
@@ -61,7 +62,7 @@
         <div class="my-4 max-w-screen-xl card">
             <div class="card-body">
                 <label class="btn btn-primary" for="modal-1">Add Service</label>
-                <input class="modal-state" id="modal-1" type="checkbox" id="modal-checkbox" />
+                <input class="modal-state" id="modal-1" type="checkbox" id="modal-checkbox"/>
                 {# START MODAL #}
                 <div class="modal">
                     <label class="modal-overlay" for="modal-1"></label>
@@ -82,7 +83,7 @@
                         </div>
                         <button class="btn btn-primary"
                                 hx-post="{% url 'api v1 invoices create services add' %}"
-{#                                hx-swap="outerHTML"#}
+                                {#                                hx-swap="outerHTML"#}
 
                                 hx-target="#services_table_body">
                             Save Service
@@ -103,7 +104,7 @@
                         </tr>
                         </thead>
                         <tbody id="services_table_body">
-                            {% include 'core/pages/invoices/create/_services_table_body.html' %}
+                        {% include 'core/pages/invoices/create/_services_table_body.html' %}
                         </tbody>
                     </table>
                 </div>
@@ -112,5 +113,14 @@
 
         <button class="btn btn-primary">Create Invoice</button>
     </form>
+
+    <script>
+        document.body.addEventListener('htmx:afterOnLoad', function () {
+            document.getElementById("modal_input-service_name").value = "";
+            document.getElementById("modal_input-hours").value = "";
+            document.getElementById("modal_input-price_per_hour").value = "";
+            document.getElementById("modal-1").checked = false;
+        });
+    </script>
 
 {% endblock content %}
