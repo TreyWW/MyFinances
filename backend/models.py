@@ -38,6 +38,12 @@ class InvoiceItem(models.Model):
     # if product
     price = models.DecimalField(max_digits=15, decimal_places=2, blank=True, null=True)
 
+    def get_total_price(self):
+        if self.is_service:
+            return self.hours * self.price_per_hour
+        else:
+            return self.price
+
 
 class Invoice(models.Model):
     STATUS_CHOICES = (
@@ -60,12 +66,11 @@ class Invoice(models.Model):
     def __str__(self):
         return f"Invoice {self.invoice_id} for {self.client}"
 
-    def total(self):
-        amount = self.hourly_rate * self.hours_worked
-        if amount % 1 == 0:
-            return int(amount)
-        else:
-            return amount
+    def get_total_price(self):
+        total = 0
+        for item in self.items.all():
+            total += item.get_total_price()
+        return total
 
 
 class PasswordSecrets(models.Model):

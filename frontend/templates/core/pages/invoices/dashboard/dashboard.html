@@ -10,12 +10,80 @@
         <table class="table-zebra table">
             <thead>
             <tr>
-                <th>Invoice ID</th>
-                <th>Date</th>
-                <th>Client Name</th>
-                <th>Amount</th>
-                <th>Payment Status</th>
-                <th>Actions</th>
+                <th>
+                    Invoice ID
+                </th>
+                <th>
+                    <div class="dropdown border-none">
+                        <label tabindex="0" class="border-none">
+                            Date
+                            <i class="fa-solid fa-caret-down border-none pt-1 pl-1/2"></i>
+                        </label>
+                        <div class="dropdown-menu border-none">
+                            <a class="dropdown-item text-sm border-none">Actions</a>
+                        </div>
+                    </div>
+                </th>
+                <th>
+                    <div class="dropdown border-none">
+                        <label tabindex="0" class="border-none">
+                            Client Name
+                            <i class="fa-solid fa-caret-down border-none pt-1 pl-1/2"></i>
+                        </label>
+                        <div class="dropdown-menu border-none">
+                            <a class="dropdown-item text-sm border-none">Actions</a>
+                        </div>
+                    </div>
+                </th>
+                <th>
+                    <div class="dropdown border-none">
+                        <label tabindex="0" class="border-none">
+                            Amount
+                            <i class="fa-solid fa-caret-down border-none pt-1 pl-1/2"></i>
+                        </label>
+                        <div class="dropdown-menu border-none">
+                            <a class="dropdown-item text-sm border-none">Actions</a>
+                        </div>
+                    </div>
+                </th>
+                <th>
+                    <div class="dropdown border-none">
+                        <label tabindex="0" class="border-none">
+                            Payment Status
+                            <i class="fa-solid fa-caret-down border-none pt-1 pl-1/2"></i>
+                        </label>
+                        <div class="dropdown-menu border-none">
+                            <a class="dropdown-item text-sm border-none">Actions</a>
+                        </div>
+                    </div>
+                </th>
+                <th>
+                    <div class="dropdown border-none">
+                        <label tabindex="0" class="border-none">
+                            Actions
+                            <i class="fa-solid fa-caret-down border-none pt-1 pl-1/2"></i>
+                        </label>
+                        <div class="dropdown-menu border-none">
+                            <a class="dropdown-item text-sm border-none">Actions</a>
+                        </div>
+                    </div>
+                </th>
+                <th>
+                    <div class="dropdown border-none">
+                        <label tabindex="0" class="border-none">
+                            Sort
+                            <i class="fa-solid fa-caret-down border-none pt-1 pl-1/2"></i>
+                        </label>
+                        <div class="dropdown-menu border-none">
+                            <a class="dropdown-item text-sm border-none">Invoice ID</a>
+                            <a class="dropdown-item text-sm border-none">Date</a>
+                            <a class="dropdown-item text-sm border-none">Client Name</a>
+                            <a class="dropdown-item text-sm border-none">Amount</a>
+                            <a class="dropdown-item text-sm border-none">Payment Status</a>
+                            <a class="dropdown-item text-sm border-none">Actions</a>
+                        </div>
+                    </div>
+                </th>
             </tr>
             </thead>
             <tbody>
@@ -25,7 +93,7 @@
               Showing {{ invoices.count }} of {{ invoices.count }}
             </span></td>
                 <td></td>
-                <td colspan="3">
+                <td colspan="4">
                     <span class="flex col-span-4 mt-2 sm:mt-auto sm:justify-end">
                         <div class="pagination pagination-compact pagination-bordered">
                             <input type="radio" name="pagination-3" id="pgn-7"/>

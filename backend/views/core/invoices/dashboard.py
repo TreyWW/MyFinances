@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.db.models import Sum
 from django.http import HttpResponse, HttpRequest, HttpResponseBadRequest, HttpResponseForbidden, \
     HttpResponseServerError
 from django.shortcuts import render, redirect
@@ -19,12 +20,18 @@ from backend.models import *
 
 from django.contrib.auth import get_user_model, logout
 
+
 @login_required
 def invoices_dashboard(request: HttpRequest):
-    # print(Client.objects.all())
-    # Invoice.objects.create(user=request.user, client=Client.objects.first(), services="Test", hourly_rate=10, hours_worked=1, total_amount=10, due_date='2024-01-01')
-    # print(Invoice.objects.all())
-    return render(request, 'core/pages/invoices/dashboard/dashboard.html', {"invoices": Invoice.objects.filter(user=request.user)})
+    context = {}
+    context["invoices"] = (Invoice.objects
+                           .filter(user=request.user)
+                           .prefetch_related("items")
+                           .only("invoice_id", "id", "payment_status", "date_due")
+                           .all())
+
+    return render(request, 'core/pages/invoices/dashboard/dashboard.html', context)
+
 
 @login_required
 def invoices_dashboard_id(request: HttpRequest, id):
