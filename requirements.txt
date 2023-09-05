@@ -11,11 +11,9 @@ google-auth-oauthlib==1.0.0
 googleapis-common-protos==1.60.0
 oauthlib==3.2.2
 django-sendgrid-v5
-mariadb
 django-environ
 django-extensions
 social-auth-app-django
-mysqlclient
 python-dateutil
 django-ratelimit
 aiohttp

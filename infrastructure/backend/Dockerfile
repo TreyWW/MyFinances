@@ -17,6 +17,7 @@ RUN pip install mariadb
 RUN pip install mysqlclient
 RUN pip install -r requirements.txt
 
+
 # Set the entrypoint
 #COPY ../scripts /infrastructure/scripts/
 RUN chmod +x infrastructure/backend/scripts/*

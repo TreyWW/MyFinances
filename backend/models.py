@@ -14,7 +14,6 @@ def RandomCode(length=6):
     characters = string.ascii_letters + string.digits
     return ''.join(random.choice(characters) for _ in range(length))
 
-
 class UserSettings(models.Model):
     CURRENCIES = {
         "GBP": {"name": "British Pound Sterling", "symbol": "£"},
@@ -39,22 +38,6 @@ class Client(models.Model):
         return self.name
 
 
-class InvoiceItem(models.Model):
-    description = models.CharField(max_length=100)
-    is_service = models.BooleanField(default=True)
-    # if service
-    hours = models.DecimalField(max_digits=15, decimal_places=2, blank=True, null=True)
-    price_per_hour = models.DecimalField(max_digits=15, decimal_places=2, blank=True, null=True)
-    # if product
-    price = models.DecimalField(max_digits=15, decimal_places=2, blank=True, null=True)
-
-    def get_total_price(self):
-        if self.is_service:
-            return self.hours * self.price_per_hour
-        else:
-            return self.price
-
-
 class Invoice(models.Model):
     STATUS_CHOICES = (
         ('pending', 'Pending'),
@@ -65,25 +48,27 @@ class Invoice(models.Model):
 
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    invoice_id = models.IntegerField(unique=True, blank=True, null=True)  # todo: add
-    client = models.ForeignKey(Client, on_delete=models.CASCADE, blank=True, null=True)  # todo: add
-
-    payment_status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
-    items = models.ManyToManyField(InvoiceItem)
-
+    invoice_id = models.CharField(max_length=20, unique=True)
+    client = models.ForeignKey(Client, on_delete=models.CASCADE)
+    services = models.TextField()
+    hourly_rate = models.DecimalField(max_digits=10, decimal_places=2)
+    hours_worked = models.DecimalField(max_digits=5, decimal_places=2)
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2)
     date_created = models.DateTimeField(auto_now_add=True)
     date_due = models.DateField()
-    date_issued = models.DateField(blank=True, null=True)
     payment_status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
+    
 
     def __str__(self):
         return f"Invoice {self.invoice_id} for {self.client}"
 
-    def get_total_price(self):
-        total = 0
-        for item in self.items.all():
-            total += item.get_total_price()
-        return total
+    def total(self):
+        amount = self.hourly_rate * self.hours_worked
+        if amount % 1 == 0:
+            return int(amount)
+        else:
+            return amount
+
 
 
 class PasswordSecrets(models.Model):
