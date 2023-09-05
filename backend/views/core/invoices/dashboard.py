@@ -27,8 +27,7 @@ def invoices_dashboard(request: HttpRequest):
     context["invoices"] = (Invoice.objects
                            .filter(user=request.user)
                            .prefetch_related("items")
-                           .only("invoice_id", "id", "payment_status", "date_due")
-                           .all())
+                           .only("invoice_id", "id", "payment_status", "date_due"))
 
     return render(request, 'core/pages/invoices/dashboard/dashboard.html', context)
 
