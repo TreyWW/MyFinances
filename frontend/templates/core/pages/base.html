@@ -4,12 +4,12 @@
       x-data="data()"
       lang="en">
 {% include 'core/partials/base/_head.html'  %}
-<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+
+<body>
 <div class="flex h-screen bg-backgroundSecondary"
      :class="{ 'overflow-hidden': isSideMenuOpen}">
     {% include 'core/partials/base/navbar/_sidebar_pc.html' %}
     {% include 'core/partials/base/navbar/_sidebar_mobile.html' %}
-
     <div class="flex flex-1 flex-col">
         <!-- header -->
         {% include 'core/partials/base/topbar/topbar.html' %}
@@ -19,6 +19,8 @@
                 <!-- MAIN PAGE -->
                 {% include 'core/partials/base/tabinator.html' %}
                 {% include 'core/partials/base/toasts.html' %}
+                {% include 'core/components/modal.html' with modals=modals %}
+
                 {% block content %}
 
                 {% endblock content %}
