@@ -19,6 +19,8 @@
                 <!-- MAIN PAGE -->
                 {% include 'core/partials/base/tabinator.html' %}
                 {% include 'core/partials/base/toasts.html' %}
+                {% include 'core/components/modal.html' with modals=modals %}
+
                 {% block content %}
 
                 {% endblock content %}

@@ -28,6 +28,9 @@ urlpatterns = [
                   path('api/v1/invoices/create/add_service', v1.invoices.create.services.add.add_service, name='api v1 invoices create services add'),
                   path('api/v1/invoices/create/remove_service', v1.invoices.create.services.remove.remove_service, name='api v1 invoices create services remove'),
 
+                  path('api/v1/invoices/create/set_destination/to', v1.invoices.create.set_destination.set_destination_to, name='api v1 invoices create set_destination to'),
+                  path('api/v1/invoices/create/set_destination/from', v1.invoices.create.set_destination.set_destination_from, name='api v1 invoices create set_destination from'),
+
                   path('login/', other.login.login_page, name='login'),
                   path('logout/', other.login.logout_view, name='logout'),
                   path('login/create_account', other.login.create_account_page, name='login create_account'),

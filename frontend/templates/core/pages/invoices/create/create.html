@@ -1,6 +1,7 @@
 {% extends 'core/pages/base.html' %}
 {% load static %}
 {% block content %}
+    {% include 'core/components/modal.html' with modals=modal_data %}
     <form method="post">
         {% csrf_token %}
         <div class="divider mt-8">STEP 1</div>
@@ -10,25 +11,9 @@
                 <h3 class="text-sm font-medium text-gray-400 ms-2">From</h3>
                 <h3 class="text-sm font-medium text-gray-400 me-2">To</h3>
             </div>
-            <div class="flex w-full">
-                <a class="max-w-screen-xl border border-gray-900 card me-3 hover:border-gray-500" href="{% url 'index' %}">
-                    <div class="card-body">
-                        <p class="text-base font-medium">My Company</p>
-                        <p class="text-sm">John Smith</p>
-                        <p class="text-sm">128 Road</p>
-                        <p class="text-sm">Street</p>
-                        <p class="text-sm">England</p>
-                    </div>
-                </a>
-                <a class="max-w-screen-xl border border-gray-900 card ms-3 hover:border-gray-500" href="{% url 'index' %}">
-                    <div class="card-body">
-                        <p class="text-base font-medium">Another Company</p>
-                        <p class="text-sm">Jane Doe</p>
-                        <p class="text-sm">456 Avenue</p>
-                        <p class="text-sm">Boulevard</p>
-                        <p class="text-sm">USA</p>
-                    </div>
-                </a>
+            <div class="flex w-full" id="to_and_from_container">
+                {% include 'core/pages/invoices/create/_from_destination.html' %}
+                {% include 'core/pages/invoices/create/_to_destination.html' %}
             </div>
         </div>
         <div class="divider my-4">STEP 2</div>
@@ -59,7 +44,7 @@
             </div>
         </div>
         <div class="divider my-4">STEP 3</div>
-        <div class="my-4 max-w-screen-xl card">
+        <div class="my-4 max-w-screen-xl card border border-gray-900 card me-3 hover:border-gray-500">
             <div class="card-body">
                 <label class="btn btn-primary" for="modal-1">Add Service</label>
                 <input class="modal-state" id="modal-1" type="checkbox" id="modal-checkbox"/>
@@ -120,6 +105,9 @@
             document.getElementById("modal_input-hours").value = "";
             document.getElementById("modal_input-price_per_hour").value = "";
             document.getElementById("modal-1").checked = false;
+
+            document.getElementById("modal_from_destination").checked = false;
+            document.getElementById("modal_to_destination").checked = false;
         });
     </script>
 
