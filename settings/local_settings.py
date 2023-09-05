@@ -5,13 +5,12 @@ env = environ.Env()
 environ.Env.read_env()
 
 CSRF_TRUSTED_ORIGINS = ['http://localhost', 'http://127.0.0.1']
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 if os.environ.get('DATABASE_TYPE') in ["sqlite3", "sqlite", "SQLITE3", "SQLITE", "SQLite", "SQLite3"]:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+            'NAME': ':memory:',
         }
     }
 else:
