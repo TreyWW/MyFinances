@@ -6,7 +6,7 @@ from backend.models import Invoice, InvoiceItem, Client
 
 
 @login_required
-@require_http_methods(['GET', 'POST'])
+@require_http_methods(['GET', 'POST', 'DELETE'])
 def create_invoice_page(request: HttpRequest):
     if request.method == "POST":
         return post(request)
