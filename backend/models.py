@@ -16,8 +16,18 @@ def RandomCode(length=6):
 
 
 class UserSettings(models.Model):
+    CURRENCIES = {
+        "GBP": {"name": "British Pound Sterling", "symbol": "£"},
+        "EUR": {"name": "Euro", "symbol": "€"},
+        "USD": {"name": "United States Dollar", "symbol": "$"},
+        "JPY": {"name": "Japanese Yen", "symbol": "¥"},
+        "INR": {"name": "Indian Rupee", "symbol": "₹"},
+        "AUD": {"name": "Australian Dollar", "symbol": "$"},
+        "CAD": {"name": "Canadian Dollar", "symbol": "$"},
+    }
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_profile')
     dark_mode = models.BooleanField(default=True)
+    currency = models.CharField(max_length=3, default="GBP", choices=[(code, info["name"]) for code, info in CURRENCIES.items()])
 
 
 class Client(models.Model):
@@ -52,6 +62,8 @@ class Invoice(models.Model):
         ('overdue', 'Overdue'),
     )
 
+
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     invoice_id = models.IntegerField(unique=True, blank=True, null=True)  # todo: add
     client = models.ForeignKey(Client, on_delete=models.CASCADE, blank=True, null=True)  # todo: add
@@ -62,6 +74,7 @@ class Invoice(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     date_due = models.DateField()
     date_issued = models.DateField(blank=True, null=True)
+    payment_status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
 
     def __str__(self):
         return f"Invoice {self.invoice_id} for {self.client}"

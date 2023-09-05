@@ -3,8 +3,7 @@
 MyFinances is an open-source web application designed to empower individuals and teams to efficiently manage their finances. Whether you're tracking personal expenses, managing client invoices, or planning your financial goals, MyFinances provides a user-friendly platform to streamline these tasks.
 
 | PLEASE NOTE: This project is still in development, and has only just started! So none of the key features or descriptions have been fully implemented. We are beginner friendly and looking for contributors! |
-| --- |
-
+|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 
 ## Key Features
 
@@ -27,32 +26,7 @@ MyFinances is an open-source web application designed to empower individuals and
 - Additional requirements can be found in the `requirements.txt` file.
 
 ### Installation
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/MyFinances.git
-   ```
-2. Move to the directory
-   ```bash
-   cd MyFinances
-   ```
-3. Create an ENV file in `coming_soon` by using:
-   ```bash
-   cp .env.sample /env/MyFinances.env
-   ```
-4. Move to the infrastructure directory
-   ```bash
-   cd MyFinances/infrastructure/backend
-   ```
-5. Build the docker image
-   ```bash
-   docker-compose build
-   ```
-6. Start the docker-compose server
-   ```bash
-   docker-compose up -d
-   ```
-7. Visit the website; `http://127.0.0.1:10012`
+Go to [SETUP.md](https://github.com/TreyWW/MyFinances/blob/main/documentation/SETUP.md)
 
 ## Contributing
 
@@ -113,6 +87,68 @@ Make sure you have the necessary prerequisites for development. These are detail
 Refer to the "Getting Started" section in this README.md for setting up the development environment and running the application locally.
 
 Thank you for your contributions!
+
+---
+
+#### 🌟 A very special thank you to all of our contributors 🌟
+
+<table>
+  <tr>
+     <td align="center">
+       <a href="https://github.com/TreyWW">
+          <img src="https://github.com/TreyWW.png" width="100px;" alt=""/>
+          <br />
+          <sub>
+             <b>
+                Trey WW
+             </b>
+          </sub>
+       </a>
+       <br />
+       <a href="https://github.com/TreyWW/MyFinances" title="Project Lead">👑</a>
+       <a href="https://github.com/TreyWW/MyFinances/commits?author=TreyWW" title="Backend">🖥</a>
+    </td>
+    <td align="center">
+       <a href="https://github.com/tomkinane">
+          <img src="https://github.com/tomkinane.png" width="100px;" alt=""/>
+          <br />
+          <sub>
+             <b>
+                Tom
+             </b>
+          </sub>
+       </a>
+       <br />
+       <a href="https://github.com/TreyWW/MyFinances/commits?author=tomkinane" title="Frontend">🎨</a>
+    </td>
+       <td align="center">
+           <a href="https://github.com/Z3nKrypt">
+               <img src="https://github.com/Z3nKrypt.png" width="100px;" alt=""/>
+               <br/>
+               <sub>
+                   <b>
+                       Jacob
+                   </b>
+               </sub>
+           </a>
+           <br/>
+           <a href="https://github.com/TreyWW/MyFinances/commits?author=Z3nKrypt" title="Documentation">📖</a>
+       </td>
+       <td align="center">
+           <a href="https://github.com/chavi362">
+               <img src="https://github.com/chavi362.png" width="100px;" alt=""/>
+               <br/>
+               <sub>
+                   <b>
+                       chavi362
+                   </b>
+               </sub>
+           </a>
+           <br/>
+           <a href="https://github.com/TreyWW/MyFinances/commits?author=chavi362" title="Documentation">📖</a>
+       </td>
+  </tr>
+</table>
 
 ---
 __Note:__ This README.md is a living document and might be updated over time. Always refer to the latest version when contributing and developing.

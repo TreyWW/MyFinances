@@ -6,7 +6,7 @@ environ.Env.read_env()
 
 CSRF_TRUSTED_ORIGINS = ['http://localhost', 'http://127.0.0.1']
 
-if os.environ.get('TEST') == 'True':
+if os.environ.get('DATABASE_TYPE') in ["sqlite3", "sqlite", "SQLITE3", "SQLITE", "SQLite", "SQLite3"]:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',

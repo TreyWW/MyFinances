@@ -1,0 +1,23 @@
+<form method="post" class="my-4 max-w-screen-xl card border border-gray-700 dark:border-gray-700">
+    {% csrf_token %}
+    <div class="card-body">
+        <div class="card-header">Account preferences</div>
+        <p class="text-content2">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam</p>
+        <div class="divide-y divide-gray-200 dark:divide-gray-700">
+            <div class="flex items-center justify-between py-4">
+                <div class="flex flex-col flex-grow">
+                    <div class="text-lg font-semibold text-gray-900 dark:text-white">Currency</div>
+                    <div class="text-base font-normal text-gray-500 dark:text-gray-400 whitespace-nowrap">This will change the default currency</div>
+                </div>
+                <select name="currency" class="select select-solid-primary w-[125px]">
+                    {% for code, info in currency_signs.items %}
+                        <option value="{{ code }}" {% if currency == code %}selected{% endif %}>
+                            {{ info.symbol }} - {{ code }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <button class="btn btn-primary mb-2">Save All</button>
+    </div>
+</form>
