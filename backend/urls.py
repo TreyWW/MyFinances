@@ -16,14 +16,14 @@ url(r'^frontend/static/(?P<path>.*)$', serve, {'document_root': settings.STATICF
 urlpatterns = [
                   path('', index, name='index'),
                   path('dashboard', dashboard, name='dashboard'),
-                  path('dashboard/settings', settings_v.view.settings_page, name='user settings'),
-                  path('dashboard/profile/change_password', settings_v.view.change_password, name='user settings change_password'),
+                  path('dashboard/settings/', settings_v.view.settings_page, name='user settings'),
+                  path('dashboard/profile/change_password/', settings_v.view.change_password, name='user settings change_password'),
                   path('dashboard/invoices/', invoices.dashboard.invoices_dashboard, name='invoices dashboard'),
                   path('dashboard/invoices/create/', invoices.create.create_invoice_page, name='invoices dashboard create'),
                   path('dashboard/invoices/<str:id>', invoices.dashboard.invoices_dashboard_id, name='invoices dashboard edit'),
+                  # path('dashboard/invoices/<str:id>/edit', invoices.dashboard.invoices_dashboard_id, name='invoices dashboard'),
 
                   path('login/external/', include('social_django.urls', namespace='social')),
-                  # path('dashboard/invoices/<str:id>/edit', invoices.dashboard.invoices_dashboard_id, name='invoices dashboard'),
 
                   path('api/v1/invoices/create/add_service', v1.invoices.create.services.add.add_service, name='api v1 invoices create services add'),
                   path('api/v1/invoices/create/remove_service', v1.invoices.create.services.remove.remove_service, name='api v1 invoices create services remove'),
