@@ -26,3 +26,4 @@ django-htmx
 django-debug-toolbar
 pytailwindcss
 mysqlclient
+django-login-required-middleware

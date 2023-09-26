@@ -1,12 +1,10 @@
-from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 
 from backend.decorators import *
 from backend.models import *
 
 
-@login_required
 def invoices_dashboard(request: HttpRequest):
     context = {}
     context["invoices"] = (Invoice.objects
@@ -18,7 +16,6 @@ def invoices_dashboard(request: HttpRequest):
     return render(request, 'core/pages/invoices/dashboard/dashboard.html', context)
 
 
-@login_required
 def invoices_dashboard_id(request: HttpRequest, invoice_id):
     if invoice_id == "create":
         return redirect("invoices dashboard create")

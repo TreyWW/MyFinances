@@ -1,17 +1,14 @@
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpRequest, HttpResponseBadRequest, HttpResponseForbidden, \
-    HttpResponseServerError
-from django.shortcuts import render, redirect
-from django.urls import reverse
+from django.http import HttpRequest
+from django.shortcuts import render
+from django.urls import resolve, Resolver404
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login
 
 import settings.settings
 from backend.decorators import *
-from backend.utils import Notification, Toast
 from backend.models import *
 
-from django.contrib.auth import get_user_model, logout
+from django.contrib.auth import logout
 
 
 @csrf_exempt
@@ -33,7 +30,12 @@ def login_page(request):
             login(request, user)
             LoginLog.objects.create(user=user)
             AuditLog.objects.create(user=user, action="Login")
-            return redirect('dashboard')
+
+            try:
+                resolve(request.POST.get('next'))
+                return redirect(request.POST.get('next'))
+            except Resolver404:
+                return redirect('dashboard')
         else:
             messages.error(request, "Invalid email or password")
             return render(request, 'core/pages/login.html', {'attempted_email': email})
@@ -44,7 +46,6 @@ def login_page(request):
     return render(request, 'core/pages/login.html', {"github_enabled": github_enabled, "google_enabled": google_enabled})
 
 
-@login_required
 def logout_view(request, messages_constants=None):
     logout(request)
 

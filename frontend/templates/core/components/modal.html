@@ -19,8 +19,8 @@
                                 {% if field.label %}
                                 <label class="form-label">{{ field.label }}</label>
                                 {% endif %}
-                                <input type="text" name="{{ field.name | default:"text" }}" placeholder="{{ field.placeholder }}"
-                                       class="input input-bordered max-w-full" {% if modal.action.required %}required{% endif %} {{ field.extra }}>
+                                <input type="text" name="{{ field.name | default:"text" }}" placeholder="{{ field.placeholder }}" value="{{ field.value }}"
+                                       class="input input-bordered max-w-full {{ field.class_extra }}" {% if modal.action.required %}required{% endif %} {{ field.extra }}>
                             {% elif field.type == "date" %}
                                 <label class="form-label">{{ field.label }}</label>
                                 <input type="date" name="{{ field.name | default:"date" }}" class="input input-bordered max-w-full" {% if field.required %}required{% endif %} {{ field.extra }}>

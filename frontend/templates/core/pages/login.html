@@ -10,6 +10,7 @@
         {% include 'core/partials/base/toasts.html' %}
 
         {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.GET.next }}"/>
         <p class="text-xl">My Finances - Login</p>
         <div class="divider"></div>
 

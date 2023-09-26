@@ -56,15 +56,15 @@
                         <h2 class="text-xl">Add Service</h2>
                         <div class="form-field">
                             <label for="service" class="form-label">Service Name</label>
-                            <input id="modal_input-service_name" name="post_service_name" type="text" class="input input-bordered">
+                            <input id="modal_input-service_name" name="post_service_name" type="text" class="input input-bordered input-ghost-secondary">
                         </div>
                         <div class="form-field">
                             <label for="hours" class="form-label">Hours</label>
-                            <input id="modal_input-hours" type="number" name="post_hours" class="input input-bordered">
+                            <input id="modal_input-hours" type="number" name="post_hours" class="input input-bordered input-ghost-secondary">
                         </div>
                         <div class="form-field">
                             <label for="pricePerHour" class="form-label">Price Per Hour</label>
-                            <input id="modal_input-price_per_hour" type="number" name="post_price_per_hour" class="input input-bordered">
+                            <input id="modal_input-price_per_hour" type="number" name="post_price_per_hour" class="input input-bordered input-ghost-secondary">
                         </div>
                         <button class="btn btn-primary"
                                 hx-post="{% url 'api v1 invoices create services add' %}"

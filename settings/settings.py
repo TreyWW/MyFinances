@@ -32,6 +32,22 @@ INSTALLED_APPS = ['django.contrib.staticfiles',
                   'django_htmx',
                   'debug_toolbar']
 
+
+LOGIN_REQUIRED_IGNORE_VIEW_NAMES = [
+    'index',
+    'login',
+    'login create_account',
+    'login forgot_password',
+    'user set password reset',
+    'user set password',
+    'user set password set',
+]
+
+LOGIN_REQUIRED_IGNORE_PATHS = [
+    r'/login/$'
+]
+# for some reason only allows "login" and not "login create account" or anything
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 EMAIL_WHITELIST = []
@@ -40,9 +56,12 @@ AUTHENTICATION_BACKENDS = [
     'social_core.backends.github.GithubOAuth2',
     'social_core.backends.google.GoogleOAuth2',
 ]
+
 SECRET_KEY = os.environ.get("SECRET_KEY")
+
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/dashboard'
+
 ROOT_URLCONF = 'backend.urls'
 SESSION_COOKIE_AGE = 1800
 SESSION_ENGINE = "django.contrib.sessions.backends.db"
@@ -50,7 +69,6 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [BASE_DIR / "frontend/static", ]
 mimetypes.add_type("text/javascript", ".js", True)
-
 
 MESSAGE_STORAGE = "django.contrib.messages.storage.cookie.CookieStorage"
 
@@ -110,7 +128,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_htmx.middleware.HtmxMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware'
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'login_required.middleware.LoginRequiredMiddleware'
 ]
 INTERNAL_IPS = [
     # ...
