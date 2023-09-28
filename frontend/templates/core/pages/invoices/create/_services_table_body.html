@@ -1,3 +1,4 @@
+{% load humanize %}
 {% for row in rows %}
     <tr>
         <td>
@@ -14,7 +15,7 @@
         </td>
         <td>
             <input class="hidden" name="total_price[]" value="{{ row.total_price }}">
-            £{{ row.total_price }}
+            £{{ row.total_price | intcomma }}
         </td>
         <td>
             <button type="button" class="btn btn-outline-error btn-xs" hx-target="closest tr" hx-delete="{% url "api v1 invoices create services remove" %}">
