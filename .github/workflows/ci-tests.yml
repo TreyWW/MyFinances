@@ -24,8 +24,6 @@ jobs:
 
       - name: Install Python dependencies
         uses: py-actions/py-dependency-install@v4
-        with:
-          path: "./requirements.txt"
 
       - name: Build and run docker-compose.ci.yml
         run: docker-compose -f infrastructure/backend/docker-compose.ci.yml up -d
