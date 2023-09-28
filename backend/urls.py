@@ -4,7 +4,7 @@ from django.views.static import serve
 from django.urls import re_path as url
 from django.urls import path, include
 
-from backend.views.core import other, passwords, api, settings as settings_v, invoices
+from backend.views.core import other, passwords, settings as settings_v, invoices
 from backend.views.core.other.index import index, dashboard
 from backend.views.api import v1
 

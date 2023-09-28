@@ -31,6 +31,7 @@ class UrlTestCase(TestCase):
         print(f"{star}  Testing URL (Logged Out) - {url} || exp: {expected_status_code} - actual: {response.status_code}")
         self.assertEqual(response.status_code, expected_status_code)
 
+
     def test_logged_in_urls(self):
         # Log in the client
         self.client.login(username='testuser', password='testpassword')
@@ -58,7 +59,7 @@ class UrlTestCase(TestCase):
             print("Response Content:")
             print(response.content)  # Print the response content for debugging
 
-        try:
-            self.assertEqual(response.status_code, expected_status_code)
-        except AssertionError:
-            pass
+        # try:
+        self.assertEqual(response.status_code, expected_status_code)
+        # except AssertionError:
+        #     pass
