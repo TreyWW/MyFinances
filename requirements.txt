@@ -7,7 +7,7 @@ google-api-core==2.11.1
 google-api-python-client==2.100.0
 google-auth==2.23.2
 google-auth-httplib2==0.1.1
-google-auth-oauthlib==1.0.0
+google-auth-oauthlib==1.1.0
 googleapis-common-protos==1.60.0
 oauthlib==3.2.2
 django-sendgrid-v5
