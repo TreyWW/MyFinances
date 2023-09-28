@@ -42,7 +42,7 @@
         {% endif %}
         <div class="form-group group">
             <div class="form-field">
-                <label class="form-label">Email address {{ attempted_email }}</label>
+                <label class="form-label">Email address</label>
 
                 <input placeholder="jane@example.com" type="email" class="max-w-full input peer" required name="email"
                        pattern="[^@\s]+@[^@\s]+\.[^@\s]+" value="{% if attempted_email %}{{ attempted_email }}{% endif %}"
