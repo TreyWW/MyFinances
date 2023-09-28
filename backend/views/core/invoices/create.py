@@ -34,7 +34,7 @@ def invoice_page_get(request: HttpRequest):
                 },
                 {
                     "type": "text", "name": "country",
-                    "required": True, "label": "City", "placeholder": "England",
+                    "required": True, "label": "Country", "placeholder": "England",
                     "value": "England",
                     "class_extra": "input-ghost-secondary"
                 },
@@ -73,7 +73,7 @@ def invoice_page_get(request: HttpRequest):
                 },
                 {
                     "type": "text", "name": "country",
-                    "required": True, "label": "City",
+                    "required": True, "label": "Country",
                     "placeholder": "England", "value": "England",
                     "class_extra": "input-ghost-secondary"
                 },
@@ -100,7 +100,7 @@ def invoice_page_post(request: HttpRequest):
             request.POST.getlist('hours[]'),
             request.POST.getlist('price_per_hour[]')
         )
-    ]  # Todo: add products to this for logic
+    ]  # Todo: add products to this for logic - wtf does this mean
 
     invoice = Invoice.objects.create(
         user=request.user,
@@ -110,7 +110,7 @@ def invoice_page_post(request: HttpRequest):
 
     invoice.items.set(invoice_items)
 
-    return redirect("index")
+    return redirect("invoices dashboard")
 
 
 @require_http_methods(['GET', 'POST'])

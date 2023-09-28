@@ -1,3 +1,4 @@
+import sys
 from pathlib import Path
 import os, mimetypes, json
 from django.contrib.messages import constants as messages
@@ -32,7 +33,6 @@ INSTALLED_APPS = ['django.contrib.staticfiles',
                   'django_htmx',
                   'debug_toolbar']
 
-
 LOGIN_REQUIRED_IGNORE_VIEW_NAMES = [
     'index',
     'login',
@@ -41,7 +41,10 @@ LOGIN_REQUIRED_IGNORE_VIEW_NAMES = [
     'user set password reset',
     'user set password',
     'user set password set',
+    'logout'
 ]
+
+# @login_required()
 
 LOGIN_REQUIRED_IGNORE_PATHS = [
     r'/login/$'
@@ -189,3 +192,12 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 SENDGRID_SANDBOX_MODE_IN_DEBUG = True
+
+if 'test' in sys.argv[1:]:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': ':memory:',
+        }
+    }
+    # check if the app is running from a manage.py test command, if so then use SQLITE with memory, faster than xampp

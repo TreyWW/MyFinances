@@ -13,6 +13,13 @@ def invoices_dashboard(request: HttpRequest):
                            .only("invoice_id", "id", "payment_status", "date_due"))
     # May need to add more logic later
 
+    # context["modal_data"] = [
+    #     {
+    #         "id": "modal_confirm_delete",
+    #         "title": "Are you sure you would like to delete this invoice?",
+    #     }
+    #     ]
+
     return render(request, 'core/pages/invoices/dashboard/dashboard.html', context)
 
 

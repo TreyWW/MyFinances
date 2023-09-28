@@ -1,4 +1,14 @@
 from django.urls import reverse
+from django.test import TestCase
+from backend.models import User
+
+
+class ViewTestCase(TestCase):
+    def setUp(self):
+        User.objects.create_user(username="user", password="user")
+
+    def call_index(self):
+        self.client.get(reverse("index"))
 
 
 def login_user(self):

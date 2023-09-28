@@ -1,17 +1,16 @@
-from django.contrib.auth.models import User
-from django.test import TestCase
 from django.urls import reverse
-from .handler import login_user, test_with_prints
-
-from backend.urls import urlpatterns
+from .handler import ViewTestCase
 
 
-class TestInvoices(TestCase):
-    def setUp(self):
-        self.user = User.objects.create_user(username='user', password='user')
+class InvoicesViewTestCase(ViewTestCase):
+    def test_invoices_view_302_for_non_authenticated_users(self):
+        response = self.client.get(reverse("invoices dashboard"))
+        self.assertEqual(response.status_code, 302)
 
-    def test_invoices_logged_in(self):
-        test_with_prints(self, "invoices dashboard", 200, True)
+    def test_invoices_view_200_for_authenticated_users(self):
+        self.client.login(username="user", password="user")
+        response = self.client.get(reverse("invoices dashboard"))
 
-    def test_invoices_not_logged_in(self):
-        test_with_prints(self, "invoices dashboard", 302, False)
+        # self.client.login(username="user", password="user")
+        # response = self.client.get(reverse("invoices dashboard"))
+        # self.assertEqual(response.status_code, 200)

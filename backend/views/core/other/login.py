@@ -33,6 +33,8 @@ def login_page(request):
 
             try:
                 resolve(request.POST.get('next'))
+                if request.POST.get('logout'):
+                    redirect('dashboard')
                 return redirect(request.POST.get('next'))
             except Resolver404:
                 return redirect('dashboard')
@@ -46,14 +48,12 @@ def login_page(request):
     return render(request, 'core/pages/login.html', {"github_enabled": github_enabled, "google_enabled": google_enabled})
 
 
-def logout_view(request, messages_constants=None):
+def logout_view(request):
     logout(request)
 
     messages.success(request, "You've now been logged out.")
 
-    if request.method == "POST":
-        return redirect('dashboard')
-    return redirect('dashboard')
+    return redirect('login')  # + "?next=" + request.POST.get('next'))
 
 def create_account_page(request: HttpRequest):
     if request.user.is_authenticated:

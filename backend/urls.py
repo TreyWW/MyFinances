@@ -32,7 +32,8 @@ urlpatterns = [
                   path('api/v1/invoices/create/set_destination/from', v1.invoices.create.set_destination.set_destination_from, name='api v1 invoices create set_destination from'),
 
                   path('login/', other.login.login_page, name='login'),
-                  path('logout/', other.login.logout_view, name='logout'),
+                  path('logout_test/', other.login.logout_view, name='logout'),
+                  # path('logout_test/', other.login.logout_view, name='logout_test'),
                   path('login/create_account', other.login.create_account_page, name='login create_account'),
                   path('login/forgot_password', other.login.forgot_password_page, name='login forgot_password'),
                   path('login/reset-password/', passwords.generate.password_reset, name='user set password reset')

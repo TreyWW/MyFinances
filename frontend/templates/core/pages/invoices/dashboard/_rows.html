@@ -1,3 +1,4 @@
+{% load humanize %}
 {% for invoice in invoices %}
     <tr>
         <td>{{ invoice.id }}</td>
@@ -12,7 +13,7 @@
             </div>
         </td>
         <td>
-            £{{ invoice.get_total_price }}
+            £{{ invoice.get_total_price | floatformat:2 | intcomma }}
         </td>
         <td>
         <span class="badge badge-square rounded
