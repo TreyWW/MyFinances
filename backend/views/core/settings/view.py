@@ -1,14 +1,12 @@
-from django.contrib.auth.decorators import login_required
 from django.contrib.sessions.models import Session
 from django.http import HttpRequest
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.contrib.auth import update_session_auth_hash
 
 from backend.decorators import *
 from backend.models import *
 
 
-@login_required
 def settings_page(request: HttpRequest):
     context = {}
     
@@ -29,7 +27,6 @@ def settings_page(request: HttpRequest):
     return render(request, "core/pages/settings/main.html", context)
 
 
-@login_required
 def change_password(request: HttpRequest):
     if request.method == "POST":
         password = request.POST.get('password')

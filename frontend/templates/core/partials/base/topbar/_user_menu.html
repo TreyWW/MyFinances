@@ -11,7 +11,7 @@
             </label>
             <div class="dropdown-menu dropdown-menu-bottom-left">
                 <a tabindex="-1" class="dropdown-item text-sm {% if request.resolver_match.url_name == "user settings" %}dropdown-active{% endif %}" href="{% url 'user settings' %}">Account settings</a>
-                <label tabindex="-1" class="dropdown-item text-sm" for="logout_modal">Log out</label>
+                <a tabindex="-1" class="dropdown-item text-sm" href="{% url 'logout' %}">Log out</a>
             </div>
         </div>
     </div>

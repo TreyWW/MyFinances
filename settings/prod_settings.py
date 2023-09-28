@@ -20,8 +20,6 @@ DATABASES = {
         }
     }
 }
-if os.environ.get("vercel"):
-    DATABASES["default"]["ENGINE"] = 'django.db.backends.postgresql'
 
 ALLOWED_HOSTS = [os.environ.get("URL")]
 

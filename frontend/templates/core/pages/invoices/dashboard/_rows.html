@@ -1,37 +1,52 @@
+{% load humanize %}
 {% for invoice in invoices %}
-<tr class="text-gray-700 dark:text-gray-400">
-    <td class="px-4 py-3 text-sm">{{ invoice.id }}</td>
-    <td class="px-4 py-3">
-    <div class="flex items-center text-sm">
-      <div>
-        <p class="font-semibold">{{ invoice.client.name | default:"No name" }}</p>
-      </div>
-    </div>
-  </td>
-    <td class="px-4 py-3 text-sm">
-    £{{ invoice.total }}
-  </td>
-    <td class="px-4 py-3 text-sm">
-    {{ invoice.date_due | date:"d/m/Y" }}
-  </td>
-    <td class="px-4 py-3 text-xs title">
+    <tr>
+        <td>{{ invoice.id }}</td>
+        <td>
+            {{ invoice.date_due | date:"d/m/Y" }}
+        </td>
+        <td>
+            <div class="flex items-center text-sm">
+                <div>
+                    <p class="font-semibold">{{ invoice.client.name | default:"No name" }}</p>
+                </div>
+            </div>
+        </td>
+        <td>
+            £{{ invoice.get_total_price | floatformat:2 | intcomma }}
+        </td>
+        <td>
         <span class="badge badge-square rounded
-        {% if invoice.status == "sent" %}
+        {% if invoice.payment_status == "sent" %}
         badge-outline text-gray-400 border-gray-600
-        {% elif invoice.status == "seen" %}
+        {% elif invoice.payment_status == "seen" %}
         badge-outline text-white border-white
         {% else %}
         badge-outline-success
         {% endif %}
 ">
-         {{ invoice.status | default:"sent" | title }}
+         {{ invoice.payment_status | default:"sent" | title }}
         </span>
-  </td>
-    <td class="px-4 py-3">
-    <div class="flex items-center text-sm space-x-4">
-        {% include "core/components/table/actions/icon_button.html" with icon="pencil" action="edit" href="dashboard" %}
-        {% include "core/components/table/actions/icon_button.html" with icon="trash-can" action="delete" href="dashboard"%}
-    </div>
-  </td>
-</tr>
+        </td>
+        <td colspan="2">
+            <div class="flex flex-wrap gap-2">
+                <div class="relative flex group">
+                    <button class="btn btn-solid-success btn-sm">
+                        {% include "core/components/icon.html" with icon="pencil" %}
+                    </button>
+                    <span class="absolute m-4 mx-auto -translate-y-8 scale-100 rounded-md opacity-0 transition-opacity badge badge-flat-success left-1/2-translate-x-1/2 group-hover:opacity-100">
+                    Edit
+                </span>
+                </div>
+                <div class="relative flex group">
+                    <button class="btn btn-solid-error btn-sm">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                    <span class="absolute m-4 mx-auto -translate-y-8 scale-100 rounded-md opacity-0 transition-opacity badge badge-flat-error left-1/2-translate-x-1/2 group-hover:opacity-100">
+                    Delete
+                </span>
+                </div>
+            </div>
+        </td>
+    </tr>
 {% endfor %}

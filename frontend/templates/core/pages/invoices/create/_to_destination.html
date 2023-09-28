@@ -1,0 +1,13 @@
+<label id="to_destination" class="max-w-screen-xl border border-gray-900 card ms-3 hover:border-gray-500" for="modal_to_destination">
+    <div class="card-body">
+        {#            <p class="text-base font-medium">Another Company</p>#}
+        <p class="text-sm">{{ name | default:"John Smith" }}</p>
+        <p class="text-sm">{{ address | default:"128 Example Road" }}</p>
+        <p class="text-sm">{{ city | default:"Testing" }}</p>
+        <p class="text-sm">{{ country | default:"Test" }}</p>
+    </div>
+    <input type="hidden" name="to_name" value="{{ name | default:"John Smith" }}">
+    <input type="hidden" name="to_address" value="{{ address | default:"128 Example Road" }}">
+    <input type="hidden" name="to_city" value="{{ city | default:"Testing" }}">
+    <input type="hidden" name="to_country" value="{{ country | default:"Test" }}">
+</label>

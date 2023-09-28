@@ -1,6 +1,9 @@
 {% extends 'core/pages/base.html' %}
+{% load static %}
 {% block content %}
+    {% include 'core/components/modal.html' with modals=modal_data %}
     <form method="post">
+        {% csrf_token %}
         <div class="divider mt-8">STEP 1</div>
         <div class="my-4 flex w-full flex-col">
 
@@ -8,25 +11,9 @@
                 <h3 class="text-sm font-medium text-gray-400 ms-2">From</h3>
                 <h3 class="text-sm font-medium text-gray-400 me-2">To</h3>
             </div>
-            <div class="flex w-full">
-                <a class="max-w-screen-xl border border-gray-900 card me-3 hover:border-gray-500" href="{% url 'index' %}">
-                    <div class="card-body">
-                        <p class="text-base font-medium">My Company</p>
-                        <p class="text-sm">John Smith</p>
-                        <p class="text-sm">128 Road</p>
-                        <p class="text-sm">Street</p>
-                        <p class="text-sm">England</p>
-                    </div>
-                </a>
-                <a class="max-w-screen-xl border border-gray-900 card ms-3 hover:border-gray-500" href="{% url 'index' %}">
-                    <div class="card-body">
-                        <p class="text-base font-medium">Another Company</p>
-                        <p class="text-sm">Jane Doe</p>
-                        <p class="text-sm">456 Avenue</p>
-                        <p class="text-sm">Boulevard</p>
-                        <p class="text-sm">USA</p>
-                    </div>
-                </a>
+            <div class="flex w-full" id="to_and_from_container">
+                {% include 'core/pages/invoices/create/_from_destination.html' %}
+                {% include 'core/pages/invoices/create/_to_destination.html' %}
             </div>
         </div>
         <div class="divider my-4">STEP 2</div>
@@ -57,10 +44,11 @@
             </div>
         </div>
         <div class="divider my-4">STEP 3</div>
-        <div class="my-4 max-w-screen-xl card">
+        <div class="my-4 max-w-screen-xl card border border-gray-900 card me-3 hover:border-gray-500">
             <div class="card-body">
                 <label class="btn btn-primary" for="modal-1">Add Service</label>
-                <input class="modal-state" id="modal-1" type="checkbox"/>
+                <input class="modal-state" id="modal-1" type="checkbox" id="modal-checkbox"/>
+                {# START MODAL #}
                 <div class="modal">
                     <label class="modal-overlay" for="modal-1"></label>
                     <div class="modal-content flex flex-col gap-5">
@@ -68,22 +56,29 @@
                         <h2 class="text-xl">Add Service</h2>
                         <div class="form-field">
                             <label for="service" class="form-label">Service Name</label>
-                            <input id="service" type="text" class="input input-bordered">
+                            <input id="modal_input-service_name" name="post_service_name" type="text" class="input input-bordered input-ghost-secondary">
                         </div>
                         <div class="form-field">
                             <label for="hours" class="form-label">Hours</label>
-                            <input id="hours" type="number" class="input input-bordered">
+                            <input id="modal_input-hours" type="number" name="post_hours" class="input input-bordered input-ghost-secondary">
                         </div>
                         <div class="form-field">
                             <label for="pricePerHour" class="form-label">Price Per Hour</label>
-                            <input id="pricePerHour" type="number" class="input input-bordered">
+                            <input id="modal_input-price_per_hour" type="number" name="post_price_per_hour" class="input input-bordered input-ghost-secondary">
                         </div>
-                        <button class="btn btn-primary" id="saveServiceBtn">Save Service</button>
+                        <button class="btn btn-primary"
+                                hx-post="{% url 'api v1 invoices create services add' %}"
+                                {#                                hx-swap="outerHTML"#}
+
+                                hx-target="#services_table_body">
+                            Save Service
+                        </button>
                     </div>
                 </div>
+                {# END MODAL #}
 
                 <div class="flex w-full overflow-x-auto">
-                    <table class="table max-w-4xl table-compact">
+                    <table class="table table-zebra max-w-full" id="services_table">
                         <thead>
                         <tr>
                             <th>Service</th>
@@ -93,23 +88,8 @@
                             <th>Actions</th>
                         </tr>
                         </thead>
-                        <tbody>
-                        <tr>
-                            <th>Something</th>
-                            <td>2</td>
-                            <td>£5</td>
-                            <td>£10</td>
-                            <td>
-                                <button type="button" class="btn btn-outline-success btn-xs">
-                                    {% include 'core/components/icon.html' with icon="pen" tags="pe-2" %}
-                                    Edit
-                                </button>
-                                <button type="button" class="btn btn-outline-error btn-xs">
-                                    {% include 'core/components/icon.html' with icon="trash-can" tags="pe-2" %}
-                                    Delete
-                                </button>
-                            </td>
-                        </tr>
+                        <tbody id="services_table_body">
+                        {% include 'core/pages/invoices/create/_services_table_body.html' %}
                         </tbody>
                     </table>
                 </div>
@@ -118,5 +98,17 @@
 
         <button class="btn btn-primary">Create Invoice</button>
     </form>
+
+    <script>
+        document.body.addEventListener('htmx:afterOnLoad', function () {
+            document.getElementById("modal_input-service_name").value = "";
+            document.getElementById("modal_input-hours").value = "";
+            document.getElementById("modal_input-price_per_hour").value = "";
+            document.getElementById("modal-1").checked = false;
+
+            document.getElementById("modal_from_destination").checked = false;
+            document.getElementById("modal_to_destination").checked = false;
+        });
+    </script>
 
 {% endblock content %}

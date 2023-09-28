@@ -63,7 +63,10 @@ To contribute code:
 1. Fork the repository.
 2. Create a new branch for your changes.
 3. Make your changes, following the coding style guidelines.
-4. Test your changes thoroughly.
+4. Test your changes thoroughly
+    - `python manage.py test backend`
+    - run the app (`python manage.py runserver`)
+    - view any changed pages in browser (`127.0.0.1`) and make sure the changes work as expected
 5. Submit a pull request to the main repository's `main` branch.
 
 We'll review your pull request, provide feedback, and work with you to get your changes merged.

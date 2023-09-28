@@ -1,35 +1,10 @@
-import os, math, traceback
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
-from django.http import HttpResponse, HttpRequest, HttpResponseBadRequest, HttpResponseForbidden, \
-    HttpResponseServerError
-from django.shortcuts import render, redirect
-import google_auth_oauthlib.flow
-import google_auth_oauthlib.flow
-import google_auth_oauthlib.flow
-from django.urls import reverse
-from googleapiclient.discovery import build
+from django.http import HttpRequest
 from django.shortcuts import redirect
-from django.contrib.auth import authenticate, login
-from django.conf import settings
-from django.utils.crypto import get_random_string
-from google.oauth2 import id_token
-from google.auth.transport import requests as google_requests
-
-from backend.decorators import *
-from backend.utils import Notification, Toast
-import json
+from django.urls import reverse
 from backend.models import *
-
-from django.contrib.auth import get_user_model, logout
-
-from django.contrib.auth import get_user_model, logout
-from django.core.mail import EmailMessage
-from django.contrib.auth.hashers import make_password, check_password
-from django.utils.safestring import mark_safe
+from django.contrib.auth.hashers import make_password
 from django.core.validators import validate_email
-from django_ratelimit.decorators import ratelimit
 from datetime import date, timedelta
 
 
@@ -63,7 +38,7 @@ def set_password_generate(request: HttpRequest):
     return redirect(NEXT)
 
 
-@not_logged_in
+#@not_logged_in
 def password_reset(request: HttpRequest):
     EMAIL = request.GET.get('email')
 

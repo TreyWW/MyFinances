@@ -3,7 +3,6 @@ from django.shortcuts import redirect
 
 from functools import wraps
 from django.shortcuts import redirect
-import requests
 from django.conf import settings
 
 from backend.utils import Notification, Toast

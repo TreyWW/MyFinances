@@ -1,24 +1,18 @@
+import sys
 from pathlib import Path
-import os, mimetypes, json, environ
+import os, mimetypes, json
 from django.contrib.messages import constants as messages
-import environ
-env = environ.Env(DEBUG=(bool, False))
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
-print(f"test: {env('DEBUG')}")
 
-DEBUG = True if os.environ.get("DEBUG") in ["True", "true", "TRUE", True] else False
+import environ
 
 env = environ.Env()
-env.read_env()
-print(f"[BACKEND] Debug is: {DEBUG} // {os.environ.get('DEBUG')}")
+environ.Env.read_env()
+DEBUG = True if os.environ.get("DEBUG") in ["True", "true", "TRUE", True] else False
 
 try:
     if DEBUG:
         print("[BACKEND] Using local settings")
         from .local_settings import *
-    elif os.environ.get("DEBUG") == "":
-        exit("[BACKEND] No ENV found, or debug not set.")
     else:
         print("[BACKEND] Using production settings")
         from .prod_settings.py import *
@@ -39,6 +33,24 @@ INSTALLED_APPS = ['django.contrib.staticfiles',
                   'django_htmx',
                   'debug_toolbar']
 
+LOGIN_REQUIRED_IGNORE_VIEW_NAMES = [
+    'index',
+    'login',
+    'login create_account',
+    'login forgot_password',
+    'user set password reset',
+    'user set password',
+    'user set password set',
+    'logout'
+]
+
+# @login_required()
+
+LOGIN_REQUIRED_IGNORE_PATHS = [
+    r'/login/$'
+]
+# for some reason only allows "login" and not "login create account" or anything
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 EMAIL_WHITELIST = []
@@ -47,9 +59,12 @@ AUTHENTICATION_BACKENDS = [
     'social_core.backends.github.GithubOAuth2',
     'social_core.backends.google.GoogleOAuth2',
 ]
+
 SECRET_KEY = os.environ.get("SECRET_KEY")
+
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/dashboard'
+
 ROOT_URLCONF = 'backend.urls'
 SESSION_COOKIE_AGE = 1800
 SESSION_ENGINE = "django.contrib.sessions.backends.db"
@@ -57,7 +72,6 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [BASE_DIR / "frontend/static", ]
 mimetypes.add_type("text/javascript", ".js", True)
-
 
 MESSAGE_STORAGE = "django.contrib.messages.storage.cookie.CookieStorage"
 
@@ -117,7 +131,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_htmx.middleware.HtmxMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware'
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'login_required.middleware.LoginRequiredMiddleware'
 ]
 INTERNAL_IPS = [
     # ...
@@ -177,3 +192,12 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 SENDGRID_SANDBOX_MODE_IN_DEBUG = True
+
+if 'test' in sys.argv[1:]:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': ':memory:',
+        }
+    }
+    # check if the app is running from a manage.py test command, if so then use SQLITE with memory, faster than xampp
