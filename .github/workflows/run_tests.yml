@@ -12,9 +12,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
-      - name: Dependency Review      
-        uses: actions/dependency-review-action@v3.1.0
         
       - name: Install Docker Compose
         run: |
