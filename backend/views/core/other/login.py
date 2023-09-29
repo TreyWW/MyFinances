@@ -84,6 +84,4 @@ def create_account_page(request: HttpRequest):
 def forgot_password_page(request: HttpRequest):
     if request.user.is_authenticated:
         return redirect('dashboard')
-    code = request.GET.get('secret')
-
     return render(request, 'core/pages/forgot_password.html')

@@ -123,7 +123,14 @@ class TracebackErrors(models.Model):
         return str(self.error)
 
 
-def SEND_SENDGRID_EMAIL(DESTINATION, SUBJECT, CONTENT, FROM='myfinances@strelix.org', request=None):
+
+def SEND_SENDGRID_EMAIL(to_email, subject, content, from_email='myfinances@strelix.org', request=None, **kwargs):
+    DESTINATION = kwargs.get("DESTINATION") or to_email
+    SUBJECT = kwargs.get("SUBJECT") or subject
+    CONTENT = kwargs.get("CONTENT") or content
+    FROM = kwargs.get("FROM") or from_email
+    request = kwargs.get("request") or request
+
     if not isinstance(DESTINATION, list):
         DESTINATION = [DESTINATION]
     msg = EmailMessage(

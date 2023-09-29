@@ -12,11 +12,10 @@ from django.contrib.auth.hashers import make_password, check_password
 
 @not_authenticated
 def set_password(request: HttpRequest, secret):
-    SECRET_RETURNED = PasswordSecrets.objects.filter(secret=make_password(secret, salt=settings.SECRET_KEY)).all()
+    SECRET_RETURNED = PasswordSecrets.objects.all()
+    SECRET_RETURNED.filter(expires__lte=timezone.now()).all().delete()
+
     for SECRET in SECRET_RETURNED:
-        if SECRET.expires <= timezone.now():
-            SECRET.delete()
-            continue
         if check_password(secret, SECRET.secret):
             return render(request, 'core/pages/reset_password.html', {"secret": secret})
 

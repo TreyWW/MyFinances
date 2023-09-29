@@ -1,17 +1,25 @@
 from django.core.exceptions import ValidationError
 from django.http import HttpRequest
 from django.shortcuts import redirect
-from django.urls import reverse
+from django.urls import reverse, resolve
 from backend.models import *
 from django.contrib.auth.hashers import make_password
 from django.core.validators import validate_email
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
+
+from django.utils.timezone import make_aware
+from django.utils import timezone
+from datetime import timedelta, date
+
+from settings.settings import EMAIL_SERVER_ENABLED
+
+
+def msg_if_valid_email_then_sent(request):
+    return messages.success(request, f"<strong>If this is a valid email address</strong> then we have sent you an email.\n Please check spam, if you cannot find the email press forgot password again.")
 
 
 def set_password_generate(request: HttpRequest):
-    if request.user.is_superuser and request.user.is_staff:
-        pass
-    else:
+    if not request.user.is_superuser or not request.user.is_staff:
         return redirect('dashboard')
 
     USER = request.GET.get('id')
@@ -22,50 +30,71 @@ def set_password_generate(request: HttpRequest):
         return redirect('dashboard')
 
     USER = User.objects.filter(id=USER).first()
-    if USER:
-        CODE = RandomCode(40)
-        HASHED_CODE = make_password(CODE, salt=settings.SECRET_KEY)
 
-        PWD_SECRET, created = PasswordSecrets.objects.update_or_create(
-            user=USER,
-            defaults={"expires": date.today() + timedelta(days=3), "secret" :HASHED_CODE}
-        )
-        PWD_SECRET.save()
-        messages.error(request, f'Successfully created a code. <a href="{reverse("user set password", args=(CODE,))}">{CODE}</a>')
-    else:
+    if not USER:
         messages.error(request, f'User not found')
+        return redirect('dashboard')
+    CODE = RandomCode(40)
+    HASHED_CODE = make_password(CODE, salt=settings.SECRET_KEY)
 
-    return redirect(NEXT)
+    PWD_SECRET, created = PasswordSecrets.objects.update_or_create(
+        user=USER,
+        defaults={"expires": date.today() + timedelta(days=3), "secret": HASHED_CODE}
+    )
+    PWD_SECRET.save()
+    messages.error(request, f'Successfully created a code. <a href="{reverse("user set password", args=(CODE,))}">{CODE}</a>')
+
+    try:
+        resolve(NEXT)
+        return redirect(NEXT)
+    except resolve.NoReverseMatch:
+        return redirect('dashboard')
 
 
-#@not_logged_in
 def password_reset(request: HttpRequest):
-    EMAIL = request.GET.get('email')
+    EMAIL = request.POST.get('email')
+
+    # if not EMAIL_SERVER_ENABLED:
+    #     messages.error(request, "Unfortunately our email server is not currently available.")
+
+
+    if not EMAIL:
+        msg_if_valid_email_then_sent(request)
+        return redirect('login forgot_password')
 
     try:
         validate_email(EMAIL)
     except ValidationError as e:
-        messages.error(request, "Invalid email provided.")
-        return redirect('login')
+        msg_if_valid_email_then_sent(request)
+        return redirect('login forgot_password')
 
-    if EMAIL:
-        USER = User.objects.filter(email=EMAIL).first()
-        if USER:
-            CODE = RandomCode(40)
-            HASHED_CODE = make_password(CODE, salt=settings.SECRET_KEY)
-            PasswordSecrets.objects.filter(user=USER).all().delete()
+    USER = User.objects.filter(email=EMAIL).first()
 
-            PWD_SECRET = PasswordSecrets(
-                user=USER,
-                expires=date.today() + timedelta(days=3),
-                secret=HASHED_CODE
-            ).save()
+    if not USER:
+        msg_if_valid_email_then_sent(request)
+        return redirect("login forgot_password")
 
-            # [i.delete() for i in found]
+    PasswordSecrets.objects.filter(user=USER).all().delete()
 
-            SEND_SENDGRID_EMAIL(USER.email, "My Finances | Password Reset",
-                                f"You've now got a new password reset code. \n\n Reset Here: {request.build_absolute_uri(reverse('user set password', args=(CODE,)))}",
-                                request=request)
-        messages.success(request,
-                         f"<strong>If this is a valid email address</strong> then we have sent you an email.\n Please check spam, if you cannot find the email press forgot password again.")
-    return redirect("login")
+    CODE = RandomCode(40)
+    HASHED_CODE = make_password(CODE)
+    expires_date = date.today() + timedelta(days=3)
+    expires_datetime = timezone.make_aware(datetime.combine(expires_date, datetime.min.time()))
+
+    PasswordSecrets.objects.create(
+        user=USER,
+        expires=expires_datetime,
+        secret=HASHED_CODE
+    )
+
+    # SEND_SENDGRID_EMAIL(USER.email, "Password Reset" ,f"""
+    #         My Finances | Password Reset
+    #         You've now got a new password reset code.
+    #
+    #         Reset Here: {request.build_absolute_uri(reverse('user set password', args=(CODE,)))}
+    # """, request=request)
+    print(f"code is {CODE}")
+
+    msg_if_valid_email_then_sent(request)
+
+    return redirect("login forgot_password")
