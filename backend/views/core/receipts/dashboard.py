@@ -13,38 +13,49 @@ def receipts_dashboard(request: HttpRequest):
     context = {}
 
     if request.htmx:
-        search_text = request.POST.get('search')
-        results = (Receipt.objects.filter(user=request.user)
-                   .filter(Q(name__icontains=search_text) | Q(date__icontains=search_text)).order_by('-date'))
-        context.update({
-            'receipts': results
-        })
-        return render(request, 'core/pages/receipts/_search_results.html', context)
+        search_text = request.POST.get("search")
+        results = (
+            Receipt.objects.filter(user=request.user)
+            .filter(Q(name__icontains=search_text) | Q(date__icontains=search_text))
+            .order_by("-date")
+        )
+        context.update({"receipts": results})
+        return render(request, "core/pages/receipts/_search_results.html", context)
 
-    context = {"modal_data": [{
-        "id": "receipt-modal",
-        "title": "Upload a receipt",
-        "action": {
-            "text": "Add Receipt", "method": "post",
-            "extra": f"enctype=multipart/form-data hx-post={reverse_lazy('api v1 receipts new')} hx-target=#items hx-refresh=true",
-            "fields": [
-                {
-                    "type": "text", "name": "receipt_name",
-                    "required": False, "label": "Receipt name", "placeholder": "Black Pen"
+    context = {
+        "modal_data": [
+            {
+                "id": "receipt-modal",
+                "title": "Upload a receipt",
+                "action": {
+                    "text": "Add Receipt",
+                    "method": "post",
+                    "extra": f"enctype=multipart/form-data hx-post={reverse_lazy('api v1 receipts new')} hx-target=#items hx-refresh=true",
+                    "fields": [
+                        {
+                            "type": "text",
+                            "name": "receipt_name",
+                            "required": False,
+                            "label": "Receipt name",
+                            "placeholder": "Black Pen",
+                        },
+                        {
+                            "type": "file",
+                            "name": "receipt_image",
+                            "required": True,
+                            "extra": "accept=image/png,image/jpeg",
+                        },
+                        {
+                            "type": "date",
+                            "name": "receipt_date",
+                            "required": True,
+                            "label": "Receipt date",
+                        },
+                    ],
                 },
-                {
-                    "type": "file", "name": "receipt_image",
-                    "required": True, "extra": 'accept=image/png,image/jpeg',
-                },
-                {
-                    "type": "date", "name": "receipt_date",
-                    "required": True, "label": "Receipt date",
-                }
-
-            ]
-        }
-    }],
-        'receipts': Receipt.objects.filter(user=request.user).order_by('-date')
+            }
+        ],
+        "receipts": Receipt.objects.filter(user=request.user).order_by("-date"),
     }
 
     return render(request, "core/pages/receipts/dashboard.html", context)

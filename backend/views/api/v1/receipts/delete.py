@@ -7,7 +7,7 @@ from backend.models import Receipt
 from django.db.models import Q
 
 
-@require_http_methods(['DELETE'])
+@require_http_methods(["DELETE"])
 @login_required
 def receipt_delete(request: HttpRequest, id: int):
     receipt = Receipt.objects.filter(id=id).first()
@@ -15,4 +15,8 @@ def receipt_delete(request: HttpRequest, id: int):
         return JsonResponse(status=404)
 
     receipt.delete()
-    return render(request, 'core/pages/receipts/_search_results.html', {'receipts': Receipt.objects.filter(user=request.user).order_by('-date')})
+    return render(
+        request,
+        "core/pages/receipts/_search_results.html",
+        {"receipts": Receipt.objects.filter(user=request.user).order_by("-date")},
+    )
