@@ -1,9 +1,15 @@
 import sys
 from pathlib import Path
-import os, mimetypes, json
+import os, mimetypes, json, environ
 from django.contrib.messages import constants as messages
 
-import environ
+
+env = environ.Env(DEBUG=(bool, False))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
+print(f"test: {env('DEBUG')}")
+
+DEBUG = True if os.environ.get("DEBUG") in ["True", "true", "TRUE", True] else False
 
 env = environ.Env()
 environ.Env.read_env()
@@ -69,6 +75,9 @@ ROOT_URLCONF = "backend.urls"
 SESSION_COOKIE_AGE = 1800
 SESSION_ENGINE = "django.contrib.sessions.backends.db"
 STATIC_URL = "/static/"
+STATIC_URL = "/static/"
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 STATICFILES_DIRS = [
     BASE_DIR / "frontend/static",
@@ -148,6 +157,15 @@ CACHES = {
     }
 }
 
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
+
 GOOGLE_OAUTH2_CLIENT_DETAILS = {
     "web": {
         "client_id": os.environ.get("GOOGLE_CLIENT_ID"),
@@ -176,6 +194,22 @@ SOCIAL_AUTH_GITHUB_SECRET = os.environ.get("GITHUB_SECRET")
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get("GOOGLE_CLIENT_IDY")
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET")
+
+AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
+AWS_STORAGE_BUCKET_NAME = os.environ.get("AWS_STORAGE_BUCKET_NAME")
+AWS_S3_SIGNATURE_NAME = "s3v4"
+AWS_S3_REGION_NAME = os.environ.get("AWS_S3_REGION_NAME")
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL = None
+AWS_S3_VERITY = True
+AWS_ENABLED = (
+    True if os.environ.get("AWS_ENABLED") in [True, "True", "true", "TRUE"] else False
+)
+
+if (AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY) and AWS_ENABLED:
+    print("[BACKEND] AWS S3 Media storage is enabled.")
+    DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 
 SENDGRID_TEMPLATE = os.environ.get("SENDGRID_TEMPLATE")
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"

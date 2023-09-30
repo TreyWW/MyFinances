@@ -4,7 +4,7 @@ gunicorn
 # db
 mysqlclient==2.2.0
 mysqlclient
-mariadb
+mariadb==1.1.7
 # django apps
 social-auth-app-django==5.3.0
 django-sendgrid-v5
@@ -20,3 +20,6 @@ django-login-required-middleware
 django-debug-toolbar
 # other stuff
 oauthlib==3.2.2
+boto3==1.28.57
+django-storages==1.14.1
+Pillow==10.0.1

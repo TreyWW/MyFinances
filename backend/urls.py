@@ -10,6 +10,7 @@ from backend.views.core import (
     settings as settings_v,
     invoices,
     clients,
+    receipts,
 )
 from backend.views.core.other.index import index, dashboard
 from backend.views.api import v1
@@ -32,6 +33,21 @@ urlpatterns = [
         "dashboard/profile/change_password/",
         settings_v.view.change_password,
         name="user settings change_password",
+    ),
+    path(
+        "dashboard/receipts",
+        receipts.dashboard.receipts_dashboard,
+        name="receipts dashboard",
+    ),
+    path(
+        "api/v1/receipts/delete/<int:id>",
+        v1.receipts.delete.receipt_delete,
+        name="api v1 receipts delete",
+    ),
+    path(
+        "api/v1/receipts/new",
+        v1.receipts.new.receipt_create,
+        name="api v1 receipts new",
     ),
     path(
         "dashboard/invoices/",
@@ -118,6 +134,12 @@ if settings.DEBUG:
     urlpatterns += [
         url(r"^__debug__/", include(debug_toolbar.urls)),
     ]
+
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    # may not need to be in debug
+    urlpatterns += static(
+        settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0]
+    )
 
 handler500 = "backend.views.core.other.errors.universal"
 handler404 = "backend.views.core.other.errors.universal"

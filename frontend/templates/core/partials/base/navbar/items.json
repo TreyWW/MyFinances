@@ -13,8 +13,8 @@
     },
     {
         "name": "Receipts",
-        "urls": ["index"],
-        "url": "",
+        "urls": ["receipts dashboard"],
+        "url": "receipts dashboard",
         "icon": "receipt"
     },
     {

@@ -1,0 +1,13 @@
+{% extends 'core/pages/base.html' %}
+{% csrf_token %}
+{% block content %}
+    <label class="btn btn-primary btn-block my-3" for="receipt-modal">
+        {% include 'core/components/icon.html' with icon="receipt" classes="pe-2" %}
+        Upload Receipt
+    </label>
+    {% include 'core/components/modal.html' with modals=modal_data %}
+    {% include 'core/pages/receipts/_search.html' %}
+    <div id="items">
+        {% include 'core/pages/receipts/_search_results.html' %}
+    </div>
+{% endblock content %}
