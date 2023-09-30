@@ -35,9 +35,9 @@ def universal(request: HttpRequest, exception=None):
             autohide=False,
             level="danger",
         )
-        TracebackErrors(user=request.user, error=exec_error).save()
+        TracebackError(user=request.user, error=exec_error).save()
     else:
-        TracebackErrors(error=exec_error).save()
+        TracebackError(error=exec_error).save()
 
     return redirect("dashboard")
 
@@ -51,7 +51,7 @@ def e_403(request: HttpRequest, exception=None):
         traceback.print_exc()
         exec_error = traceback.format_exc()
         if len(exec_error) < 4999:
-            TracebackErrors(error=exec_error).save()
+            TracebackError(error=exec_error).save()
         return redirect("login")
     else:
         Toast(
@@ -74,9 +74,9 @@ def e_403(request: HttpRequest, exception=None):
             return
 
         if request.user.is_authenticated:
-            TracebackErrors(user=request.user, error=exec_error).save()
+            TracebackError(user=request.user, error=exec_error).save()
         else:
-            TracebackErrors(error=exec_error).save()
+            TracebackError(error=exec_error).save()
 
         return redirect("dashboard")
     return redirect("dashboard")

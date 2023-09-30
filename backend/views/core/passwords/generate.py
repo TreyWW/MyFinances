@@ -40,7 +40,7 @@ def set_password_generate(request: HttpRequest):
     CODE = RandomCode(40)
     HASHED_CODE = make_password(CODE, salt=settings.SECRET_KEY)
 
-    PWD_SECRET, created = PasswordSecrets.objects.update_or_create(
+    PWD_SECRET, created = PasswordSecret.objects.update_or_create(
         user=USER,
         defaults={"expires": date.today() + timedelta(days=3), "secret": HASHED_CODE},
     )
@@ -79,7 +79,7 @@ def password_reset(request: HttpRequest):
         msg_if_valid_email_then_sent(request)
         return redirect("login forgot_password")
 
-    PasswordSecrets.objects.filter(user=USER).all().delete()
+    PasswordSecret.objects.filter(user=USER).all().delete()
 
     CODE = RandomCode(40)
     HASHED_CODE = make_password(CODE)
@@ -88,7 +88,7 @@ def password_reset(request: HttpRequest):
         datetime.combine(expires_date, datetime.min.time())
     )
 
-    PasswordSecrets.objects.create(
+    PasswordSecret.objects.create(
         user=USER, expires=expires_datetime, secret=HASHED_CODE
     )
 

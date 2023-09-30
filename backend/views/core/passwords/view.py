@@ -12,7 +12,7 @@ from django.contrib.auth.hashers import make_password, check_password
 
 @not_authenticated
 def set_password(request: HttpRequest, secret):
-    SECRET_RETURNED = PasswordSecrets.objects.all()
+    SECRET_RETURNED = PasswordSecret.objects.all()
     SECRET_RETURNED.filter(expires__lte=timezone.now()).all().delete()
 
     for SECRET in SECRET_RETURNED:

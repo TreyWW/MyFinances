@@ -24,7 +24,7 @@ from django.utils import timezone
 def set_password_set(request: HttpRequest, secret):
     password = request.POST.get("password")
     if len(password) > 7:
-        SECRET_RETURNED = PasswordSecrets.objects.all()
+        SECRET_RETURNED = PasswordSecret.objects.all()
 
         for SECRET in SECRET_RETURNED:
             if SECRET.expires < timezone.now():

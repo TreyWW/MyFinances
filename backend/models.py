@@ -35,6 +35,13 @@ class UserSettings(models.Model):
         choices=[(code, info["name"]) for code, info in CURRENCIES.items()],
     )
 
+    def __str__(self):
+        return self.user.username
+
+    class Meta:
+        verbose_name = "User Settings"
+        verbose_name_plural = "User Settings"
+
 
 class Client(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -61,6 +68,9 @@ class InvoiceItem(models.Model):
             return self.hours * self.price_per_hour
         else:
             return self.price
+
+    def __str__(self):
+        return self.description
 
 
 class Invoice(models.Model):
@@ -89,7 +99,7 @@ class Invoice(models.Model):
     )
 
     def __str__(self):
-        return f"Invoice {self.invoice_id} for {self.client}"
+        return f"Invoice #{self.invoice_id or self.id} for {self.client or 'Unknown Client'}"
 
     def get_total_price(self):
         total = 0
@@ -98,7 +108,7 @@ class Invoice(models.Model):
         return total
 
 
-class PasswordSecrets(models.Model):
+class PasswordSecret(models.Model):
     user = models.OneToOneField(
         User, on_delete=models.CASCADE, related_name="password_secrets"
     )
@@ -117,7 +127,7 @@ class LoginLog(models.Model):
     date = models.DateTimeField(auto_now_add=True)
 
 
-class Errors(models.Model):
+class Error(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     error = models.CharField(max_length=250, null=True)
     error_code = models.CharField(max_length=100, null=True)
@@ -128,7 +138,7 @@ class Errors(models.Model):
         return str(self.user_id)
 
 
-class TracebackErrors(models.Model):
+class TracebackError(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     error = models.CharField(max_length=5000, null=True)
     date = models.DateTimeField(auto_now=True)
@@ -171,7 +181,7 @@ def SEND_SENDGRID_EMAIL(
                 "Failed to connect to our email server. Please try again later or report this issue to our team.",
             )
         print(f"[ERROR] {error}", flush=True)
-        TracebackErrors(error=error).save()
+        TracebackError(error=error).save()
         return False, "Failed to connect to our email server."
 
     except smtplib.SMTPException as error:
@@ -181,9 +191,9 @@ def SEND_SENDGRID_EMAIL(
                 "Failed to connect to our email server. Please try again later or report this issue to our team.",
             )
         print(f"[ERROR] {error}", flush=True)
-        TracebackErrors(error=error).save()
+        TracebackError(error=error).save()
         return False, error
     except Exception as error:
         print(f"[ERROR] {error}", flush=True)
-        TracebackErrors(error=error).save()
+        TracebackError(error=error).save()
         return False, "Error"

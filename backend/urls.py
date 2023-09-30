@@ -7,6 +7,7 @@ from django.urls import path, include
 from backend.views.core import other, passwords, settings as settings_v, invoices
 from backend.views.core.other.index import index, dashboard
 from backend.views.api import v1
+from django.contrib import admin
 
 # from backend.views.core.api.v1.user import settings
 
@@ -97,6 +98,7 @@ urlpatterns = [
         passwords.generate.set_password_generate,
         name="admin set password generate",
     ),
+    path("admin/", admin.site.urls),
 ] + static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
 
 if settings.DEBUG:
