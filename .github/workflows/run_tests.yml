@@ -36,6 +36,10 @@ jobs:
       - name: Install Python dependencies
         uses: py-actions/py-dependency-install@v4
 
+      - name: Install mysqlclient
+        run: |
+          pip install mysqlclient
+
       - name: Build and run docker-compose.ci.yml
         run: docker-compose -f infrastructure/backend/docker-compose.ci.yml up -d
 
