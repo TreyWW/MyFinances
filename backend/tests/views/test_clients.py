@@ -1,8 +1,10 @@
 from django.urls import reverse, resolve
+
+from backend.models import Client
 from .handler import ViewTestCase
 
 
-class InvoicesViewTestCase(ViewTestCase):
+class ClientsViewTestCase(ViewTestCase):
     def test_clients_view_302_for_non_authenticated_users(self):
         response = self.client.get(reverse("clients dashboard"))
         self.assertEqual(response.status_code, 302)
@@ -24,3 +26,70 @@ class InvoicesViewTestCase(ViewTestCase):
         self.assertEqual(
             "backend.views.core.clients.dashboard.clients_dashboard", func_name
         )
+
+    def test_clients_view_doesnt_create_invalid_client_no_first_name(self):
+        self.client.login(username="user", password="user")
+        client_objects_before = Client.objects.count()
+        response = self.client.post(
+            reverse("clients dashboard"),
+            {
+                "first_name": "",
+                "last_name": "Testy",
+            },
+        )
+        client_objects_after = Client.objects.count()
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(client_objects_after, client_objects_before)
+
+    def test_clients_view_doesnt_create_invalid_client_no_last_name(self):
+        self.client.login(username="user", password="user")
+        client_objects_before = Client.objects.count()
+        response = self.client.post(
+            reverse("clients dashboard"),
+            {
+                "first_name": "Testy",
+                "last_name": "",
+            },
+        )
+        client_objects_after = Client.objects.count()
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(client_objects_after, client_objects_before)
+
+    def test_clients_view_doesnt_create_client_valid_details(self):
+        self.client.login(username="user", password="user")
+
+        with self.assertNumQueries(9):
+            client_objects_before = Client.objects.count()
+
+            response = self.client.post(
+                reverse("clients dashboard"),
+                {
+                    "first_name": "firstname",
+                    "last_name": "lastname",
+                },
+            )
+
+            client_objects_after = Client.objects.count()
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(
+                len(response.context["clients"]), client_objects_before + 1
+            )
+            self.assertEqual(client_objects_after, client_objects_before + 1)
+
+    def test_clients_check_clients_get_returned(self):
+        self.client.login(username="user", password="user")
+        response = self.client.get(reverse("clients dashboard"))
+        amount_of_clients_returned = len(response.context["clients"])
+        self.assertEqual(amount_of_clients_returned, 0)
+
+        Client.objects.create(
+            first_name="firstname",
+            last_name="lastname",
+            user=response.wsgi_request.user,
+        )
+
+        response = self.client.get(reverse("clients dashboard"))
+        amount_of_clients_returned = len(response.context["clients"])
+        self.assertEqual(amount_of_clients_returned, 1)
