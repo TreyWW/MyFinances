@@ -1,4 +1,6 @@
-# MyFinances
+<!--# MyFinances -->
+
+<img src="https://github.com/TreyWW/MyFinances/assets/73353716/685b83f4-1495-4ce6-94c7-e24c2f14a6d1" width="495" height="166">
 
 MyFinances is an open-source web application designed to empower individuals and teams to efficiently manage their finances. Whether you're tracking personal expenses, managing client invoices, or planning your financial goals, MyFinances provides a user-friendly platform to streamline these tasks.
 
@@ -26,32 +28,7 @@ MyFinances is an open-source web application designed to empower individuals and
 - Additional requirements can be found in the `requirements.txt` file.
 
 ### Installation
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/MyFinances.git
-   ```
-2. Move to the directory
-   ```bash
-   cd MyFinances
-   ```
-3. Create an ENV file in `coming_soon` by using:
-   ```bash
-   cp .env.sample /env/MyFinances.env
-   ```
-4. Move to the infrastructure directory
-   ```bash
-   cd MyFinances/infrastructure/backend
-   ```
-5. Build the docker image
-   ```bash
-   docker-compose build
-   ```
-6. Start the docker-compose server
-   ```bash
-   docker-compose up -d
-   ```
-7. Visit the website; `http://127.0.0.1:10012`
+Go to [SETUP.md](https://github.com/TreyWW/MyFinances/blob/main/documentation/SETUP.md)
 
 ## Contributing
 
@@ -88,7 +65,10 @@ To contribute code:
 1. Fork the repository.
 2. Create a new branch for your changes.
 3. Make your changes, following the coding style guidelines.
-4. Test your changes thoroughly.
+4. Test your changes thoroughly
+    - `python manage.py test backend`
+    - run the app (`python manage.py runserver`)
+    - view any changed pages in browser (`127.0.0.1`) and make sure the changes work as expected
 5. Submit a pull request to the main repository's `main` branch.
 
 We'll review your pull request, provide feedback, and work with you to get your changes merged.

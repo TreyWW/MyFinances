@@ -19,5 +19,5 @@ Past issue has finished to allow blah blah
 ## Definition of Done:
 - [ ] Created tests/urls logged_in and unlogged_in json objects for any added URLS
 - [ ] Created tests/views for any added VIEWS
-- [ ] Code has been tested with both `python manage.py test_urls` and ` python manage.py test_views`
+- [ ] Code has been tested with `python manage.py test backend`
 - [ ] All of Acceptance Criteria is complete

@@ -1,3 +1,3 @@
 #!/bin/sh
 
-python3 manage.py test_views
+python3 manage.py test backend

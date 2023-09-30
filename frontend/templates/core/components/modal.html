@@ -5,7 +5,7 @@
         <div class="modal-content flex flex-col gap-5 w-full">
             <label for="{{ modal.id }}" class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</label>
             <h2 class="text-xl">{{ modal.title }}</h2>
-            <span>{{ modal.text }}</span>
+            {% if modal.text %}<span>{{ modal.text }}</span>{% endif %}
             <form method="{{ modal.action.method }}" {% autoescape off %}{{ modal.action.extra }}{% endautoescape %}>
                 {% if modal.action.method == "post" %}
                     {% csrf_token %}
@@ -14,16 +14,19 @@
                     {% for field in modal.action.fields %}
                         <div class="form-field">
                             {% if field.type == "file" %}
-                                <input type="file" name="{{ field.name | default:"file" }}" {{ field.extra }} class="input-file input-file-primary" {% if field.required %}required{% endif %}>
+                                <input type="file" name="{{ field.name | default:"file" }}" {{ field.extra }} class="input-file input-file-primary max-w-full" {% if field.required %}required{% endif %}>
                             {% elif field.type == "text" %}
                                 {% if field.label %}
                                 <label class="form-label">{{ field.label }}</label>
                                 {% endif %}
-                                <input type="text" name="{{ field.name | default:"text" }}" placeholder="{{ field.placeholder }}"
-                                       class="input input-bordered" {% if modal.action.required %}required{% endif %} {{ field.extra }}>
+                                <input type="text" name="{{ field.name | default:"text" }}" placeholder="{{ field.placeholder }}" value="{{ field.value }}"
+                                       class="input input-bordered max-w-full {{ field.class_extra }}" {% if modal.action.required %}required{% endif %} {{ field.extra }}>
                             {% elif field.type == "date" %}
                                 <label class="form-label">{{ field.label }}</label>
-                                <input type="date" name="{{ field.name | default:"date" }}" class="input input-bordered" {% if field.required %}required{% endif %} {{ field.extra }}>
+                                <input type="date" name="{{ field.name | default:"date" }}" class="input input-bordered max-w-full" {% if field.required %}required{% endif %} {{ field.extra }}>
+                            {% elif field.type == "hidden" %}
+                                <input type="hidden" name="{{ field.name | default:"hidden" }}" value="{{ field.value }}" class="hidden" {{ field.extra }}>
+
                             {% endif %}
                         </div>
                     {% endfor %}

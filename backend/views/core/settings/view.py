@@ -1,43 +1,57 @@
-from django.contrib.auth.decorators import login_required
 from django.contrib.sessions.models import Session
-from django.core.cache import cache
 from django.http import HttpRequest
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.contrib.auth import update_session_auth_hash
 
 from backend.decorators import *
 from backend.models import *
 
 
-@login_required
 def settings_page(request: HttpRequest):
     context = {}
-    
+
     usersettings, created = UserSettings.objects.get_or_create(user=request.user)
 
     if request.method == "POST":
-        currency = request.POST.get('currency')
-        if currency:
+        currency = request.POST.get("currency")
+        if currency and currency in usersettings.CURRENCIES:
             usersettings.currency = currency
             usersettings.save()
-            cache.set("currency", currency)
-            cache.set("currency_symbol", usersettings.CURRENCIES.get(currency, {}).get('symbol'))
+        else:
+            messages.error(request, "Invalid currency")
 
-    context.update ({
-        'sessions': Session.objects.filter(),
-        'currency': usersettings.currency,
-        'currency_signs': usersettings.CURRENCIES
-    })
+    context.update(
+        {
+            "sessions": Session.objects.filter(),
+            "currency": usersettings.currency,
+            "currency_signs": usersettings.CURRENCIES,
+        }
+    )
 
     return render(request, "core/pages/settings/main.html", context)
 
 
-@login_required
 def change_password(request: HttpRequest):
     if request.method == "POST":
-        password = request.POST.get('password')
-        if not password or 129 < len(password) > 7:
-            messages.error(request, "Something went wrong, no password was provided." if not password else "Password either too short, or too long. Minimum characters is eight, maximum is 128.")
+        error: str = ""
+
+        password = request.POST.get("password")
+        confirm_password = request.POST.get("confirm_password")
+
+        if password != confirm_password:
+            error = "Passwords don't match"
+
+        if not password:
+            error = "Something went wrong, no password was provided."
+
+        if not error and len(password) > 128:
+            error = "Password either too short, or too long. Minimum characters is eight, maximum is 128."
+
+        if not error and len(password) < 8:
+            error = "Password either too short, or too long. Minimum characters is eight, maximum is 128."
+
+        if error:
+            messages.error(request, error)
             return redirect("user settings change_password")
 
         request.user.set_password(password)

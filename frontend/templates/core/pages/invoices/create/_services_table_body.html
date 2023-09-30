@@ -1,0 +1,32 @@
+{% load humanize %}
+{% for row in rows %}
+    <tr>
+        <td>
+            <input class="hidden" name="service_name[]" value="{{ row.service_name }}">
+            {{ row.service_name }}
+        </td>
+        <td>
+            <input class="hidden" name="hours[]" value="{{ row.hours }}">
+            {{ row.hours }}
+        </td>
+        <td>
+            <input class="hidden" name="price_per_hour[]" value="{{ row.price_per_hour }}">
+            £{{ row.price_per_hour }}
+        </td>
+        <td>
+            <input class="hidden" name="total_price[]" value="{{ row.total_price }}">
+            £{{ row.total_price | intcomma }}
+        </td>
+        <td>
+            <button type="button" class="btn btn-outline-error btn-xs" hx-target="closest tr" hx-delete="{% url "api v1 invoices create services remove" %}">
+                <i class="fa-solid fa-trash-can pe-2"></i>
+                Delete
+            </button>
+        </td>
+    </tr>
+{% empty %}
+    <tr>
+        <td colspan="5">No services added</td>
+    </tr>
+{% endfor %}
+{#<input class="modal-state" id="modal-1" type="checkbox" id="modal-checkbox"/>#}

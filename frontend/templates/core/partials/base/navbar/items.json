@@ -1,5 +1,11 @@
 [
     {
+        "name": "Clients",
+        "urls": ["clients dashboard"],
+        "url": "clients dashboard",
+        "icon": "users"
+    },
+    {
         "name": "Invoices",
         "urls": ["invoices dashboard", "invoices dashboard create"],
         "url": "invoices dashboard",
