@@ -26,21 +26,21 @@ def login_page(request):
 
         user = authenticate(request, username=email, password=password)
 
-        if user is not None:
-            login(request, user)
-            LoginLog.objects.create(user=user)
-            AuditLog.objects.create(user=user, action="Login")
-
-            try:
-                resolve(request.POST.get("next"))
-                if request.POST.get("logout"):
-                    redirect("dashboard")
-                return redirect(request.POST.get("next"))
-            except Resolver404:
-                return redirect("dashboard")
-        else:
+        if not user:
             messages.error(request, "Invalid email or password")
             return render(request, "core/pages/login.html", {"attempted_email": email})
+
+        login(request, user)
+        LoginLog.objects.create(user=user)
+        AuditLog.objects.create(user=user, action="Login")
+
+        try:
+            resolve(request.POST.get("next"))
+            if request.POST.get("logout"):
+                redirect("dashboard")
+            return redirect(request.POST.get("next"))
+        except Resolver404:
+            return redirect("dashboard")
 
     github_enabled = (
         True
