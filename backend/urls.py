@@ -4,7 +4,13 @@ from django.views.static import serve
 from django.urls import re_path as url
 from django.urls import path, include
 
-from backend.views.core import other, passwords, settings as settings_v, invoices
+from backend.views.core import (
+    other,
+    passwords,
+    settings as settings_v,
+    invoices,
+    clients,
+)
 from backend.views.core.other.index import index, dashboard
 from backend.views.api import v1
 from django.contrib import admin
@@ -97,6 +103,11 @@ urlpatterns = [
         "admin/generate-password",
         passwords.generate.set_password_generate,
         name="admin set password generate",
+    ),
+    path(
+        "dashboard/clients/",
+        clients.dashboard.clients_dashboard,
+        name="clients dashboard",
     ),
     path("admin/", admin.site.urls),
 ] + static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
