@@ -7,11 +7,16 @@ class Command(BaseCommand):
     help = "Runs verification tests for view files in backend/tests/views."
 
     def add_arguments(self, parser):
-        parser.add_argument('test_label', nargs='?', type=str, help="Test label for a specific view file.")
+        parser.add_argument(
+            "test_label",
+            nargs="?",
+            type=str,
+            help="Test label for a specific view file.",
+        )
 
     def handle(self, *args, **options):
         test_dir = "backend/tests/views"
-        test_label = options['test_label']
+        test_label = options["test_label"]
 
         if test_label:
             self.run_test("backend.tests.views." + test_label)

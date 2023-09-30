@@ -17,7 +17,7 @@ def set_password(request: HttpRequest, secret):
 
     for SECRET in SECRET_RETURNED:
         if check_password(secret, SECRET.secret):
-            return render(request, 'core/pages/reset_password.html', {"secret": secret})
+            return render(request, "core/pages/reset_password.html", {"secret": secret})
 
     messages.error(request, "Invalid or expired password reset code")
-    return redirect('dashboard')
+    return redirect("dashboard")

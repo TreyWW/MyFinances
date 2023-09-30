@@ -7,10 +7,11 @@ from backend.models import *
 
 def invoices_dashboard(request: HttpRequest):
     context = {}
-    context["invoices"] = (Invoice.objects
-                           .filter(user=request.user)
-                           .prefetch_related("items")
-                           .only("invoice_id", "id", "payment_status", "date_due"))
+    context["invoices"] = (
+        Invoice.objects.filter(user=request.user)
+        .prefetch_related("items")
+        .only("invoice_id", "id", "payment_status", "date_due")
+    )
     # May need to add more logic later
 
     # context["modal_data"] = [
@@ -20,7 +21,7 @@ def invoices_dashboard(request: HttpRequest):
     #     }
     #     ]
 
-    return render(request, 'core/pages/invoices/dashboard/dashboard.html', context)
+    return render(request, "core/pages/invoices/dashboard/dashboard.html", context)
 
 
 def invoices_dashboard_id(request: HttpRequest, invoice_id):
@@ -31,5 +32,8 @@ def invoices_dashboard_id(request: HttpRequest, invoice_id):
         return redirect("invoices dashboard")
     invoices = Invoice.objects.get(id=invoice_id)
     if not invoices:
-        return redirect('invoices dashboard')
-    return render(request, 'core/pages/invoices/dashboard/dashboard.html', )
+        return redirect("invoices dashboard")
+    return render(
+        request,
+        "core/pages/invoices/dashboard/dashboard.html",
+    )

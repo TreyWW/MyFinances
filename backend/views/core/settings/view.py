@@ -9,29 +9,36 @@ from backend.models import *
 
 def settings_page(request: HttpRequest):
     context = {}
-    
+
     usersettings, created = UserSettings.objects.get_or_create(user=request.user)
 
     if request.method == "POST":
-        currency = request.POST.get('currency')
+        currency = request.POST.get("currency")
         if currency:
             usersettings.currency = currency
             usersettings.save()
 
-    context.update ({
-        'sessions': Session.objects.filter(),
-        'currency': usersettings.currency,
-        'currency_signs': usersettings.CURRENCIES
-    })
+    context.update(
+        {
+            "sessions": Session.objects.filter(),
+            "currency": usersettings.currency,
+            "currency_signs": usersettings.CURRENCIES,
+        }
+    )
 
     return render(request, "core/pages/settings/main.html", context)
 
 
 def change_password(request: HttpRequest):
     if request.method == "POST":
-        password = request.POST.get('password')
+        password = request.POST.get("password")
         if not password or 129 < len(password) > 7:
-            messages.error(request, "Something went wrong, no password was provided." if not password else "Password either too short, or too long. Minimum characters is eight, maximum is 128.")
+            messages.error(
+                request,
+                "Something went wrong, no password was provided."
+                if not password
+                else "Password either too short, or too long. Minimum characters is eight, maximum is 128.",
+            )
             return redirect("user settings change_password")
 
         request.user.set_password(password)

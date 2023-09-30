@@ -14,6 +14,6 @@ class OtherItemsTestCase(ViewTestCase):
     def test_logout_from_url_logged_in(self):
         self.client.login(username="user", password="user")
         response = self.client.get(reverse("logout"))
-        self.assertNotIn('_auth_user_id', self.client.session)
+        self.assertNotIn("_auth_user_id", self.client.session)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, reverse("login"))

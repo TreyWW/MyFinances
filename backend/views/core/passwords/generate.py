@@ -15,58 +15,63 @@ from settings.settings import EMAIL_SERVER_ENABLED
 
 
 def msg_if_valid_email_then_sent(request):
-    return messages.success(request, f"<strong>If this is a valid email address</strong> then we have sent you an email.\n Please check spam, if you cannot find the email press forgot password again.")
+    return messages.success(
+        request,
+        f"<strong>If this is a valid email address</strong> then we have sent you an email.\n Please check spam, if you cannot find the email press forgot password again.",
+    )
 
 
 def set_password_generate(request: HttpRequest):
     if not request.user.is_superuser or not request.user.is_staff:
-        return redirect('dashboard')
+        return redirect("dashboard")
 
-    USER = request.GET.get('id')
-    NEXT = request.GET.get('next') or 'index'
+    USER = request.GET.get("id")
+    NEXT = request.GET.get("next") or "index"
 
     if not USER.isnumeric():
         messages.error(request, "User ID must be a valid integer")
-        return redirect('dashboard')
+        return redirect("dashboard")
 
     USER = User.objects.filter(id=USER).first()
 
     if not USER:
-        messages.error(request, f'User not found')
-        return redirect('dashboard')
+        messages.error(request, f"User not found")
+        return redirect("dashboard")
     CODE = RandomCode(40)
     HASHED_CODE = make_password(CODE, salt=settings.SECRET_KEY)
 
     PWD_SECRET, created = PasswordSecrets.objects.update_or_create(
         user=USER,
-        defaults={"expires": date.today() + timedelta(days=3), "secret": HASHED_CODE}
+        defaults={"expires": date.today() + timedelta(days=3), "secret": HASHED_CODE},
     )
     PWD_SECRET.save()
-    messages.error(request, f'Successfully created a code. <a href="{reverse("user set password", args=(CODE,))}">{CODE}</a>')
+    messages.error(
+        request,
+        f'Successfully created a code. <a href="{reverse("user set password", args=(CODE,))}">{CODE}</a>',
+    )
 
     try:
         resolve(NEXT)
         return redirect(NEXT)
     except resolve.NoReverseMatch:
-        return redirect('dashboard')
+        return redirect("dashboard")
 
 
 def password_reset(request: HttpRequest):
-    EMAIL = request.POST.get('email')
+    EMAIL = request.POST.get("email")
 
     # if not EMAIL_SERVER_ENABLED:
     #     messages.error(request, "Unfortunately our email server is not currently available.")
 
-
     if not EMAIL:
         msg_if_valid_email_then_sent(request)
-        return redirect('login forgot_password')
+        return redirect("login forgot_password")
 
     try:
         validate_email(EMAIL)
     except ValidationError as e:
         msg_if_valid_email_then_sent(request)
-        return redirect('login forgot_password')
+        return redirect("login forgot_password")
 
     USER = User.objects.filter(email=EMAIL).first()
 
@@ -79,12 +84,12 @@ def password_reset(request: HttpRequest):
     CODE = RandomCode(40)
     HASHED_CODE = make_password(CODE)
     expires_date = date.today() + timedelta(days=3)
-    expires_datetime = timezone.make_aware(datetime.combine(expires_date, datetime.min.time()))
+    expires_datetime = timezone.make_aware(
+        datetime.combine(expires_date, datetime.min.time())
+    )
 
     PasswordSecrets.objects.create(
-        user=USER,
-        expires=expires_datetime,
-        secret=HASHED_CODE
+        user=USER, expires=expires_datetime, secret=HASHED_CODE
     )
 
     # SEND_SENDGRID_EMAIL(USER.email, "Password Reset" ,f"""
