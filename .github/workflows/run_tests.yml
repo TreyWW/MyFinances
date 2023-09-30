@@ -1,4 +1,4 @@
-name: CI Tests
+name: Run Tests
 
 on:
   push:
@@ -19,26 +19,12 @@ jobs:
           sudo apt-get install -y docker-compose
 
       - name: Set up environment variables
-        run: cp .env.sample .env
-
-      - name: Configure MariaDB repository
-        run: |
-          wget https://r.mariadb.com/downloads/mariadb_repo_setup
-          echo "935944a2ab2b2a48a47f68711b43ad2d698c97f1c3a7d074b34058060c2ad21b  mariadb_repo_setup" | sha256sum -c -
-          chmod +x mariadb_repo_setup
-          sudo ./mariadb_repo_setup --mariadb-server-version="mariadb-10.6"
-
-      - name: Install MariaDB Connector/C
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libmariadb-dev
+        run: cp .env.github_actions .env
 
       - name: Install Python dependencies
         uses: py-actions/py-dependency-install@v4
-
-      - name: Install mysqlclient
-        run: |
-          pip install mysqlclient
+        with:
+          path: requirements.gh_actions.txt
 
       - name: Build and run docker-compose.ci.yml
         run: docker-compose -f infrastructure/backend/docker-compose.ci.yml up -d
