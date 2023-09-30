@@ -21,13 +21,17 @@ jobs:
       - name: Set up environment variables
         run: cp .env.sample .env
 
+      - name: Configure MariaDB repository
+        run: |
+          wget https://r.mariadb.com/downloads/mariadb_repo_setup
+          echo "935944a2ab2b2a48a47f68711b43ad2d698c97f1c3a7d074b34058060c2ad21b  mariadb_repo_setup" | sha256sum -c -
+          chmod +x mariadb_repo_setup
+          sudo ./mariadb_repo_setup --mariadb-server-version="mariadb-10.6"
+
       - name: Install MariaDB Connector/C
         run: |
-          wget https://downloads.mariadb.com/Connectors/c/connector-c-3.2.4/mariadb-connector-c-3.2.4-linux-x86_64.tar.gz
-          tar -xf mariadb-connector-c-3.2.4-linux-x86_64.tar.gz
-          sudo mv mariadb-connector-c-3.2.4-linux-x86_64 /usr/local/mariadb-connector-c
-          echo "/usr/local/mariadb-connector-c/lib" | sudo tee /etc/ld.so.conf.d/mariadb-connector-c.conf
-          sudo ldconfig
+          sudo apt-get update
+          sudo apt-get install -y libmariadb-dev
 
       - name: Install Python dependencies
         uses: py-actions/py-dependency-install@v4
