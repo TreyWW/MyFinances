@@ -24,6 +24,11 @@ jobs:
       - name: Install Python dependencies
         uses: py-actions/py-dependency-install@v4
 
+      - name: Install MariaDB and MySQL dependencies
+        run: |
+          sudo apt-get install -y libmariadb-dev
+          sudo apt-get install -y libmysqlclient-dev
+
       - name: Build and run docker-compose.ci.yml
         run: docker-compose -f infrastructure/backend/docker-compose.ci.yml up -d
 
