@@ -35,6 +35,11 @@ urlpatterns = [
         name="user settings change_password",
     ),
     path(
+        "dashboard/receipts",
+        receipts.dashboard.receipts_dashboard,
+        name="receipts dashboard",
+    ),
+    path(
         "api/v1/receipts/delete/<int:id>",
         v1.receipts.delete.receipt_delete,
         name="api v1 receipts delete",
