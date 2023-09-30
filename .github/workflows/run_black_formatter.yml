@@ -1,3 +1,4 @@
+name: Run Black Formatter
 on: [push, pull_request]
 
 jobs:

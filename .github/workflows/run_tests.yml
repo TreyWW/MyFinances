@@ -21,11 +21,13 @@ jobs:
       - name: Set up environment variables
         run: cp .env.sample .env
 
-      - name: Install MariaDB and MySQL dependencies
+      - name: Install MariaDB Connector/C
         run: |
-          sudo apt-get install -y libmariadb-dev
-          sudo apt-get install -y libmysqlclient-dev
-          sudo apt-get install -y mariadb-connector-c-dev
+          wget https://downloads.mariadb.com/Connectors/c/connector-c-3.2.4/mariadb-connector-c-3.2.4-linux-x86_64.tar.gz
+          tar -xf mariadb-connector-c-3.2.4-linux-x86_64.tar.gz
+          sudo mv mariadb-connector-c-3.2.4-linux-x86_64 /usr/local/mariadb-connector-c
+          echo "/usr/local/mariadb-connector-c/lib" | sudo tee /etc/ld.so.conf.d/mariadb-connector-c.conf
+          sudo ldconfig
 
       - name: Install Python dependencies
         uses: py-actions/py-dependency-install@v4
