@@ -15,6 +15,8 @@ MyFinances is an open-source web application designed to empower individuals and
 
 - **Financial Reports:** Gain insights into your financial health with customizable reports, income summaries, and expense analyses.
 
+- **Receipt Management** Store your old receipts, to keep as future tax deductions, or just a financial log. You can preview, download, or delete these receipts at any point! We also use parsing to auto-extract data from the receipt such as the total price.
+
 - **Budgeting:** Set financial goals and track your progress. Keep an eye on your spending habits and make informed decisions.
 
 ## Getting Started
