@@ -38,6 +38,11 @@ class UserSettings(models.Model):
         upload_to="profile_pictures", blank=True, null=True
     )
 
+    @property
+    def profile_picture_url(self):
+        if self.profile_picture and hasattr(self.profile_picture, 'url'):
+            return self.profile_picture.url
+
     def __str__(self):
         return self.user.username
 

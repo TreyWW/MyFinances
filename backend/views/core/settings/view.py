@@ -28,7 +28,6 @@ def settings_page(request: HttpRequest):
                 messages.error(request, "Invalid currency")
 
         if profile_picture:
-            print("is prof", profile_picture)
             usersettings.profile_picture = profile_picture
             usersettings.save()
 
@@ -37,7 +36,7 @@ def settings_page(request: HttpRequest):
             "sessions": Session.objects.filter(),
             "currency": usersettings.currency,
             "currency_signs": usersettings.CURRENCIES,
-            "profile_picture": usersettings.profile_picture,
+            "user_settings": usersettings,
         }
     )
 
