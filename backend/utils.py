@@ -16,7 +16,7 @@ def load_navbar_items():
 
 class Notification:
     def __init__(
-        self, level, message, extra_tags="", colour="danger", time=False, buttons=None
+            self, level, message, extra_tags="", colour="danger", time=False, buttons=None
     ):
         self.level = level
         self.message = message
@@ -48,16 +48,16 @@ class Notification:
 
 class Toast:
     def __init__(
-        self,
-        title,
-        message,
-        level="info",
-        time=5000,
-        autohide=True,
-        delay=None,
-        icon=None,
-        progress=False,
-        request=None,
+            self,
+            title,
+            message,
+            level="info",
+            time=5000,
+            autohide=True,
+            delay=None,
+            icon=None,
+            progress=False,
+            request=None,
     ):
         self.title = title
         self.message = message
@@ -111,9 +111,9 @@ TOASTS = Toasts()
 class Modals:
     @staticmethod
     def example(
-        id="create_customer",
-        success_message="Customer created with the name of ${$('#nameInput').val()}",
-        toasts=[TOASTS.refresh()],
+            id="create_customer",
+            success_message="Customer created with the name of ${$('#nameInput').val()}",
+            toasts=[TOASTS.refresh()],
     ):
         return {}
 
