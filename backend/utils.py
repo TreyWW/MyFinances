@@ -116,3 +116,23 @@ class Modals:
         toasts=[TOASTS.refresh()],
     ):
         return {}
+
+    @staticmethod
+    def change_profile_picture():
+        return {
+                "id": "modal_change_profile_picture",
+                "title": "Change Profile Picture",
+                "action": {
+                    "text": "Save",
+                    "method": "post",
+                    "extra": f"enctype=multipart/form-data #", # hx-post={reverse_lazy('api v1 receipts new')} hx-target=#items hx-refresh=true",
+                    "fields": [
+                        {
+                            "type": "file",
+                            "name": "profile_image",
+                            "required": False,
+                            "extra": "accept=image/png,image/jpeg",
+                        }
+                    ],
+                }
+        }

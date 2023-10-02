@@ -34,6 +34,9 @@ class UserSettings(models.Model):
         default="GBP",
         choices=[(code, info["name"]) for code, info in CURRENCIES.items()],
     )
+    profile_picture = models.ImageField(
+        upload_to="profile_pictures", blank=True, null=True
+    )
 
     def __str__(self):
         return self.user.username

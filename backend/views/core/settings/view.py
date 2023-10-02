@@ -5,26 +5,39 @@ from django.contrib.auth import update_session_auth_hash
 
 from backend.decorators import *
 from backend.models import *
+from backend.utils import Modals
 
+Modals = Modals()
 
 def settings_page(request: HttpRequest):
-    context = {}
+    context = {
+        "modal_data": [Modals.change_profile_picture()],
+    }
 
     usersettings, created = UserSettings.objects.get_or_create(user=request.user)
 
     if request.method == "POST":
         currency = request.POST.get("currency")
-        if currency and currency in usersettings.CURRENCIES:
-            usersettings.currency = currency
+        profile_picture = request.FILES.get("profile_image")
+
+        if currency:
+            if currency in usersettings.CURRENCIES:
+                usersettings.currency = currency
+                usersettings.save()
+            else:
+                messages.error(request, "Invalid currency")
+
+        if profile_picture:
+            print("is prof", profile_picture)
+            usersettings.profile_picture = profile_picture
             usersettings.save()
-        else:
-            messages.error(request, "Invalid currency")
 
     context.update(
         {
             "sessions": Session.objects.filter(),
             "currency": usersettings.currency,
             "currency_signs": usersettings.CURRENCIES,
+            "profile_picture": usersettings.profile_picture,
         }
     )
 
