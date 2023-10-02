@@ -176,12 +176,12 @@ class TracebackError(models.Model):
 
 
 def SEND_SENDGRID_EMAIL(
-        to_email,
-        subject,
-        content,
-        from_email="myfinances@strelix.org",
-        request=None,
-        **kwargs,
+    to_email,
+    subject,
+    content,
+    from_email="myfinances@strelix.org",
+    request=None,
+    **kwargs,
 ):
     DESTINATION = kwargs.get("DESTINATION") or to_email
     SUBJECT = kwargs.get("SUBJECT") or subject
