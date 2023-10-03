@@ -1,5 +1,5 @@
 # Dockerfile
-FROM python:3.11-alpine
+FROM python:3.12-alpine
 
 # Set the working directory
 WORKDIR /MyFinances
