@@ -1,3 +1,4 @@
+{% load static %}
 <div class="avatar avatar-ring avatar-md">
     <div class="dropdown-container">
         <div class="dropdown">
@@ -5,7 +6,11 @@
                 <img
                         class="h-8 w-8 rounded-full object-cover"
                         src="
-                        {{ user_settings.profile_picture_url | default_if_none:'#' }}
+                        {% if user_settings.profile_picture_url %}
+                            {{ user_settings.profile_picture_url }}
+                        {% else %}
+                            {% static 'img/default_profile_pic.png' %}
+                        {% endif %}
                         "
                         alt=""
                         aria-hidden="true"
