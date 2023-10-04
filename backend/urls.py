@@ -30,6 +30,16 @@ urlpatterns = [
     path("dashboard", dashboard, name="dashboard"),
     path("dashboard/settings/", settings_v.view.settings_page, name="user settings"),
     path(
+        "dashboard/settings/teams",
+        settings_v.teams.teams_dashboard,
+        name="user settings teams",
+    ),
+    path(
+        "dashboard/settings/teams/create",
+        settings_v.teams.create_team,
+        name="user settings teams create",
+    ),
+    path(
         "dashboard/profile/change_password/",
         settings_v.view.change_password,
         name="user settings change_password",

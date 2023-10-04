@@ -51,6 +51,12 @@ class UserSettings(models.Model):
         verbose_name_plural = "User Settings"
 
 
+class Team(models.Model):
+    name = models.CharField(max_length=100)
+    leader = models.ForeignKey(User, on_delete=models.CASCADE)
+    members = models.ManyToManyField(User, related_name="teams_joined")
+
+
 class Receipt(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)

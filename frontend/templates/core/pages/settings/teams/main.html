@@ -1,0 +1,25 @@
+{% extends 'core/pages/base.html' %}
+{#{% load ripple_ui_modal %}#}
+{% block content %}
+    {% include 'core/components/modal.html' with modals=modal_data %}
+    {% if not has_team %}
+        <label class="btn btn-primary" for="modal_create_team">
+            {% include 'core/components/icon.html' with icon="plus" classes="pe-2" %}
+            Create Team
+        </label>
+    {% endif %}
+
+{#    <div class="skeleton h-5 rounded-md"></div>#}
+    {#  want to start using loading skeletons ^  #}
+    {% if has_team %}
+        <h1 class="text-3xl w-full text-center mb-4">
+            Team - {{ team.name }}
+        </h1>
+        <label for="modal_invite_user_to_team" class="btn btn-primary">
+            {% include 'core/components/icon.html' with icon="plus" classes="pe-2" %}
+            Invite User
+        </label>
+        {{ team }}
+    {% endif %}
+
+{% endblock content %}

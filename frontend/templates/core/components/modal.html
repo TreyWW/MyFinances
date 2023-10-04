@@ -6,7 +6,7 @@
             <label for="{{ modal.id }}" class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</label>
             <h2 class="text-xl">{{ modal.title }}</h2>
             {% if modal.text %}<span>{{ modal.text }}</span>{% endif %}
-            <form method="{{ modal.action.method }}" {% autoescape off %}{{ modal.action.extra }}{% endautoescape %}>
+            <form method="{{ modal.action.method }}" action="{{ modal.action.href }}" {% autoescape off %}{{ modal.action.extra }}{% endautoescape %}>
                 {% if modal.action.method == "post" %}
                     {% csrf_token %}
                 {% endif %}

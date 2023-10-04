@@ -72,7 +72,7 @@ LOGIN_URL = "/login/"
 LOGIN_REDIRECT_URL = "/dashboard"
 
 ROOT_URLCONF = "backend.urls"
-SESSION_COOKIE_AGE = 1800
+SESSION_COOKIE_AGE = 604800
 SESSION_ENGINE = "django.contrib.sessions.backends.db"
 STATIC_URL = "/static/"
 STATIC_URL = "/static/"

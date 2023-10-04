@@ -136,3 +136,47 @@ class Modals:
                 ],
             },
         }
+
+    @staticmethod
+    def create_team():
+        return {
+            "id": "modal_create_team",
+            "title": "Create Team",
+            "action": {
+                "text": "Save",
+                "method": "post",
+                "href": reverse("user settings teams create"),
+                # "extra": f"enctype=multipart/form-data",  # hx-post={reverse_lazy('api v1 receipts new')} hx-target=#items hx-refresh=true",
+                "fields": [
+                    {
+                        "text": "Name your team",
+                        "type": "text",
+                        "placeholder": "The best team ever",
+                        "name": "name",
+                        "label" "required": True,
+                    }
+                ],
+            },
+        }
+
+    @staticmethod
+    def invite_user_to_team():
+        return {
+            "id": "modal_invite_user_to_team",
+            "title": "Invite User",
+            "action": {
+                "text": "Send",
+                "method": "post",
+                "href": reverse("user settings teams"),
+                # "extra": f"enctype=multipart/form-data",  # hx-post={reverse_lazy('api v1 receipts new')} hx-target=#items hx-refresh=true",
+                "fields": [
+                    {
+                        "type": "text",
+                        "name": "email",
+                        "required": True,
+                        "label": "Users Email",
+                        "placeholder": "bob@example.com",
+                    }
+                ],
+            },
+        }
