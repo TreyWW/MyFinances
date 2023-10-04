@@ -8,7 +8,7 @@ from django.http import (
 )
 from django_ratelimit.exceptions import Ratelimited
 from backend.decorators import *
-from backend.utils import Notification, Toast
+from backend.utils import Toast
 import json
 from backend.models import *
 

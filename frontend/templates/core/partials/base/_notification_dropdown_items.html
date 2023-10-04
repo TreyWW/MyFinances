@@ -1,0 +1,13 @@
+{% for notification in notifications.normal %}
+    <a tabindex="-1"
+       class="dropdown-item text-sm {% if not forloop.first %}mt-1{% endif %}"
+       hx-delete="{% url 'api v1 base notifications delete' id=notification.id %}" hx-swap="outerHTML">
+        {{ notification.message }}
+    </a>
+{% endfor %}
+
+{% for notification in notifications.modal %}
+    <label tabindex="-1" for="modal-notification-{{ notification.action_value }}" class=" dropdown-item text-sm mt-1 flex cursor-pointer">
+        {{ notification.message }}
+    </label>
+{% endfor %}

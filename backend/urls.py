@@ -60,6 +60,16 @@ urlpatterns = [
         name="api v1 receipts new",
     ),
     path(
+        "api/v1/base/notifications/get",
+        v1.base.notifications.get_notification_html,
+        name="api v1 base notifications get",
+    ),
+    path(
+        "api/v1/base/notifications/delete/<int:id>",
+        v1.base.notifications.delete_notification,
+        name="api v1 base notifications delete",
+    ),
+    path(
         "dashboard/invoices/",
         invoices.dashboard.invoices_dashboard,
         name="invoices dashboard",

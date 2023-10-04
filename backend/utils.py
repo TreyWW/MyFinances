@@ -14,38 +14,6 @@ def load_navbar_items():
     return navbar_items
 
 
-class Notification:
-    def __init__(
-        self, level, message, extra_tags="", colour="danger", time=False, buttons=None
-    ):
-        self.level = level
-        self.message = message
-        self.extra_tags = extra_tags
-        self.colour = colour
-        self.buttons = buttons or []
-        self.time = time
-
-    def add_to_request(self, request):
-        notifications = request.session.get("notifications", [])
-        notifications.append(
-            {
-                "level": self.level,
-                "message": self.message,
-                "extra_tags": self.extra_tags,
-                "colour": self.colour,
-                "buttons": self.buttons,
-                "time": self.time,
-            }
-        )
-        request.session["notifications"] = notifications
-
-    @staticmethod
-    def get_from_request(request):
-        notifications = request.session.get("notifications", [])
-        request.session["notifications"] = []
-        return notifications
-
-
 class Toast:
     def __init__(
         self,

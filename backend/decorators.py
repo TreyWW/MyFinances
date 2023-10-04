@@ -5,7 +5,7 @@ from functools import wraps
 from django.shortcuts import redirect
 from django.conf import settings
 
-from backend.utils import Notification, Toast
+from backend.utils import Toast
 
 from django.shortcuts import redirect
 
