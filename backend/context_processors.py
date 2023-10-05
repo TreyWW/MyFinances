@@ -52,11 +52,21 @@ def toasts(request):
     return {}
 
 
-# def notifications(request):
-#     context: dict = {}
-#     if request.user.is_authenticated:
-#         notifications = Notification.objects.filter(user=request.user)
-#
-#         context.update({"notifications": {"normal": [{"text": "Test"}]}})
-#     print(context)
-#     return context
+def notifications(request):
+    context: dict = {}
+    if request.user.is_authenticated:
+        notifications_qs = Notification.objects.filter(user=request.user)
+        modal_notifications = notifications_qs.filter(action="modal")
+
+        for modal_notif in modal_notifications.all():
+            if not context.get("modal_data_context_processors"):
+                context["modal_data_context_processors"] = []
+
+            try:
+                modal_function = getattr(Modals, modal_notif.action_value)
+                context["modal_data_context_processors"].append(modal_function())
+            except AttributeError:
+                print("Failed to find modal function")
+
+        context.update({"has_notifications": len(notifications_qs) > 0})
+    return context

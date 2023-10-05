@@ -8,6 +8,7 @@ from backend.models import (
     Error,
     TracebackError,
     UserSettings,
+    Notification,
 )
 from django.contrib import admin
 
@@ -21,3 +22,4 @@ admin.site.register(AuditLog)
 admin.site.register(LoginLog)
 admin.site.register(Error)
 admin.site.register(TracebackError)
+admin.site.register(Notification)

@@ -4,7 +4,9 @@
         hx-get="{% url 'api v1 base notifications get' %}" hx-target="#notifications_dropdown" hx-swap="innerHTML" hx-trigger="click">
             <div class="relative">
                 <i class="fa-solid fa-bell"></i>
-                <span aria-hidden="true" class="absolute top-0 right-0 inline-block h-3 w-3 translate-x-1 transform rounded-full border-2 border-white bg-red-600 dark:border-gray-800"></span>
+                {% if has_notifications %}
+                    <span aria-hidden="true" class="absolute top-0 right-0 inline-block h-3 w-3 translate-x-1 transform rounded-full border-2 border-white bg-red-600 dark:border-gray-800"></span>
+                {% endif %}
             </div>
         </label>
         <div class="dropdown-menu dropdown-menu-bottom-left" id="notifications_dropdown">

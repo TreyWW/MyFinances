@@ -105,7 +105,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                # 'backend.context_processors.notifications',
+                "backend.context_processors.notifications",
                 "backend.context_processors.extras",
                 "backend.context_processors.navbar",
                 "backend.context_processors.toasts",
