@@ -1,7 +1,9 @@
 import random
 import smtplib
 import string
+from datetime import timezone
 
+import uuid
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
@@ -57,8 +59,30 @@ class Team(models.Model):
     members = models.ManyToManyField(User, related_name="teams_joined")
 
 
+class TeamInvitation(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4, unique=True)
+    team = models.ForeignKey(
+        Team, on_delete=models.CASCADE, related_name="team_invitations"
+    )
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="team_invitations"
+    )
+    invited_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    expires = models.DateTimeField(null=True, blank=True)
+    active = models.BooleanField(default=True)
+
+    def set_expires(self):
+        self.expires = timezone.now() + timezone.timedelta(days=7)
+
+    def __str__(self):
+        return self.team.name
+
+    class Meta:
+        verbose_name = "Team Invitation"
+        verbose_name_plural = "Team Invitations"
+
+
 class Receipt(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     image = models.ImageField(upload_to="receipts")
     total_price = models.FloatField(null=True, blank=True)

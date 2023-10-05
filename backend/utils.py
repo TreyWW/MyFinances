@@ -148,3 +148,16 @@ class Modals:
                 ],
             },
         }
+
+    @staticmethod
+    def team_invited():
+        return {
+            "id": "modal_team_invited",
+            "title": "Would you like to join team?",
+            "action": {
+                "text": "Send",
+                "method": "post",
+                "href": reverse("user settings teams"),
+                "fields": [],
+            },
+        }
