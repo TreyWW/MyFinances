@@ -7,6 +7,7 @@ from backend.models import Notification
 def get_notification_html(request: HttpRequest):
     user_notifications = Notification.objects.filter(user=request.user)
     notifications_normal = user_notifications.filter(action="normal")
+    notifications_redirect = user_notifications.filter(action="redirect")
     notifications_modal = user_notifications.filter(action="modal")
     modals = []
 
@@ -24,6 +25,7 @@ def get_notification_html(request: HttpRequest):
             "notifications": {
                 "normal": notifications_normal,
                 "modal": notifications_modal,
+                "redirect": notifications_redirect,
             }
         },
     )

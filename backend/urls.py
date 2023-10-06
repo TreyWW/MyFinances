@@ -40,6 +40,16 @@ urlpatterns = [
         name="user settings teams create",
     ),
     path(
+        "dashboard/settings/teams/invite",
+        settings_v.teams.invite_user_to_team,
+        name="user settings teams invite",
+    ),
+    path(
+        "dashboard/settings/teams/join/<str:code>",
+        settings_v.teams.join_team,
+        name="user settings teams join",
+    ),
+    path(
         "dashboard/profile/change_password/",
         settings_v.view.change_password,
         name="user settings change_password",

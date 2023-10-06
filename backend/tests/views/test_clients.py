@@ -60,7 +60,7 @@ class ClientsViewTestCase(ViewTestCase):
     def test_clients_view_doesnt_create_client_valid_details(self):
         self.client.login(username="user", password="user")
 
-        with self.assertNumQueries(9):
+        with self.assertNumQueries(11):
             client_objects_before = Client.objects.count()
 
             response = self.client.post(

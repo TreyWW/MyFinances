@@ -135,12 +135,12 @@ class Modals:
             "action": {
                 "text": "Send",
                 "method": "post",
-                "href": reverse("user settings teams"),
+                "href": reverse("user settings teams invite"),
                 # "extra": f"enctype=multipart/form-data",  # hx-post={reverse_lazy('api v1 receipts new')} hx-target=#items hx-refresh=true",
                 "fields": [
                     {
                         "type": "text",
-                        "name": "email",
+                        "name": "user_email",
                         "required": True,
                         "label": "Users Email",
                         "placeholder": "bob@example.com",

@@ -6,6 +6,14 @@
     </a>
 {% endfor %}
 
+{% for notification in notifications.redirect %}
+    <a tabindex="-1"
+       class="dropdown-item text-sm {% if not forloop.first %}mt-1{% endif %}"
+       href="{{ notification.action_value }}">
+        {{ notification.message }}
+    </a>
+{% endfor %}
+
 {% for notification in notifications.modal %}
     <label tabindex="-1" for="modal_{{ notification.action_value }}" class=" dropdown-item text-sm mt-1 flex cursor-pointer">
         {{ notification.message }}
