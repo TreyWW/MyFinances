@@ -5,7 +5,7 @@ from .handler import ViewTestCase
 from django.contrib.messages import get_messages
 
 
-class UserSettingsTeamsViewTestCase(ViewTestCase):
+class UserSettingsTeamsDashboardViewTestCase(ViewTestCase):
     def test_teams_view_302_for_non_authenticated_users(self):
         response = self.client.get(reverse("user settings teams"))
         self.assertEqual(response.status_code, 302)
