@@ -14,12 +14,18 @@
     {% if has_team %}
         <h1 class="text-3xl w-full text-center mb-4">
             Team - {{ team.name }}
+
+            {% if not is_team_leader %}
+                <a class="btn btn-solid-error btn-xs" href="{% url "user settings teams join leave" %}">Leave Team</a>
+            {% endif %}
         </h1>
+
+        {% if is_team_leader %}
         <label for="modal_invite_user_to_team" class="btn btn-primary">
             {% include 'core/components/icon.html' with icon="plus" classes="pe-2" %}
             Invite User
         </label>
-        {{ team }}
+        {% endif %}
     {% endif %}
 
 {% endblock content %}

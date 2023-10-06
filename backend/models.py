@@ -196,7 +196,7 @@ class Notification(models.Model):
     ]
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    message = models.CharField(max_length=40)
+    message = models.CharField(max_length=100)
     action = models.CharField(max_length=10, choices=action_choices, default="normal")
     action_value = models.CharField(max_length=100, null=True, blank=True)
     date = models.DateTimeField(auto_now_add=True)

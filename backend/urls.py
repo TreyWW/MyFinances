@@ -46,8 +46,28 @@ urlpatterns = [
     ),
     path(
         "dashboard/settings/teams/join/<str:code>",
-        settings_v.teams.join_team,
+        settings_v.teams.join_team_page,
         name="user settings teams join",
+    ),
+    path(
+        "dashboard/settings/teams/join/<str:code>/accept/",
+        settings_v.teams.join_team_accepted,
+        name="user settings teams join accept",
+    ),
+    path(
+        "dashboard/settings/teams/join/<str:code>/decline/",
+        settings_v.teams.join_team_declined,
+        name="user settings teams join decline",
+    ),
+    path(
+        "dashboard/settings/teams/leave/",
+        settings_v.teams.leave_team,
+        name="user settings teams join leave",
+    ),
+    path(
+        "dashboard/settings/teams/leave/confirm",
+        settings_v.teams.leave_team_confirm,
+        name="user settings teams join leave confirm",
     ),
     path(
         "dashboard/profile/change_password/",

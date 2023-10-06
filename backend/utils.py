@@ -150,14 +150,40 @@ class Modals:
         }
 
     @staticmethod
-    def team_invited():
+    def invited_to_team_accept(invitation):
         return {
-            "id": "modal_team_invited",
-            "title": "Would you like to join team?",
+            "id": "invited_to_team_accept",
+            "title": f"Are you sure you would like to join <strong>{invitation.team.name}</strong> team?",
             "action": {
-                "text": "Send",
+                "text": "Accept",
                 "method": "post",
-                "href": reverse("user settings teams"),
+                "href": reverse(
+                    "user settings teams join accept", kwargs={"code": invitation.code}
+                ),
                 "fields": [],
+            },
+        }
+
+    @staticmethod
+    def invited_to_team_decline(invitation):
+        return {
+            "id": "invited_to_team_decline",
+            "title": f"Are you sure you would like to <u>decline</u> <strong>{invitation.team.name}</strong> teams invitation?",
+            "action": {
+                "text": "Decline",
+                "color": "error",
+                "method": "post",
+                "href": reverse(
+                    "user settings teams join decline", kwargs={"code": invitation.code}
+                ),
+                "fields": [
+                    {
+                        "type": "text",
+                        "name": "confirmation_text",
+                        "required": True,
+                        "label": f'Please type "i confirm i want to decline {invitation.team.name}" ',
+                        "placeholder": "please type the message above to confirm",
+                    }
+                ],
             },
         }
