@@ -1,3 +1,4 @@
+from django.contrib.auth.models import Permission
 from django.contrib.sessions.models import Session
 from django.http import HttpRequest
 from django.shortcuts import render
@@ -24,6 +25,10 @@ def teams_dashboard(request: HttpRequest):
         user_has_team = True
         users_team = user_team
         user_is_team_leader = True
+        [
+            modal_data.append(Modals.team_kick_user(usr))
+            for usr in user_team.members.all()
+        ]
     else:
         user_team = request.user.teams_joined.first()
 
@@ -173,16 +178,18 @@ def join_team_page(request: HttpRequest, code):
 
     team = invitation.team
 
+    modals = [
+        Modals.invited_to_team_accept(invitation),
+        Modals.invited_to_team_decline(invitation),
+    ]
+
     return render(
         request,
         "core/pages/settings/teams/join.html",
         {
             "invitation": invitation,
             "team": team,
-            "modal_data": [
-                Modals.invited_to_team_accept(invitation),
-                Modals.invited_to_team_decline(invitation),
-            ],
+            "modal_data": modals,
         },
     )
 
@@ -290,3 +297,7 @@ def leave_team_confirm(request: HttpRequest):
     team.members.remove(request.user)
     messages.success(request, f"You have successfully left the team {team.name}")
     return redirect("user settings teams")
+
+
+def manage_permissions_dashboard(request: HttpRequest):
+    return render(request, "core/pages/settings/teams/permissions.html")

@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.urls import reverse
 import os, json
 
@@ -182,6 +183,30 @@ class Modals:
                         "name": "confirmation_text",
                         "required": True,
                         "label": f'Please type "i confirm i want to decline {invitation.team.name}" ',
+                        "placeholder": "please type the message above to confirm",
+                    }
+                ],
+            },
+        }
+
+    @staticmethod
+    def team_kick_user(user: User):
+        return {
+            "id": f"team_kick_user_{user.id}",
+            "title": f'<p class="text-sm">Are you sure you would like to <u>kick</u> <strong>{user.username}</strong> from your team?</p>',
+            "action": {
+                "text": "Decline",
+                "color": "error",
+                "method": "post",
+                "href": reverse(
+                    "user settings teams kick", kwargs={"user_id": user.id}
+                ),
+                "fields": [
+                    {
+                        "type": "text",
+                        "name": "confirmation_text",
+                        "required": True,
+                        "label": f'Please type "i confirm i want to kick {user.username}"',
                         "placeholder": "please type the message above to confirm",
                     }
                 ],

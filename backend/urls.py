@@ -35,9 +35,14 @@ urlpatterns = [
         name="user settings teams",
     ),
     path(
-        "dashboard/settings/teams/kick/<id:user_id>",
-        settings_v.teams.kick_user,
-        name="user settings teams",
+        "dashboard/settings/teams/permissions/",
+        settings_v.teams.manage_permissions_dashboard,
+        name="user settings teams permissions",
+    ),
+    path(
+        "dashboard/settings/teams/kick/<int:user_id>",
+        v1.teams.kick.kick_user,
+        name="user settings teams kick",
     ),
     path(
         "dashboard/settings/teams/create",
