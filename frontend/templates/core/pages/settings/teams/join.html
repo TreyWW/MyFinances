@@ -1,0 +1,17 @@
+{% extends 'core/pages/base.html' %}
+{#{% load ripple_ui_modal %}#}
+{% block content %}
+    {% include 'core/components/modal.html' with modals=modal_data %}
+
+    <h1 class="text-3xl w-full text-center mb-1">Join Team</h1>
+    <h3 class="text-lg w-full text-center">Would you like to join the team <strong class="font-bold">{{ team.name }}</strong>?</h3>
+    <h4 class="text-md w-full text-center">
+        You were invited by {{ invitation.invited_by.first_name }}
+        <a class="link link-secondary link-ghost-secondary text-sm">(Report User)</a>
+    </h4>
+
+    <div class="flex justify-center mt-3">
+    <label for="invited_to_team_accept" class="btn btn-primary btn-block me-2">Join Team</label>
+    <label for="invited_to_team_decline" class="btn btn-secondary btn-block ms-2">Decline Invite</label>
+    </div>
+{% endblock content %}

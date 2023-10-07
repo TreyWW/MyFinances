@@ -4,7 +4,7 @@ import subprocess
 from django.http import HttpRequest
 from django.urls import reverse
 
-from .utils import Notification, Toast, Modals, load_navbar_items
+from .utils import Toast, Modals, load_navbar_items
 from .models import *
 from django.core.cache import cache
 
@@ -52,24 +52,21 @@ def toasts(request):
     return {}
 
 
-# def notifications(request: HttpRequest):
-#     if request.user.is_authenticated:
-#         notifications = Notification.get_from_request(request)
-#         statuses = Errors.objects.filter(user=request.user).order_by('-date')
-#
-#         if notifications:
-#             for notification in notifications:
-#                 if request.user.is_authenticated:
-#                     if len(notification.get('message')) > 250:
-#                         break
-#                     error = Errors(user_id=request.user.id, error=notification.get('message'),
-#                                    error_colour=notification.get('colour'),
-#                                    error_code=notification.get('level'))
-#                     error.save()
-#
-#         return {
-#             'notifications': notifications,
-#             'status_notifs': statuses,
-#             'status_notifs_new': notifications[0].get('colour') if notifications else False
-#         }
-#     return {}
+def notifications(request):
+    context: dict = {}
+    if request.user.is_authenticated:
+        notifications_qs = Notification.objects.filter(user=request.user)
+        modal_notifications = notifications_qs.filter(action="modal")
+
+        for modal_notif in modal_notifications.all():
+            if not context.get("modal_data_context_processors"):
+                context["modal_data_context_processors"] = []
+
+            try:
+                modal_function = getattr(Modals, modal_notif.action_value)
+                context["modal_data_context_processors"].append(modal_function())
+            except AttributeError:
+                print("Failed to find modal function")
+
+        context.update({"has_notifications": len(notifications_qs) > 0})
+    return context

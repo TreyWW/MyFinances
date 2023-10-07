@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.urls import reverse
 import os, json
 
@@ -12,38 +13,6 @@ def load_navbar_items():
         navbar_items = json.load(json_file)
 
     return navbar_items
-
-
-class Notification:
-    def __init__(
-        self, level, message, extra_tags="", colour="danger", time=False, buttons=None
-    ):
-        self.level = level
-        self.message = message
-        self.extra_tags = extra_tags
-        self.colour = colour
-        self.buttons = buttons or []
-        self.time = time
-
-    def add_to_request(self, request):
-        notifications = request.session.get("notifications", [])
-        notifications.append(
-            {
-                "level": self.level,
-                "message": self.message,
-                "extra_tags": self.extra_tags,
-                "colour": self.colour,
-                "buttons": self.buttons,
-                "time": self.time,
-            }
-        )
-        request.session["notifications"] = notifications
-
-    @staticmethod
-    def get_from_request(request):
-        notifications = request.session.get("notifications", [])
-        request.session["notifications"] = []
-        return notifications
 
 
 class Toast:
@@ -132,6 +101,113 @@ class Modals:
                         "name": "profile_image",
                         "required": False,
                         "extra": "accept=image/png,image/jpeg",
+                    }
+                ],
+            },
+        }
+
+    @staticmethod
+    def create_team():
+        return {
+            "id": "modal_create_team",
+            "title": "Create Team",
+            "action": {
+                "text": "Save",
+                "method": "post",
+                "href": reverse("user settings teams create"),
+                # "extra": f"enctype=multipart/form-data",  # hx-post={reverse_lazy('api v1 receipts new')} hx-target=#items hx-refresh=true",
+                "fields": [
+                    {
+                        "text": "Name your team",
+                        "type": "text",
+                        "placeholder": "The best team ever",
+                        "name": "name",
+                        "label" "required": True,
+                    }
+                ],
+            },
+        }
+
+    @staticmethod
+    def invite_user_to_team():
+        return {
+            "id": "modal_invite_user_to_team",
+            "title": "Invite User",
+            "action": {
+                "text": "Send",
+                "method": "post",
+                "href": reverse("user settings teams invite"),
+                # "extra": f"enctype=multipart/form-data",  # hx-post={reverse_lazy('api v1 receipts new')} hx-target=#items hx-refresh=true",
+                "fields": [
+                    {
+                        "type": "text",
+                        "name": "user_email",
+                        "required": True,
+                        "label": "Users Email",
+                        "placeholder": "bob@example.com",
+                    }
+                ],
+            },
+        }
+
+    @staticmethod
+    def invited_to_team_accept(invitation):
+        return {
+            "id": "invited_to_team_accept",
+            "title": f"Are you sure you would like to join <strong>{invitation.team.name}</strong> team?",
+            "action": {
+                "text": "Accept",
+                "method": "post",
+                "href": reverse(
+                    "user settings teams join accept", kwargs={"code": invitation.code}
+                ),
+                "fields": [],
+            },
+        }
+
+    @staticmethod
+    def invited_to_team_decline(invitation):
+        return {
+            "id": "invited_to_team_decline",
+            "title": f"Are you sure you would like to <u>decline</u> <strong>{invitation.team.name}</strong> teams invitation?",
+            "action": {
+                "text": "Decline",
+                "color": "error",
+                "method": "post",
+                "href": reverse(
+                    "user settings teams join decline", kwargs={"code": invitation.code}
+                ),
+                "fields": [
+                    {
+                        "type": "text",
+                        "name": "confirmation_text",
+                        "required": True,
+                        "label": f'Please type "i confirm i want to decline {invitation.team.name}" ',
+                        "placeholder": "please type the message above to confirm",
+                    }
+                ],
+            },
+        }
+
+    @staticmethod
+    def team_kick_user(user: User):
+        return {
+            "id": f"team_kick_user_{user.id}",
+            "title": f'<p class="text-sm">Are you sure you would like to <u>kick</u> <strong>{user.username}</strong> from your team?</p>',
+            "action": {
+                "text": "Decline",
+                "color": "error",
+                "method": "post",
+                "href": reverse(
+                    "user settings teams kick", kwargs={"user_id": user.id}
+                ),
+                "fields": [
+                    {
+                        "type": "text",
+                        "name": "confirmation_text",
+                        "required": True,
+                        "label": f'Please type "i confirm i want to kick {user.username}"',
+                        "placeholder": "please type the message above to confirm",
                     }
                 ],
             },

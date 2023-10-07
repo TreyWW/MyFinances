@@ -18,7 +18,8 @@
             </label>
             <div class="dropdown-menu dropdown-menu-bottom-left">
                 <a tabindex="-1" class="dropdown-item text-sm {% if request.resolver_match.url_name == "user settings" %}dropdown-active{% endif %}" href="{% url 'user settings' %}">Account settings</a>
-                <a tabindex="-1" class="dropdown-item text-sm" href="{% url 'logout' %}">Log out</a>
+                <a tabindex="-1" class="dropdown-item text-sm mt-1 {% if request.resolver_match.url_name == "user settings teams" %}dropdown-active{% endif %}" href="{% url 'user settings teams' %}">Manage team</a>
+                <a tabindex="-1" class="dropdown-item text-sm mt-1" href="{% url 'logout' %}">Log out</a>
             </div>
         </div>
     </div>

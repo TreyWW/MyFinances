@@ -30,6 +30,56 @@ urlpatterns = [
     path("dashboard", dashboard, name="dashboard"),
     path("dashboard/settings/", settings_v.view.settings_page, name="user settings"),
     path(
+        "dashboard/settings/teams",
+        settings_v.teams.teams_dashboard,
+        name="user settings teams",
+    ),
+    path(
+        "dashboard/settings/teams/permissions/",
+        settings_v.teams.manage_permissions_dashboard,
+        name="user settings teams permissions",
+    ),
+    path(
+        "dashboard/settings/teams/kick/<int:user_id>",
+        v1.teams.kick.kick_user,
+        name="user settings teams kick",
+    ),
+    path(
+        "dashboard/settings/teams/create",
+        settings_v.teams.create_team,
+        name="user settings teams create",
+    ),
+    path(
+        "dashboard/settings/teams/invite",
+        settings_v.teams.invite_user_to_team,
+        name="user settings teams invite",
+    ),
+    path(
+        "dashboard/settings/teams/join/<str:code>",
+        settings_v.teams.join_team_page,
+        name="user settings teams join",
+    ),
+    path(
+        "dashboard/settings/teams/join/<str:code>/accept/",
+        settings_v.teams.join_team_accepted,
+        name="user settings teams join accept",
+    ),
+    path(
+        "dashboard/settings/teams/join/<str:code>/decline/",
+        settings_v.teams.join_team_declined,
+        name="user settings teams join decline",
+    ),
+    path(
+        "dashboard/settings/teams/leave/",
+        settings_v.teams.leave_team,
+        name="user settings teams join leave",
+    ),
+    path(
+        "dashboard/settings/teams/leave/confirm",
+        settings_v.teams.leave_team_confirm,
+        name="user settings teams join leave confirm",
+    ),
+    path(
         "dashboard/profile/change_password/",
         settings_v.view.change_password,
         name="user settings change_password",
@@ -48,6 +98,16 @@ urlpatterns = [
         "api/v1/receipts/new",
         v1.receipts.new.receipt_create,
         name="api v1 receipts new",
+    ),
+    path(
+        "api/v1/base/notifications/get",
+        v1.base.notifications.get_notification_html,
+        name="api v1 base notifications get",
+    ),
+    path(
+        "api/v1/base/notifications/delete/<int:id>",
+        v1.base.notifications.delete_notification,
+        name="api v1 base notifications delete",
     ),
     path(
         "dashboard/invoices/",

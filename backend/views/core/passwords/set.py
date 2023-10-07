@@ -9,7 +9,7 @@ from django.http import (
 from django.views.decorators.http import require_POST
 
 from backend.decorators import *
-from backend.utils import Notification, Toast
+from backend.utils import Toast
 from backend.models import *
 from django.contrib.auth import get_user_model
 from django.core.mail import EmailMessage

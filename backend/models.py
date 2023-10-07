@@ -1,18 +1,19 @@
-import random
 import smtplib
-import string
-
+from django.utils import timezone
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
 from django.db import models
-
 from settings import settings
+from django.utils.crypto import get_random_string
+
+# def RandomCode(length=6):
+#     characters = string.ascii_letters + string.digits
+#     return "".join(random.choice(characters) for _ in range(length))
 
 
 def RandomCode(length=6):
-    characters = string.ascii_letters + string.digits
-    return "".join(random.choice(characters) for _ in range(length))
+    return get_random_string(length=length).upper()
 
 
 class UserSettings(models.Model):
@@ -49,6 +50,49 @@ class UserSettings(models.Model):
     class Meta:
         verbose_name = "User Settings"
         verbose_name_plural = "User Settings"
+
+
+class Team(models.Model):
+    name = models.CharField(max_length=100)
+    leader = models.ForeignKey(User, on_delete=models.CASCADE)
+    members = models.ManyToManyField(User, related_name="teams_joined")
+
+
+class TeamInvitation(models.Model):
+    code = models.CharField(max_length=10)
+    team = models.ForeignKey(
+        Team, on_delete=models.CASCADE, related_name="team_invitations"
+    )
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="team_invitations"
+    )
+    invited_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    expires = models.DateTimeField(null=True, blank=True)
+    active = models.BooleanField(default=True)
+
+    def is_active(self):
+        if not self.active:
+            return False
+        if timezone.now() > self.expires:
+            self.active = False
+            self.save()
+            return False
+        return True
+
+    def set_expires(self):
+        self.expires = timezone.now() + timezone.timedelta(days=7)
+
+    def save(self, *args, **kwargs):
+        self.set_expires()
+        self.code = RandomCode(10)
+        super().save()
+
+    def __str__(self):
+        return self.team.name
+
+    class Meta:
+        verbose_name = "Team Invitation"
+        verbose_name_plural = "Team Invitations"
 
 
 class Receipt(models.Model):
@@ -142,6 +186,20 @@ class PasswordSecret(models.Model):
     )
     secret = models.TextField(max_length=300)
     expires = models.DateTimeField(null=True, blank=True)
+
+
+class Notification(models.Model):
+    action_choices = [
+        ("normal", "Normal"),
+        ("modal", "Modal"),
+        ("redirect", "Redirect"),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    message = models.CharField(max_length=100)
+    action = models.CharField(max_length=10, choices=action_choices, default="normal")
+    action_value = models.CharField(max_length=100, null=True, blank=True)
+    date = models.DateTimeField(auto_now_add=True)
 
 
 class AuditLog(models.Model):
