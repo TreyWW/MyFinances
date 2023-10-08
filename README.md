@@ -142,6 +142,19 @@ Thank you for your contributions!
            <a href="https://github.com/TreyWW/MyFinances/commits?author=Z3nKrypt" title="Documentation">📖</a>
        </td>
        <td align="center">
+           <a href="https://github.com/romana-la">
+               <img src="https://github.com/romana-la.png" width="100px;" alt=""/>
+               <br/>
+               <sub>
+                   <b>
+                       romana-la
+                   </b>
+               </sub>
+           </a>
+           <br/>
+           <a href="https://github.com/TreyWW/MyFinances/commits?author=romana-la" title="Documentation">📖</a>
+       </td>
+       <td align="center">
            <a href="https://github.com/chavi362">
                <img src="https://github.com/chavi362.png" width="100px;" alt=""/>
                <br/>
