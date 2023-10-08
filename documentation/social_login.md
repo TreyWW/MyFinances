@@ -10,11 +10,11 @@ MyFinances supports social login with GitHub and Google.
       - Set **Authorization callback URL** to http://127.0.0.1:8000/login/external/complete/github/.
       - Fill in other fields according to your preferences. For more information, refer to the [GitHub documentation](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app).
     3. Confirm with **Register application**.
-    ![GitHub steps 1 to 3](/assets/GitHub_steps1to3.png)
+    ![GitHub steps 1 to 3](assets/GitHub_steps1to3.png)
     You are redirected to a page with your OAuth application.
     4. Click **Generate a new client secret**.
     5. Note the client ID and client secret as you will need to add them to the MyFinances settings.
-    ![GitHub steps 4 to 5](/assets/GitHub_steps4to5.png)
+    ![GitHub steps 4 to 5](assets/GitHub_steps4to5.png)
 
 2. Add the client secret and client ID of the OAuth application to the MyFinances settings.
     1. Set the following environment variables in your configuration:
@@ -29,13 +29,13 @@ MyFinances supports social login with GitHub and Google.
     1. Create a new project that will represent MyFinances in the GoogleCloud console. Click [here](https://console.cloud.google.com/projectcreate) to go to the **New project** page. For more information on how to fill in the individual fields, refer to the [Google Cloud documentation](https://developers.google.com/workspace/guides/create-project).
     2. Configure the consent screen that will be shown to users when they try to log in to MyFinances. Click [here](https://console.cloud.google.com/apis/credentials/consent) to go to the **OAuth consent screen** page. For more information on how to fill in the individual fields, refer to the [Google Cloud documentation](https://developers.google.com/workspace/guides/configure-oauth-consent#configure_oauth_consent).
     3. Generate OAuth client ID that will be used to authenticate MyFinances against Google's OAuth servers. Click [here](https://console.cloud.google.com/apis/credentials) to go to the **Credentials** page. For more information on the procedure, refer to the [Google Cloud documentation](https://developers.google.com/workspace/guides/create-credentials#oauth-client-id).
-    ![Google step 3a](/assets/Google_step3a.png)
+    ![Google step 3a](assets/Google_step3a.png)
         - Set **Application type** to *Web Application*.
         - To **Authorized JavaScript origins**, add the following URIs: http://localhost:8000 and http://127.0.0.1:8000.
         - To **Authorized redirect URI**, add the following URI: http://127.0.0.1:8000/login/external/complete/google-oauth2/.
-        ![Google step 3b](/assets/Google_step3b.png)
+        ![Google step 3b](assets/Google_step3b.png)
     4. Note the client secret and client ID.
-    ![Google step 4](/assets/Google_step4.png)
+    ![Google step 4](assets/Google_step4.png)
 
 2. Add the client secret and client ID of the OAuth application to the MyFinances settings.
       1. Set the following environment variables in your configuration:
