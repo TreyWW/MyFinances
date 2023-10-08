@@ -33,7 +33,6 @@ MyFinances supports social login with GitHub and Google.
         - Set **Application type** to *Web Application*.
         - To **Authorized JavaScript origins**, add the following URIs: http://localhost:8000 and http://127.0.0.1:8000.
         - To **Authorized redirect URI**, add the following URI: http://127.0.0.1:8000/login/external/complete/google-oauth2/.
-        ![Google step 3b](assets/Google_step3b.png)
     4. Note the client secret and client ID.  
     ![Google step 4](assets/Google_step4.png)
 
