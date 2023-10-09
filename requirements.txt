@@ -20,6 +20,6 @@ django-login-required-middleware
 django-debug-toolbar
 # other stuff
 oauthlib==3.2.2
-boto3==1.28.57
+boto3==1.28.62
 django-storages==1.14.2
 Pillow==10.0.1
