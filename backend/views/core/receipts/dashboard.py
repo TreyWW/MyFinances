@@ -14,11 +14,15 @@ def receipts_dashboard(request: HttpRequest):
 
     if request.htmx:
         search_text = request.POST.get("search")
-        results = (
-            Receipt.objects.filter(user=request.user)
-            .filter(Q(name__icontains=search_text) | Q(date__icontains=search_text))
-            .order_by("-date")
-        )
+        if search_text:
+            results = (
+                Receipt.objects.filter(user=request.user)
+                .filter(Q(name__icontains=search_text) | Q(date__icontains=search_text))
+                .order_by("-date")
+            )
+        else:
+            results = Receipt.objects.filter(user=request.user).order_by("-date")
+
         context.update({"receipts": results})
         return render(request, "core/pages/receipts/_search_results.html", context)
 
