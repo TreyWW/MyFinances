@@ -4,6 +4,7 @@ from backend.utils import Modals
 
 # Still working on
 
+
 def open_modal(request: HttpRequest, modal_name):
     context = {"modals": []}
 
