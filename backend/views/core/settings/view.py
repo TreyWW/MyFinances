@@ -11,9 +11,7 @@ Modals = Modals()
 
 
 def settings_page(request: HttpRequest):
-    context = {
-        "modal_data": [Modals.change_profile_picture()],
-    }
+    context = {}
 
     usersettings, created = UserSettings.objects.get_or_create(user=request.user)
 

@@ -7,34 +7,6 @@ from backend.models import Client
 
 def clients_dashboard(request: HttpRequest):
     context = {
-        "modal_data": [
-            {
-                "id": "modal_create_client",
-                "title": "Create Client",
-                "action": {
-                    "text": "Create",
-                    "method": "post",
-                    "fields": [
-                        {
-                            "type": "text",
-                            "name": "first_name",
-                            "required": True,
-                            "label": "First Name",
-                            "placeholder": "John",
-                            "class_extra": "input-ghost-secondary",
-                        },
-                        {
-                            "type": "text",
-                            "name": "last_name",
-                            "required": True,
-                            "label": "Last Name",
-                            "placeholder": "Smith",
-                            "class_extra": "input-ghost-secondary",
-                        },
-                    ],
-                },
-            }
-        ],
         "clients": Client.objects.filter(user=request.user, active=True),
     }
 

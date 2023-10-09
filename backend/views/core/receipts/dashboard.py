@@ -6,6 +6,9 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 
 from backend.models import Receipt, UserSettings
+from backend.utils import Modals
+
+Modals = Modals()
 
 
 @login_required
@@ -27,38 +30,6 @@ def receipts_dashboard(request: HttpRequest):
         return render(request, "core/pages/receipts/_search_results.html", context)
 
     context = {
-        "modal_data": [
-            {
-                "id": "receipt-modal",
-                "title": "Upload a receipt",
-                "action": {
-                    "text": "Add Receipt",
-                    "method": "post",
-                    "extra": f"enctype=multipart/form-data hx-post={reverse_lazy('api v1 receipts new')} hx-target=#items hx-refresh=true",
-                    "fields": [
-                        {
-                            "type": "text",
-                            "name": "receipt_name",
-                            "required": False,
-                            "label": "Receipt name",
-                            "placeholder": "Black Pen",
-                        },
-                        {
-                            "type": "file",
-                            "name": "receipt_image",
-                            "required": True,
-                            "extra": "accept=image/png,image/jpeg",
-                        },
-                        {
-                            "type": "date",
-                            "name": "receipt_date",
-                            "required": True,
-                            "label": "Receipt date",
-                        },
-                    ],
-                },
-            }
-        ],
         "receipts": Receipt.objects.filter(user=request.user).order_by("-date"),
     }
 

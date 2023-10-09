@@ -13,7 +13,7 @@
                     <input disabled type="text" class="input input-solid-primary w-[30%]" placeholder="John Doe" value="{{ user.first_name }} {{ user.last_name }}" />
                 </div>
                 <!-- Profile Name -->
-                <label for="modal_change_profile_picture" class="btn btn-secondary">Change Profile Picture</label>
+                <label for="modal_change_profile_picture" class="btn btn-secondary" hx-trigger="click once" hx-swap="beforeend" hx-target="#modal_container" hx-get="{% url "api v1 base modal retrieve" modal_name="change_profile_picture" %}">Change Profile Picture</label>
             </div>
         </div>
         <button class="btn btn-primary mt-auto">Save All</button>

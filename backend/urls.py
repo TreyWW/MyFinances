@@ -146,6 +146,11 @@ urlpatterns = [
         v1.invoices.create.set_destination.set_destination_from,
         name="api v1 invoices create set_destination from",
     ),
+    path(
+        "api/v1/base/modals/<str:modal_name>/retrieve",
+        v1.base.modal.open_modal,
+        name="api v1 base modal retrieve",
+    ),
     path("login/", other.login.login_page, name="login"),
     path("logout/", other.login.logout_view, name="logout"),
     # path('logout_test/', other.login.logout_view, name='logout_test'),

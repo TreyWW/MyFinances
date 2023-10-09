@@ -19,6 +19,11 @@
                 <!-- MAIN PAGE -->
                 {% include 'core/partials/base/tabinator.html' %}
                 {% include 'core/partials/base/toasts.html' %}
+
+                <div id="modal_container">
+
+                </div>
+
                 {% include 'core/components/modal.html' with modals=modals %}
                 {% include 'core/components/modal.html' with modals=modal_data_context_processors %}
 

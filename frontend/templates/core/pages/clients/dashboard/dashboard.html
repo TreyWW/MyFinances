@@ -1,7 +1,7 @@
 {% extends 'core/pages/base.html' %}
 {% block content %}
     {% include 'core/components/modal.html' with modals=modal_data %}
-    <label for="modal_create_client" class="btn btn-primary mb-4 btn-block">
+    <label class="btn btn-primary mb-4 btn-block" for="create_client" hx-trigger="click once" hx-swap="beforeend" hx-target="#modal_container" hx-get="{% url "api v1 base modal retrieve" modal_name="create_client" %}">
         {% include 'core/components/icon.html' with icon="plus" tags="me-2" %}
         Create Client
     </label>

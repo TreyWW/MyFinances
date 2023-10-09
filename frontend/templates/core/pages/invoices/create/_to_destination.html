@@ -1,4 +1,4 @@
-<label id="to_destination" class="max-w-screen-xl border border-gray-900 card ms-3 hover:border-gray-500" for="modal_to_destination">
+<label id="to_destination" class="max-w-screen-xl border border-gray-900 card ms-3 hover:border-gray-500" for="invoices_to_destination_modal" hx-trigger="click once" hx-swap="beforeend" hx-target="#modal_container" hx-get="{% url "api v1 base modal retrieve" modal_name="invoices_to_destination" %}">
     <div class="card-body">
         {#            <p class="text-base font-medium">Another Company</p>#}
         <p class="text-sm">{{ name | default:"John Smith" }}</p>

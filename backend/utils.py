@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 import os, json
 
 
@@ -85,6 +85,15 @@ class Modals:
         toasts=[TOASTS.refresh()],
     ):
         return {}
+
+    @staticmethod
+    def logout_modal():
+        return {
+            "id": "logout_modal",
+            "title": "Log out",
+            "text": "Are you sure you would like to logout?",
+            "action": {"text": "Log out", "type": "anchor", "href": reverse("logout")},
+        }
 
     @staticmethod
     def change_profile_picture():
@@ -209,6 +218,170 @@ class Modals:
                         "label": f'Please type "i confirm i want to kick {user.username}"',
                         "placeholder": "please type the message above to confirm",
                     }
+                ],
+            },
+        }
+
+    @staticmethod
+    def upload_receipt():
+        return {
+            "id": "upload_receipt",
+            "title": "Upload a receipt",
+            "action": {
+                "text": "Add Receipt",
+                "method": "post",
+                "extra": f"enctype=multipart/form-data hx-post={reverse_lazy('api v1 receipts new')} hx-target=#items hx-refresh=true",
+                "fields": [
+                    {
+                        "type": "text",
+                        "name": "receipt_name",
+                        "required": False,
+                        "label": "Receipt name",
+                        "placeholder": "Black Pen",
+                    },
+                    {
+                        "type": "file",
+                        "name": "receipt_image",
+                        "required": True,
+                        "extra": "accept=image/png,image/jpeg",
+                    },
+                    {
+                        "type": "date",
+                        "name": "receipt_date",
+                        "required": True,
+                        "label": "Receipt date",
+                    },
+                ],
+            },
+        }
+
+    @staticmethod
+    def invoices_to_destination():
+        return {
+            "id": "invoices_to_destination_modal",
+            "title": "Update their info",
+            "action": {
+                "text": "Update",
+                "method": "post",
+                "extra": f"hx-post={reverse_lazy('api v1 invoices create set_destination to')} hx-target=#to_destination hx-swap=outerHTML",  # hx-refresh=true
+                "fields": [
+                    {
+                        "type": "text",
+                        "name": "name",
+                        "required": True,
+                        "label": "Name",
+                        "placeholder": "John Smith",
+                        "value": "John Smith",
+                        "class_extra": "input-ghost-secondary",
+                    },
+                    {
+                        "type": "text",
+                        "name": "address",
+                        "required": True,
+                        "label": "Address",
+                        "placeholder": "128 Road",
+                        "value": "128 Road",
+                        "class_extra": "input-ghost-secondary",
+                    },
+                    {
+                        "type": "text",
+                        "name": "city",
+                        "required": True,
+                        "label": "City",
+                        "placeholder": "Street",
+                        "value": "Street",
+                        "class_extra": "input-ghost-secondary",
+                    },
+                    {
+                        "type": "text",
+                        "name": "country",
+                        "required": True,
+                        "label": "Country",
+                        "placeholder": "England",
+                        "value": "England",
+                        "class_extra": "input-ghost-secondary",
+                    },
+                    {"type": "hidden", "name": "modal_from_", "value": ""},
+                ],
+            },
+        }
+
+    @staticmethod
+    def invoices_from_destination():
+        return {
+            "id": "invoices_from_destination_modal",
+            "title": "Update your info",
+            "action": {
+                "text": "Update",
+                "method": "post",
+                "extra": f"hx-post={reverse_lazy('api v1 invoices create set_destination from')} hx-target=#from_destination hx-swap=outerHTML",  # hx-refresh=true
+                "fields": [
+                    {
+                        "type": "text",
+                        "name": "name",
+                        "required": True,
+                        "label": "Name",
+                        "placeholder": "John Smith",
+                        "value": "John Smith",
+                        "class_extra": "input-ghost-secondary",
+                    },
+                    {
+                        "type": "text",
+                        "name": "address",
+                        "required": True,
+                        "label": "Address",
+                        "placeholder": "128 Road",
+                        "value": "128 Road",
+                        "class_extra": "input-ghost-secondary",
+                    },
+                    {
+                        "type": "text",
+                        "name": "city",
+                        "required": True,
+                        "label": "City",
+                        "placeholder": "Street",
+                        "value": "Street",
+                        "class_extra": "input-ghost-secondary",
+                    },
+                    {
+                        "type": "text",
+                        "name": "country",
+                        "required": True,
+                        "label": "Country",
+                        "placeholder": "England",
+                        "value": "England",
+                        "class_extra": "input-ghost-secondary",
+                    },
+                    {"type": "hidden", "name": "modal_from_"},
+                ],
+            },
+        }
+
+    @staticmethod
+    def create_client():
+        return {
+            "id": "create_client",
+            "title": "Create Client",
+            "action": {
+                "text": "Create",
+                "method": "post",
+                "fields": [
+                    {
+                        "type": "text",
+                        "name": "first_name",
+                        "required": True,
+                        "label": "First Name",
+                        "placeholder": "John",
+                        "class_extra": "input-ghost-secondary",
+                    },
+                    {
+                        "type": "text",
+                        "name": "last_name",
+                        "required": True,
+                        "label": "Last Name",
+                        "placeholder": "Smith",
+                        "class_extra": "input-ghost-secondary",
+                    },
                 ],
             },
         }

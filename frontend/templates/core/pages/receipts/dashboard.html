@@ -3,7 +3,7 @@
 {% block content %}
     {% include 'core/components/modal.html' with modals=modal_data %}
 
-    <label class="btn btn-primary btn-block my-3" for="receipt-modal">
+    <label class="btn btn-primary btn-block my-3" for="upload_receipt" hx-trigger="click once" hx-swap="beforeend" hx-target="#modal_container" hx-get="{% url "api v1 base modal retrieve" modal_name="upload_receipt" %}">
         {% include 'core/components/icon.html' with icon="receipt" classes="pe-2" %}
         Upload Receipt
     </label>
