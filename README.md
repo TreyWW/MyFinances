@@ -107,14 +107,27 @@ Thank you for your contributions!
           <br />
           <sub>
              <b>
-                Trey WW
+                Trey
              </b>
           </sub>
        </a>
        <br />
-       <a href="https://github.com/TreyWW/MyFinances" title="Project Lead">👑</a>
-       <a href="https://github.com/TreyWW/MyFinances/commits?author=TreyWW" title="Backend">🖥</a>
+       <a href="https://github.com/TreyWW/MyFinances/pulls?q=user%3ATreyWW" title="Project Lead">👑</a>
+       <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3ATreyWW" title="Backend">🖥</a>
     </td>
+      <td align="center">
+           <a href="https://github.com/Z3nKrypt">
+               <img src="https://github.com/Z3nKrypt.png" width="100px;" alt=""/>
+               <br/>
+               <sub>
+                   <b>
+                       Jacob
+                   </b>
+               </sub>
+           </a>
+           <br/>
+           <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3AZ3nKrypt" title="Documentation">📖</a>
+       </td>
     <td align="center">
        <a href="https://github.com/tomkinane">
           <img src="https://github.com/tomkinane.png" width="100px;" alt=""/>
@@ -126,20 +139,20 @@ Thank you for your contributions!
           </sub>
        </a>
        <br />
-       <a href="https://github.com/TreyWW/MyFinances/commits?author=tomkinane" title="Frontend">🎨</a>
+       <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Atomkinane" title="Frontend">🎨</a>
     </td>
        <td align="center">
-           <a href="https://github.com/Z3nKrypt">
-               <img src="https://github.com/Z3nKrypt.png" width="100px;" alt=""/>
+           <a href="https://github.com/romana-la">
+               <img src="https://github.com/romana-la.png" width="100px;" alt=""/>
                <br/>
                <sub>
                    <b>
-                       Jacob
+                       romana-la
                    </b>
                </sub>
            </a>
            <br/>
-           <a href="https://github.com/TreyWW/MyFinances/commits?author=Z3nKrypt" title="Documentation">📖</a>
+           <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Aromana-la" title="Documentation">📖</a>
        </td>
        <td align="center">
            <a href="https://github.com/chavi362">
@@ -152,7 +165,7 @@ Thank you for your contributions!
                </sub>
            </a>
            <br/>
-           <a href="https://github.com/TreyWW/MyFinances/commits?author=chavi362" title="Documentation">📖</a>
+           <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Achavi362" title="Documentation">📖</a>
        </td>
   </tr>
 </table>
