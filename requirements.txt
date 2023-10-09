@@ -1,5 +1,5 @@
 # django
-django==4.2.5
+django==4.2.6
 gunicorn
 # db
 mysqlclient==2.2.0
