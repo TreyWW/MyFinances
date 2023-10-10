@@ -15,7 +15,7 @@
 {% endfor %}
 
 {% for notification in notifications.modal %}
-    <label tabindex="-1" for="modal_{{ notification.action_value }}" class=" dropdown-item text-sm mt-1 flex cursor-pointer">
+    <label tabindex="-1" for="modal_{{ notification.action_value }}" class="dropdown-item text-sm mt-1 flex cursor-pointer" hx-trigger="click once" hx-swap="beforeend" hx-target="#modal_container" hx-get="{% url "api v1 base modal retrieve" modal_name=notification.action_value %}">
         {{ notification.message }}
     </label>
 {% endfor %}

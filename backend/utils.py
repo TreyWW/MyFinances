@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.urls import reverse, reverse_lazy
 import os, json
+from backend.models import TeamInvitation
 
 
 def load_navbar_items():
@@ -160,7 +161,10 @@ class Modals:
         }
 
     @staticmethod
-    def invited_to_team_accept(invitation):
+    def invited_to_team_accept(**kwargs):
+        invitation: TeamInvitation = kwargs.get("invitation")
+        if not invitation:
+            return {}
         return {
             "id": "invited_to_team_accept",
             "title": f"Are you sure you would like to join <strong>{invitation.team.name}</strong> team?",
@@ -175,7 +179,7 @@ class Modals:
         }
 
     @staticmethod
-    def invited_to_team_decline(invitation):
+    def invited_to_team_decline(invitation: TeamInvitation):
         return {
             "id": "invited_to_team_decline",
             "title": f"Are you sure you would like to <u>decline</u> <strong>{invitation.team.name}</strong> teams invitation?",
@@ -203,6 +207,7 @@ class Modals:
         return {
             "id": f"team_kick_user_{user.id}",
             "title": f'<p class="text-sm">Are you sure you would like to <u>kick</u> <strong>{user.username}</strong> from your team?</p>',
+            "start_closed": True,
             "action": {
                 "text": "Decline",
                 "color": "error",

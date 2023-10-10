@@ -2,7 +2,7 @@
 {% block content %}
     {% include 'core/components/modal.html' with modals=modal_data %}
     {% if not has_team %}
-        <label class="btn btn-primary" for="modal_create_team">
+        <label class="btn btn-primary" for="modal_create_team" hx-get="{% url "api v1 base modal retrieve" modal_name="create_team" %}" hx-trigger="click" hx-swap="beforeend" hx-target="#modal_container">
             {% include 'core/components/icon.html' with icon="plus" classes="pe-2" %}
             Create Team
         </label>
@@ -20,7 +20,7 @@
         </h1>
 
         {% if is_team_leader %}
-            <label for="modal_invite_user_to_team" class="btn btn-primary">
+            <label for="modal_invite_user_to_team" class="btn btn-primary" hx-get="{% url "api v1 base modal retrieve" modal_name="invite_user_to_team" %}" hx-trigger="click" hx-swap="beforeend" hx-target="#modal_container">
                 {% include 'core/components/icon.html' with icon="plus" classes="pe-2" %}
                 Invite User
             </label>

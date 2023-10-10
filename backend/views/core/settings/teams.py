@@ -14,7 +14,7 @@ Modals = Modals()
 
 
 def teams_dashboard(request: HttpRequest):
-    modal_data = [Modals.create_team(), Modals.invite_user_to_team()]
+    modal_data = []  # [Modals.create_team(), Modals.invite_user_to_team()]
 
     user_has_team: bool = False
     user_is_team_leader: bool = False
