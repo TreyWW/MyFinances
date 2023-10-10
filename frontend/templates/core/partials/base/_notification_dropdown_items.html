@@ -20,7 +20,7 @@
     </label>
 {% endfor %}
 
-{% if not notifications and not notifications.normal %}
+{% if not notifications.modal and not notifications.redirect and not notifications.normal %}
     <div class="dropdown-item text-sm mt-1 hover-none pointer-events-none">
         No notifications
     </div>
