@@ -109,8 +109,7 @@ class Client(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     active = models.BooleanField(default=True)
 
-    first_name = models.CharField(max_length=32)
-    last_name = models.CharField(max_length=32)
+    name = models.CharField(max_length=64)
     phone_number = models.CharField(max_length=100, blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
 

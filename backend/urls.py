@@ -190,6 +190,11 @@ urlpatterns = [
         clients.dashboard.clients_dashboard,
         name="clients dashboard",
     ),
+    path(
+        "dashboard/clients/create/",
+        clients.create.create_client,
+        name="clients create",
+    ),
     path("admin/", admin.site.urls),
 ] + static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
 

@@ -1,0 +1,65 @@
+{% extends 'core/pages/base.html' %}
+{% load static %}
+{% block content %}
+    {% include 'core/components/modal.html' with modals=modal_data %}
+    <form method="post">
+        {% csrf_token %}
+        <div class="divider mt-8">REQUIRED DETAILS</div>
+        <div class="my-4 flex w-full flex-col">
+            <div class="flex w-full">
+                <div class="max-w-screen-xl border border-gray-900 card me-3 hover:border-gray-500" href="{% url 'index' %}">
+                    <div class="card-body">
+                        <div class="form-field">
+                            <label class="form-label">Client Name</label>
+                            <input required id="clientName" name="client_name" minlength="3" placeholder="Bob Smith" type="text" class="peer input input-ghost-secondary input-block">
+                            <label class="form-label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden ">
+                                <span class="form-label-alt">Please enter a valid client name.</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="max-w-screen-xl border border-gray-900 card ms-3 hover:border-gray-500" href="{% url 'index' %}">
+                    <div class="card-body">
+                        <div class="form-field">
+                            <label class="form-label">Client Email</label>
+                            <input id="clientEmail" name="client_email" placeholder="bsmith@example.com" type="email" class="peer input-ghost-secondary input input-block">
+                            <label class="form-label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden ">
+                                <span class="form-label-alt">Please enter a valid email.</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="divider my-4">OPTIONAL DETAILS</div>
+        <div class="my-4 flex w-full flex-col">
+            <div class="flex w-full">
+                <div class="max-w-screen-xl border border-gray-900 card me-3 hover:border-gray-500" href="{% url 'index' %}">
+                    <div class="card-body">
+                        <div class="form-field">
+                            <label class="form-label">Client Address</label>
+                            <input id="clientAddress" name="client_address" placeholder="1234 Main St" type="text" class="peer input input-ghost-secondary input-block">
+                            <label class="form-label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden ">
+                                <span class="form-label-alt">Please enter a valid address.</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="max-w-screen-xl border border-gray-900 card ms-3 hover:border-gray-500" href="{% url 'index' %}">
+                    <div class="card-body">
+                        <div class="form-field">
+                            <label class="form-label">Client Phone Number</label>
+                            <input id="clientPhone" name="client_phone" placeholder="07000000000" type="text" class="peer input-ghost-secondary input input-block">
+                            <label class="form-label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden ">
+                                <span class="form-label-alt">Please enter a valid phone.</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn btn-primary">Create Client</button>
+    </form>
+{% endblock content %}
