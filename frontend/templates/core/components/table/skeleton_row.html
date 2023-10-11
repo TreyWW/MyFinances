@@ -1,0 +1,20 @@
+{% comment %}
+
+Brief explanation:
+
+with "times" --> number of times to repeat the loop default to 4 if none
+for _ in --> just a basic python for loop
+"n" --> number of times to repeat the loop
+"rjust" --> right justify (pretty much doing a range)
+:times --> number of times to repeat the loop
+
+{% endcomment %}
+<tr>
+    {% with cols=cols|default:4 %}
+        {% for _ in "n"|rjust:cols %}
+            <th>
+                <div class="skeleton h-5 rounded-md"></div>
+            </th>
+        {% endfor %}
+    {% endwith %}
+</tr>

@@ -1,4 +1,5 @@
 {% load humanize %}
+<tbody>
 {% for invoice in invoices %}
     <tr>
         <td>{{ invoice.id }}</td>
@@ -31,7 +32,7 @@
         <td colspan="2">
             <div class="flex flex-wrap gap-2">
                 <div class="relative flex group">
-                    <button class="btn btn-solid-success btn-sm">
+                    <button class="btn btn-solid-success btn-sm" disabled>
                         {% include "core/components/icon.html" with icon="pencil" %}
                     </button>
                     <span class="absolute m-4 mx-auto -translate-y-8 scale-100 rounded-md opacity-0 transition-opacity badge badge-flat-success left-1/2-translate-x-1/2 group-hover:opacity-100">
@@ -39,7 +40,7 @@
                 </span>
                 </div>
                 <div class="relative flex group">
-                    <button class="btn btn-solid-error btn-sm">
+                    <button class="btn btn-solid-error btn-sm" disabled>
                         <i class="fa-solid fa-trash"></i>
                     </button>
                     <span class="absolute m-4 mx-auto -translate-y-8 scale-100 rounded-md opacity-0 transition-opacity badge badge-flat-error left-1/2-translate-x-1/2 group-hover:opacity-100">
@@ -50,3 +51,24 @@
         </td>
     </tr>
 {% endfor %}
+    <tr>
+        <td colspan="3">
+            <span class="flex items-center col-span-3">
+              Showing {{ invoices.count }} of {{ invoices.count }}
+            </span>
+        </td>
+        <td colspan="4">
+            <span class="flex col-span-4 mt-2 sm:mt-auto sm:justify-end">
+                <div class="pagination pagination-compact pagination-bordered">
+                    <input type="radio" name="pagination-3" id="pgn-7" disabled/>
+                    <label for="pgn-7" class="btn">1</label>
+                    <input type="radio" name="pagination-3" id="pgn-8" disabled/>
+                    <label for="pgn-8" class="btn">2</label>
+                    <input type="radio" name="pagination-3" id="pgn-9" disabled/>
+                    <label for="pgn-9" class="btn">3</label>
+                    <input type="radio" name="pagination-3" id="pgn-9" disabled/>
+                </div>
+            </span>
+        </td>
+    </tr>
+</tbody>

@@ -7,19 +7,16 @@ from backend.models import *
 
 def invoices_dashboard(request: HttpRequest):
     context = {}
-    context["invoices"] = (
-        Invoice.objects.filter(user=request.user)
-        .prefetch_related("items")
-        .only("invoice_id", "id", "payment_status", "date_due")
-    )
-    # May need to add more logic later
 
-    # context["modal_data"] = [
-    #     {
-    #         "id": "modal_confirm_delete",
-    #         "title": "Are you sure you would like to delete this invoice?",
-    #     }
-    #     ]
+    if request.htmx:
+        context["invoices"] = (
+            Invoice.objects.filter(user=request.user)
+            .prefetch_related("items")
+            .only("invoice_id", "id", "payment_status", "date_due")
+        )
+        return render(
+            request, "core/pages/invoices/dashboard/_table_body.html", context
+        )
 
     return render(request, "core/pages/invoices/dashboard/dashboard.html", context)
 
