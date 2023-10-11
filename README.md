@@ -172,3 +172,13 @@ Thank you for your contributions!
 
 ---
 __Note:__ This README.md is a living document and might be updated over time. Always refer to the latest version when contributing and developing.
+
+## Star History
+
+<a href="https://star-history.com/#TreyWW/MyFinances&Timeline">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=TreyWW/MyFinances&type=Timeline&theme=dark" />
+    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=TreyWW/MyFinances&type=Timeline" />
+    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=TreyWW/MyFinances&type=Timeline" />
+  </picture>
+</a>
