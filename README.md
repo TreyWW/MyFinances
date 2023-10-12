@@ -2,6 +2,7 @@
 
 <img src="https://github.com/TreyWW/MyFinances/assets/73353716/685b83f4-1495-4ce6-94c7-e24c2f14a6d1" width="495" height="166">
 
+![Test](https://github.com/TreyWW/MyFinances/actions/workflows/run_tests.yml/badge.svg) 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 MyFinances is an open-source web application designed to empower individuals and teams to efficiently manage their finances. Whether you're tracking personal expenses, managing client invoices, or planning your financial goals, MyFinances provides a user-friendly platform to streamline these tasks.
