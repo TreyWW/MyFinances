@@ -6,12 +6,20 @@ title: Issue # |
 [Issue ID] | Short description of the changes made
 -->
 
+# Checklist
+
+- [ ] Ran the [Black Formatter]() on any new code (checks will fail without)
+- [ ] Made any changes or additions to the doccumentation where required
+- [ ] Changes generate no new warnings/errors
+- [ ] New and existing unit tests pass locally with my changes
+
+
 ## What type of PR is this? (delete all that don't apply)
 
-- 🍕 Feature
-- 🐛 Bug Fix
-- 🚧 Breaking Change
-- 🧑‍💻 Code Refactor
+- ✨ Feature
+- 🪲 Bug Fix
+- 🚨 Breaking Change
+- ♻️ Code Refactor
 - 📝 Documentation Update
 - Other <!--(optionally add your own bullet points)-->
 
@@ -19,14 +27,9 @@ title: Issue # |
 
 <!-- Please include a summary of the change and which issue is fixed. Please also include relevant motivation and context. List any dependencies that are required for this change. -->
 
-## Changes
+## [OPTIONAL] Changes <!-- Feed free to add screenshots of new features, videos, or text bullet points -->
 
 - Moved `example.txt` to `/example/example.txt`
-
-## Related Tickets & Documents
-
-- Related Issue #
-- Closes #
 
 ## QA Instructions, Screenshots, Recordings
 
@@ -34,15 +37,14 @@ title: Issue # |
 on the devices and browsers this has been tested on, as well as any relevant
 images for UI changes. -->
 
-### UI accessibility concerns?
-
-<!-- If your PR includes UI changes, please replace this line with details on how
-accessibility is impacted and tested. -->
-
 ## Added/updated tests? (delete all that don't apply)
 
 - 👍 yes
 - 🙅 no, because they aren't needed
 - 🙋 no, because I need help
 
-## *[optional]* Are there any post deployment tasks we need to perform?
+
+## Related Tickets & Documents
+
+- Related Issue #
+- Closes # <!-- This automatically closes the issue upon merge -->
