@@ -19,7 +19,7 @@
                             Date
                             <i class="fa-solid fa-caret-down border-none pt-1 pl-1/2"></i>
                         </label>
-                        <div class="dropdown-menu border-none">
+                        <div class="dropdown-menu dropdown-menu-bottom-right border border-gray-10">
                             <a class="dropdown-item text-sm border-none">Actions</a>
                         </div>
                     </div>
@@ -30,7 +30,7 @@
                             Client Name
                             <i class="fa-solid fa-caret-down border-none pt-1 pl-1/2"></i>
                         </label>
-                        <div class="dropdown-menu border-none">
+                        <div class="dropdown-menu border border-gray-10">
                             <a class="dropdown-item text-sm border-none">Actions</a>
                         </div>
                     </div>
@@ -41,7 +41,7 @@
                             Amount
                             <i class="fa-solid fa-caret-down border-none pt-1 pl-1/2"></i>
                         </label>
-                        <div class="dropdown-menu border-none">
+                        <div class="dropdown-menu border border-gray-10">
                             <a class="dropdown-item text-sm border-none">Actions</a>
                         </div>
                     </div>
@@ -52,7 +52,7 @@
                             Payment Status
                             <i class="fa-solid fa-caret-down border-none pt-1 pl-1/2"></i>
                         </label>
-                        <div class="dropdown-menu border-none">
+                        <div class="dropdown-menu border border-gray-10">
                             <a class="dropdown-item text-sm border-none">Pending</a>
                             {# TODO: somehow make this pending button call HTMX and update #}
                             {#       add the list to pending only (BUT ALSO SAVE FOR FUTURE FILTERS) #}
@@ -65,7 +65,7 @@
                             Actions
                             <i class="fa-solid fa-caret-down border-none pt-1 pl-1/2"></i>
                         </label>
-                        <div class="dropdown-menu border-none">
+                        <div class="dropdown-menu border border-gray-10">
                             <a class="dropdown-item text-sm border-none">Actions</a>
                         </div>
                     </div>
@@ -76,7 +76,7 @@
                             Sort
                             <i class="fa-solid fa-caret-down border-none pt-1 pl-1/2"></i>
                         </label>
-                        <div class="dropdown-menu border-none">
+                        <div class="dropdown-menu border border-gray-10">
                             <a class="dropdown-item text-sm border-none">Invoice ID</a>
                             <a class="dropdown-item text-sm border-none">Date</a>
                             <a class="dropdown-item text-sm border-none">Client Name</a>
@@ -88,27 +88,8 @@
                 </th>
             </tr>
             </thead>
-            <tbody>
-            {% include 'core/pages/invoices/dashboard/_rows.html' %}
-            <tr>
-                <td colspan="2"><span class="flex items-center col-span-3">
-              Showing {{ invoices.count }} of {{ invoices.count }}
-            </span></td>
-                <td></td>
-                <td colspan="4">
-                    <span class="flex col-span-4 mt-2 sm:mt-auto sm:justify-end">
-                        <div class="pagination pagination-compact pagination-bordered">
-                            <input type="radio" name="pagination-3" id="pgn-7"/>
-                            <label for="pgn-7" class="btn">1</label>
-                            <input type="radio" name="pagination-3" id="pgn-8"/>
-                            <label for="pgn-8" class="btn">2</label>
-                            <input type="radio" name="pagination-3" id="pgn-9"/>
-                            <label for="pgn-9" class="btn">3</label>
-                            <input type="radio" name="pagination-3" id="pgn-9"/>
-                        </div>
-                    </span>
-                </td>
-            </tr>
+            <tbody id="table_body" hx-swap="outerHTML" hx-trigger="load" hx-post="{% url 'invoices dashboard' %}">
+            {% include 'core/components/table/skeleton_rows.html' with rows=3 cols=7 %}
             </tbody>
         </table>
     </div>
