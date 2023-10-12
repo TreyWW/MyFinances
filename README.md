@@ -2,6 +2,8 @@
 
 <img src="https://github.com/TreyWW/MyFinances/assets/73353716/685b83f4-1495-4ce6-94c7-e24c2f14a6d1" width="495" height="166">
 
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
 MyFinances is an open-source web application designed to empower individuals and teams to efficiently manage their finances. Whether you're tracking personal expenses, managing client invoices, or planning your financial goals, MyFinances provides a user-friendly platform to streamline these tasks.
 
 | PLEASE NOTE: This project is still in development, and has only just started! So none of the key features or descriptions have been fully implemented. We are beginner friendly and looking for contributors! |
@@ -78,6 +80,12 @@ We'll review your pull request, provide feedback, and work with you to get your 
 ### Code Style and Quality
 
 Adhere to the coding style guidelines of the Django project. Find the Django coding style guide [here](https://docs.djangoproject.com/en/4.2/internals/contributing/writing-code/coding-style/).
+
+We now also use the [python black formatter](https://black.readthedocs.io/). Code tests will be run before PRs can be merged, they will fail if you haven't ran the command below:
+```
+pip install black
+black ./
+```
 
 ### Version Control
 
