@@ -104,7 +104,10 @@
                     <div class="card-body">
                         <div class="form-field">
                             <label class="form-label">Account Holder Name</label>
-                            <input required name="account_holder_name" placeholder="Mr John Doe" type="text" class="peer input-ghost-secondary input input-block">
+                            <input name="account_holder_name" pattern="^((?:[A-Za-z]+ ?){1,3})$" name="account_holder_name" placeholder="Mr John Doe" type="text" class="peer input-ghost-secondary input input-block">
+                            <label class="form-label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden ">
+                                <span class="form-label-alt">Please enter a valid account holder name.</span>
+                            </label>
                         </div>
                     </div>
                 </div>
@@ -112,7 +115,10 @@
                     <div class="card-body">
                         <div class="form-field">
                             <label class="form-label">Account Number</label>
-                            <input required name="account_number" placeholder="1234 4321 1234 4321" type="text" class="peer input input-ghost-secondary input-block">
+                            <input onkeyup="this.value = validate_account_number(this.value);" pattern="[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{4}" name="account_number" placeholder="1234-4321-1234-4321" type="text" class="peer input input-ghost-secondary input-block">
+                            <label class="form-label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden ">
+                                <span class="form-label-alt">Please enter a valid account number.</span>
+                            </label>
                         </div>
                     </div>
                 </div>
@@ -120,7 +126,10 @@
                     <div class="card-body">
                         <div class="form-field">
                             <label class="form-label">Sort Code</label>
-                            <input required name="sort_code" placeholder="123" type="text" class="peer input-ghost-secondary input input-block">
+                            <input onkeyup="this.value = validate_sort_code(this.value);" pattern="[0-9]{3}-[0-9]{3}-[0-9]{3}" name="sort_code" name="sort_code" placeholder="1234-1234-1234" type="text" class="peer input-ghost-secondary input input-block">
+                            <label class="form-label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden ">
+                                <span class="form-label-alt">Please enter a valid sort code.</span>
+                            </label>
                         </div>
                     </div>
                 </div>
@@ -180,6 +189,49 @@
     </form>
 
     <script>
+        function validate_sort_code(value) {
+            // Remove any non-numeric characters
+            value = value.replace(/\D/g, '');
+
+            // Ensure the value is no longer than 9 characters (123-123-123)
+            if (value.length > 9) {
+                value = value.slice(0, 9);
+            }
+
+            // Format the value as "123-123-123"
+            if (value.length >= 3) {
+                value = value.slice(0, 3) + "-" + value.slice(3);
+            }
+            if (value.length >= 7) {
+                value = value.slice(0, 7) + "-" + value.slice(7);
+            }
+
+            return value;
+        }
+
+        function validate_account_number(value) {
+            // Remove any non-numeric characters
+            value = value.replace(/\D/g, '');
+
+            // Ensure the value is no longer than 16 characters (1234-1234-1234-1234)
+            if (value.length > 16) {
+                value = value.slice(0, 16);
+            }
+
+            // Format the value as "1234-1234-1234-1234"
+            if (value.length >= 4) {
+                value = value.slice(0, 4) + "-" + value.slice(4);
+            }
+            if (value.length >= 9) {
+                value = value.slice(0, 9) + "-" + value.slice(9);
+            }
+            if (value.length >= 14) {
+                value = value.slice(0, 14) + "-" + value.slice(14);
+            }
+
+            return value;
+        }
+
         document.body.addEventListener('htmx:afterOnLoad', function () {
             document.getElementById("modal_input-service_name").value = "";
             document.getElementById("modal_input-hours").value = "";
