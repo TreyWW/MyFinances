@@ -18,6 +18,9 @@ python-memcached
 django-htmx
 django-login-required-middleware
 django-debug-toolbar
+# markdown
+django-markdownify
+bleach
 # other stuff
 oauthlib==3.2.2
 boto3==1.28.62

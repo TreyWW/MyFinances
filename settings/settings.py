@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.humanize",
     "django_htmx",
     "debug_toolbar",
+    "markdownify.apps.MarkdownifyConfig",
 ]
 
 LOGIN_REQUIRED_IGNORE_VIEW_NAMES = [
@@ -176,6 +177,13 @@ GOOGLE_OAUTH2_CLIENT_DETAILS = {
         "token_uri": "https://oauth2.googleapis.com/token",
         "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
         "scopes": ["openid", "email", "profile"],
+    }
+}
+
+MARKDOWNIFY = {
+    "default": {
+        "WHITELIST_TAGS": ["a", "p", "h1", "h2", "h3", "h4", "h5", "h6", "strong"],
+        "WHITELIST_ATTRS": ["href", "src", "alt"],
     }
 }
 

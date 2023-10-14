@@ -1,13 +1,16 @@
 <label id="from_destination" class="max-w-screen-xl border border-gray-900 card me-3 hover:border-gray-500" for="invoices_from_destination_modal" hx-trigger="click once" hx-swap="beforeend" hx-target="#modal_container" hx-get="{% url "api v1 base modal retrieve" modal_name="invoices_from_destination" %}">
     <div class="card-body">
-        {#            <p class="text-base font-medium">My Company</p>#}
-        <p class="text-sm">{{ name | default:"John Smith" }}</p>
+        <p class="text-md">{{ name | default:"John Smith" }}</p>
+        <p class="text-sm">{{ company | default:"Google" }}</p>
         <p class="text-sm">{{ address | default:"128 Example Road" }}</p>
-        <p class="text-sm">{{ city | default:"Testing" }}</p>
-        <p class="text-sm">{{ country | default:"Test" }}</p>
+        <p class="text-sm">{{ city | default:"Oxford" }}</p>
+        <p class="text-sm">{{ county | default:"Oxfordshire" }}</p>
+        <p class="text-sm">{{ country | default:"England" }}</p>
     </div>
     <input type="hidden" name="from_name" value="{{ name | default:"John Smith" }}">
+    <input type="hidden" name="from_company" value="{{ company | default:"Google" }}">
     <input type="hidden" name="from_address" value="{{ address | default:"128 Example Road" }}">
-    <input type="hidden" name="from_city" value="{{ city | default:"Testing" }}">
-    <input type="hidden" name="from_country" value="{{ country | default:"Test" }}">
+    <input type="hidden" name="from_city" value="{{ city | default:"Oxford" }}">
+    <input type="hidden" name="from_county" value="{{ county | default:"Oxfordshire" }}">
+    <input type="hidden" name="from_country" value="{{ country | default:"England" }}">
 </label>

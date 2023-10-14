@@ -4,7 +4,7 @@
     {% include 'core/components/modal.html' with modals=modal_data %}
     <form method="post">
         {% csrf_token %}
-        <div class="divider mt-8">STEP 1</div>
+        <div class="divider mt-8">STEP 1 - DESTINATIONS</div>
         <div class="my-4 flex w-full flex-col">
 
             <div class="mb-2 flex justify-between">
@@ -16,7 +16,7 @@
                 {% include 'core/pages/invoices/create/_to_destination.html' %}
             </div>
         </div>
-        <div class="divider my-4">STEP 2</div>
+        <div class="divider my-4">STEP 2 - DATES</div>
         <div class="my-4 flex w-full flex-col">
             <div class="flex w-full">
                 <div class="max-w-screen-xl border border-gray-900 card me-3 hover:border-gray-500" href="{% url 'index' %}">
@@ -43,7 +43,7 @@
                 </div>
             </div>
         </div>
-        <div class="divider my-4">STEP 3</div>
+        <div class="divider my-4">STEP 3 - SERVICES</div>
         <div class="my-4 max-w-screen-xl card border border-gray-900 card me-3 hover:border-gray-500">
             <div class="card-body">
                 <label class="btn btn-primary" for="modal-1">Add Service</label>
@@ -89,13 +89,93 @@
                         </tr>
                         </thead>
                         <tbody id="services_table_body">
-                            {% include 'core/pages/invoices/create/_services_table_body.html' %}
+                        {% include 'core/pages/invoices/create/_services_table_body.html' %}
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
 
+        <div class="divider my-4">STEP 4 - BANK DETAILS [OPTIONAL]</div>
+
+        <div class="my-4 flex w-full flex-col">
+            <div class="flex w-full">
+                <div class="max-w-screen-xl border border-gray-900 card me-3 hover:border-gray-500" href="{% url 'index' %}">
+                    <div class="card-body">
+                        <div class="form-field">
+                            <label class="form-label">Account Holder Name</label>
+                            <input required name="account_holder_name" placeholder="Mr John Doe" type="text" class="peer input-ghost-secondary input input-block">
+                        </div>
+                    </div>
+                </div>
+                <div class="max-w-screen-xl border border-gray-900 card mx-3 hover:border-gray-500" href="{% url 'index' %}">
+                    <div class="card-body">
+                        <div class="form-field">
+                            <label class="form-label">Account Number</label>
+                            <input required name="account_number" placeholder="1234 4321 1234 4321" type="text" class="peer input input-ghost-secondary input-block">
+                        </div>
+                    </div>
+                </div>
+                <div class="max-w-screen-xl border border-gray-900 card ms-3 hover:border-gray-500" href="{% url 'index' %}">
+                    <div class="card-body">
+                        <div class="form-field">
+                            <label class="form-label">Sort Code</label>
+                            <input required name="sort_code" placeholder="123" type="text" class="peer input-ghost-secondary input input-block">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {#        <div class="divider my-4">STEP 5 - NOTES [OPTIONAL]</div>#}
+        {#        <div class="my-4 flex w-full flex-col">#}
+        {#            <div class="flex w-full">#}
+        {#                <div class="max-w-screen-xl border border-gray-900 card me-3 hover:border-gray-500" href="{% url 'index' %}">#}
+        {#                    <div class="card-body">#}
+        {#                        <textarea id="editor" name="notes"></textarea>#}
+        {#                    </div>#}
+        {#                </div>#}
+        {#            </div>#}
+        {#        </div>#}
+        {##}
+        {#        <style>#}
+        {#            .CodeMirror {#}
+        {#                background-color: rgb(var(--gray-3)/var(--tw-bg-opacity));#}
+        {#            }#}
+        {##}
+        {#            .editor-toolbar {#}
+        {#                background-color: rgb(var(--gray-4)/var(--tw-bg-opacity));#}
+        {#            }#}
+        {##}
+        {#            .editor-toolbar > * {#}
+        {#                background-color: rgb(var(--gray-4)/var(--tw-bg-opacity));#}
+        {#            }#}
+        {##}
+        {#            .CodeMirror,#}
+        {#            .CodeMirror-scroll {#}
+        {#                max-height: 300px;#}
+        {#            }#}
+        {##}
+        {#            .CodeMirror-fullscreen.CodeMirror {#}
+        {#                max-height: none;#}
+        {#            }#}
+        {##}
+        {#            .CodeMirror-fullscreen .CodeMirror-scroll {#}
+        {#                max-height: none;#}
+        {#            }#}
+        {##}
+        {#            .CodeMirror,#}
+        {#            .CodeMirror-scroll {#}
+        {#                max-height: 150px;#}
+        {#                min-height: 100px;#}
+        {#            }#}
+        {##}
+        {#        </style>#}
+        {#        <script>#}
+        {#            var simplemde = new SimpleMDE({#}
+        {#                element: document.getElementById("editor"),#}
+        {#                #}
+        {#            });#}
+        {#        </script>#}
         <button class="btn btn-primary">Create Invoice</button>
     </form>
 

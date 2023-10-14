@@ -9,7 +9,13 @@
         <td>
             <div class="flex items-center text-sm">
                 <div>
-                    <p class="font-semibold">{{ invoice.client.name | default:"No name" }}</p>
+                    {% with cli_name=invoice.client_to.name|default:invoice.client_name %}
+                        {% if cli_name %}
+                            <p class="font-semibold">{{ cli_name }}</p>
+                            {% else %}
+                            <p class="font-thin">No Client</p>
+                        {% endif %}
+                    {% endwith %}
                 </div>
             </div>
         </td>

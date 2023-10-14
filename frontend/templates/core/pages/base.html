@@ -2,7 +2,8 @@
 <!DOCTYPE html>
 <html :class="{ 'theme-dark': dark }"
       x-data="data()"
-      lang="en">
+      lang="en"
+        style="overflow: hidden">
 {% include 'core/partials/base/_head.html'  %}
 <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
 <div class="flex h-screen bg-backgroundSecondary"

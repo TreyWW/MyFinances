@@ -153,9 +153,33 @@ class Invoice(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     invoice_id = models.IntegerField(unique=True, blank=True, null=True)  # todo: add
-    client = models.ForeignKey(
-        Client, on_delete=models.CASCADE, blank=True, null=True
-    )  # todo: add
+
+    client_to = models.ForeignKey(
+        Client, on_delete=models.SET_NULL, blank=True, null=True
+    )
+
+    client_name = models.CharField(max_length=100, blank=True, null=True)
+    client_company = models.CharField(max_length=100, blank=True, null=True)
+    client_address = models.CharField(max_length=100, blank=True, null=True)
+    client_city = models.CharField(max_length=100, blank=True, null=True)
+    client_county = models.CharField(max_length=100, blank=True, null=True)
+    client_country = models.CharField(max_length=100, blank=True, null=True)
+
+    self_name = models.CharField(max_length=100, blank=True, null=True)
+    self_company = models.CharField(max_length=100, blank=True, null=True)
+    self_address = models.CharField(max_length=100, blank=True, null=True)
+    self_city = models.CharField(max_length=100, blank=True, null=True)
+    self_county = models.CharField(max_length=100, blank=True, null=True)
+    self_country = models.CharField(max_length=100, blank=True, null=True)
+
+    sort_code = models.CharField(max_length=100, blank=True, null=True)
+    account_holder_name = models.CharField(max_length=100, blank=True, null=True)
+    account_number = models.CharField(max_length=100, blank=True, null=True)
+    reference = models.CharField(max_length=100, blank=True, null=True)
+    invoice_number = models.CharField(max_length=100, blank=True, null=True)
+    vat_number = models.CharField(max_length=100, blank=True, null=True)
+    logo = models.ImageField(upload_to="invoice_logos", blank=True, null=True)
+    notes = models.TextField(blank=True, null=True)
 
     payment_status = models.CharField(
         max_length=10, choices=STATUS_CHOICES, default="pending"
@@ -170,7 +194,15 @@ class Invoice(models.Model):
     )
 
     def __str__(self):
-        return f"Invoice #{self.invoice_id or self.id} for {self.client or 'Unknown Client'}"
+        invoice_id = self.invoice_id or self.id
+        if self.client_name:
+            client = self.client_name
+        elif self.client_to:
+            client = self.client_to.name
+        else:
+            client = "Unknown Client"
+
+        return f"Invoice #{invoice_id} for {client}"
 
     def get_total_price(self):
         total = 0
