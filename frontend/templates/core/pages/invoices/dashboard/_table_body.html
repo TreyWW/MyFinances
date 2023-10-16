@@ -12,7 +12,7 @@
                     {% with cli_name=invoice.client_to.name|default:invoice.client_name %}
                         {% if cli_name %}
                             <p class="font-semibold">{{ cli_name }}</p>
-                            {% else %}
+                        {% else %}
                             <p class="font-thin">No Client</p>
                         {% endif %}
                     {% endwith %}
@@ -37,33 +37,32 @@
         </td>
         <td colspan="2">
             <div class="flex flex-wrap gap-2">
-                <div class="relative flex group">
-                    <button class="btn btn-solid-success btn-sm" disabled>
-                        {% include "core/components/icon.html" with icon="pencil" %}
+                <div class="relative flex group tooltip tooltip-top" data-tooltip="Preview">
+                    <button class="btn btn-solid-primary btn-sm" disabled>
+                        <i class="fa fa-solid fa-regular fa-file-pdf"></i>
                     </button>
-                    <span class="absolute m-4 mx-auto -translate-y-8 scale-100 rounded-md opacity-0 transition-opacity badge badge-flat-success left-1/2-translate-x-1/2 group-hover:opacity-100">
-                    Edit
-                </span>
                 </div>
-                <div class="relative flex group">
+                <div class="relative flex group tooltip tooltip-top" data-tooltip="Edit">
+                    <button class="btn btn-solid-success btn-sm" disabled>
+                        <i class="fa fa-solid fa-regular fa-pencil"></i>
+                    </button>
+                </div>
+                <div class="relative flex group tooltip tooltip-top" data-tooltip="Delete">
                     <button class="btn btn-solid-error btn-sm" disabled>
                         <i class="fa-solid fa-trash"></i>
                     </button>
-                    <span class="absolute m-4 mx-auto -translate-y-8 scale-100 rounded-md opacity-0 transition-opacity badge badge-flat-error left-1/2-translate-x-1/2 group-hover:opacity-100">
-                    Delete
-                </span>
                 </div>
             </div>
         </td>
     </tr>
 {% endfor %}
-    <tr>
-        <td colspan="3">
+<tr>
+    <td colspan="3">
             <span class="flex items-center col-span-3">
               Showing {{ invoices.count }} of {{ invoices.count }}
             </span>
-        </td>
-        <td colspan="4">
+    </td>
+    <td colspan="4">
             <span class="flex col-span-4 mt-2 sm:mt-auto sm:justify-end">
                 <div class="pagination pagination-compact pagination-bordered">
                     <input type="radio" name="pagination-3" id="pgn-7" disabled/>
@@ -75,6 +74,6 @@
                     <input type="radio" name="pagination-3" id="pgn-9" disabled/>
                 </div>
             </span>
-        </td>
-    </tr>
+    </td>
+</tr>
 </tbody>
