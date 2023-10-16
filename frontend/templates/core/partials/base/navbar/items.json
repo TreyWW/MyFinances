@@ -1,44 +1,63 @@
-[
+{
+  "default": [
     {
-        "name": "Clients",
-        "urls": ["clients dashboard"],
-        "url": "clients dashboard",
-        "icon": "users"
+      "name": "Clients",
+      "urls": [
+        "clients dashboard"
+      ],
+      "url": "clients dashboard",
+      "icon": "users"
     },
     {
-        "name": "Invoices",
-        "urls": ["invoices dashboard", "invoices dashboard create"],
-        "url": "invoices dashboard",
-        "icon": "file-invoice"
+      "name": "Invoices",
+      "urls": [
+        "invoices dashboard",
+        "invoices dashboard create"
+      ],
+      "url": "invoices dashboard",
+      "icon": "file-invoice"
     },
     {
-        "name": "Receipts",
-        "urls": ["receipts dashboard"],
-        "url": "receipts dashboard",
-        "icon": "receipt"
-    },
-    {
-        "name": "Expenses",
-        "urls": ["expenses"],
-        "url": "",
-        "icon": "money-bill"
-    },
-    {
-        "name": "Reports",
-        "urls": ["expenses"],
-        "url": "",
-        "icon": "chart-pie"
-    },
-    {
-        "name": "Goals",
-        "urls": ["expenses  "],
-        "url": "",
-        "icon": "trophy"
-    },
-    {
-        "name": "Tax Estimates",
-        "urls": [""],
-        "url": "",
-        "icon": "money-bill"
+      "name": "Receipts",
+      "urls": [
+        "receipts dashboard"
+      ],
+      "url": "receipts dashboard",
+      "icon": "receipt"
     }
-]
+  ],
+  "not_implemented": [
+    {
+      "name": "Expenses",
+      "urls": [
+        "expenses"
+      ],
+      "url": "",
+      "icon": "money-bill"
+    },
+    {
+      "name": "Reports",
+      "urls": [
+        "expenses"
+      ],
+      "url": "",
+      "icon": "chart-pie"
+    },
+    {
+      "name": "Goals",
+      "urls": [
+        "expenses  "
+      ],
+      "url": "",
+      "icon": "trophy"
+    },
+    {
+      "name": "Tax Estimates",
+      "urls": [
+        ""
+      ],
+      "url": "",
+      "icon": "money-bill"
+    }
+  ]
+}
