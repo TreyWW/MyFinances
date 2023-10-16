@@ -4,7 +4,7 @@ gunicorn
 # db
 mysqlclient==2.2.0
 mysqlclient
-mariadb==1.1.7
+mariadb==1.1.8
 # django apps
 social-auth-app-django==5.3.0
 django-sendgrid-v5
