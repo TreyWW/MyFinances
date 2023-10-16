@@ -110,7 +110,7 @@ TEMPLATES = [
                 "backend.context_processors.extras",
                 "backend.context_processors.navbar",
                 "backend.context_processors.toasts",
-                # "backend.context_processors.notifications",
+                "backend.context_processors.breadcrums",
                 "social_django.context_processors.backends",
             ],
         },
@@ -167,6 +167,7 @@ STORAGES = {
         "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
     },
 }
+
 
 GOOGLE_OAUTH2_CLIENT_DETAILS = {
     "web": {
