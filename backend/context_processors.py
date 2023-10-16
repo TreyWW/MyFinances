@@ -52,6 +52,69 @@ def toasts(request):
     return {}
 
 
+def breadcrums(request):
+    current_url_name = request.resolver_match.url_name
+    all_items = {
+        "dashboard": {
+            "name": "Dashboard",
+            "url": reverse("dashboard"),
+            "icon": "house",
+        },
+        "invoices dashboard": {
+            "name": "Invoices",
+            "url": reverse("invoices dashboard"),
+            "icon": "file-invoice",
+        },
+        "invoices dashboard create": {
+            "name": "Create",
+            "url": reverse("invoices dashboard create"),
+            "icon": "file-invoice",
+        },
+        "receipts dashboard": {
+            "name": "Receipts",
+            "url": reverse("receipts dashboard"),
+            "icon": "file-invoice",
+        },
+        "user settings teams": {
+            "name": "Teams",
+            "url": reverse("user settings teams"),
+            "icon": "users",
+        },
+        "user settings": {
+            "name": "Settings",
+            "url": reverse("user settings"),
+            "icon": "gear",
+        },
+    }
+
+    all_breadcrums = {
+        "dashboard": [{"name": "Home"}],
+        "user settings teams": [
+            all_items.get("dashboard"),
+            all_items.get("user settings teams"),
+        ],
+        "receipts dashboard": [
+            all_items.get("dashboard"),
+            all_items.get("receipts dashboard"),
+        ],
+        "invoices dashboard": [
+            all_items.get("dashboard"),
+            all_items.get("invoices dashboard"),
+        ],
+        "invoices dashboard create": [
+            all_items.get("dashboard"),
+            all_items.get("invoices dashboard"),
+            all_items.get("invoices dashboard create"),
+        ],
+        "user settings": [
+            all_items.get("dashboard"),
+            all_items.get("user settings"),
+        ],
+    }
+
+    return {"breadcrumb": all_breadcrums.get(current_url_name)}
+
+
 def notifications(request):
     context: dict = {}
     if request.user.is_authenticated:
