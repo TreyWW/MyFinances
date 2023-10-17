@@ -5,7 +5,7 @@ from backend.models import Invoice, UserSettings
 
 
 def preview(request, id):
-    if id is None or not id.isdigit():
+    if not id or not id.isdigit():
         messages.error(request, "Invalid invoice id")
         return redirect("invoices dashboard")
     invoice = Invoice.objects.filter(user=request.user, id=id).first()

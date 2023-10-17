@@ -120,7 +120,7 @@ class Client(models.Model):
     # team = models.ForeignKey(Team,  on_delete=models.BLANK, blank=True, null=True)
 
     def __str__(self):
-        return self.first_name + self.last_name
+        return self.name
 
 
 class InvoiceItem(models.Model):

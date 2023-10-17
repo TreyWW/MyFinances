@@ -1,5 +1,6 @@
 {% load static %}
 {% load mathfilters %}
+{% load markdownify %}
 <!DOCTYPE html>
 <html :class="{ 'theme-dark': dark }"
       x-data="data()"
@@ -7,7 +8,10 @@
       style="">
 {% include 'core/partials/base/_head.html' %}
 <div tabindex="-1" id="status_banner" class="print-ignore fixed top-0 left-0 z-50 flex justify-between w-full p-4 bg-border">
-    <button onclick="window.print()" class="btn btn-primary"><i class="fa-solid fa-print me-3"></i>Print</button>
+    <a href="{% url 'invoices dashboard' %}" class="btn btn-sm btn-secondary">
+        <i class="fa-solid fa-arrow-left me-2"></i>
+        Go Back
+    </a>
     <div class="flex items-center mx-auto">
         <p class="flex items-center text-sm font-normal">
             <span class="inline-flex p-1 mr-3 rounded-full w-6 h-6 items-center justify-center" style="background-color: rgb(var(--green-8))">
@@ -18,19 +22,25 @@
                 {% with ps=invoice.payment_status %}
                     {% if ps == "paid" %}
                         This invoice has been paid
-                    {% elif ps == "pending"%}
+                    {% elif ps == "pending" %}
                         This invoice is pending
-                    {% elif ps == "overdue"%}
+                    {% elif ps == "overdue" %}
                         This invoice is overdue
                     {% endif %}
                 {% endwith %}
             </span>
         </p>
     </div>
+
+    <button onclick="window.print()" class="btn btn-sm btn-primary me-8">
+        <i class="fa-solid fa-print me-2"></i>
+        Print
+    </button>
+
     <div class="flex items-center">
-        <button onclick="document.getElementById('status_banner').remove();" type="button" class="flex-shrink-0 inline-flex justify-center w-7 h-7 items-center text-gray-400 hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 dark:hover:bg-gray-600 dark:hover:text-white">
+        <button onclick="document.getElementById('status_banner').remove();" type="button" class="flex-shrink-0 inline-flex justify-center w-7 h-7 items-center rounded-lg text-sm p-1.5 hover:bg-gray-600 hover:text-white">
             <i class="fa-solid fa-xmark"></i>
-            <span class="sr-only">Close banner</span>
+            <span class="sr-only">Close Popup</span>
         </button>
     </div>
 </div>
@@ -152,7 +162,7 @@
     {% if invoice.notes %}
         <div class="border-t-2 pt-4 text-xs text-gray-500 text-center mt-4">
             {#        Please pay the invoice before the due date. You can pay the invoice by logging in to your account from our client portal.#}
-            {{ invoice.notes }}
+            {{ invoice.notes|markdownify }}
         </div>
     {% endif %}
     <!-- Credits -->
@@ -160,12 +170,7 @@
         This invoice was generated with 💜 by <a class="underline" href="https://github.com/TreyWW/MyFinances">MyFinances</a>.
     </div>
 </div>
-<style type="text/css">
-
-    #printable {
-        display: none;
-    }
-
+<style>
     @media print {
         .print-ignore {
             display: none;
