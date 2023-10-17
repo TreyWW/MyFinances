@@ -204,11 +204,20 @@ class Invoice(models.Model):
 
         return f"Invoice #{invoice_id} for {client}"
 
+    def get_subtotal(self):
+        subtotal = 0
+        for item in self.items.all():
+            subtotal += item.get_total_price()
+        return round(subtotal, 2)
+
     def get_total_price(self):
         total = 0
-        for item in self.items.all():
-            total += item.get_total_price()
-        return total
+        subtotal = self.get_subtotal()
+        if self.vat_number:
+            total = subtotal * 1.2
+        else:
+            total = subtotal
+        return round(total, 2)
 
 
 class PasswordSecret(models.Model):

@@ -115,6 +115,11 @@ urlpatterns = [
         name="invoices dashboard",
     ),
     path(
+        "dashboard/invoices/preview/<str:id>",
+        invoices.view.preview,
+        name="invoices dashboard preview",
+    ),
+    path(
         "dashboard/invoices/create/",
         invoices.create.create_invoice_page,
         name="invoices dashboard create",

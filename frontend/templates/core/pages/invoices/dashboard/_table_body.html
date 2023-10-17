@@ -38,9 +38,9 @@
         <td colspan="2">
             <div class="flex flex-wrap gap-2">
                 <div class="relative flex group tooltip tooltip-top" data-tooltip="Preview">
-                    <button class="btn btn-solid-primary btn-sm" disabled>
+                    <a class="btn btn-solid-primary btn-sm" href="{% url "invoices dashboard preview" id=invoice.id %}">
                         <i class="fa fa-solid fa-regular fa-file-pdf"></i>
-                    </button>
+                    </a>
                 </div>
                 <div class="relative flex group tooltip tooltip-top" data-tooltip="Edit">
                     <button class="btn btn-solid-success btn-sm" disabled>
