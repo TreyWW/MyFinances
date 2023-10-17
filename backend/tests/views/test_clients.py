@@ -86,12 +86,12 @@ class ClientsViewTestCase(ViewTestCase):
         response = self.client.get(reverse("clients dashboard"), **headers)
         amount_of_clients_returned = len(response.context["clients"])
         self.assertEqual(amount_of_clients_returned, 0)
-    
+
         Client.objects.create(
             name="bob smith",
             user=response.wsgi_request.user,
         )
-    
+
         response = self.client.get(reverse("clients dashboard"), **headers)
         amount_of_clients_returned = len(response.context["clients"])
         self.assertEqual(amount_of_clients_returned, 1)
@@ -104,7 +104,7 @@ class ClientsViewTestCase(ViewTestCase):
         response = self.client.get(reverse("clients dashboard"), **headers)
         amount_of_clients_returned = len(response.context["clients"])
         self.assertEqual(amount_of_clients_returned, 0)
-    
+
         Client.objects.create(
             name="bob smith",
             user=response.wsgi_request.user,
@@ -114,7 +114,7 @@ class ClientsViewTestCase(ViewTestCase):
             name="jane doe",
             user=response.wsgi_request.user,
         )
-    
+
         response = self.client.get(reverse("clients dashboard"), **headers)
         amount_of_clients_returned = len(response.context["clients"])
         self.assertEqual(amount_of_clients_returned, 2)
