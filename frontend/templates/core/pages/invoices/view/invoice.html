@@ -8,7 +8,7 @@
       style="">
 {% include 'core/partials/base/_head.html' %}
 <div tabindex="-1" id="status_banner" class="print-ignore fixed top-0 left-0 z-50 flex justify-between w-full p-4 bg-border">
-    <a href="{% url 'invoices dashboard' %}" class="btn btn-sm btn-secondary">
+    <a href="{% url 'invoices dashboard' %}" class="btn btn-sm">
         <i class="fa-solid fa-arrow-left me-2"></i>
         Go Back
     </a>
@@ -32,6 +32,10 @@
         </p>
     </div>
 
+    <a class="btn btn-sm btn-secondary me-2" href="" download>
+        <i class="fa-solid fa-download me-2"></i>
+        Download
+    </a>
     <button onclick="window.print()" class="btn btn-sm btn-primary me-8">
         <i class="fa-solid fa-print me-2"></i>
         Print
