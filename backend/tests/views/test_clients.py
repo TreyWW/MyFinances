@@ -78,21 +78,43 @@ class ClientsViewTestCase(ViewTestCase):
     #         )
     #         self.assertEqual(client_objects_after, client_objects_before + 1)
 
-    # def test_clients_check_clients_get_returned(self):
-    #     self.client.login(username="user", password="user")
-    #     headers = {
-    #         "HTTP_HX-request": "true",
-    #     }
-    #     response = self.client.get(reverse("clients dashboard"), **headers)
-    #     amount_of_clients_returned = len(response.context["clients"])
-    #     self.assertEqual(amount_of_clients_returned, 0)
-    #
-    #     Client.objects.create(
-    #         name="bob smith",
-    #         user=response.wsgi_request.user,
-    #     )
-    #
-    #     response = self.client.get(reverse("clients dashboard"))
-    #     amount_of_clients_returned = len(response.context["clients"])
-    #     self.assertEqual(amount_of_clients_returned, 1)
-    # todo: need someone to help fix this test, now we use HTMX
+    def test_clients_check_clients_get_returned(self):
+        self.client.login(username="user", password="user")
+        headers = {
+            "HTTP_HX-request": "true",
+        }
+        response = self.client.get(reverse("clients dashboard"), **headers)
+        amount_of_clients_returned = len(response.context["clients"])
+        self.assertEqual(amount_of_clients_returned, 0)
+    
+        Client.objects.create(
+            name="bob smith",
+            user=response.wsgi_request.user,
+        )
+    
+        response = self.client.get(reverse("clients dashboard"), **headers)
+        amount_of_clients_returned = len(response.context["clients"])
+        self.assertEqual(amount_of_clients_returned, 1)
+
+    def test_clients_creating_two_clients(self):
+        self.client.login(username="user", password="user")
+        headers = {
+            "HTTP_HX-request": "true",
+        }
+        response = self.client.get(reverse("clients dashboard"), **headers)
+        amount_of_clients_returned = len(response.context["clients"])
+        self.assertEqual(amount_of_clients_returned, 0)
+    
+        Client.objects.create(
+            name="bob smith",
+            user=response.wsgi_request.user,
+        )
+
+        Client.objects.create(
+            name="jane doe",
+            user=response.wsgi_request.user,
+        )
+    
+        response = self.client.get(reverse("clients dashboard"), **headers)
+        amount_of_clients_returned = len(response.context["clients"])
+        self.assertEqual(amount_of_clients_returned, 2)
