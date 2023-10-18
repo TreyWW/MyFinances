@@ -176,6 +176,19 @@ Thank you for your contributions!
            <br/>
            <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Achavi362" title="Documentation">📖</a>
        </td>
+       <td align="center">
+           <a href="https://github.com/bermr">
+               <img src="https://github.com/bermr.png" width="100px;" alt=""/>
+               <br/>
+               <sub>
+                   <b>
+                       bermr
+                   </b>
+               </sub>
+           </a>
+           <br/>
+           <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Abermr" title="Added Tests">🧪</a>
+       </td>
   </tr>
 </table>
 
