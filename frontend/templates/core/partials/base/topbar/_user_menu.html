@@ -4,7 +4,7 @@
         <div class="dropdown">
             <label class="btn btn-ghost flex cursor-pointer px-0" tabindex="0">
                 <img
-                        class="h-8 w-8 rounded-full object-cover"
+                        class="h-8 w-8 rounded-full object-cover avatar avatar-ring avatar-md"
                         src="
                         {% if user_settings.profile_picture_url %}
                             {{ user_settings.profile_picture_url }}
@@ -15,7 +15,7 @@
                 />
             </label>
             <div class="dropdown-menu dropdown-menu-bottom-left">
-                <div class="flex mb-2">
+                <div class="flex">
                     <img
                             class="rounded-full object-cover"
                             src="
@@ -29,10 +29,16 @@
                     />
                     <p class="text-lg ms-2">{{ request.user.get_full_name }}</p>
                 </div>
-                <div class="dropdown-divider" role="separator"></div>
-                <a tabindex="-1" class="dropdown-item text-sm {% if request.resolver_match.url_name == "user settings" %}dropdown-active{% endif %}" href="{% url 'user settings' %}">Account settings</a>
-                <a tabindex="-1" class="dropdown-item text-sm mt-1 {% if request.resolver_match.url_name == "user settings teams" %}dropdown-active{% endif %}" href="{% url 'user settings teams' %}">Manage team</a>
-                <label for="logout_modal" tabindex="-1" class="dropdown-item text-sm mt-1" hx-trigger="click once" hx-swap="beforeend" hx-target="#modal_container" hx-get="{% url "api v1 base modal retrieve" modal_name="logout_modal" %}">Log out</label>
+                <div class="dropdown-divider my-4" role="separator"></div>
+                <a tabindex="-1" class="dropdown-item text text-sm {% if request.resolver_match.url_name == "user settings" %}dropdown-active{% endif %}" href="{% url 'user settings' %}">
+                    Account settings
+                </a>
+                <a tabindex="-1" class="dropdown-item text-sm text mt-1 {% if request.resolver_match.url_name == "user settings teams" %}dropdown-active{% endif %}" href="{% url 'user settings teams' %}">
+                    Manage team
+                </a>
+                <label for="logout_modal" tabindex="-1" class="dropdown-item text text-sm mt-1" hx-trigger="click once" hx-swap="beforeend" hx-target="#modal_container" hx-get="{% url "api v1 base modal retrieve" modal_name="logout_modal" %}">
+                    Log out
+                </label>
             </div>
         </div>
     </div>
