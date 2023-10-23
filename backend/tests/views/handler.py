@@ -5,7 +5,7 @@ from backend.models import User
 
 class ViewTestCase(TestCase):
     def setUp(self):
-        User.objects.create_user(username="user", password="user")
+        self.log_in_user = User.objects.create_user(username="user", password="user")
 
     def call_index(self):
         self.client.get(reverse("index"))
