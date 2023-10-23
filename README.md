@@ -163,6 +163,19 @@ Thank you for your contributions!
            <br/>
            <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Aromana-la" title="Documentation">📖</a>
        </td>
+        <td align="center">
+           <a href="https://github.com/flyingdev">
+               <img src="https://github.com/flyingdev.png" width="100px;" alt=""/>
+               <br/>
+               <sub>
+                   <b>
+                       flyingdev
+                   </b>
+               </sub>
+           </a>
+           <br/>
+           <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Aflyingdev" title="Added Tests">🧪</a>
+       </td>
        <td align="center">
            <a href="https://github.com/chavi362">
                <img src="https://github.com/chavi362.png" width="100px;" alt=""/>
