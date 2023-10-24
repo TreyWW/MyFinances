@@ -8,7 +8,7 @@
         Upload Receipt
     </label>
     {% include 'core/pages/receipts/_search.html' %}
-    <div id="items" hx-swap="outerHTML" hx-trigger="load" hx-post="{% url 'receipts dashboard' %}">
+    <div id="items" hx-swap="outerHTML" hx-trigger="load" hx-get="{% url 'api v1 receipts fetch' %}">
         <div id="items">
             {% include 'core/components/table/skeleton_table.html' %}
         </div>

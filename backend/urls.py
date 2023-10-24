@@ -100,6 +100,11 @@ urlpatterns = [
         name="api v1 receipts new",
     ),
     path(
+        "api/v1/receipts/fetch",
+        v1.receipts.fetch.fetch_receipts,
+        name="api v1 receipts fetch",
+    ),
+    path(
         "api/v1/base/notifications/get",
         v1.base.notifications.get_notification_html,
         name="api v1 base notifications get",
