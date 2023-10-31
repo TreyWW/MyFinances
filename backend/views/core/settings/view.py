@@ -2,6 +2,8 @@ from django.contrib.sessions.models import Session
 from django.http import HttpRequest
 from django.shortcuts import render
 from django.contrib.auth import update_session_auth_hash
+from PIL import Image
+from django.contrib import messages
 
 from backend.decorators import *
 from backend.models import *
@@ -27,8 +29,12 @@ def settings_page(request: HttpRequest):
                 messages.error(request, "Invalid currency")
 
         if profile_picture:
-            usersettings.profile_picture = profile_picture
-            usersettings.save()
+            try:
+                Image.open(profile_picture)
+                usersettings.profile_picture = profile_picture
+                usersettings.save()
+            except Image.UnidentifiedImageError:
+                messages.error(request, "Unsupported image format")
 
     context.update(
         {
