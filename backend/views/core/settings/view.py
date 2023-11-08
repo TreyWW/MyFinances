@@ -30,11 +30,17 @@ def settings_page(request: HttpRequest):
 
         if profile_picture:
             try:
-                Image.open(profile_picture)
-                usersettings.profile_picture = profile_picture
-                usersettings.save()
-            except Image.UnidentifiedImageError:
-                messages.error(request, "Unsupported image format")
+                img = Image.open(profile_picture)
+                if img.format.lower() in ["jpeg", "png", "jpg"]:
+                    usersettings.profile_picture = profile_picture
+                    usersettings.save()
+                else:
+                    messages.error(
+                        request,
+                        "Unsupported image format. We support only JPEG, JPG, PNG.",
+                    )
+            except (FileNotFoundError, Image.UnidentifiedImageError):
+                messages.error(request, "Invalid or unsupported image file")
 
     context.update(
         {
