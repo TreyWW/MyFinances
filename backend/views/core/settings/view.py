@@ -30,17 +30,28 @@ def settings_page(request: HttpRequest):
 
         if profile_picture:
             try:
-                img = Image.open(profile_picture)
-                if img.format.lower() in ["jpeg", "png", "jpg"]:
-                    usersettings.profile_picture = profile_picture
-                    usersettings.save()
+                # Max file size is 10MB (Change the first number to determine the size in MB)
+                max_file_size = 10 * 1024 * 1024
+
+                if profile_picture.size <= max_file_size:
+                    img = Image.open(profile_picture)
+                    img.verify()
+
+                    if img.format.lower() in ["jpeg", "png", "jpg"]:
+                        usersettings.profile_picture = profile_picture
+                        usersettings.save()
+                    else:
+                        messages.error(
+                            request,
+                            "Unsupported image format. We support only JPEG, JPG, PNG.",
+                        )
                 else:
-                    messages.error(
-                        request,
-                        "Unsupported image format. We support only JPEG, JPG, PNG.",
-                    )
+                    messages.error(request, "File size should be up to 10MB.")
+
             except (FileNotFoundError, Image.UnidentifiedImageError):
                 messages.error(request, "Invalid or unsupported image file")
+        else:
+            messages.error(request, "Did not upload a file.")
 
     context.update(
         {
