@@ -107,6 +107,7 @@ Thank you for your contributions!
 ---
 
 #### 🌟 A very special thank you to all of our contributors 🌟
+##### View a full list <a href="https://github.com/TreyWW/MyFinances/graphs/contributors">here</a>
 
 <table>
   <tr>
@@ -200,7 +201,20 @@ Thank you for your contributions!
                </sub>
            </a>
            <br/>
-           <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Abermr" title="Added Tests">🧪</a>
+           <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3APhilipZara" title="Added Tests">🧪</a>
+       </td>
+             <td align="center">
+           <a href="https://github.com/PhilipZara">
+               <img src="https://github.com/PhilipZara.png" width="100px;" alt=""/>
+               <br/>
+               <sub>
+                   <b>
+                       PhilipZara
+                   </b>
+               </sub>
+           </a>
+           <br/>
+           <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3APhilipZara" title="Frontend">🎨</a>
        </td>
   </tr>
 </table>
