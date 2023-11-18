@@ -11,8 +11,11 @@ def manage_access(request: HttpRequest, id):
     except Invoice.DoesNotExist:
         return redirect("invoices dashboard")
 
-    all_access_codes = invoice.invoice_urls.all().order_by("-created_on")
-    print(f"All codes: {all_access_codes}")
+    all_access_codes = (
+        invoice.invoice_urls.values_list("uuid", "created_on")
+        .all()
+        .order_by("-created_on")
+    )
 
     return render(
         request,
@@ -39,7 +42,7 @@ def create_code(request: HttpRequest, id):
     return render(
         request,
         "core/pages/invoices/manage_access/_table_row.html",
-        {"code": code, "added": True},
+        {"code": code.uuid, "created_on": code.created_on, "added": True},
     )
 
 
