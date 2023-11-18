@@ -4,6 +4,9 @@
         {% for item in breadcrumb %}
             <li>
                 {% if forloop.last %}
+                    {% if item.icon %}
+                            <i class="fa-solid fa-{{ item.icon }} me-2"></i>
+                        {% endif %}
                     {{ item.name }}
                 {% else %}
                     <a href="{{ item.url }}">

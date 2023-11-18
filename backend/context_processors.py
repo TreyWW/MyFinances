@@ -70,6 +70,10 @@ def breadcrums(request):
             "url": reverse("invoices dashboard create"),
             "icon": "file-invoice",
         },
+        "invoices dashboard manage_access": {
+            "name": "Manage Access",
+            "icon": "lock",
+        },
         "receipts dashboard": {
             "name": "Receipts",
             "url": reverse("receipts dashboard"),
@@ -84,6 +88,16 @@ def breadcrums(request):
             "name": "Settings",
             "url": reverse("user settings"),
             "icon": "gear",
+        },
+        "clients dashboard": {
+            "name": "Clients",
+            "url": reverse("clients dashboard"),
+            "icon": "users",
+        },
+        "clients create": {
+            "name": "Create",
+            "url": reverse("clients create"),
+            "icon": "plus",
         },
     }
 
@@ -109,6 +123,20 @@ def breadcrums(request):
         "user settings": [
             all_items.get("dashboard"),
             all_items.get("user settings"),
+        ],
+        "invoices dashboard manage_access": [
+            all_items.get("dashboard"),
+            all_items.get("invoices dashboard"),
+            all_items.get("invoices dashboard manage_access"),
+        ],
+        "clients dashboard": [
+            all_items.get("dashboard"),
+            all_items.get("clients dashboard"),
+        ],
+        "clients create": [
+            all_items.get("dashboard"),
+            all_items.get("clients dashboard"),
+            all_items.get("clients create"),
         ],
     }
 
