@@ -58,9 +58,7 @@
 </div>
 <div class="max-w-3xl mx-auto p-6 bg-white rounded shadow-sm my-6 mt-16" id="invoice">
     <div class="grid grid-cols-2 items-center">
-        <img src="
-
-                {% if invoice.logo %}{{ invoice.logo.url }}{% else %}https://github.com/TreyWW/MyFinances/blob/main/documentation/assets/logo_single.png?raw=true{% endif %}"
+        <img src="{% if invoice.logo %}{{ invoice.logo.url }}{% else %}https://github.com/TreyWW/MyFinances/blob/main/documentation/assets/logo_single.png?raw=true{% endif %}"
              alt="company-logo" height="100" width="100">
         <div class="text-right">
             <p class="text-gray-700">
@@ -187,9 +185,15 @@
 
     <!-- Payment Details -->
     <div class="text-sm text-gray-600 mt-16">
-        <p>Account Holder Name: <span class="font-semibold ms-2">{{ invoice.account_holder_name }}</span></p>
-        <p>Account Number: <span class="font-semibold ms-2">{{ invoice.account_number }}</span></p>
-        <p>Account Sort Code: <span class="font-semibold ms-2">{{ invoice.sort_code }}</span></p>
+        {% if invoice.account_holder_name %}
+            <p>Account Holder Name: <span class="font-semibold ms-2">{{ invoice.account_holder_name }}</span></p>
+        {% endif %}
+        {% if invoice.account_number %}
+            <p>Account Number: <span class="font-semibold ms-2">{{ invoice.account_number }}</span></p>
+        {% endif %}
+        {% if invoice.sort_code %}
+            <p>Account Sort Code: <span class="font-semibold ms-2">{{ invoice.sort_code }}</span></p>
+        {% endif %}
     </div>
     <!--  Footer  -->
     {% if invoice.notes %}
