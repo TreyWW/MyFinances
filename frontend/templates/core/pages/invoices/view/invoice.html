@@ -7,14 +7,19 @@
       lang="en"
       style="">
 {% include 'core/partials/base/_head.html' %}
-<div tabindex="-1" id="status_banner" class="print-ignore fixed top-0 left-0 z-50 flex justify-between w-full p-4 bg-border">
-    <a href="{% url 'invoices dashboard' %}" class="btn btn-sm">
-        <i class="fa-solid fa-arrow-left me-2"></i>
-        Go Back
-    </a>
+<div tabindex="-1" id="status_banner" class="print-ignore fixed top-0 left-0 z-50 grid grid-cols-3 w-full p-4 bg-border">
+    <div>
+        {% if type == "preview" %}
+            <a href="{% url 'invoices dashboard' %}" class="btn btn-sm">
+                <i class="fa-solid fa-arrow-left me-2"></i>
+                Go Back
+            </a>
+        {% endif %}
+    </div>
     <div class="flex items-center mx-auto">
         <p class="flex items-center text-sm font-normal">
-            <span class="inline-flex p-1 mr-3 rounded-full w-6 h-6 items-center justify-center" style="background-color: rgb(var(--green-8))">
+            <span class="inline-flex p-1 mr-3 rounded-full w-6 h-6 items-center justify-center"
+                  style="background-color: rgb(var(--green-8))">
                 <i class="fa-solid fa-check"></i>
                 <span class="sr-only">Paid</span>
             </span>
@@ -31,26 +36,32 @@
             </span>
         </p>
     </div>
-
-    <a class="btn btn-sm btn-secondary me-2" href="" download>
-        <i class="fa-solid fa-download me-2"></i>
-        Download
-    </a>
-    <button onclick="window.print()" class="btn btn-sm btn-primary me-8">
-        <i class="fa-solid fa-print me-2"></i>
-        Print
-    </button>
-
-    <div class="flex items-center">
-        <button onclick="document.getElementById('status_banner').remove();" type="button" class="flex-shrink-0 inline-flex justify-center w-7 h-7 items-center rounded-lg text-sm p-1.5 hover:bg-gray-600 hover:text-white">
-            <i class="fa-solid fa-xmark"></i>
-            <span class="sr-only">Close Popup</span>
+    <div class="flex justify-end float-right">
+        <a class="btn btn-sm btn-secondary me-2" href="" download>
+            <i class="fa-solid fa-download me-2"></i>
+            Download
+        </a>
+        <button onclick="window.print()" class="btn btn-sm btn-primary me-8">
+            <i class="fa-solid fa-print me-2"></i>
+            Print
         </button>
+
+        <div class="flex items-center">
+            <button onclick="document.getElementById('status_banner').remove();" type="button"
+                    class="flex-shrink-0 inline-flex justify-center w-7 h-7 items-center rounded-lg text-sm p-1.5 hover:bg-gray-600 hover:text-white">
+                <i class="fa-solid fa-xmark"></i>
+                <span class="sr-only">Close Popup</span>
+            </button>
+        </div>
     </div>
+
 </div>
 <div class="max-w-3xl mx-auto p-6 bg-white rounded shadow-sm my-6 mt-16" id="invoice">
     <div class="grid grid-cols-2 items-center">
-        <img src="{% if invoice.logo %}{{ invoice.logo.url }}{% else %}https://github.com/TreyWW/MyFinances/blob/main/documentation/assets/logo_single.png?raw=true{% endif %}" alt="company-logo" height="100" width="100">
+        <img src="
+
+                {% if invoice.logo %}{{ invoice.logo.url }}{% else %}https://github.com/TreyWW/MyFinances/blob/main/documentation/assets/logo_single.png?raw=true{% endif %}"
+             alt="company-logo" height="100" width="100">
         <div class="text-right">
             <p class="text-gray-700">
                 {{ invoice.self_company }}
@@ -77,7 +88,7 @@
             </p>
             <p class="text-gray-500">
                 {{ invoice.client_name }}
-                <br/>
+                <br />
                 {{ invoice.client_address }}
             </p>
             <p class="text-gray-500">
@@ -91,10 +102,12 @@
             </p>
             <p>
                 Invoice date: <span class="ms-1 text-gray-500">03/07/2023</span>
-                <br/>
+                <br />
                 Due date:<span class="ms-1 text-gray-500">31/07/2023</span>
-                <br/>
-                Balance Due: <span class="ms-1 text-gray-500">£{{ invoice.get_total_price }}</span>
+                <br />
+                Balance Due: <span class="ms-1 text-gray-500">
+                {{ currency_symbol }}{{ invoice.get_total_price }}
+            </span>
             </p>
         </div>
     </div>
@@ -111,7 +124,8 @@
             <thead class="border-b border-gray-300 text-gray-900">
             <tr>
                 <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">Items</th>
-                <th scope="col" class="hidden px-3 py-3.5 text-right text-sm font-semibold text-gray-900 sm:table-cell">Quantity</th>
+                <th scope="col" class="hidden px-3 py-3.5 text-right text-sm font-semibold text-gray-900 sm:table-cell">Quantity
+                </th>
                 <th scope="col" class="hidden px-3 py-3.5 text-right text-sm font-semibold text-gray-900 sm:table-cell">Price</th>
                 <th scope="col" class="py-3.5 pl-3 pr-4 text-right text-sm font-semibold text-gray-900 sm:pr-0">Amount</th>
             </tr>
@@ -121,36 +135,51 @@
                 <tr class="border-b border-gray-200">
                     <td class="max-w-0 py-5 pl-4 pr-3 text-sm sm:pl-0">
                         <div class="font-medium text-gray-900">{{ item.description }}</div>
-                        <div class="mt-1 truncate text-gray-500">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ut quam vel nunc volutpat blandit ut ut urna. Sed hendrerit.</div>
+                        <div class="mt-1 truncate text-gray-500">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                                                 Vestibulum ut quam vel nunc volutpat blandit ut ut urna. Sed
+                                                                 hendrerit.
+                        </div>
                     </td>
                     <td class="hidden px-3 py-5 text-right text-sm text-gray-500 sm:table-cell">{{ item.hours }}</td>
                     <td class="hidden px-3 py-5 text-right text-sm text-gray-500 sm:table-cell">{{ item.price_per_hour }}</td>
-                    <td class="py-5 pl-3 pr-4 text-right text-sm text-gray-500 sm:pr-0">{{ currency_symbol }}{{ item.get_total_price | floatformat:2 }}</td>
+                    <td class="py-5 pl-3 pr-4 text-right text-sm text-gray-500 sm:pr-0">
+                        {{ currency_symbol }}{{ item.get_total_price | floatformat:2 }}</td>
                 </tr>
             {% endfor %}
             </tbody>
             <tfoot>
             <tr>
-                <th scope="row" colspan="3" class="hidden pl-4 pr-3 pt-6 text-right text-sm font-normal text-gray-500 sm:table-cell sm:pl-0">Subtotal</th>
+                <th scope="row" colspan="3"
+                    class="hidden pl-4 pr-3 pt-6 text-right text-sm font-normal text-gray-500 sm:table-cell sm:pl-0">Subtotal
+                </th>
                 <th scope="row" class="pl-6 pr-3 pt-6 text-left text-sm font-normal text-gray-500 sm:hidden">Subtotal</th>
-                <td class="pl-3 pr-6 pt-6 text-right text-sm text-gray-500 sm:pr-0">{{ currency_symbol }}{{ invoice.get_subtotal }}</td>
+                <td class="pl-3 pr-6 pt-6 text-right text-sm text-gray-500 sm:pr-0">
+                    {{ currency_symbol }}{{ invoice.get_subtotal }}</td>
             </tr>
             <tr>
-                <th scope="row" colspan="3" class="hidden pl-4 pr-3 pt-4 text-right text-sm font-normal text-gray-500 sm:table-cell sm:pl-0">Tax</th>
+                <th scope="row" colspan="3"
+                    class="hidden pl-4 pr-3 pt-4 text-right text-sm font-normal text-gray-500 sm:table-cell sm:pl-0">Tax
+                </th>
                 <th scope="row" class="pl-6 pr-3 pt-4 text-left text-sm font-normal text-gray-500 sm:hidden">Tax</th>
-                <td class="pl-3 pr-6 pt-4 text-right text-sm text-gray-500 sm:pr-0">{{ currency_symbol }}{{ invoice.get_total_price|sub:invoice.get_subtotal }}</td>
+                <td class="pl-3 pr-6 pt-4 text-right text-sm text-gray-500 sm:pr-0">
+                    {{ currency_symbol }}{{ invoice.get_total_price|sub:invoice.get_subtotal }}</td>
             </tr>
             {% if invoice.discount %}
                 <tr>
-                    <th scope="row" colspan="3" class="hidden pl-4 pr-3 pt-4 text-right text-sm font-normal text-gray-500 sm:table-cell sm:pl-0">Discount</th>
+                    <th scope="row" colspan="3"
+                        class="hidden pl-4 pr-3 pt-4 text-right text-sm font-normal text-gray-500 sm:table-cell sm:pl-0">Discount
+                    </th>
                     <th scope="row" class="pl-6 pr-3 pt-4 text-left text-sm font-normal text-gray-500 sm:hidden">Discount</th>
                     <td class="pl-3 pr-6 pt-4 text-right text-sm text-gray-500 sm:pr-0">-{{ invoice.discount }}%</td>
                 </tr>
             {% endif %}
             <tr>
-                <th scope="row" colspan="3" class="hidden pl-4 pr-3 pt-4 text-right text-sm font-semibold text-gray-900 sm:table-cell sm:pl-0">Total</th>
+                <th scope="row" colspan="3"
+                    class="hidden pl-4 pr-3 pt-4 text-right text-sm font-semibold text-gray-900 sm:table-cell sm:pl-0">Total
+                </th>
                 <th scope="row" class="pl-6 pr-3 pt-4 text-left text-sm font-semibold text-gray-900 sm:hidden">Total</th>
-                <td class="pl-3 pr-4 pt-4 text-right text-sm font-semibold text-gray-900 sm:pr-0">{{ currency_symbol }}{{ invoice.get_total_price }}</td>
+                <td class="pl-3 pr-4 pt-4 text-right text-sm font-semibold text-gray-900 sm:pr-0">
+                    {{ currency_symbol }}{{ invoice.get_total_price }}</td>
             </tr>
             </tfoot>
         </table>
@@ -171,7 +200,9 @@
     {% endif %}
     <!-- Credits -->
     <div class="print-ignore border-t-2 pt-4 text-xs text-gray-500 text-center mt-4">
-        This invoice was generated with 💜 by <a class="underline" href="https://github.com/TreyWW/MyFinances">MyFinances</a>.
+        This invoice was generated with 💜 by
+        <a class="underline" href="https://github.com/TreyWW/MyFinances">MyFinances</a>
+        .
     </div>
 </div>
 <style>

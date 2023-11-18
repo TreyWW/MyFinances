@@ -36,23 +36,56 @@
         </span>
         </td>
         <td colspan="2">
-            <div class="flex flex-wrap gap-2">
-                <div class="relative flex group tooltip tooltip-top" data-tooltip="Preview">
-                    <a class="btn btn-solid-primary btn-sm" href="{% url "invoices dashboard preview" id=invoice.id %}">
-                        <i class="fa fa-solid fa-regular fa-file-pdf"></i>
+            <div class="dropdown border-none">
+                <label tabindex="0" class="border-none">
+                    <button class="btn btn-outline-secondary btn-sm">
+                        <i class="fa-solid fa-ellipsis-vertical"></i>
+                    </button>
+                </label>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item text-sm border-none" href="{% url "invoices dashboard preview" id=invoice.id %}">
+                        <div class="flex items-center">
+                            <i class="me-2 fa fa-solid fa-regular fa-file-pdf"></i>
+                            Preview
+                        </div>
+                    </a>
+                    <a class="dropdown-item text-sm border-none" href="{% url "invoices dashboard manage_access" id=invoice.id %}">
+                       <div class="flex items-center">
+                            <i class="me-2 fa-solid fa-lock"></i>
+                            Manage Access
+                        </div>
+                    </a>
+                    <a class="dropdown-item text-sm border-none">
+                        <div class="flex items-center">
+                            <i class="me-2 fa fa-solid fa-regular fa-pencil"></i>
+                            Edit
+                        </div>
+                    </a>
+                    <a class="dropdown-item text-sm border-none">
+                        <div class="flex items-center">
+                            <i class="me-2 fa-solid fa-trash"></i>
+                            Delete
+                        </div>
                     </a>
                 </div>
-                <div class="relative flex group tooltip tooltip-top" data-tooltip="Edit">
-                    <button class="btn btn-solid-success btn-sm" disabled>
-                        <i class="fa fa-solid fa-regular fa-pencil"></i>
-                    </button>
-                </div>
-                <div class="relative flex group tooltip tooltip-top" data-tooltip="Delete">
-                    <button class="btn btn-solid-error btn-sm" disabled>
-                        <i class="fa-solid fa-trash"></i>
-                    </button>
-                </div>
             </div>
+            {#            <div class="flex flex-wrap gap-2">#}
+            {#                <div class="relative flex group tooltip tooltip-top" data-tooltip="Preview">#}
+            {#                    <a class="btn btn-solid-primary btn-sm" href="{% url "invoices dashboard preview" id=invoice.id %}">#}
+            {#                        <i class="fa fa-solid fa-regular fa-file-pdf"></i>#}
+            {#                    </a>#}
+            {#                </div>#}
+            {#                <div class="relative flex group tooltip tooltip-top" data-tooltip="Edit">#}
+            {#                    <button class="btn btn-solid-success btn-sm" disabled>#}
+            {#                        <i class="fa fa-solid fa-regular fa-pencil"></i>#}
+            {#                    </button>#}
+            {#                </div>#}
+            {#                <div class="relative flex group tooltip tooltip-top" data-tooltip="Delete">#}
+            {#                    <button class="btn btn-solid-error btn-sm" disabled>#}
+            {#                        <i class="fa-solid fa-trash"></i>#}
+            {#                    </button>#}
+            {#                </div>#}
+            {#            </div>#}
         </td>
     </tr>
 {% endfor %}
@@ -65,13 +98,13 @@
     <td colspan="4">
             <span class="flex col-span-4 mt-2 sm:mt-auto sm:justify-end">
                 <div class="pagination pagination-compact pagination-bordered">
-                    <input type="radio" name="pagination-3" id="pgn-7" disabled/>
+                    <input type="radio" name="pagination-3" id="pgn-7" disabled />
                     <label for="pgn-7" class="btn">1</label>
-                    <input type="radio" name="pagination-3" id="pgn-8" disabled/>
+                    <input type="radio" name="pagination-3" id="pgn-8" disabled />
                     <label for="pgn-8" class="btn">2</label>
-                    <input type="radio" name="pagination-3" id="pgn-9" disabled/>
+                    <input type="radio" name="pagination-3" id="pgn-9" disabled />
                     <label for="pgn-9" class="btn">3</label>
-                    <input type="radio" name="pagination-3" id="pgn-9" disabled/>
+                    <input type="radio" name="pagination-3" id="pgn-9" disabled />
                 </div>
             </span>
     </td>

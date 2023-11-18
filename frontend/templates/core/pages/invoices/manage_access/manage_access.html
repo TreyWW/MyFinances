@@ -1,0 +1,32 @@
+{% extends 'core/pages/base.html' %}
+{% block content %}
+    <div class="text-3xl w-full text-center mb-4 grid grid-cols-3 items-center">
+        <div>
+            <a href="{% url "invoices dashboard" %}" class="btn btn-sm btn-outline-secondary me-3 float-left">Back to invoices</a>
+        </div>
+        <h1 class="col-span-2 text-left">Manage Access to Invoice #{{ invoice.id }}</h1>
+    </div>
+
+    <button hx-trigger="click" hx-post="{% url "invoices dashboard manage_access create" id=invoice.id %}" hx-swap="afterbegin"
+            hx-target="#tbody"
+            class="btn btn-primary">
+        <i class="fa fa-solid fa-link pe-2"></i>
+        Create URL
+    </button>
+
+    <table class="w-full table mt-3">
+        <thead>
+        <tr>
+            <th>Code</th>
+            <th>Date Created</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody id="tbody">
+        {% for code in all_codes %}
+            {% include 'core/pages/invoices/manage_access/_table_row.html' %}
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock content %}

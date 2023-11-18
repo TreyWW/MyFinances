@@ -18,5 +18,7 @@ python-memcached
 django-htmx
 django-login-required-middleware
 django-debug-toolbar
+django-components
 # other stuff
 oauthlib==3.2.2
+shortuuid

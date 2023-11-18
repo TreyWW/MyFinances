@@ -26,7 +26,6 @@ except ImportError:
     exit("[BACKEND] Couldn't import settings")
 
 INSTALLED_APPS = [
-    "django.contrib.staticfiles",
     "django_extensions",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -40,6 +39,8 @@ INSTALLED_APPS = [
     "django_htmx",
     "debug_toolbar",
     "markdownify.apps.MarkdownifyConfig",
+    "django_components",
+    "django_components.safer_staticfiles",
 ]
 
 LOGIN_REQUIRED_IGNORE_VIEW_NAMES = [
@@ -51,6 +52,7 @@ LOGIN_REQUIRED_IGNORE_VIEW_NAMES = [
     "user set password",
     "user set password set",
     "logout",
+    "invoices view invoice",
 ]
 
 # @login_required()
@@ -99,7 +101,6 @@ TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [BASE_DIR / "frontend/templates"],
-        "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
                 "django.template.context_processors.debug",
@@ -112,6 +113,19 @@ TEMPLATES = [
                 "backend.context_processors.toasts",
                 "backend.context_processors.breadcrums",
                 "social_django.context_processors.backends",
+            ],
+            "loaders": [
+                (
+                    "django.template.loaders.cached.Loader",
+                    [
+                        "django.template.loaders.filesystem.Loader",
+                        "django.template.loaders.app_directories.Loader",
+                        "django_components.template_loader.Loader",
+                    ],
+                )
+            ],
+            "builtins": [
+                "django_components.templatetags.component_tags",
             ],
         },
     },
