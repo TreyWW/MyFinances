@@ -21,7 +21,7 @@ try:
         from .local_settings import *
     else:
         print("[BACKEND] Using production settings")
-        from .prod_settings.py import *
+        from .prod_settings import *
 except ImportError:
     exit("[BACKEND] Couldn't import settings")
 
