@@ -99,9 +99,9 @@
                 <span class="ms-1 text-gray-500">INV #{{ invoice.invoice_id|default:invoice.id }}</span>
             </p>
             <p>
-                Invoice date: <span class="ms-1 text-gray-500">03/07/2023</span>
+                Invoice date: <span class="ms-1 text-gray-500">{{ invoice.date_issued|date:"d/m/Y" }}</span>
                 <br />
-                Due date:<span class="ms-1 text-gray-500">31/07/2023</span>
+                Due date:<span class="ms-1 text-gray-500">{{ invoice.date_due|date:"d/m/Y" }}</span>
                 <br />
                 Balance Due: <span class="ms-1 text-gray-500">
                 {{ currency_symbol }}{{ invoice.get_total_price }}
@@ -132,10 +132,11 @@
             {% for item in invoice.items.all %}
                 <tr class="border-b border-gray-200">
                     <td class="max-w-0 py-5 pl-4 pr-3 text-sm sm:pl-0">
-                        <div class="font-medium text-gray-900">{{ item.description }}</div>
-                        <div class="mt-1 truncate text-gray-500">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                                                 Vestibulum ut quam vel nunc volutpat blandit ut ut urna. Sed
-                                                                 hendrerit.
+                        <div class="font-medium text-gray-900">
+                            {{ item.name }}
+                        </div>
+                        <div class="mt-1 truncate text-gray-500">
+                            {{ item.description|markdownify }}
                         </div>
                     </td>
                     <td class="hidden px-3 py-5 text-right text-sm text-gray-500 sm:table-cell">{{ item.hours }}</td>

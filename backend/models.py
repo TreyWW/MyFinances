@@ -128,6 +128,7 @@ class Client(models.Model):
 
 
 class InvoiceItem(models.Model):
+    name = models.CharField(max_length=50)
     description = models.CharField(max_length=100)
     is_service = models.BooleanField(default=True)
     # if service

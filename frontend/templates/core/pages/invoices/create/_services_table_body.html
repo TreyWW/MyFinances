@@ -1,9 +1,12 @@
 {% load humanize %}
+{% load markdownify %}
 {% for row in rows %}
     <tr>
         <td>
             <input class="hidden" name="service_name[]" value="{{ row.service_name }}">
-            {{ row.service_name }}
+            <input class="hidden" name="service_description[]" value="{{ row.service_description }}">
+            {{ row.service_name|markdownify }}
+            {{ row.service_description|markdownify }}
         </td>
         <td>
             <input class="hidden" name="hours[]" value="{{ row.hours }}">
