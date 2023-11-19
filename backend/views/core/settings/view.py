@@ -39,7 +39,7 @@ def settings_page(request: HttpRequest):
         }
     )
 
-    return render(request, "core/pages/settings/main.html", context)
+    return render(request, "pages/settings/main.html", context)
 
 
 def change_password(request: HttpRequest):
@@ -71,4 +71,4 @@ def change_password(request: HttpRequest):
         messages.success(request, "Successfully changed your password.")
         return redirect("user settings")
 
-    return render(request, "core/pages/reset_password.html", {"type": "change"})
+    return render(request, "pages/reset_password.html", {"type": "change"})

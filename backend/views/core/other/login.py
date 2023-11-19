@@ -28,7 +28,7 @@ def login_page(request):
 
         if not user:
             messages.error(request, "Invalid email or password")
-            return render(request, "core/pages/login.html", {"attempted_email": email})
+            return render(request, "pages/login.html", {"attempted_email": email})
 
         login(request, user)
         LoginLog.objects.create(user=user)
@@ -56,7 +56,7 @@ def login_page(request):
 
     return render(
         request,
-        "core/pages/login.html",
+        "pages/login.html",
         {"github_enabled": github_enabled, "google_enabled": google_enabled},
     )
 
@@ -80,7 +80,7 @@ def create_account_page(request: HttpRequest):
         if password != password_confirm:
             messages.error(request, "Passwords don't match")
             return render(
-                request, "core/pages/create_account.html", {"attempted_email": email}
+                request, "pages/create_account.html", {"attempted_email": email}
             )
 
         emails_taken = (User.objects.filter(email=email).count() > 0) or (
@@ -88,18 +88,18 @@ def create_account_page(request: HttpRequest):
         )
         if emails_taken:
             messages.error(request, "Email is already taken")
-            return render(request, "core/pages/create_account.html")
+            return render(request, "pages/create_account.html")
 
         user = User.objects.create_user(email=email, username=email, password=password)
         user = authenticate(request, username=email, password=password)
         login(request, user)
 
         return redirect("dashboard")
-    return render(request, "core/pages/create_account.html")
+    return render(request, "pages/create_account.html")
 
 
 @not_authenticated
 def forgot_password_page(request: HttpRequest):
     if request.user.is_authenticated:
         return redirect("dashboard")
-    return render(request, "core/pages/forgot_password.html")
+    return render(request, "pages/forgot_password.html")

@@ -25,9 +25,7 @@ class InvoicesViewTestCase(ViewTestCase):
     def test_invoices_view_match_with_template(self):
         self.client.login(username="user", password="user")
         response = self.client.get(self._invoices_dashboard_url)
-        self.assertTemplateUsed(
-            response, "core/pages/invoices/dashboard/dashboard.html"
-        )
+        self.assertTemplateUsed(response, "pages/invoices/dashboard/dashboard.html")
 
     def test_invoices_view_matches_with_urls_view(self):
         func = resolve("/dashboard/invoices/").func
@@ -89,7 +87,7 @@ class InvoicesCreateTestCase(ViewTestCase):
     def test_invoices_create_match_with_template(self):
         self.client.login(username="user", password="user")
         response = self.client.get(self._invoices_create_url)
-        self.assertTemplateUsed(response, "core/pages/invoices/create/create.html")
+        self.assertTemplateUsed(response, "pages/invoices/create/create.html")
 
     def test_invoices_create_matches_with_urls_view(self):
         func = resolve("/dashboard/invoices/create/").func

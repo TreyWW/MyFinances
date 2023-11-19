@@ -17,7 +17,7 @@ class ClientsViewTestCase(ViewTestCase):
     def test_clients_view_matches_with_template(self):
         self.client.login(username="user", password="user")
         response = self.client.get(reverse("clients dashboard"))
-        self.assertTemplateUsed(response, "core/pages/clients/dashboard/dashboard.html")
+        self.assertTemplateUsed(response, "pages/clients/dashboard/dashboard.html")
 
     def test_clients_view_matches_with_urls_view(self):
         func = resolve("/dashboard/clients/").func

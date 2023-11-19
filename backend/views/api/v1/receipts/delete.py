@@ -17,6 +17,6 @@ def receipt_delete(request: HttpRequest, id: int):
     receipt.delete()
     return render(
         request,
-        "core/pages/receipts/_search_results.html",
+        "pages/receipts/_search_results.html",
         {"receipts": Receipt.objects.filter(user=request.user).order_by("-date")},
     )

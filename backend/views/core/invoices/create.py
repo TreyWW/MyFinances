@@ -8,7 +8,7 @@ from backend.models import Invoice, InvoiceItem, Client
 def invoice_page_get(request: HttpRequest):
     context = {}
 
-    return render(request, "core/pages/invoices/create/create.html", context)
+    return render(request, "pages/invoices/create/create.html", context)
 
 
 def invoice_page_post(request: HttpRequest):

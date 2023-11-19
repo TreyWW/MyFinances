@@ -1,0 +1,12 @@
+{% extends 'pages/base.html' %}
+{% block content %}
+    {% include 'components/modal.html' with modals=modal_data %}
+    <a class="btn btn-primary mb-4" href="{% url "clients create" %}">
+        {% include 'components/icon.html' with icon="plus" tags="me-2" %}
+        Create Client
+    </a>
+
+    <div hx-swap="outerHTML" hx-trigger="load" hx-get="{% url 'clients dashboard' %}">
+            {% include 'components/table/skeleton_table.html' %}
+    </div>
+{% endblock content %}

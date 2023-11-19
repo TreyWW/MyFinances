@@ -39,7 +39,7 @@ class OtherItemsTestCase(ViewTestCase):
     def test_login_get_page_loads(self):
         response = self.client.get(reverse("login"))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "core/pages/login.html")
+        self.assertTemplateUsed(response, "pages/login.html")
 
     def test_login_actually_logs_you_in(self):
         response = self.client.post(
@@ -62,5 +62,5 @@ class OtherItemsTestCase(ViewTestCase):
             reverse("login"), {"email": "user", "password": "invalid"}
         )
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "core/pages/login.html")
+        self.assertTemplateUsed(response, "pages/login.html")
         self.assertEqual(response.context["attempted_email"], "user")

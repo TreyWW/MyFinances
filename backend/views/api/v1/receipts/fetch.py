@@ -21,4 +21,4 @@ def fetch_receipts(request: HttpRequest):
         results = Receipt.objects.filter(user=request.user).order_by("-date")
 
     context.update({"receipts": results})
-    return render(request, "core/pages/receipts/_search_results.html", context)
+    return render(request, "pages/receipts/_search_results.html", context)

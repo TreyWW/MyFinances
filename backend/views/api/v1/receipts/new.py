@@ -54,6 +54,6 @@ def receipt_create(request: HttpRequest):
     messages.success(request, f"Receipt added with the name of {receipt.name}")
     return render(
         request,
-        "core/pages/receipts/_search_results.html",
+        "pages/receipts/_search_results.html",
         {"receipts": Receipt.objects.filter(user=request.user).order_by("-date")},
     )

@@ -25,4 +25,4 @@ def open_modal(request: HttpRequest, modal_name):
 
     context["modals"].append(modal_instance)
 
-    return render(request, "core/components/modal.html", context)
+    return render(request, "components/modal.html", context)

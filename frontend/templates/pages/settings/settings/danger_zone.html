@@ -1,0 +1,19 @@
+<div class="my-4 max-w-screen-xl card border border-gray-700 dark:border-gray-700">
+    <div class="card-body ">
+        <div class="card-header text-red-200">
+            {% include 'components/icon.html' with icon="triangle-exclamation" tags="text-red-300 mr-2" %}
+            Danger Zone
+            {% include 'components/icon.html' with icon="triangle-exclamation" tags="text-red-300 mr-2" %}
+        </div>
+
+        <a class="btn btn-outline-error border-red-200 hover:bg-red-200 hover:text-black text-red-200"
+           href="{% url 'user settings change_password' %}">
+            Change account password
+        </a>
+        <a class="btn btn-outline-error border-red-200 hover:bg-red-200 hover:text-black text-red-200"
+           href="{% url 'logout' %}">
+            {% include 'components/icon.html' with icon="right-from-bracket" tags="me-2" %}
+            Log out
+        </a>
+    </div>
+</div>

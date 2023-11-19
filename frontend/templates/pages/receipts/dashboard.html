@@ -1,0 +1,16 @@
+{% extends 'pages/base.html' %}
+{% csrf_token %}
+{% block content %}
+    {% include 'components/modal.html' with modals=modal_data %}
+
+    <label class="btn btn-primary btn-block my-3" for="upload_receipt" hx-trigger="click once" hx-swap="beforeend" hx-target="#modal_container" hx-get="{% url "api v1 base modal retrieve" modal_name="upload_receipt" %}">
+        {% include 'components/icon.html' with icon="receipt" classes="pe-2" %}
+        Upload Receipt
+    </label>
+    {% include 'pages/receipts/_search.html' %}
+    <div id="items" hx-swap="outerHTML" hx-trigger="load" hx-get="{% url 'api v1 receipts fetch' %}">
+        <div id="items">
+            {% include 'components/table/skeleton_table.html' %}
+        </div>
+    </div>
+{% endblock content %}

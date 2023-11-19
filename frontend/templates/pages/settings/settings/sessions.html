@@ -1,0 +1,20 @@
+{% if sessions.count > 0 %}
+    <div class="my-4 max-w-screen-xl card border border-gray-700 dark:border-gray-700">
+        <div class="card-body">
+            <div class="card-header">
+                Sessions
+            </div>
+            <ul class="divide-y divide-gray-200 dark:divide-gray-700">
+                {% for session in sessions|slice:":3" %}
+                    {% include 'pages/settings/settings/session.html' with session=session %}
+                {% endfor %}
+            </ul>
+            {% if sessions.count > 3 %}
+                <a class="text-white font-medium text-sm"
+                   href="#">
+                    See more
+                </a>
+            {% endif %}
+        </div>
+    </div>
+{% endif %}
