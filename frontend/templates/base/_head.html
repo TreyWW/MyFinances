@@ -1,0 +1,40 @@
+{% load static %}
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>My Finances</title>
+
+    <!-- Fonts -->
+    <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+            rel="stylesheet"
+    />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Agbalumo">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <!-- Tailwind & DaisyUI -->
+    <link rel="stylesheet" href="{% static 'src/output.css' %}">
+{#    <script src="https://cdn.tailwindcss.com"></script>#}
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"/>
+    <!-- HyperScript -->
+{#    <script src="https://unpkg.com/hyperscript.org@0.9.12"></script>#}
+    <!-- AlpineJS -->
+{#    <script#}
+{#            src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"#}
+{#            defer#}
+{#    ></script>#}
+{#    <script src="{% static 'js/init-alpine.js' %}"></script>#}
+    <!-- SimpleMDE -->
+    <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+    <!-- Markdown -->
+    <script type="module" src="https://md-block.verou.me/md-block.js"></script>
+    <!-- HTMX -->
+    <script src="https://unpkg.com/htmx.org@1.9.4" integrity="sha384-zUfuhFKKZCbHTY6aRR46gxiqszMk5tcHjsVFxnUo8VMus4kHGVdIYVbOYYNlKmHV" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/htmx.org/dist/ext/multi-swap.js"></script>
+{#    <script>#}
+{#        htmx.config.globalViewTransitions = true#}
+{#    </script>#}
+</head>

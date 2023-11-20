@@ -1,0 +1,99 @@
+{% load static %}
+<div class="navbar bg-base-100">
+    <div class="navbar-start">
+        <div class="dropdown">
+            <label tabindex="0" class="btn btn-ghost lg:hidden">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" />
+                </svg>
+            </label>
+            <!-- Topbar Dropdown (MOBILE ONLY) -->
+            <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] shadow p-2 bg-base-100 rounded-box w-52">
+                <li>
+                    <a>Item 1</a>
+                </li>
+                <li>
+                    <a>Parent</a>
+                    <ul class="p-2">
+                        <li>
+                            <a>Submenu 1</a>
+                        </li>
+                        <li>
+                            <a>Submenu 2</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a>Item 3</a>
+                </li>
+            </ul>
+        </div>
+        <div class="flex items-center gap-x-3 gap-x-0 md:gap-x-5 ms-4">
+            <a href="/" class="hidden md:block">
+                <img src="{% static "img/logo_single.png" %}" class="h-10">
+            </a>
+            <a class="md:text-2xl text-gray-800 font-semibold dark:text-gray-200" href="/">
+                My Finances
+            </a>
+        </div>
+    </div>
+    <div class="navbar-center hidden lg:flex">
+        <!-- Topbar Dropdown (LARGE ONLY) -->
+        <ul class="menu menu-horizontal px-1">
+            <li>
+                <a>Item 1</a>
+            </li>
+            <li tabindex="0" class="z-[1]">
+                <details>
+                    <summary>Parent</summary>
+                    <ul class="p-2">
+                        <li>
+                            <a>Submenu 1</a>
+                        </li>
+                        <li>
+                            <a>Submenu 2</a>
+                        </li>
+                    </ul>
+                </details>
+            </li>
+            <li>
+                <a>Item 3</a>
+            </li>
+        </ul>
+    </div>
+    <div class="navbar-end">
+        {# Right Icons #}
+{#        <div class="flex">#}
+            {# Profile Picture  #}
+            <div class="dropdown dropdown-end">
+                <label tabindex="0" class="btn btn-ghost btn-circle avatar">
+                    <div class="w-10 rounded-full">
+                        <div class="avatar">
+                            <div class="w-10 rounded-full">
+                                <div id="my_profile_picture_small">
+                                    {#                                    {% component "profile_picture" url=request.user.profile.profile_picture_url %}#}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </label>
+                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                    <li>
+                        <a class="justify-between">
+                            Profile
+                            <span class="badge">New</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url "index" %}">Settings</a>
+                    </li>
+                    <li>
+                        <label for="logout_modal">Logout</label>
+                    </li>
+                </ul>
+            </div>
+            {# End of Profile Picture #}
+{#        </div>#}
+        {# End of Right Icons #}
+    </div>
+</div>

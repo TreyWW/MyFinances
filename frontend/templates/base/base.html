@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+{% include 'base/_head.html' %}
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+<div class="drawer drawer-mobile min-h-full">
+    <input id="left-sidebar-drawer" type="checkbox" class="drawer-toggle">
+    <div class="drawer-content flex flex-col ">
+        {% include 'base/_topbar.html' %}
+
+        <div class="flex-1 min-h-screen overflow-y-auto pt-8 px-6 pb-4 bg-base-200">
+            <div id="messages_list">
+{#                {% component "messages_list" with_js="true" %}#}
+            </div>
+            {% block content %}{% endblock content %}
+        </div>
+        <input type="checkbox" id="logout_modal" class="modal-toggle" />
+        <div class="modal">
+            <div class="modal-box">
+                <h3 class="font-bold text-lg">Logout</h3>
+                <p class="py-4">Are you sure you would like to logout?</p>
+                <div class="modal-action">
+                    <a href="{% url 'logout' %}" class="btn btn-primary">Logout</a>
+                    <label for="logout_modal" class="btn">
+                        Go Back
+                        <i class="fa-solid fa-reply ms-3"></i>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
