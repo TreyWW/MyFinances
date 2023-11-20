@@ -17,30 +17,30 @@ module.exports = {
     ],
     plugins: [require("daisyui")],
     daisyui: {
-        themes: [
-            // "dark",
-            "light",
-            {
-                dark: {
-                    "color-scheme": "dark",
-                    "primary": "#985eff", // 985eff
-                    "primary-content": "#ffffff",
-                    "gold": "#bf9553",
-                    "secondary": "#1FB2A5",
-                    "secondary-content": "#ffffff",
-                    "accent": "#1FB2A5",
-                    "accent-content": "#ffffff",
-                    "neutral": "#2a323c",
-                    "neutral-focus": "#242b33",
-                    "neutral-content": "#A6ADBB",
-                    "base-100": "#1d232a",
-                    "base-200": "#191e24",
-                    "base-300": "#15191e",
-                    "base-content": "#A6ADBB",
-                    "placeholderColor": "#0051ff",
-                }
-            }
-        ],
+        // themes: [
+        //     // "dark",
+        //     "light",
+        //     {
+        //         dark: {
+        //             "color-scheme": "dark",
+        //             "primary": "#985eff", // 985eff
+        //             "primary-content": "#ffffff",
+        //             "gold": "#bf9553",
+        //             "secondary": "#1FB2A5",
+        //             "secondary-content": "#ffffff",
+        //             "accent": "#1FB2A5",
+        //             "accent-content": "#ffffff",
+        //             "neutral": "#2a323c",
+        //             "neutral-focus": "#242b33",
+        //             "neutral-content": "#A6ADBB",
+        //             "base-100": "#1d232a",
+        //             "base-200": "#191e24",
+        //             "base-300": "#15191e",
+        //             "base-content": "#A6ADBB",
+        //             "placeholderColor": "#0051ff",
+        //         }
+        //     }
+        // ],
         darkTheme:
             "dark",
     },

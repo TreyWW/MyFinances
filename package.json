@@ -11,7 +11,9 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "daisyui": "^3.9.4",
+    "autoprefixer": "^10.4.16",
+    "daisyui": "^4.4.2",
+    "postcss": "^8.4.31",
     "tailwindcss": "^3.3.5"
   },
   "dependencies": {
@@ -62,7 +64,6 @@
     "picomatch": "^2.3.1",
     "pify": "^2.3.0",
     "pirates": "^4.0.6",
-    "postcss": "^8.4.31",
     "postcss-import": "^15.1.0",
     "postcss-js": "^4.0.1",
     "postcss-load-config": "^4.0.1",

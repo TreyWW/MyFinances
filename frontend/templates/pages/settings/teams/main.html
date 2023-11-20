@@ -1,73 +1,80 @@
 {% extends 'base/base.html' %}
 {% block content %}
     {% include 'components/modal.html' with modals=modal_data %}
+
+    <div class="card w-full p-6 bg-base-100 shadow-xl mt-2">
+        <div class="flex items-center justify-between">
+            <div>
+                {% if is_team_leader %}
+                    <button onclick="modal_invite_user_to_team.showModal();" class="btn btn-primary"
+                            hx-get="{% url "api v1 base modal retrieve" modal_name="invite_user_to_team" %}"
+                            hx-trigger="click once"
+                            hx-swap="beforeend" hx-target="#modal_container">
+                        {% include 'components/icon.html' with icon="plus" classes="pe-2" %}
+                        Invite User
+                    </button>
+                {% endif %}
+            </div>
+            <h1 class="text-3xl text-center">
+                Team - {{ team.name }}
+            </h1>
+            {% if is_team_leader %}<div class="cursor-not-allowed tooltip tooltip-left" data-tip="You are the team leader, so you cannot
+            leave the  team">{% endif %}
+            <a class="btn btn-error {% if is_team_leader %}btn-disabled{% endif %}" href=
+                    "{% url "user settings teams join leave" %}">Leave Team</a>
+            {% if is_team_leader %}</div>{% endif %}
+        </div>
+    </div>
+
     {% if not has_team %}
-        <label class="btn btn-primary" for="modal_create_team" hx-get="{% url "api v1 base modal retrieve" modal_name="create_team" %}" hx-trigger="click" hx-swap="beforeend" hx-target="#modal_container">
+        <label class="btn btn-primary" for="modal_create_team"
+               hx-get="{% url "api v1 base modal retrieve" modal_name="create_team" %}" hx-trigger="click" hx-swap="beforeend"
+               hx-target="#modal_container">
             {% include 'components/icon.html' with icon="plus" classes="pe-2" %}
             Create Team
         </label>
     {% endif %}
 
-    {#    <div class="skeleton h-5 rounded-md"></div>#}
-    {#  want to start using loading skeletons ^  #}
-    {% if has_team %}
-        <h1 class="text-3xl w-full text-center mb-4">
-            Team - {{ team.name }}
-
-            {% if not is_team_leader %}
-                <a class="btn btn-solid-error btn-xs" href="{% url "user settings teams join leave" %}">Leave Team</a>
-            {% endif %}
-        </h1>
-
-        {% if is_team_leader %}
-            <label for="modal_invite_user_to_team" class="btn btn-primary" hx-get="{% url "api v1 base modal retrieve" modal_name="invite_user_to_team" %}" hx-trigger="click" hx-swap="beforeend" hx-target="#modal_container">
-                {% include 'components/icon.html' with icon="plus" classes="pe-2" %}
-                Invite User
-            </label>
-        {% endif %}
-    {% endif %}
-
-
-    <table class="w-full table mt-3">
-        <thead>
-        <tr>
-            <th>Name</th>
-            <th>Role</th>
-            {% if is_team_leader %}
-                <th>Actions</th>
-            {% endif %}
-        </tr>
-        </thead>
-        <tbody>
-        {% for user in team.members.all %}
+    <div class="card w-full p-6 bg-base-100 shadow-xl mt-2">
+        <table class="w-full table mt-3">
+            <thead>
             <tr>
-                <td>{{ user.username }}</td>
-                <td>NoIdea</td>
+                <th>Name</th>
+                <th>Role</th>
                 {% if is_team_leader %}
-                    <td>
-                        <div class="flex flex-wrap gap-2">
-                            <div class="relative flex group">
-                                <button class="btn btn-solid-success btn-sm">
-                                    <i class="fa fa-solid fa-regular fa-hammer"></i>
-                                </button>
-                                <span class="absolute m-4 mx-auto z-50 -translate-y-8 scale-100 rounded-md opacity-0 transition-opacity badge badge-flat-success left-1/2-translate-x-1/2 group-hover:opacity-100">
-                                    Edit Permissions
-                                </span>
-                            </div>
-                            <div class="relative flex group">
-                                <label class="btn btn-solid-error btn-sm" for="team_kick_user_{{ user.id }}">
-                                    <i class="fa-solid fa-ban"></i>
-                                </label>
-                                <span class="absolute m-4 mx-auto -translate-y-8 scale-100 rounded-md opacity-0 transition-opacity badge badge-flat-error left-1/2-translate-x-1/2 group-hover:opacity-100">
-                                    Kick User
-                                </span>
-                            </div>
-                        </div>
-                    </td>
+                    <th>Actions</th>
                 {% endif %}
             </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+            {% for user in team.members.all %}
+                <tr>
+                    <td>{{ user.username }}</td>
+                    <td>NoIdea</td>
+                    {% if is_team_leader %}
+                        <td>
+                            <div class="flex flex-wrap gap-2">
+                                <div class="tooltip" data-tip="Edit Permissions">
+                                    <button class="btn btn-success btn-outline btn-sm">
+                                        <i class="fa-solid fa-hammer"></i>
+                                    </button>
+                                </span>
+                                </div>
+                                <div class="tooltip" data-tip="Kick User">
+                                    <button class="btn btn-error btn-outline btn-sm" onclick="team_kick_user_{{ user.id }}
+                                            .showModal
+                                            ();">
+                                        <i class="fa-solid fa-ban"></i>
+                                    </button>
+                                </span>
+                                </div>
+                            </div>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
 {% endblock content %}
