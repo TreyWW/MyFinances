@@ -20,19 +20,20 @@ def convert_currency(init_currency, target_currency, amount):
     ----------
     Returns an int or float representing the new amount
     """
-
     if not isinstance(init_currency, str) or len(init_currency) != 3:
-        print("Initial currency not recognized, returning original amount")
-        return amount
+        raise ValueError("Initial currency not recognized")
+
     if not isinstance(target_currency, str) or len(target_currency) != 3:
-        print("Target currency not recognized, returning original amount")
-        return amount
-    if not isinstance(amount, int) or not isinstance(amount, float):
-        print("Amount is not an accepted datatype, returning original amount")
-        return amount
+        raise ValueError("Target currency not recognized")
+
+    if not isinstance(amount, (int, float)):
+        raise ValueError("Amount is not an accepted datatype")
 
     currency_rates = CurrencyRates()
 
-    target_amount = currency_rates.get_rates(init_currency, target_currency, amount)
-
-    return round(target_amount, 2)
+    try:
+        target_amount = currency_rates.get_rates(init_currency, target_currency, amount)
+        return round(target_amount, 2)
+    except Exception as e:
+        # Handle specific exceptions raised by forex_python if needed
+        raise ValueError(f"Error in currency conversion: {e}")
