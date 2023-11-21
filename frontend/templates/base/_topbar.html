@@ -30,7 +30,13 @@
         </div>
         <div class="flex items-center gap-x-3 gap-x-0 md:gap-x-5 ms-4">
             <a href="/" class="hidden md:block">
-                <img src="{% static "img/logo_single.png" %}" class="h-10">
+                <label id="service_list_button" aria-label="close sidebar" class="swap-rotate
+                        drawer-overlay swap">
+                    <input type="checkbox" />
+                    <img src="{% static "img/logo_single.png" %}" class="h-10 swap-off">
+                    <i class="fa fa-solid fa-x swap-on h-10"></i>
+                    {# TODO: Trey: Improve X Button (not aligned) #}
+                </label>
             </a>
             <a class="md:text-2xl text-gray-800 font-semibold dark:text-gray-200" href="/">
                 My Finances
@@ -43,7 +49,7 @@
             <li>
                 <a>Item 1</a>
             </li>
-            <li tabindex="0" class="z-[1]">
+            <li class="z-[1]">
                 <details>
                     <summary>Parent</summary>
                     <ul class="p-2">
@@ -80,7 +86,8 @@
             </label>
             <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52 gap-y-1">
                 <li>
-                    <a {% if request.resolver_match.url_name == "user settings" %}class="active"{% endif %} href="{% url 'user settings' %}">
+                    <a {% if request.resolver_match.url_name == "user settings" %}class="active"{% endif %}
+                       href="{% url 'user settings' %}">
                         <i class="fa fa-solid fa-cog"></i>
                         Account Settings
                     </a>
@@ -88,7 +95,7 @@
                 <li>
                     <a class="justify-between {% if request.resolver_match.url_name == "user settings teams" %}active{% endif %}"
                        href=
-                            "{% url "user settings teams" %}">
+                               "{% url "user settings teams" %}">
                         <i class="fa fa-solid fa-users"></i>
                         Manage Team
                         <span class="badge">New</span>

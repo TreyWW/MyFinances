@@ -15,25 +15,6 @@
         </thead>
         <tbody>
         {% include 'pages/clients/dashboard/_rows.html' %}
-        <tr>
-            <td colspan="2"><span class="flex items-center col-span-3">
-              Showing {{ clients.count | default:0 }} of {{ clients.count | default:0 }}
-            </span></td>
-            <td></td>
-            <td colspan="4">
-                    <span class="flex col-span-4 mt-2 sm:mt-auto sm:justify-end">
-                        <div class="pagination pagination-compact pagination-bordered">
-                            <input type="radio" name="pagination-3" id="pgn-7"/>
-                            <label for="pgn-7" class="btn">1</label>
-                            <input type="radio" name="pagination-3" id="pgn-8"/>
-                            <label for="pgn-8" class="btn">2</label>
-                            <input type="radio" name="pagination-3" id="pgn-9"/>
-                            <label for="pgn-9" class="btn">3</label>
-                            <input type="radio" name="pagination-3" id="pgn-9"/>
-                        </div>
-                    </span>
-            </td>
-        </tr>
         </tbody>
     </table>
 </div>

@@ -5,21 +5,15 @@
         <td colspan="2">{{ client.name }}</td>
         <td colspan="2">
             <div class="flex flex-wrap gap-2">
-                <div class="relative flex group">
-                    <button disabled class="btn btn-solid-success btn-sm disabled">
-                        {% include "components/icon.html" with icon="pencil" %}
+                <div class="tooltip" data-tip="Edit">
+                    <button class="btn btn-outline btn-success btn-sm btn-disabled">
+                        <i class="fa fa-solid fa-pencil"></i>
                     </button>
-                    <span class="absolute m-4 mx-auto -translate-y-8 scale-100 rounded-md opacity-0 transition-opacity badge badge-flat-success left-1/2-translate-x-1/2 group-hover:opacity-100">
-                    Edit
-                </span>
                 </div>
-                <div class="relative flex group">
-                    <button disabled class="btn btn-solid-error btn-sm disabled">
-                        <i class="fa-solid fa-trash"></i>
+                <div class="tooltip" data-tip="Delete">
+                    <button class="btn btn-outline btn-error btn-sm btn-disabled">
+                        <i class="fa fa-solid fa-trash"></i>
                     </button>
-                    <span class="absolute m-4 mx-auto -translate-y-8 scale-100 rounded-md opacity-0 transition-opacity badge badge-flat-error left-1/2-translate-x-1/2 group-hover:opacity-100">
-                    Delete
-                </span>
                 </div>
             </div>
         </td>
