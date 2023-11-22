@@ -53,20 +53,10 @@
             <div class="fixed bottom-5 left-5 z-50">
                 <ul class="menu menu-horizontal bg-base-100 rounded-box">
                     <li>
-                        <label for="service_list_drawer" id="service_list_button" aria-label="close sidebar" class="swap-rotate
+                        <label for="service_list_drawer"
+                               id="service_list_button" aria-label="close sidebar"
+                               class="swap-rotate
                         drawer-overlay swap">
-                            <script>
-                                document.addEventListener('DOMContentLoaded', function () {
-                                    const sl_button = document.getElementById("service_list_button");
-                                    const sl_toggler_checkbox = document.getElementById("service_list_toggler");
-
-                                    if (sl_button && sl_toggler_checkbox) {
-                                        sl_button.addEventListener('click', function () {
-                                            sl_toggler_checkbox.checked = !sl_toggler_checkbox.checked;
-                                        });
-                                    }
-                                });
-                            </script>
                             <input type="checkbox" id="service_list_toggler" />
                             <i class="fa fa-solid fa-ellipsis swap-off"></i>
                             <i class="fa fa-solid fa-x swap-on"></i>
@@ -75,6 +65,20 @@
                 </ul>
             </div>
         </div>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const drawer = document.getElementById("service_list_drawer");
+                drawer.addEventListener("change", function() {
+                    if (drawer.checked) {
+                        document.getElementById("service_list_toggler").checked = true;
+                        document.getElementById("logo_single_serivce_list_toggler").checked = true;
+                    } else {
+                        document.getElementById("service_list_toggler").checked = false;
+                        document.getElementById("logo_single_serivce_list_toggler").checked = false;
+                    };
+                });
+            });
+        </script>
         <input type="checkbox" id="logout_modal" class="modal-toggle" />
         <div class="modal">
             <div class="modal-box">

@@ -2542,18 +2542,6 @@ html {
   outline-color: var(--fallback-p,oklch(var(--p)/1));
 }
 
-.input-info {
-  --tw-border-opacity: 1;
-  border-color: var(--fallback-in,oklch(var(--in)/var(--tw-border-opacity)));
-}
-
-.input-info:focus,
-    .input-info:focus-within {
-  --tw-border-opacity: 1;
-  border-color: var(--fallback-in,oklch(var(--in)/var(--tw-border-opacity)));
-  outline-color: var(--fallback-in,oklch(var(--in)/1));
-}
-
 .input-disabled,
   .input:disabled,
   .input[disabled] {
@@ -3605,20 +3593,12 @@ html {
   bottom: 0px;
 }
 
-.bottom-5 {
-  bottom: 1.25rem;
-}
-
 .left-0 {
   left: 0px;
 }
 
 .left-1\/2 {
   left: 50%;
-}
-
-.left-5 {
-  left: 1.25rem;
 }
 
 .right-0 {
@@ -3629,16 +3609,24 @@ html {
   right: 0.5rem;
 }
 
-.right-5 {
-  right: 1.25rem;
-}
-
 .top-0 {
   top: 0px;
 }
 
 .top-2 {
   top: 0.5rem;
+}
+
+.bottom-5 {
+  bottom: 1.25rem;
+}
+
+.left-5 {
+  left: 1.25rem;
+}
+
+.right-5 {
+  right: 1.25rem;
 }
 
 .top-5 {
@@ -3661,10 +3649,6 @@ html {
   z-index: 1;
 }
 
-.z-40 {
-  z-index: 40;
-}
-
 .col-span-3 {
   grid-column: span 3 / span 3;
 }
@@ -3675,6 +3659,10 @@ html {
 
 .m-4 {
   margin: 1rem;
+}
+
+.m-auto {
+  margin: auto;
 }
 
 .-mx-4 {
@@ -3727,10 +3715,6 @@ html {
 
 .mb-2 {
   margin-bottom: 0.5rem;
-}
-
-.mb-3 {
-  margin-bottom: 0.75rem;
 }
 
 .mb-4 {
@@ -3827,6 +3811,10 @@ html {
 
 .mt-auto {
   margin-top: auto;
+}
+
+.mb-3 {
+  margin-bottom: 0.75rem;
 }
 
 .block {
@@ -3961,10 +3949,6 @@ html {
   width: 2rem;
 }
 
-.w-80 {
-  width: 20rem;
-}
-
 .w-\[25\%\] {
   width: 25%;
 }
@@ -3975,6 +3959,10 @@ html {
 
 .w-full {
   width: 100%;
+}
+
+.w-80 {
+  width: 20rem;
 }
 
 .min-w-0 {
@@ -4620,11 +4608,6 @@ html {
   line-height: 1;
 }
 
-.text-base-content {
-  --tw-text-opacity: 1;
-  color: var(--fallback-bc,oklch(var(--bc)/var(--tw-text-opacity)));
-}
-
 .text-blue-800 {
   --tw-text-opacity: 1;
   color: rgb(30 64 175 / var(--tw-text-opacity));
@@ -4703,6 +4686,11 @@ html {
 .text-yellow-400 {
   --tw-text-opacity: 1;
   color: rgb(250 204 21 / var(--tw-text-opacity));
+}
+
+.text-base-content {
+  --tw-text-opacity: 1;
+  color: var(--fallback-bc,oklch(var(--bc)/var(--tw-text-opacity)));
 }
 
 .text-error {
@@ -4981,10 +4969,6 @@ html {
 .after\:content-\[\'\'\]::after {
   --tw-content: '';
   content: var(--tw-content);
-}
-
-.hover\:border:hover {
-  border-width: 1px;
 }
 
 .hover\:border-gray-400:hover {

@@ -30,11 +30,11 @@
         </div>
         <div class="flex items-center gap-x-3 gap-x-0 md:gap-x-5 ms-4">
             <a href="/" class="hidden md:block">
-                <label id="service_list_button" aria-label="close sidebar" class="swap-rotate
-                        drawer-overlay swap">
-                    <input type="checkbox" />
+                <label for="service_list_drawer" id="service_list_button" aria-label="close sidebar"
+                       class="swap-rotate drawer-overlay swap flex items-center">
+                    <input type="checkbox" id="logo_single_serivce_list_toggler" />
                     <img src="{% static "img/logo_single.png" %}" class="h-10 swap-off">
-                    <i class="fa fa-solid fa-x swap-on h-10"></i>
+                    <i class="fa fa-solid fa-x swap-on h-10 flex justify-center items-center"></i>
                     {# TODO: Trey: Improve X Button (not aligned) #}
                 </label>
             </a>
@@ -42,6 +42,7 @@
                 My Finances
             </a>
         </div>
+
     </div>
     <div class="navbar-center hidden lg:flex">
         <!-- Topbar Dropdown (LARGE ONLY) -->
