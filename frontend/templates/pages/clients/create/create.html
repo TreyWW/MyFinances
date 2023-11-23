@@ -16,7 +16,7 @@
                                     <span class="label-text">Client Name</span>
                                 </label>
                                 <input required id="clientName" name="client_name"
-                                       minlength="3" type="text" class="peer input input-bordered input-primary w-full max-w-xs"
+                                       minlength="3" type="text" class="peer input input-bordered w-full max-w-xs"
                                        placeholder="Bob Smith" />
                                 <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden">
                                     <span class="label-text-alt text-error">Please enter a valid client name</span>
@@ -32,7 +32,7 @@
                                     <span class="label-text">Client Email</span>
                                 </label>
                                 <input required id="clientName" name="client_name"
-                                       minlength="3" type="text" class="peer input input-bordered input-primary w-full max-w-xs"
+                                       minlength="3" type="text" class="peer input input-bordered  w-full max-w-xs"
                                        placeholder="Bob Smith" />
                                 <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden">
                                     <span class="label-text-alt text-error">Please enter a valid client name</span>
@@ -53,7 +53,7 @@
                                     <span class="label-text">Client Address</span>
                                 </label>
                                 <input id="clientName" name="client_address"
-                                       minlength="3" type="text" class="peer input input-bordered input-primary w-full max-w-xs"
+                                       minlength="3" type="text" class="peer input input-bordered w-full max-w-xs"
                                        placeholder="1234 Main St" />
                                 <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden">
                                     <span class="label-text-alt text-error">Please enter a valid client address</span>
@@ -70,7 +70,7 @@
                                     <span class="label-text">Client Telephone Number</span>
                                 </label>
                                 <input name="client_phone"
-                                       type="tel" class="peer input input-bordered input-primary w-full max-w-xs"
+                                       type="tel" class="peer input input-bordered w-full max-w-xs"
                                        placeholder="07000000000" />
                                 <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden">
                                     <span class="label-text-alt text-error">Please enter a valid phone number</span>
@@ -80,6 +80,9 @@
                     </div>
                 </div>
             </div>
+            <button type="submit" class="btn float-right w-[150px] btn-primary">
+                Create
+            </button>
         </form>
     </div>
 {% endblock content %}
