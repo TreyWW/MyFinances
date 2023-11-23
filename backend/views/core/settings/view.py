@@ -1,5 +1,7 @@
+from time import sleep
+
 from django.contrib.sessions.models import Session
-from django.http import HttpRequest
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.contrib.auth import update_session_auth_hash
 
@@ -14,31 +16,42 @@ def settings_page(request: HttpRequest):
     context = {}
 
     usersettings, created = UserSettings.objects.get_or_create(user=request.user)
+    context.update(
+        {
+            "sessions": Session.objects.filter(),
+            "currency_signs": usersettings.CURRENCIES,
+            "currency": usersettings.currency,
+            "user_settings": usersettings,
+        }
+    )
 
-    if request.method == "POST":
+    if request.method == "POST" and request.htmx:
         currency = request.POST.get("currency")
+        section = request.POST.get("section")
         profile_picture = request.FILES.get("profile_image")
 
-        if currency:
+        if section == "account_preferences":
             if currency in usersettings.CURRENCIES:
                 usersettings.currency = currency
                 usersettings.save()
             else:
                 messages.error(request, "Invalid currency")
 
-        if profile_picture:
+            context.update(
+                {
+                    "post_return": "currency",
+                    "currency": usersettings.currency,
+                    "user_settings": usersettings,
+                }
+            )
+
+        if section == "profile_settings" and profile_picture:
             usersettings.profile_picture = profile_picture
             usersettings.save()
 
-    context.update(
-        {
-            "sessions": Session.objects.filter(),
-            "currency": usersettings.currency,
-            "currency_signs": usersettings.CURRENCIES,
-            "user_settings": usersettings,
-        }
-    )
+        return render(request, "pages/settings/settings/preferences.html", context)
 
+    # return HttpResponse("Success", status=200)
     return render(request, "pages/settings/main.html", context)
 
 

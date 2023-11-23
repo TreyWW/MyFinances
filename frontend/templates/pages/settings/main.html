@@ -3,16 +3,10 @@
 {% block content %}
     {% include 'components/modal.html' with modals=modal_data %}
     {% include 'pages/settings/settings/sessions.html' %}
-    <div class="grid grid-cols-1 xl:grid-cols-2 xl:gap-4 ">
+    <div class="w-full grid grid-cols-1 xl:grid-cols-2 xl:gap-4">
         {% include 'pages/settings/settings/preferences.html' %}
-        {% include 'pages/settings/settings/email_notifications.html' %}
+        {% include 'pages/settings/settings/profile_settings.html' %}
     </div>
     {% include 'pages/settings/settings/danger_zone.html' %}
-
-    <script>
-        if (window.history.replaceState) {
-            window.history.replaceState(null, null, window.location.href);
-        }
-    </script>
 
 {% endblock content %}

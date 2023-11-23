@@ -8,6 +8,7 @@
             Create Client
         </a>
         <form method="post">
+            {% csrf_token %}
             <input type="text" placeholder="Search"
                    class="input input-bordered input-block my-3"
                    hx-get="/api/v1/receipts/fetch"
@@ -16,11 +17,9 @@
                    hx-indicator="#search_loading"
                    name="search">
             <span id="search_loading" class="loading loading-spinner text-primary loading-htmx"></span>
-            <div id="results">
-            </div>
         </form>
 
-        <div hx-swap="outerHTML" hx-trigger="load" hx-get="{% url 'clients dashboard' %}">
+        <div hx-swap="outerHTML" hx-trigger="load" id="items" hx-get="{% url 'clients dashboard' %}">
             {% include 'components/table/skeleton_table.html' %}
         </div>
     </div>

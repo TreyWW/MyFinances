@@ -22,19 +22,31 @@
     opacity: 0.8;
 }
 
-.loading-htmx {
+/****************************/
+/*       HTMX LOADING       */
+/****************************/
+
+/* Show button text when not loading*/
+.loading-htmx .loading-htmx-text {
+    display: inline-block;
+}
+
+/* Hide button text when loading */
+.loading-htmx.htmx-request .loading-htmx-text {
     display: none;
 }
 
-.htmx-request .loading-htmx {
-    display: inline-block;
-    /*animation: hideLoading 1s 1 forwards;*/
+/*Hide loading spinner when not loading */
+.loading-htmx .loading-htmx-loader {
+    display: none;
 }
 
-.htmx-request.loading-htmx {
-     display: inline-block;
-    /*animation: hideLoading 1s 1 forwards;*/
+/* Show loading spinner when loading */
+.loading-htmx.htmx-request .loading-htmx-loader {
+    display: inline-block;
 }
+
+
 
 @keyframes hideLoading {
     0% {
