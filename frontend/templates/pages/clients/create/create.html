@@ -5,7 +5,7 @@
     <div class="card bg-base-100 p-6">
         <form method="post">
             {% csrf_token %}
-            <div class="divider mt-8">REQUIRED DETAILS</div>
+            <div class="divider mb-6">REQUIRED DETAILS</div>
             <div class="my-4 flex w-full flex-col">
                 <div class="flex w-full">
                     {# Client Name Card #}
@@ -35,7 +35,7 @@
                                        minlength="3" type="text" class="peer input input-bordered  w-full max-w-xs"
                                        placeholder="Bob Smith" />
                                 <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden">
-                                    <span class="label-text-alt text-error">Please enter a valid client name</span>
+                                    <span class="label-text-alt text-error">Please enter a valid client email address</span>
                                 </label>
                             </div>
                         </div>
@@ -56,7 +56,8 @@
                                        minlength="3" type="text" class="peer input input-bordered w-full max-w-xs"
                                        placeholder="1234 Main St" />
                                 <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden">
-                                    <span class="label-text-alt text-error">Please enter a valid client address</span>
+                                    <span class="label-text-alt text-error">Please enter a valid client address or no
+                                                                            address</span>
                                 </label>
                             </div>
                         </div>
