@@ -1449,6 +1449,29 @@ html {
   padding-bottom: 0.5rem;
 }
 
+.hero {
+  display: grid;
+  width: 100%;
+  place-items: center;
+  background-size: cover;
+  background-position: center;
+}
+
+.hero > * {
+  grid-column-start: 1;
+  grid-row-start: 1;
+}
+
+.hero-content {
+  z-index: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 80rem;
+  gap: 1rem;
+  padding: 1rem;
+}
+
 .input {
   flex-shrink: 1;
   height: 3rem;
@@ -3705,6 +3728,11 @@ html {
   margin-bottom: 2rem;
 }
 
+.my-2 {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
 .-ml-1 {
   margin-left: -0.25rem;
 }
@@ -3821,6 +3849,14 @@ html {
   margin-top: auto;
 }
 
+.mb-24 {
+  margin-bottom: 6rem;
+}
+
+.mt-12 {
+  margin-top: 3rem;
+}
+
 .block {
   display: block;
 }
@@ -3895,6 +3931,14 @@ html {
 
 .h-screen {
   height: 100vh;
+}
+
+.h-0 {
+  height: 0px;
+}
+
+.h-0\.5 {
+  height: 0.125rem;
 }
 
 .min-h-full {
@@ -3973,6 +4017,10 @@ html {
   width: 100%;
 }
 
+.w-48 {
+  width: 12rem;
+}
+
 .min-w-0 {
   min-width: 0px;
 }
@@ -4015,6 +4063,14 @@ html {
 
 .max-w-xs {
   max-width: 20rem;
+}
+
+.max-w-5xl {
+  max-width: 64rem;
+}
+
+.max-w-md {
+  max-width: 28rem;
 }
 
 .flex-1 {
@@ -4221,6 +4277,11 @@ html {
   border-radius: 0.75rem;
 }
 
+.rounded-l-xl {
+  border-top-left-radius: 0.75rem;
+  border-bottom-left-radius: 0.75rem;
+}
+
 .rounded-br-lg {
   border-bottom-right-radius: 0.5rem;
 }
@@ -4363,6 +4424,11 @@ html {
   background-color: rgb(133 77 14 / var(--tw-bg-opacity));
 }
 
+.bg-secondary {
+  --tw-bg-opacity: 1;
+  background-color: var(--fallback-s,oklch(var(--s)/var(--tw-bg-opacity)));
+}
+
 .bg-opacity-50 {
   --tw-bg-opacity: 0.5;
 }
@@ -4471,6 +4537,26 @@ html {
   padding-bottom: .4125rem;
 }
 
+.px-10 {
+  padding-left: 2.5rem;
+  padding-right: 2.5rem;
+}
+
+.py-12 {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+.py-24 {
+  padding-top: 6rem;
+  padding-bottom: 6rem;
+}
+
+.py-8 {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
 .pb-16 {
   padding-bottom: 4rem;
 }
@@ -4529,6 +4615,10 @@ html {
 
 .pt-8 {
   padding-top: 2rem;
+}
+
+.pt-2 {
+  padding-top: 0.5rem;
 }
 
 .text-left {
@@ -4700,6 +4790,16 @@ html {
   color: rgb(250 204 21 / var(--tw-text-opacity));
 }
 
+.text-secondary {
+  --tw-text-opacity: 1;
+  color: var(--fallback-s,oklch(var(--s)/var(--tw-text-opacity)));
+}
+
+.text-secondary-content {
+  --tw-text-opacity: 1;
+  color: var(--fallback-sc,oklch(var(--sc)/var(--tw-text-opacity)));
+}
+
 .underline {
   text-decoration-line: underline;
 }
@@ -4784,6 +4884,18 @@ html {
 
 .duration-150 {
   transition-duration: 150ms;
+}
+
+.duration-200 {
+  transition-duration: 200ms;
+}
+
+.duration-300 {
+  transition-duration: 300ms;
+}
+
+.duration-500 {
+  transition-duration: 500ms;
 }
 
 .ease-in {
@@ -5104,6 +5216,10 @@ html {
   content: var(--tw-content);
 }
 
+.hover\:cursor-pointer:hover {
+  cursor: pointer;
+}
+
 .hover\:border-gray-400:hover {
   --tw-border-opacity: 1;
   border-color: rgb(156 163 175 / var(--tw-border-opacity));
@@ -5210,6 +5326,11 @@ html {
   --tw-ring-color: rgb(31 41 55 / var(--tw-ring-opacity));
 }
 
+.focus\:ring-gray-100:focus {
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(243 244 246 / var(--tw-ring-opacity));
+}
+
 .focus\:ring-offset-2:focus {
   --tw-ring-offset-width: 2px;
 }
@@ -5242,6 +5363,10 @@ html {
 
 .group:hover .group-hover\:w-full {
   width: 100%;
+}
+
+.group:hover .group-hover\:max-w-full {
+  max-width: 100%;
 }
 
 .group:hover .group-hover\:opacity-100 {
@@ -5420,6 +5545,11 @@ html {
     background-color: rgb(255 255 255 / var(--tw-bg-opacity));
   }
 
+  .dark\:hover\:bg-gray-700:hover {
+    --tw-bg-opacity: 1;
+    background-color: rgb(55 65 81 / var(--tw-bg-opacity));
+  }
+
   .dark\:hover\:text-gray-200:hover {
     --tw-text-opacity: 1;
     color: rgb(229 231 235 / var(--tw-text-opacity));
@@ -5433,6 +5563,11 @@ html {
   .dark\:focus\:ring-white:focus {
     --tw-ring-opacity: 1;
     --tw-ring-color: rgb(255 255 255 / var(--tw-ring-opacity));
+  }
+
+  .dark\:focus\:ring-gray-800:focus {
+    --tw-ring-opacity: 1;
+    --tw-ring-color: rgb(31 41 55 / var(--tw-ring-opacity));
   }
 
   .dark\:focus\:ring-offset-gray-800:focus {
@@ -5465,6 +5600,10 @@ html {
 
   .sm\:w-1\/6 {
     width: 16.666667%;
+  }
+
+  .sm\:w-auto {
+    width: auto;
   }
 
   .sm\:grid-cols-2 {
@@ -5532,6 +5671,10 @@ html {
 
   .md\:w-1\/2 {
     width: 50%;
+  }
+
+  .md\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .md\:flex-row {

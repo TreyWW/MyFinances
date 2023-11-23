@@ -9,6 +9,9 @@ from backend.decorators import *
 from backend.models import *
 
 from django.contrib.auth import logout
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
+from django.views import View
 
 
 @csrf_exempt
@@ -16,19 +19,16 @@ from django.contrib.auth import logout
 def login_page(request):
     if request.user.is_authenticated:
         return redirect("dashboard")
-    #
-    # user = User.objects.first()
-    # login(request, user)
+
     if request.method == "POST":
         email = request.POST.get("email")
         password = request.POST.get("password")
-        remember_me = request.POST.get("remember_me")
 
         user = authenticate(request, username=email, password=password)
 
         if not user:
             messages.error(request, "Invalid email or password")
-            return render(request, "pages/login.html", {"attempted_email": email})
+            return render(request, "pages/login/login.html", {"attempted_email": email})
 
         login(request, user)
         LoginLog.objects.create(user=user)
@@ -56,7 +56,7 @@ def login_page(request):
 
     return render(
         request,
-        "pages/login.html",
+        "pages/login/login.html",
         {"github_enabled": github_enabled, "google_enabled": google_enabled},
     )
 
@@ -69,10 +69,23 @@ def logout_view(request):
     return redirect("login")  # + "?next=" + request.POST.get('next'))
 
 
-def create_account_page(request: HttpRequest):
-    if request.user.is_authenticated:
-        return redirect("dashboard")
-    if request.method == "POST":
+class CreateAccountChooseView(View):
+    def get(self, request):
+        if request.user.is_authenticated:
+            return redirect("dashboard")
+        return render(request, "pages/login/create_account_choose.html")
+
+
+class CreateAccountManualView(View):
+    def get(self, request):
+        if request.user.is_authenticated:
+            return redirect("dashboard")
+        return render(request, "pages/login/create_account_manual.html")
+
+    def post(self, request):
+        if request.user.is_authenticated:
+            return redirect("dashboard")
+
         email = request.POST.get("email")
         password = request.POST.get("password")
         password_confirm = request.POST.get("confirm_password")
@@ -80,26 +93,39 @@ def create_account_page(request: HttpRequest):
         if password != password_confirm:
             messages.error(request, "Passwords don't match")
             return render(
-                request, "pages/create_account.html", {"attempted_email": email}
+                request,
+                "pages/login/create_account_manual.html",
+                {"attempted_email": email},
             )
 
-        emails_taken = (User.objects.filter(email=email).count() > 0) or (
-            User.objects.filter(username=email).count() > 0
-        )
+        try:
+            validate_email(email)
+        except ValidationError:
+            messages.error(request, "Invalid email")
+            return render(request, "pages/login/create_account_manual.html")
+
+        emails_taken = User.objects.filter(email=email).exists()
+
         if emails_taken:
             messages.error(request, "Email is already taken")
-            return render(request, "pages/create_account.html")
+            return render(request, "pages/login/create_account_manual.html")
 
-        user = User.objects.create_user(email=email, username=email, password=password)
+        if len(password) < 6:
+            messages.error(request, "Password must be at least 6 characters")
+            return render(request, "pages/login/create_account_manual.html")
+
+        User.objects.create_user(email=email, username=email, password=password)
         user = authenticate(request, username=email, password=password)
-        login(request, user)
+        if not user:
+            messages.error(request, "Something went wrong")
+            return render(request, "pages/login/create_account_manual.html")
 
+        login(request, user)
         return redirect("dashboard")
-    return render(request, "pages/create_account.html")
 
 
 @not_authenticated
 def forgot_password_page(request: HttpRequest):
     if request.user.is_authenticated:
         return redirect("dashboard")
-    return render(request, "pages/forgot_password.html")
+    return render(request, "pages/login/forgot_password.html")

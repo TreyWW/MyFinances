@@ -46,6 +46,7 @@ LOGIN_REQUIRED_IGNORE_VIEW_NAMES = [
     "index",
     "login",
     "login create_account",
+    "login create_account manual",
     "login forgot_password",
     "user set password reset",
     "user set password",
