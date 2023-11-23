@@ -1,7 +1,7 @@
 {% extends 'base/base.html' %}
 {% block content %}
     {% include 'components/modal.html' with modals=modal_data %}
-
+    {# TODO: Major code clean up needed #}
     <div class="card w-full p-6 bg-base-100 shadow-xl mt-2">
         <div class="flex items-center justify-between">
             <div>
@@ -14,27 +14,40 @@
                         Invite User
                     </button>
                 {% endif %}
+                {% if not has_team %}
+                    <button onclick="modal_create_team.showModal();" class="btn btn-primary" for="modal_create_team"
+                           hx-get="{% url "api v1 base modal retrieve" modal_name="create_team" %}" hx-trigger="click once"
+                           hx-swap="beforeend"
+                           hx-target="#modal_container">
+                        {% include 'components/icon.html' with icon="plus" classes="pe-2" %}
+                        Create Team
+                    </button>
+                {% endif %}
             </div>
             <h1 class="text-3xl text-center">
-                Team - {{ team.name }}
+                {% if has_team %}
+                    Team - {{ team.name }}
+                {% else %}
+                    You aren't in a team
+                {% endif %}
             </h1>
-            {% if is_team_leader %}<div class="cursor-not-allowed tooltip tooltip-left" data-tip="You are the team leader, so you cannot
-            leave the  team">{% endif %}
-            <a class="btn btn-error {% if is_team_leader %}btn-disabled{% endif %}" href=
-                    "{% url "user settings teams join leave" %}">Leave Team</a>
-            {% if is_team_leader %}</div>{% endif %}
+            {% if is_team_leader %}
+                <div class="cursor-not-allowed tooltip tooltip-left"
+                     data-tip="You are the team leader, so you cannot leave theteam">
+            {% endif %}
+            {% if has_team %}
+                <a class="btn btn-error {% if is_team_leader %}btn-disabled{% endif %}"
+                   href="{% url "user settings teams join leave" %}">Leave Team
+                </a>
+            {% else %}
+                <span></span>
+            {% endif %}
+            {% if is_team_leader %}
+                </div>
+            {% endif %}
         </div>
     </div>
-
-    {% if not has_team %}
-        <label class="btn btn-primary" for="modal_create_team"
-               hx-get="{% url "api v1 base modal retrieve" modal_name="create_team" %}" hx-trigger="click" hx-swap="beforeend"
-               hx-target="#modal_container">
-            {% include 'components/icon.html' with icon="plus" classes="pe-2" %}
-            Create Team
-        </label>
-    {% endif %}
-
+    {% if has_team %}
     <div class="card w-full p-6 bg-base-100 shadow-xl mt-2">
         <table class="w-full table mt-3">
             <thead>
@@ -58,7 +71,7 @@
                                     <button class="btn btn-success btn-outline btn-sm">
                                         <i class="fa-solid fa-hammer"></i>
                                     </button>
-                                </span>
+                                    </span>
                                 </div>
                                 <div class="tooltip" data-tip="Kick User">
                                     <button class="btn btn-error btn-outline btn-sm" onclick="team_kick_user_{{ user.id }}
@@ -66,7 +79,7 @@
                                             ();">
                                         <i class="fa-solid fa-ban"></i>
                                     </button>
-                                </span>
+                                    </span>
                                 </div>
                             </div>
                         </td>
@@ -76,5 +89,6 @@
             </tbody>
         </table>
     </div>
+    {% endif %}
 
 {% endblock content %}
