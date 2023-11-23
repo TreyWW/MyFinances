@@ -68,7 +68,7 @@ def breadcrums(request):
         "invoices dashboard create": {
             "name": "Create",
             "url": reverse("invoices dashboard create"),
-            "icon": "file-invoice",
+            "icon": None,
         },
         "receipts dashboard": {
             "name": "Receipts",
@@ -88,7 +88,7 @@ def breadcrums(request):
     }
 
     all_breadcrums = {
-        "dashboard": [{"name": "Home"}],
+        "dashboard": [all_items.get("dashboard")],
         "user settings teams": [
             all_items.get("dashboard"),
             all_items.get("user settings teams"),
