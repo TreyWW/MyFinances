@@ -36,12 +36,23 @@
     display: none;
 }
 
-/*Hide loading spinner when not loading */
+/* Hide loading spinner when not loading */
 .loading-htmx .loading-htmx-loader {
     display: none;
 }
 
 /* Show loading spinner when loading */
+.loading-htmx-loader-individual.htmx-request {
+    display: inline-block;
+}
+
+/* Hide loading spinner when not loading */
+
+.loading-htmx-loader-individual {
+    display: none;
+}
+/* Show loading spinner when loading */
+
 .loading-htmx.htmx-request .loading-htmx-loader {
     display: inline-block;
 }
