@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+.input_card {
+    @apply rounded-full;
+    @apply max-w-screen-xl;
+    @apply border;
+    @apply border-gray-900;
+    @apply card;
+    @apply me-3;
+    @apply hover:border-gray-500 w-full;
+}
+
 .input::placeholder {
     color: #787d86;
     opacity: 0.8;

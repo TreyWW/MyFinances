@@ -21,7 +21,7 @@ def invoice_page_post(request: HttpRequest):
             request.POST.getlist("hours[]"),
             request.POST.getlist("price_per_hour[]"),
         )
-    ]  # Todo: add products to this for logic - wtf does this mean
+    ]  # Todo: add products to this for logic
 
     invoice = Invoice.objects.create(
         user=request.user,
