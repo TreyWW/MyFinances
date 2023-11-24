@@ -80,7 +80,7 @@ def settings_page(request: HttpRequest):
         }
     )
 
-    return render(request, "core/pages/settings/main.html", context)
+    return render(request, "pages/settings/main.html", context)
 
 
 def change_password(request: HttpRequest):
