@@ -49,7 +49,7 @@ class UserSettingsViewTestCase(ViewTestCase):
         )
 
         messages = list(get_messages(response.wsgi_request))
-        self.assertEqual(len(messages), 1)
+        self.assertEqual(len(messages), 2)
         self.assertEqual(str(messages[0]), "Invalid currency")
 
         self.assertEqual(response.status_code, 200)
