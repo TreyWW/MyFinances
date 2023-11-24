@@ -36,7 +36,7 @@
         </span>
         </td>
         <td colspan="2">
-            <div class="dropdown">
+            <div class="dropdown {% if not forloop.first and forloop.last %}dropdown-top{% endif %}">
                 <label tabindex="0" class="btn btn-primary btn-outline btn-sm">
                     <i class="fa-solid fa-regular fa-ellipsis-vertical"></i>
                 </label>

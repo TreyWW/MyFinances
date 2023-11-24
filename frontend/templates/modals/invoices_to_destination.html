@@ -1,0 +1,53 @@
+{% component_block "modal" id="modal_invoices_to_destination" start_open="true" title="Update TO info" %}
+    {% fill "content" %}
+        <form class="py-4"
+              id="modal_invoices_to_destination-form"
+              hx-post="{% url 'api v1 invoices create set_destination to' %}" hx-swap="innerHTML" hx-target="#to_destination">
+            {% csrf_token %}
+            <div class="form-control">
+                <label class="label">Name</label>
+                <input type="text" name="name" placeholder="John Smith" value=""
+                       class="input input-bordered max-w-full">
+            </div>
+
+            <div class="form-control">
+                <label class="label">Company</label>
+                <input type="text" name="company" placeholder="Google" value=""
+                       class="input input-bordered max-w-full">
+            </div>
+
+            <div class="form-control">
+                <label class="label">Address</label>
+                <input type="text" name="address" placeholder="128 Road" value=""
+                       class="input input-bordered max-w-full">
+            </div>
+            <div class="form-control">
+                <label class="label">City</label>
+                <input type="text" name="city" placeholder="Oxford" value=""
+                       class="input input-bordered max-w-full">
+            </div>
+
+            <div class="form-control">
+                <label class="label">County</label>
+                <input type="text" name="county" placeholder="Oxfordshire" value=""
+                       class="input input-bordered max-w-full">
+            </div>
+            <div class="form-control">
+                <label class="label">Country</label>
+                <input type="text" name="country" placeholder="England" value=""
+                       class="input input-bordered max-w-full">
+            </div>
+            <div class="modal-action">
+                <button type="submit" onclick="document.getElementById('modal_invoices_to_destination').close();"
+                        id="modal_invoices_to_destination-action-btn"
+                        class="btn btn-primary">
+                    Save
+                </button>
+                <button type="reset" class="btn btn-error">Reset</button>
+                <button type="button" onclick="document.getElementById('modal_invoices_to_destination').close();" class="btn">
+                    Close
+                </button>
+            </div>
+        </form>
+    {% endfill %}
+{% endcomponent_block %}

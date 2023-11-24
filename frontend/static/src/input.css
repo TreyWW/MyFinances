@@ -11,6 +11,31 @@
     @apply me-3;
     @apply hover:border-gray-500 w-full;
 }
+/***************************/
+/*       SCROLL BARS       */
+/***************************/
+
+/* width */
+::-webkit-scrollbar {
+    @apply w-[10px];
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* PLACEHOLDERS */
 
 .input::placeholder {
     color: #787d86;

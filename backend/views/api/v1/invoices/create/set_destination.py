@@ -7,7 +7,7 @@ to_get = ["name", "address", "city", "country"]
 
 @require_http_methods(["POST"])
 def set_destination_to(request: HttpRequest):
-    context = {}
+    context = {"swapping": True}
 
     context.update({key: request.POST.get(key) for key in to_get})
 
@@ -16,7 +16,7 @@ def set_destination_to(request: HttpRequest):
 
 @require_http_methods(["POST"])
 def set_destination_from(request: HttpRequest):
-    context = {}
+    context = {"swapping": True}
 
     context.update({key: request.POST.get(key) for key in to_get})
 

@@ -326,7 +326,7 @@ class Modals:
     @staticmethod
     def invoices_from_destination():
         return {
-            "id": "invoices_from_destination_modal",
+            "id": "modal_invoices_from_destination",
             "title": "Update your info",
             "action": {
                 "text": "Update",
