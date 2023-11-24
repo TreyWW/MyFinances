@@ -20,7 +20,7 @@ def add_service(request: HttpRequest):
     hours = int(request.POST.get("post_hours"))
     service_name = request.POST.get("post_service_name")
     service_description = request.POST.get("post_service_description")
-    price_per_hour = int(request.POST.get("post_price_per_hour"))
+    price_per_hour = int(request.POST.get("post_rate"))
 
     if not hours:
         return JsonResponse(

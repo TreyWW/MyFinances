@@ -8,7 +8,6 @@ from backend.utils import Modals
 def open_modal(request: HttpRequest, modal_name, context_type=None, context_value=None):
     try:
         template_name = f"modals/{modal_name}.html"
-        print(template_name)
         return render(request, template_name)
     except:
         return HttpResponseBadRequest("Something went wrong")

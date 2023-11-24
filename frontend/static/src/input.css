@@ -11,6 +11,14 @@
     @apply me-3;
     @apply hover:border-gray-500 w-full;
 }
+
+.required_star {
+    @apply text-red-400;
+    @apply float-left;
+    @apply text-left;
+    @apply ms-1;
+}
+
 /***************************/
 /*       SCROLL BARS       */
 /***************************/

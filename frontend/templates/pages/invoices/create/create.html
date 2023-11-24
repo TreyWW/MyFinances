@@ -3,7 +3,7 @@
 {% load markdownify %}
 {% block content %}
     {% include 'components/modal.html' with modals=modal_data %}
-    <form method="post" class="card bg-base-100 p-6">
+    <form method="post" class="card bg-base-100 p-6 group">
         {% csrf_token %}
         <div class="divider">STEP 1 - DESTINATIONS</div>
         <div class="my-4 flex w-full flex-col">
@@ -23,7 +23,10 @@
                 <div class="input_card">
                     <div class="card-body">
                         <div class="form-control w-full">
-                            <label class="label">Issue date</label>
+                            <label class="label justify-start">
+                                Issue date
+                                <span class="required_star">*</span>
+                            </label>
                             <input required id="dateIssued" name="date_issued" placeholder="" type="date"
                                    class="peer input input-bordered input-block">
                             <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden ">
@@ -35,7 +38,10 @@
                 <div class="input_card">
                     <div class="card-body">
                         <div class="form-control w-full">
-                            <label class="label">Due date</label>
+                            <label class="label justify-start">
+                                Due date
+                                <span class="required_star">*</span>
+                            </label>
                             <input required name="date_due" id="dueDate" placeholder="" type="date"
                                    class="peer input-bordered input input-block">
                             <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden ">
@@ -49,57 +55,57 @@
         <div class="divider my-4">STEP 3 - SERVICES</div>
         <div class="input_card">
             <div class="card-body">
-                <label class="btn btn-primary" for="modal-1">Add Service</label>
-                <input class="modal-state" id="modal-1" type="checkbox" id="modal-checkbox" />
+                <button onclick="modal_invoices_add_service.showModal();"
+                        class="btn btn-primary"
+                        hx-trigger="click once" hx-swap="beforeend" hx-target="#modal_container"
+                        hx-get="{% url "api v1 base modal retrieve" modal_name="invoices_add_service" %}">
+                    Add Service
+                </button>
                 {# START MODAL #}
-                <div class="modal">
-                    <label class="modal-overlay" for="modal-1"></label>
-                    <div class="modal-content flex flex-col gap-5 w-screen">
-                        <label for="modal-1" class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</label>
-                        <h2 class="text-xl">Add Service</h2>
-                        <div class="form-field w-full">
-                            <label for="service" class="form-label">Service Name</label>
-                            <input id="modal_input-service_name"
-                                   name="post_service_name"
-                                   type="text"
-                                   class="input input-block input-bordered input-ghost-secondary">
-                        </div>
-                        <div class="form-field">
-                            <label for="service" class="form-label">Service Name</label>
-                            <input id="modal_input-service_name" name="post_service_name" type="text"
-                                   class="input input-bordered input-ghost-secondary">
-                            <label for="service" class="form-label">Service Description</label>
-                            <textarea id="modal_input-service_description"
-                                      name="post_service_description"
-                                      class="textarea textarea-block textarea-ghost-secondary"></textarea>
-                        </div>
-                        <div class="form-field">
-                            <label for="hours" class="form-label">Hours</label>
-                            <input id="modal_input-hours" type="number" name="post_hours"
-                                   class="input input-bordered input-ghost-secondary">
-                            <label for="hours" class="form-label">Quantity</label>
-                            <input id="modal_input-hours"
-                                   type="number" name="post_hours"
-                                   class="input input-bordered input-block input-ghost-secondary">
-                        </div>
-                        <div class="form-field">
-                            <label for="pricePerHour" class="form-label">Price Per Hour</label>
-                            <input id="modal_input-price_per_hour" type="number" name="post_price_per_hour"
-                                   class="input input-bordered input-ghost-secondary">
-                            <label for="pricePerHour" class="form-label">Rate</label>
-                            <input id="modal_input-price_per_hour" type="number" name="post_price_per_hour" class="input
-                            input-block
-                            input-bordered input-ghost-secondary">
-                        </div>
-                        <button class="btn btn-primary"
-                                hx-post="{% url 'api v1 invoices create services add' %}"
-                                {#                                hx-swap="outerHTML"#}
-
-                                hx-target="#services_table_body">
-                            Save Service
-                        </button>
-                    </div>
-                </div>
+                {#                <div class="modal">#}
+                {#                        <div class="form-field w-full">#}
+                {#                            <label for="service" class="form-label">Service Name</label>#}
+                {#                            <input id="modal_input-service_name"#}
+                {#                                   name="post_service_name"#}
+                {#                                   type="text"#}
+                {#                                   class="input input-block input-bordered input-ghost-secondary">#}
+                {#                        </div>#}
+                {#                        <div class="form-field">#}
+                {#                            <label for="service" class="form-label">Service Name</label>#}
+                {#                            <input id="modal_input-service_name" name="post_service_name" type="text"#}
+                {#                                   class="input input-bordered input-ghost-secondary">#}
+                {#                            <label for="service" class="form-label">Service Description</label>#}
+                {#                            <textarea id="modal_input-service_description"#}
+                {#                                      name="post_service_description"#}
+                {#                                      class="textarea textarea-block textarea-ghost-secondary"></textarea>#}
+                {#                        </div>#}
+                {#                        <div class="form-field">#}
+                {#                            <label for="hours" class="form-label">Hours</label>#}
+                {#                            <input id="modal_input-hours" type="number" name="post_hours"#}
+                {#                                   class="input input-bordered input-ghost-secondary">#}
+                {#                            <label for="hours" class="form-label">Quantity</label>#}
+                {#                            <input id="modal_input-hours"#}
+                {#                                   type="number" name="post_hours"#}
+                {#                                   class="input input-bordered input-block input-ghost-secondary">#}
+                {#                        </div>#}
+                {#                        <div class="form-field">#}
+                {#                            <label for="pricePerHour" class="form-label">Price Per Hour</label>#}
+                {#                            <input id="modal_input-price_per_hour" type="number" name="post_price_per_hour"#}
+                {#                                   class="input input-bordered input-ghost-secondary">#}
+                {#                            <label for="pricePerHour" class="form-label">Rate</label>#}
+                {#                            <input id="modal_input-price_per_hour" type="number" name="post_price_per_hour" class="input#}
+                {#                            input-block#}
+                {#                            input-bordered input-ghost-secondary">#}
+                {#                        </div>#}
+                {#                        <button class="btn btn-primary"#}
+                {#                                hx-post="{% url 'api v1 invoices create services add' %}"#}
+                {#                                hx-swap="outerHTML"#}
+                {##}
+                {#                                hx-target="#services_table_body">#}
+                {#                            Save Service#}
+                {#                        </button>#}
+                {#                    </div>#}
+                {#                </div>#}
                 {# END MODAL #}
 
                 <div class="flex w-full overflow-x-auto">
@@ -166,57 +172,61 @@
                 </div>
             </div>
         </div>
-        {#        <div class="divider my-4">STEP 5 - NOTES [OPTIONAL]</div>#}
-        {#        <div class="my-4 flex w-full flex-col">#}
-        {#            <div class="flex w-full">#}
-        {#                <div class="max-w-screen-xl border border-gray-900 card me-3 hover:border-gray-500" href="{% url 'index' %}">#}
-        {#                    <div class="card-body">#}
-        {#                        <textarea id="editor" name="notes"></textarea>#}
-        {#                    </div>#}
-        {#                </div>#}
-        {#            </div>#}
-        {#        </div>#}
-        {##}
-        {#        <style>#}
-        {#            .CodeMirror {#}
-        {#                background-color: rgb(var(--gray-3)/var(--tw-bg-opacity));#}
-        {#            }#}
-        {##}
-        {#            .editor-toolbar {#}
-        {#                background-color: rgb(var(--gray-4)/var(--tw-bg-opacity));#}
-        {#            }#}
-        {##}
-        {#            .editor-toolbar > * {#}
-        {#                background-color: rgb(var(--gray-4)/var(--tw-bg-opacity));#}
-        {#            }#}
-        {##}
-        {#            .CodeMirror,#}
-        {#            .CodeMirror-scroll {#}
-        {#                max-height: 300px;#}
-        {#            }#}
-        {##}
-        {#            .CodeMirror-fullscreen.CodeMirror {#}
-        {#                max-height: none;#}
-        {#            }#}
-        {##}
-        {#            .CodeMirror-fullscreen .CodeMirror-scroll {#}
-        {#                max-height: none;#}
-        {#            }#}
-        {##}
-        {#            .CodeMirror,#}
-        {#            .CodeMirror-scroll {#}
-        {#                max-height: 150px;#}
-        {#                min-height: 100px;#}
-        {#            }#}
-        {##}
-        {#        </style>#}
-        {#        <script>#}
-        {#            var simplemde = new SimpleMDE({#}
-        {#                element: document.getElementById("editor"),#}
-        {#                #}
-        {#            });#}
-        {#        </script>#}
-        <button class="btn btn-primary">Create Invoice</button>
+{#                <div class="divider my-4">STEP 5 - NOTES [OPTIONAL]</div>#}
+{#                <div class="my-4 flex w-full flex-col">#}
+{#                    <div class="flex w-full">#}
+{#                        <div class="max-w-screen-xl border border-gray-900 card me-3 hover:border-gray-500" href="{% url 'index' %}">#}
+{#                            <div class="card-body">#}
+{#                                <textarea id="editor" name="notes"></textarea>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{##}
+{#                <style>#}
+{#                    .CodeMirror {#}
+{#                        background-color: rgb(var(--gray-3)/var(--tw-bg-opacity));#}
+{#                    }#}
+{##}
+{#                    .editor-toolbar {#}
+{#                        background-color: rgb(var(--gray-4)/var(--tw-bg-opacity));#}
+{#                    }#}
+{##}
+{#                    .editor-toolbar > * {#}
+{#                        background-color: rgb(var(--gray-4)/var(--tw-bg-opacity));#}
+{#                    }#}
+{##}
+{#                    .CodeMirror,#}
+{#                    .CodeMirror-scroll {#}
+{#                        max-height: 300px;#}
+{#                    }#}
+{##}
+{#                    .CodeMirror-fullscreen.CodeMirror {#}
+{#                        max-height: none;#}
+{#                    }#}
+{##}
+{#                    .CodeMirror-fullscreen .CodeMirror-scroll {#}
+{#                        max-height: none;#}
+{#                    }#}
+{##}
+{#                    .CodeMirror,#}
+{#                    .CodeMirror-scroll {#}
+{#                        max-height: 150px;#}
+{#                        min-height: 100px;#}
+{#                    }#}
+{##}
+{#                </style>#}
+{#                <script>#}
+{#                    var simplemde = new SimpleMDE({#}
+{#                        element: document.getElementById("editor"),#}
+{##}
+{#                    });#}
+{#                </script>#}
+        <div class="group-invalid:tooltip" data-tip="Fill out all required details to save the invoice.">
+            <button class="btn btn-primary group-invalid:btn-disabled btn-block">
+                Create Invoice
+            </button>
+        </div>
     </form>
 
     <script>
