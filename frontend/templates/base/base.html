@@ -34,10 +34,14 @@
                             <a href="{% url "clients dashboard" %}">Clients</a>
                             <ul>
                                 <li>
-                                    <a>View All</a>
+                                    <a href="{% url "clients dashboard" %}"
+                                    {% if request.resolver_match.url_name == "clients dashboard" %}class="active"{% endif %}>
+                                        View All</a>
                                 </li>
                                 <li>
-                                    <a>Create New</a>
+                                    <a href="{% url "clients create" %}"
+                                    {% if request.resolver_match.url_name == "clients create" %}class="active"
+                                    {% endif %}>Create New</a>
                                 </li>
                             </ul>
                         </li>
