@@ -1,5 +1,5 @@
 from django.urls import reverse, resolve
-from .handler import ViewTestCase
+from tests.handler import ViewTestCase
 
 from model_bakery import baker
 
@@ -15,7 +15,7 @@ class ReceiptsViewTestCase(ViewTestCase):
         self.assertEqual(response.status_code, 302)
 
     def test_receipts_dashboard_view_200_for_authenticated_users(self):
-        self.client.login(username="user", password="user")
+        self.login_user()
         response = self.client.get(self._receipts_dashboard_url)
         self.assertEqual(response.status_code, 200)
 
@@ -39,7 +39,7 @@ class ReceiptsAPITestCase(ViewTestCase):
         self.assertEqual(response.status_code, 302)
 
     def test_receipts_fetch_api_view_404_for_authenticated_users(self):
-        self.client.login(username="user", password="user")
+        self.login_user()
         response = self.client.get(self._receipts_api_fetch_url)
         self.assertEqual(response.status_code, 404)
 
@@ -87,7 +87,7 @@ class ReceiptsAPITestCase(ViewTestCase):
 
         data = {"search": search_text}
         headers = {"HTTP_HX-Request": "true"}
-        self.client.login(username="user", password="user")
+        self.login_user()
         response = self.client.get(self._receipts_api_fetch_url, data, **headers)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.context["receipts"]), 1)

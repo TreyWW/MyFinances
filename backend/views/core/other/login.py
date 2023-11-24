@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.http import HttpRequest
 from django.shortcuts import render
 from django.urls import resolve, Resolver404
@@ -6,7 +7,7 @@ from django.contrib.auth import authenticate, login
 
 import settings.settings
 from backend.decorators import *
-from backend.models import *
+from backend.models import LoginLog, AuditLog, User
 
 from django.contrib.auth import logout
 from django.core.exceptions import ValidationError
@@ -104,7 +105,10 @@ class CreateAccountManualView(View):
             messages.error(request, "Invalid email")
             return render(request, "pages/login/create_account_manual.html")
 
-        emails_taken = User.objects.filter(email=email).exists()
+        emails_taken = User.objects.filter(
+            Q(username=email) | Q(email=email)
+        ).exists()  # may want to change to "email" once we add email
+        # backend for logins
 
         if emails_taken:
             messages.error(request, "Email is already taken")

@@ -1,8 +1,6 @@
 from django.urls import reverse, resolve
 
-from backend.models import UserSettings
-from .handler import ViewTestCase
-from django.contrib.messages import get_messages
+from tests.handler import ViewTestCase
 
 
 class UserSettingsTeamsDashboardViewTestCase(ViewTestCase):
@@ -11,7 +9,7 @@ class UserSettingsTeamsDashboardViewTestCase(ViewTestCase):
         self.assertEqual(response.status_code, 302)
 
     def test_teams_view_200_for_authenticated_users(self):
-        self.client.login(username="user", password="user")
+        self.login_user()
         response = self.client.get(reverse("user settings teams"))
         self.assertEqual(response.status_code, 200)
 

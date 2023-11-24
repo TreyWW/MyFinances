@@ -1,5 +1,5 @@
 from django.urls import reverse, resolve
-from .handler import ViewTestCase
+from tests.handler import ViewTestCase
 
 
 class DashboardViewTestCase(ViewTestCase):
@@ -8,7 +8,7 @@ class DashboardViewTestCase(ViewTestCase):
         self.assertEqual(response.status_code, 302)
 
     def test_dashboard_view_200_for_authenticated_users(self):
-        self.client.login(username="user", password="user")
+        self.login_user()
         response = self.client.get(reverse("dashboard"))
         self.assertEqual(response.status_code, 200)
 

@@ -1,7 +1,7 @@
 from django.contrib.auth.hashers import check_password
 from django.contrib.messages import get_messages
 from django.urls import reverse, resolve
-from .handler import ViewTestCase
+from tests.handler import ViewTestCase
 
 
 class ChangePasswordViewTestCase(ViewTestCase):
@@ -10,7 +10,7 @@ class ChangePasswordViewTestCase(ViewTestCase):
         self.assertEqual(response.status_code, 302)
 
     def test_change_password_view_200_for_authenticated_users_GET(self):
-        self.client.login(username="user", password="user")
+        self.login_user()
         response = self.client.get(reverse("user settings change_password"))
         self.assertEqual(response.status_code, 200)
 
@@ -19,7 +19,7 @@ class ChangePasswordViewTestCase(ViewTestCase):
         self.assertEqual(response.status_code, 302)
 
     def test_change_password_view_200_for_authenticated_users_POST_valid_password(self):
-        self.client.login(username="user", password="user")
+        self.login_user()
         response = self.client.post(
             reverse("user settings change_password"),
             {"password": "changed_password", "confirm_password": "changed_password"},
@@ -38,7 +38,7 @@ class ChangePasswordViewTestCase(ViewTestCase):
     def test_change_password_view_200_for_authenticated_users_POST_invalid_no_password(
         self,
     ):
-        self.client.login(username="user", password="user")
+        self.login_user()
         response = self.client.post(reverse("user settings change_password"), {})
 
         self.assertTrue(check_password("user", response.wsgi_request.user.password))
@@ -54,7 +54,7 @@ class ChangePasswordViewTestCase(ViewTestCase):
     def test_change_password_view_200_for_authenticated_users_POST_invalid_password_too_short(
         self,
     ):
-        self.client.login(username="user", password="user")
+        self.login_user()
         response = self.client.post(
             reverse("user settings change_password"),
             {"password": "pass", "confirm_password": "pass"},
@@ -74,7 +74,7 @@ class ChangePasswordViewTestCase(ViewTestCase):
     def test_change_password_view_200_for_authenticated_users_POST_invalid_confirm_is_different(
         self,
     ):
-        self.client.login(username="user", password="user")
+        self.login_user()
         response = self.client.post(
             reverse("user settings change_password"),
             {"password": "password23", "confirm_password": "password"},
@@ -94,7 +94,7 @@ class ChangePasswordViewTestCase(ViewTestCase):
     def test_change_password_view_200_for_authenticated_users_POST_invalid_password_too_long(
         self,
     ):
-        self.client.login(username="user", password="user")
+        self.login_user()
         response = self.client.post(
             reverse("user settings change_password"),
             {"password": "p" * 129, "confirm_password": "p" * 129},

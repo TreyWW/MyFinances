@@ -2,7 +2,7 @@ from datetime import date
 from django.urls import reverse, resolve
 
 from backend.models import Invoice
-from .handler import ViewTestCase
+from tests.handler import ViewTestCase
 
 from model_bakery import baker
 
@@ -18,12 +18,12 @@ class InvoicesViewTestCase(ViewTestCase):
         self.assertEqual(response.status_code, 302)
 
     def test_invoices_view_200_for_authenticated_users(self):
-        self.client.login(username="user", password="user")
+        self.login_user()
         response = self.client.get(self._invoices_dashboard_url)
         self.assertEqual(response.status_code, 200)
 
     def test_invoices_view_match_with_template(self):
-        self.client.login(username="user", password="user")
+        self.login_user()
         response = self.client.get(self._invoices_dashboard_url)
         self.assertTemplateUsed(response, "pages/invoices/dashboard/dashboard.html")
 
@@ -36,7 +36,7 @@ class InvoicesViewTestCase(ViewTestCase):
         )
 
     def test_invoices_check_clients_get_returned_zero(self):
-        self.client.login(username="user", password="user")
+        self.login_user()
         headers = {
             "HTTP_HX-request": "true",
         }
@@ -48,7 +48,7 @@ class InvoicesViewTestCase(ViewTestCase):
         _quantity = 1
         baker.make("backend.Invoice", user=self.log_in_user, _quantity=_quantity)
 
-        self.client.login(username="user", password="user")
+        self.login_user()
         headers = {
             "HTTP_HX-request": "true",
         }
@@ -60,7 +60,7 @@ class InvoicesViewTestCase(ViewTestCase):
         _quantity = 2
         baker.make("backend.Invoice", user=self.log_in_user, _quantity=_quantity)
 
-        self.client.login(username="user", password="user")
+        self.login_user()
         headers = {
             "HTTP_HX-request": "true",
         }
@@ -80,12 +80,12 @@ class InvoicesCreateTestCase(ViewTestCase):
         self.assertEqual(response.status_code, 302)
 
     def test_invoices_create_200_for_authenticated_users(self):
-        self.client.login(username="user", password="user")
+        self.login_user()
         response = self.client.get(self._invoices_create_url)
         self.assertEqual(response.status_code, 200)
 
     def test_invoices_create_match_with_template(self):
-        self.client.login(username="user", password="user")
+        self.login_user()
         response = self.client.get(self._invoices_create_url)
         self.assertTemplateUsed(response, "pages/invoices/create/create.html")
 
@@ -98,7 +98,7 @@ class InvoicesCreateTestCase(ViewTestCase):
         )
 
     def test_invoices_create_invoice_from_post_data(self):
-        self.client.login(username="user", password="user")
+        self.login_user()
 
         data = {
             "service_name[]": ["Service 1", "Service 2"],

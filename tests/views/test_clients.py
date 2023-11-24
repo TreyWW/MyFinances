@@ -1,7 +1,7 @@
 from django.urls import reverse, resolve
 
 from backend.models import Client
-from .handler import ViewTestCase
+from tests.handler import ViewTestCase
 
 
 class ClientsViewTestCase(ViewTestCase):
@@ -10,12 +10,12 @@ class ClientsViewTestCase(ViewTestCase):
         self.assertEqual(response.status_code, 302)
 
     def test_clients_view_200_for_authenticated_users(self):
-        self.client.login(username="user", password="user")
+        self.login_user()
         response = self.client.get(reverse("clients dashboard"))
         self.assertEqual(response.status_code, 200)
 
     def test_clients_view_matches_with_template(self):
-        self.client.login(username="user", password="user")
+        self.login_user()
         response = self.client.get(reverse("clients dashboard"))
         self.assertTemplateUsed(response, "pages/clients/dashboard/dashboard.html")
 
@@ -28,7 +28,7 @@ class ClientsViewTestCase(ViewTestCase):
         )
 
     def test_clients_view_doesnt_create_invalid_client_no_first_name(self):
-        self.client.login(username="user", password="user")
+        self.login_user()
         client_objects_before = Client.objects.count()
         response = self.client.post(
             reverse("clients dashboard"),
@@ -43,7 +43,7 @@ class ClientsViewTestCase(ViewTestCase):
         self.assertEqual(client_objects_after, client_objects_before)
 
     def test_clients_view_doesnt_create_invalid_client_no_last_name(self):
-        self.client.login(username="user", password="user")
+        self.login_user()
         client_objects_before = Client.objects.count()
         response = self.client.post(
             reverse("clients dashboard"),
@@ -79,7 +79,7 @@ class ClientsViewTestCase(ViewTestCase):
     #         self.assertEqual(client_objects_after, client_objects_before + 1)
 
     def test_clients_check_clients_get_returned(self):
-        self.client.login(username="user", password="user")
+        self.login_user()
         headers = {
             "HTTP_HX-request": "true",
         }
@@ -97,7 +97,7 @@ class ClientsViewTestCase(ViewTestCase):
         self.assertEqual(amount_of_clients_returned, 1)
 
     def test_clients_creating_two_clients(self):
-        self.client.login(username="user", password="user")
+        self.login_user()
         headers = {
             "HTTP_HX-request": "true",
         }

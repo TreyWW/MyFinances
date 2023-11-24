@@ -5,14 +5,15 @@ from backend.models import User
 
 class ViewTestCase(TestCase):
     def setUp(self):
-        self.log_in_user = User.objects.create_user(username="user", password="user")
+        self.log_in_user = User.objects.create_user(
+            username="user@example.com", password="user", email="user@example.com"
+        )
 
     def call_index(self):
         self.client.get(reverse("index"))
 
-
-def login_user(self):
-    self.client.login(username="user", password="user")
+    def login_user(self):
+        self.client.login(username="user@example.com", password="user")
 
 
 def test_with_prints(self, url, expected_status_code, logged_in):

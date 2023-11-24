@@ -1,5 +1,5 @@
 from django.urls import reverse, resolve
-from .handler import ViewTestCase
+from tests.handler import ViewTestCase
 
 
 class IndexViewTestCase(ViewTestCase):
@@ -8,7 +8,7 @@ class IndexViewTestCase(ViewTestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_index_view_200_for_authenticated_users(self):
-        self.client.login(username="user", password="user")
+        self.login_user()
         response = self.client.get(reverse("index"))
         self.assertEqual(response.status_code, 200)
 

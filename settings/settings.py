@@ -111,7 +111,7 @@ TEMPLATES = [
                 "backend.context_processors.extras",
                 "backend.context_processors.navbar",
                 "backend.context_processors.toasts",
-                "backend.context_processors.breadcrums",
+                "backend.context_processors.breadcrumbs",
                 "social_django.context_processors.backends",
             ],
         },

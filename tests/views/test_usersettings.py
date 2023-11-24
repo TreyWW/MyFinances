@@ -1,7 +1,7 @@
 from django.urls import reverse, resolve
 
 from backend.models import UserSettings
-from .handler import ViewTestCase
+from tests.handler import ViewTestCase
 from django.contrib.messages import get_messages
 
 
@@ -11,7 +11,7 @@ class UserSettingsViewTestCase(ViewTestCase):
         self.assertEqual(response.status_code, 302)
 
     def test_usersettings_view_200_for_authenticated_users(self):
-        self.client.login(username="user", password="user")
+        self.login_user()
         response = self.client.get(reverse("user settings"))
         self.assertEqual(response.status_code, 200)
 
@@ -22,7 +22,7 @@ class UserSettingsViewTestCase(ViewTestCase):
         self.assertEqual("backend.views.core.settings.view.settings_page", func_name)
 
     def test_usersettings_currency_post_with_valid(self):
-        self.client.login(username="user", password="user")
+        self.login_user()
         # check default
         response = self.client.get(reverse("user settings"))
         usr_settings = UserSettings.objects.first()
@@ -30,13 +30,23 @@ class UserSettingsViewTestCase(ViewTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context["currency"], "GBP")
         # change and recheck
-        response = self.client.post(reverse("user settings"), {"currency": "EUR"})
+        headers = {"HTTP_HX-Request": "true"}
+        response = self.client.post(
+            reverse("user settings"),
+            {"currency": "EUR", "section": "account_preferences"},
+            **headers,
+        )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context["currency"], "EUR")
 
     def test_usersettings_currency_post_with_invalid_currency(self):
-        self.client.login(username="user", password="user")
-        response = self.client.post(reverse("user settings"), {"currency": "invalid"})
+        self.login_user()
+        headers = {"HTTP_HX-Request": "true"}
+        response = self.client.post(
+            reverse("user settings"),
+            {"currency": "invalid", "section": "account_preferences"},
+            **headers,
+        )
 
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(len(messages), 1)

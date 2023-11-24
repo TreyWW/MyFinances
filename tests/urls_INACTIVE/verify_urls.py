@@ -21,7 +21,7 @@ class UrlTestCase(TestCase):
             return json.load(file)
 
     def test_urls(self):
-        unlogged_in_data = self.load_json_data("./unlogged_in.json")
+        unlogged_in_data = self.load_json_data("unlogged_in.json")
         for url_name, status_codes in unlogged_in_data.items():
             url = reverse(url_name, args=status_codes[1:])
             self._test_url(url, url_name, status_codes)
@@ -41,7 +41,7 @@ class UrlTestCase(TestCase):
         self.client.login(username="testuser", password="testpassword")
 
         # Test the logged-in URLs
-        logged_in_data = self.load_json_data("./logged_in.json")
+        logged_in_data = self.load_json_data("logged_in.json")
         for url_name, status_codes in logged_in_data.items():
             url = reverse(url_name, args=status_codes[1:])
             self._test_logged_in_url(url, url_name, status_codes)
