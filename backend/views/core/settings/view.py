@@ -73,7 +73,7 @@ def settings_page(request: HttpRequest):
 
     context.update(
         {
-            "sessions": [],  #Session.objects.filter(),
+            "sessions": [],  # Session.objects.filter(),
             "currency": usersettings.currency,
             "currency_signs": usersettings.CURRENCIES,
             "user_settings": usersettings,
