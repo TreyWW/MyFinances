@@ -111,6 +111,7 @@ ENV/
 env.bak/
 venv.bak/
 media/*
+.idea
 
 # Spyder project settings
 .spyderproject
@@ -132,3 +133,6 @@ dmypy.json
 
 # VS Code
 .vscode
+
+# Node
+node_modules

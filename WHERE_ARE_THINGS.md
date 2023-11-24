@@ -13,7 +13,7 @@
 
 ### Views
 ```
-backend/views/core/<section>/<file>.py
+backend/<section/app>/views/<file>.py
 ```
 
 ### Tests
@@ -40,11 +40,11 @@ frontend/static/js/
 
 ### Templates (HTML Pages)
 ```
-  frontend/templates/core/pages/<section>/<page_name>.html
+  frontend/templates/pages/<section>/<page_name>.html
 ```
 
 ### Partial Templates
 ```
-  frontend/templates/core/pages/<section>/_<page_name>-<partial_topic>.html
-  e.g. --> frontend/templates/core/pages/receipts/_dashboard_search_results.html
+  frontend/templates/pages/<section>/_<page_name>-<partial_topic>.html
+  e.g. --> frontend/templates/pages/receipts/_dashboard_search_results.html
 ```

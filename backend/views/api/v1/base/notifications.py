@@ -20,7 +20,7 @@ def get_notification_html(request: HttpRequest):
 
     return render(
         request,
-        "core/partials/base/_notification_dropdown_items.html",
+        "partials/base/_notification_dropdown_items.html",
         {
             "notifications": {
                 "normal": notifications_normal,

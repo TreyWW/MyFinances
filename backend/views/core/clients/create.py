@@ -7,7 +7,7 @@ from backend.models import Client
 
 def create_client(request: HttpRequest):
     if request.method == "GET":
-        return render(request, "core/pages/clients/create/create.html")
+        return render(request, "pages/clients/create/create.html")
 
     client_name = request.POST.get("client_name")
     client_email = request.POST.get("client_email")

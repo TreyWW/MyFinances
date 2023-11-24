@@ -1,0 +1,89 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block content %}
+    {% include 'components/modal.html' with modals=modal_data %}
+    <div class="card bg-base-100 p-6">
+        <form method="post">
+            {% csrf_token %}
+            <div class="divider mb-6">REQUIRED DETAILS</div>
+            <div class="my-4 flex w-full flex-col">
+                <div class="flex w-full">
+                    {# Client Name Card #}
+                    <div class="card me-3 w-full bg-base-200 border border-base-200 hover:border-gray-400">
+                        <div class="card-body w-full">
+                            <div class="form-control w-full max-w-xs">
+                                <label class="label">
+                                    <span class="label-text">Client Name</span>
+                                </label>
+                                <input required id="clientName" name="client_name"
+                                       minlength="3" type="text" class="peer input input-bordered w-full max-w-xs"
+                                       placeholder="Bob Smith" />
+                                <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden">
+                                    <span class="label-text-alt text-error">Please enter a valid client name</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    {# Client Email Card #}
+                    <div class="card me-3 w-full bg-base-200 border border-base-200 hover:border-gray-400">
+                        <div class="card-body w-full">
+                            <div class="form-control w-full max-w-xs">
+                                <label class="label">
+                                    <span class="label-text">Client Email</span>
+                                </label>
+                                <input required id="clientName" name="client_name"
+                                       minlength="3" type="text" class="peer input input-bordered  w-full max-w-xs"
+                                       placeholder="Bob Smith" />
+                                <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden">
+                                    <span class="label-text-alt text-error">Please enter a valid client email address</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="divider my-6">OPTIONAL DETAILS</div>
+            <div class="my-4 flex w-full flex-col">
+                {# Client Address Card #}
+                <div class="flex w-full">
+                    <div class="card me-3 w-full bg-base-200 border border-base-200 hover:border-gray-400">
+                        <div class="card-body w-full">
+                            <div class="form-control w-full max-w-xs">
+                                <label class="label">
+                                    <span class="label-text">Client Address</span>
+                                </label>
+                                <input id="clientName" name="client_address"
+                                       minlength="3" type="text" class="peer input input-bordered w-full max-w-xs"
+                                       placeholder="1234 Main St" />
+                                <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden">
+                                    <span class="label-text-alt text-error">Please enter a valid client address or no
+                                                                            address</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                {# Client Phone Number Card #}
+
+                    <div class="card me-3 w-full bg-base-200 border border-base-200 hover:border-gray-400">
+                        <div class="card-body w-full">
+                            <div class="form-control w-full max-w-xs">
+                                <label class="label">
+                                    <span class="label-text">Client Telephone Number</span>
+                                </label>
+                                <input name="client_phone"
+                                       type="tel" class="peer input input-bordered w-full max-w-xs"
+                                       placeholder="07000000000" />
+                                <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden">
+                                    <span class="label-text-alt text-error">Please enter a valid phone number</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn float-right w-[150px] btn-primary">
+                Create
+            </button>
+        </form>
+    </div>
+{% endblock content %}

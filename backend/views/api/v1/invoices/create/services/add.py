@@ -59,6 +59,4 @@ def add_service(request: HttpRequest):
         }
     )
 
-    return render(
-        request, "core/pages/invoices/create/_services_table_body.html", context
-    )
+    return render(request, "pages/invoices/create/_services_table_body.html", context)

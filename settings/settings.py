@@ -21,7 +21,7 @@ try:
         from .local_settings import *
     else:
         print("[BACKEND] Using production settings")
-        from .prod_settings.py import *
+        from .prod_settings import *
 except ImportError:
     exit("[BACKEND] Couldn't import settings")
 
@@ -47,6 +47,7 @@ LOGIN_REQUIRED_IGNORE_VIEW_NAMES = [
     "index",
     "login",
     "login create_account",
+    "login create_account manual",
     "login forgot_password",
     "user set password reset",
     "user set password",
@@ -111,7 +112,7 @@ TEMPLATES = [
                 "backend.context_processors.extras",
                 "backend.context_processors.navbar",
                 "backend.context_processors.toasts",
-                "backend.context_processors.breadcrums",
+                "backend.context_processors.breadcrumbs",
                 "social_django.context_processors.backends",
             ],
             "loaders": [

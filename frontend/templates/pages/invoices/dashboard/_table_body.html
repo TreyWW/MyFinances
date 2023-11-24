@@ -1,0 +1,59 @@
+{% load humanize %}
+<tbody>
+{% for invoice in invoices %}
+    <tr>
+        <td>{{ invoice.id }}</td>
+        <td>
+            {{ invoice.date_due | date:"d/m/Y" }}
+        </td>
+        <td>
+            <div class="flex items-center text-sm">
+                <div>
+                    {% with cli_name=invoice.client_to.name|default:invoice.client_name %}
+                        {% if cli_name %}
+                            <p class="font-semibold">{{ cli_name }}</p>
+                        {% else %}
+                            <p class="font-thin">No Client</p>
+                        {% endif %}
+                    {% endwith %}
+                </div>
+            </div>
+        </td>
+        <td>
+            £{{ invoice.get_total_price | floatformat:2 | intcomma }}
+        </td>
+        <td>
+        <span class="badge badge-square rounded
+        {% if invoice.payment_status == "sent" %}
+        badge-outline text-gray-400 border-gray-600
+        {% elif invoice.payment_status == "seen" %}
+        badge-outline text-white border-white
+        {% else %}
+        badge-outline-success
+        {% endif %}
+">
+         {{ invoice.payment_status | default:"sent" | title }}
+        </span>
+        </td>
+        <td colspan="2">
+            <div class="flex flex-wrap gap-2">
+                <div class="relative flex group tooltip tooltip-top" data-tooltip="Preview">
+                    <a class="btn btn-primary btn-sm" href="{% url "invoices dashboard preview" id=invoice.id %}">
+                        <i class="fa fa-solid fa-regular fa-file-pdf"></i>
+                    </a>
+                </div>
+                <div class="relative flex group tooltip tooltip-top" data-tooltip="Edit">
+                    <button class="btn btn-success btn-sm" disabled>
+                        <i class="fa fa-solid fa-regular fa-pencil"></i>
+                    </button>
+                </div>
+                <div class="relative flex group tooltip tooltip-top" data-tooltip="Delete">
+                    <button class="btn btn-error btn-sm" disabled>
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        </td>
+    </tr>
+{% endfor %}
+</tbody>

@@ -1,0 +1,117 @@
+{% load static %}
+<div class="navbar bg-base-100">
+    <div class="navbar-start">
+        <div class="dropdown">
+            <label tabindex="0" class="btn btn-ghost lg:hidden">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" />
+                </svg>
+            </label>
+            <!-- Topbar Dropdown (MOBILE ONLY) -->
+            <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] shadow p-2 bg-base-100 rounded-box w-52">
+                <li>
+                    <a>something</a>
+                </li>
+                <li>
+                    <a>something</a>
+                    <ul class="p-2">
+                        <li>
+                            <a>something dropdown</a>
+                        </li>
+                        <li>
+                            <a>something dropdown</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a>something</a>
+                </li>
+            </ul>
+        </div>
+        <div class="flex items-center gap-x-3 gap-x-0 md:gap-x-5 ms-4">
+            <a href="/" class="hidden md:block">
+                <label for="service_list_drawer" id="service_list_button" aria-label="close sidebar"
+                       class="swap-rotate drawer-overlay swap flex items-center">
+                    <input type="checkbox" id="logo_single_serivce_list_toggler" />
+                    <img src="{% static "img/logo_single.png" %}" class="h-10 swap-off">
+                    <i class="fa fa-solid fa-x swap-on h-10 flex justify-center items-center"></i>
+                    {# TODO: Trey: Improve X Button (not aligned) #}
+                </label>
+            </a>
+            <a class="md:text-2xl text-gray-800 font-semibold dark:text-gray-200" href="/">
+                My Finances
+            </a>
+        </div>
+
+    </div>
+    <div class="navbar-center hidden lg:flex z-50">
+        <!-- Topbar Dropdown (LARGE ONLY) -->
+        <ul class="menu menu-horizontal px-1">
+            <li>
+                <a>something</a>
+            </li>
+            <li class="z-[50]">
+                <details>
+                    <summary>something</summary>
+                    <ul class="p-2">
+                        <li>
+                            <a>something dropdown</a>
+                        </li>
+                        <li>
+                            <a>something dropdown</a>
+                        </li>
+                    </ul>
+                </details>
+            </li>
+            <li>
+                <a>something</a>
+            </li>
+        </ul>
+    </div>
+    <div class="navbar-end">
+        {# Right Icons #}
+        {#        <div class="flex">#}
+        {# Profile Picture  #}
+        <div class="dropdown dropdown-end">
+            <label tabindex="0" class="btn btn-ghost btn-circle avatar">
+                <div class="w-10 rounded-full">
+                    <div class="avatar">
+                        <div class="w-10 rounded-full">
+                            <div id="my_profile_picture_small">
+                                {#                                    {% component "profile_picture" url=request.user.profile.profile_picture_url %}#}
+                                {# TODO: Trey: Add profile picture once merged PR #39 #}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </label>
+            <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52 gap-y-1">
+                <li>
+                    <a {% if request.resolver_match.url_name == "user settings" %}class="active"{% endif %}
+                       href="{% url 'user settings' %}">
+                        <i class="fa fa-solid fa-cog"></i>
+                        Account Settings
+                    </a>
+                </li>
+                <li>
+                    <a class="justify-between {% if request.resolver_match.url_name == "user settings teams" %}active{% endif %}"
+                       href=
+                               "{% url "user settings teams" %}">
+                        <i class="fa fa-solid fa-users"></i>
+                        Manage Team
+                        <span class="badge">New</span>
+                    </a>
+                </li>
+                <li>
+                    <label for="logout_modal">
+                        <i class="fa fa-solid fa-right-from-bracket"></i>
+                        Logout
+                    </label>
+                </li>
+            </ul>
+        </div>
+        {# End of Profile Picture #}
+        {#        </div>#}
+        {# End of Right Icons #}
+    </div>
+</div>

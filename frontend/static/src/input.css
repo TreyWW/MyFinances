@@ -1,0 +1,98 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.input_card {
+    @apply rounded-full;
+    @apply max-w-screen-xl;
+    @apply border;
+    @apply border-gray-900;
+    @apply card;
+    @apply me-3;
+    @apply hover:border-gray-500 w-full;
+}
+
+.input::placeholder {
+    color: #787d86;
+    opacity: 0.8;
+}
+
+.textarea::placeholder {
+    color: #787d86;
+    opacity: 0.8;
+}
+
+/****************************/
+/*       HTMX LOADING       */
+/****************************/
+
+/* Show button text when not loading*/
+.loading-htmx .loading-htmx-text {
+    display: inline-block;
+}
+
+/* Hide button text when loading */
+.loading-htmx.htmx-request .loading-htmx-text {
+    display: none;
+}
+
+/* Hide loading spinner when not loading */
+.loading-htmx .loading-htmx-loader {
+    display: none;
+}
+
+/* Show loading spinner when loading */
+.loading-htmx-loader-individual.htmx-request {
+    display: inline-block;
+}
+
+/* Hide loading spinner when not loading */
+
+.loading-htmx-loader-individual {
+    display: none;
+}
+/* Show loading spinner when loading */
+
+.loading-htmx.htmx-request .loading-htmx-loader {
+    display: inline-block;
+}
+
+
+
+@keyframes hideLoading {
+    0% {
+        display: inline;
+    }
+    100% {
+        display: none;
+    }
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+}
+
+@keyframes fade-out {
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes slide-from-right {
+    from {
+        transform: translateX(90px);
+    }
+}
+
+@keyframes slide-to-left {
+    to {
+        transform: translateX(-90px);
+    }
+}
+
+.slide-it {
+    animation: 420ms cubic-bezier(0, 0, 0.2, 1) 90ms both fade-in,
+    600ms cubic-bezier(0.4, 0, 0.2, 1) both slide-from-right;
+}

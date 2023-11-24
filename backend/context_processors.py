@@ -7,6 +7,7 @@ from django.urls import reverse
 from .utils import Toast, Modals, load_navbar_items
 from .models import *
 from django.core.cache import cache
+from typing import List, Optional, Dict, Any
 
 Modals = Modals()
 
@@ -52,95 +53,70 @@ def toasts(request):
     return {}
 
 
-def breadcrums(request):
-    current_url_name = request.resolver_match.url_name
-    all_items = {
-        "dashboard": {
-            "name": "Dashboard",
-            "url": reverse("dashboard"),
-            "icon": "house",
-        },
-        "invoices dashboard": {
-            "name": "Invoices",
-            "url": reverse("invoices dashboard"),
-            "icon": "file-invoice",
-        },
-        "invoices dashboard create": {
-            "name": "Create",
-            "url": reverse("invoices dashboard create"),
-            "icon": "file-invoice",
-        },
-        "invoices dashboard manage_access": {
-            "name": "Manage Access",
-            "icon": "lock",
-        },
-        "receipts dashboard": {
-            "name": "Receipts",
-            "url": reverse("receipts dashboard"),
-            "icon": "file-invoice",
-        },
-        "user settings teams": {
-            "name": "Teams",
-            "url": reverse("user settings teams"),
-            "icon": "users",
-        },
-        "user settings": {
-            "name": "Settings",
-            "url": reverse("user settings"),
-            "icon": "gear",
-        },
-        "clients dashboard": {
-            "name": "Clients",
-            "url": reverse("clients dashboard"),
-            "icon": "users",
-        },
-        "clients create": {
-            "name": "Create",
-            "url": reverse("clients create"),
-            "icon": "plus",
-        },
+def breadcrumbs(request: HttpRequest):
+    def get_item(name: str, url_name: str, icon: Optional[str] = None) -> dict:
+        """
+        Create a breadcrumb item dictionary.
+
+        Parameters:
+        - name (str): The name of the breadcrumb item.
+        - url_name (str): The URL name used for generating the URL using Django's reverse function.
+        - icon (Optional[str]): The icon associated with the breadcrumb item (default is None).
+
+        Returns:
+        Dict[str, Any]: A dictionary representing the breadcrumb item.
+        """
+        return {
+            "name": name,
+            "url": reverse(url_name),
+            "icon": icon,
+        }
+
+    def generate_breadcrumbs(*breadcrumb_list: str) -> List[Dict[str, Any]]:
+        """
+        Generate a list of breadcrumb items based on the provided list of breadcrumb names.
+
+        Parameters:
+        - breadcrumb_list (str): Variable number of strings representing the names of the breadcrumbs.
+
+        Returns:
+        List[Dict[str, Any]]: A list of dictionaries representing the breadcrumb items.
+        """
+        return [all_items.get(breadcrumb) for breadcrumb in breadcrumb_list]
+
+    current_url_name: str = request.resolver_match.url_name
+
+    all_items: Dict[str, dict] = {
+        "dashboard": get_item("Dashboard", "dashboard", "house"),
+        "invoices dashboard": get_item(
+            "Invoices", "invoices dashboard", "file-invoice"
+        ),
+        "invoices dashboard create": get_item("Create", "invoices dashboard create"),
+        "receipts dashboard": get_item(
+            "Receipts", "receipts dashboard", "file-invoice"
+        ),
+        "user settings teams": get_item("Teams", "user settings teams", "users"),
+        "user settings": get_item("Settings", "user settings", "gear"),
+        "clients dashboard": get_item("Clients", "clients dashboard", "users"),
+        "clients create": get_item("Create", "clients create"),
     }
 
-    all_breadcrums = {
-        "dashboard": [{"name": "Home"}],
-        "user settings teams": [
-            all_items.get("dashboard"),
-            all_items.get("user settings teams"),
-        ],
-        "receipts dashboard": [
-            all_items.get("dashboard"),
-            all_items.get("receipts dashboard"),
-        ],
-        "invoices dashboard": [
-            all_items.get("dashboard"),
-            all_items.get("invoices dashboard"),
-        ],
-        "invoices dashboard create": [
-            all_items.get("dashboard"),
-            all_items.get("invoices dashboard"),
-            all_items.get("invoices dashboard create"),
-        ],
-        "user settings": [
-            all_items.get("dashboard"),
-            all_items.get("user settings"),
-        ],
-        "invoices dashboard manage_access": [
-            all_items.get("dashboard"),
-            all_items.get("invoices dashboard"),
-            all_items.get("invoices dashboard manage_access"),
-        ],
-        "clients dashboard": [
-            all_items.get("dashboard"),
-            all_items.get("clients dashboard"),
-        ],
-        "clients create": [
-            all_items.get("dashboard"),
-            all_items.get("clients dashboard"),
-            all_items.get("clients create"),
-        ],
+    all_breadcrumbs: Dict[str, list] = {
+        "dashboard": generate_breadcrumbs("dashboard"),
+        "user settings teams": generate_breadcrumbs("dashboard", "user settings teams"),
+        "receipts dashboard": generate_breadcrumbs("dashboard", "receipts dashboard"),
+        "invoices dashboard": generate_breadcrumbs("dashboard", "invoices dashboard"),
+        "invoices dashboard create": generate_breadcrumbs(
+            "dashboard", "invoices dashboard", "invoices dashboard create"
+        ),
+        "clients dashboard": generate_breadcrumbs("dashboard", "clients dashboard"),
+        "clients create": generate_breadcrumbs(
+            "dashboard", "clients dashboard", "clients create"
+        ),
+        "user settings": generate_breadcrumbs("dashboard", "user settings"),
     }
 
-    return {"breadcrumb": all_breadcrums.get(current_url_name)}
+    return {"breadcrumb": all_breadcrumbs.get(current_url_name, [])}
 
 
 def notifications(request):

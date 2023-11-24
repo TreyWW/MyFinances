@@ -1,0 +1,278 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load markdownify %}
+{% block content %}
+    {% include 'components/modal.html' with modals=modal_data %}
+    <form method="post" class="card bg-base-100 p-6">
+        {% csrf_token %}
+        <div class="divider">STEP 1 - DESTINATIONS</div>
+        <div class="my-4 flex w-full flex-col">
+
+            <div class="mb-2 flex justify-between">
+                <h3 class="text-sm font-medium text-gray-400 ms-2">From</h3>
+                <h3 class="text-sm font-medium text-gray-400 me-2">To</h3>
+            </div>
+            <div class="flex w-full" id="to_and_from_container">
+                {% include 'pages/invoices/create/_from_destination.html' %}
+                {% include 'pages/invoices/create/_to_destination.html' %}
+            </div>
+        </div>
+        <div class="divider my-4">STEP 2 - DATES</div>
+        <div class="my-4 flex w-full flex-col">
+            <div class="flex w-full">
+                <div class="input_card">
+                    <div class="card-body">
+                        <div class="form-control w-full">
+                            <label class="label">Issue date</label>
+                            <input required id="dateIssued" name="date_issued" placeholder="" type="date"
+                                   class="peer input input-bordered input-block">
+                            <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden ">
+                                <span class="label-text-alt text-error">Please enter a valid date.</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="input_card">
+                    <div class="card-body">
+                        <div class="form-control w-full">
+                            <label class="label">Due date</label>
+                            <input required name="date_due" id="dueDate" placeholder="" type="date"
+                                   class="peer input-bordered input input-block">
+                            <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden ">
+                                <span class="label-text-alt text-error">Please enter a valid date.</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="divider my-4">STEP 3 - SERVICES</div>
+        <div class="input_card">
+            <div class="card-body">
+                <label class="btn btn-primary" for="modal-1">Add Service</label>
+                <input class="modal-state" id="modal-1" type="checkbox" id="modal-checkbox" />
+                {# START MODAL #}
+                <div class="modal">
+                    <label class="modal-overlay" for="modal-1"></label>
+                    <div class="modal-content flex flex-col gap-5 w-screen">
+                        <label for="modal-1" class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</label>
+                        <h2 class="text-xl">Add Service</h2>
+                        <div class="form-field w-full">
+                            <label for="service" class="form-label">Service Name</label>
+                            <input id="modal_input-service_name"
+                                   name="post_service_name"
+                                   type="text"
+                                   class="input input-block input-bordered input-ghost-secondary">
+                        </div>
+                        <div class="form-field">
+                            <label for="service" class="form-label">Service Name</label>
+                            <input id="modal_input-service_name" name="post_service_name" type="text"
+                                   class="input input-bordered input-ghost-secondary">
+                            <label for="service" class="form-label">Service Description</label>
+                            <textarea id="modal_input-service_description"
+                                      name="post_service_description"
+                                      class="textarea textarea-block textarea-ghost-secondary"></textarea>
+                        </div>
+                        <div class="form-field">
+                            <label for="hours" class="form-label">Hours</label>
+                            <input id="modal_input-hours" type="number" name="post_hours"
+                                   class="input input-bordered input-ghost-secondary">
+                            <label for="hours" class="form-label">Quantity</label>
+                            <input id="modal_input-hours"
+                                   type="number" name="post_hours"
+                                   class="input input-bordered input-block input-ghost-secondary">
+                        </div>
+                        <div class="form-field">
+                            <label for="pricePerHour" class="form-label">Price Per Hour</label>
+                            <input id="modal_input-price_per_hour" type="number" name="post_price_per_hour"
+                                   class="input input-bordered input-ghost-secondary">
+                            <label for="pricePerHour" class="form-label">Rate</label>
+                            <input id="modal_input-price_per_hour" type="number" name="post_price_per_hour" class="input
+                            input-block
+                            input-bordered input-ghost-secondary">
+                        </div>
+                        <button class="btn btn-primary"
+                                hx-post="{% url 'api v1 invoices create services add' %}"
+                                {#                                hx-swap="outerHTML"#}
+
+                                hx-target="#services_table_body">
+                            Save Service
+                        </button>
+                    </div>
+                </div>
+                {# END MODAL #}
+
+                <div class="flex w-full overflow-x-auto">
+                    <table class="table table-zebra max-w-full" id="services_table">
+                        <thead>
+                        <tr>
+                            <th>Service</th>
+                            <th>Quantity</th>
+                            <th>Rate</th>
+                            <th>Total Price</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody id="services_table_body">
+                        {% include 'pages/invoices/create/_services_table_body.html' %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="divider my-4">STEP 4 - BANK DETAILS [OPTIONAL]</div>
+
+        <div class="my-4 flex w-full flex-col">
+            <div class="flex w-full">
+                <div class="input_card">
+                    <div class="card-body">
+                        <div class="form-control w-full">
+                            <label class="label">Account Holder Name</label>
+                            <input name="account_holder_name" pattern="^((?:[A-Za-z]+ ?){1,3})$" name="account_holder_name"
+                                   placeholder="Mr John Doe" type="text" class="peer input-bordered input input-block">
+                            <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden ">
+                                <span class="label-text-alt text-error">Please enter a valid account holder name.</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="input_card">
+                    <div class="card-body">
+                        <div class="form-control w-full">
+                            <label class="label">Account Number</label>
+                            <input onkeyup="this.value = validate_account_number(this.value);"
+                                   pattern="[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{4}" name="account_number"
+                                   placeholder="1234-4321-1234-4321" type="text"
+                                   class="peer input input-bordered input-block">
+                            <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden ">
+                                <span class="label-text-alt text-error">Please enter a valid account number.</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="input_card">
+                    <div class="card-body">
+                        <div class="form-control w-full max-w-xs">
+                            <label class="label">Sort Code</label>
+                            <input onkeyup="this.value = validate_sort_code(this.value);" pattern="[0-9]{3}-[0-9]{3}-[0-9]{3}"
+                                   name="sort_code" name="sort_code" placeholder="1234-1234-1234" type="text"
+                                   class="peer input-bordered input input-block">
+                            <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden ">
+                                <span class="label-text-alt text-error">Please enter a valid sort code.</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {#        <div class="divider my-4">STEP 5 - NOTES [OPTIONAL]</div>#}
+        {#        <div class="my-4 flex w-full flex-col">#}
+        {#            <div class="flex w-full">#}
+        {#                <div class="max-w-screen-xl border border-gray-900 card me-3 hover:border-gray-500" href="{% url 'index' %}">#}
+        {#                    <div class="card-body">#}
+        {#                        <textarea id="editor" name="notes"></textarea>#}
+        {#                    </div>#}
+        {#                </div>#}
+        {#            </div>#}
+        {#        </div>#}
+        {##}
+        {#        <style>#}
+        {#            .CodeMirror {#}
+        {#                background-color: rgb(var(--gray-3)/var(--tw-bg-opacity));#}
+        {#            }#}
+        {##}
+        {#            .editor-toolbar {#}
+        {#                background-color: rgb(var(--gray-4)/var(--tw-bg-opacity));#}
+        {#            }#}
+        {##}
+        {#            .editor-toolbar > * {#}
+        {#                background-color: rgb(var(--gray-4)/var(--tw-bg-opacity));#}
+        {#            }#}
+        {##}
+        {#            .CodeMirror,#}
+        {#            .CodeMirror-scroll {#}
+        {#                max-height: 300px;#}
+        {#            }#}
+        {##}
+        {#            .CodeMirror-fullscreen.CodeMirror {#}
+        {#                max-height: none;#}
+        {#            }#}
+        {##}
+        {#            .CodeMirror-fullscreen .CodeMirror-scroll {#}
+        {#                max-height: none;#}
+        {#            }#}
+        {##}
+        {#            .CodeMirror,#}
+        {#            .CodeMirror-scroll {#}
+        {#                max-height: 150px;#}
+        {#                min-height: 100px;#}
+        {#            }#}
+        {##}
+        {#        </style>#}
+        {#        <script>#}
+        {#            var simplemde = new SimpleMDE({#}
+        {#                element: document.getElementById("editor"),#}
+        {#                #}
+        {#            });#}
+        {#        </script>#}
+        <button class="btn btn-primary">Create Invoice</button>
+    </form>
+
+    <script>
+        function validate_sort_code(value) {
+            // Remove any non-numeric characters
+            value = value.replace(/\D/g, '');
+
+            // Ensure the value is no longer than 9 characters (123-123-123)
+            if (value.length > 9) {
+                value = value.slice(0, 9);
+            }
+
+            // Format the value as "123-123-123"
+            if (value.length >= 3) {
+                value = value.slice(0, 3) + "-" + value.slice(3);
+            }
+            if (value.length >= 7) {
+                value = value.slice(0, 7) + "-" + value.slice(7);
+            }
+
+            return value;
+        }
+
+        function validate_account_number(value) {
+            // Remove any non-numeric characters
+            value = value.replace(/\D/g, '');
+
+            // Ensure the value is no longer than 16 characters (1234-1234-1234-1234)
+            if (value.length > 16) {
+                value = value.slice(0, 16);
+            }
+
+            // Format the value as "1234-1234-1234-1234"
+            if (value.length >= 4) {
+                value = value.slice(0, 4) + "-" + value.slice(4);
+            }
+            if (value.length >= 9) {
+                value = value.slice(0, 9) + "-" + value.slice(9);
+            }
+            if (value.length >= 14) {
+                value = value.slice(0, 14) + "-" + value.slice(14);
+            }
+
+            return value;
+        }
+
+        document.body.addEventListener('htmx:afterOnLoad', function () {
+            document.getElementById("modal_input-service_name").value = "";
+            document.getElementById("modal_input-service_description").value = "";
+            document.getElementById("modal_input-hours").value = "";
+            document.getElementById("modal_input-price_per_hour").value = "";
+            document.getElementById("modal-1").checked = false;
+
+            document.getElementById("modal_from_destination").checked = false;
+            document.getElementById("modal_to_destination").checked = false;
+        });
+    </script>
+
+{% endblock content %}

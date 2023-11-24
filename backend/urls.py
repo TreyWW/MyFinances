@@ -186,8 +186,13 @@ urlpatterns = [
     # path('logout_test/', other.login.logout_view, name='logout_test'),
     path(
         "login/create_account",
-        other.login.create_account_page,
+        other.login.CreateAccountChooseView.as_view(),
         name="login create_account",
+    ),
+    path(
+        "login/create_account/manual",
+        other.login.CreateAccountManualView.as_view(),
+        name="login create_account manual",
     ),
     path(
         "login/forgot_password",
