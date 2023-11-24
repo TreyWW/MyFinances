@@ -1,5 +1,5 @@
 from django.contrib.sessions.models import Session
-from django.http import HttpRequest
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.contrib.auth import update_session_auth_hash
 from PIL import Image
@@ -16,19 +16,35 @@ def settings_page(request: HttpRequest):
     context = {}
 
     usersettings, created = UserSettings.objects.get_or_create(user=request.user)
+    context.update(
+        {
+            "sessions": Session.objects.filter(),
+            "currency_signs": usersettings.CURRENCIES,
+            "currency": usersettings.currency,
+            "user_settings": usersettings,
+        }
+    )
 
-    if request.method == "POST":
+    if request.method == "POST" and request.htmx:
         currency = request.POST.get("currency")
+        section = request.POST.get("section")
         profile_picture = request.FILES.get("profile_image")
 
-        if currency:
+        if section == "account_preferences":
             if currency in usersettings.CURRENCIES:
                 usersettings.currency = currency
                 usersettings.save()
             else:
                 messages.error(request, "Invalid currency")
 
-        if profile_picture:
+            context.update(
+                {
+                    "post_return": "currency",
+                    "currency": usersettings.currency,
+                    "user_settings": usersettings,
+                }
+            )
+        if section == "profile_settings" and profile_picture:
             try:
                 # Max file size is 10MB (Change the first number to determine the size in MB)
                 max_file_size = 10 * 1024 * 1024
@@ -53,9 +69,11 @@ def settings_page(request: HttpRequest):
         else:
             messages.error(request, "Did not upload a file.")
 
+        return render(request, "pages/settings/settings/preferences.html", context)
+
     context.update(
         {
-            "sessions": Session.objects.filter(),
+            "sessions": [],  # Session.objects.filter(),
             "currency": usersettings.currency,
             "currency_signs": usersettings.CURRENCIES,
             "user_settings": usersettings,
@@ -94,4 +112,4 @@ def change_password(request: HttpRequest):
         messages.success(request, "Successfully changed your password.")
         return redirect("user settings")
 
-    return render(request, "core/pages/reset_password.html", {"type": "change"})
+    return render(request, "pages/reset_password.html", {"type": "change"})

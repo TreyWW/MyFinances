@@ -7,7 +7,7 @@ from backend.models import TeamInvitation
 def load_navbar_items():
     json_file_path = os.path.join(
         os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-        "frontend/templates/core/partials/base/navbar/items.json",
+        "frontend/templates/partials/base/navbar/items.json",
     )
 
     with open(json_file_path) as json_file:

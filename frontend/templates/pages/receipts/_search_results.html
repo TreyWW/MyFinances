@@ -1,0 +1,66 @@
+{% csrf_token %}
+<div class="flex w-full overflow-x-auto" id="items">
+    <table class="table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Date</th>
+            <th>Name</th>
+            <th>Amount</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% if receipts %}
+            {% for row in receipts %}
+                <tr id="row-{{ row.id }}">
+                    <td>
+                        <button onclick="modal_receipt_{{ row.id }}.showModal();" class="link link-primary">{{ row.id }}</button>
+                    </td>
+                    <td>{{ row.date }}</td>
+                    <td>{{ row.name }}</td>
+                    <td>{{ currency_symbol }}{{ row.total_price | default:"0.00" }}</td>
+                    <td>
+                        <form method="post">
+                            <button type="button" onclick="modal_receipt_{{ row.id }}.showModal();" class="btn btn-outline
+                            btn-success
+                            btn-sm">
+                                Preview</button>
+                            <a class="btn btn-outline btn-primary btn-sm" href="{{ row.image.url }}" download>Download</a>
+                            {# TODO: Security Vuln ^: Make a generation token to download this image, shouldn't be able to download from url directly #}
+                            <button class="btn btn-outline btn-error btn-sm" hx-delete="{% url 'api v1 receipts delete' id=row.id %}" hx-target="#items" hx-confirm="Are you  sure you would like to delete the receipt?">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+
+                <dialog class="modal modal-bottom sm:modal-middle" id="modal_receipt_{{ row.id }}">
+                    <div class="modal-box">
+                        <h2 class="text-xl">{{ row.name | title }}
+                            <span class="text-xs">
+                                {{ row.date }}  Uploaded on {{ row.date_uploaded | date:"d/m/Y" }}
+                            </span>
+                        </h2>
+                        <img class="w-full my-3" src="{{ row.image.url }}" alt="Receipt">
+                        <div class="flex gap-3">
+                            <a class="btn btn-primary" href="{{ row.image.url }}" download>Download</a>
+                            <button class="btn" onclick="modal_receipt_{{ row.id }}.close();">Cancel</button>
+                        </div>
+                    </div>
+                </dialog>
+            {% endfor %}
+        {% else %}
+            <td colspan="100%">
+                No receipts found.
+            </td>
+        {% endif %}
+        </tbody>
+    </table>
+</div>
+<script>
+    document.body.addEventListener('htmx:configRequest', (event) => {
+        event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
+    })
+</script>
+<div hx-swap-oob="beforeend:#toasts">
+    {% include 'partials/base/toasts.html' %}
+</div>

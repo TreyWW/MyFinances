@@ -8,7 +8,7 @@ from backend.models import Invoice, InvoiceItem, Client
 def invoice_page_get(request: HttpRequest):
     context = {}
 
-    return render(request, "core/pages/invoices/create/create.html", context)
+    return render(request, "pages/invoices/create/create.html", context)
 
 
 def invoice_page_post(request: HttpRequest):
@@ -21,7 +21,7 @@ def invoice_page_post(request: HttpRequest):
             request.POST.getlist("hours[]"),
             request.POST.getlist("price_per_hour[]"),
         )
-    ]  # Todo: add products to this for logic - wtf does this mean
+    ]  # Todo: add products to this for logic
 
     invoice = Invoice.objects.create(
         user=request.user,

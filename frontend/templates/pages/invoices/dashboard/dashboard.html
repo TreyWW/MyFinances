@@ -1,0 +1,115 @@
+{% extends 'base/base.html' %}
+{% block content %}
+    <div class="card bg-base-100 p-6">
+
+        <p class="text-white font-bold">{{ page }}</p>
+        {# TODO SEARCH BAR #}
+        <a class="btn btn-primary mb-4 btn-block" href="{% url 'invoices dashboard create' %}">
+            {% include 'components/icon.html' with icon="file-invoice" tags="me-2" %}
+            Create Invoice
+        </a>
+        <div class="flex w-full overflow-x-hidden overflow-y-hidden">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>
+                        Invoice ID
+                    </th>
+                    <th>
+                        <div class="dropdown">
+                            <label tabindex="0" class="border-none">
+                                Date
+                                <i class="fa-solid fa-caret-down border-none pt-1 pl-1/2"></i>
+                            </label>
+                            <div tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                                <a class="dropdown-item text-sm border-none">Actions</a>
+                            </div>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="dropdown">
+                            <label tabindex="0" class="border-none">
+                                Client Name
+                                <i class="fa-solid fa-caret-down border-none pt-1 pl-1/2"></i>
+                            </label>
+                            <div class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                                <a class="dropdown-item text-sm border-none">Actions</a>
+                            </div>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="dropdown">
+                            <label tabindex="0" class="border-none">
+                                Amount
+                                <i class="fa-solid fa-caret-down border-none pt-1 pl-1/2"></i>
+                            </label>
+                            <div class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                                <a class="dropdown-item text-sm border-none">Actions</a>
+                            </div>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="dropdown">
+                            <label tabindex="0" class="border-none">
+                                Payment Status
+                                <i class="fa-solid fa-caret-down border-none pt-1 pl-1/2"></i>
+                            </label>
+                            <ul class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                                <li>
+                                    <a class="dropdown-item text-sm border-none">Pending</a>
+                                </li>
+                                {# TODO: somehow make this pending button call HTMX and update #}
+                                {#       add the list to pending only (BUT ALSO SAVE FOR FUTURE FILTERS) #}
+                            </ul>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="dropdown">
+                            <label tabindex="0" class="border-none">
+                                Actions
+                                <i class="fa-solid fa-caret-down border-none pt-1 pl-1/2"></i>
+                            </label>
+                            <ul class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                                <li>
+                                    <a class="dropdown-item text-sm border-none">Actions</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="dropdown border-none">
+                            <label tabindex="0" class="border-none">
+                                Sort
+                                <i class="fa-solid fa-caret-down border-none pt-1 pl-1/2"></i>
+                            </label>
+                            <ul class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                                <li>
+                                    <a class="dropdown-item text-sm border-none">Invoice ID</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item text-sm border-none">Date</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item text-sm border-none">Client Name</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item text-sm border-none">Amount</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item text-sm border-none">Payment Status</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item text-sm border-none">Actions</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </th>
+                </tr>
+                </thead>
+                <tbody id="table_body" hx-swap="outerHTML" hx-trigger="load" hx-post="{% url 'invoices dashboard' %}">
+                {% include 'components/table/skeleton_rows.html' with rows=3 cols=7 %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock content %}
