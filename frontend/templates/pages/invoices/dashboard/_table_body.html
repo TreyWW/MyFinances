@@ -36,23 +36,54 @@
         </span>
         </td>
         <td colspan="2">
-            <div class="flex flex-wrap gap-2">
-                <div class="relative flex group tooltip tooltip-top" data-tooltip="Preview">
-                    <a class="btn btn-primary btn-sm" href="{% url "invoices dashboard preview" id=invoice.id %}">
-                        <i class="fa fa-solid fa-regular fa-file-pdf"></i>
-                    </a>
-                </div>
-                <div class="relative flex group tooltip tooltip-top" data-tooltip="Edit">
-                    <button class="btn btn-success btn-sm" disabled>
-                        <i class="fa fa-solid fa-regular fa-pencil"></i>
-                    </button>
-                </div>
-                <div class="relative flex group tooltip tooltip-top" data-tooltip="Delete">
-                    <button class="btn btn-error btn-sm" disabled>
-                        <i class="fa-solid fa-trash"></i>
-                    </button>
-                </div>
+            <div class="dropdown">
+                <label tabindex="0" class="btn btn-primary btn-outline btn-sm">
+                    <i class="fa-solid fa-regular fa-ellipsis-vertical"></i>
+                </label>
+                <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                    <li>
+                        <a href="{% url "invoices dashboard preview" id=invoice.id %}">
+                            <i class="fa-solid fa-regular fa-file-pdf"></i>
+                            Preview
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url "invoices dashboard manage_access" id=invoice.id %}">
+                            <i class="fa-solid fa-key"></i>
+                            Manage Access
+                        </a>
+                    </li>
+                    <li>
+                        <a href="" class="disabled">
+                            <i class="fa-solid fa-regular fa-pencil"></i>
+                            Edit
+                        </a>
+                    </li>
+                    <li>
+                        <a href="" class="disabled">
+                            <i class="fa-solid fa-trash"></i>
+                            Delete
+                        </a>
+                    </li>
+                </ul>
             </div>
+{#            <div class="flex flex-wrap gap-2">#}
+{#                <div class="relative flex group tooltip tooltip-top" data-tooltip="Preview">#}
+{#                    <a class="btn btn-primary btn-sm" href="{% url "invoices dashboard preview" id=invoice.id %}">#}
+{#                        <i class="fa fa-solid fa-regular fa-file-pdf"></i>#}
+{#                    </a>#}
+{#                </div>#}
+{#                <div class="relative flex group tooltip tooltip-top" data-tooltip="Edit">#}
+{#                    <button class="btn btn-success btn-sm" disabled>#}
+{#                        <i class="fa fa-solid fa-regular fa-pencil"></i>#}
+{#                    </button>#}
+{#                </div>#}
+{#                <div class="relative flex group tooltip tooltip-top" data-tooltip="Delete">#}
+{#                    <button class="btn btn-error btn-sm" disabled>#}
+{#                        <i class="fa-solid fa-trash"></i>#}
+{#                    </button>#}
+{#                </div>#}
+{#            </div>#}
         </td>
     </tr>
 {% endfor %}

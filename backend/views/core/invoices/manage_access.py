@@ -19,7 +19,7 @@ def manage_access(request: HttpRequest, id):
 
     return render(
         request,
-        "core/pages/invoices/manage_access/manage_access.html",
+        "pages/invoices/manage_access/manage_access.html",
         {"all_codes": all_access_codes, "invoice": invoice},
     )
 
@@ -41,7 +41,7 @@ def create_code(request: HttpRequest, id):
     messages.success(request, "Successfully created code")
     return render(
         request,
-        "core/pages/invoices/manage_access/_table_row.html",
+        "pages/invoices/manage_access/_table_row.html",
         {"code": code.uuid, "created_on": code.created_on, "added": True},
     )
 
@@ -62,6 +62,6 @@ def delete_code(request: HttpRequest, id):
     messages.success(request, "Successfully deleted code")
     return render(
         request,
-        "core/pages/invoices/manage_access/_table_row.html",
+        "pages/invoices/manage_access/_table_row.html",
         {},
     )

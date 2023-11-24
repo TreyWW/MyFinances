@@ -25,7 +25,7 @@ def preview(request, id):
 
     return render(
         request,
-        "core/pages/invoices/view/invoice.html",
+        "pages/invoices/view/invoice.html",
         context,
     )
 
@@ -54,6 +54,6 @@ def view(request, uuid):
 
     return render(
         request,
-        "core/pages/invoices/view/invoice.html",
+        "pages/invoices/view/invoice.html",
         context,
     )

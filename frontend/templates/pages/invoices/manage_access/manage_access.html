@@ -1,32 +1,39 @@
-{% extends 'core/pages/base.html' %}
+{% extends 'base/base.html' %}
 {% block content %}
-    <div class="text-3xl w-full text-center mb-4 grid grid-cols-3 items-center">
-        <div>
-            <a href="{% url "invoices dashboard" %}" class="btn btn-sm btn-outline-secondary me-3 float-left">Back to invoices</a>
+    <div class="card p-6 shadow-xl bg-base-100 mb-4">
+        <div class=" text-3xl w-full grid grid-cols-3">
+            <div>
+                <a href="{% url "invoices dashboard" %}" class="btn btn-sm btn-outline btn-secondary me-3 float-left">
+                    Back to invoices
+                </a>
+            </div>
+            <h1 class="text-left col-span-2">Manage Access to Invoice #{{ invoice.id }}</h1>
         </div>
-        <h1 class="col-span-2 text-left">Manage Access to Invoice #{{ invoice.id }}</h1>
     </div>
 
-    <button hx-trigger="click" hx-post="{% url "invoices dashboard manage_access create" id=invoice.id %}" hx-swap="afterbegin"
-            hx-target="#tbody"
-            class="btn btn-primary">
-        <i class="fa fa-solid fa-link pe-2"></i>
-        Create URL
-    </button>
+    <div class="card bg-base-100 shadow-xl w-full p-6">
+        <button hx-trigger="click" hx-post="{% url "invoices dashboard manage_access create" id=invoice.id %}"
+                hx-swap="afterbegin"
+                hx-target="#tbody"
+                class="btn btn-primary">
+            <i class="fa fa-solid fa-link pe-2"></i>
+            Create URL
+        </button>
 
-    <table class="w-full table mt-3">
-        <thead>
-        <tr>
-            <th>Code</th>
-            <th>Date Created</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody id="tbody">
-        {% for code, created_on in all_codes %}
-            {% include 'core/pages/invoices/manage_access/_table_row.html' %}
-        {% endfor %}
-        </tbody>
-    </table>
+        <table class="w-full table mt-3">
+            <thead>
+            <tr>
+                <th>Code</th>
+                <th>Date Created</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody id="tbody">
+            {% for code, created_on in all_codes %}
+                {% include 'pages/invoices/manage_access/_table_row.html' %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
 {% endblock content %}
