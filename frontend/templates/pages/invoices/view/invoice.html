@@ -6,7 +6,7 @@
       x-data="data()"
       lang="en"
       style="">
-{% include 'core/partials/base/_head.html' %}
+{% include 'partials/base/_head.html' %}
 <div tabindex="-1" id="status_banner" class="print-ignore fixed top-0 left-0 z-50 grid grid-cols-3 w-full p-4 bg-border">
     <div>
         {% if type == "preview" %}
@@ -18,7 +18,7 @@
     </div>
     <div class="flex items-center mx-auto">
         <p class="flex items-center text-sm font-normal">
-            <span class="inline-flex p-1 mr-3 rounded-full w-6 h-6 items-center justify-center" style="background-color: rgb(var(--green-8))">
+            <span class="inline-flex p-1 mr-3 rounded-full w-6 h-6 items-center justify-center bg-green-800">
                 <i class="fa-solid fa-check"></i>
                 <span class="sr-only">Paid</span>
             </span>
