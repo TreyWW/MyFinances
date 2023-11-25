@@ -1,16 +1,21 @@
 import smtplib
 from django.utils import timezone
 from django.contrib import messages
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, UserManager, AbstractUser
 from django.core.mail import EmailMessage
 from django.db import models
 from settings import settings
 from django.utils.crypto import get_random_string
 from shortuuid.django_fields import ShortUUIDField
 
-# def RandomCode(length=6):
-#     characters = string.ascii_letters + string.digits
-#     return "".join(random.choice(characters) for _ in range(length))
+
+class CustomUserManager(UserManager):
+    def get_queryset(self):
+        return super().get_queryset().select_related("user_profile")
+
+
+class User(AbstractUser):
+    objects = CustomUserManager()
 
 
 def RandomCode(length=6):
@@ -37,13 +42,14 @@ class UserSettings(models.Model):
         choices=[(code, info["name"]) for code, info in CURRENCIES.items()],
     )
     profile_picture = models.ImageField(
-        upload_to="profile_pictures", blank=True, null=True
+        upload_to="profile_pictures/", blank=True, null=True
     )
 
     @property
     def profile_picture_url(self):
         if self.profile_picture and hasattr(self.profile_picture, "url"):
             return self.profile_picture.url
+        return ""
 
     def get_currency_symbol(self):
         return self.CURRENCIES.get(self.currency, {}).get("symbol", "$")

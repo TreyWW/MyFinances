@@ -155,7 +155,7 @@ urlpatterns = [
         name="invoices dashboard edit",
     ),
     # path('dashboard/invoices/<str:id>/edit', invoices.dashboard.invoices_dashboard_id, name='invoices dashboard'),
-    path("login/external/", include("social_django.urls", namespace="social")),
+    path("login/external/", include("allauth.urls")),
     path(
         "api/v1/invoices/create/add_service",
         v1.invoices.create.services.add.add_service,
@@ -180,6 +180,11 @@ urlpatterns = [
         "api/v1/base/modals/<str:modal_name>/retrieve",
         v1.base.modal.open_modal,
         name="api v1 base modal retrieve",
+    ),
+    path(
+        "api/v1/base/modals/<str:modal_name>/retrieve/<context_type>/<context_value>",
+        v1.base.modal.open_modal,
+        name="api v1 base modal retrieve with context",
     ),
     path("login/", other.login.login_page, name="login"),
     path("logout/", other.login.logout_view, name="logout"),

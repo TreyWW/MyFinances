@@ -78,8 +78,7 @@
                     <div class="avatar">
                         <div class="w-10 rounded-full">
                             <div id="my_profile_picture_small">
-                                {#                                    {% component "profile_picture" url=request.user.profile.profile_picture_url %}#}
-                                {# TODO: Trey: Add profile picture once merged PR #39 #}
+                                {% component "profile_picture" url=user_settings.profile_picture_url %}
                             </div>
                         </div>
                     </div>

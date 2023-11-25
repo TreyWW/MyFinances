@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from backend.models import User
 from django.urls import reverse, reverse_lazy
 import os, json
 from backend.models import TeamInvitation

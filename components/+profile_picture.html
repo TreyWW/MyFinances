@@ -1,0 +1,12 @@
+{% load static %}
+{% if swap_oob %}
+    <div id="{{ swap_oob }}" hx-swap-oob="outerHTML:#{{ swap_oob }}">
+{% endif %}
+{% if url %}
+    <img src="{% if url %}{{ url }}{% else %}{% if user_settings.profile_picture %}{{ user_settings.profile_picture_url }}{% else %}{% static 'img/default_profile_pic.png' %}{% endif %}{% endif %}" class="{{ extra_classes }}" />
+{% else %}
+    <img src="{% if user_settings.profile_picture %}{{ user_settings.profile_picture_url }}{% else %}{% static 'img/default_profile_pic.png' %}{% endif %}" class="{{ extra_classes }}" />
+{% endif %}
+{% if swap_oob %}
+    </div>
+{% endif %}

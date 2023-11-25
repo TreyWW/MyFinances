@@ -44,30 +44,40 @@ def settings_page(request: HttpRequest):
                     "user_settings": usersettings,
                 }
             )
-        if section == "profile_settings" and profile_picture:
-            try:
-                # Max file size is 10MB (Change the first number to determine the size in MB)
-                max_file_size = 10 * 1024 * 1024
+        if section == "profile_picture":
+            if profile_picture:
+                try:
+                    # Max file size is 10MB (Change the first number to determine the size in MB)
+                    max_file_size = 10 * 1024 * 1024
 
-                if profile_picture.size <= max_file_size:
-                    img = Image.open(profile_picture)
-                    img.verify()
+                    if profile_picture.size <= max_file_size:
+                        img = Image.open(profile_picture)
+                        img.verify()
 
-                    if img.format.lower() in ["jpeg", "png", "jpg"]:
-                        usersettings.profile_picture = profile_picture
-                        usersettings.save()
+                        if img.format.lower() in ["jpeg", "png", "jpg"]:
+                            usersettings.profile_picture = profile_picture
+                            usersettings.save()
+                            messages.success(
+                                request, "Successfully updated profile picture"
+                            )
+                        else:
+                            messages.error(
+                                request,
+                                "Unsupported image format. We support only JPEG, JPG, PNG.",
+                            )
                     else:
-                        messages.error(
-                            request,
-                            "Unsupported image format. We support only JPEG, JPG, PNG.",
-                        )
-                else:
-                    messages.error(request, "File size should be up to 10MB.")
+                        messages.error(request, "File size should be up to 10MB.")
 
-            except (FileNotFoundError, Image.UnidentifiedImageError):
+                except (FileNotFoundError, Image.UnidentifiedImageError):
+                    messages.error(request, "Invalid or unsupported image file")
+            else:
                 messages.error(request, "Invalid or unsupported image file")
-        else:
-            messages.error(request, "Did not upload a file.")
+
+            return render(
+                request,
+                "pages/settings/settings/_post_profile_pic.html",
+                {"users_profile_picture": usersettings.profile_picture_url},
+            )
 
         return render(request, "pages/settings/settings/preferences.html", context)
 

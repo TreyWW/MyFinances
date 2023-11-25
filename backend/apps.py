@@ -5,6 +5,6 @@ class BackendConfig(AppConfig):
     name = "backend"
 
     def ready(self):
-        # import backend.signals
-        # Need to import signals if we use signals.py
+        import backend.signals
+
         pass
