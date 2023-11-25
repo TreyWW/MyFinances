@@ -3,37 +3,43 @@
 <html :class="{ 'theme-dark': dark }"
       x-data="data()"
       lang="en">
-{% include 'pages/base/_head.html' %}
+{% include 'base/_head.html' %}
 <body>
-<div class="flex h-screen bg-backgroundPrimary"
-     :class="{ 'overflow-hidden': isSideMenuOpen}">
-    <main class="h-full overflow-y-auto pb-16">
-        <div class="navbar-sticky">
-            <div class="bg-backgroundSecondary">
-                <div class="max-w-[85rem] px-4 py-4 sm:px-6 lg:px-8 mx-auto">
-                    <div class="grid justify-center sm:grid-cols-2 sm:items-center gap-4">
-                        <div class="flex items-center gap-x-3 md:gap-x-5">
-                            <a href="/">
-                                <img src="{% static 'img/logo_single.png' %}" class="h-10">
-                            </a>
-                            <div class="grow"><a class="md:text-xl text-gray-800 font-semibold dark:text-gray-200" href="/">
-                                My Finances
-                            </a>
-                            </div>
-                        </div>
-                        <div class="text-center sm:text-left flex sm:justify-end sm:items-center gap-x-3 md:gap-x-4"><a class="py-2 px-3 inline-flex justify-center items-center gap-2 rounded-md sm:rounded-full border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm md:py-3 md:px-4" href="{% url 'login create_account' %}">
-                            Register
-                        </a>
-                            <a class="py-[.4125rem] px-3 inline-flex justify-center items-center gap-2 rounded-md sm:rounded-full border-2 border-gray-900 font-semibold text-gray-800 hover:text-white hover:bg-gray-800 hover:border-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 focus:ring-offset-2 transition-all text-sm md:py-[.688rem] md:px-4 dark:hover:bg-white dark:border-gray-200 dark:hover:border-white dark:text-white dark:hover:text-gray-800 dark:focus:ring-white dark:focus:ring-offset-gray-800" href="{% url 'login' %}">
-                                Login
-                            </a>
-                        </div>
-                    </div>
+<div class="navbar bg-base-100 p-4">
+    <div class="navbar-start">
+        <div class="grid justify-center sm:grid-cols-2 sm:items-center gap-4">
+            <div class="flex items-center gap-x-3 md:gap-x-5">
+                <a href="/">
+                    <img src="{% static 'img/logo_single.png' %}" class="h-10">
+                </a>
+                <div class="grow">
+                    <a class="md:text-xl text-gray-800 font-semibold dark:text-gray-200" href="/">
+                        My Finances
+                    </a>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="navbar-end">
+        <div class="text-center sm:text-left flex sm:justify-end sm:items-center gap-x-3 md:gap-x-4">
+            <a class="py-2 px-3 inline-flex justify-center items-center gap-2 rounded-md sm:rounded-full border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm md:py-3 md:px-4"
+               href="{% url 'login create_account' %}">
+                Register
+            </a>
+            <a class="py-[.4125rem] px-3 inline-flex justify-center items-center gap-2 rounded-md sm:rounded-full border-2 border-gray-900 font-semibold text-gray-800 hover:text-white hover:bg-gray-800 hover:border-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 focus:ring-offset-2 transition-all text-sm md:py-[.688rem] md:px-4 dark:hover:bg-white dark:border-gray-200 dark:hover:border-white dark:text-white dark:hover:text-gray-800 dark:focus:ring-white dark:focus:ring-offset-gray-800"
+               href="{% url 'login' %}">
+                Login
+            </a>
+        </div>
+    </div>
+</div>
+<div class="flex h-screen w-full bg-base-200"
+     :class="{ 'overflow-hidden': isSideMenuOpen}">
+    <main class="h-full w-full overflow-y-auto pb-16">
+        <div class="navbar-sticky">
             <div class="text-4xl center text-center mt-8">
                 <p>We're still in development!</p>
-                <a class="btn btn-lg btn-primary mt-3" href="{% url "dashboard" %}">Go to dashboard</a>
+                <a class="btn btn-lg btn-primary mt-3" href="/dashboard">Go to dashboard</a>
             </div>
         </div>
     </main>

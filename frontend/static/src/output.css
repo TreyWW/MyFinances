@@ -1425,6 +1425,12 @@ html {
     outline: 2px solid transparent;
     outline-offset: 2px;
   }
+
+  @supports (color: oklch(0 0 0)) {
+    :where(.menu li:not(.menu-title):not(.disabled) > *:not(ul):not(details):not(.menu-title)):not(.active):hover, :where(.menu li:not(.menu-title):not(.disabled) > details > summary:not(.menu-title)):not(.active):hover {
+      background-color: var(--fallback-bc,oklch(var(--bc)/0.1));
+    }
+  }
 }
 
 .dropdown:is(details) summary::-webkit-details-marker {
