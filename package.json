@@ -58,7 +58,7 @@
     "object-assign": "^4.1.1",
     "object-hash": "^3.0.0",
     "once": "^1.4.0",
-    "path-is-absolute": "^1.0.1",
+    "path-is-absolute": "^2.0.0",
     "path-parse": "^1.0.7",
     "picocolors": "^1.0.0",
     "picomatch": "^3.0.1",
