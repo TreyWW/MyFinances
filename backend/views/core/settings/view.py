@@ -34,6 +34,7 @@ def settings_page(request: HttpRequest):
             if currency in usersettings.CURRENCIES:
                 usersettings.currency = currency
                 usersettings.save()
+                messages.success(request, "Successfully updated currency")
             else:
                 messages.error(request, "Invalid currency")
 
