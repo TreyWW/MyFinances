@@ -73,16 +73,12 @@
         {#        <div class="flex">#}
         {# Profile Picture  #}
         <div class="dropdown dropdown-end">
-            <label tabindex="0" class="btn btn-ghost btn-circle avatar">
-                <div class="w-10 rounded-full">
-                    <div class="avatar">
-                        <div class="w-10 rounded-full">
-                            <div id="my_profile_picture_small">
-                                {% component "profile_picture" url=user_settings.profile_picture_url %}
-                            </div>
+            <label tabindex="0" class="btn btn-ghost btn-circle">
+                    <div class="avatar w-12">
+                        <div id="my_profile_picture_small" class="w-full h-full avatar-img-ring">
+                            {% component "profile_picture" url=user_settings.profile_picture_url %}
                         </div>
                     </div>
-                </div>
             </label>
             <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52 gap-y-1">
                 <li>

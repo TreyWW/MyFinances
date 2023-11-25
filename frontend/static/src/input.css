@@ -19,6 +19,16 @@
     @apply ms-1;
 }
 
+.avatar-img-ring {
+    @apply ring;
+    @apply ring-primary;
+    @apply hover:ring-offset-4;
+    @apply ring-offset-base-100;
+    @apply ring-offset-2;
+    @apply w-24;
+    @apply rounded-full;
+}
+
 /***************************/
 /*       SCROLL BARS       */
 /***************************/
