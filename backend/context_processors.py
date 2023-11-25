@@ -32,14 +32,8 @@ def extras(request: HttpRequest):
 
     data["git_branch"] = os.environ.get("BRANCH")
     data["git_version"] = os.environ.get("VERSION")
-    data["modals"] = [
-        # {
-        #     "id": "logout_modal",
-        #     "title": "Log out",
-        #     "text": "Are you sure you would like to logout?",
-        #     "action": {"text": "Log out", "type": "anchor", "href": reverse("logout")},
-        # }
-    ]
+    if request.user.is_authenticated:
+        data["user_settings"] = UserSettings.objects.get_or_create(user=request.user)
 
     return data
 

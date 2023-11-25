@@ -19,7 +19,6 @@ class LoginTestCases(ViewTestCase):
             reverse("login"), {"email": "user@example.com", "password": "user"}
         )
         messages = list(get_messages(response.wsgi_request))
-        print([a.message for a in messages])
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response.wsgi_request.user.is_authenticated)
         self.assertEqual(response.wsgi_request.user.id, self.log_in_user.id)

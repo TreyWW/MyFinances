@@ -1,3 +1,5 @@
+from django.contrib.auth.admin import UserAdmin
+
 from backend.models import (
     Client,
     Invoice,
@@ -12,6 +14,7 @@ from backend.models import (
     Notification,
     Team,
     TeamInvitation,
+    User,
 )
 from django.contrib import admin
 
@@ -29,3 +32,4 @@ admin.site.register(TracebackError)
 admin.site.register(Notification)
 admin.site.register(Team)
 admin.site.register(TeamInvitation)
+admin.site.register(User, UserAdmin)

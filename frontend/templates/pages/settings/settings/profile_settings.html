@@ -21,12 +21,12 @@
                             This will change your accounts profile picture
                         </div>
                     </div>
-                    <button disabled onclick="modal_change_profile_picture.showModal();"
+                    <button onclick="modal_change_profile_picture.showModal();"
                         class="btn btn-primary btn-outline"
                         hx-trigger="click once"
                         hx-swap="beforeend"
                         hx-target="#modal_container"
-                        hx-get="{% url "api v1 base modal retrieve" modal_name="change_profile_picture" %}">
+                        hx-get="{% url "api v1 base modal retrieve with context" modal_name="change_profile_picture" context_type="profile_picture" context_value="True" %}">
                     Change
                 </button>
                 </div>

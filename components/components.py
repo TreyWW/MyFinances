@@ -62,7 +62,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 DIR = os.path.join(BASE_DIR, "components")
 register_components(DIR, SimpleComponent)
 
-# Register components in the "frontend/templates" folder (you may need to adjust this based on your project structure)
+# Register components in the "frontend/templates" folder
 DIR = os.path.join(BASE_DIR, "frontend/templates")
 register_components(DIR, SimpleComponent)
 

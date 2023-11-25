@@ -32,7 +32,6 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
-    "social_django",
     "backend",
     "mathfilters",
     "django.contrib.humanize",
@@ -41,6 +40,10 @@ INSTALLED_APPS = [
     "markdownify.apps.MarkdownifyConfig",
     "django_components",
     "django_components.safer_staticfiles",
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.github",
 ]
 
 LOGIN_REQUIRED_IGNORE_VIEW_NAMES = [
@@ -65,9 +68,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 EMAIL_WHITELIST = []
 AUTHENTICATION_BACKENDS = [
-    "django.contrib.auth.backends.ModelBackend",
-    "social_core.backends.github.GithubOAuth2",
-    "social_core.backends.google.GoogleOAuth2",
+    # "django.contrib.auth.backends.ModelBackend",
+    "backend.auth_backends.EmailInsteadOfUsernameBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
 ]
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
@@ -91,11 +94,11 @@ mimetypes.add_type("text/javascript", ".js", True)
 MESSAGE_STORAGE = "django.contrib.messages.storage.cookie.CookieStorage"
 
 MESSAGE_TAGS = {
-    messages.DEBUG: "border-blue-300 bg-blue-50 text-blue-800 dark:border-blue-800 dark:text-blue-400",
-    messages.INFO: "border-blue-300 bg-red-50 text-blue-800 dark:border-blue-800 dark:text-blue-400",
-    messages.SUCCESS: "border-green-300 bg-green-50 text-green-800 dark:border-green-800 dark:text-green-400",
-    messages.WARNING: "border-yellow-300 bg-yellow-50 text-yellow-800 dark:border-yellow-800 dark:text-yellow-400",
-    messages.ERROR: "border-red-300 bg-red-50 text-red-800 dark:border-red-800 dark:text-red-400",
+    messages.DEBUG: "alert-info",
+    messages.INFO: "alert-info",
+    messages.SUCCESS: "alert-success",
+    messages.WARNING: "alert-warning",
+    messages.ERROR: "alert-error",
 }
 
 TEMPLATES = [
@@ -113,7 +116,6 @@ TEMPLATES = [
                 "backend.context_processors.navbar",
                 "backend.context_processors.toasts",
                 "backend.context_processors.breadcrumbs",
-                "social_django.context_processors.backends",
             ],
             "loaders": [
                 (
@@ -160,6 +162,7 @@ MIDDLEWARE = [
     "django_htmx.middleware.HtmxMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     "login_required.middleware.LoginRequiredMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
 ]
 INTERNAL_IPS = [
     # ...
@@ -183,18 +186,7 @@ STORAGES = {
     },
 }
 
-
-GOOGLE_OAUTH2_CLIENT_DETAILS = {
-    "web": {
-        "client_id": os.environ.get("GOOGLE_CLIENT_ID"),
-        "client_secret": os.environ.get("GOOGLE_CLIENT_SECRET"),
-        "redirect_uris": os.environ.get("GOOGLE_CLIENT_URI"),
-        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-        "token_uri": "https://oauth2.googleapis.com/token",
-        "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-        "scopes": ["openid", "email", "profile"],
-    }
-}
+SOCIALACCOUNT_PROVIDERS = {"github": {}}
 
 MARKDOWNIFY = {
     "default": {
@@ -202,6 +194,8 @@ MARKDOWNIFY = {
         "WHITELIST_ATTRS": ["href", "src", "alt"],
     }
 }
+
+AUTH_USER_MODEL = "backend.User"
 
 LANGUAGE_CODE = "en-us"
 
