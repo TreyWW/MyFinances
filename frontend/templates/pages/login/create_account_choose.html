@@ -1,0 +1,21 @@
+{% extends 'base/auth.html' %}
+{% load static %}
+
+{% block image %}
+    {% static 'img/choose.svg' %}
+{% endblock image %}
+
+{% block title %}
+    Create an account
+{% endblock title %}
+
+{% block content %}
+    <a href="{% url 'login create_account manual' %}" class="my-4 py-8 w-full max-w-full min-w-full inline-flex items-center justify-center
+    w-full px-5 py-3 text-lg font-medium text-center text-gray-900 border border-gray-200 rounded-lg sm:w-auto hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
+        Create with manual details
+    </a>
+    <a href="" class="my-4 py-8 w-full max-w-full min-w-full inline-flex items-center justify-center w-full px-5 py-3 text-lg font-medium text-center text-gray-900 border border-gray-200 rounded-lg sm:w-auto hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
+        <i class="fa-brands fa-github mr-2"></i>
+        Create with github
+    </a>
+{% endblock %}

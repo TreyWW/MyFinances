@@ -107,6 +107,7 @@ Thank you for your contributions!
 ---
 
 #### 🌟 A very special thank you to all of our contributors 🌟
+##### View a full list <a href="https://github.com/TreyWW/MyFinances/graphs/contributors">here</a>
 
 <table>
   <tr>
@@ -163,6 +164,19 @@ Thank you for your contributions!
            <br/>
            <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Aromana-la" title="Documentation">📖</a>
        </td>
+        <td align="center">
+           <a href="https://github.com/flyingdev">
+               <img src="https://github.com/flyingdev.png" width="100px;" alt=""/>
+               <br/>
+               <sub>
+                   <b>
+                       flyingdev
+                   </b>
+               </sub>
+           </a>
+           <br/>
+           <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Aflyingdev" title="Added Tests">🧪</a>
+       </td>
        <td align="center">
            <a href="https://github.com/chavi362">
                <img src="https://github.com/chavi362.png" width="100px;" alt=""/>
@@ -187,7 +201,20 @@ Thank you for your contributions!
                </sub>
            </a>
            <br/>
-           <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Abermr" title="Added Tests">🧪</a>
+           <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3APhilipZara" title="Added Tests">🧪</a>
+       </td>
+             <td align="center">
+           <a href="https://github.com/PhilipZara">
+               <img src="https://github.com/PhilipZara.png" width="100px;" alt=""/>
+               <br/>
+               <sub>
+                   <b>
+                       PhilipZara
+                   </b>
+               </sub>
+           </a>
+           <br/>
+           <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3APhilipZara" title="Frontend">🎨</a>
        </td>
   </tr>
 </table>

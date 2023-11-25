@@ -1,12 +1,12 @@
 # django
-django==4.2.6
+django==4.2.7
 gunicorn
 # db
 # mysqlclient==2.2.0
 # mysqlclient
 # mariadb
 # django apps
-social-auth-app-django==5.3.0
+social-auth-app-django==5.4.0
 django-sendgrid-v5
 django-environ==0.11.2
 django-extensions==3.2.3

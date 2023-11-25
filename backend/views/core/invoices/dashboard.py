@@ -14,11 +14,9 @@ def invoices_dashboard(request: HttpRequest):
             .prefetch_related("items")
             .only("invoice_id", "id", "payment_status", "date_due")
         )
-        return render(
-            request, "core/pages/invoices/dashboard/_table_body.html", context
-        )
+        return render(request, "pages/invoices/dashboard/_table_body.html", context)
 
-    return render(request, "core/pages/invoices/dashboard/dashboard.html", context)
+    return render(request, "pages/invoices/dashboard/dashboard.html", context)
 
 
 def invoices_dashboard_id(request: HttpRequest, invoice_id):
@@ -32,5 +30,5 @@ def invoices_dashboard_id(request: HttpRequest, invoice_id):
         return redirect("invoices dashboard")
     return render(
         request,
-        "core/pages/invoices/dashboard/dashboard.html",
+        "pages/invoices/dashboard/dashboard.html",
     )

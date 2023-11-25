@@ -20,6 +20,6 @@ def preview(request, id):
 
     return render(
         request,
-        "core/pages/invoices/view/invoice.html",
+        "pages/invoices/view/invoice.html",
         {"invoice": invoice, "currency_symbol": currency_symbol},
     )

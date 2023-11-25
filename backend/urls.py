@@ -100,6 +100,11 @@ urlpatterns = [
         name="api v1 receipts new",
     ),
     path(
+        "api/v1/receipts/fetch",
+        v1.receipts.fetch.fetch_receipts,
+        name="api v1 receipts fetch",
+    ),
+    path(
         "api/v1/base/notifications/get",
         v1.base.notifications.get_notification_html,
         name="api v1 base notifications get",
@@ -161,8 +166,13 @@ urlpatterns = [
     # path('logout_test/', other.login.logout_view, name='logout_test'),
     path(
         "login/create_account",
-        other.login.create_account_page,
+        other.login.CreateAccountChooseView.as_view(),
         name="login create_account",
+    ),
+    path(
+        "login/create_account/manual",
+        other.login.CreateAccountManualView.as_view(),
+        name="login create_account manual",
     ),
     path(
         "login/forgot_password",
