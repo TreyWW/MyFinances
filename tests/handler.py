@@ -1,6 +1,24 @@
 from django.urls import reverse
 from django.test import TestCase
 from backend.models import User
+from django.core.files.uploadedfile import SimpleUploadedFile
+from PIL import Image
+from io import BytesIO
+
+
+def create_mock_image():
+    """
+    Create a simple mock image using Pillow.
+
+    Returns:
+        SimpleUploadedFile: A mock image as a SimpleUploadedFile.
+    """
+    image = Image.new("RGB", (100, 100), "white")
+    image_io = BytesIO()
+    image.save(image_io, "JPEG")
+    return SimpleUploadedFile(
+        "mock_image.jpg", image_io.getvalue(), content_type="image/jpeg"
+    )
 
 
 class ViewTestCase(TestCase):

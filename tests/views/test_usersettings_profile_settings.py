@@ -4,25 +4,7 @@ from django.urls import reverse
 from backend.models import UserSettings
 from tests.handler import ViewTestCase
 from django.contrib.messages import get_messages
-from model_bakery import baker
-from django.core.files.uploadedfile import SimpleUploadedFile
-from PIL import Image
-from io import BytesIO
-
-
-def create_mock_image():
-    """
-    Create a simple mock image using Pillow.
-
-    Returns:
-        SimpleUploadedFile: A mock image as a SimpleUploadedFile.
-    """
-    image = Image.new("RGB", (100, 100), "white")
-    image_io = BytesIO()
-    image.save(image_io, "JPEG")
-    return SimpleUploadedFile(
-        "mock_image.jpg", image_io.getvalue(), content_type="image/jpeg"
-    )
+from tests.handler import create_mock_image
 
 
 class UserSettingsProfileSettingsViewTestCase(ViewTestCase):

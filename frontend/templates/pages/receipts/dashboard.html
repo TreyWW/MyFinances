@@ -1,15 +1,16 @@
 {% extends 'base/base.html' %}
 {% csrf_token %}
 {% block content %}
-    {% include 'components/modal.html' with modals=modal_data %}
-
     <div class="card w-full p-6 bg-base-100 shadow-xl mt-2">
         <h2 class="text-xl">Receipts</h2>
-        <button onclick="upload_receipt.showModal();" class="btn btn-primary btn-block my-3" for="upload_receipt"
+        <button onclick="modal_receipts_upload.showModal();"
+                id="upload_receipt_button"
+                class="btn btn-primary btn-block my-3 loading-htmx" for="upload_receipt"
                 hx-trigger="click once" hx-swap="beforeend"
-                hx-target="#modal_container" hx-get="{% url "api v1 base modal retrieve" modal_name="upload_receipt" %}">
-            <i class="fa-solid fa-receipt pe-1"></i>
-            Upload Receipt
+                hx-target="#modal_container"
+                hx-get="{% url "api v1 base modal retrieve" modal_name="receipts_upload" %}">
+            <span class="loading-htmx-text"><i class="fa-solid fa-receipt pe-1"></i> Upload Receipt</span>
+            <span id="currency_save_loading" class="loading loading-spinner loading-htmx-loader"></span>
         </button>
         {% include 'pages/receipts/_search.html' %}
         <div id="items" hx-swap="outerHTML" hx-trigger="load" hx-get="{% url 'api v1 receipts fetch' %}">
