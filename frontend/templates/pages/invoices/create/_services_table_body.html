@@ -1,9 +1,12 @@
 {% load humanize %}
+{% load markdownify %}
 {% for row in rows %}
     <tr>
         <td>
             <input class="hidden" name="service_name[]" value="{{ row.service_name }}">
-            {{ row.service_name }}
+            <input class="hidden" name="service_description[]" value="{{ row.service_description }}">
+            {{ row.service_name|markdownify }}
+            {{ row.service_description|markdownify }}
         </td>
         <td>
             <input class="hidden" name="hours[]" value="{{ row.hours }}">
@@ -18,7 +21,8 @@
             £{{ row.total_price | intcomma }}
         </td>
         <td>
-            <button type="button" class="btn btn-outline-error btn-xs" hx-swap="outerHTML" hx-target="closest tr" hx-delete="{% url "api v1 invoices create services remove" %}">
+            <button type="button" class="btn btn-outline btn-error btn-xs" hx-swap="outerHTML" hx-target="closest tr"
+                    hx-delete="{% url "api v1 invoices create services remove" %}">
                 <i class="fa-solid fa-trash-can pe-2"></i>
                 Delete
             </button>

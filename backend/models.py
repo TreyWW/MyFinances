@@ -6,6 +6,7 @@ from django.core.mail import EmailMessage
 from django.db import models
 from settings import settings
 from django.utils.crypto import get_random_string
+from shortuuid.django_fields import ShortUUIDField
 
 # def RandomCode(length=6):
 #     characters = string.ascii_letters + string.digits
@@ -43,6 +44,9 @@ class UserSettings(models.Model):
     def profile_picture_url(self):
         if self.profile_picture and hasattr(self.profile_picture, "url"):
             return self.profile_picture.url
+
+    def get_currency_symbol(self):
+        return self.CURRENCIES.get(self.currency, {}).get("symbol", "$")
 
     def __str__(self):
         return self.user.username
@@ -124,6 +128,7 @@ class Client(models.Model):
 
 
 class InvoiceItem(models.Model):
+    name = models.CharField(max_length=50)
     description = models.CharField(max_length=100)
     is_service = models.BooleanField(default=True)
     # if service
@@ -218,6 +223,40 @@ class Invoice(models.Model):
         else:
             total = subtotal
         return round(total, 2)
+
+
+class InvoiceURL(models.Model):
+    uuid = ShortUUIDField(length=8, primary_key=True)
+    invoice = models.ForeignKey(
+        Invoice, on_delete=models.CASCADE, related_name="invoice_urls"
+    )
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_on = models.DateTimeField(auto_now_add=True)
+    expires = models.DateTimeField(null=True, blank=True)
+    active = models.BooleanField(default=True)
+
+    def is_active(self):
+        if not self.active:
+            return False
+        if timezone.now() > self.expires:
+            self.active = False
+            self.save()
+            return False
+        return True
+
+    def set_expires(self):
+        self.expires = timezone.now() + timezone.timedelta(days=7)
+
+    def save(self, *args, **kwargs):
+        self.set_expires()
+        super().save()
+
+    def __str__(self):
+        return str(self.invoice.id)
+
+    class Meta:
+        verbose_name = "Invoice URL"
+        verbose_name_plural = "Invoice URLs"
 
 
 class PasswordSecret(models.Model):

@@ -12,6 +12,39 @@
     @apply hover:border-gray-500 w-full;
 }
 
+.required_star {
+    @apply text-red-400;
+    @apply float-left;
+    @apply text-left;
+    @apply ms-1;
+}
+
+/***************************/
+/*       SCROLL BARS       */
+/***************************/
+
+/* width */
+::-webkit-scrollbar {
+    @apply w-[10px];
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* PLACEHOLDERS */
+
 .input::placeholder {
     color: #787d86;
     opacity: 0.8;

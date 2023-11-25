@@ -8,14 +8,19 @@ def add_service(request: HttpRequest):
     context = {}
     list_hours = request.POST.getlist("hours[]")
     list_service_name = request.POST.getlist("service_name[]")
+    list_service_description = request.POST.getlist("service_description[]")
     list_price_per_hour = request.POST.getlist("price_per_hour[]")
     list_of_current_rows = [
-        row for row in zip(list_hours, list_service_name, list_price_per_hour)
+        row
+        for row in zip(
+            list_hours, list_service_name, list_service_description, list_price_per_hour
+        )
     ]
 
     hours = int(request.POST.get("post_hours"))
     service_name = request.POST.get("post_service_name")
-    price_per_hour = int(request.POST.get("post_price_per_hour"))
+    service_description = request.POST.get("post_service_description")
+    price_per_hour = int(request.POST.get("post_rate"))
 
     if not hours:
         return JsonResponse(
@@ -38,8 +43,9 @@ def add_service(request: HttpRequest):
             {
                 "hours": row[0],
                 "service_name": row[1],
-                "price_per_hour": row[2],
-                "total_price": float(row[0]) * float(row[2]),
+                "service_description": row[2],
+                "price_per_hour": row[3],
+                "total_price": float(row[0]) * float(row[3]),
             }
         )
 
@@ -47,6 +53,7 @@ def add_service(request: HttpRequest):
         {
             "hours": hours,
             "service_name": service_name,
+            "service_description": service_description,
             "price_per_hour": price_per_hour,
             "total_price": hours * price_per_hour,
         }

@@ -14,14 +14,15 @@ def invoice_page_get(request: HttpRequest):
 def invoice_page_post(request: HttpRequest):
     invoice_items = [
         InvoiceItem.objects.create(
-            description=row[0], hours=row[1], price_per_hour=row[2]
+            name=row[0], description=row[1], hours=row[2], price_per_hour=row[3]
         )
         for row in zip(
             request.POST.getlist("service_name[]"),
+            request.POST.getlist("service_description[]"),
             request.POST.getlist("hours[]"),
             request.POST.getlist("price_per_hour[]"),
         )
-    ]  # Todo: add products to this for logic
+    ]  # TODO: add products to this for logic (so that they can be loaded without manually making each time)
 
     invoice = Invoice.objects.create(
         user=request.user,

@@ -1,5 +1,9 @@
-<label id="from_destination" class="input_card"
-       for="invoices_from_destination_modal" hx-trigger="click once" hx-swap="beforeend" hx-target="#modal_container" hx-get="{% url "api v1 base modal retrieve" modal_name="invoices_from_destination" %}">
+{% if not swapping %}
+<button onclick="modal_invoices_from_destination.showModal();" id="from_destination"
+        class="input_card text-left"
+       hx-trigger="click once" hx-swap="beforeend" hx-target="#modal_container"
+       hx-get="{% url "api v1 base modal retrieve" modal_name="invoices_from_destination" %}">
+    {% endif %}
     <div class="card-body">
         <p class="text-md">{{ name | default:"John Smith" }}</p>
         <p class="text-sm">{{ company | default:"Google" }}</p>
@@ -14,4 +18,6 @@
     <input type="hidden" name="from_city" value="{{ city | default:"Oxford" }}">
     <input type="hidden" name="from_county" value="{{ county | default:"Oxfordshire" }}">
     <input type="hidden" name="from_country" value="{{ country | default:"England" }}">
-</label>
+{% if not swapping %}
+</button>
+{% endif %}

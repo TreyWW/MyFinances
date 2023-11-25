@@ -120,9 +120,29 @@ urlpatterns = [
         name="invoices dashboard",
     ),
     path(
+        "dashboard/invoices/access/<str:id>",
+        invoices.manage_access.manage_access,
+        name="invoices dashboard manage_access",
+    ),
+    path(
+        "dashboard/invoices/access/<str:id>/create",
+        invoices.manage_access.create_code,
+        name="invoices dashboard manage_access create",
+    ),
+    path(
+        "dashboard/invoices/access/<str:id>/delete",
+        invoices.manage_access.delete_code,
+        name="invoices dashboard manage_access delete",
+    ),
+    path(
         "dashboard/invoices/preview/<str:id>",
         invoices.view.preview,
         name="invoices dashboard preview",
+    ),
+    path(
+        "invoice/<str:uuid>",
+        invoices.view.view,
+        name="invoices view invoice",
     ),
     path(
         "dashboard/invoices/create/",
