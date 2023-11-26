@@ -1,0 +1,46 @@
+{% component_block "modal" id="modal_receipts_upload" start_open="true" title="Upload Receipt" %}
+    {% fill "content" %}
+        <form class="py-4"
+              id="modal_receipts_upload-form"
+              hx-post="{% url 'api v1 receipts new' %}"
+              hx-swap="innerHTML"
+              enctype="multipart/form-data"
+              hx-encoding="multipart/form-data"
+              hx-target="#items"
+              hx-indicator="#upload_receipt_button"
+        >
+            {% csrf_token %}
+            <div class="form-control">
+                <label class="label">Receipt Name</label>
+                <input required type="text" name="receipt_name" class="input input-bordered">
+            </div>
+            <div class="form-control">
+                <label class="label">Receipt Image</label>
+                <input required type="file" name="receipt_image"
+                       class="file-input file-input-bordered max-w-full" accept="image/jpeg,image/png,image/jpg">
+            </div>
+            <div class="form-control">
+                <label class="label">Receipt Date</label>
+                <input type="date" name="receipt_date" class="input input-bordered">
+            </div>
+            <div class="modal-action">
+                <button type="submit"
+                        id="modal_receipts_upload-action-btn"
+                        class="btn btn-primary">
+                    Save
+                </button>
+                <script>
+                    document.getElementById('modal_receipts_upload-action-btn').addEventListener("click", function () {
+                        if (document.getElementById('modal_receipts_upload-form').checkValidity()) {
+                            document.getElementById('modal_receipts_upload').close();
+                        }
+                    });
+                </script>
+                <button type="reset" class="btn btn-error">Reset</button>
+                <button type="button" onclick="document.getElementById('modal_receipts_upload').close();" class="btn">
+                    Close
+                </button>
+            </div>
+        </form>
+    {% endfill %}
+{% endcomponent_block %}
