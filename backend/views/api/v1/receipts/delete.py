@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, JsonResponse
 from django.shortcuts import render
@@ -15,6 +16,7 @@ def receipt_delete(request: HttpRequest, id: int):
         return JsonResponse(status=404)
 
     receipt.delete()
+    messages.success(request, "Receipt deleted")
     return render(
         request,
         "pages/receipts/_search_results.html",

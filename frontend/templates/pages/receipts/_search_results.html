@@ -32,7 +32,7 @@
                         {# TODO: Security Vuln ^: Make a generation token to download this image, shouldn't be able to download from url directly #}
                         <button class="btn btn-outline btn-error btn-sm"
                                 hx-delete="{% url 'api v1 receipts delete' id=row.id %}" hx-target="#items"
-                                hx-confirm="Are you  sure you would like to delete the receipt?">Delete
+                                hx-confirm="Are you sure you would like to delete the receipt?">Delete
                         </button>
                     </form>
                 </td>
