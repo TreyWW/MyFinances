@@ -33,7 +33,7 @@ MyFinances is an open-source web application designed to empower individuals and
 - Additional requirements can be found in the `requirements.txt` file.
 
 ### Installation
-Go to [SETUP.md](https://github.com/TreyWW/MyFinances/blob/main/documentation/SETUP.md)
+View our wiki to get started [https://github.com/TreyWW/MyFinances/wiki](https://github.com/TreyWW/MyFinances/wiki)
 
 ## Contributing
 
@@ -100,7 +100,7 @@ Make sure you have the necessary prerequisites for development. These are detail
 
 #### Getting Started
 
-Refer to the "Getting Started" section in this README.md for setting up the development environment and running the application locally.
+View our wiki to get started [https://github.com/TreyWW/MyFinances/wiki](https://github.com/TreyWW/MyFinances/wiki)
 
 Thank you for your contributions!
 
