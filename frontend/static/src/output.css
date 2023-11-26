@@ -5041,7 +5041,6 @@ html {
 
 .input_card {
   border-radius: 9999px;
-  max-width: 1280px;
   border-width: 1px;
   --tw-border-opacity: 1;
   border-color: rgb(17 24 39 / var(--tw-border-opacity));
