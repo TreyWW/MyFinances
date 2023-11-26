@@ -17,7 +17,7 @@ title: Issue # | Title goes here
 ## What type of PR is this?
 <!-- delete all that don't apply -->
 - ✨ Feature
-- 🪲 Bug Fix
+- 🐛 Bug Fix
 - 🚨 Breaking Change
 - ♻️ Code Refactor
 - 📝 Documentation Update
