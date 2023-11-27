@@ -6,7 +6,7 @@ mysqlclient==2.2.0
 mysqlclient
 mariadb==1.1.8
 # django apps
-django-allauth==0.58.1
+django-allauth==0.58.2
 django-sendgrid-v5
 django-environ==0.11.2
 django-extensions==3.2.3
