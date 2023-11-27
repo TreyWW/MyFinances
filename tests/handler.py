@@ -27,6 +27,7 @@ class ViewTestCase(TestCase):
             username="user@example.com", password="user", email="user@example.com"
         )
         self.mock_images = []
+        self.htmx_headers = {"HTTP_HX-Request": "true"}
 
     def tearDown(self):
         [image.delete() for image in self.mock_images]
