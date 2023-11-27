@@ -2,7 +2,7 @@
 <button onclick="modal_invoices_to_destination.showModal();" id="to_destination"
         class="input_card text-left"
        hx-trigger="click once" hx-swap="beforeend" hx-target="#modal_container"
-       hx-get="{% url "api v1 base modal retrieve" modal_name="invoices_to_destination" %}">
+       hx-get="{% url "api:base:modal retrieve" modal_name="invoices_to_destination" %}">
     {% endif %}
     <div class="card-body">
         <p class="text-md">{{ name | default:"John Smith" }}</p>

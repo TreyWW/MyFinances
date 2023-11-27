@@ -8,12 +8,12 @@
                 class="btn btn-primary btn-block my-3 loading-htmx" for="upload_receipt"
                 hx-trigger="click once" hx-swap="beforeend"
                 hx-target="#modal_container"
-                hx-get="{% url "api v1 base modal retrieve" modal_name="receipts_upload" %}">
+                hx-get="{% url "api:base:modal retrieve" modal_name="receipts_upload" %}">
             <span class="loading-htmx-text"><i class="fa-solid fa-receipt pe-1"></i> Upload Receipt</span>
             <span id="currency_save_loading" class="loading loading-spinner loading-htmx-loader"></span>
         </button>
         {% include 'pages/receipts/_search.html' %}
-        <div id="items" hx-swap="outerHTML" hx-trigger="load" hx-get="{% url 'api v1 receipts fetch' %}">
+        <div id="items" hx-swap="outerHTML" hx-trigger="load" hx-get="{% url 'api:receipts:fetch' %}">
             <div id="items">
                 {% include 'components/table/skeleton_table.html' %}
             </div>

@@ -39,7 +39,7 @@ def receipt_create(request: HttpRequest):
         user=request.user, name=name, image=file, date=date
     )
     # r = requests.post(
-    #     "https://ocr.asprise.com/api/v1/receipt",
+    #     "https://ocr.asprise.com/api/receipt",
     #     data={
     #         "api_key": "TRUE" if os.environ.get("OCR_API_TEST") else "",
     #         "apikey": os.environ.get("OCR_API_KEY")

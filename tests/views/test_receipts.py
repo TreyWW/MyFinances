@@ -40,8 +40,8 @@ class ReceiptsAPITestCase(ViewTestCase):
         super().setUp()
 
         # Define URLs for the receipts API
-        self._receipts_api_fetch_url = reverse("api v1 receipts fetch")
-        self._receipts_api_create_url = reverse("api v1 receipts new")
+        self._receipts_api_fetch_url = reverse("api:receipts:fetch")
+        self._receipts_api_create_url = reverse("api:receipts:new")
 
     def test_receipts_fetch_api_view_302_for_non_authenticated_users(self):
         # Test that non-authenticated users are redirected
@@ -56,12 +56,10 @@ class ReceiptsAPITestCase(ViewTestCase):
 
     def test_receipts_fetch_api_view_matches_with_urls_view(self):
         # Test that the URL resolves to the correct view function
-        func = resolve("/api/v1/receipts/fetch").func
+        func = resolve("/api/receipts/fetch").func
         func_name = f"{func.__module__}.{func.__name__}"
-        self.assertEqual("/api/v1/receipts/fetch", self._receipts_api_fetch_url)
-        self.assertEqual(
-            "backend.views.api.v1.receipts.fetch.fetch_receipts", func_name
-        )
+        self.assertEqual("/api/receipts/fetch", self._receipts_api_fetch_url)
+        self.assertEqual("backend.api.receipts.fetch.fetch_receipts", func_name)
 
     def test_receipts_fetch_api_view_returns_correct_amount(self):
         # Test that the API returns the correct number of receipts

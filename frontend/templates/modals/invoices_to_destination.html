@@ -2,7 +2,7 @@
     {% fill "content" %}
         <form class="py-4"
               id="modal_invoices_to_destination-form"
-              hx-post="{% url 'api v1 invoices create set_destination to' %}" hx-swap="innerHTML" hx-target="#to_destination">
+              hx-post="{% url 'api:invoices:set_destination to' %}" hx-swap="innerHTML" hx-target="#to_destination">
             {% csrf_token %}
             <div class="form-control">
                 <label class="label">Name</label>

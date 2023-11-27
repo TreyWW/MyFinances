@@ -2,7 +2,7 @@
     {% fill "content" %}
         <form class="py-4"
               id="modal_receipts_upload-form"
-              hx-post="{% url 'api v1 receipts new' %}"
+              hx-post="{% url 'api:receipts:new' %}"
               hx-swap="innerHTML"
               enctype="multipart/form-data"
               hx-encoding="multipart/form-data"

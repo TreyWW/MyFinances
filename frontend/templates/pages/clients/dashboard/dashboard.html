@@ -11,7 +11,7 @@
             {% csrf_token %}
             <input type="text" placeholder="Search"
                    class="input input-bordered input-block my-3 loading-htmx"
-                   hx-get="/api/v1/receipts/fetch"
+                   hx-get="/api/receipts/fetch"
                    hx-target="#items"
                    hx-trigger="keyup changed delay:500ms"
                    name="search"

@@ -36,7 +36,8 @@
                 <a tabindex="-1" class="dropdown-item text-sm text mt-1 {% if request.resolver_match.url_name == "user settings teams" %}dropdown-active{% endif %}" href="{% url 'user settings teams' %}">
                     Manage team
                 </a>
-                <label for="logout_modal" tabindex="-1" class="dropdown-item text text-sm mt-1" hx-trigger="click once" hx-swap="beforeend" hx-target="#modal_container" hx-get="{% url "api v1 base modal retrieve" modal_name="logout_modal" %}">
+                <label for="logout_modal" tabindex="-1" class="dropdown-item text text-sm mt-1" hx-trigger="click once"
+                       hx-swap="beforeend" hx-target="#modal_container" hx-get="{% url "api:base:modal retrieve" modal_name="logout_modal" %}">
                     Log out
                 </label>
             </div>
