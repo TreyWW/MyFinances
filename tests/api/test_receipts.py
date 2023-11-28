@@ -33,11 +33,7 @@ class ReceiptsAPIFetch(ViewTestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_matches_with_urls_view(self):
-        # Ensure that the URL reversal and view function match as expected
-        func = resolve(self.url_path).func
-        func_name = f"{func.__module__}.{func.__name__}"
-        self.assertEqual(self.url_path, reverse(self.url_name))
-        self.assertEqual(self.view_function_path, func_name)
+        assert_url_matches_view(self.url_path, self.url_name, self.view_function_path)
 
     def test_no_receipts_get_returned_on_first(self):
         # Ensure that no receipts are returned when user has no receipts
