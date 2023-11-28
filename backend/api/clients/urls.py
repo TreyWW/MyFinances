@@ -1,10 +1,10 @@
 from django.urls import path
-from .view import view_all
+from . import fetch
 
 urlpatterns = [
     path(
         "fetch",
-        view_all.fetch_all_clients,
+        fetch.fetch_all_clients,
         name="fetch",
     ),
 ]

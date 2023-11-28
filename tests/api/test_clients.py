@@ -29,9 +29,7 @@ class ClientsAPIFetch(ViewTestCase):
         func = resolve("/api/clients/fetch").func
         func_name = f"{func.__module__}.{func.__name__}"
         self.assertEqual("/api/clients/fetch", reverse("api:clients:fetch"))
-        self.assertEqual(
-            "backend.api.clients.view.view_all.fetch_all_clients", func_name
-        )
+        self.assertEqual("backend.api.clients.fetch.fetch_all_clients", func_name)
 
     def test_no_clients_get_returned_on_first(self):
         self.login_user()
