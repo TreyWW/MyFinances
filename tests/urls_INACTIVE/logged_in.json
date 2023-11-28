@@ -9,5 +9,5 @@
   "user settings change_password": [200],
   "invoices dashboard": [200],
   "receipts dashboard": [200],
-  "api v1 receipts new": [405]
+  "api:receipts:new": [405]
 }

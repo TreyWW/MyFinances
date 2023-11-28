@@ -5,6 +5,25 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from PIL import Image
 from io import BytesIO
 
+from django.urls import resolve, reverse
+from django.test import SimpleTestCase
+
+
+def assert_url_matches_view(url_path, url_name, view_function_path):
+    """
+    Assert that the given URL name matches the specified view function.
+
+    Args:
+        url_path (str): The full URL path of the view. (e.g. api//clients/fetch/)
+        url_name (str): The name of the URL to reverse. (e.g. api:clients:fetch)
+        view_function_path (str): The expected path of the view function (e.g., "backend.api.clients.fetch.fetch_all_clients").
+    """
+    resolved_func = resolve(url_path).func
+    resolved_func_name = f"{resolved_func.__module__}.{resolved_func.__name__}"
+
+    SimpleTestCase().assertEqual(reverse(url_name), url_path)
+    SimpleTestCase().assertEqual(resolved_func_name, view_function_path)
+
 
 def create_mock_image():
     """
@@ -21,17 +40,31 @@ def create_mock_image():
     )
 
 
+def cleanup_uploaded_files(files):
+    """
+    Cleanup uploaded files.
+
+    Args:
+        files (list): List of files to delete.
+    """
+    [file.delete() for file in files]
+
+
 class ViewTestCase(TestCase):
     def setUp(self):
         self.log_in_user = User.objects.create_user(
             username="user@example.com", password="user", email="user@example.com"
         )
         self.mock_images = []
+        self.htmx_headers = {"HTTP_HX-Request": "true"}
 
     def tearDown(self):
-        [image.delete() for image in self.mock_images]
-        [receipt.image.delete() for receipt in Receipt.objects.all()]
-        [pfp.profile_picture.delete() for pfp in UserSettings.objects.all()]
+        # Cleanup uploaded files
+        cleanup_uploaded_files(self.mock_images)
+        cleanup_uploaded_files([receipt.image for receipt in Receipt.objects.all()])
+        cleanup_uploaded_files(
+            [pfp.profile_picture for pfp in UserSettings.objects.all()]
+        )
         super().tearDown()
 
     def call_index(self):
@@ -40,15 +73,9 @@ class ViewTestCase(TestCase):
     def login_user(self):
         self.client.login(username="user@example.com", password="user")
 
-
-def test_with_prints(self, url, expected_status_code, logged_in):
-    url = reverse(url)
-    print("-----------------------")
-    print(f"({'NL' if not logged_in else 'LI'}) Testing {url}")
-    print(f"Expected: {expected_status_code}")
-    if logged_in:
-        login_user(self)
-    response = self.client.get(url)
-    print("Actual: ", response.status_code)
-    self.assertEqual(response.status_code, expected_status_code)
-    print("-----------------------")
+    def make_request(self, with_htmx=True):
+        """
+        Makes request to self.url_name, defaults "with htmx"
+        """
+        headers = self.htmx_headers if with_htmx else {}
+        return self.client.get(reverse(self.url_name), **headers)

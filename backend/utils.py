@@ -235,7 +235,8 @@ class Modals:
             "action": {
                 "text": "Add Receipt",
                 "method": "post",
-                "extra": f"enctype=multipart/form-data hx-post={reverse_lazy('api v1 receipts new')} hx-target=#items hx-refresh=true",
+                "extra": f"enctype=multipart/form-data hx-post={reverse_lazy('api:receipts:new')} hx-target=#items "
+                f"hx-refresh=true",
                 "fields": [
                     {
                         "type": "text",
@@ -268,7 +269,8 @@ class Modals:
             "action": {
                 "text": "Update",
                 "method": "post",
-                "extra": f"hx-post={reverse_lazy('api v1 invoices create set_destination to')} hx-target=#to_destination hx-swap=outerHTML",  # hx-refresh=true
+                "extra": f"hx-post={reverse_lazy('api:invoices:set_destination to')} hx-target=#to_destination hx-swap=outerHTML",
+                # hx-refresh=true
                 "fields": [
                     {
                         "type": "text",
@@ -331,7 +333,7 @@ class Modals:
             "action": {
                 "text": "Update",
                 "method": "post",
-                "extra": f"hx-post={reverse_lazy('api v1 invoices create set_destination from')} hx-target=#from_destination hx-swap=outerHTML",  # hx-refresh=true
+                "extra": f"hx-post={reverse_lazy('api:invoices:set_destination from')} hx-target=#from_destination hx-swap=outerHTML",  # hx-refresh=true
                 "fields": [
                     {
                         "type": "text",

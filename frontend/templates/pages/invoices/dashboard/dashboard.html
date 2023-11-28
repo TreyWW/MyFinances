@@ -106,7 +106,7 @@
                     </th>
                 </tr>
                 </thead>
-                <tbody id="table_body" hx-swap="outerHTML" hx-trigger="load" hx-post="{% url 'invoices dashboard' %}">
+                <tbody id="table_body" hx-swap="outerHTML" hx-trigger="load" hx-get="{% url 'api:invoices:fetch' %}">
                 {% include 'components/table/skeleton_rows.html' with rows=3 cols=7 %}
                 </tbody>
             </table>

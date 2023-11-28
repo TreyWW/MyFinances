@@ -11,7 +11,7 @@
             {% csrf_token %}
             <input type="text" placeholder="Search"
                    class="input input-bordered input-block my-3 loading-htmx"
-                   hx-get="/api/v1/receipts/fetch"
+                   hx-get="/api/clients/fetch"
                    hx-target="#items"
                    hx-trigger="keyup changed delay:500ms"
                    name="search"
@@ -20,7 +20,7 @@
             <span id="search_loading" class="loading loading-spinner loading-htmx-loader-individual"></span>
         </form>
 
-        <div hx-swap="outerHTML" hx-trigger="load" id="items" hx-get="{% url 'clients dashboard' %}">
+        <div hx-swap="outerHTML" hx-trigger="load" id="items" hx-get="{% url 'api:clients:fetch' %}">
             {% include 'components/table/skeleton_table.html' %}
         </div>
     </div>
