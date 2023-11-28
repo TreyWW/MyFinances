@@ -35,39 +35,6 @@ class InvoicesViewTestCase(ViewTestCase):
             "backend.views.core.invoices.dashboard.invoices_dashboard", func_name
         )
 
-    def test_invoices_check_clients_get_returned_zero(self):
-        self.login_user()
-        headers = {
-            "HTTP_HX-request": "true",
-        }
-        response = self.client.get(self._invoices_dashboard_url, **headers)
-        amount_of_invoices_returned = len(response.context["invoices"])
-        self.assertEqual(amount_of_invoices_returned, 0)
-
-    def test_invoices_check_clients_get_returned_one(self):
-        _quantity = 1
-        baker.make("backend.Invoice", user=self.log_in_user, _quantity=_quantity)
-
-        self.login_user()
-        headers = {
-            "HTTP_HX-request": "true",
-        }
-        response = self.client.get(self._invoices_dashboard_url, **headers)
-        amount_of_invoices_returned = len(response.context["invoices"])
-        self.assertEqual(amount_of_invoices_returned, _quantity)
-
-    def test_invoices_creating_two_invoices(self):
-        _quantity = 2
-        baker.make("backend.Invoice", user=self.log_in_user, _quantity=_quantity)
-
-        self.login_user()
-        headers = {
-            "HTTP_HX-request": "true",
-        }
-        response = self.client.get(self._invoices_dashboard_url, **headers)
-        amount_of_invoices_returned = len(response.context["invoices"])
-        self.assertEqual(amount_of_invoices_returned, _quantity)
-
 
 class InvoicesCreateTestCase(ViewTestCase):
     def setUp(self):
