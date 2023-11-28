@@ -5,14 +5,21 @@
             <p class="text-content2">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam</p>
             <div class="divide-y divide-gray-200 dark:divide-gray-700">
                 <!-- Profile Name -->
-                <div class="flex items-center justify-between py-4">
+                <form hx-post="{% url "api:settings:change_name" %}" hx-swap="none"
+                      class="flex items-center justify-between py-4">
                     <div class="flex flex-col flex-grow">
                         <p class="text-lg font-semibold text-gray-900 dark:text-white">Account Name</p>
                         <p class="text-base font-normal text-gray-500 dark:text-gray-400">This will be displayed on your account</p>
                     </div>
-                    <input disabled type="text" class="input input-bordered w-[30%]"
-                           placeholder="John Doe" value="{{request.user.get_full_name}}" />
-                </div>
+                    <input type="hidden" name="section" value="name" />
+                    <input type="text" name="first_name" class="input input-bordered w-[30%]"
+                           placeholder="John" value="{{ request.user.first_name }}" />
+                    <input type="text" name="last_name" class="input input-bordered w-[30%] mx-1"
+                           placeholder="Doe" value="{{ request.user.last_name }}" />
+                    <button type="submit" class="btn btn-outline btn-primary">
+                        <i class="fa fa-solid fa-save"></i>
+                    </button>
+                </form>
                 {# Profile Picture Input #}
                 <div class="flex items-center justify-between py-4">
                     <div class="flex flex-col flex-grow">
