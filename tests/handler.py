@@ -72,3 +72,7 @@ class ViewTestCase(TestCase):
 
     def login_user(self):
         self.client.login(username="user@example.com", password="user")
+
+    def make_request(self, with_htmx=True):
+        headers = self.htmx_headers if with_htmx else {}
+        return self.client.get(reverse(self.url_name), **headers)

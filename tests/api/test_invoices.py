@@ -1,9 +1,8 @@
 import random
-from django.urls import reverse, resolve
+from django.urls import reverse
 from backend.models import Invoice
-from tests.handler import ViewTestCase
+from tests.handler import ViewTestCase, assert_url_matches_view
 from model_bakery import baker
-from tests.handler import assert_url_matches_view
 
 
 class InvoicesAPIFetch(ViewTestCase):
@@ -15,29 +14,29 @@ class InvoicesAPIFetch(ViewTestCase):
 
     def test_302_for_all_normal_get_requests(self):
         # Ensure that non-HTMX GET requests are redirected to the login page
-        response = self.client.get(reverse(self.url_name))
+        response = self.make_request(with_htmx=False)
         self.assertRedirects(response, f"/login/?next={self.url_path}", 302)
 
         # Ensure that authenticated users with HTMX headers are redirected to the invoices dashboard
         self.login_user()
-        response = self.client.get(reverse(self.url_name))
+        response = self.make_request(with_htmx=False)
         self.assertRedirects(response, "/dashboard/invoices/", 302)
 
     def test_302_for_non_authenticated_users(self):
         # Ensure that non-authenticated users receive a 302 status code
-        response = self.client.get(reverse(self.url_name), **self.htmx_headers)
+        response = self.make_request(with_htmx=True)
         self.assertEqual(response.status_code, 302)
 
     def test_200_for_authenticated_users_with_htmx(self):
         # Ensure that authenticated users with HTMX headers receive a 200 status code
         self.login_user()
-        response = self.client.get(reverse(self.url_name), **self.htmx_headers)
+        response = self.make_request()
         self.assertEqual(response.status_code, 200)
 
     def test_404_for_authenticated_users_no_htmx(self):
         # Ensure that authenticated users without HTMX headers are redirected to the invoices dashboard
         self.login_user()
-        response = self.client.get(reverse(self.url_name))
+        response = self.make_request(with_htmx=False)
         self.assertRedirects(response, "/dashboard/invoices/", 302)
 
     def test_matches_with_urls_view(self):
@@ -48,9 +47,9 @@ class InvoicesAPIFetch(ViewTestCase):
         )
 
     def test_no_invoices_get_returned_on_first(self):
-        # Ensure that no invoices are returned when user has no invoices
+        # Ensure that no invoices are returned when the user has no invoices
         self.login_user()
-        response = self.client.get(reverse(self.url_name), **self.htmx_headers)
+        response = self.make_request()
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.context.get("invoices")), 0)
 
@@ -66,7 +65,7 @@ class InvoicesAPIFetch(ViewTestCase):
             user=self.log_in_user,
         )
 
-        response = self.client.get(reverse(self.url_name), **self.htmx_headers)
+        response = self.make_request()
         self.assertEqual(response.status_code, 200)
 
         # Check that the number of invoices returned matches the number created
