@@ -3,7 +3,7 @@ from . import fetch
 
 urlpatterns = [
     path(
-        "fetch",
+        "fetch/",
         fetch.fetch_all_clients,
         name="fetch",
     ),
