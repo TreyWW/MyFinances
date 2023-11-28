@@ -1,4 +1,32 @@
 {% extends 'base/base.html' %}
 {% block content %}
-    dashboard
+  <div class="container mx-auto p-4">
+    <!-- Header -->
+    <header class="mb-4">
+      <h1 class="text-3xl font-semibold">MyFinances Dashboard</h1>
+    </header>
+
+    <!-- Overview Section -->
+    <section class="bg-white p-6 rounded-md shadow-md mb-4">
+      <h2 class="text-xl font-semibold mb-4">Overview</h2>
+    </section>
+
+    <!-- Income and Expenses Section -->
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <!-- Income Section -->
+      <div class="bg-white p-6 rounded-md shadow-md mb-4">
+        <h2 class="text-xl font-semibold mb-4">Income</h2>
+      </div>
+
+      <!-- Expenses Section -->
+      <div class="bg-white p-6 rounded-md shadow-md mb-4">
+        <h2 class="text-xl font-semibold mb-4">Expenses</h2>
+      </div>
+    </section>
+
+    <!-- Transactions Section -->
+    <section class="bg-white p-6 rounded-md shadow-md">
+      <h2 class="text-xl font-semibold mb-4">Recent Transactions</h2>
+    </section>
+  </div>
 {% endblock content %}
