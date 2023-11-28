@@ -1,6 +1,6 @@
 from django.db.models import Q
 from django.http import HttpRequest, HttpResponseNotFound
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
 
 from backend.models import Invoice
@@ -8,6 +8,9 @@ from backend.models import Invoice
 
 @require_http_methods(["GET"])
 def fetch_all_invoices(request: HttpRequest):
+    if not request.htmx:
+        return redirect("invoices dashboard")
+
     sort_by = request.GET.get("sort")
     filter_type = request.GET.get("filter_type")
     filter_by = request.GET.get("filter")
