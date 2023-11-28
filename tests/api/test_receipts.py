@@ -1,43 +1,48 @@
 import random
 from django.urls import reverse, resolve
-from backend.models import Receipt
-from tests.handler import ViewTestCase
+from tests.handler import ViewTestCase, assert_url_matches_view
 from model_bakery import baker
 
 
 class ReceiptsAPIFetch(ViewTestCase):
+    def setUp(self):
+        super().setUp()
+        self.url_path = "/api/receipts/fetch/"
+        self.url_name = "api:receipts:fetch"
+        self.view_function_path = "backend.api.receipts.fetch.fetch_all_receipts"
+
     def test_302_for_all_normal_get_requests(self):
         # Ensure that non-HTMX GET requests are redirected to the login page
-        response = self.client.get(reverse("api:receipts:fetch"))
-        self.assertRedirects(response, "/login/?next=/api/receipts/fetch", 302)
+        response = self.client.get(reverse(self.url_name))
+        self.assertRedirects(response, f"/login/?next={self.url_path}", 302)
 
         # Ensure that authenticated users are redirected to the receipts dashboard
         self.login_user()
-        response = self.client.get(reverse("api:receipts:fetch"))
+        response = self.client.get(reverse(self.url_name))
         self.assertRedirects(response, "/dashboard/receipts/", 302)
 
     def test_302_for_non_authenticated_users(self):
         # Ensure that non-authenticated users receive a 302 status code
-        response = self.client.get(reverse("api:receipts:fetch"), **self.htmx_headers)
+        response = self.make_request()
         self.assertEqual(response.status_code, 302)
 
     def test_200_for_authenticated_users(self):
         # Ensure that authenticated users receive a 200 status code with HTMX headers
         self.login_user()
-        response = self.client.get(reverse("api:receipts:fetch"), **self.htmx_headers)
+        response = self.make_request()
         self.assertEqual(response.status_code, 200)
 
     def test_matches_with_urls_view(self):
         # Ensure that the URL reversal and view function match as expected
-        func = resolve("/api/receipts/fetch").func
+        func = resolve(self.url_path).func
         func_name = f"{func.__module__}.{func.__name__}"
-        self.assertEqual("/api/receipts/fetch", reverse("api:receipts:fetch"))
-        self.assertEqual("backend.api.receipts.fetch.fetch_all_receipts", func_name)
+        self.assertEqual(self.url_path, reverse(self.url_name))
+        self.assertEqual(self.view_function_path, func_name)
 
     def test_no_receipts_get_returned_on_first(self):
         # Ensure that no receipts are returned when user has no receipts
         self.login_user()
-        response = self.client.get(reverse("api:receipts:fetch"), **self.htmx_headers)
+        response = self.make_request()
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.context.get("receipts")), 0)
 
@@ -54,7 +59,7 @@ class ReceiptsAPIFetch(ViewTestCase):
             user=self.log_in_user,
         )
 
-        response = self.client.get(reverse("api:receipts:fetch"), **self.htmx_headers)
+        response = self.make_request()
         self.assertEqual(response.status_code, 200)
 
         # Check that the number of clients returned matches the number created

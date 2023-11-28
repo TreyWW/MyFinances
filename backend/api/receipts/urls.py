@@ -3,17 +3,17 @@ from . import delete, new, fetch
 
 urlpatterns = [
     path(
-        "delete/<int:id>",
+        "delete/<int:id>/",
         delete.receipt_delete,
         name="delete",
     ),
     path(
-        "new",
+        "new/",
         new.receipt_create,
         name="new",
     ),
     path(
-        "fetch",
+        "fetch/",
         fetch.fetch_all_receipts,
         name="fetch",
     ),
