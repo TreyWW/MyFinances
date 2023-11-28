@@ -77,7 +77,7 @@ urlpatterns = [
         name="user settings change_password",
     ),
     path(
-        "dashboard/receipts",
+        "dashboard/receipts/",
         receipts.dashboard.receipts_dashboard,
         name="receipts dashboard",
     ),

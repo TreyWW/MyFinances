@@ -1,14 +1,14 @@
 from django.db.models import Q
 from django.http import HttpRequest, HttpResponseNotFound
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from backend.models import Receipt
 
 
-def fetch_receipts(request: HttpRequest):
+def fetch_all_receipts(request: HttpRequest):
     context = {}
     if not request.htmx:
-        return HttpResponseNotFound()
+        return redirect("receipts dashboard")
 
     search_text = request.GET.get("search")
     if search_text:

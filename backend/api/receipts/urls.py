@@ -14,7 +14,7 @@ urlpatterns = [
     ),
     path(
         "fetch",
-        fetch.fetch_receipts,
+        fetch.fetch_all_receipts,
         name="fetch",
     ),
 ]
