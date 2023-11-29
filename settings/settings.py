@@ -7,7 +7,6 @@ from django.contrib.messages import constants as messages
 env = environ.Env(DEBUG=(bool, False))
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
-print(f"test: {env('DEBUG')}")
 
 DEBUG = True if os.environ.get("DEBUG") in ["True", "true", "TRUE", True] else False
 
@@ -17,10 +16,10 @@ DEBUG = True if os.environ.get("DEBUG") in ["True", "true", "TRUE", True] else F
 
 try:
     if DEBUG:
-        print("[BACKEND] Using local settings")
+        print("[BACKEND] Using local settings", flush=True)
         from .local_settings import *
     else:
-        print("[BACKEND] Using production settings")
+        print("[BACKEND] Using production settings", flush=True)
         from .prod_settings import *
 except ImportError:
     exit("[BACKEND] Couldn't import settings")
@@ -245,6 +244,7 @@ EMAIL_SERVER_ENABLED = True if EMAIL_HOST_PASSWORD else False
 SENDGRID_SANDBOX_MODE_IN_DEBUG = True
 
 if "test" in sys.argv[1:]:
+    print("[BACKEND] Using sqlite3 database due to a test being ran", flush=True)
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
