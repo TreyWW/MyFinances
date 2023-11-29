@@ -1,7 +1,7 @@
 <div class="dropdown-container">
     <div class="dropdown">
         <label class="flex cursor-pointer px-0" tabindex="0"
-        hx-get="{% url 'api v1 base notifications get' %}" hx-target="#notifications_dropdown" hx-swap="innerHTML" hx-trigger="click">
+        hx-get="{% url 'api:base:notifications get' %}" hx-target="#notifications_dropdown" hx-swap="innerHTML" hx-trigger="click">
             <div class="relative">
                 <i class="fa-solid fa-bell"></i>
                 {% if has_notifications %}

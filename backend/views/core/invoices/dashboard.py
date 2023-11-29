@@ -8,14 +8,6 @@ from backend.models import *
 def invoices_dashboard(request: HttpRequest):
     context = {}
 
-    if request.htmx:
-        context["invoices"] = (
-            Invoice.objects.filter(user=request.user)
-            .prefetch_related("items")
-            .only("invoice_id", "id", "payment_status", "date_due")
-        )
-        return render(request, "pages/invoices/dashboard/_table_body.html", context)
-
     return render(request, "pages/invoices/dashboard/dashboard.html", context)
 
 

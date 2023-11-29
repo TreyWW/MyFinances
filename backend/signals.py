@@ -1,4 +1,4 @@
-from backend.models import UserSettings
+from backend.models import UserSettings, Receipt
 from django.db.models.signals import pre_save, post_delete
 from django.dispatch import receiver
 from django.core.files.storage import default_storage
@@ -26,6 +26,15 @@ def delete_old_profile_picture(sender, instance, **kwargs):
 def set_profile_picture_to_none(sender, instance, **kwargs):
     if instance.profile_picture:
         # Check if the file exists in the storage
-        if not default_storage.exists(instance.profile_picture.name):
-            instance.profile_picture = None
+        if default_storage.exists(instance.profile_picture.name):
+            instance.profile_picture.delete(save=False)
+
+
+@receiver(post_delete, sender=Receipt)
+def set_profile_picture_to_none(sender, instance, **kwargs):
+    if instance.image:
+        # Check if the file exists in the storage
+        if default_storage.exists(instance.image.name):
+            instance.image.delete(save=False)
+            instance.image = None
             instance.save()

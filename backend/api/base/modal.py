@@ -1,7 +1,7 @@
 from django.http import HttpRequest, HttpResponseBadRequest
 from django.shortcuts import render
 
-from backend.models import UserSettings
+from backend.models import UserSettings, Receipt
 from backend.utils import Modals
 
 # Still working on

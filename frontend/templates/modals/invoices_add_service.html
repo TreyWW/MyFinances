@@ -2,7 +2,7 @@
     {% fill "content" %}
         <form class="py-4"
               id="modal_invoices_add_service-form"
-              hx-post="{% url 'api v1 invoices create services add' %}" hx-swap="innerHTML" hx-target="#services_table_body">
+              hx-post="{% url 'api:receipts:fetch' %}" hx-swap="innerHTML" hx-target="#services_table_body">
             {% csrf_token %}
             <div class="form-control w-full">
                 <label class="label justify-start">

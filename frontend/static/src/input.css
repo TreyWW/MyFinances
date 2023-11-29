@@ -79,6 +79,12 @@
     display: none;
 }
 
+/* Disabled  button when loading */
+button.loading-htmx.htmx-request {
+    cursor: not-allowed;
+    @apply btn-disabled;
+}
+
 /* Hide loading spinner when not loading */
 .loading-htmx .loading-htmx-loader {
     display: none;

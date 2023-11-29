@@ -111,8 +111,14 @@ class Receipt(models.Model):
     image = models.ImageField(upload_to="receipts")
     total_price = models.FloatField(null=True, blank=True)
     date = models.DateField(null=True, blank=True)
-    date_uploaded = models.DateTimeField(auto_now=True)
+    date_uploaded = models.DateTimeField(auto_now_add=True)
     receipt_parsed = models.JSONField(null=True, blank=True)
+
+    @property
+    def get_receipt_url(self):
+        if self.image and hasattr(self.image, "url"):
+            return self.image.url
+        return ""
 
 
 class Client(models.Model):
