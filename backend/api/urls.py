@@ -6,6 +6,7 @@ urlpatterns = [
     path("receipts/", include("backend.api.receipts.urls")),
     path("invoices/", include("backend.api.invoices.urls")),
     path("clients/", include("backend.api.clients.urls")),
+    path("settings/", include("backend.api.settings.urls")),
 ]
 
 app_name = "api"
