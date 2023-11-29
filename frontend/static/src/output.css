@@ -3710,9 +3710,21 @@ html {
   width: max-content;
 }
 
-.tooltip.tooltip-open:before,
-.tooltip.tooltip-open:after,
-.tooltip:hover:before,
+.tooltip.tooltip-open:before {
+    opacity: 1;
+    transition-delay: 75ms;
+}
+
+.tooltip.tooltip-open:after {
+    opacity: 1;
+    transition-delay: 75ms;
+}
+
+.tooltip:hover:before {
+    opacity: 1;
+    transition-delay: 75ms;
+}
+
 .tooltip:hover:after {
   opacity: 1;
   transition-delay: 75ms;
@@ -5507,7 +5519,22 @@ button.btn.loading-htmx.htmx-request {
   width: max-content;
 }
 
-.group:invalid .group-invalid\:tooltip.tooltip-open:before,.group:invalid .group-invalid\:tooltip.tooltip-open:after,.group:invalid .group-invalid\:tooltip:hover:before,.group:invalid .group-invalid\:tooltip:hover:after {
+.group:invalid .group-invalid\:tooltip.tooltip-open:before {
+    opacity: 1;
+    transition-delay: 75ms;
+}
+
+.group:invalid .group-invalid\:tooltip.tooltip-open:after {
+    opacity: 1;
+    transition-delay: 75ms;
+}
+
+.group:invalid .group-invalid\:tooltip:hover:before {
+    opacity: 1;
+    transition-delay: 75ms;
+}
+
+.group:invalid .group-invalid\:tooltip:hover:after {
   opacity: 1;
   transition-delay: 75ms;
 }

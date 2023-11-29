@@ -5,19 +5,23 @@
             <p class="text-content2">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam</p>
             <div class="divide-y divide-gray-200 dark:divide-gray-700">
                 <!-- Profile Name -->
-                <form hx-post="{% url "api:settings:change_name" %}" hx-swap="none"
+                <form hx-post="{% url "api:settings:change_name" %}" hx-swap="none" hx-indicator="#save_account_name"
                       class="flex items-center justify-between py-4">
                     <div class="flex flex-col flex-grow">
                         <p class="text-lg font-semibold text-gray-900 dark:text-white">Account Name</p>
-                        <p class="text-base font-normal text-gray-500 dark:text-gray-400">This will be displayed on your account</p>
+                        <p class="text-base font-normal text-gray-500 dark:text-gray-400">This will be displayed on your account
+                        </p>
                     </div>
                     <input type="hidden" name="section" value="name" />
                     <input type="text" name="first_name" class="input input-bordered w-[30%]"
                            placeholder="John" value="{{ request.user.first_name }}" />
                     <input type="text" name="last_name" class="input input-bordered w-[30%] mx-1"
                            placeholder="Doe" value="{{ request.user.last_name }}" />
-                    <button type="submit" class="btn btn-outline btn-primary">
-                        <i class="fa fa-solid fa-save"></i>
+                    <button id="save_account_name" type="submit" class="btn btn-outline btn-primary loading-htmx">
+                        <span class="loading-htmx-text">
+                            <i class="fa fa-solid fa-save"></i>
+                        </span>
+                        <span class="loading loading-spinner loading-htmx-loader"></span>
                     </button>
                 </form>
                 {# Profile Picture Input #}
@@ -29,13 +33,13 @@
                         </div>
                     </div>
                     <button onclick="modal_change_profile_picture.showModal();"
-                        class="btn btn-primary btn-outline"
-                        hx-trigger="click once"
-                        hx-swap="beforeend"
-                        hx-target="#modal_container"
-                        hx-get="{% url "api:base:modal retrieve with context" modal_name="change_profile_picture" context_type="profile_picture" context_value="True" %}">
-                    Change
-                </button>
+                            class="btn btn-primary btn-outline"
+                            hx-trigger="click once"
+                            hx-swap="beforeend"
+                            hx-target="#modal_container"
+                            hx-get="{% url "api:base:modal retrieve with context" modal_name="change_profile_picture" context_type="profile_picture" context_value="True" %}">
+                        Change
+                    </button>
                 </div>
             </div>
         </div>
