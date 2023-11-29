@@ -1,4 +1,78 @@
 {% extends 'base/base.html' %}
 {% block content %}
-    dashboard
+  <div class="container mx-auto p-4">
+    <!-- Header -->
+    <header class="mb-4">
+      <h1 class="text-3xl font-semibold">MyFinances Dashboard</h1>
+    </header>
+
+    <!-- Overview Section -->
+    <section class="bg-black bg-opacity-50 p-6 rounded-md shadow-md mb-4 hover:bg-purple-700 hover:text-white">
+      <h2 class="text-2xl font-semibold mb-4">Overview</h2>
+    </section>
+
+    <!-- Income and Expenses Section -->
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <!-- Income Section -->
+      <div class="bg-black bg-opacity-50 p-6 rounded-md shadow-md mb-4 hover:bg-purple-700 hover:text-white">
+        <h2 class="text-2xl font-semibold mb-4">Income</h2>
+        <!-- sample data -->
+        <div class="flex flex-col items-center justify-around">
+          <div>
+            <h4 class="text-3xl">$2850.00</h4>
+          </div>
+          <div class="flex flex-row items-center gap-2">
+            <h3 class="text-2xl">Goal</h3>
+            <h4 class="text-xl">- $3200.00</h4>
+          </div>
+        </div>
+      </div>
+
+      <!-- Expenses Section -->
+      <div class="bg-black bg-opacity-50 p-6 rounded-md shadow-md mb-4 hover:bg-purple-700 hover:text-white">
+        <h2 class="text-2xl font-semibold mb-4">Expenses</h2>
+        <!-- sample data -->
+        <div class="flex flex-col items-center justify-around">
+          <div>
+            <h4 class="text-3xl">$750.00</h4>
+          </div>
+          <div class="flex flex-row items-center gap-2">
+            <h3 class="text-2xl">Goal</h3>
+            <h4 class="text-xl">- $550.00</h4>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Transactions Section -->
+    <section class="bg-black bg-opacity-50 p-6 rounded-md shadow-md hover:bg-purple-700 hover:text-white">
+      <h2 class="text-2xl font-semibold mb-4">Recent Transactions</h2>
+      
+      <!-- Description mode -->
+      <!-- Debit operation -->
+      <!-- sample data -->
+      <ul class="list-none">
+        <li class="hover:border-white hover:bg-gray-600 p-4 mb-2 border rounded-md">
+          <span class="font-bold">Date:</span> January 1, 2023<br>
+          <span class="font-bold">Value:</span> $100.00<br>
+          <span class="font-bold">Operation:</span> Debit<br>
+          <span class="font-bold">Item:</span> Grocery<br>
+          <span class="font-bold">Receipt:</span> <a href="#">View Receipt</a><br>
+          <span class="font-bold">Description:</span> Grocery shopping at XYZ Mart<br>
+          <span class="font-bold">Category:</span> Food
+        </li>
+
+        <!-- Credit operation -->
+        <li class="hover:border-white hover:bg-gray-600 p-4 mb-2 border rounded-md">
+          <span class="font-bold">Date:</span> January 5, 2023<br>
+          <span class="font-bold">Value:</span> $50.00<br>
+          <span class="font-bold">Operation:</span> Credit<br>
+          <span class="font-bold">Item:</span> Online Sale<br>
+          <span class="font-bold">Receipt:</span> <a href="#">View Receipt</a><br>
+          <span class="font-bold">Description:</span> Sold items on an online platform<br>
+          <span class="font-bold">Category:</span> Sales
+        </li>
+      </ul>
+    </section>
+  </div>
 {% endblock content %}
