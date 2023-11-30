@@ -64,6 +64,10 @@ module.exports = {
                     "0 0px 20px #bf9553",
                     "0 0px 65px #bf9553"
                 ],
+                glow_red: [
+                    "0 0px 20px var(--fallback-er,oklch(var(--er)/var(--tw-text-opacity)))",
+                    "0 0px 65px var(--fallback-er,oklch(var(--er)/var(--tw-text-opacity)))"
+                ],
                 glow_gold_small: [
                     "0 0px 15px #bf9553",
                     // "0 0px 80px #bf9553"

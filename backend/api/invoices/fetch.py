@@ -34,18 +34,9 @@ def fetch_all_invoices(request: HttpRequest):
     }
 
     # Validate and sanitize the sort_by parameter
-    sort_by = (
-        sort_by
-        if sort_by
-        in [
-            "-date_due",
-            "date_due",
-            "id",
-            "-id",
-            "payment_status",
-        ]
-        else None
-    )
+    all_sort_options = ["date_due", "id", "payment_status"]
+    context["all_sort_options"] = all_sort_options
+    sort_by = sort_by if sort_by in all_sort_options else "id"
 
     # Fetch invoices for the user, prefetch related items, and select specific fields
     invoices = (

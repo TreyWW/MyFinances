@@ -3,8 +3,6 @@
     <form id="filter_list_storage">
     </form>
     <div class="card bg-base-100 p-6 mb-4 h-screen">
-        <p class="text-white font-bold">{{ page }}</p>
-        {# TODO SEARCH BAR #}
         <a class="btn btn-primary btn-block" href="{% url 'invoices dashboard create' %}">
             {% include 'components/icon.html' with icon="file-invoice" tags="me-2" %}
             Create Invoice
@@ -14,29 +12,24 @@
                 <span class="loading-htmx-text"><i class="fa fa-solid fa-sort"></i></span>
                 <span id="currency_save_loading" class="loading loading-spinner loading-htmx-loader"></span>
             </div>
-            <ul class="dropdown-content menu z-[1] w-52 rounded-box bg-base-200 p-2 shadow">
+            <ul class="dropdown-content menu z-[1] w-52 rounded-box bg-base-200 p-2 shadow"
+                hx-swap="outerHTML"
+                hx-target="#table_body"
+                hx-indicator="#sort-indicator">
                 <h2 class="menu-title">Sort by</h2>
-                <li>
-                    <button class="dropdown-item border-none text-sm"
-                            hx-swap="outerHTML" hx-trigger="click"
-                            hx-get="{% url 'api:invoices:fetch' %}"
-                            hx-target="#table_body"
-                            hx-indicator="#sort-indicator"
-                            hx-vals='{"sort": "payment_status"}'
-                            id="sort_payment_status"
-                    >
-                        {#                        <i class="fa fa-solid fa-caret-down"></i>#}
+                <li data-sort="id">
+                    <button class="dropdown-item" hx-get="{% url 'api:invoices:fetch' %}" name="sort" value="id">
+                        <i class="fa-solid fa-sort"></i>
+                        ID
+                    </button>
+                </li>
+                <li data-sort="payment_status">
+                    <button class="dropdown-item" hx-get="{% url 'api:invoices:fetch' %}" name="sort" value="payment_status">
                         Payment Status
                     </button>
-                    <button class="dropdown-item border-none text-sm"
-                            hx-swap="outerHTML" hx-trigger="click"
-                            hx-get="{% url 'api:invoices:fetch' %}"
-                            hx-target="#table_body"
-                            hx-indicator="#sort-indicator"
-                            hx-vals='{"sort": "date"}'
-                            id="sort_date"
-                    >
-                        {#                        <i class="fa fa-solid fa-caret-down"></i>#}
+                </li>
+                <li data-sort="date_due">
+                    <button class="dropdown-item" hx-get="{% url 'api:invoices:fetch' %}" name="sort" value="date_due">
                         Date
                     </button>
                 </li>

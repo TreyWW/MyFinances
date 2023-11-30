@@ -24,13 +24,11 @@
             £{{ invoice.get_total_price | floatformat:2 | intcomma }}
         </td>
         <td>
-        <span class="badge badge-square rounded
-        {% if invoice.payment_status == "sent" %}
-        badge-outline text-gray-400 border-gray-600
-        {% elif invoice.payment_status == "seen" %}
-        badge-outline text-white border-white
-        {% else %}
-        badge-outline-success
+        <span class="badge badge-outline rounded p-3
+        {% if invoice.payment_status == "paid" %}
+       badge-success
+        {% elif invoice.payment_status == "overdue" %}
+       badge-error drop-shadow drop-shadow-glow_red
         {% endif %}
 ">
          {{ invoice.payment_status | default:"sent" | title }}
@@ -85,17 +83,21 @@
 {% endfor %}
 </tbody>
 
-{% if sort %}
-    <div hx-swap-oob="innerHTML:#sort_{{ sort }}">
-        {% if sort == "payment_status" %}
-            <i class="fa fa-solid fa-sort"></i>
+{% for option in all_sort_options %}
+    <div hx-swap-oob="innerHTML:li[data-sort='{{ option }}'] button">
+        {% if sort == option %}<i class="fa fa-solid fa-sort"></i>{% endif %}
+        {% if option == "payment_status" %}
             Payment Status
-        {% elif sort == "date" %}
-            <i class="fa fa-solid fa-sort"></i>
+        {% elif option == "date_due" %}
             Date
+        {% elif option == "amount" %}
+            Amount
+        {% else %}
+            ID
         {% endif %}
     </div>
-{% endif %}
+{% endfor %}
+
 {% for filter_type, inner_filters in all_filters.items %}
     {% for filter in inner_filters %}
         <div hx-swap-oob="innerHTML:div[data-filter-type='{{ filter_type }}'] ul li[data-filter-by='{{ filter }}'] button">
