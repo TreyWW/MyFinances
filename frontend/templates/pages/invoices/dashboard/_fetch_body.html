@@ -83,7 +83,6 @@
         No Invoices Found
     </td>
 {% endfor %}
-<td>{{ all_filters }}</td>
 </tbody>
 
 {% if sort %}
@@ -110,5 +109,7 @@
     <input type="hidden" name="payment_status_paid" value="{% if 'paid' in selected_filters %}true{% endif %}">
     <input type="hidden" name="payment_status_pending" value="{% if 'pending' in selected_filters %}true{% endif %}">
     <input type="hidden" name="payment_status_overdue" value="{% if 'overdue' in selected_filters %}true{% endif %}">
-    <input type="hidden" name="amount_20+" value="">
+    <input type="hidden" name="amount_20+" value="{% if '20+' in selected_filters %}true{% endif %}">
+    <input type="hidden" name="amount_50+" value="{% if '50+' in selected_filters %}true{% endif %}">
+    <input type="hidden" name="amount_100+" value="{% if '100+' in selected_filters %}true{% endif %}">
 </div>

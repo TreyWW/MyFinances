@@ -1,4 +1,4 @@
-from django.db.models import Q
+from django.db.models import Q, Case, When, F, FloatField, ExpressionWrapper
 from django.http import HttpRequest
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
@@ -25,7 +25,12 @@ def fetch_all_invoices(request: HttpRequest):
             "paid": True if request.GET.get("payment_status_paid") else False,
             "pending": True if request.GET.get("payment_status_pending") else False,
             "overdue": True if request.GET.get("payment_status_overdue") else False,
-        }
+        },
+        "amount": {
+            "20+": True if request.GET.get("amount_20+") else False,
+            "50+": True if request.GET.get("amount_50+") else False,
+            "100+": True if request.GET.get("amount_100+") else False,
+        },
     }
 
     # Validate and sanitize the sort_by parameter
@@ -48,6 +53,17 @@ def fetch_all_invoices(request: HttpRequest):
         .prefetch_related("items")
         .only("invoice_id", "id", "payment_status", "date_due")
         .filter()
+        .annotate(
+            subtotal=ExpressionWrapper(
+                F("items__hours") * F("items__price_per_hour"),
+                output_field=FloatField(),
+            ),
+            amount=Case(
+                When(vat_number=True, then=F("subtotal") * 1.2),
+                default=F("subtotal"),
+                output_field=FloatField(),
+            ),
+        )
     )
 
     # Initialize context variables
@@ -62,6 +78,7 @@ def fetch_all_invoices(request: HttpRequest):
 
     # Iterate through previous filters to build OR conditions
     for filter_type, filter_by_list in previous_filters.items():
+        or_conditions_filter = Q()  # Initialize OR conditions for each filter type
         for filter_by, status in filter_by_list.items():
             # Determine if the filter was selected in the previous request
             was_previous_selection = True if status else False
@@ -77,9 +94,16 @@ def fetch_all_invoices(request: HttpRequest):
                 not was_previous_selection and has_just_been_selected
             ):
                 # Construct filter condition dynamically based on filter_type
-                filter_condition = {f"{filter_type}": filter_by}
-                or_conditions |= Q(**filter_condition)
+                if "+" in filter_by:
+                    numeric_part = float(filter_by.split("+")[0])
+                    filter_condition = {f"{filter_type}__gte": numeric_part}
+                else:
+                    filter_condition = {f"{filter_type}": filter_by}
+                or_conditions_filter |= Q(**filter_condition)
                 context["selected_filters"].append(filter_by)
+
+        # Combine OR conditions for each filter type with AND
+        or_conditions &= or_conditions_filter
 
     # Apply OR conditions to the invoices queryset
     invoices = invoices.filter(or_conditions)

@@ -29,6 +29,17 @@
     @apply rounded-full;
 }
 
+.dropdown ul.dropdown-content {
+    @apply z-[1];
+    @apply menu;
+    @apply p-2;
+    @apply shadow;
+    @apply bg-base-200;
+    @apply gap-y-1;
+    @apply rounded-box;
+    @apply w-52;
+}
+
 /***************************/
 /*       SCROLL BARS       */
 /***************************/
