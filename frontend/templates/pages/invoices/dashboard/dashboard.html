@@ -1,7 +1,12 @@
 {% extends 'base/base.html' %}
 {% block content %}
+    <form id="filter_list_storage">
+        <input type="hidden" name="payment_status_paid" value="">
+        <input type="hidden" name="payment_status_pending" value="">
+        <input type="hidden" name="payment_status_overdue" value="">
+        <input type="hidden" name="amount_20+" value="">
+    </form>
     <div class="card bg-base-100 p-6 mb-4 h-screen">
-
         <p class="text-white font-bold">{{ page }}</p>
         {# TODO SEARCH BAR #}
         <a class="btn btn-primary btn-block" href="{% url 'invoices dashboard create' %}">
@@ -74,58 +79,41 @@
                         </div>
                     </th>
                     <th>
-                        <div class="dropdown">
+                        <div class="dropdown" data-filter-type="payment_status"
+                             hx-swap="outerHTML"
+                             hx-target="#table_body"
+                             hx-indicator="" {# TODO: Add a general indicator #}
+                             hx-vals='{"filter_type": "payment_status"}'
+                             hx-include="#filter_list_storage"
+                        >
                             <label tabindex="0" class="border-none">
                                 Payment Status
                                 <i class="fa-solid fa-caret-down border-none pt-1 pl-1/2"></i>
                             </label>
                             <ul class="dropdown-content z-[1] menu p-2 shadow bg-base-200 gap-y-1 rounded-box w-52">
-                                <form id="filter_list_payment_status">
-                                    <input type="hidden" name="payment_status_paid" value="">
-                                    <input type="hidden" name="payment_status_pending" value="">
-                                    <input type="hidden" name="payment_status_overdue" value="">
-                                </form>
-                                <li>
+                                <li data-filter-by="paid">
                                     <button class="dropdown-item text-sm border-none"
                                             hx-get="{% url "api:invoices:fetch" %}"
-                                            hx-swap="outerHTML"
-                                            hx-target="#table_body"
-                                            hx-indicator="" {# TODO: Add a general indicator #}
-                                            hx-vals='{"filter_type": "payment_status"}'
                                             name="filter"
                                             value="paid"
-                                            id="filtering_paid"
-                                            hx-include="#filter_list_payment_status"
                                     >
                                         Paid
                                     </button>
                                 </li>
-                                <li>
+                                <li data-filter-by="pending">
                                     <button class="dropdown-item text-sm border-none"
                                             hx-get="{% url "api:invoices:fetch" %}"
-                                            hx-swap="outerHTML"
-                                            hx-target="#table_body"
-                                            hx-indicator="" {# TODO: Add a general indicator #}
-                                            hx-vals='{"filter_type": "payment_status"}'
                                             name="filter"
                                             value="pending"
-                                            id="filtering_pending"
-                                            hx-include="#filter_list_payment_status"
                                     >
                                         Pending
                                     </button>
                                 </li>
-                                <li>
+                                <li data-filter-by="overdue">
                                     <button class="dropdown-item text-sm border-none"
                                             hx-get="{% url "api:invoices:fetch" %}"
-                                            hx-swap="outerHTML"
-                                            hx-target="#table_body"
-                                            hx-indicator="" {# TODO: Add a general indicator #}
-                                            hx-vals='{"filter_type": "payment_status"}'
                                             name="filter"
                                             value="overdue"
-                                            id="filtering_overdue"
-                                            hx-include="#filter_list_payment_status"
                                     >
                                         Overdue
                                     </button>

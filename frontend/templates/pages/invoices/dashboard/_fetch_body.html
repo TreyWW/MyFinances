@@ -76,26 +76,14 @@
                     </div>
                 </ul>
             </div>
-            {#            <div class="flex flex-wrap gap-2">#}
-            {#                <div class="relative flex group tooltip tooltip-top" data-tooltip="Preview">#}
-            {#                    <a class="btn btn-primary btn-sm" href="{% url "invoices dashboard preview" id=invoice.id %}">#}
-            {#                        <i class="fa fa-solid fa-regular fa-file-pdf"></i>#}
-            {#                    </a>#}
-            {#                </div>#}
-            {#                <div class="relative flex group tooltip tooltip-top" data-tooltip="Edit">#}
-            {#                    <button class="btn btn-success btn-sm" disabled>#}
-            {#                        <i class="fa fa-solid fa-regular fa-pencil"></i>#}
-            {#                    </button>#}
-            {#                </div>#}
-            {#                <div class="relative flex group tooltip tooltip-top" data-tooltip="Delete">#}
-            {#                    <button class="btn btn-error btn-sm" disabled>#}
-            {#                        <i class="fa-solid fa-trash"></i>#}
-            {#                    </button>#}
-            {#                </div>#}
-            {#            </div>#}
         </td>
     </tr>
+{% empty %}
+    <td colspan="100%" class="text-center">
+        No Invoices Found
+    </td>
 {% endfor %}
+<td>{{ all_filters }}</td>
 </tbody>
 
 {% if sort %}
@@ -109,19 +97,18 @@
         {% endif %}
     </div>
 {% endif %}
-{% if filtering == "payment_status" %}
-    {% for filter in all_filters %}
-        <div hx-swap-oob="innerHTML:#filtering_{{ filter }}">
+{% for filter_type, inner_filters in all_filters.items %}
+    {% for filter in inner_filters %}
+        <div hx-swap-oob="innerHTML:div[data-filter-type='{{ filter_type }}'] ul li[data-filter-by='{{ filter }}'] button">
             {% if filter in selected_filters %}<i class="fa fa-solid fa-check"></i>{% endif %}
             {{ filter | title }}
         </div>
     {% endfor %}
-{% endif %}
+{% endfor %}
 
-{% if filtering == "payment_status" %}
-    <div hx-swap-oob="innerHTML:#filter_list_payment_status">
-        <input type="hidden" name="payment_status_paid" value="{% if 'paid' in selected_filters %}true{% endif %}">
-        <input type="hidden" name="payment_status_pending" value="{% if 'pending' in selected_filters %}true{% endif %}">
-        <input type="hidden" name="payment_status_overdue" value="{% if 'overdue' in selected_filters %}true{% endif %}">
-    </div>
-{% endif %}
+<div hx-swap-oob="innerHTML:#filter_list_storage">
+    <input type="hidden" name="payment_status_paid" value="{% if 'paid' in selected_filters %}true{% endif %}">
+    <input type="hidden" name="payment_status_pending" value="{% if 'pending' in selected_filters %}true{% endif %}">
+    <input type="hidden" name="payment_status_overdue" value="{% if 'overdue' in selected_filters %}true{% endif %}">
+    <input type="hidden" name="amount_20+" value="">
+</div>
