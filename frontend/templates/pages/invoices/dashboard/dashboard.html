@@ -1,14 +1,47 @@
 {% extends 'base/base.html' %}
 {% block content %}
-    <div class="card bg-base-100 p-6 mb-4">
+    <div class="card bg-base-100 p-6 mb-4 h-screen">
 
         <p class="text-white font-bold">{{ page }}</p>
         {# TODO SEARCH BAR #}
-        <a class="btn btn-primary mb-4 btn-block" href="{% url 'invoices dashboard create' %}">
+        <a class="btn btn-primary btn-block" href="{% url 'invoices dashboard create' %}">
             {% include 'components/icon.html' with icon="file-invoice" tags="me-2" %}
             Create Invoice
         </a>
-        <div class="flex w-full overflow-x-hidden overflow-y-hidden">
+        <div class="dropdown dropdown-hover dropdown-right my-4 w-14">
+            <div tabindex="0" role="button" class="btn btn-square btn-outline loading-htmx" id="sort-indicator">
+                <span class="loading-htmx-text"><i class="fa fa-solid fa-sort"></i></span>
+                <span id="currency_save_loading" class="loading loading-spinner loading-htmx-loader"></span>
+            </div>
+            <ul class="dropdown-content menu z-[1] w-52 rounded-box bg-base-200 p-2 shadow">
+                <h2 class="menu-title">Sort by</h2>
+                <li>
+                    <button class="dropdown-item border-none text-sm"
+                            hx-swap="outerHTML" hx-trigger="click"
+                            hx-get="{% url 'api:invoices:fetch' %}"
+                            hx-target="#table_body"
+                            hx-indicator="#sort-indicator"
+                            hx-vals='{"sort": "payment_status"}'
+                            id="sort_payment_status"
+                    >
+                        {#                        <i class="fa fa-solid fa-caret-down"></i>#}
+                        Payment Status
+                    </button>
+                    <button class="dropdown-item border-none text-sm"
+                            hx-swap="outerHTML" hx-trigger="click"
+                            hx-get="{% url 'api:invoices:fetch' %}"
+                            hx-target="#table_body"
+                            hx-indicator="#sort-indicator"
+                            hx-vals='{"sort": "date"}'
+                            id="sort_date"
+                    >
+                        {#                        <i class="fa fa-solid fa-caret-down"></i>#}
+                        Date
+                    </button>
+                </li>
+            </ul>
+        </div>
+        <div class="flex w-full h-full overflow-x-hidden overflow-y-auto">
             <table class="table">
                 <thead>
                 <tr>
@@ -21,21 +54,13 @@
                                 Date
                                 <i class="fa-solid fa-caret-down border-none pt-1 pl-1/2"></i>
                             </label>
-                            <div tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                            <div tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-200 rounded-box w-52">
                                 <a class="dropdown-item text-sm border-none">Actions</a>
                             </div>
                         </div>
                     </th>
                     <th>
-                        <div class="dropdown">
-                            <label tabindex="0" class="border-none">
-                                Client Name
-                                <i class="fa-solid fa-caret-down border-none pt-1 pl-1/2"></i>
-                            </label>
-                            <div class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-                                <a class="dropdown-item text-sm border-none">Actions</a>
-                            </div>
-                        </div>
+                        Client Name
                     </th>
                     <th>
                         <div class="dropdown">
@@ -43,7 +68,7 @@
                                 Amount
                                 <i class="fa-solid fa-caret-down border-none pt-1 pl-1/2"></i>
                             </label>
-                            <div class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                            <div class="dropdown-content z-[1] menu p-2 shadow bg-base-200 rounded-box w-52">
                                 <a class="dropdown-item text-sm border-none">Actions</a>
                             </div>
                         </div>
@@ -54,9 +79,56 @@
                                 Payment Status
                                 <i class="fa-solid fa-caret-down border-none pt-1 pl-1/2"></i>
                             </label>
-                            <ul class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                            <ul class="dropdown-content z-[1] menu p-2 shadow bg-base-200 gap-y-1 rounded-box w-52">
+                                <form id="filter_list_payment_status">
+                                    <input type="hidden" name="payment_status_paid" value="">
+                                    <input type="hidden" name="payment_status_pending" value="">
+                                    <input type="hidden" name="payment_status_overdue" value="">
+                                </form>
                                 <li>
-                                    <a class="dropdown-item text-sm border-none">Pending</a>
+                                    <button class="dropdown-item text-sm border-none"
+                                            hx-get="{% url "api:invoices:fetch" %}"
+                                            hx-swap="outerHTML"
+                                            hx-target="#table_body"
+                                            hx-indicator="" {# TODO: Add a general indicator #}
+                                            hx-vals='{"filter_type": "payment_status"}'
+                                            name="filter"
+                                            value="paid"
+                                            id="filtering_paid"
+                                            hx-include="#filter_list_payment_status"
+                                    >
+                                        Paid
+                                    </button>
+                                </li>
+                                <li>
+                                    <button class="dropdown-item text-sm border-none"
+                                            hx-get="{% url "api:invoices:fetch" %}"
+                                            hx-swap="outerHTML"
+                                            hx-target="#table_body"
+                                            hx-indicator="" {# TODO: Add a general indicator #}
+                                            hx-vals='{"filter_type": "payment_status"}'
+                                            name="filter"
+                                            value="pending"
+                                            id="filtering_pending"
+                                            hx-include="#filter_list_payment_status"
+                                    >
+                                        Pending
+                                    </button>
+                                </li>
+                                <li>
+                                    <button class="dropdown-item text-sm border-none"
+                                            hx-get="{% url "api:invoices:fetch" %}"
+                                            hx-swap="outerHTML"
+                                            hx-target="#table_body"
+                                            hx-indicator="" {# TODO: Add a general indicator #}
+                                            hx-vals='{"filter_type": "payment_status"}'
+                                            name="filter"
+                                            value="overdue"
+                                            id="filtering_overdue"
+                                            hx-include="#filter_list_payment_status"
+                                    >
+                                        Overdue
+                                    </button>
                                 </li>
                                 {# TODO: somehow make this pending button call HTMX and update #}
                                 {#       add the list to pending only (BUT ALSO SAVE FOR FUTURE FILTERS) #}
@@ -69,35 +141,7 @@
                                 Actions
                                 <i class="fa-solid fa-caret-down border-none pt-1 pl-1/2"></i>
                             </label>
-                            <ul class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-                                <li>
-                                    <a class="dropdown-item text-sm border-none">Actions</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </th>
-                    <th>
-                        <div class="dropdown border-none">
-                            <label tabindex="0" class="border-none">
-                                Sort
-                                <i class="fa-solid fa-caret-down border-none pt-1 pl-1/2"></i>
-                            </label>
-                            <ul class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-                                <li>
-                                    <a class="dropdown-item text-sm border-none">Invoice ID</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item text-sm border-none">Date</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item text-sm border-none">Client Name</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item text-sm border-none">Amount</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item text-sm border-none">Payment Status</a>
-                                </li>
+                            <ul class="dropdown-content z-[1] menu p-2 shadow bg-base-200 rounded-box w-52">
                                 <li>
                                     <a class="dropdown-item text-sm border-none">Actions</a>
                                 </li>
@@ -107,7 +151,7 @@
                 </tr>
                 </thead>
                 <tbody id="table_body" hx-swap="outerHTML" hx-trigger="load" hx-get="{% url 'api:invoices:fetch' %}">
-                {% include 'components/table/skeleton_rows.html' with rows=3 cols=7 %}
+                {% include 'components/table/skeleton_rows.html' with rows=3 cols=6 %}
                 </tbody>
             </table>
         </div>

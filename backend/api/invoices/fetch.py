@@ -10,10 +10,11 @@ from backend.models import Invoice
 def fetch_all_invoices(request: HttpRequest):
     if not request.htmx:
         return redirect("invoices dashboard")
-
+    context = {}
     sort_by = request.GET.get("sort")
     filter_type = request.GET.get("filter_type")
     filter_by = request.GET.get("filter")
+
     sort_by = (
         sort_by
         if sort_by
@@ -35,16 +36,40 @@ def fetch_all_invoices(request: HttpRequest):
     )
 
     if filter_type and filter_by:
-        if filter_type == "payment_status" and filter_by in [
-            "pending",
-            "paid",
-            "overdue",
-        ]:
-            invoices = invoices.filter(payment_status=filter_by)
+        if filter_type == "payment_status":
+            all_payment_statuses = [
+                "overdue",
+                "pending",
+                "paid",
+            ]
+            selected_statuses = {
+                "paid": True
+                if request.GET.get("payment_status_paid") or filter_by == "paid"
+                else False,
+                "pending": True
+                if request.GET.get("payment_status_pending") or filter_by == "pending"
+                else False,
+                "overdue": True
+                if request.GET.get("payment_status_overdue") or filter_by == "overdue"
+                else False,
+            }
+            context["all_filters"] = all_payment_statuses
+            context["filtering"] = "payment_status"
+            for item, status in selected_statuses.items():
+                if status:
+                    invoices = invoices.filter(payment_status=item)
+                    print(context.get("selected_filters"))
+                    context["selected_filters"] = (
+                        [item]
+                        if not context.get("selected_filters", False)
+                        else context["selected_filters"].append(item)
+                    )
+                    print(context.get("selected_filters"))
 
     if sort_by:
         invoices = invoices.order_by(sort_by)
+        context["sort"] = sort_by
 
-    return render(
-        request, "pages/invoices/dashboard/_table_body.html", {"invoices": invoices}
-    )
+    context["invoices"] = invoices
+
+    return render(request, "pages/invoices/dashboard/_fetch_body.html", context)
