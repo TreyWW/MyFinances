@@ -101,7 +101,7 @@
 {% for filter_type, inner_filters in all_filters.items %}
     {% for filter in inner_filters %}
         <div hx-swap-oob="innerHTML:div[data-filter-type='{{ filter_type }}'] ul li[data-filter-by='{{ filter }}'] button">
-            {% if filter in selected_filters %}<i class="fa fa-solid fa-check"></i>{% endif %}
+            {% if filter in selected_filters %}<i class="fa fa-solid fa-check text-success"></i>{% endif %}
             {{ filter | title }}
         </div>
     {% endfor %}
