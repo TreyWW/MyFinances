@@ -2,7 +2,7 @@
     <div class="card-body flex flex-col h-full">
         <div class="card-title flex-grow">Profile Settings</div>
         <div class="flex flex-col flex-grow">
-            <p class="text-content2">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam</p>
+            <p class="text-content2">{% lorem 10 w %}</p>
             <div class="divide-y divide-gray-200 dark:divide-gray-700">
                 <!-- Profile Name -->
                 <form hx-post="{% url "api:settings:change_name" %}" hx-swap="none" hx-indicator="#save_account_name"

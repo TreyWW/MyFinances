@@ -10,10 +10,10 @@
            href="{% url 'user settings change_password' %}">
             Change account password
         </a>
-        <a class="btn btn-outline-error border-red-200 hover:bg-red-200 hover:text-black text-red-200"
-           href="{% url 'logout' %}">
+        <label class="btn btn-outline-error border-red-200 hover:bg-red-200 hover:text-black text-red-200"
+            for="logout_modal">
             {% include 'components/icon.html' with icon="right-from-bracket" tags="me-2" %}
             Log out
-        </a>
+        </label>
     </div>
 </div>
