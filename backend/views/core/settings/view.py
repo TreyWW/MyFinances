@@ -26,25 +26,9 @@ def settings_page(request: HttpRequest):
     )
 
     if request.method == "POST" and request.htmx:
-        currency = request.POST.get("currency")
         section = request.POST.get("section")
         profile_picture = request.FILES.get("profile_image")
 
-        if section == "account_preferences":
-            if currency in usersettings.CURRENCIES:
-                usersettings.currency = currency
-                usersettings.save()
-                messages.success(request, "Successfully updated currency")
-            else:
-                messages.error(request, "Invalid currency")
-
-            context.update(
-                {
-                    "post_return": "currency",
-                    "currency": usersettings.currency,
-                    "user_settings": usersettings,
-                }
-            )
         if section == "profile_picture":
             if profile_picture:
                 try:

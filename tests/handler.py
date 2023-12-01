@@ -1,3 +1,4 @@
+from django.contrib.messages import get_messages
 from django.urls import reverse
 from django.test import TestCase
 from backend.models import User, Receipt, UserSettings
@@ -73,9 +74,18 @@ class ViewTestCase(TestCase):
     def login_user(self):
         self.client.login(username="user@example.com", password="user")
 
-    def make_request(self, with_htmx=True):
+    def make_request(self, method="get", data={}, with_htmx=True):
         """
         Makes request to self.url_name, defaults "with htmx"
         """
         headers = self.htmx_headers if with_htmx else {}
-        return self.client.get(reverse(self.url_name), **headers)
+        if method == "post":
+            return self.client.post(reverse(self.url_name), data, **headers)
+        else:
+            return self.client.get(reverse(self.url_name), **headers)
+
+    def get_all_messages(self, response):
+        try:
+            return list(get_messages(response.wsgi_request))
+        except:
+            return []
