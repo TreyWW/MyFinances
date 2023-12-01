@@ -1,5 +1,6 @@
-from django.urls import reverse, resolve
-from backend.models import UserSettings
+from django.urls import reverse
+
+from backend.models import UserSettings, User
 from tests.handler import ViewTestCase, assert_url_matches_view
 
 
@@ -68,3 +69,69 @@ class CurrencyAPIChange(ViewTestCase):
         self.assertEqual(str(messages[0]), "Successfully updated currency")
         user_settings = UserSettings.objects.get(user=self.log_in_user)
         self.assertEqual(user_settings.currency, "EUR")
+
+
+class AccountNameChange(ViewTestCase):
+    def setUp(self):
+        super().setUp()
+        self.url_path = "/api/settings/change_name/"
+        self.url_name = "api:settings:change_name"
+        self.view_function_path = "settings.change_name.change_name"
+
+    def test_405_for_non_htmx_requests(self):
+        # Ensure that non-HTMX requests to the endpoint result in a 405 Method Not Allowed response
+        self.login_user()
+        response = self.make_request(method="post", with_htmx=False)
+        self.assertEqual(response.status_code, 405)
+        self.assertEqual(response.content.decode(), "Invalid Request")
+
+    def test_redirects_to_login_for_unauthenticated_users(self):
+        # Ensure that unauthenticated users are redirected to the login page
+        response = self.make_request()
+        self.assertRedirects(response, f"/login/?next={self.url_path}", 302)
+
+    def test_validation_error_no_name_provided(self):
+        # Ensure that a validation error message is displayed when neither a first name nor a last name is provided
+        self.login_user()
+        response = self.make_request(method="post", with_htmx=True)
+        self.assertEqual(response.status_code, 200)
+        messages = self.get_all_messages(response)
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(
+            str(messages[0]), "Please enter a valid firstname or lastname."
+        )
+
+    def test_name_didnt_change(self):
+        # Ensure that a warning message is displayed when the provided name is the same as the current name
+        self.login_user()
+        self.log_in_user.first_name = "John"
+        self.log_in_user.last_name = "Doe"
+        self.log_in_user.save()
+        response = self.make_request(
+            method="post",
+            data={"first_name": "John", "last_name": "Doe"},
+            with_htmx=True,
+        )
+        self.assertEqual(response.status_code, 200)
+        messages = self.get_all_messages(response)
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), "You already have this name.")
+
+    def test_name_changed_successfully(self):
+        # Ensure that the name is successfully changed, and a success message is displayed
+        self.login_user()
+        response = self.make_request(
+            method="post",
+            data={"first_name": "New", "last_name": "Name"},
+            with_htmx=True,
+        )
+        self.assertEqual(response.status_code, 200)
+        messages = self.get_all_messages(response)
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(
+            str(messages[0]),
+            "Successfully changed your name to <strong>New Name</strong>",
+        )
+        # get updated user obj
+        user = User.objects.get(id=self.log_in_user.id)
+        self.assertEqual("New Name", user.get_full_name())

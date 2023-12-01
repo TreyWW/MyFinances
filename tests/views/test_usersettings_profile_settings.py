@@ -70,3 +70,7 @@ class UserSettingsProfileSettingsViewTestCase(ViewTestCase):
 
         # Check that the profile picture is still at default and hasn't changed
         self.assertEqual(response.context["users_profile_picture"], "")
+
+    def test_account_name_change_via_form(self):
+        # Log in the user
+        self.login_user()
