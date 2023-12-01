@@ -30,3 +30,4 @@ Pillow==10.1.0
 shortuuid
 # test
 model_bakery
+tblib # this is used to see parallel test errors
