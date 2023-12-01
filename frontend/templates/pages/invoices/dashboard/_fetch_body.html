@@ -1,0 +1,117 @@
+{% load humanize %}
+{% load mathfilters %}
+<tbody id="table_body">
+{% for invoice in invoices %}
+    <tr>
+        <td>{{ invoice.id }}</td>
+        <td>
+            {{ invoice.date_due | date:"d/m/Y" }}
+        </td>
+        <td>
+            <div class="flex items-center text-sm">
+                <div>
+                    {% with cli_name=invoice.client_to.name|default:invoice.client_name %}
+                        {% if cli_name %}
+                            <p class="font-semibold">{{ cli_name }}</p>
+                        {% else %}
+                            <p class="font-thin">No Client</p>
+                        {% endif %}
+                    {% endwith %}
+                </div>
+            </div>
+        </td>
+        <td>
+            £{{ invoice.get_total_price | floatformat:2 | intcomma }}
+        </td>
+        <td>
+        <span class="badge badge-outline rounded p-3
+        {% if invoice.payment_status == "paid" %}
+       badge-success
+        {% elif invoice.payment_status == "overdue" %}
+       badge-error drop-shadow drop-shadow-glow_red
+        {% endif %}
+">
+         {{ invoice.payment_status | default:"sent" | title }}
+        </span>
+        </td>
+        <td colspan="2">
+            {# The if statement for dropdown top goes as followes #}
+            {# Use dropdown on top if these: #}
+            {# - is second to last item (and not first item) #}
+            {# - is last item           (and not first item) #}
+            <div class="dropdown dropdown-left
+{% if forloop.last and invoices.count > 1 or forloop.counter == invoices.count|sub:1 and not forloop.first %}dropdown-top
+{% endif %}">
+                <label tabindex="0" class="btn btn-primary btn-outline btn-sm">
+                    <i class="fa-solid fa-regular fa-ellipsis-vertical"></i>
+                </label>
+                <ul tabindex="0" class="dropdown-content z-[1] menu wp-2 shadow-2xl bg-base-200 rounded-box w-52">
+                    <li>
+                        <a href="{% url "invoices dashboard preview" id=invoice.id %}">
+                            <i class="fa-solid fa-regular fa-file-pdf"></i>
+                            Preview
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url "invoices dashboard manage_access" id=invoice.id %}">
+                            <i class="fa-solid fa-key"></i>
+                            Manage Access
+                        </a>
+                    </li>
+                    <div class="tooltip tooltip-left" data-tip="These actions aren't yet added.">
+                        <li class="disabled">
+                            <a href="">
+                                <i class="fa-solid fa-regular fa-pencil"></i>
+                                Edit
+                            </a>
+                        </li>
+                        <li class="disabled">
+                            <a href="">
+                                <i class="fa-solid fa-trash"></i>
+                                Delete
+                            </a>
+                        </li>
+                    </div>
+                </ul>
+            </div>
+        </td>
+    </tr>
+{% empty %}
+    <td colspan="100%" class="text-center">
+        No Invoices Found
+    </td>
+{% endfor %}
+</tbody>
+
+{% for option in all_sort_options %}
+    <div hx-swap-oob="innerHTML:li[data-sort='{{ option }}'] button">
+        {% if sort == option %}<i class="fa fa-solid fa-sort"></i>{% endif %}
+        {% if option == "payment_status" %}
+            Payment Status
+        {% elif option == "date_due" %}
+            Date
+        {% elif option == "amount" %}
+            Amount
+        {% else %}
+            ID
+        {% endif %}
+    </div>
+{% endfor %}
+
+{% for filter_type, inner_filters in all_filters.items %}
+    {% for filter in inner_filters %}
+        <div hx-swap-oob="innerHTML:div[data-filter-type='{{ filter_type }}'] ul li[data-filter-by='{{ filter }}'] button">
+            {% if filter in selected_filters %}<i class="fa fa-solid fa-check text-success"></i>{% endif %}
+            {{ filter | title }}
+        </div>
+    {% endfor %}
+{% endfor %}
+
+<div hx-swap-oob="innerHTML:#filter_list_storage">
+    <input type="hidden" name="payment_status_paid" value="{% if 'paid' in selected_filters %}true{% endif %}">
+    <input type="hidden" name="payment_status_pending" value="{% if 'pending' in selected_filters %}true{% endif %}">
+    <input type="hidden" name="payment_status_overdue" value="{% if 'overdue' in selected_filters %}true{% endif %}">
+    <input type="hidden" name="amount_20+" value="{% if '20+' in selected_filters %}true{% endif %}">
+    <input type="hidden" name="amount_50+" value="{% if '50+' in selected_filters %}true{% endif %}">
+    <input type="hidden" name="amount_100+" value="{% if '100+' in selected_filters %}true{% endif %}">
+</div>
