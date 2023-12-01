@@ -2,9 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+.modal-responsive {
+    @apply modal-bottom;
+    @apply sm:modal-middle;
+}
+
 .input_card {
     @apply rounded-full;
-    @apply max-w-screen-xl;
     @apply border;
     @apply border-gray-900;
     @apply card;
