@@ -1,33 +1,32 @@
 # django
 django==4.2.7
-gunicorn
+gunicorn==21.2.0
 # db
 mysqlclient==2.2.0
-mysqlclient
 mariadb==1.1.8
 # django apps
 django-allauth==0.58.2
-django-sendgrid-v5
+django-sendgrid-v5==1.2.3
 django-environ==0.11.2
 django-extensions==3.2.3
-python-dateutil
-django-mathfilters
-django-ratelimit
-django-htmlmin
-python-memcached
-django-htmx
-django-login-required-middleware
-django-debug-toolbar
-django-components
+python-dateutil==2.8.2
+django-mathfilters==1.0.0
+django-ratelimit==4.1.0
+django-htmlmin==0.11.0
+python-memcached==1.59
+django-htmx==1.17.2
+django-login-required-middleware==0.9.0
+django-debug-toolbar==4.2.0
+django-components==0.29
 # markdown
-django-markdownify
-bleach
+django-markdownify==0.9.3
+bleach==6.1.0
 # other stuff
 oauthlib==3.2.2
-boto3==1.29.6
+boto3==1.33.6
 django-storages==1.14.2
 Pillow==10.1.0
-shortuuid
+shortuuid==1.0.11
 # test
-model_bakery
+model_bakery==1.17.0
 tblib # this is used to see parallel test errors

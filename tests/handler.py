@@ -1,13 +1,12 @@
-from django.contrib.messages import get_messages
-from django.urls import reverse
-from django.test import TestCase
-from backend.models import User, Receipt, UserSettings
-from django.core.files.uploadedfile import SimpleUploadedFile
-from PIL import Image
 from io import BytesIO
 
+from PIL import Image
+from django.contrib.messages import get_messages
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.test import TestCase, SimpleTestCase
 from django.urls import resolve, reverse
-from django.test import SimpleTestCase
+
+from backend.models import User, Receipt, UserSettings
 
 
 def assert_url_matches_view(url_path, url_name, view_function_path):
@@ -74,13 +73,16 @@ class ViewTestCase(TestCase):
     def login_user(self):
         self.client.login(username="user@example.com", password="user")
 
-    def make_request(self, method="get", data={}, with_htmx=True):
+    def make_request(self, method="get", data=None, with_htmx=True, format=None):
         """
         Makes request to self.url_name, defaults "with htmx"
         """
         headers = self.htmx_headers if with_htmx else {}
+        method = method.lower() or "get"
         if method == "post":
             return self.client.post(reverse(self.url_name), data, **headers)
+        elif method == "delete":
+            return self.client.delete(reverse(self.url_name), data, **headers)
         else:
             return self.client.get(reverse(self.url_name), **headers)
 

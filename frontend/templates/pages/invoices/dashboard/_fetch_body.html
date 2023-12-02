@@ -65,11 +65,15 @@
                                 Edit
                             </a>
                         </li>
-                        <li class="disabled">
-                            <a href="">
+                        <li>
+                            <button hx-delete="{% url 'api:invoices:delete' %}"
+                                    hx-target="closest tr"
+                                    hx-confirm="Are you sure you would like to delete invoice #{{ invoice.id }}?"
+                                    hx-vals='{"invoice": "{{ invoice.id }}" }'
+                            >
                                 <i class="fa-solid fa-trash"></i>
                                 Delete
-                            </a>
+                            </button>
                         </li>
                     </div>
                 </ul>
