@@ -4206,6 +4206,18 @@ html {
   height: 100vh;
 }
 
+.h-12 {
+    height: 3rem;
+}
+
+.max-h-44 {
+    max-height: 11rem;
+}
+
+.max-h-12 {
+    max-height: 3rem;
+}
+
 .min-h-full {
   min-height: 100%;
 }
@@ -4220,10 +4232,6 @@ html {
 
 .w-11 {
   width: 2.75rem;
-}
-
-.w-12 {
-  width: 3rem;
 }
 
 .w-14 {
@@ -4292,6 +4300,14 @@ html {
 
 .w-full {
   width: 100%;
+}
+
+.w-10 {
+    width: 2.5rem;
+}
+
+.w-12 {
+    width: 3rem;
 }
 
 .min-w-0 {
@@ -4617,11 +4633,6 @@ html {
   border-color: rgb(17 24 39 / var(--tw-border-opacity));
 }
 
-.border-red-200 {
-  --tw-border-opacity: 1;
-  border-color: rgb(254 202 202 / var(--tw-border-opacity));
-}
-
 .border-transparent {
   border-color: transparent;
 }
@@ -4872,6 +4883,10 @@ html {
   padding-top: 0.25rem;
 }
 
+.pt-12 {
+    padding-top: 3rem;
+}
+
 .pt-2 {
   padding-top: 0.5rem;
 }
@@ -5023,11 +5038,6 @@ html {
 .text-purple-600 {
   --tw-text-opacity: 1;
   color: rgb(147 51 234 / var(--tw-text-opacity));
-}
-
-.text-red-200 {
-  --tw-text-opacity: 1;
-  color: rgb(254 202 202 / var(--tw-text-opacity));
 }
 
 .text-red-500 {
@@ -5367,7 +5377,6 @@ html {
 .avatar-img-ring {
   --tw-ring-offset-color: var(--fallback-b1,oklch(var(--b1)/1));
   --tw-ring-offset-width: 2px;
-  width: 6rem;
   border-radius: 9999px;
 }
 
@@ -5998,16 +6007,6 @@ button.btn.loading-htmx.htmx-request {
 .hover\:bg-purple-800:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(107 33 168 / var(--tw-bg-opacity));
-}
-
-.hover\:bg-red-200:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(254 202 202 / var(--tw-bg-opacity));
-}
-
-.hover\:text-black:hover {
-  --tw-text-opacity: 1;
-  color: rgb(0 0 0 / var(--tw-text-opacity));
 }
 
 .hover\:text-gray-800:hover {
