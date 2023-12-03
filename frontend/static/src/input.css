@@ -26,6 +26,7 @@
 .avatar-img-ring {
     @apply ring;
     @apply ring-primary;
+    @apply focus:ring-offset-4;
     @apply hover:ring-offset-4;
     @apply ring-offset-base-100;
     @apply ring-offset-2;

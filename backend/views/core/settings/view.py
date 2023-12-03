@@ -81,27 +81,19 @@ def settings_page(request: HttpRequest):
 
 def change_password(request: HttpRequest):
     if request.method == "POST":
-        error: str = ""
-
+        current_password = request.POST.get("current_password")
         password = request.POST.get("password")
         confirm_password = request.POST.get("confirm_password")
 
-        if password != confirm_password:
-            error = "Passwords don't match"
-
-        if not password:
-            error = "Something went wrong, no password was provided."
-
-        if not error and len(password) > 128:
-            error = "Password either too short, or too long. Minimum characters is eight, maximum is 128."
-
-        if not error and len(password) < 8:
-            error = "Password either too short, or too long. Minimum characters is eight, maximum is 128."
+        error = validate_password_change(
+            request.user, current_password, password, confirm_password
+        )
 
         if error:
             messages.error(request, error)
             return redirect("user settings change_password")
 
+        # If no errors, update the password
         request.user.set_password(password)
         request.user.save()
         update_session_auth_hash(request, request.user)
@@ -109,3 +101,19 @@ def change_password(request: HttpRequest):
         return redirect("user settings")
 
     return render(request, "pages/reset_password.html", {"type": "change"})
+
+
+def validate_password_change(user, current_password, new_password, confirm_password):
+    if not user.check_password(current_password):
+        return "Incorrect current password"
+
+    if new_password != confirm_password:
+        return "Passwords don't match"
+
+    if not new_password:
+        return "Something went wrong, no password was provided."
+
+    if len(new_password) < 8 or len(new_password) > 128:
+        return "Password must be between 8 and 128 characters."
+
+    return None
