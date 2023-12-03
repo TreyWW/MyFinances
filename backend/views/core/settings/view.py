@@ -1,9 +1,8 @@
-from django.contrib.sessions.models import Session
-from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render
-from django.contrib.auth import update_session_auth_hash
 from PIL import Image
-from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.sessions.models import Session
+from django.http import HttpRequest
+from django.shortcuts import render
 
 from backend.decorators import *
 from backend.models import *
@@ -15,13 +14,17 @@ Modals = Modals()
 def settings_page(request: HttpRequest):
     context = {}
 
-    usersettings, created = UserSettings.objects.get_or_create(user=request.user)
+    try:
+        usersettings = request.user.user_profile
+    except UserSettings.DoesNotExist:
+        # Create a new UserSettings object
+        usersettings = UserSettings.objects.create(user=request.user)
+
     context.update(
         {
             "sessions": Session.objects.filter(),
             "currency_signs": usersettings.CURRENCIES,
             "currency": usersettings.currency,
-            "user_settings": usersettings,
         }
     )
 
@@ -70,8 +73,6 @@ def settings_page(request: HttpRequest):
         {
             "sessions": [],  # Session.objects.filter(),
             "currency": usersettings.currency,
-            "currency_signs": usersettings.CURRENCIES,
-            "user_settings": usersettings,
         }
     )
 

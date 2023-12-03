@@ -7,14 +7,13 @@ from backend.models import Invoice, InvoiceURL
 
 def manage_access(request: HttpRequest, id):
     try:
-        invoice: dict = Invoice.objects.get(id=id, user=request.user)
+        invoice = Invoice.objects.prefetch_related("invoice_urls").get(id=id, user=request.user)
     except Invoice.DoesNotExist:
+        messages.error(request, "Invoice not found")
         return redirect("invoices dashboard")
 
-    all_access_codes = (
-        invoice.invoice_urls.values_list("uuid", "created_on")
-        .all()
-        .order_by("-created_on")
+    all_access_codes = invoice.invoice_urls.values_list("uuid", "created_on").order_by(
+        "-created_on"
     )
 
     return render(

@@ -1,6 +1,6 @@
-from django.http import HttpResponse
-from django.shortcuts import redirect, render
 from django.contrib import messages
+from django.http import HttpResponse
+from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
 from backend.models import UserSettings  # Replace with your actual model
@@ -9,7 +9,10 @@ from backend.models import UserSettings  # Replace with your actual model
 @require_http_methods(["POST"])
 def update_currency_view(request):
     currency = request.POST.get("currency", None)
-    usersettings, created = UserSettings.objects.get_or_create(user=request.user)
+    try:
+        usersettings = request.user.user_profile
+    except UserSettings.DoesNotExist:
+        usersettings = UserSettings.objects.create(user=request.user)
 
     htmx_return = "partials/base/toasts.html"
 

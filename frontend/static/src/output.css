@@ -4574,6 +4574,10 @@ html {
   border-radius: 0.75rem;
 }
 
+.rounded-3xl {
+  border-radius: 1.5rem;
+}
+
 .rounded-l-xl {
   border-top-left-radius: 0.75rem;
   border-bottom-left-radius: 0.75rem;
@@ -4644,6 +4648,11 @@ html {
 .border-white {
   --tw-border-opacity: 1;
   border-color: rgb(255 255 255 / var(--tw-border-opacity));
+}
+
+.border-primary {
+  --tw-border-opacity: 1;
+  border-color: var(--fallback-p, oklch(var(--p)/var(--tw-border-opacity)));
 }
 
 .bg-base-100 {
@@ -5142,6 +5151,11 @@ html {
 .ring-primary {
   --tw-ring-opacity: 1;
   --tw-ring-color: var(--fallback-p,oklch(var(--p)/var(--tw-ring-opacity)));
+}
+
+.ring-accent {
+  --tw-ring-opacity: 1;
+  --tw-ring-color: var(--fallback-a, oklch(var(--a)/var(--tw-ring-opacity)));
 }
 
 .ring-offset-2 {

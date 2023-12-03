@@ -29,8 +29,10 @@
             </tr>
             </thead>
             <tbody id="tbody">
-            {% for code, created_on in all_codes %}
-                {% include 'pages/invoices/manage_access/_table_row.html' %}
+            {% for url in invoice.invoice_urls.all %}
+                {% with code=url.uuid created_on=url.created_on %}
+                    {% include 'pages/invoices/manage_access/_table_row.html' %}
+                {% endwith %}
             {% endfor %}
             </tbody>
         </table>

@@ -75,10 +75,10 @@
         <div class="dropdown dropdown-end">
             <label tabindex="0" class="btn btn-ghost btn-circle">
                 {#                    <div class="avatar w-10">#}
-                {% component "profile_picture" image_type="small" extra_classes="max-w-12 max-h-12 w-12 h-12 avatar-img-ring" url=user_settings.profile_picture_url %}
+                {% component "profile_picture" image_type="small" extra_classes="max-w-12 max-h-12 w-12 h-12 avatar-img-ring" url=request.user.user_profile.profile_picture_url %}
                 {#                    </div>#}
             </label>
-            <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52 gap-y-1">
+            <ul tabindex="0" class="menu menu-sm dropdown-content border border-primary">
                 <li>
                     <a {% if request.resolver_match.url_name == "user settings" %}class="active"{% endif %}
                        href="{% url 'user settings' %}">

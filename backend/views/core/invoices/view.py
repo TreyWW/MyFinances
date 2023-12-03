@@ -8,16 +8,18 @@ from backend.models import Invoice, UserSettings, InvoiceURL
 def preview(request, id):
     context = {"type": "preview"}
 
-    try:
-        invoice = Invoice.objects.get(user=request.user, id=id)
-    except Invoice.DoesNotExist:
+    invoice = (
+        Invoice.objects.filter(user=request.user, id=id)
+        .prefetch_related("items")
+        .first()
+    )
+
+    if not invoice:
         messages.error(request, "Invoice not found")
         return redirect("invoices dashboard")
 
     try:
-        currency_symbol = (
-            UserSettings.objects.get(user=request.user).get_currency_symbol or "$"
-        )
+        currency_symbol = request.user.user_profile.get_currency_symbol
     except UserSettings.DoesNotExist:
         currency_symbol = "$"
 
@@ -35,7 +37,11 @@ def view(request, uuid):
     context = {"type": "view"}
 
     try:
-        url = InvoiceURL.objects.get(uuid=uuid)
+        url = (
+            InvoiceURL.objects.select_related("invoice")
+            .prefetch_related("invoice", "invoice__items")
+            .get(uuid=uuid)
+        )
         invoice = url.invoice
         if not invoice:
             raise InvoiceURL.DoesNotExist
@@ -44,9 +50,7 @@ def view(request, uuid):
         return redirect("index")
 
     try:
-        currency_symbol = (
-            UserSettings.objects.get(user=request.user).get_currency_symbol or "$"
-        )
+        currency_symbol = request.user.user_profile.get_currency_symbol
     except UserSettings.DoesNotExist:
         currency_symbol = "$"
 

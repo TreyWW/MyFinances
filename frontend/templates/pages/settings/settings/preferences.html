@@ -26,10 +26,12 @@
                         <div class="text-lg font-semibold text-gray-900 dark:text-white">Currency</div>
                         <div class="text-base font-normal text-gray-500 dark:text-gray-400 whitespace-nowrap">
                             This will change the default currency for your account
+
+                            {{ request.user.user_profile }}
                         </div>
                     </div>
                     <select name="currency" class="select select-bordered w-[25%]">
-                        {% for code, info in currency_signs.items %}
+                        {% for code, info in request.user.user_profile.CURRENCIES.items %}
                             <option value="{{ code }}" {% if currency == code %}selected{% endif %}>
                                 {{ info.symbol }} - {{ code }}
                             </option>
