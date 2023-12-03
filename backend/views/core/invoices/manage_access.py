@@ -7,7 +7,9 @@ from backend.models import Invoice, InvoiceURL
 
 def manage_access(request: HttpRequest, id):
     try:
-        invoice = Invoice.objects.prefetch_related("invoice_urls").get(id=id, user=request.user)
+        invoice = Invoice.objects.prefetch_related("invoice_urls").get(
+            id=id, user=request.user
+        )
     except Invoice.DoesNotExist:
         messages.error(request, "Invoice not found")
         return redirect("invoices dashboard")
