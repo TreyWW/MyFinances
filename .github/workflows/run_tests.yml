@@ -3,7 +3,7 @@ name: Backend Tests
 on: [push, pull_request, workflow_dispatch]
 
 env:
-  DOCKER_COMPOSE_PATH: infrastructre/backend/docker-compose.ci.yml
+  DOCKER_COMPOSE_PATH: ./infrastructure/backend/docker-compose.ci.yml
 
 jobs:
   build:
