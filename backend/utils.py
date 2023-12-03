@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from backend.models import User
 from django.urls import reverse, reverse_lazy
 import os, json
 from backend.models import TeamInvitation
@@ -7,7 +7,7 @@ from backend.models import TeamInvitation
 def load_navbar_items():
     json_file_path = os.path.join(
         os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-        "frontend/templates/core/partials/base/navbar/items.json",
+        "frontend/templates/partials/base/navbar/items.json",
     )
 
     with open(json_file_path) as json_file:
@@ -235,7 +235,8 @@ class Modals:
             "action": {
                 "text": "Add Receipt",
                 "method": "post",
-                "extra": f"enctype=multipart/form-data hx-post={reverse_lazy('api v1 receipts new')} hx-target=#items hx-refresh=true",
+                "extra": f"enctype=multipart/form-data hx-post={reverse_lazy('api:receipts:new')} hx-target=#items "
+                f"hx-refresh=true",
                 "fields": [
                     {
                         "type": "text",
@@ -268,7 +269,8 @@ class Modals:
             "action": {
                 "text": "Update",
                 "method": "post",
-                "extra": f"hx-post={reverse_lazy('api v1 invoices create set_destination to')} hx-target=#to_destination hx-swap=outerHTML",  # hx-refresh=true
+                "extra": f"hx-post={reverse_lazy('api:invoices:set_destination to')} hx-target=#to_destination hx-swap=outerHTML",
+                # hx-refresh=true
                 "fields": [
                     {
                         "type": "text",
@@ -326,12 +328,12 @@ class Modals:
     @staticmethod
     def invoices_from_destination():
         return {
-            "id": "invoices_from_destination_modal",
+            "id": "modal_invoices_from_destination",
             "title": "Update your info",
             "action": {
                 "text": "Update",
                 "method": "post",
-                "extra": f"hx-post={reverse_lazy('api v1 invoices create set_destination from')} hx-target=#from_destination hx-swap=outerHTML",  # hx-refresh=true
+                "extra": f"hx-post={reverse_lazy('api:invoices:set_destination from')} hx-target=#from_destination hx-swap=outerHTML",  # hx-refresh=true
                 "fields": [
                     {
                         "type": "text",

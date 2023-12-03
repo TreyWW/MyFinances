@@ -1,0 +1,100 @@
+{% extends 'base/base.html' %}
+{% block content %}
+    {% include 'components/modal.html' with modals=modal_data %}
+    {# TODO: Major code clean up needed #}
+    <div class="my-4 w-full card border border-gray-700 dark:border-gray-700">
+        <div class="flex h-24 glass top-0 left-0 w-full h-full opacity-50 card">
+            <!-- This section doesn't work yet, so we have an overlay over it -->
+            <p class="text-center text-white text-2xl py-2 px-4 m-auto">Coming Soon</p>
+        </div>
+    </div>
+    {#    <div class="card w-full p-6 bg-base-100 shadow-xl mt-2">#}
+    {#        <div class="flex items-center justify-between">#}
+    {#            <div>#}
+    {#                {% if is_team_leader %}#}
+    {#                    <button onclick="modal_invite_user_to_team.showModal();" class="btn btn-primary"#}
+    {#                            hx-get="{% url "api:base:modal retrieve" modal_name="invite_user_to_team" %}"#}
+    {#                            hx-trigger="click once"#}
+    {#                            hx-swap="beforeend" hx-target="#modal_container">#}
+    {#                        {% include 'components/icon.html' with icon="plus" classes="pe-2" %}#}
+    {#                        Invite User#}
+    {#                    </button>#}
+    {#                {% endif %}#}
+    {#                {% if not has_team %}#}
+    {#                    <button onclick="modal_create_team.showModal();" class="btn btn-primary" for="modal_create_team"#}
+    {#                           hx-get="{% url "api:base:modal retrieve" modal_name="create_team" %}" hx-trigger="click once"#}
+    {#                           hx-swap="beforeend"#}
+    {#                           hx-target="#modal_container">#}
+    {#                        {% include 'components/icon.html' with icon="plus" classes="pe-2" %}#}
+    {#                        Create Team#}
+    {#                    </button>#}
+    {#                {% endif %}#}
+    {#            </div>#}
+    {#            <h1 class="text-3xl text-center">#}
+    {#                {% if has_team %}#}
+    {#                    Team - {{ team.name }}#}
+    {#                {% else %}#}
+    {#                    You aren't in a team#}
+    {#                {% endif %}#}
+    {#            </h1>#}
+    {#            {% if is_team_leader %}#}
+    {#                <div class="cursor-not-allowed tooltip tooltip-left"#}
+    {#                     data-tip="You are the team leader, so you cannot leave theteam">#}
+    {#            {% endif %}#}
+    {#            {% if has_team %}#}
+    {#                <a class="btn btn-error {% if is_team_leader %}btn-disabled{% endif %}"#}
+    {#                   href="{% url "user settings teams join leave" %}">Leave Team#}
+    {#                </a>#}
+    {#            {% else %}#}
+    {#                <span></span>#}
+    {#            {% endif %}#}
+    {#            {% if is_team_leader %}#}
+    {#                </div>#}
+    {#            {% endif %}#}
+    {#        </div>#}
+    {#    </div>#}
+    {#    {% if has_team %}#}
+    {#    <div class="card w-full p-6 bg-base-100 shadow-xl mt-2">#}
+    {#        <table class="w-full table mt-3">#}
+    {#            <thead>#}
+    {#            <tr>#}
+    {#                <th>Name</th>#}
+    {#                <th>Role</th>#}
+    {#                {% if is_team_leader %}#}
+    {#                    <th>Actions</th>#}
+    {#                {% endif %}#}
+    {#            </tr>#}
+    {#            </thead>#}
+    {#            <tbody>#}
+    {#            {% for user in team.members.all %}#}
+    {#                <tr>#}
+    {#                    <td>{{ user.username }}</td>#}
+    {#                    <td>NoIdea</td>#}
+    {#                    {% if is_team_leader %}#}
+    {#                        <td>#}
+    {#                            <div class="flex flex-wrap gap-2">#}
+    {#                                <div class="tooltip" data-tip="Edit Permissions">#}
+    {#                                    <button class="btn btn-success btn-outline btn-sm">#}
+    {#                                        <i class="fa-solid fa-hammer"></i>#}
+    {#                                    </button>#}
+    {#                                    </span>#}
+    {#                                </div>#}
+    {#                                <div class="tooltip" data-tip="Kick User">#}
+    {#                                    <button class="btn btn-error btn-outline btn-sm" onclick="team_kick_user_{{ user.id }}#}
+    {#                                            .showModal#}
+    {#                                            ();">#}
+    {#                                        <i class="fa-solid fa-ban"></i>#}
+    {#                                    </button>#}
+    {#                                    </span>#}
+    {#                                </div>#}
+    {#                            </div>#}
+    {#                        </td>#}
+    {#                    {% endif %}#}
+    {#                </tr>#}
+    {#            {% endfor %}#}
+    {#            </tbody>#}
+    {#        </table>#}
+    {#    </div>#}
+    {#    {% endif %}#}
+
+{% endblock content %}

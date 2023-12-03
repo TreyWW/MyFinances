@@ -1,25 +1,63 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect
+from login_required import login_not_required
 
-from backend.models import Invoice, UserSettings
+from backend.models import Invoice, UserSettings, InvoiceURL
 
 
 def preview(request, id):
-    if not id or not id.isdigit():
-        messages.error(request, "Invalid invoice id")
-        return redirect("invoices dashboard")
-    invoice = Invoice.objects.filter(user=request.user, id=id).first()
+    context = {"type": "preview"}
+
+    invoice = (
+        Invoice.objects.filter(user=request.user, id=id)
+        .prefetch_related("items")
+        .first()
+    )
+
     if not invoice:
         messages.error(request, "Invoice not found")
         return redirect("invoices dashboard")
-    users_currency = UserSettings.objects.filter(user=request.user).first()
-    currency_symbol = "$"
-    if users_currency:
-        currency = users_currency.currency
-        currency_symbol = UserSettings.CURRENCIES.get(currency, {}).get("symbol", "$")
+
+    try:
+        currency_symbol = request.user.user_profile.get_currency_symbol
+    except UserSettings.DoesNotExist:
+        currency_symbol = "$"
+
+    context.update({"invoice": invoice, "currency_symbol": currency_symbol})
 
     return render(
         request,
-        "core/pages/invoices/view/invoice.html",
-        {"invoice": invoice, "currency_symbol": currency_symbol},
+        "pages/invoices/view/invoice.html",
+        context,
+    )
+
+
+@login_not_required
+def view(request, uuid):
+    context = {"type": "view"}
+
+    try:
+        url = (
+            InvoiceURL.objects.select_related("invoice")
+            .prefetch_related("invoice", "invoice__items")
+            .get(uuid=uuid)
+        )
+        invoice = url.invoice
+        if not invoice:
+            raise InvoiceURL.DoesNotExist
+    except InvoiceURL.DoesNotExist:
+        messages.error(request, "Invoice not found")
+        return redirect("index")
+
+    try:
+        currency_symbol = request.user.user_profile.get_currency_symbol
+    except UserSettings.DoesNotExist:
+        currency_symbol = "$"
+
+    context.update({"invoice": invoice, "currency_symbol": currency_symbol})
+
+    return render(
+        request,
+        "pages/invoices/view/invoice.html",
+        context,
     )

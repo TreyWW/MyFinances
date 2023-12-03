@@ -1,7 +1,8 @@
+from PIL import Image
+from django.contrib.auth import update_session_auth_hash
 from django.contrib.sessions.models import Session
 from django.http import HttpRequest
 from django.shortcuts import render
-from django.contrib.auth import update_session_auth_hash
 
 from backend.decorators import *
 from backend.models import *
@@ -13,62 +14,106 @@ Modals = Modals()
 def settings_page(request: HttpRequest):
     context = {}
 
-    usersettings, created = UserSettings.objects.get_or_create(user=request.user)
-
-    if request.method == "POST":
-        currency = request.POST.get("currency")
-        profile_picture = request.FILES.get("profile_image")
-
-        if currency:
-            if currency in usersettings.CURRENCIES:
-                usersettings.currency = currency
-                usersettings.save()
-            else:
-                messages.error(request, "Invalid currency")
-
-        if profile_picture:
-            usersettings.profile_picture = profile_picture
-            usersettings.save()
+    try:
+        usersettings = request.user.user_profile
+    except UserSettings.DoesNotExist:
+        # Create a new UserSettings object
+        usersettings = UserSettings.objects.create(user=request.user)
 
     context.update(
         {
             "sessions": Session.objects.filter(),
-            "currency": usersettings.currency,
             "currency_signs": usersettings.CURRENCIES,
-            "user_settings": usersettings,
+            "currency": usersettings.currency,
         }
     )
 
-    return render(request, "core/pages/settings/main.html", context)
+    if request.method == "POST" and request.htmx:
+        section = request.POST.get("section")
+        profile_picture = request.FILES.get("profile_image")
+
+        if section == "profile_picture":
+            if profile_picture:
+                try:
+                    # Max file size is 10MB (Change the first number to determine the size in MB)
+                    max_file_size = 10 * 1024 * 1024
+
+                    if profile_picture.size <= max_file_size:
+                        img = Image.open(profile_picture)
+                        img.verify()
+
+                        if img.format.lower() in ["jpeg", "png", "jpg"]:
+                            usersettings.profile_picture = profile_picture
+                            usersettings.save()
+                            messages.success(
+                                request, "Successfully updated profile picture"
+                            )
+                        else:
+                            messages.error(
+                                request,
+                                "Unsupported image format. We support only JPEG, JPG, PNG.",
+                            )
+                    else:
+                        messages.error(request, "File size should be up to 10MB.")
+
+                except (FileNotFoundError, Image.UnidentifiedImageError):
+                    messages.error(request, "Invalid or unsupported image file")
+            else:
+                messages.error(request, "Invalid or unsupported image file")
+
+            return render(
+                request,
+                "pages/settings/settings/_post_profile_pic.html",
+                {"users_profile_picture": usersettings.profile_picture_url},
+            )
+
+        return render(request, "pages/settings/settings/preferences.html", context)
+
+    context.update(
+        {
+            "sessions": [],  # Session.objects.filter(),
+            "currency": usersettings.currency,
+        }
+    )
+
+    return render(request, "pages/settings/main.html", context)
 
 
 def change_password(request: HttpRequest):
     if request.method == "POST":
-        error: str = ""
-
+        current_password = request.POST.get("current_password")
         password = request.POST.get("password")
         confirm_password = request.POST.get("confirm_password")
 
-        if password != confirm_password:
-            error = "Passwords don't match"
-
-        if not password:
-            error = "Something went wrong, no password was provided."
-
-        if not error and len(password) > 128:
-            error = "Password either too short, or too long. Minimum characters is eight, maximum is 128."
-
-        if not error and len(password) < 8:
-            error = "Password either too short, or too long. Minimum characters is eight, maximum is 128."
+        error = validate_password_change(
+            request.user, current_password, password, confirm_password
+        )
 
         if error:
             messages.error(request, error)
             return redirect("user settings change_password")
 
+        # If no errors, update the password
         request.user.set_password(password)
         request.user.save()
         update_session_auth_hash(request, request.user)
         messages.success(request, "Successfully changed your password.")
         return redirect("user settings")
 
-    return render(request, "core/pages/reset_password.html", {"type": "change"})
+    return render(request, "pages/reset_password.html", {"type": "change"})
+
+
+def validate_password_change(user, current_password, new_password, confirm_password):
+    if not user.check_password(current_password):
+        return "Incorrect current password"
+
+    if new_password != confirm_password:
+        return "Passwords don't match"
+
+    if not new_password:
+        return "Something went wrong, no password was provided."
+
+    if len(new_password) < 8 or len(new_password) > 128:
+        return "Password must be between 8 and 128 characters."
+
+    return None

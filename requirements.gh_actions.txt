@@ -4,9 +4,9 @@ gunicorn
 # db
 # mysqlclient==2.2.0
 # mysqlclient
-# mariadb
+# mariadb==1.1.8
 # django apps
-social-auth-app-django==5.4.0
+django-allauth==0.58.2
 django-sendgrid-v5
 django-environ==0.11.2
 django-extensions==3.2.3
@@ -18,5 +18,15 @@ python-memcached
 django-htmx
 django-login-required-middleware
 django-debug-toolbar
+django-components
+# markdown
+django-markdownify
+bleach
 # other stuff
 oauthlib==3.2.2
+boto3==1.29.6
+django-storages==1.14.2
+Pillow==10.1.0
+shortuuid
+# test
+model_bakery

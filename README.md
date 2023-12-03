@@ -2,6 +2,8 @@
 
 <img src="https://github.com/TreyWW/MyFinances/assets/73353716/685b83f4-1495-4ce6-94c7-e24c2f14a6d1" width="400">
 
+![Code Formatter](https://github.com/TreyWW/MyFinances/actions/workflows/run_black_formatter.yml/badge.svg)
+![Dependency Review](https://github.com/TreyWW/MyFinances/actions/workflows/dependancy_review.yml/badge.svg)
 ![Test](https://github.com/TreyWW/MyFinances/actions/workflows/run_tests.yml/badge.svg) 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
@@ -33,7 +35,7 @@ MyFinances is an open-source web application designed to empower individuals and
 - Additional requirements can be found in the `requirements.txt` file.
 
 ### Installation
-Go to [SETUP.md](https://github.com/TreyWW/MyFinances/blob/main/documentation/SETUP.md)
+View our wiki to get started [https://github.com/TreyWW/MyFinances/wiki](https://github.com/TreyWW/MyFinances/wiki)
 
 ## Contributing
 
@@ -71,7 +73,7 @@ To contribute code:
 2. Create a new branch for your changes.
 3. Make your changes, following the coding style guidelines.
 4. Test your changes thoroughly
-    - `python manage.py test backend`
+    - `python manage.py test`
     - run the app (`python manage.py runserver`)
     - view any changed pages in browser (`127.0.0.1`) and make sure the changes work as expected
 5. Submit a pull request to the main repository's `main` branch.
@@ -100,7 +102,7 @@ Make sure you have the necessary prerequisites for development. These are detail
 
 #### Getting Started
 
-Refer to the "Getting Started" section in this README.md for setting up the development environment and running the application locally.
+View our wiki to get started [https://github.com/TreyWW/MyFinances/wiki](https://github.com/TreyWW/MyFinances/wiki)
 
 Thank you for your contributions!
 
