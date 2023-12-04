@@ -1,7 +1,12 @@
 from forex_python.converter import CurrencyRates
+from django.http import HttpRequest
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+from backend.models import *
+import datetime
 
 
-def convert_currency(init_currency, target_currency, amount):
+def convert_currency(init_currency, target_currency, amount, date=None):
     """
     Converts one currency to another, given an amount, using the forex_python library
 
@@ -16,6 +21,9 @@ def convert_currency(init_currency, target_currency, amount):
     amount : int or float, required
         The amount to be converted
 
+    date: datetime, optional
+        Past date at which the currency should be converted
+
     Returns
     ----------
     Returns an int or float representing the new amount
@@ -29,11 +37,58 @@ def convert_currency(init_currency, target_currency, amount):
     if not isinstance(amount, (int, float)):
         raise ValueError("Amount is not an accepted datatype")
 
+    if not isinstance(date, datetime.datetime):
+        raise ValueError("Date is not an accepted datatype")
+
+    if date is not None:
+        # Check if date was a weekend
+        # Forex's source has no records on weekends (5,6 = Sat, Sun)
+        if date.weekday() >= 5:
+            # move to friday before the weekend
+            date = date.replace(day=date.day - (date.weekday() - 4))
+
     currency_rates = CurrencyRates()
 
     try:
-        target_amount = currency_rates.get_rates(init_currency, target_currency, amount)
+        target_amount = currency_rates.convert(init_currency, target_currency, amount)
         return round(target_amount, 2)
     except Exception as e:
         # Handle specific exceptions raised by forex_python if needed
         raise ValueError(f"Error in currency conversion: {e}")
+
+
+def currency_conversion(request: HttpRequest):
+    context = {}
+    if request.method == "POST":
+        print("Request was post")
+
+        amount = request.POST["currency_amount"]
+        try:
+            amount = float(amount)
+            converted_amt = convert_currency(
+                request.POST["from_currency"], request.POST["to_currency"], amount
+            )
+            context.update(
+                {
+                    "converted_amount": converted_amt,
+                    "original_amount": amount,
+                    "original_currency": request.POST["from_currency"],
+                    "target_currency": request.POST["to_currency"],
+                }
+            )
+        except Exception as e:
+            print(f"exception raised in currency_conversion view: {e}")
+    elif request.method == "GET":
+        print("Request was get")
+
+    usersettings, created = UserSettings.objects.get_or_create(user=request.user)
+
+    context.update(
+        {
+            "currency_signs": usersettings.CURRENCIES,
+        }
+    )
+
+    return render(
+        request, "core/pages/currency_converter/dashboard.html", context=context
+    )

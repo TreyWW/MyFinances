@@ -1,0 +1,65 @@
+{% extends 'core/pages/base.html' %}
+{% block content %}
+    <p class="text-white font-bold">{{ page }}</p>
+    {# TODO SEARCH BAR #}
+    
+<form method="post" class="my-4 max-w-screen-xl card border border-gray-700 dark:border-gray-700">
+    {% csrf_token %}
+    <div class="my-4 flex w-full flex-col">
+        
+        <div class="card-body">
+            <div class="text-lg font-semibold text-gray-900 dark:text-white">Convert Currency</div>
+                    <div class="form-field">
+                         <label class="form-label">Currency Amount</label>
+                        <input  name="currency_amount" placeholder="100" type="text" class="peer input-ghost-secondary input input-block">
+                        <label class="form-label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden ">
+                            <span class="form-label-alt">Please enter a valid currency amount name.</span>
+                        </label>
+                    </div>
+
+      
+                    
+                    <div class="divide-y divide-gray-200 dark:divide-gray-700">
+                        <div class="flex items-center justify-between py-4">
+            
+                            <div class="w-[50%]"> 
+                            <div class="text-lg font-semibold text-gray-900 dark:text-white">From Currency</div>
+                            <select name="from_currency" class="select select-solid-primary w-[100%]">
+                                {% for code, info in currency_signs.items %}
+                                    <option value="{{ code }}" {% if currency == code %}selected{% endif %}>
+                                        {{ info.symbol }} - {{ code }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            </div>
+
+                            <div class="w-[50%]"> 
+                                <div class="text-lg font-semibold text-gray-900 dark:text-white">To Currency</div>
+                                <select name="to_currency" class="select select-solid-primary w-[100%]">
+                                    {% for code, info in currency_signs.items %}
+                                        <option value="{{ code }}" {% if currency == code %}selected{% endif %}>
+                                            {{ info.symbol }} - {{ code }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                                </div>
+                        </div>
+                    </div>
+
+                    {% if converted_amount %}
+            <div class="text-lg text-gray-900 dark:text-white">
+                <p>Converted!</p>
+            <p>
+                {{original_amount}} in {{original_currency}} is {{converted_amount}} in {{target_currency}}
+            </p>    
+            </div>
+            {% endif %}
+
+                    <button class="btn btn-primary mb-2">Convert</button>
+                </div>
+            
+
+        </div>
+    </div>
+</form>
+{% endblock content %}
