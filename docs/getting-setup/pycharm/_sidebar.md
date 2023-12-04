@@ -1,0 +1,5 @@
+- [Back](getting-setup/pycharm/)
+- [Fork Project](getting-setup/pycharm/django/fork)
+- [Setup Django](getting-setup/pycharm/django/?id=setting-up-django-with-pycharm-professional)
+- [Setup Environment Variables](getting-setup/pycharm/django/?id=setup-your-environment-variables)
+- [Setup Frontend](getting-setup/pycharm/frontend/)
