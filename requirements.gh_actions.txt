@@ -24,7 +24,7 @@ django-markdownify
 bleach
 # other stuff
 oauthlib==3.2.2
-boto3==1.29.6
+boto3==1.33.6
 django-storages==1.14.2
 Pillow==10.1.0
 shortuuid
