@@ -50,7 +50,14 @@ def convert_currency(init_currency, target_currency, amount, date=None):
     currency_rates = CurrencyRates()
 
     try:
-        target_amount = currency_rates.convert(init_currency, target_currency, amount)
+        if date is not None:
+            target_amount = currency_rates.convert(
+                init_currency, target_currency, amount, date
+            )
+        else:
+            target_amount = currency_rates.convert(
+                init_currency, target_currency, amount
+            )
         return round(target_amount, 2)
     except Exception as e:
         # Handle specific exceptions raised by forex_python if needed
@@ -66,7 +73,9 @@ def currency_conversion(request: HttpRequest):
         try:
             amount = float(amount)
             converted_amt = convert_currency(
-                request.POST["from_currency"], request.POST["to_currency"], amount
+                request.POST["from_currency"],
+                request.POST["to_currency"],
+                amount,
             )
             context.update(
                 {
