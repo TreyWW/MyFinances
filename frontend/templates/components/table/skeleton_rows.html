@@ -1,0 +1,17 @@
+{% comment %}
+
+Brief explanation:
+
+with "rows" --> number of times to repeat the loop default to 4 if none
+for _ in --> just a basic python for loop
+"n" --> number of times to repeat the loop
+"rjust" --> right justify (pretty much doing a range)
+:times --> number of times to repeat the loop
+
+{% endcomment %}
+
+{% with rows=rows|default:4 %}
+    {% for _ in "n"|rjust:rows %}
+        {% include 'components/table/skeleton_row.html' with cols=cols %}
+    {% endfor %}
+{% endwith %}

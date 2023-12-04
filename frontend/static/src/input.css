@@ -1,0 +1,162 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.modal-responsive {
+    @apply modal-bottom;
+    @apply sm:modal-middle;
+}
+
+.input_card {
+    @apply rounded-full;
+    @apply border;
+    @apply border-gray-900;
+    @apply card;
+    @apply me-3;
+    @apply hover:border-gray-500 w-full;
+}
+
+.required_star {
+    @apply text-red-400;
+    @apply float-left;
+    @apply text-left;
+    @apply ms-1;
+}
+
+.avatar-img-ring {
+    @apply ring;
+    @apply ring-primary;
+    @apply focus:ring-offset-4;
+    @apply hover:ring-offset-4;
+    @apply ring-offset-base-100;
+    @apply ring-offset-2;
+    @apply rounded-full;
+}
+
+.dropdown ul.dropdown-content {
+    @apply z-[1];
+    @apply menu;
+    @apply p-2;
+    @apply shadow;
+    @apply bg-base-200;
+    @apply gap-y-1;
+    @apply rounded-box;
+    @apply w-52;
+}
+
+/***************************/
+/*       SCROLL BARS       */
+/***************************/
+
+/* width */
+::-webkit-scrollbar {
+    @apply w-[10px];
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* PLACEHOLDERS */
+
+.input::placeholder {
+    color: #787d86;
+    opacity: 0.8;
+}
+
+.textarea::placeholder {
+    color: #787d86;
+    opacity: 0.8;
+}
+
+/****************************/
+/*       HTMX LOADING       */
+/****************************/
+
+/* Show button text when not loading*/
+.loading-htmx .loading-htmx-text {
+    display: inline-block;
+}
+
+/* Hide button text when loading */
+.loading-htmx.htmx-request .loading-htmx-text {
+    display: none;
+}
+
+/* Disabled  button when loading */
+button.loading-htmx.htmx-request {
+    cursor: not-allowed;
+    @apply btn-disabled;
+}
+
+/* Hide loading spinner when not loading */
+.loading-htmx .loading-htmx-loader {
+    display: none;
+}
+
+/* Show loading spinner when loading */
+.loading-htmx-loader-individual.htmx-request {
+    display: inline-block;
+}
+
+/* Hide loading spinner when not loading */
+
+.loading-htmx-loader-individual {
+    display: none;
+}
+/* Show loading spinner when loading */
+
+.loading-htmx.htmx-request .loading-htmx-loader {
+    display: inline-block;
+}
+
+
+
+@keyframes hideLoading {
+    0% {
+        display: inline;
+    }
+    100% {
+        display: none;
+    }
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+}
+
+@keyframes fade-out {
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes slide-from-right {
+    from {
+        transform: translateX(90px);
+    }
+}
+
+@keyframes slide-to-left {
+    to {
+        transform: translateX(-90px);
+    }
+}
+
+.slide-it {
+    animation: 420ms cubic-bezier(0, 0, 0.2, 1) 90ms both fade-in,
+    600ms cubic-bezier(0.4, 0, 0.2, 1) both slide-from-right;
+}

@@ -1,0 +1,24 @@
+{% if not swapping %}
+    <h3 class="text-sm text-natural font-semibold block lg:hidden ms-3">To</h3>
+    <button onclick="modal_invoices_to_destination.showModal();" id="to_destination"
+            class="input_card text-left"
+            hx-trigger="click once" hx-swap="beforeend" hx-target="#modal_container"
+            hx-get="{% url "api:base:modal retrieve" modal_name="invoices_to_destination" %}">
+{% endif %}
+<div class="card-body">
+    <p class="text-md">{{ name | default:"John Smith" }}</p>
+    <p class="text-sm">{{ company | default:"Google" }}</p>
+    <p class="text-sm">{{ address | default:"128 Example Road" }}</p>
+    <p class="text-sm">{{ city | default:"Oxford" }}</p>
+    <p class="text-sm">{{ county | default:"Oxfordshire" }}</p>
+    <p class="text-sm">{{ country | default:"England" }}</p>
+</div>
+<input type="hidden" name="to_name" value="{{ name | default:"John Smith" }}">
+<input type="hidden" name="to_company" value="{{ company | default:"Google" }}">
+<input type="hidden" name="to_address" value="{{ address | default:"128 Example Road" }}">
+<input type="hidden" name="to_city" value="{{ city | default:"Oxford" }}">
+<input type="hidden" name="to_county" value="{{ county | default:"Oxfordshire" }}">
+<input type="hidden" name="to_country" value="{{ country | default:"England" }}">
+{% if not swapping %}
+    </button>
+{% endif %}

@@ -1,0 +1,70 @@
+{% for modal in modals %}
+    {#    <input class="modal-state" id="{{ modal.id }}" type="checkbox" {% if not modal.start_closed %}checked{% endif %} />#}
+    <dialog id="{{ modal.id }}" class="modal modal-responsive">
+        {#        <label class="modal-overlay" for="{{ modal.id }}"></label>#}
+        <div class="modal-box">
+            {#            <label for="{{ modal.id }}" class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</label>#}
+            <h3 class="text-lg">{{ modal.title | safe }}</h3>
+            {% if modal.text %}<span>{{ modal.text }}</span>{% endif %}
+            <form id="modal-{{ modal.id }}-form" method="{{ modal.action.method }}" action="{{ modal.action.href }}"
+                    {% autoescape off %}{{ modal.action.extra }}{% endautoescape %}>
+                {% if modal.action.method == "post" %}
+                    {% csrf_token %}
+                {% endif %}
+                <div class="form-group">
+                    {% for field in modal.action.fields %}
+                        <div class="form-field">
+                            {% if field.type == "file" %}
+                                <input type="file" name="{{ field.name | default:"file" }}" {{ field.extra }}
+                                       class="input-file input-file-primary max-w-full"
+                                       {% if field.required %}required{% endif %}>
+                            {% elif field.type == "text" %}
+                                {% if field.label %}
+                                    <label class="form-label">{{ field.label }}</label>
+                                {% endif %}
+                                <input type="text" name="{{ field.name | default:"text" }}" placeholder="{{ field.placeholder }}"
+                                       value="{{ field.value }}"
+                                       class="input input-bordered max-w-full {{ field.class_extra }}"
+                                       {% if modal.action.required %}required{% endif %} {{ field.extra }}>
+                            {% elif field.type == "date" %}
+                                <label class="form-label">{{ field.label }}</label>
+                                <input type="date" name="{{ field.name | default:"date" }}"
+                                       class="input input-bordered max-w-full"
+                                       {% if field.required %}required{% endif %} {{ field.extra }}>
+                            {% elif field.type == "hidden" %}
+                                <input type="hidden" name="{{ field.name | default:"hidden" }}" value="{{ field.value }}"
+                                       class="hidden" {{ field.extra }}>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                    <div class="modal-action">
+                        {% if modal.action.type == "anchor" %}
+                            <a href="{{ modal.action.href }}"
+                               class="btn btn-{{ modal.action.color | default:"primary" }}">{{ modal.action.text }}</a>
+                        {% else %}
+                            <script>
+                                document.getElementById("modal-{{ modal.id }}-action-btn").onclick = function () {
+                                    if (document.getElementById("modal-{{ modal.id }}-form").checkValidity()) {
+                                        {{ modal.id }}.close();
+                                    }
+                                }
+                            </script>
+                            <button id="modal-{{ modal.id }}-action-btn" class="btn btn
+                            -{{ modal.action.color | default:"primary" }}"
+                            >{{ modal.action.text }}</button>
+                        {% endif %}
+                        <form method="dialog" class="modal-backdrop">
+                            <button type="button" onclick="{{ modal.id }}.close();" class="btn">Cancel</button>
+                        </form>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </dialog>
+    {% if not modal.start_closed %}
+        <script>
+            {{ modal.id }}.showModal() {# Shows the modal #}
+            document.currentScript.remove(); {# Removes the script upon execution #}
+        </script>
+    {% endif %}
+{% endfor %}

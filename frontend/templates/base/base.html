@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+{% include 'base/_head.html' %}
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+<div class="drawer drawer-mobile min-h-full">
+    <input id="left-sidebar-drawer" type="checkbox" class="drawer-toggle">
+    <div class="drawer-content flex flex-col ">
+        {% include 'base/_topbar.html' %}
+
+        <div class="flex-1 min-h-screen overflow-y-auto pt-8 px-6 pb-4 bg-base-200">
+{#            <div id="messages_list">#}
+                {#                {% component "messages_list" with_js="true" %}#}
+{#            </div>#}
+            {% include 'partials/base/breadcrumbs.html' %}
+            {% include 'partials/base/toasts.html' %}
+
+            <div id="modal_container">
+                {# Leave here #}
+            </div>
+            <div class="drawer">
+                <input id="service_list_drawer" type="checkbox" class="drawer-toggle" />
+                <div class="drawer-content">
+                    {% block content %}{% endblock content %}
+                </div>
+                <div class="drawer-side">
+                    <label for="service_list_drawer" aria-label="close sidebar" class="drawer-overlay"></label>
+                    <ul class="menu p-4 w-80 min-h-full bg-base-200 text-base-content z-10 gap-y-1">
+                        <label class="btn btn-square btn-outline btn-block top-5 right-5 mb-3"
+                               for="service_list_drawer">
+                            <i class="fa fa-solid fa-x"></i>
+                            Close
+                        </label>
+                        <li>
+                            <a href="{% url "clients dashboard" %}">Clients</a>
+                            <ul>
+                                <li>
+                                    <a href="{% url "clients dashboard" %}"
+                                    {% if request.resolver_match.url_name == "clients dashboard" %}class="active"{% endif %}>
+                                        View All</a>
+                                </li>
+                                <li>
+                                    <a href="{% url "clients create" %}"
+                                    {% if request.resolver_match.url_name == "clients create" %}class="active"
+                                    {% endif %}>Create New</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="{% url "invoices dashboard" %}">Invoices</a>
+                        </li>
+                        <li>
+                            <a href="{% url "receipts dashboard" %}">Receipts</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="fixed bottom-5 left-5 z-50">
+                <ul class="menu menu-horizontal bg-base-100 rounded-box">
+                    <li>
+                        <label for="service_list_drawer"
+                               id="service_list_button" aria-label="close sidebar"
+                               class="swap-rotate
+                        drawer-overlay swap">
+                            <input type="checkbox" id="service_list_toggler" />
+                            <i class="fa fa-solid fa-ellipsis swap-off"></i>
+                            <i class="fa fa-solid fa-x swap-on"></i>
+                        </label>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const drawer = document.getElementById("service_list_drawer");
+                drawer.addEventListener("change", function() {
+                    if (drawer.checked) {
+                        document.getElementById("service_list_toggler").checked = true;
+                        document.getElementById("logo_single_serivce_list_toggler").checked = true;
+                    } else {
+                        document.getElementById("service_list_toggler").checked = false;
+                        document.getElementById("logo_single_serivce_list_toggler").checked = false;
+                    };
+                });
+            });
+        </script>
+        <input type="checkbox" id="logout_modal" class="modal-toggle" />
+        <div class="modal modal-responsive">
+            <div class="modal-box">
+                <h3 class="font-bold text-lg">Logout</h3>
+                <p class="py-4">Are you sure you would like to logout?</p>
+                <div class="modal-action">
+                    <a href="{% url 'logout' %}" class="btn btn-primary">Logout</a>
+                    <label for="logout_modal" class="btn">
+                        Go Back
+                        <i class="fa-solid fa-reply ms-3"></i>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

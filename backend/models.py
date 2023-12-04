@@ -1,15 +1,21 @@
 import smtplib
 from django.utils import timezone
 from django.contrib import messages
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, UserManager, AbstractUser
 from django.core.mail import EmailMessage
 from django.db import models
 from settings import settings
 from django.utils.crypto import get_random_string
+from shortuuid.django_fields import ShortUUIDField
 
-# def RandomCode(length=6):
-#     characters = string.ascii_letters + string.digits
-#     return "".join(random.choice(characters) for _ in range(length))
+
+class CustomUserManager(UserManager):
+    def get_queryset(self):
+        return super().get_queryset().select_related("user_profile")
+
+
+class User(AbstractUser):
+    objects = CustomUserManager()
 
 
 def RandomCode(length=6):
@@ -36,13 +42,17 @@ class UserSettings(models.Model):
         choices=[(code, info["name"]) for code, info in CURRENCIES.items()],
     )
     profile_picture = models.ImageField(
-        upload_to="profile_pictures", blank=True, null=True
+        upload_to="profile_pictures/", blank=True, null=True
     )
 
     @property
     def profile_picture_url(self):
         if self.profile_picture and hasattr(self.profile_picture, "url"):
             return self.profile_picture.url
+        return ""
+
+    def get_currency_symbol(self):
+        return self.CURRENCIES.get(self.currency, {}).get("symbol", "$")
 
     def __str__(self):
         return self.user.username
@@ -101,8 +111,14 @@ class Receipt(models.Model):
     image = models.ImageField(upload_to="receipts")
     total_price = models.FloatField(null=True, blank=True)
     date = models.DateField(null=True, blank=True)
-    date_uploaded = models.DateTimeField(auto_now=True)
+    date_uploaded = models.DateTimeField(auto_now_add=True)
     receipt_parsed = models.JSONField(null=True, blank=True)
+
+    @property
+    def get_receipt_url(self):
+        if self.image and hasattr(self.image, "url"):
+            return self.image.url
+        return ""
 
 
 class Client(models.Model):
@@ -124,6 +140,7 @@ class Client(models.Model):
 
 
 class InvoiceItem(models.Model):
+    name = models.CharField(max_length=50)
     description = models.CharField(max_length=100)
     is_service = models.BooleanField(default=True)
     # if service
@@ -218,6 +235,40 @@ class Invoice(models.Model):
         else:
             total = subtotal
         return round(total, 2)
+
+
+class InvoiceURL(models.Model):
+    uuid = ShortUUIDField(length=8, primary_key=True)
+    invoice = models.ForeignKey(
+        Invoice, on_delete=models.CASCADE, related_name="invoice_urls"
+    )
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_on = models.DateTimeField(auto_now_add=True)
+    expires = models.DateTimeField(null=True, blank=True)
+    active = models.BooleanField(default=True)
+
+    def is_active(self):
+        if not self.active:
+            return False
+        if timezone.now() > self.expires:
+            self.active = False
+            self.save()
+            return False
+        return True
+
+    def set_expires(self):
+        self.expires = timezone.now() + timezone.timedelta(days=7)
+
+    def save(self, *args, **kwargs):
+        self.set_expires()
+        super().save()
+
+    def __str__(self):
+        return str(self.invoice.id)
+
+    class Meta:
+        verbose_name = "Invoice URL"
+        verbose_name_plural = "Invoice URLs"
 
 
 class PasswordSecret(models.Model):

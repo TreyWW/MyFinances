@@ -16,11 +16,7 @@ from backend.views.core import (
 from backend.views.core.currency_converter import dashboard as cc_dashboard
 
 from backend.views.core.other.index import index, dashboard
-from backend.views.api import v1
 from django.contrib import admin
-
-# from backend.views.core.api.v1.user import settings
-
 
 url(
     r"^frontend/static/(?P<path>.*)$",
@@ -29,6 +25,7 @@ url(
 )
 
 urlpatterns = [
+    path("api/", include("backend.api.urls")),
     path("", index, name="index"),
     path("dashboard", dashboard, name="dashboard"),
     path("dashboard/settings/", settings_v.view.settings_page, name="user settings"),
@@ -41,11 +38,6 @@ urlpatterns = [
         "dashboard/settings/teams/permissions/",
         settings_v.teams.manage_permissions_dashboard,
         name="user settings teams permissions",
-    ),
-    path(
-        "dashboard/settings/teams/kick/<int:user_id>",
-        v1.teams.kick.kick_user,
-        name="user settings teams kick",
     ),
     path(
         "dashboard/settings/teams/create",
@@ -88,34 +80,9 @@ urlpatterns = [
         name="user settings change_password",
     ),
     path(
-        "dashboard/receipts",
+        "dashboard/receipts/",
         receipts.dashboard.receipts_dashboard,
         name="receipts dashboard",
-    ),
-    path(
-        "api/v1/receipts/delete/<int:id>",
-        v1.receipts.delete.receipt_delete,
-        name="api v1 receipts delete",
-    ),
-    path(
-        "api/v1/receipts/new",
-        v1.receipts.new.receipt_create,
-        name="api v1 receipts new",
-    ),
-    path(
-        "api/v1/receipts/fetch",
-        v1.receipts.fetch.fetch_receipts,
-        name="api v1 receipts fetch",
-    ),
-    path(
-        "api/v1/base/notifications/get",
-        v1.base.notifications.get_notification_html,
-        name="api v1 base notifications get",
-    ),
-    path(
-        "api/v1/base/notifications/delete/<int:id>",
-        v1.base.notifications.delete_notification,
-        name="api v1 base notifications delete",
     ),
     path(
         "dashboard/invoices/",
@@ -123,9 +90,29 @@ urlpatterns = [
         name="invoices dashboard",
     ),
     path(
+        "dashboard/invoices/access/<str:id>",
+        invoices.manage_access.manage_access,
+        name="invoices dashboard manage_access",
+    ),
+    path(
+        "dashboard/invoices/access/<str:id>/create",
+        invoices.manage_access.create_code,
+        name="invoices dashboard manage_access create",
+    ),
+    path(
+        "dashboard/invoices/access/<str:id>/delete",
+        invoices.manage_access.delete_code,
+        name="invoices dashboard manage_access delete",
+    ),
+    path(
         "dashboard/invoices/preview/<str:id>",
         invoices.view.preview,
         name="invoices dashboard preview",
+    ),
+    path(
+        "invoice/<str:uuid>",
+        invoices.view.view,
+        name="invoices view invoice",
     ),
     path(
         "dashboard/invoices/create/",
@@ -138,39 +125,19 @@ urlpatterns = [
         name="invoices dashboard edit",
     ),
     # path('dashboard/invoices/<str:id>/edit', invoices.dashboard.invoices_dashboard_id, name='invoices dashboard'),
-    path("login/external/", include("social_django.urls", namespace="social")),
-    path(
-        "api/v1/invoices/create/add_service",
-        v1.invoices.create.services.add.add_service,
-        name="api v1 invoices create services add",
-    ),
-    path(
-        "api/v1/invoices/create/remove_service",
-        v1.invoices.create.services.remove.remove_service,
-        name="api v1 invoices create services remove",
-    ),
-    path(
-        "api/v1/invoices/create/set_destination/to",
-        v1.invoices.create.set_destination.set_destination_to,
-        name="api v1 invoices create set_destination to",
-    ),
-    path(
-        "api/v1/invoices/create/set_destination/from",
-        v1.invoices.create.set_destination.set_destination_from,
-        name="api v1 invoices create set_destination from",
-    ),
-    path(
-        "api/v1/base/modals/<str:modal_name>/retrieve",
-        v1.base.modal.open_modal,
-        name="api v1 base modal retrieve",
-    ),
+    path("login/external/", include("allauth.urls")),
     path("login/", other.login.login_page, name="login"),
     path("logout/", other.login.logout_view, name="logout"),
     # path('logout_test/', other.login.logout_view, name='logout_test'),
     path(
         "login/create_account",
-        other.login.create_account_page,
+        other.login.CreateAccountChooseView.as_view(),
         name="login create_account",
+    ),
+    path(
+        "login/create_account/manual",
+        other.login.CreateAccountManualView.as_view(),
+        name="login create_account manual",
     ),
     path(
         "login/forgot_password",
@@ -182,7 +149,6 @@ urlpatterns = [
         passwords.generate.password_reset,
         name="user set password reset",
     ),
-    # path('api/v1/user/profile/toggle_theme', api.v1.user.profile.toggle_theme, name='api v1 user toggle_theme'),
     path(
         "login/set-password/<str:secret>",
         passwords.view.set_password,
