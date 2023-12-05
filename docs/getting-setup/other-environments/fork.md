@@ -19,5 +19,3 @@ git clone [fork URL copied from earlier]
 # for example:
 # git clone https://github.com/YourUsername/MyFinances.git
 ```
-
-[Start setting up Django](getting-setup/pycharm/django/)
