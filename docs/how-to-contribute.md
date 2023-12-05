@@ -43,7 +43,7 @@ into *main*?" and then
 press "pull in".
 
 <details>
-<summary>View Image</summary>
+<summary>:framed_picture: View Image</summary>
 <img src="_assets/setup/pull-example.png"/>
 </details>
 
