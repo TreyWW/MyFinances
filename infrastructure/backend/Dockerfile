@@ -1,21 +1,24 @@
 # Dockerfile
-FROM python:3.9-alpine
+FROM python:3.12-alpine
 
 # Set the working directory
 WORKDIR /MyFinances
-# Copy the project files
+
 COPY . .
-#COPY ../../requirements.gh_actions.txt requirements.txt
-# Install dependencies
-RUN apk add --update mariadb-connector-c-dev
-RUN apk add --no-cache --virtual .build-deps py-pip musl-dev gcc mariadb-dev
-RUN pip install --upgrade pip
-RUN pip install mysql
-RUN apk add --no-cache git
+
+RUN apk --no-cache --update add \
+    mariadb-connector-c-dev \
+    py-pip \
+    musl-dev \
+    gcc \
+    mariadb-dev \
+    git \
+    libffi-dev 
+
+RUN pip install --upgrade pip \
+    && pip install mysql mariadb mysqlclient -r requirements.txt
+
 CMD ["git","--version"]
-RUN pip install mariadb
-RUN pip install mysqlclient
-RUN pip install -r requirements.txt --upgrade
 
 # Set the entrypoint
 #COPY ../scripts /infrastructure/scripts/
