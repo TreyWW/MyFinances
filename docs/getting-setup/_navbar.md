@@ -1,1 +1,0 @@
-- Version <select id="version" data-item="version_select"><option>none</option><option>0.1.0</option></select>
