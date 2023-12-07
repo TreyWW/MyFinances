@@ -1,58 +1,126 @@
 {% extends 'base/base.html' %}
 {% block content %}
-  <div class="container mx-auto p-4">
+  <div class="card w-full p-6 bg-base-100 shadow-xl mt-2">
     <!-- Header -->
     <header class="mb-4">
-      <h1 class="text-3xl font-semibold">MyFinances Dashboard</h1>
+      <h1 class="text-3xl font-semibold">MyFinances - Budget Dashboard</h1>
     </header>
 
-    <!-- Overview Section -->
-    <section class="bg-black bg-opacity-50 p-6 rounded-md shadow-md mb-4 hover:bg-purple-700 hover:text-white">
-      <h2 class="text-2xl font-semibold mb-4">Overview</h2>
+    <section class="card w-auto p-6 shadow-xl mt-2">
+      <h2 class="text-2xl font-semibold mb-4">Overview - Last 30 days</h2>
+  
+      <!-- Bar Graphs -->
+      <canvas id="incomeExpensesChart" style="height: 300px;"></canvas>
     </section>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      // Generate random data for the last 30 days
+      var days = [];
+      var incomeData = [];
+      var expensesData = [];
 
-    <!-- Income and Expenses Section -->
-    <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <!-- Income Section -->
-      <div class="bg-black bg-opacity-50 p-6 rounded-md shadow-md mb-4 hover:bg-purple-700 hover:text-white">
+      for (var i = 1; i <= 30; i++) {
+          days.push('Day ' + i);
+          incomeData.push(Math.floor(Math.random() * 1000) + 1000); // Random income between 1000 and 2000
+          expensesData.push(Math.floor(Math.random() * 500) + 500); // Random expenses between 500 and 1000
+      }
+
+      // Chart.js configuration
+      var ctx = document.getElementById('incomeExpensesChart').getContext('2d');
+      var myChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+              labels: days,
+              datasets: [
+                  {
+                      label: 'Income',
+                      data: incomeData,
+                      backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                      borderColor: 'rgba(75, 192, 192, 1)',
+                      borderWidth: 1
+                  },
+                  {
+                      label: 'Expenses',
+                      data: expensesData,
+                      backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                      borderColor: 'rgba(255, 99, 132, 1)',
+                      borderWidth: 1
+                  }
+              ]
+          },
+          options: {
+              scales: {
+                  y: {
+                      beginAtZero: true
+                  }
+              }
+          }
+      });
+    </script>  
+
+    <section class="grid grid-cols-3 md:grid-cols-3 gap-2">
+      <div class="card w-auto p-6 btn-outline btn-primary shadow-xl mt-2">
         <h2 class="text-2xl font-semibold mb-4">Income</h2>
-        <!-- sample data -->
-        <div class="flex flex-col items-center justify-around">
-          <div>
-            <h4 class="text-3xl">$2850.00</h4>
-          </div>
-          <div class="flex flex-row items-center gap-2">
-            <h3 class="text-2xl">Goal</h3>
-            <h4 class="text-xl">- $3200.00</h4>
+        <div class="flex flex-row align-center justify-center">
+          <figure class="text-4xl mr-4 p-6"><i class="fas fa-coins"></i></figure>
+          <div class="flex flex-row align-center justify-center">
+            <!-- sample data -->
+            <div class="flex flex-col items-center justify-around">
+              <div>
+                <h4 class="text-3xl">$2850.00</h4>
+              </div>
+              <div class="flex flex-row items-center gap-2">
+                <h3 class="text-2xl">Goal</h3>
+                <h4 class="text-xl">- $3200.00</h4>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-
-      <!-- Expenses Section -->
-      <div class="bg-black bg-opacity-50 p-6 rounded-md shadow-md mb-4 hover:bg-purple-700 hover:text-white">
+      <div class="card w-auto p-6 btn-outline btn-primary shadow-xl mt-2">
         <h2 class="text-2xl font-semibold mb-4">Expenses</h2>
-        <!-- sample data -->
-        <div class="flex flex-col items-center justify-around">
-          <div>
-            <h4 class="text-3xl">$750.00</h4>
+        <div class="flex flex-row align-center justify-center">
+          <figure class="text-4xl mr-4 p-6"><i class="fas fa-file-invoice-dollar"></i></figure>
+          <div class="flex flex-row align-center justify-center">
+            <!-- sample data -->
+            <div class="flex flex-col items-center justify-around">
+              <div>
+                <h4 class="text-3xl">$2850.00</h4>
+              </div>
+              <div class="flex flex-row items-center gap-2">
+                <h3 class="text-2xl">Goal</h3>
+                <h4 class="text-xl">- $3200.00</h4>
+              </div>
+            </div>
           </div>
-          <div class="flex flex-row items-center gap-2">
-            <h3 class="text-2xl">Goal</h3>
-            <h4 class="text-xl">- $550.00</h4>
+        </div>
+      </div>
+      <div class="card w-auto p-6 btn-outline btn-primary shadow-xl mt-2">
+        <h2 class="text-2xl font-semibold mb-4">Prediction</h2>
+        <div class="flex flex-row align-center justify-center">
+          <figure class="text-4xl mr-4 p-6"><i class="fas fa-chart-line"></i></figure>
+          <div class="flex flex-row align-center justify-center">
+            <!-- sample data -->
+            <div class="flex flex-col items-center justify-around">
+              <div>
+                <h4 class="text-3xl">$2850.00</h4>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
     <!-- Transactions Section -->
-    <section class="bg-black bg-opacity-50 p-6 rounded-md shadow-md hover:bg-purple-700 hover:text-white">
+    <section class="card p-6 w-auto mt-2">
       <h2 class="text-2xl font-semibold mb-4">Recent Transactions</h2>
       
       <!-- Description mode -->
       <!-- Debit operation -->
       <!-- sample data -->
       <ul class="list-none">
-        <li class="hover:border-white hover:bg-gray-600 p-4 mb-2 border rounded-md">
+        <li class="hover:border-white btn-outline btn-primary p-4 mb-2 border rounded-md">
           <span class="font-bold">Date:</span> January 1, 2023<br>
           <span class="font-bold">Value:</span> $100.00<br>
           <span class="font-bold">Operation:</span> Debit<br>
@@ -63,7 +131,7 @@
         </li>
 
         <!-- Credit operation -->
-        <li class="hover:border-white hover:bg-gray-600 p-4 mb-2 border rounded-md">
+        <li class="hover:border-white btn-outline btn-primary  p-4 mb-2 border rounded-md">
           <span class="font-bold">Date:</span> January 5, 2023<br>
           <span class="font-bold">Value:</span> $50.00<br>
           <span class="font-bold">Operation:</span> Credit<br>
