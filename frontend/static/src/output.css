@@ -1,5 +1,5 @@
 /*
-! tailwindcss v3.3.5 | MIT License | https://tailwindcss.com
+! tailwindcss v3.3.6 | MIT License | https://tailwindcss.com
 */
 
 /*
@@ -121,8 +121,10 @@ strong {
 }
 
 /*
-1. Use the user's configured `mono` font family by default.
-2. Correct the odd `em` font sizing in all browsers.
+1. Use the user's configured `mono` font-family by default.
+2. Use the user's configured `mono` font-feature-settings by default.
+3. Use the user's configured `mono` font-variation-settings by default.
+4. Correct the odd `em` font sizing in all browsers.
 */
 
 code,
@@ -131,8 +133,12 @@ samp,
 pre {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   /* 1 */
-  font-size: 1em;
+    font-feature-settings: normal;
   /* 2 */
+    font-variation-settings: normal;
+    /* 3 */
+    font-size: 1em;
+    /* 4 */
 }
 
 /*
@@ -1568,6 +1574,9 @@ html {
 
 .input {
   flex-shrink: 1;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
   height: 3rem;
   padding-left: 1rem;
   padding-right: 1rem;
@@ -2748,6 +2757,10 @@ html {
   .input[disabled]::placeholder {
   color: var(--fallback-bc,oklch(var(--bc)/var(--tw-placeholder-opacity)));
   --tw-placeholder-opacity: 0.2;
+}
+
+.input::-webkit-date-and-time-value {
+    text-align: inherit;
 }
 
 .join > :where(*:not(:first-child)) {
@@ -4856,11 +4869,6 @@ html {
   padding-bottom: 1.25rem;
 }
 
-.py-8 {
-  padding-top: 2rem;
-  padding-bottom: 2rem;
-}
-
 .pb-16 {
   padding-bottom: 4rem;
 }
@@ -4927,6 +4935,10 @@ html {
 
 .pt-8 {
   padding-top: 2rem;
+}
+
+.pb-8 {
+    padding-bottom: 2rem;
 }
 
 .text-left {
@@ -5062,6 +5074,11 @@ html {
     color: var(--fallback-n, oklch(var(--n)/var(--tw-text-opacity)));
 }
 
+.text-orange-500 {
+    --tw-text-opacity: 1;
+    color: rgb(249 115 22 / var(--tw-text-opacity));
+}
+
 .text-purple-600 {
   --tw-text-opacity: 1;
   color: rgb(147 51 234 / var(--tw-text-opacity));
@@ -5100,6 +5117,11 @@ html {
 .text-yellow-400 {
   --tw-text-opacity: 1;
   color: rgb(250 204 21 / var(--tw-text-opacity));
+}
+
+.text-primary {
+    --tw-text-opacity: 1;
+    color: var(--fallback-p, oklch(var(--p)/var(--tw-text-opacity)));
 }
 
 .underline {
@@ -5623,6 +5645,77 @@ html {
   width: 13rem;
 }
 
+.btn-large-card {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    max-width: 100%;
+    min-width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+    font-weight: 500;
+    text-align: center;
+    --tw-text-opacity: 1;
+    color: rgb(17 24 39 / var(--tw-text-opacity));
+    border-width: 1px;
+    --tw-border-opacity: 1;
+    border-color: rgb(229 231 235 / var(--tw-border-opacity));
+    border-radius: 0.5rem;
+}
+
+@media (min-width: 640px) {
+    .btn-large-card {
+        width: auto;
+    }
+}
+
+.btn-large-card:hover {
+    --tw-bg-opacity: 1;
+    background-color: rgb(243 244 246 / var(--tw-bg-opacity));
+}
+
+.btn-large-card:focus {
+    --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+    --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(4px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+    box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+    --tw-ring-opacity: 1;
+    --tw-ring-color: rgb(243 244 246 / var(--tw-ring-opacity));
+}
+
+@media (prefers-color-scheme: dark) {
+    .btn-large-card {
+        --tw-text-opacity: 1;
+        color: rgb(255 255 255 / var(--tw-text-opacity));
+        --tw-border-opacity: 1;
+        border-color: rgb(55 65 81 / var(--tw-border-opacity));
+    }
+
+    .btn-large-card:hover {
+        --tw-bg-opacity: 1;
+        background-color: rgb(55 65 81 / var(--tw-bg-opacity));
+    }
+
+    .btn-large-card:focus {
+        --tw-ring-opacity: 1;
+        --tw-ring-color: rgb(31 41 55 / var(--tw-ring-opacity));
+    }
+}
+
+.fa-google {
+    background: conic-gradient(from -45deg, #ea4335 110deg, #4285f4 90deg 180deg, #34a853 180deg 270deg, #fbbc05 270deg) 73% 55%/150% 150% no-repeat;
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
 /***************************/
 
 /*       SCROLL BARS       */
@@ -6060,11 +6153,6 @@ button.btn.loading-htmx.htmx-request {
   box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
 }
 
-.focus\:ring-gray-100:focus {
-  --tw-ring-opacity: 1;
-  --tw-ring-color: rgb(243 244 246 / var(--tw-ring-opacity));
-}
-
 .active\:bg-purple-600:active {
   --tw-bg-opacity: 1;
   background-color: rgb(147 51 234 / var(--tw-bg-opacity));
@@ -6241,11 +6329,6 @@ button.btn.loading-htmx.htmx-request {
     color: rgb(255 255 255 / var(--tw-text-opacity));
   }
 
-  .dark\:hover\:bg-gray-700:hover {
-    --tw-bg-opacity: 1;
-    background-color: rgb(55 65 81 / var(--tw-bg-opacity));
-  }
-
   .dark\:hover\:bg-gray-800:hover {
     --tw-bg-opacity: 1;
     background-color: rgb(31 41 55 / var(--tw-bg-opacity));
@@ -6254,11 +6337,6 @@ button.btn.loading-htmx.htmx-request {
   .dark\:hover\:text-gray-200:hover {
     --tw-text-opacity: 1;
     color: rgb(229 231 235 / var(--tw-text-opacity));
-  }
-
-  .dark\:focus\:ring-gray-800:focus {
-    --tw-ring-opacity: 1;
-    --tw-ring-color: rgb(31 41 55 / var(--tw-ring-opacity));
   }
 
   .peer:focus ~ .dark\:peer-focus\:ring-blue-800 {
@@ -6287,10 +6365,6 @@ button.btn.loading-htmx.htmx-request {
 
   .sm\:w-1\/6 {
     width: 16.666667%;
-  }
-
-  .sm\:w-auto {
-    width: auto;
   }
 
   .sm\:grid-cols-2 {

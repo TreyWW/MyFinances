@@ -1,8 +1,8 @@
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib import admin
+from django.urls import re_path as url, path, include
 from django.views.static import serve
-from django.urls import re_path as url
-from django.urls import path, include
 
 from backend.views.core import (
     other,
@@ -13,7 +13,6 @@ from backend.views.core import (
     receipts,
 )
 from backend.views.core.other.index import index, dashboard
-from django.contrib import admin
 
 url(
     r"^frontend/static/(?P<path>.*)$",
@@ -121,8 +120,8 @@ urlpatterns = [
         invoices.dashboard.invoices_dashboard_id,
         name="invoices dashboard edit",
     ),
-    # path('dashboard/invoices/<str:id>/edit', invoices.dashboard.invoices_dashboard_id, name='invoices dashboard'),
-    path("login/external/", include("allauth.urls")),
+    # path('dashboard/invoices/<str:id>/edit', invoices.dashboard.invoices_dash~board_id, name='invoices dashboard'),
+    path("login/external/", include("social_django.urls", namespace="social")),
     path("login/", other.login.login_page, name="login"),
     path("logout/", other.login.logout_view, name="logout"),
     # path('logout_test/', other.login.logout_view, name='logout_test'),
