@@ -2,9 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+.modal-responsive {
+    @apply modal-bottom;
+    @apply sm:modal-middle;
+}
+
 .input_card {
     @apply rounded-full;
-    @apply max-w-screen-xl;
     @apply border;
     @apply border-gray-900;
     @apply card;
@@ -22,11 +26,58 @@
 .avatar-img-ring {
     @apply ring;
     @apply ring-primary;
+    @apply focus:ring-offset-4;
     @apply hover:ring-offset-4;
     @apply ring-offset-base-100;
     @apply ring-offset-2;
-    @apply w-24;
     @apply rounded-full;
+}
+
+.dropdown ul.dropdown-content {
+    @apply z-[1];
+    @apply menu;
+    @apply p-2;
+    @apply shadow;
+    @apply bg-base-200;
+    @apply gap-y-1;
+    @apply rounded-box;
+    @apply w-52;
+}
+
+.btn-large-card {
+    @apply my-4;
+    @apply py-8;
+    @apply w-full;
+    @apply max-w-full;
+    @apply min-w-full;
+    @apply inline-flex;
+    @apply items-center;
+    @apply justify-center;
+    @apply w-full;
+    @apply px-5;
+    @apply text-lg;
+    @apply font-medium;
+    @apply text-center;
+    @apply text-gray-900;
+    @apply border;
+    @apply border-gray-200;
+    @apply rounded-lg;
+    @apply sm:w-auto;
+    @apply hover:bg-gray-100;
+    @apply focus:ring-4;
+    @apply focus:ring-gray-100;
+    @apply dark:text-white;
+    @apply dark:border-gray-700;
+    @apply dark:hover:bg-gray-700;
+    @apply dark:focus:ring-gray-800;
+}
+
+.fa-google {
+    background: conic-gradient(from -45deg, #ea4335 110deg, #4285f4 90deg 180deg, #34a853 180deg 270deg, #fbbc05 270deg) 73% 55%/150% 150% no-repeat;
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+    @apply bg-clip-text;
+    @apply text-transparent;
 }
 
 /***************************/
@@ -100,12 +151,12 @@ button.loading-htmx.htmx-request {
 .loading-htmx-loader-individual {
     display: none;
 }
+
 /* Show loading spinner when loading */
 
 .loading-htmx.htmx-request .loading-htmx-loader {
     display: inline-block;
 }
-
 
 
 @keyframes hideLoading {

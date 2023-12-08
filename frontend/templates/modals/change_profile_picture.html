@@ -6,13 +6,13 @@
             {% csrf_token %}
             <div>
                 <label class="label">Old Profile Picture</label>
-                <div id="modal_change_profile_picture-profile_picture">
-                    <div class="avatar">
-                        {% component "profile_picture" url=users_profile_picture extra_classes="w-44 h-44 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2" %}
-                    </div>
+                <div class="flex justify-center items-center pt-12">
+                    {#                    <div id="modal_change_profile_picture-profile_picture" class="w-full h-full flex justify-center items-center pt-12">#}
+                    {% component "profile_picture" image_type="change_modal" url=users_profile_picture extra_classes="max-w-44 max-h-44 w-44 h-44 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2" %}
+                    {#                    </div>#}
                 </div>
             </div>
-            <div class="form-control">
+            <div class="form-control mt-4">
                 <label class="label">Upload new profile picture</label>
                 <input required type="file" name="profile_image"
                        class="file-input file-input-bordered max-w-full" accept="image/jpeg,image/png,image/jpg">

@@ -33,3 +33,7 @@ admin.site.register(Notification)
 admin.site.register(Team)
 admin.site.register(TeamInvitation)
 admin.site.register(User, UserAdmin)
+
+admin.site.site_header = "MyFinances Admin"
+admin.site.index_title = "MyFinances"
+admin.site.site_title = "MyFinances | Administration"

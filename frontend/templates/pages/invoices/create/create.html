@@ -7,19 +7,18 @@
         {% csrf_token %}
         <div class="divider">STEP 1 - DESTINATIONS</div>
         <div class="my-4 flex w-full flex-col">
-
-            <div class="mb-2 flex justify-between">
-                <h3 class="text-sm font-medium text-gray-400 ms-2">From</h3>
-                <h3 class="text-sm font-medium text-gray-400 me-2">To</h3>
+            <div class="mb-2 grid grid-cols-2">
+                <h3 class="text-sm text-natural font-semibold ms-3">From</h3>
+                <h3 class="text-sm text-natural font-semibold hidden lg:block text-end me-6">To</h3>
             </div>
-            <div class="flex w-full" id="to_and_from_container">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full" id="to_and_from_container">
                 {% include 'pages/invoices/create/_from_destination.html' %}
                 {% include 'pages/invoices/create/_to_destination.html' %}
             </div>
         </div>
         <div class="divider my-4">STEP 2 - DATES</div>
         <div class="my-4 flex w-full flex-col">
-            <div class="flex w-full">
+            <div class="w-full gap-4 grid grid-cols-1 lg:grid-cols-2">
                 <div class="input_card">
                     <div class="card-body">
                         <div class="form-control w-full">
@@ -53,7 +52,7 @@
             </div>
         </div>
         <div class="divider my-4">STEP 3 - SERVICES</div>
-        <div class="input_card">
+        <div class="input_card max-w-full min-w-full">
             <div class="card-body">
                 <button onclick="modal_invoices_add_service.showModal();"
                         class="btn btn-primary"
@@ -130,7 +129,7 @@
         <div class="divider my-4">STEP 4 - BANK DETAILS [OPTIONAL]</div>
 
         <div class="my-4 flex w-full flex-col">
-            <div class="flex w-full">
+            <div class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-2 lg:gap-4">
                 <div class="input_card">
                     <div class="card-body">
                         <div class="form-control w-full">
@@ -157,7 +156,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="input_card">
+                <div class="input_card col-span-1 md:col-span-2 lg:col-span-1">
                     <div class="card-body">
                         <div class="form-control w-full max-w-xs">
                             <label class="label">Sort Code</label>

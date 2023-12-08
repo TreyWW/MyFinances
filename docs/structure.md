@@ -1,0 +1,13 @@
+- Main info
+- Getting Started
+    - Pycharm
+        - django
+            - main
+            - fork
+        - frontend
+            - main
+            - fork
+    - Other Environments
+- Versions
+    - 0.1.0
+      - 

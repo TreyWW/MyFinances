@@ -5,6 +5,7 @@ services:
     restart: always
     build:
       context: .
+      dockerfile: ./infrastructure/backend/Dockerfile
     ports:
       - '9012:9012'
     volumes:
