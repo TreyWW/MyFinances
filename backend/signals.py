@@ -43,9 +43,7 @@ def set_profile_picture_to_none(sender, instance, **kwargs):
 
 @receiver(post_save, sender=User)
 def user_account_create_make_usersettings(sender, instance, created, **kwargs):
-    print("signal ran")
     if created:
-        print("signal created")
         try:
             users_settings = instance.user_profile
         except UserSettings.DoesNotExist:
@@ -53,4 +51,3 @@ def user_account_create_make_usersettings(sender, instance, created, **kwargs):
 
         if not users_settings:
             UserSettings.objects.create(user=instance)
-            print("User created from signal")
