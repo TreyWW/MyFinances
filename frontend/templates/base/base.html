@@ -31,25 +31,36 @@
                             Close
                         </label>
                         <li>
-                            <a href="{% url "clients dashboard" %}">Clients</a>
-                            <ul>
-                                <li>
-                                    <a href="{% url "clients dashboard" %}"
-                                    {% if request.resolver_match.url_name == "clients dashboard" %}class="active"{% endif %}>
-                                        View All</a>
-                                </li>
-                                <li>
-                                    <a href="{% url "clients create" %}"
-                                    {% if request.resolver_match.url_name == "clients create" %}class="active"
-                                    {% endif %}>Create New</a>
-                                </li>
-                            </ul>
+                            {% with i_url="dashboard" %}
+                            <a href="{% url i_url %}"
+                               {% if  request.resolver_match.url_name == i_url %}class="active{% endif %}">
+                                My Dashboard
+                            </a>
+                            {% endwith %}
                         </li>
                         <li>
-                            <a href="{% url "invoices dashboard" %}">Invoices</a>
+                            {% with i_url="clients dashboard" %}
+                            <a href="{% url i_url %}"
+                                    {% if request.resolver_match.url_name == i_url %}class="active"{% endif %}>
+                                Clients
+                            </a>
+                            {% endwith %}
                         </li>
                         <li>
-                            <a href="{% url "receipts dashboard" %}">Receipts</a>
+                            {% with i_url="invoices dashboard" %}
+                            <a href="{% url i_url %}"
+                                    {% if request.resolver_match.url_name == i_url %}class="active"{% endif %}>
+                                Invoices
+                            </a>
+                            {% endwith %}
+                        </li>
+                        <li>
+                            {% with i_url="receipts dashboard" %}
+                            <a href="{% url i_url %}"
+                               {% if request.resolver_match.url_name == i_url %}class="active"{% endif %}>
+                                Receipts
+                            </a>
+                            {% endwith %}
                         </li>
                     </ul>
                 </div>

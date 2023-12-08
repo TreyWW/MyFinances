@@ -10,21 +10,16 @@
             <!-- Topbar Dropdown (MOBILE ONLY) -->
             <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] shadow p-2 bg-base-100 rounded-box w-52">
                 <li>
-                    <a>something</a>
+                    <a href="/dashboard">My Dashboard</a>
                 </li>
                 <li>
-                    <a>something</a>
-                    <ul class="p-2">
-                        <li>
-                            <a>something dropdown</a>
-                        </li>
-                        <li>
-                            <a>something dropdown</a>
-                        </li>
-                    </ul>
+                    <a href="{% url "receipts dashboard" %}">My Receipts</a>
                 </li>
                 <li>
-                    <a>something</a>
+                    <a href="{% url "invoices dashboard" %}">My Invoices</a>
+                </li>
+                <li>
+                    <a href="{% url "clients dashboard" %}">My Clients</a>
                 </li>
             </ul>
         </div>
@@ -48,23 +43,29 @@
         <!-- Topbar Dropdown (LARGE ONLY) -->
         <ul class="menu menu-horizontal px-1">
             <li>
-                <a>something</a>
+                <a href="/dashboard">My Dashboard</a>
             </li>
-            <li class="z-[50]">
-                <details>
-                    <summary>something</summary>
-                    <ul class="p-2">
-                        <li>
-                            <a>something dropdown</a>
-                        </li>
-                        <li>
-                            <a>something dropdown</a>
-                        </li>
-                    </ul>
-                </details>
+            {#            <li class="z-[50]">#}
+            {#                <details>#}
+            {#                    <summary>some dropdown</summary>#}
+            {#                    <ul class="p-2">#}
+            {#                        <li>#}
+            {#                            <a>something dropdown</a>#}
+            {#                        </li>#}
+            {#                        <li>#}
+            {#                            <a>something dropdown</a>#}
+            {#                        </li>#}
+            {#                    </ul>#}
+            {#                </details>#}
+            {#            </li>#}
+            <li>
+                <a href="{% url "receipts dashboard" %}">My Receipts</a>
             </li>
             <li>
-                <a>something</a>
+                <a href="{% url "invoices dashboard" %}">My Invoices</a>
+            </li>
+            <li>
+                <a href="{% url "clients dashboard" %}">My Clients</a>
             </li>
         </ul>
     </div>
@@ -106,7 +107,7 @@
                         <a tabindex="-1" class="dropdown-item text text-sm mt-1" href="/admin">
                             Go to admin dashboard
                         </a>
-                </li>
+                    </li>
                 {% endif %}
             </ul>
         </div>
