@@ -101,6 +101,13 @@
                         Logout
                     </label>
                 </li>
+                {% if request.user.is_superuser and request.user.is_staff %}
+                    <li>
+                        <a tabindex="-1" class="dropdown-item text text-sm mt-1" href="/admin">
+                            Go to admin dashboard
+                        </a>
+                </li>
+                {% endif %}
             </ul>
         </div>
         {# End of Profile Picture #}
