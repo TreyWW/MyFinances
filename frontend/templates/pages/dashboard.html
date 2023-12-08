@@ -1,4 +1,102 @@
 {% extends 'base/base.html' %}
+{% load static %}
 {% block content %}
-    dashboard
+  <div class="card w-full p-6 bg-base-100 shadow-xl mt-2">
+    <!-- Header -->
+    <header class="mb-4">
+      <h1 class="text-3xl font-semibold">MyFinances - Budget Dashboard</h1>
+    </header>
+
+    <section class="card w-auto p-6 shadow-xl mt-2">
+      <h2 class="text-2xl font-semibold mb-4">Overview - Last 30 days</h2>
+  
+      <!-- Bar Graphs -->
+      <canvas id="incomeExpensesChart" style="height: 300px;"></canvas>
+    </section>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <section class="grid grid-cols-3 md:grid-cols-3 gap-2">
+      <div class="card w-auto p-6 btn-outline btn-primary shadow-xl mt-2">
+        <h2 class="text-2xl font-semibold mb-4">Income</h2>
+        <div class="flex flex-row align-center justify-center">
+          <figure class="text-4xl mr-4 p-6"><i class="fas fa-coins"></i></figure>
+          <div class="flex flex-row align-center justify-center">
+            <!-- sample data -->
+            <div class="flex flex-col items-center justify-around">
+              <div>
+                <h4 class="text-3xl">$2850.00</h4>
+              </div>
+              <div class="flex flex-row items-center gap-2">
+                <h3 class="text-2xl">Goal</h3>
+                <h4 class="text-xl">- $3200.00</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card w-auto p-6 btn-outline btn-primary shadow-xl mt-2">
+        <h2 class="text-2xl font-semibold mb-4">Expenses</h2>
+        <div class="flex flex-row align-center justify-center">
+          <figure class="text-4xl mr-4 p-6"><i class="fas fa-file-invoice-dollar"></i></figure>
+          <div class="flex flex-row align-center justify-center">
+            <!-- sample data -->
+            <div class="flex flex-col items-center justify-around">
+              <div>
+                <h4 class="text-3xl">$2850.00</h4>
+              </div>
+              <div class="flex flex-row items-center gap-2">
+                <h3 class="text-2xl">Goal</h3>
+                <h4 class="text-xl">- $3200.00</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card w-auto p-6 btn-outline btn-primary shadow-xl mt-2">
+        <h2 class="text-2xl font-semibold mb-4">Prediction</h2>
+        <div class="flex flex-row align-center justify-center">
+          <figure class="text-4xl mr-4 p-6"><i class="fas fa-chart-line"></i></figure>
+          <div class="flex flex-row align-center justify-center">
+            <!-- sample data -->
+            <div class="flex flex-col items-center justify-around">
+              <div>
+                <h4 class="text-3xl">$2850.00</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Transactions Section -->
+    <section class="card p-6 w-auto mt-2">
+      <h2 class="text-2xl font-semibold mb-4">Recent Transactions</h2>
+      
+      <!-- sample data -->
+      <ul class="list-none">
+        <li class="hover:border-white btn-outline btn-primary p-4 mb-2 border rounded-md">
+          <span class="font-bold">Date:</span> January 1, 2023<br>
+          <span class="font-bold">Value:</span> $100.00<br>
+          <span class="font-bold">Operation:</span> Debit<br>
+          <span class="font-bold">Item:</span> Grocery<br>
+          <span class="font-bold">Receipt:</span> <a href="#">View Receipt</a><br>
+          <span class="font-bold">Description:</span> Grocery shopping at XYZ Mart<br>
+          <span class="font-bold">Category:</span> Food
+        </li>
+
+        <!-- sample data -->
+        <li class="hover:border-white btn-outline btn-primary  p-4 mb-2 border rounded-md">
+          <span class="font-bold">Date:</span> January 5, 2023<br>
+          <span class="font-bold">Value:</span> $50.00<br>
+          <span class="font-bold">Operation:</span> Credit<br>
+          <span class="font-bold">Item:</span> Online Sale<br>
+          <span class="font-bold">Receipt:</span> <a href="#">View Receipt</a><br>
+          <span class="font-bold">Description:</span> Sold items on an online platform<br>
+          <span class="font-bold">Category:</span> Sales
+        </li>
+      </ul>
+    </section>
+  </div>
+  <script src="{% static 'js/budget-canvas.js' %}"></script>
 {% endblock content %}
