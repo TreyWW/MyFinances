@@ -12,7 +12,7 @@
 {% block content %}
     <form method="post">
         {% csrf_token %}
-        <div class="mb-4">
+        <div class="mb-1">
             <div class="form-control w-full mt-4">
                 <label class="label">
                     <span class="label-text text-base-content undefined">
@@ -20,8 +20,8 @@
                     </span>
                 </label>
                 <input required type="email" name="email" pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
-                        placeholder="jsmith@example.com"
-                        class="peer input input-bordered w-full" value="{{ attempted_email|default_if_none:'' }}">
+                       placeholder="jsmith@example.com"
+                       class="peer input input-bordered w-full" value="{{ attempted_email|default_if_none:'' }}">
                 <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden">
                     <span class="label-text-alt text-error">Please enter a valid email.</span>
                 </label>
@@ -51,7 +51,19 @@
                 <span class="my-2 block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-secondary">
                 </span>
             </a>
-            <a href="{% url 'index' %}" class="text-secondary-content inline-block">Back to homepage</a>
+            <a href="{% url 'index' %}" class="text-primary inline-block">Back to homepage</a>
         </div>
+        {% if github_enabled %}
+            <a href="{% url 'social:begin' 'github' %}" class="btn-large-card">
+                <i class="fa-brands fa-github mr-2"></i>
+                Login with github
+            </a>
+        {% endif %}
+        {% if google_enabled %}
+            <a href="{% url 'social:begin' 'google-oauth2' %}" class="btn-large-card">
+                <i class="fa-brands fa-google mr-2 text-orange-500"></i>
+                Login with google
+            </a>
+        {% endif %}
     </form>
 {% endblock %}

@@ -1,6 +1,9 @@
-name: Run Tests
+name: Backend Tests
 
 on: [push, pull_request]
+
+env:
+  DOCKER_COMPOSE_PATH: ./infrastructure/backend/docker-compose.ci.yml
 
 jobs:
   build:
@@ -17,15 +20,17 @@ jobs:
       - name: Set up environment variables
         run: cp .env.github_actions .env
 
+      - name: Copy docker compose file
+        run: cp $DOCKER_COMPOSE_PATH ./docker-compose.yml   
+
       - name: Install Python dependencies
         uses: py-actions/py-dependency-install@v4
         with:
           path: requirements.gh_actions.txt
 
       - name: Build and run docker-compose.ci.yml
-        run: docker-compose -f docker-compose.ci.yml up -d
+        run: docker-compose up -d
 
       - name: Run the test scripts
         run: |
-          docker-compose -f docker-compose.ci.yml exec -T myfinances_django ./infrastructure/backend/scripts/tests/views.sh
-#          docker-compose -f infrastructure/backend/docker-compose.ci.yml exec -T myfinances_django ./infrastructure/backend/scripts/tests/views.sh
+          docker-compose exec -T myfinances_django ./infrastructure/backend/scripts/tests/views.sh

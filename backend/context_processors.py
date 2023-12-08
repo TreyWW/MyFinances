@@ -1,13 +1,12 @@
-import json
 import os
-import subprocess
+from typing import List, Optional, Dict, Any
+
+from django.core.cache import cache
 from django.http import HttpRequest
 from django.urls import reverse
 
-from .utils import Toast, Modals, load_navbar_items
 from .models import *
-from django.core.cache import cache
-from typing import List, Optional, Dict, Any
+from .utils import Toast, Modals, load_navbar_items
 
 Modals = Modals()
 
@@ -32,8 +31,6 @@ def extras(request: HttpRequest):
 
     data["git_branch"] = os.environ.get("BRANCH")
     data["git_version"] = os.environ.get("VERSION")
-    if request.user.is_authenticated:
-        data["user_settings"] = UserSettings.objects.get_or_create(user=request.user)
 
     return data
 
