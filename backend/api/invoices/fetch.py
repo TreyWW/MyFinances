@@ -2,7 +2,7 @@ from django.db.models import Q, Case, When, F, FloatField, ExpressionWrapper
 from django.http import HttpRequest
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
-
+from django.utils import timezone
 from backend.models import Invoice
 
 
@@ -105,6 +105,10 @@ def fetch_all_invoices(request: HttpRequest):
         context["sort"] = sort_by
 
     # Add invoices to the context
+    for items in invoices:
+        if (items.date_due and timezone.now().date() > items.date_due) and items.payment_status == "pending":
+            items.payment_status = "overdue"
+            
     context["invoices"] = invoices
 
     # Render the HTMX response

@@ -52,6 +52,7 @@ def invoice_page_post(request: HttpRequest):
     )
 
     invoice.payment_status = invoice.dynamic_payment_status
+    print(invoice.date_due)
     invoice.save()
     invoice.items.set(invoice_items)
 
