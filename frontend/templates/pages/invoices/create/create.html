@@ -3,7 +3,7 @@
 {% load markdownify %}
 {% block content %}
     {% include 'components/modal.html' with modals=modal_data %}
-    <form method="post" class="card bg-base-100 p-6 group">
+    <form method="post" class="card bg-base-100 p-6 group" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="divider">STEP 1 - DESTINATIONS</div>
         <div class="my-4 flex w-full flex-col">
@@ -171,56 +171,74 @@
                 </div>
             </div>
         </div>
-{#                <div class="divider my-4">STEP 5 - NOTES [OPTIONAL]</div>#}
-{#                <div class="my-4 flex w-full flex-col">#}
-{#                    <div class="flex w-full">#}
-{#                        <div class="max-w-screen-xl border border-gray-900 card me-3 hover:border-gray-500" href="{% url 'index' %}">#}
-{#                            <div class="card-body">#}
-{#                                <textarea id="editor" name="notes"></textarea>#}
-{#                            </div>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                </div>#}
-{##}
-{#                <style>#}
-{#                    .CodeMirror {#}
-{#                        background-color: rgb(var(--gray-3)/var(--tw-bg-opacity));#}
-{#                    }#}
-{##}
-{#                    .editor-toolbar {#}
-{#                        background-color: rgb(var(--gray-4)/var(--tw-bg-opacity));#}
-{#                    }#}
-{##}
-{#                    .editor-toolbar > * {#}
-{#                        background-color: rgb(var(--gray-4)/var(--tw-bg-opacity));#}
-{#                    }#}
-{##}
-{#                    .CodeMirror,#}
-{#                    .CodeMirror-scroll {#}
-{#                        max-height: 300px;#}
-{#                    }#}
-{##}
-{#                    .CodeMirror-fullscreen.CodeMirror {#}
-{#                        max-height: none;#}
-{#                    }#}
-{##}
-{#                    .CodeMirror-fullscreen .CodeMirror-scroll {#}
-{#                        max-height: none;#}
-{#                    }#}
-{##}
-{#                    .CodeMirror,#}
-{#                    .CodeMirror-scroll {#}
-{#                        max-height: 150px;#}
-{#                        min-height: 100px;#}
-{#                    }#}
-{##}
-{#                </style>#}
-{#                <script>#}
-{#                    var simplemde = new SimpleMDE({#}
-{#                        element: document.getElementById("editor"),#}
-{##}
-{#                    });#}
-{#                </script>#}
+
+        <div class="divider my-4">STEP 5 - CUSTOM DESIGNS [OPTIONAL]</div>
+        <div class="my-4 flex w-full flex-col">
+            <div class="w-full gap-4 grid grid-cols-1 lg:grid-cols-2">
+                <div class="input_card">
+                    <div class="card-body">
+                        <div class="form-control w-full">
+                            <label class="label justify-start">
+                                Use custom logo
+                            </label>
+                            <input type="file" name="logo"
+                                   class="file-input file-input-bordered max-w-full" accept="image/jpeg,image/png,image/jpg">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {#                <div class="divider my-4">STEP 5 - NOTES [OPTIONAL]</div>#}
+        {#                <div class="my-4 flex w-full flex-col">#}
+        {#                    <div class="flex w-full">#}
+        {#                        <div class="max-w-screen-xl border border-gray-900 card me-3 hover:border-gray-500" href="{% url 'index' %}">#}
+        {#                            <div class="card-body">#}
+        {#                                <textarea id="editor" name="notes"></textarea>#}
+        {#                            </div>#}
+        {#                        </div>#}
+        {#                    </div>#}
+        {#                </div>#}
+        {##}
+        {#                <style>#}
+        {#                    .CodeMirror {#}
+        {#                        background-color: rgb(var(--gray-3)/var(--tw-bg-opacity));#}
+        {#                    }#}
+        {##}
+        {#                    .editor-toolbar {#}
+        {#                        background-color: rgb(var(--gray-4)/var(--tw-bg-opacity));#}
+        {#                    }#}
+        {##}
+        {#                    .editor-toolbar > * {#}
+        {#                        background-color: rgb(var(--gray-4)/var(--tw-bg-opacity));#}
+        {#                    }#}
+        {##}
+        {#                    .CodeMirror,#}
+        {#                    .CodeMirror-scroll {#}
+        {#                        max-height: 300px;#}
+        {#                    }#}
+        {##}
+        {#                    .CodeMirror-fullscreen.CodeMirror {#}
+        {#                        max-height: none;#}
+        {#                    }#}
+        {##}
+        {#                    .CodeMirror-fullscreen .CodeMirror-scroll {#}
+        {#                        max-height: none;#}
+        {#                    }#}
+        {##}
+        {#                    .CodeMirror,#}
+        {#                    .CodeMirror-scroll {#}
+        {#                        max-height: 150px;#}
+        {#                        min-height: 100px;#}
+        {#                    }#}
+        {##}
+        {#                </style>#}
+        {#                <script>#}
+        {#                    var simplemde = new SimpleMDE({#}
+        {#                        element: document.getElementById("editor"),#}
+        {##}
+        {#                    });#}
+        {#                </script>#}
         <div class="group-invalid:tooltip" data-tip="Fill out all required details to save the invoice.">
             <button class="btn btn-primary group-invalid:btn-disabled btn-block">
                 Create Invoice

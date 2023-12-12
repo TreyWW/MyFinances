@@ -43,7 +43,7 @@ def invoice_page_post(request: HttpRequest):
         notes=request.POST.get("notes"),
         invoice_number=request.POST.get("invoice_number"),
         vat_number=request.POST.get("vat_number"),
-        # logo = request.POST.get("logo"),
+        logo=request.FILES.get("logo"),
         reference=request.POST.get("reference"),
         sort_code=request.POST.get("sort_code"),
         account_number=request.POST.get("account_number"),

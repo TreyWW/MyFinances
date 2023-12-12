@@ -20,11 +20,18 @@
         </div>
         <div class="flex items-center mx-auto">
             <p class="flex items-center text-sm font-normal">
-            <span class="inline-flex p-1 mr-3 rounded-full w-6 h-6 items-center justify-center bg-success">
-                <i class="fa-solid fa-check text-neutral"></i>
-            </span>
-                <span>
                 {% with ps=invoice.payment_status %}
+                    <span class="inline-flex p-1 mr-3 rounded-full w-6 h-6 items-center justify-center
+                        {% if ps == "paid" %}
+                        bg-success text-neutral
+                        {% elif ps == "pending" %}
+                        bg-gray-500 text-black
+                        {% else %}
+                        bg-error text-neutral
+                    {% endif %}">
+                        <i class="fa-solid fa-check"></i>
+                    </span>
+                    <span>
                     {% if ps == "paid" %}
                         This invoice has been <strong>paid</strong>
                     {% elif ps == "pending" %}
@@ -32,9 +39,9 @@
                     {% elif ps == "overdue" %}
                         This invoice is <strong>overdue</strong>
                     {% endif %}
-                {% endwith %}
             </span>
-            </p>
+                    </p>
+                {% endwith %}
         </div>
         <div class="flex justify-end float-right">
             <a class="btn btn-sm btn-secondary me-2" href="" download>
@@ -59,7 +66,8 @@
     <!-- Start of Invoice -->
     <div class="max-w-3xl mx-auto p-6 bg-white rounded shadow-sm my-6 mt-16 min-h-screen" id="invoice">
         <div class="grid grid-cols-2 items-center">
-            <img src="{% if invoice.logo %}{{ invoice.logo.url }}{% else %}https://github.com/TreyWW/MyFinances/blob/main/documentation/assets/logo_single.png?raw=true{% endif %}"
+            <img src="
+                    {% if invoice.logo %}{{ invoice.logo.url }}{% else %}https://github.com/TreyWW/MyFinances/blob/main/documentation/assets/logo_single.png?raw=true{% endif %}"
                  alt="company-logo" height="100" width="100">
             <div class="text-right">
                 <p class="text-gray-700">
