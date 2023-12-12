@@ -53,7 +53,8 @@ def edit_invoice(request: HttpRequest, invoice_id):
         messages.success(request, "Invoice edited")
         return render(request, "partials/base/toasts.html")
 
-    return JsonResponse({"message": "Invoice successfully edited"}, status=200)
+    return render(request, "pages/invoices/dashboard/dashboard.html")
+    #return JsonResponse({"message": "Invoice successfully edited"}, status=200)
 
 
 
