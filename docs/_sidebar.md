@@ -1,3 +1,4 @@
 - [What is our project]()
 - [Get setup with our project](getting-setup/)
 - [How to contribute to our project](how-to-contribute)
+- [View Changelog](changelog)
