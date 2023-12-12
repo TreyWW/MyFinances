@@ -123,7 +123,8 @@ urlpatterns = [
     #),
     path(
         "dashboard/invoices/edit/<str:id>",
-        edit.edit_invoice,
+        invoices.create.edit_invoice_page,
+        #invoices.edit.invoice_edit_page_get,
         name="invoices dashboard edit",
     ),
     # path('dashboard/invoices/<str:id>/edit', invoices.dashboard.invoices_dash~board_id, name='invoices dashboard'),
