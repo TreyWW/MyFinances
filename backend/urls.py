@@ -3,6 +3,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import re_path as url, path, include
 from django.views.static import serve
+from .api.invoices import edit
 
 from backend.views.core import (
     other,
@@ -115,9 +116,14 @@ urlpatterns = [
         invoices.create.create_invoice_page,
         name="invoices dashboard create",
     ),
+    #path(
+    #    "dashboard/invoices/<str:id>",
+    #    invoices.dashboard.invoices_dashboard_id,
+    #    name="invoices dashboard edit",
+    #),
     path(
-        "dashboard/invoices/<str:id>",
-        invoices.dashboard.invoices_dashboard_id,
+        "dashboard/invoices/edit/<str:id>",
+        edit.edit_invoice,
         name="invoices dashboard edit",
     ),
     # path('dashboard/invoices/<str:id>/edit', invoices.dashboard.invoices_dash~board_id, name='invoices dashboard'),
