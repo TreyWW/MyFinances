@@ -3,7 +3,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import re_path as url, path, include
 from django.views.static import serve
-from .api.invoices import edit
+from .views.core.invoices import edit
 
 from backend.views.core import (
     other,
@@ -123,7 +123,7 @@ urlpatterns = [
     #),
     path(
         "dashboard/invoices/edit/<str:id>",
-        invoices.create.edit_invoice_page,
+        invoices.edit.edit_invoice_page,
         #invoices.edit.invoice_edit_page_get,
         name="invoices dashboard edit",
     ),
