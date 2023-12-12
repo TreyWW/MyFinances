@@ -1,8 +1,9 @@
 # Social Login
 
 MyFinances supports social login with manual details and GitHub OAuth.
-> ! These docs show you how to get setup locally with these
-> logins, but on production make sure to replace `http://127.0.0.1:8000` with `https://` and then your domain name.
+
+!> These docs show you how to get setup locally with these
+logins, but on production make sure to replace `http://127.0.0.1:8000` with `https://` and then your domain name.
 
 ## Set up Social Login with GitHub
 
