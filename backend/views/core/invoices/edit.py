@@ -12,14 +12,11 @@ def invoice_edit_page_get(request, id):
     return render(request, "pages/invoices/edit/edit.html", context)
 
 
-@require_http_methods(["EDIT"])
-def edit_invoice(request: HttpRequest):
-
-    edit_items = QueryDict(request.body)
-    invoice = edit_items.get("invoice")
+@require_http_methods(["POST"])
+def edit_invoice(request: HttpRequest, invoice_id):
 
     try:
-        invoice = Invoice.objects.get(id=request.POST.get('invoice_id'))
+        invoice = Invoice.objects.get(id=invoice_id)
     except:
         return JsonResponse({"message": "Invoice not found"}, status=404)
 
@@ -63,5 +60,5 @@ def edit_invoice(request: HttpRequest):
 @require_http_methods(["GET", "POST"])
 def edit_invoice_page(request: HttpRequest, id):
     if request.method == "POST":
-        return edit_invoice(request)
+        return edit_invoice(request,id)
     return invoice_edit_page_get(request, id)
