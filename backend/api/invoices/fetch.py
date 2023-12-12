@@ -103,6 +103,9 @@ def fetch_all_invoices(request: HttpRequest):
         if (items.date_due and timezone.now().date() > items.date_due) and items.payment_status == "pending":
             items.payment_status = "overdue"
             items.save()
+        if (items.date_due and timezone.now().date() < items.date_due) and items.payment_status == "overdue":
+            items.payment_status = "pending"
+            items.save()
 
     # Apply OR conditions to the invoices queryset
     invoices = invoices.filter(or_conditions)
