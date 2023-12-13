@@ -1,9 +1,24 @@
 {% component_block "modal" id="modal_invoices_to_destination" start_open="true" title="Update TO info" %}
     {% fill "content" %}
+        <div class="join w-full">
+            <input class="input w-full input-disabled input-bordered input-primary join-item" value="Import from existing client"
+                   disabled>
+            <select class="select select-bordered select-primary join-item">
+                <option selected disabled>View Clients</option>
+            </select>
+        </div>
+        <div class="divider">OR</div>
         <form class="py-4"
               id="modal_invoices_to_destination-form"
               hx-post="{% url 'api:invoices:set_destination to' %}" hx-swap="innerHTML" hx-target="#to_destination">
             {% csrf_token %}
+            <div class="form-control">
+                <label class="label">Single
+                <input type="checkbox" name="is_representative" class="toggle toggle-primary" />
+                    Representative
+                </label>
+
+            </div>
             <div class="form-control">
                 <label class="label">Name</label>
                 <input type="text" name="name" placeholder="John Smith" value=""

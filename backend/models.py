@@ -128,6 +128,8 @@ class Client(models.Model):
     name = models.CharField(max_length=64)
     phone_number = models.CharField(max_length=100, blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
+    company = models.CharField(max_length=100, blank=True, null=True)
+    is_representative = models.BooleanField(default=False)
 
     address = models.CharField(max_length=100, blank=True, null=True)
     city = models.CharField(max_length=100, blank=True, null=True)
@@ -206,9 +208,6 @@ class Invoice(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     date_due = models.DateField()
     date_issued = models.DateField(blank=True, null=True)
-    payment_status = models.CharField(
-        max_length=10, choices=STATUS_CHOICES, default="pending"
-    )
 
     def __str__(self):
         invoice_id = self.invoice_id or self.id

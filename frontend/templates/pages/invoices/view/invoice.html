@@ -67,6 +67,7 @@
     <div class="max-w-3xl mx-auto p-6 bg-white rounded shadow-sm my-6 mt-16 min-h-screen" id="invoice">
         <div class="grid grid-cols-2 items-center">
             <img src="
+
                     {% if invoice.logo %}{{ invoice.logo.url }}{% else %}https://github.com/TreyWW/MyFinances/blob/main/documentation/assets/logo_single.png?raw=true{% endif %}"
                  alt="company-logo" height="100" width="100">
             <div class="text-right">
@@ -94,14 +95,31 @@
                     <p class="font-bold text-gray-800">
                         Bill to
                     </p>
-                    <p class="text-gray-500">
-                        {{ invoice.client_name|default_if_none:"" }}
-                        <br />
-                        {{ invoice.client_address|default_if_none:"" }}
-                    </p>
-                    <p class="text-gray-500">
-                        {{ invoice.client_email|default_if_none:"" }}
-                    </p>
+                    {% if invoice.client_to %}
+                        {% if invoice.client_to.is_representative %}
+                            {{ invoice.client_to.company }}
+                        {% endif %}
+                        <p class="text-gray-500">
+                            {{ invoice.client_to.name|default_if_none:"" }}
+                            <br>
+                            {{ invoice.client_to.email|default_if_none:"" }}
+                            {% if invoice.client_to.phone_number %}
+                                ({{ invoice.client_to.phone_number }})
+                            {% endif %}
+                            {{ invoice.client_to.name|default_if_none:"" }}
+
+                        </p>
+
+                    {% else %}
+                        <p class="text-gray-500">
+                            {{ invoice.client_name|default_if_none:"" }}
+                            <br />
+                            {{ invoice.client_address|default_if_none:"" }}
+                        </p>
+                        <p class="text-gray-500">
+                            {{ invoice.client_email|default_if_none:"" }}
+                        </p>
+                    {% endif %}
                 {% endif %}
             </div>
 
