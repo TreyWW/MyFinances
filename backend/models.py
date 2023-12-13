@@ -217,6 +217,7 @@ class Invoice(models.Model):
             return "overdue"
         else:
             return self.payment_status
+            
     def __str__(self):
         invoice_id = self.invoice_id or self.id
         if self.client_name:
