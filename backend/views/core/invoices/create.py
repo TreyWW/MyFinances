@@ -64,3 +64,10 @@ def create_invoice_page(request: HttpRequest):
     if request.method == "POST":
         return invoice_page_post(request)
     return invoice_page_get(request)
+
+
+@require_http_methods(["GET", "POST"])
+def edit_invoice_page(request: HttpRequest):
+    if request.method == "POST":
+        return invoice_page_post(request)
+    return invoice_page_get(request)
