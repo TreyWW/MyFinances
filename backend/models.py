@@ -9,7 +9,6 @@ from django.utils.crypto import get_random_string
 from shortuuid.django_fields import ShortUUIDField
 
 
-
 class CustomUserManager(UserManager):
     def get_queryset(self):
         return super().get_queryset().select_related("user_profile")
@@ -45,7 +44,7 @@ class UserSettings(models.Model):
     profile_picture = models.ImageField(
         upload_to="profile_pictures/", blank=True, null=True
     )
-
+    
     @property
     def profile_picture_url(self):
         if self.profile_picture and hasattr(self.profile_picture, "url"):
@@ -104,7 +103,7 @@ class TeamInvitation(models.Model):
     class Meta:
         verbose_name = "Team Invitation"
         verbose_name_plural = "Team Invitations"
-
+        
 
 class Receipt(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -161,7 +160,7 @@ class InvoiceItem(models.Model):
     def __str__(self):
         return self.description
 
-    
+
 class Invoice(models.Model):
     STATUS_CHOICES = (
         ("pending", "Pending"),
@@ -210,11 +209,14 @@ class Invoice(models.Model):
 
     @property
     def dynamic_payment_status(self):
-        if self.date_due and timezone.now().date() > self.date_due and self.payment_status == "pending":
+        if (
+            self.date_due
+            and timezone.now().date() > self.date_due
+            and self.payment_status == "pending"
+        ):
             return "overdue"
         else:
             return self.payment_status
-        
     def __str__(self):
         invoice_id = self.invoice_id or self.id
         if self.client_name:
