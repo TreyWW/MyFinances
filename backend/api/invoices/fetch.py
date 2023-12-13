@@ -56,7 +56,7 @@ def fetch_all_invoices(request: HttpRequest):
             ),
         )
     )
-    
+
     # Initialize context variables
     context["selected_filters"] = []
     context["all_filters"] = {

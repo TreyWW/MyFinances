@@ -44,7 +44,7 @@ class UserSettings(models.Model):
     profile_picture = models.ImageField(
         upload_to="profile_pictures/", blank=True, null=True
     )
-    
+
     @property
     def profile_picture_url(self):
         if self.profile_picture and hasattr(self.profile_picture, "url"):
@@ -103,7 +103,7 @@ class TeamInvitation(models.Model):
     class Meta:
         verbose_name = "Team Invitation"
         verbose_name_plural = "Team Invitations"
-        
+
 
 class Receipt(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -217,7 +217,7 @@ class Invoice(models.Model):
             return "overdue"
         else:
             return self.payment_status
-            
+
     def __str__(self):
         invoice_id = self.invoice_id or self.id
         if self.client_name:
