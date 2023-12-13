@@ -27,7 +27,7 @@ def invoice_page_post(request: HttpRequest):
 
     invoice = Invoice.objects.create(
         user=request.user,
-        date_due=datetime.strptime(request.POST.get("date_due"), '%Y-%m-%d').date(),
+        date_due=datetime.strptime(request.POST.get("date_due"), "%Y-%m-%d").date(),
         date_issued=request.POST.get("date_issued"),
         client_name=request.POST.get("to_name"),
         client_company=request.POST.get("to_company"),

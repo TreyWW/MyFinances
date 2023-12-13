@@ -116,15 +116,15 @@ urlpatterns = [
         invoices.create.create_invoice_page,
         name="invoices dashboard create",
     ),
-    #path(
+    # path(
     #    "dashboard/invoices/<str:id>",
     #    invoices.dashboard.invoices_dashboard_id,
     #    name="invoices dashboard edit",
-    #),
+    # ),
     path(
         "dashboard/invoices/edit/<str:id>",
         invoices.edit.edit_invoice_page,
-        #invoices.edit.invoice_edit_page_get,
+        # invoices.edit.invoice_edit_page_get,
         name="invoices dashboard edit",
     ),
     # path('dashboard/invoices/<str:id>/edit', invoices.dashboard.invoices_dash~board_id, name='invoices dashboard'),
