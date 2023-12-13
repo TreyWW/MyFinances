@@ -24,13 +24,14 @@ def invoice_get_existing_data(invoice_obj):
         "og_cilent_city": invoice_obj.client_city,
         "og_cilent_county": invoice_obj.client_county,
         "og_cilent_country": invoice_obj.client_country,
+        "og_date_issued": invoice_obj.date_issued,
+        "og_date_due": invoice_obj.date_due,
     }
     return stored_data
 
 
 # gets invoice object from invoice id, convert obj to dict, and renders edit.html while passing the stored invoice values to frontend
 def invoice_edit_page_get(request, invoice_id):
-    context = {"type": "edit"}
     try:
         invoice = Invoice.objects.get(id=invoice_id)
     except:

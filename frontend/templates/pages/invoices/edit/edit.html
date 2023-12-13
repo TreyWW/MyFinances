@@ -26,7 +26,8 @@
                                 Issue date
                                 <span class="required_star">*</span>
                             </label>
-                            <input required id="dateIssued" name="date_issued" placeholder="" type="date"
+                            <input required id="dateIssued" name="date_issued" placeholder=""
+                                   value="{{ og_date_issued|date:"Y-m-d" }}" type="date"
                                    class="peer input input-bordered input-block">
                             <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden ">
                                 <span class="label-text-alt text-error">Please enter a valid date.</span>
@@ -42,7 +43,7 @@
                                 <span class="required_star">*</span>
                             </label>
                             <input required name="date_due" id="dueDate" placeholder="" type="date"
-                                   class="peer input-bordered input input-block">
+                                   class="peer input-bordered input input-block" value="{{ og_date_due|date:"Y-m-d" }}">
                             <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden ">
                                 <span class="label-text-alt text-error">Please enter a valid date.</span>
                             </label>
