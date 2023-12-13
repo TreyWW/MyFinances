@@ -58,24 +58,23 @@
                             Manage Access
                         </a>
                     </li>
-                    <div class="tooltip tooltip-left" data-tip="These actions aren't yet added.">
-                        <li class="disabled">
-                            <a href="">
-                                <i class="fa-solid fa-regular fa-pencil"></i>
-                                Edit
-                            </a>
-                        </li>
-                        <li>
-                            <button hx-delete="{% url 'api:invoices:delete' %}"
+                    
+                    <li>
+                        <a href="{% url "invoices dashboard edit" id=invoice.id %}">
+                            <i class="fa-solid fa-regular fa-pencil"></i>
+                            Edit
+                        </a>
+                    </li>
+                    <li>
+                        <button hx-delete="{% url 'api:invoices:delete' %}"
                                     hx-target="closest tr"
                                     hx-confirm="Are you sure you would like to delete invoice #{{ invoice.id }}?"
                                     hx-vals='{"invoice": "{{ invoice.id }}" }'
-                            >
-                                <i class="fa-solid fa-trash"></i>
-                                Delete
-                            </button>
-                        </li>
-                    </div>
+                        >
+                            <i class="fa-solid fa-trash"></i>
+                            Delete
+                        </button>
+                    </li>
                 </ul>
             </div>
         </td>

@@ -209,6 +209,17 @@ class Invoice(models.Model):
     date_due = models.DateField()
     date_issued = models.DateField(blank=True, null=True)
 
+    @property
+    def dynamic_payment_status(self):
+        if (
+            self.date_due
+            and timezone.now().date() > self.date_due
+            and self.payment_status == "pending"
+        ):
+            return "overdue"
+        else:
+            return self.payment_status
+
     def __str__(self):
         invoice_id = self.invoice_id or self.id
         if self.client_name:

@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.decorators.http import require_http_methods
 from backend.models import Invoice, InvoiceItem, Client
+from datetime import datetime
 
 
 def invoice_page_get(request: HttpRequest):
@@ -26,7 +27,7 @@ def invoice_page_post(request: HttpRequest):
 
     invoice = Invoice.objects.create(
         user=request.user,
-        date_due=request.POST.get("date_due"),
+        date_due=datetime.strptime(request.POST.get("date_due"), "%Y-%m-%d").date(),
         date_issued=request.POST.get("date_issued"),
         client_name=request.POST.get("to_name"),
         client_company=request.POST.get("to_company"),
@@ -50,6 +51,9 @@ def invoice_page_post(request: HttpRequest):
         account_holder_name=request.POST.get("account_holder_name"),
     )
 
+    invoice.payment_status = invoice.dynamic_payment_status
+    print(invoice.date_due)
+    invoice.save()
     invoice.items.set(invoice_items)
 
     return redirect("invoices dashboard")
@@ -57,6 +61,13 @@ def invoice_page_post(request: HttpRequest):
 
 @require_http_methods(["GET", "POST"])
 def create_invoice_page(request: HttpRequest):
+    if request.method == "POST":
+        return invoice_page_post(request)
+    return invoice_page_get(request)
+
+
+@require_http_methods(["GET", "POST"])
+def edit_invoice_page(request: HttpRequest):
     if request.method == "POST":
         return invoice_page_post(request)
     return invoice_page_get(request)
