@@ -12,21 +12,33 @@ from datetime import datetime
 # Function that takes an invoice object and makes a dict of its attributes
 def invoice_get_existing_data(invoice_obj):
     stored_data = {
-        "og_name": invoice_obj.self_name,
-        "og_company": invoice_obj.self_company,
-        "og_address": invoice_obj.self_address,
-        "og_city": invoice_obj.self_city,
-        "og_county": invoice_obj.self_county,
-        "og_country": invoice_obj.self_country,
-        "og_cilent_name": invoice_obj.client_name,
-        "og_cilent_company": invoice_obj.client_company,
-        "og_cilent_address": invoice_obj.client_address,
-        "og_cilent_city": invoice_obj.client_city,
-        "og_cilent_county": invoice_obj.client_county,
-        "og_cilent_country": invoice_obj.client_country,
-        "og_date_issued": invoice_obj.date_issued,
-        "og_date_due": invoice_obj.date_due,
+        "from_name": invoice_obj.self_name,
+        "from_company": invoice_obj.self_company,
+        "from_address": invoice_obj.self_address,
+        "from_city": invoice_obj.self_city,
+        "from_county": invoice_obj.self_county,
+        "from_country": invoice_obj.self_country,
+        "from_date_issued": invoice_obj.date_issued,
+        "from_date_due": invoice_obj.date_due,
+        "invoice_object": invoice_obj,
+        "og_issue_date": invoice_obj.date_issued,
+        "og_due_date": invoice_obj.date_due,
     }
+    if invoice_obj.client_to:
+        stored_data["to_name"] = invoice_obj.client_to.name
+        stored_data["to_company"] = invoice_obj.client_to.company
+        stored_data["to_address"] = invoice_obj.client_to.address
+        stored_data["to_city"] = invoice_obj.client_to.city
+        stored_data["to_county"] = invoice_obj.client_to.county
+        stored_data["to_country"] = invoice_obj.client_to.country
+    else:
+        stored_data["to_name"] = invoice_obj.client_name
+        stored_data["to_company"] = invoice_obj.client_company
+        stored_data["to_address"] = invoice_obj.client_address
+        stored_data["to_city"] = invoice_obj.client_city
+        stored_data["to_county"] = invoice_obj.client_county
+        stored_data["to_country"] = invoice_obj.client_country
+    print(stored_data)
     return stored_data
 
 
@@ -83,8 +95,7 @@ def edit_invoice(request: HttpRequest, invoice_id):
         messages.success(request, "Invoice edited")
         return render(request, "partials/base/toasts.html")
 
-    return render(request, "pages/invoices/dashboard/dashboard.html")
-    # return JsonResponse({"message": "Invoice successfully edited"}, status=200)
+    return invoice_edit_page_get(request, invoice_id)
 
 
 # decorator & view function for rendering page and updating invoice items in the backend

@@ -1,7 +1,7 @@
 from django.http import HttpRequest, HttpResponseBadRequest
 from django.shortcuts import render
 
-from backend.models import UserSettings
+from backend.models import UserSettings, Invoice
 
 
 # Still working on
@@ -19,6 +19,28 @@ def open_modal(request: HttpRequest, modal_name, context_type=None, context_valu
                     ] = request.user.user_profile.profile_picture_url
                 except UserSettings.DoesNotExist:
                     pass
+            elif context_type == "edit_invoice_to":
+                invoice = context_value
+                try:
+                    invoice = Invoice.objects.get(id=invoice)
+                except:
+                    return render(request, template_name, context)
+
+                if invoice.client_to:
+                    context["to_name"] = invoice.client_to.name
+                    context["to_company"] = invoice.client_to.company
+                    context["to_address"] = invoice.client_to.address
+                    context["to_city"] = invoice.client_to.city
+                    context["to_county"] = invoice.client_to.county
+                    context["to_country"] = invoice.client_to.country
+                else:
+                    context["to_name"] = invoice.client_name
+                    context["to_company"] = invoice.client_company
+                    context["to_address"] = invoice.client_address
+                    context["to_city"] = invoice.client_city
+                    context["to_county"] = invoice.client_county
+                    context["to_country"] = invoice.client_country
+
         return render(request, template_name, context)
     except:
         return HttpResponseBadRequest("Something went wrong")

@@ -10,21 +10,21 @@
 
 <!-- PRE-POPULATE FIELDS WITH EXISTING DATA OF THE INVOICE-->
     <div class="card-body">
-        <p class="text-md">{{ name | default:"John Smith" }}</p>
-        <p class="text-sm">{{ company | default:"Google" }}</p>
-        <p class="text-sm">{{ address | default:"128 Example Road" }}</p>
-        <p class="text-sm">{{ city | default:"Oxford" }}</p>
-        <p class="text-sm">{{ county | default:"Oxfordshire" }}</p>
-        <p class="text-sm">{{ country | default:"England" }}</p>
+        <p class="text-md">{{ from_name | default:"No name" }}</p>
+        <p class="text-sm">{{ from_company | default:"No company" }}</p>
+        <p class="text-sm">{{ from_address | default:"No address" }}</p>
+        <p class="text-sm">{{ from_city | default:"No city" }}</p>
+        <p class="text-sm">{{ from_county | default:"No county" }}</p>
+        <p class="text-sm">{{ from_country | default:"No country" }}</p>
     </div>
     
 <!-- REPLACE DEFAULT VALUES WITH WHATEVER IS ALREADY STORED FOR THE INVOICE - if user does not change field, keep whats there-->
-    <input type="hidden" name="from_name" value="{{ name | default:"John Smith" }}">
-    <input type="hidden" name="from_company" value="{{ company | default:"Google" }}">
-    <input type="hidden" name="from_address" value="{{ address | default:"128 Example Road" }}">
-    <input type="hidden" name="from_city" value="{{ city | default:"Oxford" }}">
-    <input type="hidden" name="from_county" value="{{ county | default:"Oxfordshire" }}">
-    <input type="hidden" name="from_country" value="{{ country | default:"England" }}">
+    <input type="hidden" name="from_name" value="{{ from_name | default:"" }}">
+    <input type="hidden" name="from_company" value="{{ from_company | default:"" }}">
+    <input type="hidden" name="from_address" value="{{ from_address | default:"" }}">
+    <input type="hidden" name="from_city" value="{{ from_city | default:"" }}">
+    <input type="hidden" name="from_county" value="{{ from_county | default:"" }}">
+    <input type="hidden" name="from_country" value="{{ from_country | default:"" }}">
 {% if not swapping %}
 </button>
 {% endif %}
