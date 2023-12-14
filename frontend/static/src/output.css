@@ -2760,18 +2760,6 @@ html {
   outline-color: var(--fallback-bc,oklch(var(--bc)/0.2));
 }
 
-.input-primary {
-  --tw-border-opacity: 1;
-  border-color: var(--fallback-p,oklch(var(--p)/var(--tw-border-opacity)));
-}
-
-.input-primary:focus,
-    .input-primary:focus-within {
-  --tw-border-opacity: 1;
-  border-color: var(--fallback-p,oklch(var(--p)/var(--tw-border-opacity)));
-  outline-color: var(--fallback-p,oklch(var(--p)/1));
-}
-
 .input-disabled,
   .input:disabled,
   .input[disabled] {
@@ -5386,6 +5374,17 @@ html {
 
 .ease-in-out {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.circle-tick {
+  display: inline-flex;
+  padding: 0.25rem;
+  margin-right: 0.75rem;
+  border-radius: 9999px;
+  width: 1.5rem;
+  height: 1.5rem;
+  align-items: center;
+  justify-content: center;
 }
 
 .modal-responsive {

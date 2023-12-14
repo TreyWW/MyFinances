@@ -7,7 +7,10 @@ from datetime import datetime
 
 
 def invoice_page_get(request: HttpRequest):
-    context = {}
+    context = {
+        "clients": Client.objects.filter(user=request.user),
+    }
+    print("context ", context)
 
     return render(request, "pages/invoices/create/create.html", context)
 
@@ -23,7 +26,7 @@ def invoice_page_post(request: HttpRequest):
             request.POST.getlist("hours[]"),
             request.POST.getlist("price_per_hour[]"),
         )
-    ]  # TODO: add products to this for logic (so that they can be loaded without manually making each time)
+    ]
 
     invoice = Invoice.objects.create(
         user=request.user,
@@ -52,7 +55,7 @@ def invoice_page_post(request: HttpRequest):
     )
 
     invoice.payment_status = invoice.dynamic_payment_status
-    print(invoice.date_due)
+
     invoice.save()
     invoice.items.set(invoice_items)
 

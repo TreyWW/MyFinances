@@ -21,16 +21,19 @@
         <div class="flex items-center mx-auto">
             <p class="flex items-center text-sm font-normal">
                 {% with ps=invoice.payment_status %}
-                    <span class="inline-flex p-1 mr-3 rounded-full w-6 h-6 items-center justify-center
-                        {% if ps == "paid" %}
-                        bg-success text-neutral
-                        {% elif ps == "pending" %}
-                        bg-gray-500 text-black
-                        {% else %}
-                        bg-error text-neutral
-                    {% endif %}">
-                        <i class="fa-solid fa-check"></i>
-                    </span>
+                    {% if ps == "paid" %}
+                        <span class="circle-tick bg-success text-neutral">
+                            <i class="fa-solid fa-tick"></i>
+                        </span>
+                    {% elif ps == "pending" %}
+                        <span class="circle-tick bg-gray-500 text-black">
+                            <i class="fa-solid fa-question"></i>
+                        </span>
+                    {% elif ps == "overdue" %}
+                        <span class="circle-tick bg-error text-neutral">
+                            <i class="fa-solid fa-x"></i>
+                        </span>
+                    {% endif %}
                     <span>
                     {% if ps == "paid" %}
                         This invoice has been <strong>paid</strong>
@@ -66,10 +69,12 @@
     <!-- Start of Invoice -->
     <div class="max-w-3xl mx-auto p-6 bg-white rounded shadow-sm my-6 mt-16 min-h-screen" id="invoice">
         <div class="grid grid-cols-2 items-center">
-            <img src="
-
-                    {% if invoice.logo %}{{ invoice.logo.url }}{% else %}https://github.com/TreyWW/MyFinances/blob/main/documentation/assets/logo_single.png?raw=true{% endif %}"
+            {% if invoice.logo %}
+                <img src="{{ invoice.logo.url }}" alt="company-logo" height="100" width="100">
+            {% else %}
+            <img src="https://github.com/TreyWW/MyFinances/blob/main/documentation/assets/logo_single.png?raw=true"
                  alt="company-logo" height="100" width="100">
+            {% endif %}
             <div class="text-right">
                 <p class="text-gray-700">
                     {{ invoice.self_company|default_if_none:"" }}
@@ -91,36 +96,9 @@
         <!-- Client info -->
         <div class="grid grid-cols-2 items-center mt-7">
             <div>
-                {% if invoice.client_name or invoice.client_address or invoice.client_email %}
-                    <p class="font-bold text-gray-800">
-                        Bill to
-                    </p>
-                    {% if invoice.client_to %}
-                        {% if invoice.client_to.is_representative %}
-                            {{ invoice.client_to.company }}
-                        {% endif %}
-                        <p class="text-gray-500">
-                            {{ invoice.client_to.name|default_if_none:"" }}
-                            <br>
-                            {{ invoice.client_to.email|default_if_none:"" }}
-                            {% if invoice.client_to.phone_number %}
-                                ({{ invoice.client_to.phone_number }})
-                            {% endif %}
-                            {{ invoice.client_to.name|default_if_none:"" }}
-
-                        </p>
-
-                    {% else %}
-                        <p class="text-gray-500">
-                            {{ invoice.client_name|default_if_none:"" }}
-                            <br />
-                            {{ invoice.client_address|default_if_none:"" }}
-                        </p>
-                        <p class="text-gray-500">
-                            {{ invoice.client_email|default_if_none:"" }}
-                        </p>
-                    {% endif %}
-                {% endif %}
+                {% with details=invoice.get_to_details %}
+                {% include 'pages/invoices/view/_client-details.html' with c_type=details.0 c_details=details.1 %}
+                {% endwith %}
             </div>
 
             <div class="text-right text-gray-800">

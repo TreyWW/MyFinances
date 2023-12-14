@@ -220,6 +220,21 @@ class Invoice(models.Model):
         else:
             return self.payment_status
 
+    @property
+    def get_to_details(self) -> tuple[str, dict[str, str]]:
+        """
+        Returns the client details for the invoice
+        "client" and Client object if client_to
+        "manual" and dict of details  if client_name
+        """
+        if self.client_to:
+            return "client", self.client_to
+        else:
+            return "manual", {
+                "name": self.client_name,
+                "company": self.client_company,
+            }
+
     def __str__(self):
         invoice_id = self.invoice_id or self.id
         if self.client_name:

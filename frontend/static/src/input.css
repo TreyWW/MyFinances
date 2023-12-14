@@ -2,6 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+.circle-tick {
+    @apply inline-flex;
+    @apply p-1;
+    @apply mr-3;
+    @apply rounded-full;
+    @apply w-6;
+    @apply h-6;
+    @apply items-center;
+    @apply justify-center;
+}
+
 .modal-responsive {
     @apply modal-bottom;
     @apply sm:modal-middle;

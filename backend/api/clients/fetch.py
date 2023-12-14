@@ -1,3 +1,5 @@
+import time
+
 from django.db.models import Q
 from django.http import HttpRequest
 from django.shortcuts import render, redirect
@@ -23,3 +25,17 @@ def fetch_all_clients(request: HttpRequest):
         )
 
     return render(request, "pages/clients/dashboard/_table.html", {"clients": clients})
+
+
+@require_http_methods(["GET"])
+def fetch_clients_dropdown(request: HttpRequest):
+    if not request.htmx:
+        return redirect("clients dashboard")
+
+    clients = Client.objects.filter(user=request.user, active=True)
+
+    return render(
+        request,
+        "pages/invoices/create/_view_clients_dropdown.html",
+        {"clients": clients},
+    )

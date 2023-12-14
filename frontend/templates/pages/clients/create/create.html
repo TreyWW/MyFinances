@@ -36,9 +36,9 @@
                             <label class="label">
                                 <span class="label-text">Client Email</span>
                             </label>
-                            <input required id="clientName" name="client_name"
-                                   minlength="3" type="text" class="peer input input-bordered  w-full"
-                                   placeholder="Bob Smith" />
+                            <input required id="clientEmail" name="client_email"
+                                   minlength="4" type="email" class="peer input input-bordered w-full"
+                                   placeholder="bsmith@example.com" />
                             <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden">
                                 <span class="label-text-alt text-error">Please enter a valid client email address</span>
                             </label>
@@ -54,7 +54,7 @@
                         <label class="label">
                             <span class="label-text">Client Company</span>
                         </label>
-                        <input required id="companyName" name="company_name"
+                        <input id="companyName" name="company_name"
                                minlength="3" type="text" class="peer input input-bordered w-full"
                                placeholder="Bob Smith" />
                         <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden">
@@ -111,8 +111,10 @@
         function check_is_rep() {
             if (is_rep_inp.checked) {
                 is_rep_div.style.display = "block";
+                is_rep_inp.required = true;
             } else {
                 is_rep_div.style.display = "none";
+                is_rep_inp.required = false;
             }
         }
 
