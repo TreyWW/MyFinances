@@ -23,10 +23,10 @@ jobs:
       - name: Copy docker compose file
         run: cp $DOCKER_COMPOSE_PATH ./docker-compose.yml   
 
-      - name: Install Python dependencies
-        uses: py-actions/py-dependency-install@v4
-        with:
-          path: requirements.gh_actions.txt
+      #      - name: Install Python dependencies
+      #        uses: py-actions/py-dependency-install@v4
+      #        with:
+      #          path: requirements.gh_actions.txt
 
       - name: Build and run docker-compose.ci.yml
         run: docker-compose up -d
