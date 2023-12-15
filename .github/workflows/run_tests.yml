@@ -12,6 +12,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Set up Python
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
       - name: Install Docker Compose
         run: |
           sudo apt-get update
@@ -21,20 +26,7 @@ jobs:
         run: cp .env.github_actions .env
 
       - name: Copy docker compose file
-        run: cp $DOCKER_COMPOSE_PATH ./docker-compose.yml   
-
-      #      - name: Install Python dependencies
-      #        uses: py-actions/py-dependency-install@v4
-      #        with:
-      #          path: requirements.gh_actions.txt
-
-      - name: Run poetry image
-        uses: abatilo/actions-poetry@v2
-        with:
-          poetry-version: 1.7.1
-
-      - name: Install poetry packages
-        run: poetry install --without dev,mysql --no-root
+        run: cp $DOCKER_COMPOSE_PATH ./docker-compose.yml
 
       - name: Build and run docker-compose.ci.yml
         run: docker-compose up -d
