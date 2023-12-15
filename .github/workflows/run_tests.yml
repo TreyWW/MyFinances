@@ -27,8 +27,8 @@ jobs:
         run: cp $DOCKER_COMPOSE_PATH ./docker-compose.yml
 
       - name: Build and run docker-compose.ci.yml
-        run: docker-compose up -d --wait --wait-timeout 30
+        run: docker compose up -d --wait --wait-timeout 30
 
       - name: Run the test scripts
         run: |
-          docker-compose exec -T myfinances_django ./infrastructure/backend/scripts/tests/views.sh
+          docker compose exec -T myfinances_django ./infrastructure/backend/scripts/tests/views.sh
