@@ -5,10 +5,9 @@
             {% csrf_token %}
             <div class="form-control">
                 <div class="label">Use existing client</div>
-
                 <select data-selection="client" class="select select-bordered select-primary join-item peer"
                         hx-get="{% url "api:clients:fetch dropdown" %}"
-                        hx-swap="innerHTML" hx-trigger="load" name="selected_client">
+                        hx-swap="innerHTML" hx-trigger="load" name="selected_client" hx-vals='{"existing_client_id": "{{ existing_client_id }}"}'>
                     <option selected disabled>Loading clients...</option>
                 </select>
                 <button data-button="existing_Client" onclick="document.getElementById('modal_invoices_to_destination').close();"

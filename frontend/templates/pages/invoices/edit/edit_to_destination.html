@@ -15,6 +15,7 @@
     <p class="text-sm">{{ to_city | default:"No city" }}</p>
     <p class="text-sm">{{ to_county | default:"No county" }}</p>
     <p class="text-sm">{{ to_country | default:"No country" }}</p>
+    <p class="text-sm">{% if is_representative %}Is a{% else %}Is not a{% endif %} representative</p>
 </div>
 
 <!-- REPLACE DEFAULT VALUES WITH WHATEVER IS ALREADY STORED FOR THE INVOICE - if user does not change field, keep whats there-->
@@ -24,6 +25,8 @@
 <input type="hidden" name="to_city" value="{{ to_city | default:"" }}">
 <input type="hidden" name="to_county" value="{{ to_county | default:"" }}">
 <input type="hidden" name="to_country" value="{{ to_country | default:"" }}">
+<input type="hidden" name="selected_client" value="{{ existing_client.id }}">
+<input type="hidden" name="is_representative" value="{{ is_representative }}">
 {% if not swapping %}
     </button>
 {% endif %}

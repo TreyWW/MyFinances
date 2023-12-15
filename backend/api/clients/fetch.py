@@ -32,10 +32,11 @@ def fetch_clients_dropdown(request: HttpRequest):
     if not request.htmx:
         return redirect("clients dashboard")
 
+    selected_client = request.GET.get("existing_client_id") or None
     clients = Client.objects.filter(user=request.user, active=True)
 
     return render(
         request,
         "pages/invoices/create/_view_clients_dropdown.html",
-        {"clients": clients},
+        {"clients": clients, "selected_client": selected_client},
     )
