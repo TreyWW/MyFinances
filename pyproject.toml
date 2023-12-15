@@ -1,0 +1,50 @@
+[tool.poetry]
+name = "MyFinances"
+version = "0.1.1"
+description = "github.com/TreyWW/MyFinances"
+authors = []
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+bleach = "6.1.0"
+oauthlib = "3.2.2"
+boto3 = "1.33.6"
+django-storages = "1.14.2"
+pillow = "10.1.0"
+tblib = "^3.0.0"
+
+[tool.poetry.group.django.dependencies]
+Django = "^4.2.7"
+gunicorn = "21.2.0"
+social-auth-app-django = "5.4.0"
+django-sendgrid-v5 = "1.2.3"
+django-environ = "0.11.2"
+django-extensions = "3.2.3"
+python-dateutil = "2.8.2"
+django-mathfilters = "1.0.0"
+django-ratelimit = "4.1.0"
+django-htmlmin = "0.11.0"
+python-memcached = "1.59"
+django-htmx = "1.17.2"
+django-login-required-middleware = "0.9.0"
+django-debug-toolbar = "4.2.0"
+django-components = "0.29"
+django-markdownify = "0.9.3"
+shortuuid = "1.0.11"
+model-bakery = "1.17.0"
+
+[tool.poetry.group.mysql]
+optional = true
+
+[tool.poetry.group.mysql.dependencies]
+mysqlclient = "2.2.0"
+mariadb = "1.1.8"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.12.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
