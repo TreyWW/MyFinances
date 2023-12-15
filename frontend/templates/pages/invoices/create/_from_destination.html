@@ -5,19 +5,19 @@
        hx-get="{% url "api:base:modal retrieve" modal_name="invoices_from_destination" %}">
     {% endif %}
     <div class="card-body">
-        <p class="text-md">{{ name | default:"John Smith" }}</p>
-        <p class="text-sm">{{ company | default:"Google" }}</p>
-        <p class="text-sm">{{ address | default:"128 Example Road" }}</p>
-        <p class="text-sm">{{ city | default:"Oxford" }}</p>
-        <p class="text-sm">{{ county | default:"Oxfordshire" }}</p>
-        <p class="text-sm">{{ country | default:"England" }}</p>
+        <p class="text-md">{{ name | default:"No name" }}</p>
+        <p class="text-sm">{{ company | default:"No company" }}</p>
+        <p class="text-sm">{{ address | default:"No address" }}</p>
+        <p class="text-sm">{{ city | default:"No city" }}</p>
+        <p class="text-sm">{{ county | default:"No county" }}</p>
+        <p class="text-sm">{{ country | default:"No country" }}</p>
     </div>
-    <input type="hidden" name="from_name" value="{{ name | default:"John Smith" }}">
-    <input type="hidden" name="from_company" value="{{ company | default:"Google" }}">
-    <input type="hidden" name="from_address" value="{{ address | default:"128 Example Road" }}">
-    <input type="hidden" name="from_city" value="{{ city | default:"Oxford" }}">
-    <input type="hidden" name="from_county" value="{{ county | default:"Oxfordshire" }}">
-    <input type="hidden" name="from_country" value="{{ country | default:"England" }}">
+    <input type="hidden" name="from_name" value="{{ name | default:"" }}">
+    <input type="hidden" name="from_company" value="{{ company | default:"" }}">
+    <input type="hidden" name="from_address" value="{{ address | default:"" }}">
+    <input type="hidden" name="from_city" value="{{ city | default:"" }}">
+    <input type="hidden" name="from_county" value="{{ county | default:"" }}">
+    <input type="hidden" name="from_country" value="{{ country | default:"" }}">
 {% if not swapping %}
 </button>
 {% endif %}

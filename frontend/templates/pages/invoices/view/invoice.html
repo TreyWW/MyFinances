@@ -20,11 +20,21 @@
         </div>
         <div class="flex items-center mx-auto">
             <p class="flex items-center text-sm font-normal">
-            <span class="inline-flex p-1 mr-3 rounded-full w-6 h-6 items-center justify-center bg-success">
-                <i class="fa-solid fa-check text-neutral"></i>
-            </span>
-                <span>
                 {% with ps=invoice.payment_status %}
+                    {% if ps == "paid" %}
+                        <span class="circle-tick bg-success text-neutral">
+                            <i class="fa-solid fa-tick"></i>
+                        </span>
+                    {% elif ps == "pending" %}
+                        <span class="circle-tick bg-gray-500 text-black">
+                            <i class="fa-solid fa-question"></i>
+                        </span>
+                    {% elif ps == "overdue" %}
+                        <span class="circle-tick bg-error text-neutral">
+                            <i class="fa-solid fa-x"></i>
+                        </span>
+                    {% endif %}
+                    <span>
                     {% if ps == "paid" %}
                         This invoice has been <strong>paid</strong>
                     {% elif ps == "pending" %}
@@ -32,9 +42,9 @@
                     {% elif ps == "overdue" %}
                         This invoice is <strong>overdue</strong>
                     {% endif %}
-                {% endwith %}
             </span>
-            </p>
+                    </p>
+                {% endwith %}
         </div>
         <div class="flex justify-end float-right">
             <a class="btn btn-sm btn-secondary me-2" href="" download>
@@ -59,8 +69,12 @@
     <!-- Start of Invoice -->
     <div class="max-w-3xl mx-auto p-6 bg-white rounded shadow-sm my-6 mt-16 min-h-screen" id="invoice">
         <div class="grid grid-cols-2 items-center">
-            <img src="{% if invoice.logo %}{{ invoice.logo.url }}{% else %}https://github.com/TreyWW/MyFinances/blob/main/documentation/assets/logo_single.png?raw=true{% endif %}"
+            {% if invoice.logo %}
+                <img src="{{ invoice.logo.url }}" alt="company-logo" height="100" width="100">
+            {% else %}
+            <img src="https://github.com/TreyWW/MyFinances/blob/main/documentation/assets/logo_single.png?raw=true"
                  alt="company-logo" height="100" width="100">
+            {% endif %}
             <div class="text-right">
                 <p class="text-gray-700">
                     {{ invoice.self_company|default_if_none:"" }}
@@ -82,19 +96,9 @@
         <!-- Client info -->
         <div class="grid grid-cols-2 items-center mt-7">
             <div>
-                {% if invoice.client_name or invoice.client_address or invoice.client_email %}
-                    <p class="font-bold text-gray-800">
-                        Bill to
-                    </p>
-                    <p class="text-gray-500">
-                        {{ invoice.client_name|default_if_none:"" }}
-                        <br />
-                        {{ invoice.client_address|default_if_none:"" }}
-                    </p>
-                    <p class="text-gray-500">
-                        {{ invoice.client_email|default_if_none:"" }}
-                    </p>
-                {% endif %}
+                {% with details=invoice.get_to_details %}
+                {% include 'pages/invoices/view/_client-details.html' with c_type=details.0 c_details=details.1 %}
+                {% endwith %}
             </div>
 
             <div class="text-right text-gray-800">
@@ -161,14 +165,20 @@
                     <td class="pl-3 pr-6 pt-6 text-right text-sm text-gray-500 sm:pr-0">
                         {{ currency_symbol }}{{ invoice.get_subtotal }}</td>
                 </tr>
+                {% if tax %} {# todo add tax #}
                 <tr>
                     <th scope="row" colspan="3"
-                        class="hidden pl-4 pr-3 pt-4 text-right text-sm font-normal text-gray-500 sm:table-cell sm:pl-0">Tax
+                        class="hidden pl-4 pr-3 pt-4 text-right text-sm font-normal text-gray-500 sm:table-cell sm:pl-0">
+                        Tax
                     </th>
-                    <th scope="row" class="pl-6 pr-3 pt-4 text-left text-sm font-normal text-gray-500 sm:hidden">Tax</th>
+                    <th scope="row" class="pl-6 pr-3 pt-4 text-left text-sm font-normal text-gray-500 sm:hidden">
+                        Tax
+                    </th>
                     <td class="pl-3 pr-6 pt-4 text-right text-sm text-gray-500 sm:pr-0">
-                        {{ currency_symbol }}{{ invoice.get_total_price|sub:invoice.get_subtotal }}</td>
+                        {{ currency_symbol }}0.00
+                    </td>
                 </tr>
+                {% endif %}
                 {% if invoice.discount %}
                     <tr>
                         <th scope="row" colspan="3"

@@ -3,7 +3,7 @@ from django.http import HttpRequest, JsonResponse, QueryDict
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
-from backend.models import Invoice
+from backend.models import Invoice, Client
 from datetime import datetime
 
 # RELATED PATH FILES : \frontend\templates\pages\invoices\dashboard\_fetch_body.html, \backend\urls.py
@@ -12,21 +12,39 @@ from datetime import datetime
 # Function that takes an invoice object and makes a dict of its attributes
 def invoice_get_existing_data(invoice_obj):
     stored_data = {
-        "og_name": invoice_obj.self_name,
-        "og_company": invoice_obj.self_company,
-        "og_address": invoice_obj.self_address,
-        "og_city": invoice_obj.self_city,
-        "og_county": invoice_obj.self_county,
-        "og_country": invoice_obj.self_country,
-        "og_cilent_name": invoice_obj.client_name,
-        "og_cilent_company": invoice_obj.client_company,
-        "og_cilent_address": invoice_obj.client_address,
-        "og_cilent_city": invoice_obj.client_city,
-        "og_cilent_county": invoice_obj.client_county,
-        "og_cilent_country": invoice_obj.client_country,
-        "og_date_issued": invoice_obj.date_issued,
-        "og_date_due": invoice_obj.date_due,
+        "from_name": invoice_obj.self_name,
+        "from_company": invoice_obj.self_company,
+        "from_address": invoice_obj.self_address,
+        "from_city": invoice_obj.self_city,
+        "from_county": invoice_obj.self_county,
+        "from_country": invoice_obj.self_country,
+        "from_date_issued": invoice_obj.date_issued,
+        "from_date_due": invoice_obj.date_due,
+        "invoice_object": invoice_obj,
+        "og_issue_date": invoice_obj.date_issued,
+        "og_due_date": invoice_obj.date_due,
+        "invoice_object": invoice_obj,
     }
+    if invoice_obj.client_to:
+        stored_data["to_name"] = invoice_obj.client_to.name
+        stored_data["to_company"] = invoice_obj.client_to.company
+        stored_data["is_representative"] = invoice_obj.client_to.is_representative
+        # stored_data["to_address"] = invoice_obj.client_to.address
+        # stored_data["to_city"] = invoice_obj.client_to.city
+        # stored_data["to_county"] = invoice_obj.client_to.county
+        # stored_data["to_country"] = invoice_obj.client_to.country
+    else:
+        stored_data["to_name"] = invoice_obj.client_name
+        stored_data["to_company"] = invoice_obj.client_company
+        stored_data["to_address"] = invoice_obj.client_address
+        stored_data["to_city"] = invoice_obj.client_city
+        stored_data["to_county"] = invoice_obj.client_county
+        stored_data["to_country"] = invoice_obj.client_country
+        stored_data["is_representative"] = invoice_obj.client_is_representative
+
+    if invoice_obj.client_to:
+        stored_data["existing_client"] = invoice_obj.client_to
+
     return stored_data
 
 
@@ -53,12 +71,6 @@ def edit_invoice(request: HttpRequest, invoice_id):
     attributes_to_updates = {
         "date_due": datetime.strptime(request.POST.get("date_due"), "%Y-%m-%d").date(),
         "date_issued": request.POST.get("date_issued"),
-        "client_name": request.POST.get("to_name"),
-        "client_company": request.POST.get("to_company"),
-        "client_address": request.POST.get("to_address"),
-        "client_city": request.POST.get("to_city"),
-        "client_county": request.POST.get("to_county"),
-        "client_country": request.POST.get("to_country"),
         "self_name": request.POST.get("from_name"),
         "self_company": request.POST.get("from_company"),
         "self_address": request.POST.get("from_address"),
@@ -74,6 +86,26 @@ def edit_invoice(request: HttpRequest, invoice_id):
         "account_holder_name": request.POST.get("account_holder_name"),
     }
 
+    client_to_id = request.POST.get("selected_client")
+    try:
+        client_to_obj = Client.objects.get(id=client_to_id, user=request.user)
+    except:
+        client_to_obj = None
+
+    if client_to_obj:
+        invoice.client_to = client_to_obj
+    else:
+        attributes_to_updates.update(
+            {
+                "client_name": request.POST.get("to_name"),
+                "client_company": request.POST.get("to_company"),
+                "client_address": request.POST.get("to_address"),
+                "client_city": request.POST.get("to_city"),
+                "client_county": request.POST.get("to_county"),
+                "client_country": request.POST.get("to_country"),
+            }
+        )
+
     for column_name, new_value in attributes_to_updates.items():
         setattr(invoice, column_name, new_value)
 
@@ -83,8 +115,7 @@ def edit_invoice(request: HttpRequest, invoice_id):
         messages.success(request, "Invoice edited")
         return render(request, "partials/base/toasts.html")
 
-    return render(request, "pages/invoices/dashboard/dashboard.html")
-    # return JsonResponse({"message": "Invoice successfully edited"}, status=200)
+    return invoice_edit_page_get(request, invoice_id)
 
 
 # decorator & view function for rendering page and updating invoice items in the backend

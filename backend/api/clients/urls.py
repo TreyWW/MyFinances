@@ -7,6 +7,11 @@ urlpatterns = [
         fetch.fetch_all_clients,
         name="fetch",
     ),
+    path(
+        "fetch/dropdown/",
+        fetch.fetch_clients_dropdown,
+        name="fetch dropdown",
+    ),
 ]
 
 app_name = "clients"
