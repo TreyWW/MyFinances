@@ -13,6 +13,7 @@
 {#        <p class="text-sm">{{ existing_client.city | default:"Oxford" }}</p>#}
 {#        <p class="text-sm">{{ existing_client.county | default:"Oxfordshire" }}</p>#}
         <p class="text-sm">{{ existing_client.country | default:"No country" }}</p>
+        <p class="text-sm">{% if existing_client.is_representative %}Is a{% else %}Is not a{% endif %} representative</p>
     {% else %}
         <p class="text-md">{{ name | default:"No Name" }}</p>
         <p class="text-sm">{{ company | default:"No Company" }}</p>
@@ -20,6 +21,7 @@
         <p class="text-sm">{{ city | default:"No city" }}</p>
         <p class="text-sm">{{ county | default:"No county" }}</p>
         <p class="text-sm">{{ country | default:"No country" }}</p>
+        <p class="text-sm">{% if is_representative == "on" %}Is a{% else %}Is not a{% endif %} representative</p>
     {% endif %}
 </div>
 <input type="hidden" name="to_name" value="{{ name | default:"" }}">
@@ -29,6 +31,7 @@
 <input type="hidden" name="to_county" value="{{ county | default:"" }}">
 <input type="hidden" name="to_country" value="{{ country | default:"" }}">
 <input type="hidden" name="selected_client" value="{{ existing_client }}">
+<input type="hidden" name="is_representative" value="{{ is_representative }}">
 {% if not swapping %}
     </button>
 {% endif %}

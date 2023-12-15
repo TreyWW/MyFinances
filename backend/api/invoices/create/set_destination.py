@@ -5,13 +5,7 @@ from django.views.decorators.http import require_http_methods
 
 from backend.models import Client
 
-to_get = [
-    "name",
-    "address",
-    "city",
-    "country",
-    "company",
-]
+to_get = ["name", "address", "city", "country", "company", "is_representative"]
 
 
 @require_http_methods(["POST"])

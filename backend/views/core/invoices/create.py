@@ -38,6 +38,9 @@ def invoice_page_post(request: HttpRequest):
         client_city=request.POST.get("to_city"),
         client_county=request.POST.get("to_county"),
         client_country=request.POST.get("to_country"),
+        client_is_representative=True
+        if request.POST.get("is_representative") == "on"
+        else False,
         self_name=request.POST.get("from_name"),
         self_company=request.POST.get("from_company"),
         self_address=request.POST.get("from_address"),

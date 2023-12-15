@@ -165,14 +165,20 @@
                     <td class="pl-3 pr-6 pt-6 text-right text-sm text-gray-500 sm:pr-0">
                         {{ currency_symbol }}{{ invoice.get_subtotal }}</td>
                 </tr>
+                {% if tax %} {# todo add tax #}
                 <tr>
                     <th scope="row" colspan="3"
-                        class="hidden pl-4 pr-3 pt-4 text-right text-sm font-normal text-gray-500 sm:table-cell sm:pl-0">Tax
+                        class="hidden pl-4 pr-3 pt-4 text-right text-sm font-normal text-gray-500 sm:table-cell sm:pl-0">
+                        Tax
                     </th>
-                    <th scope="row" class="pl-6 pr-3 pt-4 text-left text-sm font-normal text-gray-500 sm:hidden">Tax</th>
+                    <th scope="row" class="pl-6 pr-3 pt-4 text-left text-sm font-normal text-gray-500 sm:hidden">
+                        Tax
+                    </th>
                     <td class="pl-3 pr-6 pt-4 text-right text-sm text-gray-500 sm:pr-0">
-                        {{ currency_symbol }}{{ invoice.get_total_price|sub:invoice.get_subtotal }}</td>
+                        {{ currency_symbol }}0.00
+                    </td>
                 </tr>
+                {% endif %}
                 {% if invoice.discount %}
                     <tr>
                         <th scope="row" colspan="3"

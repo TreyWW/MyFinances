@@ -183,6 +183,7 @@ class Invoice(models.Model):
     client_city = models.CharField(max_length=100, blank=True, null=True)
     client_county = models.CharField(max_length=100, blank=True, null=True)
     client_country = models.CharField(max_length=100, blank=True, null=True)
+    client_is_representative = models.BooleanField(default=False)
 
     self_name = models.CharField(max_length=100, blank=True, null=True)
     self_company = models.CharField(max_length=100, blank=True, null=True)
