@@ -3,7 +3,7 @@
 <tbody id="table_body">
 {% for invoice in invoices %}
     <tr>
-        <td>{{ invoice.id }}</td>
+        <td class="link link-primary"><a href="{% url "invoices dashboard preview" id=invoice.id %}">{{ invoice.id }}</a></td>
         <td>
             {{ invoice.date_due | date:"d/m/Y" }}
         </td>
