@@ -28,6 +28,14 @@ jobs:
       #        with:
       #          path: requirements.gh_actions.txt
 
+      - name: Run poetry image
+        uses: abatilo/actions-poetry@v2
+        with:
+          poetry-version: 1.7.1
+
+      - name: Install poetry packages
+        run: poetry install --without dev,mysql --no-root
+
       - name: Build and run docker-compose.ci.yml
         run: docker-compose up -d
 
