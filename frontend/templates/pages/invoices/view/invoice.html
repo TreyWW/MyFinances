@@ -51,10 +51,14 @@
                 <i class="fa-solid fa-download me-2"></i>
                 Download
             </a>
-            <button onclick="window.print()" class="btn btn-sm btn-primary me-8">
+            <button onclick="window.print()" class="btn btn-sm btn-primary me-2">
                 <i class="fa-solid fa-print me-2"></i>
                 Print
             </button>
+            <a class="btn btn-sm btn-accent me-8"
+               href="{% url "invoices dashboard manage_access" id=invoice.id %}">
+                Share Invoice
+            </a>
 
             <div class="flex items-center">
                 <button onclick="document.getElementById('status_banner').remove();" type="button"
