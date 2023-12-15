@@ -11,8 +11,6 @@ def invoice_page_get(request: HttpRequest):
     context = {
         "clients": Client.objects.filter(user=request.user),
     }
-    print("context ", context)
-
     return render(request, "pages/invoices/create/create.html", context)
 
 

@@ -5,9 +5,6 @@ from django.views.decorators.http import require_http_methods
 
 from backend.models import Invoice, Client
 from datetime import datetime
-import pprint
-
-pp = pprint.PrettyPrinter(indent=4)
 # RELATED PATH FILES : \frontend\templates\pages\invoices\dashboard\_fetch_body.html, \backend\urls.py
 
 
@@ -47,7 +44,6 @@ def invoice_get_existing_data(invoice_obj):
     if invoice_obj.client_to:
         stored_data["existing_client"] = invoice_obj.client_to
 
-    pp.pprint(stored_data)
     return stored_data
 
 

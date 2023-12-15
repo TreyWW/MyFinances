@@ -9,7 +9,6 @@ from backend.models import Invoice
 @require_http_methods(["DELETE"])
 def delete_invoice(request: HttpRequest):
     delete_items = QueryDict(request.body)
-    print("del items", delete_items)
 
     invoice = delete_items.get("invoice")
 
