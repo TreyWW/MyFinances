@@ -30,7 +30,7 @@
 <input type="hidden" name="to_city" value="{{ city | default:"" }}">
 <input type="hidden" name="to_county" value="{{ county | default:"" }}">
 <input type="hidden" name="to_country" value="{{ country | default:"" }}">
-<input type="hidden" name="selected_client" value="{{ existing_client }}">
+<input type="hidden" name="selected_client" value="{{ existing_client.id }}">
 <input type="hidden" name="is_representative" value="{{ is_representative }}">
 {% if not swapping %}
     </button>
