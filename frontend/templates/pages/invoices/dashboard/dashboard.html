@@ -1,0 +1,149 @@
+{% extends 'base/base.html' %}
+{% block content %}
+    <form id="filter_list_storage">
+    </form>
+    <div class="card bg-base-100 p-6 mb-4 h-screen">
+        <a class="btn btn-primary btn-block" href="{% url 'invoices dashboard create' %}">
+            {% include 'components/icon.html' with icon="file-invoice" tags="me-2" %}
+            Create Invoice
+        </a>
+        <div class="dropdown dropdown-hover dropdown-right my-4 w-14">
+            <div tabindex="0" role="button" class="btn btn-square btn-outline loading-htmx" id="sort-indicator">
+                <span class="loading-htmx-text"><i class="fa fa-solid fa-sort"></i></span>
+                <span id="currency_save_loading" class="loading loading-spinner loading-htmx-loader"></span>
+            </div>
+            <ul class="dropdown-content menu z-[1] w-52 rounded-box bg-base-200 p-2 shadow"
+                hx-swap="outerHTML"
+                hx-target="#table_body"
+                hx-indicator="#sort-indicator">
+                <h2 class="menu-title">Sort by</h2>
+                <li data-sort="id">
+                    <button class="dropdown-item" hx-get="{% url 'api:invoices:fetch' %}" name="sort" value="id">
+                        <i class="fa-solid fa-sort"></i>
+                        ID
+                    </button>
+                </li>
+                <li data-sort="payment_status">
+                    <button class="dropdown-item" hx-get="{% url 'api:invoices:fetch' %}" name="sort" value="payment_status">
+                        Payment Status
+                    </button>
+                </li>
+                <li data-sort="date_due">
+                    <button class="dropdown-item" hx-get="{% url 'api:invoices:fetch' %}" name="sort" value="date_due">
+                        Date
+                    </button>
+                </li>
+            </ul>
+        </div>
+        <div class="flex w-full h-full overflow-x-hidden overflow-y-auto">
+            <table class="table">
+                <thead>
+                <tr hx-swap="outerHTML"
+                    hx-target="#table_body"
+                    hx-indicator=""
+                    hx-include="#filter_list_storage">
+                    <th>
+                        Invoice ID
+                    </th>
+                    <th>
+                        Date
+                    </th>
+                    <th>
+                        Client Name
+                    </th>
+                    <th>
+                        <div class="dropdown"
+                             data-filter-type="amount"
+                             hx-vals='{"filter_type": "amount"}'>
+                            <label tabindex="0" class="border-none">
+                                Amount
+                                <i class="fa-solid fa-caret-down border-none pt-1 pl-1/2"></i>
+                            </label>
+                            <ul class="dropdown-content">
+                                <h2 class="menu-title">Amount</h2>
+                                <div class="divider -mt-2 -mb-1"></div>
+                                <li data-filter-by="20+">
+                                    <button class="dropdown-item text-sm border-none"
+                                            hx-get="{% url "api:invoices:fetch" %}"
+                                            name="filter"
+                                            value="20+"
+                                    >
+                                        20+
+                                    </button>
+                                </li>
+                                <li data-filter-by="50+">
+                                    <button class="dropdown-item text-sm border-none"
+                                            hx-get="{% url "api:invoices:fetch" %}"
+                                            name="filter"
+                                            value="50+"
+                                    >
+                                        50+
+                                    </button>
+                                </li>
+                                <li data-filter-by="100+">
+                                    <button class="dropdown-item text-sm border-none"
+                                            hx-get="{% url "api:invoices:fetch" %}"
+                                            name="filter"
+                                            value="100+"
+                                    >
+                                        100+
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="dropdown"
+                             data-filter-type="payment_status"
+                             hx-vals='{"filter_type": "payment_status"}'
+
+                        >
+                            <label tabindex="0" class="border-none">
+                                Payment Status
+                                <i class="fa-solid fa-caret-down border-none pt-1 pl-1/2"></i>
+                            </label>
+                            <ul class="dropdown-content">
+                                <h2 class="menu-title">Payment Status</h2>
+                                <div class="divider -mt-2 -mb-1"></div>
+                                <li data-filter-by="paid">
+                                    <button class="dropdown-item text-sm border-none"
+                                            hx-get="{% url "api:invoices:fetch" %}"
+                                            name="filter"
+                                            value="paid"
+                                    >
+                                        Paid
+                                    </button>
+                                </li>
+                                <li data-filter-by="pending">
+                                    <button class="dropdown-item text-sm border-none"
+                                            hx-get="{% url "api:invoices:fetch" %}"
+                                            name="filter"
+                                            value="pending"
+                                    >
+                                        Pending
+                                    </button>
+                                </li>
+                                <li data-filter-by="overdue">
+                                    <button class="dropdown-item text-sm border-none"
+                                            hx-get="{% url "api:invoices:fetch" %}"
+                                            name="filter"
+                                            value="overdue"
+                                    >
+                                        Overdue
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </th>
+                    <th>
+                        Actions
+                    </th>
+                </tr>
+                </thead>
+                <tbody id="table_body" hx-swap="outerHTML" hx-trigger="load" hx-get="{% url 'api:invoices:fetch' %}">
+                {% include 'components/table/skeleton_rows.html' with rows=3 cols=6 %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock content %}

@@ -1,0 +1,20 @@
+<dialog id="{% slot "id" %}{{ id }}{% endslot %}" class="modal modal-responsive">
+    <div class="modal-box">
+        {% slot "title" %}
+            <h3 class="font-bold text-lg">{{ title }}</h3>
+        {% endslot %}
+        {% slot "content" %}
+            <p class="py-4">
+                {{ content }}
+            </p>
+        {% endslot %}
+    </div>
+    <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+    </form>
+</dialog>
+{% if start_open %}
+    <script>
+        {{ id }}.showModal()
+    </script>
+{% endif %}

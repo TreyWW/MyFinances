@@ -1,7 +1,0 @@
-<form method="post">
-    {% csrf_token %}
-    <input type="text" placeholder="Search" class="input input-bordered input-block my-3"
-           hx-get="{% url 'api v1 receipts fetch' %}" hx-target="#items" hx-trigger="keyup changed delay:500ms" name="search">
-    <div id="results">
-    </div>
-</form>

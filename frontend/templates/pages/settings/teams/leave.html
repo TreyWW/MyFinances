@@ -1,0 +1,10 @@
+{% extends 'base/base.html' %}
+{% block content %}
+    <h1 class="text-3xl w-full text-center mb-1">Leave Team</h1>
+    <h3 class="text-lg w-full text-center">Are you sure you would like to leave <strong>{{ team.name }}</strong> team?</h3>
+
+    <div class="flex justify-center mt-3">
+        <a class="btn btn-primary btn-block me-2" href="{% url "user settings teams join leave confirm" %}">Leave Team</a>
+        <a class="btn btn-secondary btn-block ms-2" href="{% url "user settings teams" %}">Go back</a>
+    </div>
+{% endblock content %}

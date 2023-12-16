@@ -38,7 +38,7 @@ def teams_dashboard(request: HttpRequest):
 
     return render(
         request,
-        "core/pages/settings/teams/main.html",
+        "pages/settings/teams/main.html",
         {
             "modal_data": modal_data,
             "has_team": user_has_team,
@@ -185,7 +185,7 @@ def join_team_page(request: HttpRequest, code):
 
     return render(
         request,
-        "core/pages/settings/teams/join.html",
+        "pages/settings/teams/join.html",
         {
             "invitation": invitation,
             "team": team,
@@ -278,7 +278,7 @@ def leave_team(request: HttpRequest):
         messages.error(request, "You are not in a team")
         return redirect("user settings teams")
 
-    return render(request, "core/pages/settings/teams/leave.html")
+    return render(request, "pages/settings/teams/leave.html")
 
 
 def leave_team_confirm(request: HttpRequest):
@@ -300,4 +300,4 @@ def leave_team_confirm(request: HttpRequest):
 
 
 def manage_permissions_dashboard(request: HttpRequest):
-    return render(request, "core/pages/settings/teams/permissions.html")
+    return render(request, "pages/settings/teams/permissions.html")

@@ -1,0 +1,25 @@
+{% load humanize %}
+{% for client in clients %}
+    <tr>
+        <td>{{ client.id }}</td>
+        <td colspan="2">{{ client.name }}</td>
+        <td colspan="2">
+            <div class="flex flex-wrap gap-2">
+                <div class="tooltip" data-tip="Edit">
+                    <button class="btn btn-outline btn-success btn-sm btn-disabled">
+                        <i class="fa fa-solid fa-pencil"></i>
+                    </button>
+                </div>
+                <div class="tooltip" data-tip="Delete">
+                    <button class="btn btn-outline btn-error btn-sm btn-disabled">
+                        <i class="fa fa-solid fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        </td>
+    </tr>
+{% empty %}
+<td colspan="100%" class="text-center">
+    No clients found.
+</td>
+{% endfor %}

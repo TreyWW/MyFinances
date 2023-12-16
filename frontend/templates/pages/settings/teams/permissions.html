@@ -1,0 +1,38 @@
+{% extends 'base/base.html' %}
+{% block content %}
+    <h1 class="text-3xl w-full text-center mb-4">
+        Managing {{ team.name }} teams permissions
+    </h1>
+
+    <table class="w-full table mt-3">
+        <thead>
+        <tr>
+            <th>Permission</th>
+            <th>View</th>
+            <th>Add</th>
+            <th>Change</th>
+            <th>Delete</th>
+        </tr>
+        </thead>
+        <tbody>
+            {% for permission in permissions %}
+                <tr>
+                    <td>{{ permission.name }}</td>
+                    <td>
+                        <input type="checkbox" class="checkbox-primary checkbox" checked/>
+                    </td>
+                    <td>
+                        <input type="checkbox" class="checkbox-success checkbox" checked/>
+                    </td>
+                    <td>
+                        <input type="checkbox" class="checkbox-warning checkbox" checked/>
+                    </td>
+                    <td>
+                        <input type="checkbox" class="checkbox-error checkbox" checked/>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock content %}

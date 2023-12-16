@@ -1,0 +1,36 @@
+<div hx-swap-oob="innerHTML:#messages_list">
+    {% for message in messages %}
+        <div onclick="clicked_alert_to_close(this);" class="mb-4 rounded-lg alert {{ message.tags }}" role="alert">
+            <i class="mr-3 inline h-4 w-4 flex-shrink-0 fa-solid fa-shake
+                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                fa-triangle-exclamation
+                {% else %}
+                fa-circle-info
+                {% endif %}
+                "
+               style="--fa-animation-duration: 2s;"></i>
+            <div>
+                {% autoescape off %}{{ message }}{% endautoescape %}
+            </div>
+            <script>
+                var scriptElement = document.currentScript;
+                var divElement = scriptElement.parentNode;
+                setTimeout(function () {
+                    clicked_alert_to_close(divElement);
+                }, 5000);
+            </script>
+        </div>
+    {% endfor %}
+    {% if with_js %}
+        <script>
+            function clicked_alert_to_close(item) {
+                $(item).animate({
+                    opacity: 0,
+                    marginTop: "-=30px"
+                }, 'slow', function () {
+                    item.remove();
+                });
+            }
+        </script>
+    {% endif %}
+</div>

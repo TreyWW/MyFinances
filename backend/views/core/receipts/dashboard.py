@@ -8,4 +8,4 @@ Modals = Modals()
 
 @login_required
 def receipts_dashboard(request: HttpRequest):
-    return render(request, "core/pages/receipts/dashboard.html")
+    return render(request, "pages/receipts/dashboard.html")

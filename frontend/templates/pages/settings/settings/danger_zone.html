@@ -1,0 +1,19 @@
+<div class="my-4 card border border-gray-700 dark:border-gray-70 w-full">
+    <div class="card-body ">
+        <div class="text-center text-md mb-2 text-error">
+            <i class="fa fa-solid fa-triangle-exclamation me-2"></i>
+            Danger Zone
+            <i class="fa fa-solid fa-triangle-exclamation ms-2"></i>
+        </div>
+
+        <a class="btn btn-error btn-outline"
+           href="{% url 'user settings change_password' %}">
+            Change account password
+        </a>
+        <label class="btn btn-error btn-outline"
+            for="logout_modal">
+            {% include 'components/icon.html' with icon="right-from-bracket" tags="me-2" %}
+            Log out
+        </label>
+    </div>
+</div>
