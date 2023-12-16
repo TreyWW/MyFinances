@@ -37,8 +37,9 @@ def convert_currency(init_currency, target_currency, amount, date=None):
     if not isinstance(amount, (int, float)):
         raise ValueError("Amount is not an accepted datatype")
 
-    if not isinstance(date, datetime.datetime):
-        raise ValueError("Date is not an accepted datatype")
+    if date is not None:
+        if not isinstance(date, datetime.datetime):
+            raise ValueError("Date is not an accepted datatype")
 
     if date is not None:
         # Check if date was a weekend

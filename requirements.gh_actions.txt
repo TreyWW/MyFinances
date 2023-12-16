@@ -20,3 +20,5 @@ django-login-required-middleware
 django-debug-toolbar
 # other stuff
 oauthlib==3.2.2
+# currency converter
+forex_python==1.8

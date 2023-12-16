@@ -26,5 +26,7 @@ oauthlib==3.2.2
 boto3==1.28.84
 django-storages==1.14.2
 Pillow==10.1.0
+# currency converter
+forex_python==1.8
 # test
 model_bakery
