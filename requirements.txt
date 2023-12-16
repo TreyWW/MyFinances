@@ -5,7 +5,7 @@ gunicorn==21.2.0
 mysqlclient==2.2.0
 mariadb==1.1.8
 # django apps
-django-allauth==0.58.2
+social-auth-app-django==5.4.0
 django-sendgrid-v5==1.2.3
 django-environ==0.11.2
 django-extensions==3.2.3

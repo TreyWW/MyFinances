@@ -1,0 +1,6 @@
+- [Home](/)
+- [PyCharm Professional IDE](getting-setup/pycharm/fork)
+- [Other Environments](getting-setup/other-environments/)
+- [Social Login Setup](getting-setup/social-logins?id=social-login)
+    * [Github](getting-setup/social-logins?id=set-up-social-login-with-github)
+    * [Google](getting-setup/social-logins?id=set-up-social-login-with-google)

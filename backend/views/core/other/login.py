@@ -1,18 +1,16 @@
+from django.contrib.auth import authenticate, login, logout
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
 from django.db.models import Q
 from django.http import HttpRequest
 from django.shortcuts import render
 from django.urls import resolve, Resolver404
+from django.views import View
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth import authenticate, login
 
 import settings.settings
 from backend.decorators import *
 from backend.models import LoginLog, AuditLog, User
-
-from django.contrib.auth import logout
-from django.core.exceptions import ValidationError
-from django.core.validators import validate_email
-from django.views import View
 
 
 @csrf_exempt
@@ -43,22 +41,13 @@ def login_page(request):
         except Resolver404:
             return redirect("dashboard")
 
-    github_enabled = (
-        True
-        if settings.SOCIAL_AUTH_GITHUB_KEY and settings.SOCIAL_AUTH_GITHUB_SECRET
-        else False
-    )
-    google_enabled = (
-        True
-        if settings.SOCIAL_AUTH_GOOGLE_OAUTH2_KEY
-        and settings.SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET
-        else False
-    )
-
     return render(
         request,
         "pages/login/login.html",
-        {"github_enabled": github_enabled, "google_enabled": google_enabled},
+        {
+            "github_enabled": settings.SOCIAL_AUTH_GITHUB_ENABLED,
+            "google_enabled": settings.SOCIAL_AUTH_GOOGLE_OAUTH2_ENABLED,
+        },
     )
 
 
@@ -74,7 +63,14 @@ class CreateAccountChooseView(View):
     def get(self, request):
         if request.user.is_authenticated:
             return redirect("dashboard")
-        return render(request, "pages/login/create_account_choose.html")
+        return render(
+            request,
+            "pages/login/create_account_choose.html",
+            {
+                "github_enabled": settings.SOCIAL_AUTH_GITHUB_ENABLED,
+                "google_enabled": settings.SOCIAL_AUTH_GOOGLE_OAUTH2_ENABLED,
+            },
+        )
 
 
 class CreateAccountManualView(View):

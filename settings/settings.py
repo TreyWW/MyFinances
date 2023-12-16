@@ -1,8 +1,11 @@
+import environ
+import json
+import mimetypes
+import os
 import sys
 from pathlib import Path
-import os, mimetypes, json, environ
-from django.contrib.messages import constants as messages
 
+from django.contrib.messages import constants as messages
 
 env = environ.Env(DEBUG=(bool, False))
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -39,10 +42,7 @@ INSTALLED_APPS = [
     "markdownify.apps.MarkdownifyConfig",
     "django_components",
     "django_components.safer_staticfiles",
-    "allauth",
-    "allauth.account",
-    "allauth.socialaccount",
-    "allauth.socialaccount.providers.github",
+    "social_django",
 ]
 
 LOGIN_REQUIRED_IGNORE_VIEW_NAMES = [
@@ -56,11 +56,14 @@ LOGIN_REQUIRED_IGNORE_VIEW_NAMES = [
     "user set password set",
     "logout",
     "invoices view invoice",
+    "social:begin",
+    "social:complete",
+    "social:disconnect",
 ]
 
 # @login_required()
 
-LOGIN_REQUIRED_IGNORE_PATHS = [r"/login/$"]
+LOGIN_REQUIRED_IGNORE_PATHS = [r"/login/$", "/accounts/github/login/callback/$"]
 # for some reason only allows "login" and not "login create account" or anything
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -69,7 +72,8 @@ EMAIL_WHITELIST = []
 AUTHENTICATION_BACKENDS = [
     # "django.contrib.auth.backends.ModelBackend",
     "backend.auth_backends.EmailInsteadOfUsernameBackend",
-    "allauth.account.auth_backends.AuthenticationBackend",
+    "social_core.backends.github.GithubOAuth2",
+    "social_core.backends.google.GoogleOAuth2",
 ]
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
@@ -80,7 +84,6 @@ LOGIN_REDIRECT_URL = "/dashboard"
 ROOT_URLCONF = "backend.urls"
 SESSION_COOKIE_AGE = 604800
 SESSION_ENGINE = "django.contrib.sessions.backends.db"
-STATIC_URL = "/static/"
 STATIC_URL = "/static/"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
@@ -110,6 +113,8 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "social_django.context_processors.backends",
+                "social_django.context_processors.login_redirect",
                 "backend.context_processors.notifications",
                 "backend.context_processors.extras",
                 "backend.context_processors.navbar",
@@ -161,7 +166,7 @@ MIDDLEWARE = [
     "django_htmx.middleware.HtmxMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     "login_required.middleware.LoginRequiredMiddleware",
-    "allauth.account.middleware.AccountMiddleware",
+    "social_django.middleware.SocialAuthExceptionMiddleware",
 ]
 INTERNAL_IPS = [
     # ...
@@ -185,8 +190,6 @@ STORAGES = {
     },
 }
 
-SOCIALACCOUNT_PROVIDERS = {"github": {}}
-
 MARKDOWNIFY = {
     "default": {
         "WHITELIST_TAGS": ["a", "p", "h1", "h2", "h3", "h4", "h5", "h6", "strong"],
@@ -209,9 +212,22 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 SOCIAL_AUTH_GITHUB_SCOPE = ["user:email"]
 SOCIAL_AUTH_GITHUB_KEY = os.environ.get("GITHUB_KEY")
 SOCIAL_AUTH_GITHUB_SECRET = os.environ.get("GITHUB_SECRET")
+SOCIAL_AUTH_GITHUB_ENABLED = (
+    True if SOCIAL_AUTH_GITHUB_KEY and SOCIAL_AUTH_GITHUB_SECRET else False
+)
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = None
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = None
+SOCIAL_AUTH_GOOGLE_OAUTH2_ENABLED = (
+    True
+    if SOCIAL_AUTH_GOOGLE_OAUTH2_KEY and SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET
+    else False
+)
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get("GOOGLE_CLIENT_IDY")
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET")
+# SOCIAL_AUTH_LOGIN_URL = "/login/external/"
+# SOCIAL_AUTH_NEW_USER_REDIRECT_URL = "/login/external/new_user/"
+# SOCIAL_AUTH_LOGIN_REDIRECT_URL = "/"
+SOCIAL_AUTH_USER_MODEL = "backend.User"
+
 
 AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")

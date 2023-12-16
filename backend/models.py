@@ -128,6 +128,8 @@ class Client(models.Model):
     name = models.CharField(max_length=64)
     phone_number = models.CharField(max_length=100, blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
+    company = models.CharField(max_length=100, blank=True, null=True)
+    is_representative = models.BooleanField(default=False)
 
     address = models.CharField(max_length=100, blank=True, null=True)
     city = models.CharField(max_length=100, blank=True, null=True)
@@ -181,6 +183,7 @@ class Invoice(models.Model):
     client_city = models.CharField(max_length=100, blank=True, null=True)
     client_county = models.CharField(max_length=100, blank=True, null=True)
     client_country = models.CharField(max_length=100, blank=True, null=True)
+    client_is_representative = models.BooleanField(default=False)
 
     self_name = models.CharField(max_length=100, blank=True, null=True)
     self_company = models.CharField(max_length=100, blank=True, null=True)
@@ -206,9 +209,32 @@ class Invoice(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     date_due = models.DateField()
     date_issued = models.DateField(blank=True, null=True)
-    payment_status = models.CharField(
-        max_length=10, choices=STATUS_CHOICES, default="pending"
-    )
+
+    @property
+    def dynamic_payment_status(self):
+        if (
+            self.date_due
+            and timezone.now().date() > self.date_due
+            and self.payment_status == "pending"
+        ):
+            return "overdue"
+        else:
+            return self.payment_status
+
+    @property
+    def get_to_details(self) -> tuple[str, dict[str, str]]:
+        """
+        Returns the client details for the invoice
+        "client" and Client object if client_to
+        "manual" and dict of details  if client_name
+        """
+        if self.client_to:
+            return "client", self.client_to
+        else:
+            return "manual", {
+                "name": self.client_name,
+                "company": self.client_company,
+            }
 
     def __str__(self):
         invoice_id = self.invoice_id or self.id
