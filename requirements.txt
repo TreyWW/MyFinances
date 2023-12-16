@@ -27,6 +27,8 @@ boto3==1.33.6
 django-storages==1.14.2
 Pillow==10.1.0
 shortuuid==1.0.11
+# currency converter
+forex_python==1.8
 # test
 model_bakery==1.17.0
 tblib # this is used to see parallel test errors

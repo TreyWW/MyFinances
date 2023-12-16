@@ -30,3 +30,5 @@ Pillow==10.1.0
 shortuuid
 # test
 model_bakery
+# currency converter
+forex_python==1.8
