@@ -141,6 +141,14 @@ class Client(models.Model):
         return self.name
 
 
+class InvoiceProduct(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=50)
+    description = models.CharField(max_length=100)
+    quantity = models.IntegerField()
+    rate = models.DecimalField(max_digits=15, decimal_places=2, blank=True, null=True)
+
+
 class InvoiceItem(models.Model):
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=100)

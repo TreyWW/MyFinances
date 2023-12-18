@@ -1,0 +1,14 @@
+{# This is for the INVOICE CREATION dropdown #}
+{% for product in products %}
+    <li>
+        <button hx-post="{% url 'api:invoices:services add' %}" hx-include="#services_table_body"
+                hx-swap="innerHTML"
+                hx-target="#services_table_body"
+                hx-vals='{"existing_service": "{{ product.id }}"}'>
+            {{ product.name }} <br> {{ product.description }}
+            <div class="btn btn-primary btn-sm btn-circle absolute right-2">
+                <i class="fa-solid fa-plus"></i>
+            </div>
+        </button>
+    </li>
+{% endfor %}

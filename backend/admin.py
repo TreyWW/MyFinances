@@ -15,6 +15,7 @@ from backend.models import (
     Team,
     TeamInvitation,
     User,
+    InvoiceProduct,
 )
 from django.contrib import admin
 
@@ -32,6 +33,7 @@ admin.site.register(TracebackError)
 admin.site.register(Notification)
 admin.site.register(Team)
 admin.site.register(TeamInvitation)
+admin.site.register(InvoiceProduct)
 admin.site.register(User, UserAdmin)
 
 admin.site.site_header = "MyFinances Admin"

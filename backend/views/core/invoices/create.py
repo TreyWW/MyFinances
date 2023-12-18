@@ -3,13 +3,14 @@ from django.http import HttpRequest
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.decorators.http import require_http_methods
-from backend.models import Invoice, InvoiceItem, Client
+from backend.models import Invoice, InvoiceItem, Client, InvoiceProduct
 from datetime import datetime
 
 
 def invoice_page_get(request: HttpRequest):
     context = {
         "clients": Client.objects.filter(user=request.user),
+        "existing_products": InvoiceProduct.objects.filter(user=request.user),
     }
     return render(request, "pages/invoices/create/create.html", context)
 

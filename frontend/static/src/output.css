@@ -4084,6 +4084,10 @@ html {
   margin: auto;
 }
 
+.m-2 {
+  margin: 0.5rem;
+}
+
 .-mx-4 {
   margin-left: -1rem;
   margin-right: -1rem;
@@ -4449,6 +4453,10 @@ html {
   width: 20rem;
 }
 
+.w-\[100\%\] {
+  width: 100%;
+}
+
 .w-\[150px\] {
   width: 150px;
 }
@@ -4461,12 +4469,24 @@ html {
   width: 30%;
 }
 
+.w-\[50\%\] {
+  width: 50%;
+}
+
 .w-\[60\%\] {
   width: 60%;
 }
 
 .w-full {
   width: 100%;
+}
+
+.w-1\/3 {
+  width: 33.333333%;
+}
+
+.w-2\/3 {
+  width: 66.666667%;
 }
 
 .min-w-0 {
@@ -4640,6 +4660,11 @@ html {
 
 .gap-y-1 {
   row-gap: 0.25rem;
+}
+
+.gap-x-2 {
+  -moz-column-gap: 0.5rem;
+       column-gap: 0.5rem;
 }
 
 .space-x-4 > :not([hidden]) ~ :not([hidden]) {
@@ -4907,6 +4932,10 @@ html {
 
 .p-6 {
   padding: 1.5rem;
+}
+
+.p-8 {
+  padding: 2rem;
 }
 
 .px-0 {
