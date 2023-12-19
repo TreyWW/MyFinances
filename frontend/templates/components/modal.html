@@ -42,15 +42,12 @@
                             <a href="{{ modal.action.href }}"
                                class="btn btn-{{ modal.action.color | default:"primary" }}">{{ modal.action.text }}</a>
                         {% else %}
-                            <script>
-                                document.getElementById("modal-{{ modal.id }}-action-btn").onclick = function () {
-                                    if (document.getElementById("modal-{{ modal.id }}-form").checkValidity()) {
-                                        {{ modal.id }}.close();
-                                    }
-                                }
-                            </script>
                             <button id="modal-{{ modal.id }}-action-btn" class="btn btn
                             -{{ modal.action.color | default:"primary" }}"
+                            _="on click
+                            if #{{ modal.id }}-form.checkValidity()
+                             call #modal_receipts_upload.close()
+                            end"
                             >{{ modal.action.text }}</button>
                         {% endif %}
                         <form method="dialog" class="modal-backdrop">
@@ -63,8 +60,10 @@
     </dialog>
     {% if not modal.start_closed %}
         <script>
-            {{ modal.id }}.showModal() {# Shows the modal #}
-            document.currentScript.remove(); {# Removes the script upon execution #}
+            {{ modal.id }}.showModal()
+            {# Shows the modal #}
+            document.currentScript.remove();
+            {# Removes the script upon execution #}
         </script>
     {% endif %}
 {% endfor %}

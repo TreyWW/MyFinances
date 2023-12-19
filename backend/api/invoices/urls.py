@@ -2,18 +2,13 @@ from django.urls import path
 
 from . import fetch, delete, edit
 from .create import set_destination
-from .create.services import add, remove
+from .create.services import add
 
 urlpatterns = [
     path(
         "add_service/",
         add.add_service,
         name="services add",
-    ),
-    path(
-        "remove_service/",
-        remove.remove_service,
-        name="services remove",
     ),
     path(
         "set_destination/to/",

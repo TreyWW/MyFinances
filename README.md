@@ -32,6 +32,8 @@ MyFinances is an open-source web application designed to empower individuals and
 - Django
 - Docker
 - Docker Compose
+- HTMX
+- HyperScript
 - Additional requirements can be found in the `requirements.txt` file.
 
 ### Installation

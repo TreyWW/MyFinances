@@ -38,6 +38,8 @@ user-friendly platform to streamline these tasks.
 - Django
 - Docker
 - Docker Compose
+- HTMX
+- HyperScript
 - Additional requirements can be found in the `requirements.txt` file.
 
 ### Installation
