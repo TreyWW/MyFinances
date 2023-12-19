@@ -19,4 +19,6 @@ def fetch_products(request: HttpRequest):
     else:
         results = InvoiceProduct.objects.filter(user=request.user).order_by("name")
 
-    return render(request, "pages/products/fetched_items.html", {"products": results[:5]})
+    return render(
+        request, "pages/products/fetched_items.html", {"products": results[:5]}
+    )
