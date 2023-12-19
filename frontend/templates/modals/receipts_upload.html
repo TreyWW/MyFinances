@@ -26,18 +26,15 @@
             <div class="modal-action">
                 <button type="submit"
                         id="modal_receipts_upload-action-btn"
-                        class="btn btn-primary">
+                        class="btn btn-primary"
+                        _="on click
+                    if #modal_receipts_upload-form.checkValidity()
+                     call #modal_receipts_upload.close()
+                    end">
                     Save
                 </button>
-                <script>
-                    document.getElementById('modal_receipts_upload-action-btn').addEventListener("click", function () {
-                        if (document.getElementById('modal_receipts_upload-form').checkValidity()) {
-                            document.getElementById('modal_receipts_upload').close();
-                        }
-                    });
-                </script>
                 <button type="reset" class="btn btn-error">Reset</button>
-                <button type="button" onclick="document.getElementById('modal_receipts_upload').close();" class="btn btn-neutral">
+                <button type="button" _="on click call #modal_receipts_upload.close()" class="btn btn-neutral">
                     Close
                 </button>
             </div>
