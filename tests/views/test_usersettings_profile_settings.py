@@ -1,10 +1,10 @@
 import os
 
-from django.urls import reverse
-from backend.models import UserSettings
-from tests.handler import ViewTestCase
 from django.contrib.messages import get_messages
-from tests.handler import create_mock_image
+from django.urls import reverse
+
+from backend.models import UserSettings
+from tests.handler import ViewTestCase, create_mock_image
 
 
 class UserSettingsProfileSettingsViewTestCase(ViewTestCase):
@@ -17,8 +17,7 @@ class UserSettingsProfileSettingsViewTestCase(ViewTestCase):
         usr_settings = UserSettings.objects.first()
         self.assertIsNotNone(usr_settings)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.context["user_settings"], usr_settings)
-        self.assertEqual(response.context["user_settings"].profile_picture_url, "")
+        self.assertEqual(self.log_in_user.user_profile.profile_picture_url, "")
 
         # Change profile picture and recheck
         headers = {"HTTP_HX-Request": "true"}
@@ -70,3 +69,7 @@ class UserSettingsProfileSettingsViewTestCase(ViewTestCase):
 
         # Check that the profile picture is still at default and hasn't changed
         self.assertEqual(response.context["users_profile_picture"], "")
+
+    def test_account_name_change_via_form(self):
+        # Log in the user
+        self.login_user()

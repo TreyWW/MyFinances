@@ -1,9 +1,8 @@
-from django.contrib.sessions.models import Session
-from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render
-from django.contrib.auth import update_session_auth_hash
 from PIL import Image
-from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.sessions.models import Session
+from django.http import HttpRequest
+from django.shortcuts import render
 
 from backend.decorators import *
 from backend.models import *
@@ -15,36 +14,24 @@ Modals = Modals()
 def settings_page(request: HttpRequest):
     context = {}
 
-    usersettings, created = UserSettings.objects.get_or_create(user=request.user)
+    try:
+        usersettings = request.user.user_profile
+    except UserSettings.DoesNotExist:
+        # Create a new UserSettings object
+        usersettings = UserSettings.objects.create(user=request.user)
+
     context.update(
         {
             "sessions": Session.objects.filter(),
             "currency_signs": usersettings.CURRENCIES,
             "currency": usersettings.currency,
-            "user_settings": usersettings,
         }
     )
 
     if request.method == "POST" and request.htmx:
-        currency = request.POST.get("currency")
         section = request.POST.get("section")
         profile_picture = request.FILES.get("profile_image")
 
-        if section == "account_preferences":
-            if currency in usersettings.CURRENCIES:
-                usersettings.currency = currency
-                usersettings.save()
-                messages.success(request, "Successfully updated currency")
-            else:
-                messages.error(request, "Invalid currency")
-
-            context.update(
-                {
-                    "post_return": "currency",
-                    "currency": usersettings.currency,
-                    "user_settings": usersettings,
-                }
-            )
         if section == "profile_picture":
             if profile_picture:
                 try:
@@ -86,8 +73,6 @@ def settings_page(request: HttpRequest):
         {
             "sessions": [],  # Session.objects.filter(),
             "currency": usersettings.currency,
-            "currency_signs": usersettings.CURRENCIES,
-            "user_settings": usersettings,
         }
     )
 
@@ -96,27 +81,19 @@ def settings_page(request: HttpRequest):
 
 def change_password(request: HttpRequest):
     if request.method == "POST":
-        error: str = ""
-
+        current_password = request.POST.get("current_password")
         password = request.POST.get("password")
         confirm_password = request.POST.get("confirm_password")
 
-        if password != confirm_password:
-            error = "Passwords don't match"
-
-        if not password:
-            error = "Something went wrong, no password was provided."
-
-        if not error and len(password) > 128:
-            error = "Password either too short, or too long. Minimum characters is eight, maximum is 128."
-
-        if not error and len(password) < 8:
-            error = "Password either too short, or too long. Minimum characters is eight, maximum is 128."
+        error = validate_password_change(
+            request.user, current_password, password, confirm_password
+        )
 
         if error:
             messages.error(request, error)
             return redirect("user settings change_password")
 
+        # If no errors, update the password
         request.user.set_password(password)
         request.user.save()
         update_session_auth_hash(request, request.user)
@@ -124,3 +101,19 @@ def change_password(request: HttpRequest):
         return redirect("user settings")
 
     return render(request, "pages/reset_password.html", {"type": "change"})
+
+
+def validate_password_change(user, current_password, new_password, confirm_password):
+    if not user.check_password(current_password):
+        return "Incorrect current password"
+
+    if new_password != confirm_password:
+        return "Passwords don't match"
+
+    if not new_password:
+        return "Something went wrong, no password was provided."
+
+    if len(new_password) < 8 or len(new_password) > 128:
+        return "Password must be between 8 and 128 characters."
+
+    return None

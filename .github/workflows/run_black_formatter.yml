@@ -1,4 +1,4 @@
-name: Run Black Formatter
+name: Code Formatter
 on: [push, pull_request]
 
 jobs:

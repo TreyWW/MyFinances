@@ -30,7 +30,7 @@
     </tr>
 {% empty %}
     <tr>
-        <td colspan="5">No services added</td>
+        <td colspan="100%" class="text-center">No services added</td>
     </tr>
 {% endfor %}
 
@@ -39,7 +39,7 @@
         var container = document.getElementById('services_table_body');
         var rows = container.querySelectorAll('tr');
         if (rows.length === 0) {
-            container.innerHTML = '<tr><td colspan="5">No services added</td></tr>';
+            container.innerHTML = '<tr><td colspan="100%" class="text-center">No services added</td></tr>';
         }
     });
 </script>

@@ -1,8 +1,8 @@
 from django.http import HttpRequest, HttpResponseBadRequest
 from django.shortcuts import render
 
-from backend.models import UserSettings, Receipt
-from backend.utils import Modals
+from backend.models import UserSettings
+
 
 # Still working on
 
@@ -14,9 +14,9 @@ def open_modal(request: HttpRequest, modal_name, context_type=None, context_valu
         if context_type and context_value:
             if context_type == "profile_picture":
                 try:
-                    context["users_profile_picture"] = UserSettings.objects.get(
-                        user=request.user
-                    ).profile_picture_url
+                    context[
+                        "users_profile_picture"
+                    ] = request.user.user_profile.profile_picture_url
                 except UserSettings.DoesNotExist:
                     pass
         return render(request, template_name, context)
