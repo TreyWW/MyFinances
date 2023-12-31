@@ -3,7 +3,6 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import re_path as url, path, include
 from django.views.static import serve
-from .views.core.invoices import edit
 
 from backend.views.core import (
     other,
@@ -13,10 +12,9 @@ from backend.views.core import (
     clients,
     receipts,
 )
-
 from backend.views.core.currency_converter import dashboard as cc_dashboard
-
 from backend.views.core.other.index import index, dashboard
+from .views.core.invoices import edit
 
 url(
     r"^frontend/static/(?P<path>.*)$",
@@ -181,7 +179,7 @@ urlpatterns = [
         name="clients create",
     ),
     path(
-        "dashboard/currency_converter",
+        "dashboard/currency_converter/",
         cc_dashboard.currency_conversion,
         name="currency converter",
     ),

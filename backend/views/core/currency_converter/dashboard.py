@@ -1,9 +1,10 @@
-from forex_python.converter import CurrencyRates
-from django.http import HttpRequest
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
-from backend.models import *
 import datetime
+
+from django.http import HttpRequest
+from django.shortcuts import render
+from forex_python.converter import CurrencyRates
+
+from backend.models import *
 
 
 def convert_currency(init_currency, target_currency, amount, date=None):
@@ -78,12 +79,21 @@ def currency_conversion(request: HttpRequest):
                 request.POST["to_currency"],
                 amount,
             )
+            original_currency_sign = UserSettings.CURRENCIES.get(
+                request.POST["from_currency"], {}
+            ).get("symbol", None)
+            target_currency_sign = UserSettings.CURRENCIES.get(
+                request.POST["to_currency"], {}
+            ).get("symbol", None)
+
             context.update(
                 {
                     "converted_amount": converted_amt,
                     "original_amount": amount,
                     "original_currency": request.POST["from_currency"],
+                    "original_currency_sign": original_currency_sign,
                     "target_currency": request.POST["to_currency"],
+                    "target_currency_sign": target_currency_sign,
                 }
             )
         except Exception as e:
