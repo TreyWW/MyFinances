@@ -99,6 +99,4 @@ def currency_conversion(request: HttpRequest):
         }
     )
 
-    return render(
-        request, "core/pages/currency_converter/dashboard.html", context=context
-    )
+    return render(request, "pages/currency_converter/dashboard.html", context=context)

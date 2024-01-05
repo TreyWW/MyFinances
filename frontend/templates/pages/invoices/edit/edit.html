@@ -51,8 +51,22 @@
                 </div>
             </div>
         </div>
-     
-
+        <div class="flex w-full overflow-x-auto">
+            <table class="table table-zebra max-w-full" id="services_table">
+                <thead>
+                <tr>
+                    <th>Service</th>
+                    <th>Quantity</th>
+                    <th>Rate</th>
+                    <th>Total Price</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody id="services_table_body">
+                {% include 'pages/invoices/create/_services_table_body.html' %}
+                </tbody>
+            </table>
+        </div>
 
         <div class="group-invalid:tooltip" data-tip="Fill out all required details to save the invoice.">
             <button class="btn btn-primary group-invalid:btn-disabled btn-block">
@@ -60,12 +74,12 @@
             </button>
         </div>
 
- 
+
     </form>
 
-  
 
-<!-- still need to add SERVICE & PAYMENT INFORMATION fields for editing -->
+
+    <!-- still need to add SERVICE & PAYMENT INFORMATION fields for editing -->
 
 
 
