@@ -8,6 +8,7 @@ urlpatterns = [
     path("clients/", include("backend.api.clients.urls")),
     path("settings/", include("backend.api.settings.urls")),
     path("products/", include("backend.api.products.urls")),
+    path("currency_converter/", include("backend.api.currency_converter.urls")),
 ]
 
 app_name = "api"

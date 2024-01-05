@@ -180,7 +180,7 @@ urlpatterns = [
     ),
     path(
         "dashboard/currency_converter/",
-        cc_dashboard.currency_conversion,
+        cc_dashboard.currency_convert_view,
         name="currency converter",
     ),
     path("admin/", admin.site.urls),
