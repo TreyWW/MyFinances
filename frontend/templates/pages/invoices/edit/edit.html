@@ -51,24 +51,12 @@
                 </div>
             </div>
         </div>
-        <div class="flex w-full overflow-x-auto">
-            <table class="table table-zebra max-w-full" id="services_table">
-                <thead>
-                <tr>
-                    <th>Service</th>
-                    <th>Quantity</th>
-                    <th>Rate</th>
-                    <th>Total Price</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody id="services_table_body">
-                {% include 'pages/invoices/create/_services_table_body.html' %}
-                </tbody>
-            </table>
-        </div>
+        <div class="divider my-4">STEP 3 - SERVICES</div>
+        {% component_block "pages:invoices:create:services_table" %}
 
-        <div class="group-invalid:tooltip" data-tip="Fill out all required details to save the invoice.">
+        {% endcomponent_block %}
+
+        <div class="group-invalid:tooltip mt-4" data-tip="Fill out all required details to save the invoice.">
             <button class="btn btn-primary group-invalid:btn-disabled btn-block">
                 Update Invoice
             </button>
