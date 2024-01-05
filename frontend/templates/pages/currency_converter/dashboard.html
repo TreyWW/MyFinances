@@ -5,12 +5,12 @@
 
     <form method="post" class="my-4 max-w-screen-xl card border border-gray-700 dark:border-gray-700">
         {% csrf_token %}
-        <div class="my-4 flex w-full flex-col">
+        <div class="mb-4 flex w-full flex-col">
 
             <div class="card-body">
-                <div class="text-lg font-semibold text-gray-900 dark:text-white">Convert Currency</div>
+                <h1 class="text-lg text-center font-semibold text-gray-900 dark:text-white">Convert Currency</h1>
                 <div class="form-field">
-                    <label class="form-label">Currency Amount</label>
+                    <label class="text-lg font-semibold text-gray-900 dark:text-white mb-1">Currency Amount</label>
                     <br>
                     <input name="currency_amount" placeholder="100" type="text"
                            class="peer input-ghost-secondary input input-bordered input-block">
@@ -21,9 +21,9 @@
 
 
                 <div class="divide-y divide-gray-200 dark:divide-gray-700">
-                    <div class="flex items-center justify-between py-4">
+                    <div class="flex items-center justify-between py-4 gap-x-4">
                         <div class="w-[50%]">
-                            <div class="text-lg font-semibold text-gray-900 dark:text-white">From Currency</div>
+                            <label class="text-lg font-semibold text-gray-900 dark:text-white mb-1">From Currency</label>
                             <select name="from_currency" class="select select-bordered select-solid-primary w-[100%]">
                                 {% for code, info in currency_signs.items %}
                                     <option value="{{ code }}" {% if currency == code %}selected{% endif %}>
@@ -34,7 +34,7 @@
                         </div>
 
                         <div class="w-[50%]">
-                            <div class="text-lg font-semibold text-gray-900 dark:text-white">To Currency</div>
+                            <label class="text-lg font-semibold text-gray-900 dark:text-white mb-1">To Currency</label>
                             <select name="to_currency" class="select select-bordered select-solid-primary w-[100%]">
                                 {% for code, info in currency_signs.items %}
                                     <option value="{{ code }}" {% if currency == code %}selected{% endif %}>
