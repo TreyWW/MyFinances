@@ -3,7 +3,7 @@ from django.http import HttpRequest, JsonResponse, QueryDict
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
-from backend.models import Invoice, Client
+from backend.models import Invoice, Client, InvoiceItem
 from datetime import datetime
 
 # RELATED PATH FILES : \frontend\templates\pages\invoices\dashboard\_fetch_body.html, \backend\urls.py
@@ -24,6 +24,7 @@ def invoice_get_existing_data(invoice_obj):
         "og_issue_date": invoice_obj.date_issued,
         "og_due_date": invoice_obj.date_due,
         "invoice_object": invoice_obj,
+        "rows": invoice_obj.items.all(),
     }
     if invoice_obj.client_to:
         stored_data["to_name"] = invoice_obj.client_to.name
@@ -108,6 +109,21 @@ def edit_invoice(request: HttpRequest, invoice_id):
 
     for column_name, new_value in attributes_to_updates.items():
         setattr(invoice, column_name, new_value)
+
+    invoice_items = [
+        InvoiceItem.objects.create(
+            name=row[0], description=row[1], hours=row[2], price_per_hour=row[3]
+        )
+        for row in zip(
+            request.POST.getlist("service_name[]"),
+            request.POST.getlist("service_description[]"),
+            request.POST.getlist("hours[]"),
+            request.POST.getlist("price_per_hour[]"),
+        )
+    ]
+
+    if invoice_items:
+        invoice.items.set(invoice_items)
 
     invoice.save()
 
