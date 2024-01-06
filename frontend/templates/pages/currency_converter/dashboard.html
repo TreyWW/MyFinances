@@ -1,14 +1,10 @@
 {% extends 'base/base.html' %}
 {% block content %}
-    <p class="text-white font-bold">{{ page }}</p>
-    {# TODO SEARCH BAR #}
-
     <form class="my-4 max-w-screen-xl card border border-gray-700 dark:border-gray-700"
           hx-post="{% url 'api:currency_converter:convert' %}" hx-target='div[data-type="results"]'
           method="post">
         {% csrf_token %}
         <div class="mb-4 flex w-full flex-col">
-
             <div class="card-body">
                 <h1 class="text-lg text-center font-semibold text-gray-900 dark:text-white">Convert Currency</h1>
                 <div class="form-field">
@@ -54,9 +50,6 @@
                     Convert
                 </button>
             </div>
-
-
-        </div>
         </div>
     </form>
 {% endblock content %}
