@@ -17,6 +17,9 @@ def receipt_create(request: HttpRequest):
     file = request.FILES.get("receipt_image")  # InMemoryUploadedFile
     date = request.POST.get("receipt_date")
     name = request.POST.get("receipt_name")
+    merchant_store = request.POST.get("merchant_store")
+    purchase_category = request.POST.get("purchase_category")
+    total_price = request.POST.get("total_price")
 
     if not file:
         messages.error(request, "No image found")
@@ -36,7 +39,13 @@ def receipt_create(request: HttpRequest):
         date = None
 
     receipt = Receipt.objects.create(
-        user=request.user, name=name, image=file, date=date
+        user=request.user,
+        name=name,
+        image=file,
+        date=date,
+        merchant_store=merchant_store,
+        purchase_category=purchase_category,
+        total_price=total_price,
     )
     # r = requests.post(
     #     "https://ocr.asprise.com/api/receipt",
