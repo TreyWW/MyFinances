@@ -113,8 +113,8 @@ class Receipt(models.Model):
     date = models.DateField(null=True, blank=True)
     date_uploaded = models.DateTimeField(auto_now_add=True)
     receipt_parsed = models.JSONField(null=True, blank=True)
-    merchant_store = models.CharField(max_length=200)
-    purchase_category = models.CharField(max_length=200)
+    merchant_store = models.CharField(max_length=255, blank=True, null=True)
+    purchase_category = models.CharField(max_length=200, blank=True, null=True)
 
     @property
     def get_receipt_url(self):
