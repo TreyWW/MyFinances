@@ -257,6 +257,27 @@ class Modals:
                         "required": True,
                         "label": "Receipt date",
                     },
+                    {
+                        "type": "text",
+                        "name": "merchant_store",
+                        "required": True,
+                        "label": "Merchant/Store",
+                        "placeholder": "Enter the name of the merchant or store",
+                    },
+                    {
+                        "type": "text",
+                        "name": "purchase_category",
+                        "required": True,
+                        "label": "Purchase Category",
+                        "placeholder": "Enter the purchase category",
+                    },
+                    {
+                        "type": "number",
+                        "name": "total_price",
+                        "required": True,
+                        "label": "Amount Total",
+                        "placeholder": "Enter the total amount",
+                    },
                 ],
             },
         }

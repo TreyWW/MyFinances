@@ -6,6 +6,8 @@
             <th>ID</th>
             <th>Date</th>
             <th>Name</th>
+            <th>Merchant/Store</th>
+            <th>Category</th>
             <th>Amount</th>
             <th>Actions</th>
         </tr>
@@ -21,6 +23,8 @@
                 </td>
                 <td>{{ row.date }}</td>
                 <td>{{ row.name }}</td>
+                <td>{{ row.merchant_store }}</td>
+                <td>{{ row.purchase_category }}</td>
                 <td>{{ currency_symbol }}{{ row.total_price | default:"0.00" }}</td>
                 <td>
                     <form method="post">
