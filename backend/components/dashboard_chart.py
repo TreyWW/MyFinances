@@ -60,7 +60,5 @@ def generate_chart(income_data:list=[], expenses_data:list=[]):
 
     # Convert Bokeh plot to components for embedding
     script, chart = components(p)
-
-    print(chart)
-    print(script)
+    
     return script, chart
