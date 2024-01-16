@@ -7,6 +7,7 @@ from django.db import models
 from settings import settings
 from django.utils.crypto import get_random_string
 from shortuuid.django_fields import ShortUUIDField
+from uuid import uuid4
 
 
 class CustomUserManager(UserManager):
@@ -116,11 +117,20 @@ class Receipt(models.Model):
     merchant_store = models.CharField(max_length=255, blank=True, null=True)
     purchase_category = models.CharField(max_length=200, blank=True, null=True)
 
-    @property
-    def get_receipt_url(self):
-        if self.image and hasattr(self.image, "url"):
-            return self.image.url
-        return ""
+
+class ReceiptDownloadToken(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    file = models.ForeignKey(Receipt, on_delete=models.CASCADE)
+    token = models.UUIDField(default=uuid4, editable=False, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    used_at = models.DateTimeField(null=True, blank=True)
+
+    def mark_as_used(self):
+        self.used_at = timezone.now()
+        self.save()
+
+    def is_used(self):
+        return self.used_at is not None
 
 
 class Client(models.Model):
