@@ -122,15 +122,6 @@ class ReceiptDownloadToken(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     file = models.ForeignKey(Receipt, on_delete=models.CASCADE)
     token = models.UUIDField(default=uuid4, editable=False, unique=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    used_at = models.DateTimeField(null=True, blank=True)
-
-    def mark_as_used(self):
-        self.used_at = timezone.now()
-        self.save()
-
-    def is_used(self):
-        return self.used_at is not None
 
 
 class Client(models.Model):
