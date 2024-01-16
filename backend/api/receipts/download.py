@@ -19,9 +19,7 @@ def download_receipt(request, token):
     try:
         download_token = ReceiptDownloadToken.objects.get(token=token)
     except ReceiptDownloadToken.DoesNotExist:
-        return HttpResponse(
-            "Download link has been used", status=404
-        )
+        return HttpResponse("Download link has been used", status=404)
 
     # if download_token.is_used():
     #     return HttpResponse("Download link has been used", status=410)  # 410 Gone
