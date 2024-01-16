@@ -16,10 +16,17 @@ def download_receipt(request, token):
     Returns:
         HttpResponse: The HTTP response containing the downloaded receipt file.
     """
-    download_token = get_object_or_404(ReceiptDownloadToken, token=token)
+    try:
+        download_token = ReceiptDownloadToken.objects.get(token=token)
+    except ReceiptDownloadToken.DoesNotExist:
+        return HttpResponse(
+            "No ReceiptDownloadToken matches the given query", status=404
+        )
 
-    if download_token.is_used() or download_token.user != request.user:
-        raise Http404("Download link is invalid or has been used")
+    if download_token.is_used():
+        return HttpResponse("Download link has been used", status=410)  # 410 Gone
+    elif download_token.user != request.user:
+        return HttpResponse("Invalid user", status=403)  # 403 Forbidden
 
     receipt = get_object_or_404(Receipt, id=download_token.file.id)
 
@@ -42,7 +49,10 @@ def generate_download_link(request, receipt_id):
     Returns:
         JsonResponse: A JSON response containing the unique,onetime download link and filename.
     """
-    receipt = get_object_or_404(Receipt, id=receipt_id, user=request.user)
+    try:
+        receipt = Receipt.objects.get(id=receipt_id, user=request.user)
+    except Receipt.DoesNotExist:
+        return HttpResponse("Receipt not found", status=404)
     token = ReceiptDownloadToken.objects.create(user=request.user, file=receipt)
     download_link = request.build_absolute_uri(
         reverse("api:receipts:download_receipt", args=[token.token])

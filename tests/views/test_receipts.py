@@ -1,6 +1,6 @@
 from django.contrib.messages import get_messages
 from django.urls import reverse, resolve
-
+import uuid
 from backend.models import Receipt, ReceiptDownloadToken
 from tests.handler import ViewTestCase, create_mock_image
 
@@ -111,15 +111,16 @@ class ReceiptDownloadEndpointsTest(ViewTestCase):
 
     def test_download_receipt_invalid_token(self):
         self.login_user()
-        invalid_url = reverse("api:receipts:download_receipt", args=["invalid_token"])
+        invalid_token = uuid.uuid4()  # Generate a valid UUID
+        invalid_url = reverse("api:receipts:download_receipt", args=[invalid_token])
         response = self.client.get(invalid_url)
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 404)  # Update expected status code
 
     def test_download_receipt_used_token(self):
         self.login_user()
         self.token.mark_as_used()
         response = self.client.get(self.download_receipt_url)
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 410)  # Update expected status code
 
     def test_generate_download_link_valid_receipt(self):
         self.login_user()
@@ -133,4 +134,4 @@ class ReceiptDownloadEndpointsTest(ViewTestCase):
             "api:receipts:generate_download_link", args=[9999]
         )  # Assuming 9999 is an invalid receipt id
         response = self.client.get(invalid_url)
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 404)
