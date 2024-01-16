@@ -4,10 +4,12 @@
 
 ![Code Formatter](https://github.com/TreyWW/MyFinances/actions/workflows/run_black_formatter.yml/badge.svg)
 ![Dependency Review](https://github.com/TreyWW/MyFinances/actions/workflows/dependancy_review.yml/badge.svg)
-![Test](https://github.com/TreyWW/MyFinances/actions/workflows/run_tests.yml/badge.svg) 
+![Test](https://github.com/TreyWW/MyFinances/actions/workflows/run_tests.yml/badge.svg)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-MyFinances is an open-source web application designed to empower individuals and teams to efficiently manage their finances. Whether you're tracking personal expenses, managing client invoices, or planning your financial goals, MyFinances provides a user-friendly platform to streamline these tasks.
+MyFinances is an open-source web application designed to empower individuals and teams to efficiently manage their finances.
+Whether you're tracking personal expenses, managing client invoices, or planning your financial goals, MyFinances provides a
+user-friendly platform to streamline these tasks.
 
 | PLEASE NOTE: This project is still in development, and has only just started! So none of the key features or descriptions have been fully implemented. We are beginner friendly and looking for contributors! |
 |---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -16,11 +18,15 @@ MyFinances is an open-source web application designed to empower individuals and
 
 - **Expense Tracking:** Easily record and categorize your expenses, upload photos of receipts, and visualize spending patterns.
 
-- **Invoicing:** Generate professional invoices for clients, including options for hourly rates or fixed fees. Receive payments directly through the integrated payment gateways.
+- **Invoicing:** Generate professional invoices for clients, including options for hourly rates or fixed fees. Receive payments
+  directly through the integrated payment gateways.
 
-- **Financial Reports:** Gain insights into your financial health with customizable reports, income summaries, and expense analyses.
+- **Financial Reports:** Gain insights into your financial health with customizable reports, income summaries, and expense
+  analyses.
 
-- **Receipt Management** Store your old receipts, to keep as future tax deductions, or just a financial log. You can preview, download, or delete these receipts at any point! We also use parsing to auto-extract data from the receipt such as the total price.
+- **Receipt Management** Store your old receipts, to keep as future tax deductions, or just a financial log. You can preview,
+  download, or delete these receipts at any point! We also use parsing to auto-extract data from the receipt such as the total
+  price.
 
 - **Budgeting:** Set financial goals and track your progress. Keep an eye on your spending habits and make informed decisions.
 
@@ -37,6 +43,7 @@ MyFinances is an open-source web application designed to empower individuals and
 - Additional requirements can be found in the `requirements.txt` file.
 
 ### Installation
+
 View our documentation to get started [https://myfinances.strelix.org](https://myfinances.strelix.org)
 
 ## Contributing
@@ -53,19 +60,23 @@ Before submitting a new issue, please:
 - Check the issue tracker for a specific upstream project that may be more appropriate.
 - Check against supported versions of this project (i.e., the latest).
 
-Use the Subscribe button to stay updated on discussions. Keep conversations on-topic and respect the opinions of others. For urgent issues or those involving confidential details, please report them directly to the maintainers.
+Use the Subscribe button to stay updated on discussions. Keep conversations on-topic and respect the opinions of others. For
+urgent issues or those involving confidential details, please report them directly to the maintainers.
 
 #### Security Vulnerabilities
 
-We take security seriously. If you discover a security vulnerability within MyFinances, please reach out to us directly via [email](mailto:security-myfinances@strelix.org). We will promptly address and resolve the issue.
+We take security seriously. If you discover a security vulnerability within MyFinances, please reach out to us directly
+via [email](mailto:security-myfinances@strelix.org). We will promptly address and resolve the issue.
 
 #### Bug Reports
 
-If you encounter a bug, please report it by opening an issue on the issue tracker. Include details about the issue, steps to reproduce, and relevant environment details.
+If you encounter a bug, please report it by opening an issue on the issue tracker. Include details about the issue, steps to
+reproduce, and relevant environment details.
 
 #### Feature Requests
 
-We welcome feature requests! If you have an idea for a new feature or enhancement, open an issue on the issue tracker. Describe the feature, its potential benefits, and any relevant use cases.
+We welcome feature requests! If you have an idea for a new feature or enhancement, open an issue on the issue tracker. Describe
+the feature, its potential benefits, and any relevant use cases.
 
 ### Pull Requests / Merge Requests
 
@@ -84,9 +95,12 @@ We'll review your pull request, provide feedback, and work with you to get your 
 
 ### Code Style and Quality
 
-Adhere to the coding style guidelines of the Django project. Find the Django coding style guide [here](https://docs.djangoproject.com/en/4.2/internals/contributing/writing-code/coding-style/).
+Adhere to the coding style guidelines of the Django project. Find the Django coding style
+guide [here](https://docs.djangoproject.com/en/4.2/internals/contributing/writing-code/coding-style/).
 
-We now also use the [python black formatter](https://black.readthedocs.io/). Code tests will be run before PRs can be merged, they will fail if you haven't ran the command below:
+We now also use the [python black formatter](https://black.readthedocs.io/). Code tests will be run before PRs can be merged, they
+will fail if you haven't ran the command below:
+
 ```
 pip install black
 black ./
@@ -111,6 +125,7 @@ Thank you for your contributions!
 ---
 
 #### 🌟 A very special thank you to all of our contributors 🌟
+
 ##### View a full list <a href="https://github.com/TreyWW/MyFinances/graphs/contributors">here</a>
 
 <table>
@@ -221,10 +236,65 @@ Thank you for your contributions!
            <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3APhilipZara" title="Frontend">🎨</a>
        </td>
   </tr>
+<tr>
+<td align="center">
+           <a href="https://github.com/Tianrui-Luo">
+               <img src="https://github.com/Tianrui-Luo.png" width="100px;" alt=""/>
+               <br/>
+               <sub>
+                   <b>
+                       Tianrui-Luo
+                   </b>
+               </sub>
+           </a>
+           <br/>
+           <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3ATianrui-Luo" title="Backend">🖥</a>
+       </td>
+<td align="center">
+           <a href="https://github.com/SharonAliyas5573">
+               <img src="https://github.com/SharonAliyas5573.png" width="100px;" alt=""/>
+               <br/>
+               <sub>
+                   <b>
+                       SharonAliyas5573
+                   </b>
+               </sub>
+           </a>
+           <br/>
+           <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3ASharonAliyas5573" title="Backend">🖥</a>
+       </td>
+   <td align="center">
+           <a href="https://github.com/Nuovaxu">
+               <img src="https://github.com/Nuovaxu.png" width="100px;" alt=""/>
+               <br/>
+               <sub>
+                   <b>
+                       Nuovaxu
+                   </b>
+               </sub>
+           </a>
+           <br/>
+           <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3ANuovaxu" title="Frontend">🎨</a>
+       </td>
+<td align="center">
+           <a href="https://github.com/HessTaha">
+               <img src="https://github.com/HessTaha.png" width="100px;" alt=""/>
+               <br/>
+               <sub>
+                   <b>
+                       HessTaha
+                   </b>
+               </sub>
+           </a>
+           <br/>
+           <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3AHessTaha" title="Docker">🐳</a>
+       </td>
+</tr>
 </table>
 
 ---
-__Note:__ This README.md is a living document and might be updated over time. Always refer to the latest version when contributing and developing.
+__Note:__ This README.md is a living document and might be updated over time. Always refer to the latest version when contributing
+and developing.
 
 ## Star History
 
