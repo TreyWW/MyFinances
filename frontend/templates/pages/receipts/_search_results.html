@@ -33,7 +33,6 @@
                                 class="btn btn-outline btn-success btn-sm">
                             Preview
                         </button>
-                        {% csrf_token %}
                         <button type="button" class="btn btn-outline btn-primary btn-sm " onclick="Download_file('{% url 'api:receipts:generate_download_link' receipt_id=row.id %}')">Download</button>
                         <button class="btn btn-outline btn-error btn-sm"
                                 hx-delete="{% url 'api:receipts:delete' id=row.id %}" hx-target="#items"
@@ -52,7 +51,7 @@
                     </h2>
                     <img class="w-full my-3" src="{{ row.image.url }}" alt="Receipt">
                     <div class="flex gap-3">
-                        <a class="btn btn-primary" href="{{ row.image.url }}" download>Download</a>
+                        <button type="button" class="btn btn-primary" onclick="Download_file('{% url 'api:receipts:generate_download_link' receipt_id=row.id %}')">Download</button>
                         <button class="btn" onclick="modal_receipt_{{ row.id }}.close();">Cancel</button>
                     </div>
                 </div>
