@@ -20,17 +20,17 @@ def download_receipt(request, token):
         download_token = ReceiptDownloadToken.objects.get(token=token)
     except ReceiptDownloadToken.DoesNotExist:
         return HttpResponse(
-            "No ReceiptDownloadToken matches the given query", status=404
+            "Download link has been used", status=404
         )
 
-    if download_token.is_used():
-        return HttpResponse("Download link has been used", status=410)  # 410 Gone
-    elif download_token.user != request.user:
+    # if download_token.is_used():
+    #     return HttpResponse("Download link has been used", status=410)  # 410 Gone
+    if download_token.user != request.user:
         return HttpResponse("Invalid user", status=403)  # 403 Forbidden
 
     receipt = get_object_or_404(Receipt, id=download_token.file.id)
 
-    download_token.mark_as_used()
+    download_token.delete()
 
     response = FileResponse(receipt.image)
 
