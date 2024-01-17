@@ -24,7 +24,7 @@ def download_receipt(request, token):
     # if download_token.is_used():
     #     return HttpResponse("Download link has been used", status=410)  # 410 Gone
     if download_token.user != request.user:
-        return HttpResponse("Invalid user", status=403)  # 403 Forbidden
+        return HttpResponse("Forbidden", status=403)  # 403 Forbidden
 
     receipt = get_object_or_404(Receipt, id=download_token.file.id)
 
