@@ -5,7 +5,11 @@ Sqlite is a popular option for local development as it has no installation neede
 
 ## Installation
 
-1. Add `DATABASE_TYPE=sqlite` in your django environment variables. More on environment variables can be found [here](getting-setup/other-environments/env-variables)
+1. Add `DATABASE_TYPE=sqlite` in your django environment variables.
+
+More on environment variables can be through our guides: [env files](getting-setup/other-environments/env-variables) and 
+[env files for pycharm professional](getting-setup/pycharm/env-variables)
+
 2. Run django migrate command 
 ```bash
 python manage.py migrate 
