@@ -25,7 +25,7 @@ bleach==6.1.0
 oauthlib==3.2.2
 boto3==1.33.6
 django-storages==1.14.2
-Pillow==10.1.0
+Pillow==10.2.0
 shortuuid==1.0.11
 # currency converter
 forex_python==1.8
