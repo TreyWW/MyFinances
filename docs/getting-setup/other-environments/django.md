@@ -8,7 +8,7 @@
 pip install -r requirements.txt
 ```
 
-2. Setup your database [(click to view our guide)](getting-setup/other-environments/database)
+2. Setup your database [(click to view our guide)](getting-setup/databases/)
 
 3. Migrate the database
 
