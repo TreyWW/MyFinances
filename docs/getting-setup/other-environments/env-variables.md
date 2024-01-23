@@ -1,6 +1,6 @@
 ## Setup your environment variables
 
-1. Copy the sample environment variables
+1. Copy the sample environment variables to .env. (Creates .env if it's not created)
 
 ```bash
 cp .env.sample .env
