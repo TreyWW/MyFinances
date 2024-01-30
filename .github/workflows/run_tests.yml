@@ -8,8 +8,23 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      #----------------------------------------------
+      #       check-out repo and set-up python
+      #----------------------------------------------
+      -
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+
+      - name: Set up python
+        id: setup-python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      #----------------------------------------------
+      #       install and configure poetry
+      #----------------------------------------------
+      -
 
       - name: Install and configure Poetry
         uses: snok/install-poetry@v1
@@ -18,6 +33,11 @@ jobs:
           virtualenvs-create: false
           virtualenvs-in-project: false
           installer-parallel: true
+
+      #----------------------------------------------
+      #       install docker compose
+      #       setup + configure docker compose
+      #----------------------------------------------
 
       - name: Install Docker Compose
         run: |
@@ -29,6 +49,11 @@ jobs:
 
       - name: Copy docker compose file
         run: cp $DOCKER_COMPOSE_PATH ./docker-compose.yml
+
+      #----------------------------------------------
+      #       run docker compose & tests
+      #----------------------------------------------
+
 
       - name: Build and run docker-compose.ci.yml
         run: docker compose up -d --wait --wait-timeout 30
