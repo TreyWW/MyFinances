@@ -38,7 +38,7 @@ user-friendly platform to streamline these tasks.
 - Django
 - Docker
 - Docker Compose
-- Additional requirements can be found in the `requirements.txt` file.
+- Additional requirements can be found in the `pyproject.toml` file (or by using `poetry show`).
 
 ### Installation
 

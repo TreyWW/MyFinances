@@ -32,7 +32,7 @@ MyFinances is an open-source web application designed to empower individuals and
 - Django
 - Docker
 - Docker Compose
-- Additional requirements can be found in the `requirements.txt` file.
+- Additional requirements can be found in the `pyproject.toml` file (or by using `poetry show`).
 
 ### Installation
 View our documentation to get started [https://myfinances.strelix.org](https://myfinances.strelix.org)
