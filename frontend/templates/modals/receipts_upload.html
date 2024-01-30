@@ -23,21 +23,30 @@
                 <label class="label">Receipt Date</label>
                 <input type="date" name="receipt_date" class="input input-bordered">
             </div>
+            <div class="form-control">
+                <label class="label">Merchant/Store</label>
+                <input required type="text" name="merchant_store" class="input input-bordered">
+            </div>
+            <div class="form-control">
+                <label class="label">Purchase Category</label>
+                <input required type="text" name="purchase_category" class="input input-bordered">
+            </div>
+            <div class="form-control">
+                <label class="label">Total Price</label>
+                <input required type="number" name="total_price" class="input input-bordered">
+            </div>
             <div class="modal-action">
                 <button type="submit"
                         id="modal_receipts_upload-action-btn"
-                        class="btn btn-primary">
+                        class="btn btn-primary"
+                        _="on click
+                    if #modal_receipts_upload-form.checkValidity()
+                     call #modal_receipts_upload.close()
+                    end">
                     Save
                 </button>
-                <script>
-                    document.getElementById('modal_receipts_upload-action-btn').addEventListener("click", function () {
-                        if (document.getElementById('modal_receipts_upload-form').checkValidity()) {
-                            document.getElementById('modal_receipts_upload').close();
-                        }
-                    });
-                </script>
                 <button type="reset" class="btn btn-error">Reset</button>
-                <button type="button" onclick="document.getElementById('modal_receipts_upload').close();" class="btn btn-neutral">
+                <button type="button" _="on click call #modal_receipts_upload.close()" class="btn btn-neutral">
                     Close
                 </button>
             </div>

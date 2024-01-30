@@ -69,3 +69,5 @@ and run server. For more details, view the page for your environment below
 <img src="_assets/setup/pycharm-8-1.png" />
 <img src="_assets/setup/pycharm-8-2.png" />
 </details>
+
+12. Setup your database [(click to view our guide)](getting-setup/databases/)

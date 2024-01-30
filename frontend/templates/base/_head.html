@@ -28,6 +28,8 @@
 {#            defer#}
 {#    ></script>#}
 {#    <script src="{% static 'js/init-alpine.js' %}"></script>#}
+    <script src="{% static 'js/receipt_download.js' %}"></script>
+       
     <!-- SimpleMDE -->
     <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
@@ -36,6 +38,7 @@
     <!-- HTMX -->
     <script src="https://unpkg.com/htmx.org@1.9.4" integrity="sha384-zUfuhFKKZCbHTY6aRR46gxiqszMk5tcHjsVFxnUo8VMus4kHGVdIYVbOYYNlKmHV" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/htmx.org/dist/ext/multi-swap.js"></script>
+    <script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
     <script>
         // https://htmx.org/docs/#config
         htmx.config.globalViewTransitions = true

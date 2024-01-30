@@ -7,6 +7,7 @@ from django.db import models
 from settings import settings
 from django.utils.crypto import get_random_string
 from shortuuid.django_fields import ShortUUIDField
+from uuid import uuid4
 
 
 class CustomUserManager(UserManager):
@@ -113,12 +114,14 @@ class Receipt(models.Model):
     date = models.DateField(null=True, blank=True)
     date_uploaded = models.DateTimeField(auto_now_add=True)
     receipt_parsed = models.JSONField(null=True, blank=True)
+    merchant_store = models.CharField(max_length=255, blank=True, null=True)
+    purchase_category = models.CharField(max_length=200, blank=True, null=True)
 
-    @property
-    def get_receipt_url(self):
-        if self.image and hasattr(self.image, "url"):
-            return self.image.url
-        return ""
+
+class ReceiptDownloadToken(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    file = models.ForeignKey(Receipt, on_delete=models.CASCADE)
+    token = models.UUIDField(default=uuid4, editable=False, unique=True)
 
 
 class Client(models.Model):
@@ -139,6 +142,14 @@ class Client(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class InvoiceProduct(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=50)
+    description = models.CharField(max_length=100)
+    quantity = models.IntegerField()
+    rate = models.DecimalField(max_digits=15, decimal_places=2, blank=True, null=True)
 
 
 class InvoiceItem(models.Model):

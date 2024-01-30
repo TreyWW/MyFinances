@@ -1572,6 +1572,20 @@ html {
   padding: 1rem;
 }
 
+.indicator {
+    position: relative;
+    display: inline-flex;
+    width: -moz-max-content;
+    width: max-content;
+}
+
+.indicator :where(.indicator-item) {
+    z-index: 1;
+    position: absolute;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+    white-space: nowrap;
+}
+
 .input {
   flex-shrink: 1;
   -webkit-appearance: none;
@@ -3610,6 +3624,78 @@ html {
   visibility: visible;
 }
 
+.indicator :where(.indicator-item) {
+    bottom: auto;
+    inset-inline-end: 0px;
+    inset-inline-start: auto;
+    top: 0px;
+    --tw-translate-y: -50%;
+    --tw-translate-x: 50%;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+:is([dir="rtl"] .indicator :where(.indicator-item)) {
+    --tw-translate-x: -50%;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.indicator :where(.indicator-item.indicator-start) {
+    inset-inline-end: auto;
+    inset-inline-start: 0px;
+    --tw-translate-x: -50%;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+:is([dir="rtl"] .indicator :where(.indicator-item.indicator-start)) {
+    --tw-translate-x: 50%;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.indicator :where(.indicator-item.indicator-center) {
+    inset-inline-end: 50%;
+    inset-inline-start: 50%;
+    --tw-translate-x: -50%;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+:is([dir="rtl"] .indicator :where(.indicator-item.indicator-center)) {
+    --tw-translate-x: 50%;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.indicator :where(.indicator-item.indicator-end) {
+    inset-inline-end: 0px;
+    inset-inline-start: auto;
+    --tw-translate-x: 50%;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+:is([dir="rtl"] .indicator :where(.indicator-item.indicator-end)) {
+    --tw-translate-x: -50%;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.indicator :where(.indicator-item.indicator-bottom) {
+    bottom: 0px;
+    top: auto;
+    --tw-translate-y: 50%;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.indicator :where(.indicator-item.indicator-middle) {
+    bottom: 50%;
+    top: 50%;
+    --tw-translate-y: -50%;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.indicator :where(.indicator-item.indicator-top) {
+    bottom: auto;
+    top: 0px;
+    --tw-translate-y: -50%;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
 .join.join-vertical {
   flex-direction: column;
 }
@@ -4032,10 +4118,6 @@ html {
   top: 0px;
 }
 
-.top-2 {
-  top: 0.5rem;
-}
-
 .top-5 {
   top: 1.25rem;
 }
@@ -4385,6 +4467,10 @@ html {
   width: 0.25rem;
 }
 
+.w-1\/3 {
+    width: 33.333333%;
+}
+
 .w-10 {
   width: 2.5rem;
 }
@@ -4399,6 +4485,10 @@ html {
 
 .w-14 {
   width: 3.5rem;
+}
+
+.w-2\/3 {
+    width: 66.666667%;
 }
 
 .w-3 {
@@ -4449,6 +4539,10 @@ html {
   width: 20rem;
 }
 
+.w-\[100\%\] {
+    width: 100%;
+}
+
 .w-\[150px\] {
   width: 150px;
 }
@@ -4459,6 +4553,10 @@ html {
 
 .w-\[30\%\] {
   width: 30%;
+}
+
+.w-\[50\%\] {
+    width: 50%;
 }
 
 .w-\[60\%\] {
@@ -4584,6 +4682,10 @@ html {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.flex-row {
+  flex-direction: row;
+}
+
 .flex-col {
   flex-direction: column;
 }
@@ -4640,6 +4742,11 @@ html {
 
 .gap-y-1 {
   row-gap: 0.25rem;
+}
+
+.gap-x-4 {
+    -moz-column-gap: 1rem;
+    column-gap: 1rem;
 }
 
 .space-x-4 > :not([hidden]) ~ :not([hidden]) {
@@ -4907,6 +5014,10 @@ html {
 
 .p-6 {
   padding: 1.5rem;
+}
+
+.p-8 {
+  padding: 2rem;
 }
 
 .px-0 {

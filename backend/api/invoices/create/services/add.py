@@ -2,10 +2,21 @@ from django.http import HttpRequest, JsonResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
+from backend.models import InvoiceProduct
+
 
 @require_http_methods(["POST"])
 def add_service(request: HttpRequest):
     context = {}
+    existing_service = request.POST.get("existing_service")
+
+    try:
+        existing_service_obj = InvoiceProduct.objects.get(
+            user=request.user, id=existing_service
+        )
+    except InvoiceProduct.DoesNotExist:
+        existing_service_obj = None
+
     list_hours = request.POST.getlist("hours[]")
     list_service_name = request.POST.getlist("service_name[]")
     list_service_description = request.POST.getlist("service_description[]")
@@ -17,25 +28,27 @@ def add_service(request: HttpRequest):
         )
     ]
 
-    hours = int(request.POST.get("post_hours"))
-    service_name = request.POST.get("post_service_name")
-    service_description = request.POST.get("post_service_description")
-    price_per_hour = int(request.POST.get("post_rate"))
+    if not existing_service:
+        hours = int(request.POST.get("post_hours"))
+        service_name = request.POST.get("post_service_name")
+        service_description = request.POST.get("post_service_description")
+        price_per_hour = int(request.POST.get("post_rate"))
 
-    if not hours:
-        return JsonResponse(
-            {"status": "false", "message": "The hours field is required"}, status=400
-        )
-    if not service_name:
-        return JsonResponse(
-            {"status": "false", "message": "The service name field is required"},
-            status=400,
-        )
-    if not price_per_hour:
-        return JsonResponse(
-            {"status": "false", "message": "The price per hour field is required"},
-            status=400,
-        )
+        if not hours:
+            return JsonResponse(
+                {"status": "false", "message": "The hours field is required"},
+                status=400,
+            )
+        if not service_name:
+            return JsonResponse(
+                {"status": "false", "message": "The service name field is required"},
+                status=400,
+            )
+        if not price_per_hour:
+            return JsonResponse(
+                {"status": "false", "message": "The price per hour field is required"},
+                status=400,
+            )
 
     context["rows"] = []
     for row in list_of_current_rows:
@@ -49,14 +62,26 @@ def add_service(request: HttpRequest):
             }
         )
 
-    context["rows"].append(
-        {
-            "hours": hours,
-            "service_name": service_name,
-            "service_description": service_description,
-            "price_per_hour": price_per_hour,
-            "total_price": hours * price_per_hour,
-        }
-    )
+    if existing_service and existing_service_obj:
+        context["rows"].append(
+            {
+                "hours": existing_service_obj.quantity,
+                "service_name": existing_service_obj.name,
+                "service_description": existing_service_obj.description,
+                "price_per_hour": existing_service_obj.rate,
+                "total_price": existing_service_obj.quantity
+                * existing_service_obj.rate,
+            }
+        )
+    else:
+        context["rows"].append(
+            {
+                "hours": hours,
+                "service_name": service_name,
+                "service_description": service_description,
+                "price_per_hour": price_per_hour,
+                "total_price": hours * price_per_hour,
+            }
+        )
 
     return render(request, "pages/invoices/create/_services_table_body.html", context)

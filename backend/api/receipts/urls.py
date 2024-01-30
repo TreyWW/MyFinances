@@ -1,5 +1,5 @@
 from django.urls import path
-from . import delete, new, fetch
+from . import delete, new, fetch, download
 
 urlpatterns = [
     path(
@@ -17,6 +17,12 @@ urlpatterns = [
         fetch.fetch_all_receipts,
         name="fetch",
     ),
+    path(
+        "download/<int:receipt_id>/",
+        download.generate_download_link,
+        name="generate_download_link",
+    ),
+    path("cdn/<uuid:token>/", download.download_receipt, name="download_receipt"),
 ]
 
 app_name = "receipts"

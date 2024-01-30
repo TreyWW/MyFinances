@@ -1,0 +1,10 @@
+{% if converted_amount %}
+    <div class="text-lg text-center text-gray-900 dark:text-white">
+        <p>
+            <strong>{{ original_currency_sign }}{{ original_amount }}</strong> in {{ original_currency }} is
+            <strong>{{ target_currency_sign }}{{ converted_amount }}</strong> in {{ target_currency }}
+        </p>
+    </div>
+{% else %}
+    <p class="text-lg text-center text-error">Conversion failed.</p>
+{% endif %}

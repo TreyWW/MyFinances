@@ -2,7 +2,6 @@
 {% load static %}
 {% load markdownify %}
 {% block content %}
-    {% include 'components/modal.html' with modals=modal_data %}
     <form method="post" class="card bg-base-100 p-6 group" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="divider">STEP 1 - DESTINATIONS</div>
@@ -52,79 +51,10 @@
             </div>
         </div>
         <div class="divider my-4">STEP 3 - SERVICES</div>
-        <div class="input_card max-w-full min-w-full">
-            <div class="card-body">
-                <button onclick="modal_invoices_add_service.showModal();"
-                        class="btn btn-primary"
-                        hx-trigger="click once" hx-swap="beforeend" hx-target="#modal_container"
-                        hx-get="{% url "api:base:modal retrieve" modal_name="invoices_add_service" %}">
-                    Add Service
-                </button>
-                {# START MODAL #}
-                {#                <div class="modal">#}
-                {#                        <div class="form-field w-full">#}
-                {#                            <label for="service" class="form-label">Service Name</label>#}
-                {#                            <input id="modal_input-service_name"#}
-                {#                                   name="post_service_name"#}
-                {#                                   type="text"#}
-                {#                                   class="input input-block input-bordered input-ghost-secondary">#}
-                {#                        </div>#}
-                {#                        <div class="form-field">#}
-                {#                            <label for="service" class="form-label">Service Name</label>#}
-                {#                            <input id="modal_input-service_name" name="post_service_name" type="text"#}
-                {#                                   class="input input-bordered input-ghost-secondary">#}
-                {#                            <label for="service" class="form-label">Service Description</label>#}
-                {#                            <textarea id="modal_input-service_description"#}
-                {#                                      name="post_service_description"#}
-                {#                                      class="textarea textarea-block textarea-ghost-secondary"></textarea>#}
-                {#                        </div>#}
-                {#                        <div class="form-field">#}
-                {#                            <label for="hours" class="form-label">Hours</label>#}
-                {#                            <input id="modal_input-hours" type="number" name="post_hours"#}
-                {#                                   class="input input-bordered input-ghost-secondary">#}
-                {#                            <label for="hours" class="form-label">Quantity</label>#}
-                {#                            <input id="modal_input-hours"#}
-                {#                                   type="number" name="post_hours"#}
-                {#                                   class="input input-bordered input-block input-ghost-secondary">#}
-                {#                        </div>#}
-                {#                        <div class="form-field">#}
-                {#                            <label for="pricePerHour" class="form-label">Price Per Hour</label>#}
-                {#                            <input id="modal_input-price_per_hour" type="number" name="post_price_per_hour"#}
-                {#                                   class="input input-bordered input-ghost-secondary">#}
-                {#                            <label for="pricePerHour" class="form-label">Rate</label>#}
-                {#                            <input id="modal_input-price_per_hour" type="number" name="post_price_per_hour" class="input#}
-                {#                            input-block#}
-                {#                            input-bordered input-ghost-secondary">#}
-                {#                        </div>#}
-                {#                        <button class="btn btn-primary"#}
-                {#                                hx-post="{% url 'api v1 invoices create services add' %}"#}
-                {#                                hx-swap="outerHTML"#}
-                {##}
-                {#                                hx-target="#services_table_body">#}
-                {#                            Save Service#}
-                {#                        </button>#}
-                {#                    </div>#}
-                {#                </div>#}
-                {# END MODAL #}
 
-                <div class="flex w-full overflow-x-auto">
-                    <table class="table table-zebra max-w-full" id="services_table">
-                        <thead>
-                        <tr>
-                            <th>Service</th>
-                            <th>Quantity</th>
-                            <th>Rate</th>
-                            <th>Total Price</th>
-                            <th>Actions</th>
-                        </tr>
-                        </thead>
-                        <tbody id="services_table_body">
-                        {% include 'pages/invoices/create/_services_table_body.html' %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+        {% component_block "pages:invoices:create:services_table" %}
+
+        {% endcomponent_block %}
 
         <div class="divider my-4">STEP 4 - BANK DETAILS [OPTIONAL]</div>
 

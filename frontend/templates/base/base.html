@@ -8,9 +8,9 @@
         {% include 'base/_topbar.html' %}
 
         <div class="flex-1 min-h-screen overflow-y-auto pt-8 px-6 pb-4 bg-base-200">
-{#            <div id="messages_list">#}
-                {#                {% component "messages_list" with_js="true" %}#}
-{#            </div>#}
+            {#            <div id="messages_list">#}
+            {#                {% component "messages_list" with_js="true" %}#}
+            {#            </div>#}
             {% include 'partials/base/breadcrumbs.html' %}
             {% include 'partials/base/toasts.html' %}
 
@@ -22,48 +22,7 @@
                 <div class="drawer-content">
                     {% block content %}{% endblock content %}
                 </div>
-                <div class="drawer-side">
-                    <label for="service_list_drawer" aria-label="close sidebar" class="drawer-overlay"></label>
-                    <ul class="menu p-4 w-80 min-h-full bg-base-200 text-base-content z-10 gap-y-1">
-                        <label class="btn btn-square btn-outline btn-block top-5 right-5 mb-3"
-                               for="service_list_drawer">
-                            <i class="fa fa-solid fa-x"></i>
-                            Close
-                        </label>
-                        <li>
-                            {% with i_url="dashboard" %}
-                            <a href="{% url i_url %}"
-                               {% if  request.resolver_match.url_name == i_url %}class="active{% endif %}">
-                                My Dashboard
-                            </a>
-                            {% endwith %}
-                        </li>
-                        <li>
-                            {% with i_url="clients dashboard" %}
-                            <a href="{% url i_url %}"
-                                    {% if request.resolver_match.url_name == i_url %}class="active"{% endif %}>
-                                Clients
-                            </a>
-                            {% endwith %}
-                        </li>
-                        <li>
-                            {% with i_url="invoices dashboard" %}
-                            <a href="{% url i_url %}"
-                                    {% if request.resolver_match.url_name == i_url %}class="active"{% endif %}>
-                                Invoices
-                            </a>
-                            {% endwith %}
-                        </li>
-                        <li>
-                            {% with i_url="receipts dashboard" %}
-                            <a href="{% url i_url %}"
-                               {% if request.resolver_match.url_name == i_url %}class="active"{% endif %}>
-                                Receipts
-                            </a>
-                            {% endwith %}
-                        </li>
-                    </ul>
-                </div>
+                {% component "base:left_drawer" %}
             </div>
             <div class="fixed bottom-5 left-5 z-50">
                 <ul class="menu menu-horizontal bg-base-100 rounded-box">
@@ -81,16 +40,17 @@
             </div>
         </div>
         <script>
-            document.addEventListener("DOMContentLoaded", function() {
+            document.addEventListener("DOMContentLoaded", function () {
                 const drawer = document.getElementById("service_list_drawer");
-                drawer.addEventListener("change", function() {
+                drawer.addEventListener("change", function () {
                     if (drawer.checked) {
                         document.getElementById("service_list_toggler").checked = true;
                         document.getElementById("logo_single_serivce_list_toggler").checked = true;
                     } else {
                         document.getElementById("service_list_toggler").checked = false;
                         document.getElementById("logo_single_serivce_list_toggler").checked = false;
-                    };
+                    }
+                    ;
                 });
             });
         </script>

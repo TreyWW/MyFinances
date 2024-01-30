@@ -1,0 +1,50 @@
+<div class="drawer-side">
+    <label for="service_list_drawer" aria-label="close sidebar" class="drawer-overlay"></label>
+    <ul class="menu p-4 w-80 min-h-full bg-base-200 text-base-content z-10 gap-y-1">
+        <label class="btn btn-square btn-outline btn-block top-5 right-5 mb-3"
+               for="service_list_drawer">
+            <i class="fa fa-solid fa-x"></i>
+            Close
+        </label>
+        <li>
+            {% with i_url="dashboard" %}
+                <a href="{% url i_url %}"
+                   {% if  request.resolver_match.url_name == i_url %}class="active{% endif %}">
+                    My Dashboard
+                </a>
+            {% endwith %}
+        </li>
+        <li>
+            {% with i_url="clients dashboard" %}
+                <a href="{% url i_url %}"
+                   {% if request.resolver_match.url_name == i_url %}class="active"{% endif %}>
+                    Clients
+                </a>
+            {% endwith %}
+        </li>
+        <li>
+            {% with i_url="invoices dashboard" %}
+                <a href="{% url i_url %}"
+                   {% if request.resolver_match.url_name == i_url %}class="active"{% endif %}>
+                    Invoices
+                </a>
+            {% endwith %}
+        </li>
+        <li>
+            {% with i_url="receipts dashboard" %}
+                <a href="{% url i_url %}"
+                   {% if request.resolver_match.url_name == i_url %}class="active"{% endif %}>
+                    Receipts
+                </a>
+            {% endwith %}
+        </li>
+        <li>
+            {% with i_url="currency converter" %}
+                <a href="{% url i_url %}"
+                   {% if request.resolver_match.url_name == i_url %}class="active"{% endif %}>
+                    Currency Converter
+                </a>
+            {% endwith %}
+        </li>
+    </ul>
+</div>

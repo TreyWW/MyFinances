@@ -6,6 +6,8 @@
             <th>ID</th>
             <th>Date</th>
             <th>Name</th>
+            <th>Merchant/Store</th>
+            <th>Category</th>
             <th>Amount</th>
             <th>Actions</th>
         </tr>
@@ -21,6 +23,8 @@
                 </td>
                 <td>{{ row.date }}</td>
                 <td>{{ row.name }}</td>
+                <td>{{ row.merchant_store }}</td>
+                <td>{{ row.purchase_category }}</td>
                 <td>{{ currency_symbol }}{{ row.total_price | default:"0.00" }}</td>
                 <td>
                     <form method="post">
@@ -28,8 +32,7 @@
                                 class="btn btn-outline btn-success btn-sm">
                             Preview
                         </button>
-                        <a class="btn btn-outline btn-primary btn-sm" href="{{ row.image.url }}" download>Download</a>
-                        {# TODO: Security Vuln ^: Make a generation token to download this image, shouldn't be able to download from url directly #}
+                        <button type="button" class="btn btn-outline btn-primary btn-sm " onclick="Download_file('{% url 'api:receipts:generate_download_link' receipt_id=row.id %}')">Download</button>
                         <button class="btn btn-outline btn-error btn-sm"
                                 hx-delete="{% url 'api:receipts:delete' id=row.id %}" hx-target="#items"
                                 hx-confirm="Are you sure you would like to delete the receipt?">Delete
@@ -47,7 +50,7 @@
                     </h2>
                     <img class="w-full my-3" src="{{ row.image.url }}" alt="Receipt">
                     <div class="flex gap-3">
-                        <a class="btn btn-primary" href="{{ row.image.url }}" download>Download</a>
+                        <button type="button" class="btn btn-primary" onclick="Download_file('{% url 'api:receipts:generate_download_link' receipt_id=row.id %}')">Download</button>
                         <button class="btn" onclick="modal_receipt_{{ row.id }}.close();">Cancel</button>
                     </div>
                 </div>

@@ -2,7 +2,6 @@
 {% load static %}
 {% load markdownify %}
 {% block content %}
-    {% include 'components/modal.html' with modals=modal_data %}
     <form method="post" class="card bg-base-100 p-6 group">
         {% csrf_token %}
         <div class="divider">STEP 1 - DESTINATIONS</div>
@@ -52,21 +51,23 @@
                 </div>
             </div>
         </div>
-     
+        <div class="divider my-4">STEP 3 - SERVICES</div>
+        {% component_block "pages:invoices:create:services_table" %}
 
+        {% endcomponent_block %}
 
-        <div class="group-invalid:tooltip" data-tip="Fill out all required details to save the invoice.">
+        <div class="group-invalid:tooltip mt-4" data-tip="Fill out all required details to save the invoice.">
             <button class="btn btn-primary group-invalid:btn-disabled btn-block">
                 Update Invoice
             </button>
         </div>
 
- 
+
     </form>
 
-  
 
-<!-- still need to add SERVICE & PAYMENT INFORMATION fields for editing -->
+
+    <!-- still need to add SERVICE & PAYMENT INFORMATION fields for editing -->
 
 
 

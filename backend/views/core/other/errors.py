@@ -1,18 +1,10 @@
 import traceback
-from django.http import (
-    HttpResponse,
-    HttpRequest,
-    HttpResponseBadRequest,
-    HttpResponseForbidden,
-    HttpResponseServerError,
-)
+from django.http import HttpRequest
+
 from django_ratelimit.exceptions import Ratelimited
 from backend.decorators import *
 from backend.utils import Toast
-import json
 from backend.models import *
-
-from django.contrib.auth import get_user_model, logout
 
 
 def universal(request: HttpRequest, exception=None):
@@ -79,4 +71,3 @@ def e_403(request: HttpRequest, exception=None):
             TracebackError(error=exec_error).save()
 
         return redirect("dashboard")
-    return redirect("dashboard")

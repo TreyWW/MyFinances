@@ -1,7 +1,6 @@
 {% extends 'base/base.html' %}
 {% load static %}
 {% block content %}
-    {% include 'components/modal.html' with modals=modal_data %}
     <div class="card bg-base-100 p-6">
         <form method="post">
             {% csrf_token %}
