@@ -10,13 +10,14 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-                - name: Install and configure Poetry
-                uses: snok/install-poetry@v1
-                with:
-                  version: 1.5.1
-                  virtualenvs-create: false
-                  virtualenvs-in-project: false
-                  installer-parallel: true
+
+      - name: Install and configure Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: 1.5.1
+          virtualenvs-create: false
+          virtualenvs-in-project: false
+          installer-parallel: true
 
       - name: Install Docker Compose
         run: |
