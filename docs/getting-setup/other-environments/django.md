@@ -2,10 +2,11 @@
 
 !> Make sure you have followed all of our previous steps in this section before doing this
 
-1. Install our dependencies using `pip`
+1. Install our dependencies
+   using `python poetry` [click here for installation guide](https://python-poetry.org/docs/#installing-manually)
 
 ```bash
-pip install -r requirements.txt
+poetry install
 ```
 
 2. Setup your database [(click to view our guide)](getting-setup/databases/)

@@ -1,7 +1,12 @@
-# Dockerfile
 FROM python:3.12-alpine
 
-# Set the working directory
+RUN pip install poetry==1.7.1
+
+ENV POETRY_NO_INTERACTION=1 \
+    POETRY_VIRTUALENVS_IN_PROJECT=1 \
+    POETRY_VIRTUALENVS_CREATE=false \
+    POETRY_CACHE_DIR=/tmp/poetry_cache
+
 WORKDIR /MyFinances
 
 COPY . .
@@ -12,20 +17,13 @@ RUN apk --no-cache --update add \
     musl-dev \
     gcc \
     mariadb-dev \
-    git \
-    libffi-dev 
+    libffi-dev
 
-RUN pip install --upgrade pip \
-    && pip install mysql mariadb mysqlclient -r requirements.txt
+RUN poetry install --without dev,mysql --no-root && rm -rf $POETRY_CACHE_DIR
 
-CMD ["git","--version"]
-
-# Set the entrypoint
-#COPY ../scripts /infrastructure/scripts/
 RUN chmod +x infrastructure/backend/scripts/*
 RUN chmod +x infrastructure/backend/scripts/tests/*
 ENTRYPOINT ["sh", "infrastructure/backend/scripts/entrypoint.sh"]
 
-# Expose ports
 EXPOSE 10012
 EXPOSE 9012

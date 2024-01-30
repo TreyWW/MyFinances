@@ -45,7 +45,7 @@ and run server. For more details, view the page for your environment below
 
 <br>
 
-!> Before continuing, please install all requirements.txt. Go to `requirements.txt`, right click, press "`Install All Packages`"
+!> Before continuing, please install all of our dependencies via `poetry install`"
 
 9. To refresh the cache, go back to settings, project, and interpreter and install "Django" if not already there
 
