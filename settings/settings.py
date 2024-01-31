@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "social_django",
     "rest_framework",
     "rest_framework.authtoken",
+    "drf_yasg",
 ]
 
 LOGIN_REQUIRED_IGNORE_VIEW_NAMES = [
@@ -81,6 +82,8 @@ AUTHENTICATION_BACKENDS = [
     "social_core.backends.github.GithubOAuth2",
     "social_core.backends.google.GoogleOAuth2",
 ]
+
+SWAGGER_SETTINGS = {"VALIDATOR_URL": "http://localhost:8189"}
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
