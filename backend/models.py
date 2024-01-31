@@ -1,13 +1,15 @@
 import smtplib
-from django.utils import timezone
+from uuid import uuid4
+
 from django.contrib import messages
 from django.contrib.auth.models import User, UserManager, AbstractUser
 from django.core.mail import EmailMessage
 from django.db import models
-from settings import settings
+from django.utils import timezone
 from django.utils.crypto import get_random_string
 from shortuuid.django_fields import ShortUUIDField
-from uuid import uuid4
+
+from settings import settings
 
 
 class CustomUserManager(UserManager):
@@ -203,7 +205,7 @@ class Invoice(models.Model):
     self_county = models.CharField(max_length=100, blank=True, null=True)
     self_country = models.CharField(max_length=100, blank=True, null=True)
 
-    sort_code = models.CharField(max_length=100, blank=True, null=True)
+    sort_code = models.CharField(max_length=8, blank=True, null=True)  # 12-34-56
     account_holder_name = models.CharField(max_length=100, blank=True, null=True)
     account_number = models.CharField(max_length=100, blank=True, null=True)
     reference = models.CharField(max_length=100, blank=True, null=True)
