@@ -8,7 +8,7 @@ from tests.handler import ViewTestCase, assert_url_matches_view
 class InvoicesAPIFetch(ViewTestCase):
     def setUp(self):
         super().setUp()
-        self.url_path = "/api/invoices/fetch/"
+        self.url_path = "/api/v1/invoices/fetch/"
         self.url_name = "api:invoices:fetch"
         self.view_function_path = "backend.api.invoices.fetch.fetch_all_invoices"
 
@@ -81,7 +81,7 @@ class InvoicesAPIFetch(ViewTestCase):
 class InvoicesAPIDelete(ViewTestCase):
     def setUp(self):
         super().setUp()
-        self.url_path = "/api/invoices/delete/"
+        self.url_path = "/api/v1/invoices/delete/"
         self.url_name = "api:invoices:delete"
         self.view_function_path = "backend.api.invoices.delete.delete_invoice"
 

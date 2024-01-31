@@ -8,7 +8,7 @@ class CurrencyAPIChange(ViewTestCase):
     # Setting up common data for tests
     def setUp(self):
         super().setUp()
-        self.url_path = "/api/settings/change_currency/"
+        self.url_path = "/api/v1/settings/change_currency/"
         self.url_name = "api:settings:change_currency"
         self.view_function_path = "backend.api.settings.currency.update_currency_view"
 
@@ -74,7 +74,7 @@ class CurrencyAPIChange(ViewTestCase):
 class AccountNameChange(ViewTestCase):
     def setUp(self):
         super().setUp()
-        self.url_path = "/api/settings/change_name/"
+        self.url_path = "/api/v1/settings/change_name/"
         self.url_name = "api:settings:change_name"
         self.view_function_path = "settings.change_name.change_name"
 

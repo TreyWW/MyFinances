@@ -6,7 +6,7 @@ from tests.handler import ViewTestCase, assert_url_matches_view
 class CurrencyConverterConvertAPI(ViewTestCase):
     def setUp(self):
         super().setUp()
-        self.url_path = "/api/currency_converter/convert/"
+        self.url_path = "/api/v1/currency_converter/convert/"
         self.url_name = "api:currency_converter:convert"
         self.view_function_path = (
             "backend.api.currency_converter.convert.currency_conversion"

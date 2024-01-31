@@ -1,10 +1,10 @@
-import environ
 import json
 import mimetypes
 import os
 import sys
 from pathlib import Path
 
+import environ
 from django.contrib.messages import constants as messages
 
 env = environ.Env(DEBUG=(bool, False))
@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     "django_components",
     "django_components.safer_staticfiles",
     "social_django",
+    "rest_framework",
+    "rest_framework.authtoken",
 ]
 
 LOGIN_REQUIRED_IGNORE_VIEW_NAMES = [
@@ -63,7 +65,11 @@ LOGIN_REQUIRED_IGNORE_VIEW_NAMES = [
 
 # @login_required()
 
-LOGIN_REQUIRED_IGNORE_PATHS = [r"/login/$", "/accounts/github/login/callback/$"]
+LOGIN_REQUIRED_IGNORE_PATHS = [
+    r"/login/$",
+    "/accounts/github/login/callback/$",
+    r"/api/external/*",
+]
 # for some reason only allows "login" and not "login create account" or anything
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -171,7 +177,7 @@ MIDDLEWARE = [
 INTERNAL_IPS = [
     # ...
     "127.0.0.1",
-    "localhost"
+    "localhost",
     # ...
 ]
 CACHES = {

@@ -10,7 +10,7 @@
             {% csrf_token %}
             <input type="text" placeholder="Search"
                    class="input input-bordered input-block my-3 loading-htmx"
-                   hx-get="/api/clients/fetch"
+                   hx-get="/api/v1/clients/fetch"
                    hx-target="#items"
                    hx-trigger="keyup changed delay:500ms"
                    name="search"

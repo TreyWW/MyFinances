@@ -1,13 +1,15 @@
 import random
-from django.urls import reverse, resolve
-from tests.handler import ViewTestCase, assert_url_matches_view
+
+from django.urls import reverse
 from model_bakery import baker
+
+from tests.handler import ViewTestCase, assert_url_matches_view
 
 
 class ClientsAPIFetch(ViewTestCase):
     def setUp(self):
         super().setUp()
-        self.url_path = "/api/clients/fetch/"
+        self.url_path = "/api/v1/clients/fetch/"
         self.url_name = "api:clients:fetch"
         self.view_function_path = "backend.api.clients.fetch.fetch_all_clients"
 

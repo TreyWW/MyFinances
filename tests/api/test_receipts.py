@@ -1,13 +1,15 @@
 import random
-from django.urls import reverse, resolve
-from tests.handler import ViewTestCase, assert_url_matches_view
+
+from django.urls import reverse
 from model_bakery import baker
+
+from tests.handler import ViewTestCase, assert_url_matches_view
 
 
 class ReceiptsAPIFetch(ViewTestCase):
     def setUp(self):
         super().setUp()
-        self.url_path = "/api/receipts/fetch/"
+        self.url_path = "/api/v1/receipts/fetch/"
         self.url_name = "api:receipts:fetch"
         self.view_function_path = "backend.api.receipts.fetch.fetch_all_receipts"
 

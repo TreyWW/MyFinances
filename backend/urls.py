@@ -23,7 +23,8 @@ url(
 )
 
 urlpatterns = [
-    path("api/", include("backend.api.urls")),
+    path("api/v1/", include("backend.api.urls")),
+    path("api/external/", include("restAPI.urls")),
     path("", index, name="index"),
     path("dashboard", dashboard, name="dashboard"),
     path("dashboard/settings/", settings_v.view.settings_page, name="user settings"),
