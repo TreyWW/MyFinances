@@ -43,7 +43,6 @@ def fetch_all_invoices(request: HttpRequest):
         Invoice.objects.filter(user=request.user)
         .prefetch_related("items")
         .only("invoice_id", "id", "payment_status", "date_due")
-        .filter()
         .annotate(
             subtotal=ExpressionWrapper(
                 F("items__hours") * F("items__price_per_hour"),
