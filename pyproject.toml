@@ -14,6 +14,7 @@ django-storages = "1.14.2"
 pillow = "10.2.0"
 tblib = "^3.0.0"
 forex-python = "^1.8"
+django = "^5.0.1"
 
 [tool.poetry.group.django.dependencies]
 Django = "^5.0.1"
