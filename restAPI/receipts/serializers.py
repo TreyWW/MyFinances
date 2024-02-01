@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from backend.models import Receipt
+from backend.models import Receipt, ReceiptDownloadToken
 
 
 class ReceiptReturnedSerializer(serializers.ModelSerializer):
@@ -52,3 +52,18 @@ class ReceiptReturnedSerializer(serializers.ModelSerializer):
         help_text="The category of the purchase",
         required=False,
     )
+
+
+
+class ReceiptDownloadTokenReturnedSerializer(serializers.Serializer):
+    class Meta:
+        model = ReceiptDownloadToken
+        fields = [
+            "success",
+            "token",
+            "url"
+        ]
+
+    success = serializers.BooleanField(label="Was token generated successfully")
+    token = serializers.CharField(label="Receipt download token")
+    url = serializers.URLField(label="Receipt download full URL")
