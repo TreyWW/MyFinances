@@ -124,6 +124,8 @@ class ReceiptDownloadToken(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     file = models.ForeignKey(Receipt, on_delete=models.CASCADE)
     token = models.UUIDField(default=uuid4, editable=False, unique=True)
+    delete_at = models.DateTimeField(blank=True, null=True)
+    expires_at = models.DateTimeField(blank=True, null=True)
 
 
 class Client(models.Model):

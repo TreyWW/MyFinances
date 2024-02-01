@@ -3,6 +3,7 @@ from uuid import UUID
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
+from django.utils import timezone
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
@@ -42,20 +43,28 @@ def download_receipt(request, token: ReceiptDownloadToken.token):
     try:
         UUID(token)
     except ValueError:
-        # Don't yet have token, so creating one?
+        # Token isn't a valid UUID
         return Response({"detail": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
 
     try:
         download_token = ReceiptDownloadToken.objects.get(token=token)
     except ReceiptDownloadToken.DoesNotExist:
-        return Response({"detail": "Download link has been used"}, status=status.HTTP_404_NOT_FOUND)
+        return Response({"detail": "Download link is invalid"}, status=status.HTTP_404_NOT_FOUND)
+
+    if download_token.delete_at and download_token.delete_in < timezone.now():
+        download_token.delete()
+        return Response({"detail": "Download has already been used"}, status=status.HTTP_410_GONE)
+
+    if download_token.expires_at and download_token.expires_at < timezone.now():
+        download_token.delete()
+        return Response({"detail": "Download link has expired"}, status=status.HTTP_410_GONE)
 
     if download_token.user != request.user:
         return Response({"detail": "Forbidden"}, status=status.HTTP_403_FORBIDDEN)
 
     receipt = get_object_or_404(Receipt, id=download_token.file.id)
 
-    download_token.delete()
+    download_token.delete_at = timezone.now() + timezone.timedelta(days=6)
 
     image_data = receipt.image.read()
 
@@ -65,10 +74,7 @@ def download_receipt(request, token: ReceiptDownloadToken.token):
     return response
 
 
-
-
 @swagger_auto_schema(
-    # manual_parameters=[search_param],
     method="GET",
     responses={200: user_response_get_token},
 )
@@ -84,7 +90,8 @@ def get_download_token(request, receipt_id: Receipt.id):
     if receipt.user != request.user:
         return Response({"success": False, "message": "Forbidden"}, status=status.HTTP_403_FORBIDDEN)
 
-    token = ReceiptDownloadToken.objects.create(user=request.user, file=receipt)
+    token = ReceiptDownloadToken.objects.create(user=request.user, file=receipt, delete_at=timezone.now() +
+                                                                                           timezone.timedelta(days=1))
     download_link = request.build_absolute_uri(
         reverse("restAPI:receipts:download", args=[token.token])
     )
@@ -92,11 +99,9 @@ def get_download_token(request, receipt_id: Receipt.id):
     response_data = {
         "success": True,
         "url": download_link,
-        "token": token.token,
-        # "filename": receipt.image.name,
+        "token": token.token
     }
 
-    # Assuming you have a serializer for your Receipt model
     serializer = ReceiptDownloadTokenReturnedSerializer(response_data)
 
     # Instead of FileResponse, use Response with appropriate data

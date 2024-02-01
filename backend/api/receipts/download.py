@@ -1,4 +1,6 @@
 from django.http import FileResponse, Http404
+from django.utils import timezone
+
 from backend.models import Receipt, ReceiptDownloadToken
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
@@ -19,7 +21,12 @@ def download_receipt(request, token):
     try:
         download_token = ReceiptDownloadToken.objects.get(token=token)
     except ReceiptDownloadToken.DoesNotExist:
-        return HttpResponse("Download link has been used", status=404)
+        return HttpResponse("Download link is invalid", status=404)
+
+    if download_token.delete_in and download_token.delete_in < timezone.now():
+        download_token.delete()
+        return HttpResponse("Download has already been used", status=410)
+
 
     # if download_token.is_used():
     #     return HttpResponse("Download link has been used", status=410)  # 410 Gone
@@ -28,7 +35,7 @@ def download_receipt(request, token):
 
     receipt = get_object_or_404(Receipt, id=download_token.file.id)
 
-    download_token.delete()
+    download_token.delete_at = timezone.now() + timezone.timedelta(days=6)
 
     response = FileResponse(receipt.image)
 
