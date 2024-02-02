@@ -11,11 +11,17 @@
         >
             {% csrf_token %}
             <div class="form-control">
-                <label class="label">Receipt Name</label>
+                <label class="label justify-start">
+                    Receipt Name
+                    <span class="required_star">*</span>
+                </label>
                 <input required type="text" name="receipt_name" class="input input-bordered">
             </div>
             <div class="form-control">
-                <label class="label">Receipt Image</label>
+                <label class="label justify-start">
+                    Receipt Image
+                    <span class="required_star">*</span>
+                </label>
                 <input required type="file" name="receipt_image"
                        class="file-input file-input-bordered max-w-full" accept="image/jpeg,image/png,image/jpg">
             </div>
@@ -25,14 +31,17 @@
             </div>
             <div class="form-control">
                 <label class="label">Merchant/Store</label>
-                <input required type="text" name="merchant_store" class="input input-bordered">
+                <input type="text" name="merchant_store" class="input input-bordered">
             </div>
             <div class="form-control">
                 <label class="label">Purchase Category</label>
-                <input required type="text" name="purchase_category" class="input input-bordered">
+                <input type="text" name="purchase_category" class="input input-bordered">
             </div>
             <div class="form-control">
-                <label class="label">Total Price</label>
+                <label class="label justify-start">
+                    Total Price
+                    <span class="required_star">*</span>
+                </label>
                 <input required type="number" name="total_price" class="input input-bordered">
             </div>
             <div class="modal-action">
