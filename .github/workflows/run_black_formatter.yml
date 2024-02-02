@@ -8,6 +8,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Python Black
-        uses: cytopia/docker-black@49d77dfc9811e09dec98474b56acc73b71d3ac1e
+        uses: cytopia/docker-black@latest
         with:
           path: './'
