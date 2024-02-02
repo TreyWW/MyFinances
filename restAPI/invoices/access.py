@@ -16,6 +16,7 @@ from .serializers import InvoiceURLCreatedSerializer
 
 user_response = openapi.Response("URL", InvoiceURLCreatedSerializer)
 
+
 @swagger_auto_schema(
     method="POST",
     responses={200: user_response},
@@ -27,7 +28,9 @@ def create_code(request, invoice_id: Invoice.id):
     try:
         invoice = Invoice.objects.get(id=invoice_id)
     except Invoice.DoesNotExist:
-        return Response({"detail": "Invoice not found"}, status=status.HTTP_404_NOT_FOUND)
+        return Response(
+            {"detail": "Invoice not found"}, status=status.HTTP_404_NOT_FOUND
+        )
 
     if not request.user or request.user != invoice.user:
         return Response({"detail": "Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED)

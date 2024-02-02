@@ -27,7 +27,6 @@ def download_receipt(request, token):
         download_token.delete()
         return HttpResponse("Download has already been used", status=410)
 
-
     # if download_token.is_used():
     #     return HttpResponse("Download link has been used", status=410)  # 410 Gone
     if download_token.user != request.user:

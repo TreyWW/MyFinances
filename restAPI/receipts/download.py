@@ -28,7 +28,9 @@ from .serializers import ReceiptDownloadTokenReturnedSerializer
 # )
 
 user_response_download = openapi.Response("Download a receipt")
-user_response_get_token = openapi.Response("Get a download token", ReceiptDownloadTokenReturnedSerializer)
+user_response_get_token = openapi.Response(
+    "Get a download token", ReceiptDownloadTokenReturnedSerializer
+)
 
 
 @swagger_auto_schema(
@@ -49,15 +51,21 @@ def download_receipt(request, token: ReceiptDownloadToken.token):
     try:
         download_token = ReceiptDownloadToken.objects.get(token=token)
     except ReceiptDownloadToken.DoesNotExist:
-        return Response({"detail": "Download link is invalid"}, status=status.HTTP_404_NOT_FOUND)
+        return Response(
+            {"detail": "Download link is invalid"}, status=status.HTTP_404_NOT_FOUND
+        )
 
     if download_token.delete_at and download_token.delete_in < timezone.now():
         download_token.delete()
-        return Response({"detail": "Download has already been used"}, status=status.HTTP_410_GONE)
+        return Response(
+            {"detail": "Download has already been used"}, status=status.HTTP_410_GONE
+        )
 
     if download_token.expires_at and download_token.expires_at < timezone.now():
         download_token.delete()
-        return Response({"detail": "Download link has expired"}, status=status.HTTP_410_GONE)
+        return Response(
+            {"detail": "Download link has expired"}, status=status.HTTP_410_GONE
+        )
 
     if download_token.user != request.user:
         return Response({"detail": "Forbidden"}, status=status.HTTP_403_FORBIDDEN)
@@ -69,7 +77,7 @@ def download_receipt(request, token: ReceiptDownloadToken.token):
     image_data = receipt.image.read()
 
     response = HttpResponse(image_data, content_type="image/jpeg")
-    response['Content-Disposition'] = f'attachment; filename="{receipt.image.name}"'
+    response["Content-Disposition"] = f'attachment; filename="{receipt.image.name}"'
 
     return response
 
@@ -85,22 +93,26 @@ def get_download_token(request, receipt_id: Receipt.id):
     try:
         receipt = Receipt.objects.get(id=receipt_id, user=request.user)
     except Receipt.DoesNotExist:
-        return Response({"success": False, "message": "Receipt not found"}, status=status.HTTP_404_NOT_FOUND)
+        return Response(
+            {"success": False, "message": "Receipt not found"},
+            status=status.HTTP_404_NOT_FOUND,
+        )
 
     if receipt.user != request.user:
-        return Response({"success": False, "message": "Forbidden"}, status=status.HTTP_403_FORBIDDEN)
+        return Response(
+            {"success": False, "message": "Forbidden"}, status=status.HTTP_403_FORBIDDEN
+        )
 
-    token = ReceiptDownloadToken.objects.create(user=request.user, file=receipt, delete_at=timezone.now() +
-                                                                                           timezone.timedelta(days=1))
+    token = ReceiptDownloadToken.objects.create(
+        user=request.user,
+        file=receipt,
+        delete_at=timezone.now() + timezone.timedelta(days=1),
+    )
     download_link = request.build_absolute_uri(
         reverse("restAPI:receipts:download", args=[token.token])
     )
 
-    response_data = {
-        "success": True,
-        "url": download_link,
-        "token": token.token
-    }
+    response_data = {"success": True, "url": download_link, "token": token.token}
 
     serializer = ReceiptDownloadTokenReturnedSerializer(response_data)
 

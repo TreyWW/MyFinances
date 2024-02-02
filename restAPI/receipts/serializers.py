@@ -54,15 +54,10 @@ class ReceiptReturnedSerializer(serializers.ModelSerializer):
     )
 
 
-
 class ReceiptDownloadTokenReturnedSerializer(serializers.Serializer):
     class Meta:
         model = ReceiptDownloadToken
-        fields = [
-            "success",
-            "token",
-            "url"
-        ]
+        fields = ["success", "token", "url"]
 
     success = serializers.BooleanField(label="Was token generated successfully")
     token = serializers.CharField(label="Receipt download token")

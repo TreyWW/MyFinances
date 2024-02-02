@@ -18,6 +18,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from backend.models import InvoiceURL, UserSettings
+
 # search_param = openapi.Parameter(
 #     "search",
 #     openapi.IN_QUERY,
@@ -44,8 +45,7 @@ def download_invoice(request, invoice_uuid: InvoiceURL.uuid):
             raise ValueError("Invoice UUID isnt a short uuid")
 
         url = (
-            InvoiceURL.objects
-            .select_related("invoice")
+            InvoiceURL.objects.select_related("invoice")
             .prefetch_related("invoice", "invoice__items")
             .get(uuid=invoice_uuid)
         )
@@ -54,12 +54,14 @@ def download_invoice(request, invoice_uuid: InvoiceURL.uuid):
         if not invoice:
             raise InvoiceURL.DoesNotExist
 
-
     except ValueError:
-        return Response({"detail": "Invalid invoice uuid"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            {"detail": "Invalid invoice uuid"}, status=status.HTTP_400_BAD_REQUEST
+        )
     except InvoiceURL.DoesNotExist:
-        return Response({"detail": "Invoice not found"}, status=status.HTTP_404_NOT_FOUND)
-
+        return Response(
+            {"detail": "Invoice not found"}, status=status.HTTP_404_NOT_FOUND
+        )
 
     try:
         if request.user.is_authenticated:
@@ -69,14 +71,15 @@ def download_invoice(request, invoice_uuid: InvoiceURL.uuid):
     except UserSettings.DoesNotExist:
         currency_symbol = "$"
 
-
     invoice_html = render_to_string(
         "pages/invoices/view/invoice.html",
         {"invoice": invoice, "currency_symbol": currency_symbol},
     )
 
     response = HttpResponse(content_type="application/pdf")
-    response['Content-Disposition'] = f'attachment; filename="Invoice #{invoice.id}.pdf"'
+    response["Content-Disposition"] = (
+        f'attachment; filename="Invoice #{invoice.id}.pdf"'
+    )
     # print(invoice_html)
 
     pisa.CreatePDF(invoice_html, dest=response)

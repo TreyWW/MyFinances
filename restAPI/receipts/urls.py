@@ -8,16 +8,12 @@ urlpatterns = [
         fetch.fetch_all_receipts,
         name="fetch",
     ),
+    path("download/<str:token>/", download.download_receipt, name="download"),
     path(
-        "download/<str:token>/",
-        download.download_receipt,
-        name="download"
+        "get_download_token/<int:receipt_id>/",
+        download.get_download_token,
+        name="get_download_token",
     ),
-    path(
-      "get_download_token/<int:receipt_id>/",
-      download.get_download_token,
-      name="get_download_token"
-    )
 ]
 
 app_name = "receipts"
