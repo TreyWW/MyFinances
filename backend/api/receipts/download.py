@@ -23,7 +23,7 @@ def download_receipt(request, token):
     except ReceiptDownloadToken.DoesNotExist:
         return HttpResponse("Download link is invalid", status=404)
 
-    if download_token.delete_in and download_token.delete_in < timezone.now():
+    if download_token.delete_at and download_token.delete_in < timezone.now():
         download_token.delete()
         return HttpResponse("Download has already been used", status=410)
 
