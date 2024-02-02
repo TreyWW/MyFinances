@@ -3,7 +3,7 @@ on: [push, pull_request]
 
 jobs:
   python-black:
-    name: Python Black
+    name: Run python Black
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
