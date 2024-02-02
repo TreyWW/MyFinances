@@ -16,6 +16,7 @@ tblib = "^3.0.0"
 forex-python = "^1.8"
 djangorestframework = "^3.14.0"
 drf-yasg = { extras = ["validation"], version = "^1.21.7" }
+xhtml2pdf = "^0.2.14"
 
 [tool.poetry.group.django.dependencies]
 Django = "^5.0.1"
