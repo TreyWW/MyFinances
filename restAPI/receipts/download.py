@@ -55,7 +55,7 @@ def download_receipt(request, token: ReceiptDownloadToken.token):
             {"detail": "Download link is invalid"}, status=status.HTTP_404_NOT_FOUND
         )
 
-    if download_token.delete_at and download_token.delete_in < timezone.now():
+    if download_token.delete_at and download_token.delete_at < timezone.now():
         download_token.delete()
         return Response(
             {"detail": "Download has already been used"}, status=status.HTTP_410_GONE

@@ -122,7 +122,9 @@ class ReceiptDownloadEndpointsTest(ViewTestCase):
         response = self.client.get(
             self.download_receipt_url
         )  # Try to use the token again
-        self.assertEqual(response.status_code, 404)  # Expect a 404 response
+        # print(response.content)
+        self.assertEqual(response.status_code, 410)  # Expect a 410 "already used"
+        self.assertEqual(response.content, b"Download has already been used")
 
     def test_generate_download_link_valid_receipt(self):
         self.login_user()
