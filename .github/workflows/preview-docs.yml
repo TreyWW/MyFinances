@@ -1,4 +1,4 @@
-name: Deploy PR previews
+name: Deploy Documentation preview for PRs
 
 on:
   pull_request:
