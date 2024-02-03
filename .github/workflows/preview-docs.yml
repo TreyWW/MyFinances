@@ -19,7 +19,7 @@ jobs:
 
       - name: Install and Build
         if: github.event.action != 'closed' # Skip the build if the PR has been closed
-        run: npm i && npm run build
+        run: npm i
 
       - name: Deploy preview
         uses: rossjrw/pr-preview-action@v1
