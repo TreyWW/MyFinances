@@ -43,6 +43,11 @@ optional = true
 mysqlclient = "2.2.0"
 mariadb = "1.1.8"
 
+[tool.poetry.group.postgres]
+optional = true
+
+[tool.poetry.group.postgres.dependencies]
+psycopg2 = "2.9.9"
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.1.1"
