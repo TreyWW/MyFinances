@@ -25,4 +25,15 @@ jobs:
         uses: rossjrw/pr-preview-action@v1
         with:
           source-dir: ./docs/
+          umbrella-dir: docs/pr-preview
           preview-branch: gh-pages
+          action: deploy
+
+      - name: Delete preview
+        uses: rossjrw/pr-preview-action@v1
+        if: github.event.action == "closed" && !github.event.pull_request.merged
+        with:
+          source-dir: ./docs/
+          umbrella-dir: docs/pr-preview
+          preview-branch: gh-pages
+          action: remove
