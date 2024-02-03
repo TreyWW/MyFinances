@@ -25,6 +25,6 @@ jobs:
         uses: rossjrw/pr-preview-action@v1
         with:
           source-dir: ./docs/
-          umbrella-dir: docs/pr-preview
-          preview-branch: gh-pages
-          action: deploy
+          umbrella-dir: pr-preview
+          preview-branch: main
+          action: auto
