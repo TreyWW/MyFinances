@@ -21,7 +21,7 @@
             </div>
         </td>
         <td>
-            £{{ invoice.get_total_price | floatformat:2 | intcomma }}
+            £{{ invoice.amount | floatformat:2 | intcomma }}
         </td>
         <td>
         <span class="badge badge-outline rounded p-3

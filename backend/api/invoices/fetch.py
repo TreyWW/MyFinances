@@ -1,8 +1,18 @@
-from django.db.models import Q, Case, When, F, FloatField, ExpressionWrapper
+from django.db.models import (
+    Q,
+    Case,
+    When,
+    F,
+    FloatField,
+    ExpressionWrapper,
+    CharField,
+    Value,
+)
 from django.http import HttpRequest
 from django.shortcuts import render, redirect
-from django.views.decorators.http import require_http_methods
 from django.utils import timezone
+from django.views.decorators.http import require_http_methods
+
 from backend.models import Invoice
 
 
@@ -42,7 +52,10 @@ def fetch_all_invoices(request: HttpRequest):
     invoices = (
         Invoice.objects.filter(user=request.user)
         .prefetch_related("items")
-        .only("invoice_id", "id", "payment_status", "date_due")
+        .select_related("client_to")
+        .only(
+            "invoice_id", "id", "payment_status", "date_due", "client_to", "client_name"
+        )
         .annotate(
             subtotal=ExpressionWrapper(
                 F("items__hours") * F("items__price_per_hour"),
@@ -96,17 +109,22 @@ def fetch_all_invoices(request: HttpRequest):
         or_conditions &= or_conditions_filter
 
     # check/update payment status to make sure it is correct before invoices are filtered and displayed
-    for items in invoices:
-        if (
-            items.date_due and timezone.now().date() > items.date_due
-        ) and items.payment_status == "pending":
-            items.payment_status = "overdue"
-            items.save()
-        if (
-            items.date_due and timezone.now().date() < items.date_due
-        ) and items.payment_status == "overdue":
-            items.payment_status = "pending"
-            items.save()
+    invoices.update(
+        payment_status=Case(
+            When(
+                date_due__lt=timezone.now().date(),
+                payment_status="pending",
+                then=Value("overdue"),
+            ),
+            When(
+                date_due__gt=timezone.now().date(),
+                payment_status="overdue",
+                then=Value("pending"),
+            ),
+            default=F("payment_status"),
+            output_field=CharField(),
+        )
+    )
 
     # Apply OR conditions to the invoices queryset
     invoices = invoices.filter(or_conditions)
