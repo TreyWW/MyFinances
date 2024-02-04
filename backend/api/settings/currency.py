@@ -14,7 +14,7 @@ def update_currency_view(request):
     except UserSettings.DoesNotExist:
         usersettings = UserSettings.objects.create(user=request.user)
 
-    htmx_return = "partials/base/toasts.html"
+    htmx_return = "base/toasts.html"
 
     if not request.htmx and not currency:
         return HttpResponse("Invalid Request", status=400)

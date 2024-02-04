@@ -1,10 +1,11 @@
+from datetime import datetime
+
 from django.contrib import messages
-from django.http import HttpRequest, JsonResponse, QueryDict
+from django.http import HttpRequest, JsonResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
 from backend.models import Invoice
-from datetime import datetime
 
 
 @require_http_methods(["POST"])
@@ -45,6 +46,6 @@ def edit_invoice(request: HttpRequest):
 
     if request.htmx:
         messages.success(request, "Invoice edited")
-        return render(request, "partials/base/toasts.html")
+        return render(request, "base/toasts.html")
 
     return JsonResponse({"message": "Invoice successfully edited"}, status=200)

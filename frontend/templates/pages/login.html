@@ -7,7 +7,7 @@
 <body>
 <div class="flex min-h-screen items-center">
     <form method="post" novalidate class="mx-auto flex w-full max-w-lg flex-col rounded-xl border p-4 group border-border bg-backgroundSecondary sm:p-20">
-        {% include 'partials/base/toasts.html' %}
+        {% include 'base/toasts.html' %}
 
         {% csrf_token %}
         <input type="hidden" name="next" value="{{ request.GET.next }}"/>

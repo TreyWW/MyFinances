@@ -24,6 +24,6 @@ def delete_invoice(request: HttpRequest):
 
     if request.htmx:
         messages.success(request, "Invoice deleted")
-        return render(request, "partials/base/toasts.html")
+        return render(request, "base/toasts.html")
 
     return JsonResponse({"message": "Invoice successfully deleted"}, status=200)
