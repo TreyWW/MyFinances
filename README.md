@@ -128,6 +128,7 @@ Thank you for your contributions!
 
 ##### View a full list <a href="https://github.com/TreyWW/MyFinances/graphs/contributors">here</a>
 
+<!-- CONTRIBUTORS TABLE START -->
 <table>
   <tr>
      <td align="center">
@@ -291,6 +292,7 @@ Thank you for your contributions!
        </td>
 </tr>
 </table>
+<!-- CONTRIBUTORS TABLE END -->
 
 ---
 __Note:__ This README.md is a living document and might be updated over time. Always refer to the latest version when contributing
