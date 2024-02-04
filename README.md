@@ -202,7 +202,7 @@ Thank you for your contributions!
             <br />
             <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Aflyingdev" title="Added Tests">🧪</a>
         </td>
-        </td><td>
+        </td></tr><tr><td>
         <td align="center">
             <a href="https://github.com/chavi362">
                 <img src="https://github.com/chavi362.png" width="100px;" alt="" />
@@ -226,7 +226,7 @@ Thank you for your contributions!
             <br />
             <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Abermr" title="Added Tests">🧪</a>
         </td>
-        </td></tr><tr><td>
+        </td><td>
         <td align="center">
             <a href="https://github.com/PhilipZara">
                 <img src="https://github.com/PhilipZara.png" width="100px;" alt="" />
@@ -274,7 +274,7 @@ Thank you for your contributions!
             <br />
             <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3ANuovaxu" title="Backend">🖥</a>
         </td>
-        </td><td>
+        </td></tr><tr><td>
         <td align="center">
             <a href="https://github.com/HessTaha">
                 <img src="https://github.com/HessTaha.png" width="100px;" alt="" />

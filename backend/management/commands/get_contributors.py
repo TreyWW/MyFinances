@@ -100,8 +100,9 @@ class Command(BaseCommand):
 
         # Generate HTML for contributors
         contributors_html = ""
+        users_per_row = 6
         for index, contributor in enumerate(contributors_data, start=1):
-            if (index - 1) % 8 == 0 and index > 1:
+            if (index - 1) % users_per_row == 0 and index > 1:
                 contributors_html += "</tr><tr>"
             contributors_html += f"<td>{generate_contributor_html(contributor)}</td>"
 
