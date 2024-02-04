@@ -1,13 +1,10 @@
-name: Code Formatter
+name: Black Formatter
+
 on: [push, pull_request]
 
 jobs:
-  python-black:
-    name: Run python Black
+  lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Python Black
-        uses: cytopia/docker-black@0.11
-        with:
-          path: './'
+      - uses: psf/black@stable
