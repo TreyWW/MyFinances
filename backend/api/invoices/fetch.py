@@ -7,13 +7,15 @@ from django.db.models import (
     ExpressionWrapper,
     CharField,
     Value,
+    Sum,
+    Prefetch,
 )
 from django.http import HttpRequest
 from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods
 
-from backend.models import Invoice
+from backend.models import Invoice, InvoiceItem
 
 
 @require_http_methods(["GET"])
@@ -51,22 +53,30 @@ def fetch_all_invoices(request: HttpRequest):
     # Fetch invoices for the user, prefetch related items, and select specific fields
     invoices = (
         Invoice.objects.filter(user=request.user)
-        .prefetch_related("items")
-        .select_related("client_to")
+        .prefetch_related(
+            Prefetch(
+                "items",
+                queryset=InvoiceItem.objects.annotate(
+                    subtotal=ExpressionWrapper(
+                        F("hours") * F("price_per_hour"),
+                        output_field=FloatField(),
+                    ),
+                ),
+            ),
+        )
+        .select_related("client_to", "client_to__user")
         .only(
             "invoice_id", "id", "payment_status", "date_due", "client_to", "client_name"
         )
         .annotate(
-            subtotal=ExpressionWrapper(
-                F("items__hours") * F("items__price_per_hour"),
-                output_field=FloatField(),
-            ),
+            subtotal=Sum(F("items__hours") * F("items__price_per_hour")),
             amount=Case(
                 When(vat_number=True, then=F("subtotal") * 1.2),
                 default=F("subtotal"),
                 output_field=FloatField(),
             ),
         )
+        .distinct()  # just an extra precaution
     )
 
     # Initialize context variables
