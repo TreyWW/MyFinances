@@ -20,6 +20,8 @@ class CustomUserManager(UserManager):
 class User(AbstractUser):
     objects = CustomUserManager()
 
+    logged_in_as_team = models.ForeignKey("Team", on_delete=models.SET_NULL, null=True)
+
 
 def RandomCode(length=6):
     return get_random_string(length=length).upper()
