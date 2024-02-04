@@ -130,169 +130,198 @@ Thank you for your contributions!
 
 <!-- CONTRIBUTORS TABLE START -->
 <table>
-  <tr>
-     <td align="center">
-       <a href="https://github.com/TreyWW">
-          <img src="https://github.com/TreyWW.png" width="100px;" alt=""/>
-          <br />
-          <sub>
-             <b>
-                Trey
-             </b>
-          </sub>
-       </a>
-       <br />
-       <a href="https://github.com/TreyWW/MyFinances/pulls?q=user%3ATreyWW" title="Project Lead">👑</a>
-       <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3ATreyWW" title="Backend">🖥</a>
-    </td>
-      <td align="center">
-           <a href="https://github.com/Z3nKrypt">
-               <img src="https://github.com/Z3nKrypt.png" width="100px;" alt=""/>
-               <br/>
-               <sub>
-                   <b>
-                       Jacob
-                   </b>
-               </sub>
-           </a>
-           <br/>
-           <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3AZ3nKrypt" title="Documentation">📖</a>
-       </td>
-    <td align="center">
-       <a href="https://github.com/tomkinane">
-          <img src="https://github.com/tomkinane.png" width="100px;" alt=""/>
-          <br />
-          <sub>
-             <b>
-                Tom
-             </b>
-          </sub>
-       </a>
-       <br />
-       <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Atomkinane" title="Frontend">🎨</a>
-    </td>
-       <td align="center">
-           <a href="https://github.com/romana-la">
-               <img src="https://github.com/romana-la.png" width="100px;" alt=""/>
-               <br/>
-               <sub>
-                   <b>
-                       romana-la
-                   </b>
-               </sub>
-           </a>
-           <br/>
-           <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Aromana-la" title="Documentation">📖</a>
-       </td>
+<tr><td>
         <td align="center">
-           <a href="https://github.com/flyingdev">
-               <img src="https://github.com/flyingdev.png" width="100px;" alt=""/>
-               <br/>
-               <sub>
-                   <b>
-                       flyingdev
-                   </b>
-               </sub>
-           </a>
-           <br/>
-           <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Aflyingdev" title="Added Tests">🧪</a>
-       </td>
-       <td align="center">
-           <a href="https://github.com/chavi362">
-               <img src="https://github.com/chavi362.png" width="100px;" alt=""/>
-               <br/>
-               <sub>
-                   <b>
-                       chavi362
-                   </b>
-               </sub>
-           </a>
-           <br/>
-           <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Achavi362" title="Documentation">📖</a>
-       </td>
-       <td align="center">
-           <a href="https://github.com/bermr">
-               <img src="https://github.com/bermr.png" width="100px;" alt=""/>
-               <br/>
-               <sub>
-                   <b>
-                       bermr
-                   </b>
-               </sub>
-           </a>
-           <br/>
-           <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3APhilipZara" title="Added Tests">🧪</a>
-       </td>
-             <td align="center">
-           <a href="https://github.com/PhilipZara">
-               <img src="https://github.com/PhilipZara.png" width="100px;" alt=""/>
-               <br/>
-               <sub>
-                   <b>
-                       PhilipZara
-                   </b>
-               </sub>
-           </a>
-           <br/>
-           <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3APhilipZara" title="Frontend">🎨</a>
-       </td>
-  </tr>
-<tr>
-<td align="center">
-           <a href="https://github.com/Tianrui-Luo">
-               <img src="https://github.com/Tianrui-Luo.png" width="100px;" alt=""/>
-               <br/>
-               <sub>
-                   <b>
-                       Tianrui-Luo
-                   </b>
-               </sub>
-           </a>
-           <br/>
-           <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3ATianrui-Luo" title="Backend">🖥</a>
-       </td>
-<td align="center">
-           <a href="https://github.com/SharonAliyas5573">
-               <img src="https://github.com/SharonAliyas5573.png" width="100px;" alt=""/>
-               <br/>
-               <sub>
-                   <b>
-                       SharonAliyas5573
-                   </b>
-               </sub>
-           </a>
-           <br/>
-           <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3ASharonAliyas5573" title="Backend">🖥</a>
-       </td>
-   <td align="center">
-           <a href="https://github.com/Nuovaxu">
-               <img src="https://github.com/Nuovaxu.png" width="100px;" alt=""/>
-               <br/>
-               <sub>
-                   <b>
-                       Nuovaxu
-                   </b>
-               </sub>
-           </a>
-           <br/>
-           <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3ANuovaxu" title="Frontend">🎨</a>
-       </td>
-<td align="center">
-           <a href="https://github.com/HessTaha">
-               <img src="https://github.com/HessTaha.png" width="100px;" alt=""/>
-               <br/>
-               <sub>
-                   <b>
-                       HessTaha
-                   </b>
-               </sub>
-           </a>
-           <br/>
-           <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3AHessTaha" title="Docker">🐳</a>
-       </td>
-</tr>
-</table>
+            <a href="https://github.com/TreyWW">
+                <img src="https://github.com/TreyWW.png" width="100px;" alt="" />
+                <br />
+                <sub>
+                    <b>Trey</b>
+                </sub>
+            </a>
+            <br />
+            <a href="https://github.com/TreyWW/MyFinances/pulls?q=user%3ATreyWW" title="Project Lead">👑</a><a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3ATreyWW" title="Backend">🖥</a>
+        </td>
+        </td><td>
+        <td align="center">
+            <a href="https://github.com/Z3nKrypt">
+                <img src="https://github.com/Z3nKrypt.png" width="100px;" alt="" />
+                <br />
+                <sub>
+                    <b>Jacob</b>
+                </sub>
+            </a>
+            <br />
+            <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3AZ3nKrypt" title="Documentation">📖</a>
+        </td>
+        </td><td>
+        <td align="center">
+            <a href="https://github.com/tomkinane">
+                <img src="https://github.com/tomkinane.png" width="100px;" alt="" />
+                <br />
+                <sub>
+                    <b>Tom</b>
+                </sub>
+            </a>
+            <br />
+            <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Atomkinane" title="Frontend">🎨</a>
+        </td>
+        </td><td>
+        <td align="center">
+            <a href="https://github.com/SharonAliyas5573">
+                <img src="https://github.com/SharonAliyas5573.png" width="100px;" alt="" />
+                <br />
+                <sub>
+                    <b>SharonAliyas5573</b>
+                </sub>
+            </a>
+            <br />
+            <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3ASharonAliyas5573" title="Backend">🖥</a>
+        </td>
+        </td><td>
+        <td align="center">
+            <a href="https://github.com/romana-la">
+                <img src="https://github.com/romana-la.png" width="100px;" alt="" />
+                <br />
+                <sub>
+                    <b>romana-la</b>
+                </sub>
+            </a>
+            <br />
+            <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Aromana-la" title="Documentation">📖</a>
+        </td>
+        </td><td>
+        <td align="center">
+            <a href="https://github.com/flyingdev">
+                <img src="https://github.com/flyingdev.png" width="100px;" alt="" />
+                <br />
+                <sub>
+                    <b>flyingdev</b>
+                </sub>
+            </a>
+            <br />
+            <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Aflyingdev" title="Added Tests">🧪</a>
+        </td>
+        </td><td>
+        <td align="center">
+            <a href="https://github.com/chavi362">
+                <img src="https://github.com/chavi362.png" width="100px;" alt="" />
+                <br />
+                <sub>
+                    <b>chavi362</b>
+                </sub>
+            </a>
+            <br />
+            <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Achavi362" title="Documentation">📖</a>
+        </td>
+        </td><td>
+        <td align="center">
+            <a href="https://github.com/bermr">
+                <img src="https://github.com/bermr.png" width="100px;" alt="" />
+                <br />
+                <sub>
+                    <b>bermr</b>
+                </sub>
+            </a>
+            <br />
+            <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Abermr" title="Added Tests">🧪</a>
+        </td>
+        </td></tr><tr><td>
+        <td align="center">
+            <a href="https://github.com/PhilipZara">
+                <img src="https://github.com/PhilipZara.png" width="100px;" alt="" />
+                <br />
+                <sub>
+                    <b>PhilipZara</b>
+                </sub>
+            </a>
+            <br />
+            <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3APhilipZara" title="Frontend">🎨</a>
+        </td>
+        </td><td>
+        <td align="center">
+            <a href="https://github.com/Tianrui-Luo">
+                <img src="https://github.com/Tianrui-Luo.png" width="100px;" alt="" />
+                <br />
+                <sub>
+                    <b>Tianrui-Luo</b>
+                </sub>
+            </a>
+            <br />
+            <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3ATianrui-Luo" title="Backend">🖥</a>
+        </td>
+        </td><td>
+        <td align="center">
+            <a href="https://github.com/HarryHuCodes">
+                <img src="https://github.com/HarryHuCodes.png" width="100px;" alt="" />
+                <br />
+                <sub>
+                    <b>HarryHuCodes</b>
+                </sub>
+            </a>
+            <br />
+            <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3AHarryHuCodes" title="Backend">🖥</a>
+        </td>
+        </td><td>
+        <td align="center">
+            <a href="https://github.com/Nuovaxu">
+                <img src="https://github.com/Nuovaxu.png" width="100px;" alt="" />
+                <br />
+                <sub>
+                    <b>Nuova</b>
+                </sub>
+            </a>
+            <br />
+            <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3ANuovaxu" title="Backend">🖥</a>
+        </td>
+        </td><td>
+        <td align="center">
+            <a href="https://github.com/HessTaha">
+                <img src="https://github.com/HessTaha.png" width="100px;" alt="" />
+                <br />
+                <sub>
+                    <b>HessTaha</b>
+                </sub>
+            </a>
+            <br />
+            <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3AHessTaha" title="Docker">🐳</a>
+        </td>
+        </td><td>
+        <td align="center">
+            <a href="https://github.com/wnm210">
+                <img src="https://github.com/wnm210.png" width="100px;" alt="" />
+                <br />
+                <sub>
+                    <b>wnm210</b>
+                </sub>
+            </a>
+            <br />
+            <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Awnm210" title="Frontend">🎨</a>
+        </td>
+        </td><td>
+        <td align="center">
+            <a href="https://github.com/matthewjuarez1">
+                <img src="https://github.com/matthewjuarez1.png" width="100px;" alt="" />
+                <br />
+                <sub>
+                    <b>Matt</b>
+                </sub>
+            </a>
+            <br />
+            <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Amatthewjuarez1" title="Backend">🖥</a><a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Amatthewjuarez1" title="Frontend">🎨</a>
+        </td>
+        </td></tr></table>
 <!-- CONTRIBUTORS TABLE END -->
+
+If any information is incorrect above, or you would like anything removed, feel free to open an issue, email our team, or
+manually edit with the details below.
+
+### How to edit the contributors table?
+
+- Updated any info in `backend/management/commands/contributors.json`
+- Run `py manage.py get_contributors`
+- Make a PR to request these changes in
+- Done :)
 
 ---
 __Note:__ This README.md is a living document and might be updated over time. Always refer to the latest version when contributing

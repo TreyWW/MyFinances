@@ -1,0 +1,124 @@
+[
+  {
+    "name": "Trey",
+    "username": "TreyWW",
+    "role": "Project Lead",
+    "tags": [
+      "👑",
+      "🖥"
+    ]
+  },
+  {
+    "name": "Jacob",
+    "username": "Z3nKrypt",
+    "role": "Documentation",
+    "tags": [
+      "📖"
+    ]
+  },
+  {
+    "name": "Tom",
+    "username": "tomkinane",
+    "role": "Frontend",
+    "tags": [
+      "🎨"
+    ]
+  },
+  {
+    "name": "SharonAliyas5573",
+    "username": "SharonAliyas5573",
+    "role": "Backend",
+    "tags": [
+      "🖥"
+    ]
+  },
+  {
+    "name": "romana-la",
+    "username": "romana-la",
+    "role": "Documentation",
+    "tags": [
+      "📖"
+    ]
+  },
+  {
+    "name": "flyingdev",
+    "username": "flyingdev",
+    "role": "Added Tests",
+    "tags": [
+      "🧪"
+    ]
+  },
+  {
+    "name": "chavi362",
+    "username": "chavi362",
+    "role": "Documentation",
+    "tags": [
+      "📖"
+    ]
+  },
+  {
+    "name": "bermr",
+    "username": "bermr",
+    "role": "Added Tests",
+    "tags": [
+      "🧪"
+    ]
+  },
+  {
+    "name": "PhilipZara",
+    "username": "PhilipZara",
+    "role": "Frontend",
+    "tags": [
+      "🎨"
+    ]
+  },
+  {
+    "name": "Tianrui-Luo",
+    "username": "Tianrui-Luo",
+    "role": "Backend",
+    "tags": [
+      "🖥"
+    ]
+  },
+  {
+    "name": "HarryHuCodes",
+    "username": "HarryHuCodes",
+    "role": "Backend",
+    "tags": [
+      "🖥"
+    ]
+  },
+  {
+    "name": "Nuova",
+    "username": "Nuovaxu",
+    "role": "Backend",
+    "tags": [
+      "🖥"
+    ]
+  },
+  {
+    "name": "HessTaha",
+    "username": "HessTaha",
+    "role": "Docker",
+    "tags": [
+      "🐳"
+    ]
+  },
+  {
+    "name": "wnm210",
+    "username": "wnm210",
+    "role": "Frontend",
+    "tags": [
+      "🎨"
+    ]
+  },
+  {
+    "name": "Matt",
+    "username": "matthewjuarez1",
+    "role": "Full Stack",
+    "tags": [
+      "🖥",
+      "🎨"
+    ]
+  }
+]
