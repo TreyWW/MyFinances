@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User, UserManager, AbstractUser
 from django.core.mail import EmailMessage
 from django.db import models
+from django.db.models import Aggregate
 from django.utils import timezone
 from django.utils.crypto import get_random_string
 from shortuuid.django_fields import ShortUUIDField
@@ -12,9 +13,19 @@ from shortuuid.django_fields import ShortUUIDField
 from settings import settings
 
 
+class GroupConcat(Aggregate):
+    function = "GROUP_CONCAT"
+    template = "%(function)s(%(distinct)s%(expressions)s)"
+
+
 class CustomUserManager(UserManager):
     def get_queryset(self):
-        return super().get_queryset().select_related("user_profile")
+        return (
+            super()
+            .get_queryset()
+            .select_related("user_profile", "logged_in_as_team")
+            .prefetch_related("teams_leader_of")
+        )
 
 
 class User(AbstractUser):
@@ -69,7 +80,9 @@ class UserSettings(models.Model):
 
 class Team(models.Model):
     name = models.CharField(max_length=100)
-    leader = models.ForeignKey(User, on_delete=models.CASCADE)
+    leader = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="teams_leader_of"
+    )
     members = models.ManyToManyField(User, related_name="teams_joined")
 
 

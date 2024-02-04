@@ -91,12 +91,16 @@
                         {% endif %}
                     </summary>
                     <ul class="menu menu-sm dropdown-content border border-primary">
-                        <li>
-                            <a>Org 1</a>
-                        </li>
-                        <li>
-                            <a>Org 2</a>
-                        </li>
+                        {% for team in request.user.teams_joined.all %}
+                            <li>
+                                <a>{{ team.name }}</a>
+                            </li>
+                        {% endfor %}
+                        {% for team in request.user.teams_leader_of.all %}
+                            <li>
+                                <a>{{ team.name | title }}</a>
+                            </li>
+                        {% endfor %}
                     </ul>
                 </details>
                 <div class="divider mt-0 mb-0"></div>
