@@ -78,7 +78,28 @@
                 {% component "profile_picture" image_type="small" extra_classes="max-w-12 max-h-12 w-12 h-12 avatar-img-ring" url=request.user.user_profile.profile_picture_url %}
                 {#                    </div>#}
             </label>
+
             <ul tabindex="0" class="menu menu-sm dropdown-content border border-primary">
+                <details class="dropdown dropdown-left flex flex-col">
+                    <summary class="btn block text-left p-2 max-h-full h-full">
+                        {% if request.user.logged_in_as_team %}
+                            <h2 class="text-xl mb-1">Organization</h2>
+                            <h2 class="text-md">Logged in for <strong>{{ request.user.logged_in_as_team.name }}</strong></h2>
+                        {% else %}
+                            <h2 class="text-xl mb-1">Personal</h2>
+                            <h2 class="text-md">Logged in as <strong>{{ request.user.first_name }}</strong></h2>
+                        {% endif %}
+                    </summary>
+                    <ul class="menu menu-sm dropdown-content border border-primary">
+                        <li>
+                            <a>Org 1</a>
+                        </li>
+                        <li>
+                            <a>Org 2</a>
+                        </li>
+                    </ul>
+                </details>
+                <div class="divider mt-0 mb-0"></div>
                 <li>
                     <a {% if request.resolver_match.url_name == "user settings" %}class="active"{% endif %}
                        href="{% url 'user settings' %}">
@@ -87,7 +108,7 @@
                     </a>
                 </li>
                 <li>
-                    <a class="justify-between {% if request.resolver_match.url_name == "user settings teams" %}active{% endif %}"
+                    <a class="{% if request.resolver_match.url_name == "user settings teams" %}active{% endif %}"
                        href=
                                "{% url "user settings teams" %}">
                         <i class="fa fa-solid fa-users"></i>
