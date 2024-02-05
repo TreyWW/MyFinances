@@ -19,7 +19,7 @@ def fetch_all_receipts(request: HttpRequest):
         results = results.filter(user=request.user)
 
     if search_text:
-        (
+        results = (
             results.filter(
                 Q(name__icontains=search_text) | Q(date__icontains=search_text)
             ).order_by("-date")

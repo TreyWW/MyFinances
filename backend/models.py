@@ -23,11 +23,6 @@ def USER_OR_ORGANIZATION_CONSTRAINT():
     )
 
 
-class GroupConcat(Aggregate):
-    function = "GROUP_CONCAT"
-    template = "%(function)s(%(distinct)s%(expressions)s)"
-
-
 class CustomUserManager(UserManager):
     def get_queryset(self):
         return (
@@ -164,7 +159,8 @@ class ReceiptDownloadToken(models.Model):
 
 
 class Client(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    organization = models.ForeignKey(Team, on_delete=models.CASCADE, null=True)
     active = models.BooleanField(default=True)
 
     name = models.CharField(max_length=64)
@@ -177,7 +173,8 @@ class Client(models.Model):
     city = models.CharField(max_length=100, blank=True, null=True)
     country = models.CharField(max_length=100, blank=True, null=True)
 
-    # team = models.ForeignKey(Team,  on_delete=models.BLANK, blank=True, null=True)
+    class Meta:
+        constraints = [USER_OR_ORGANIZATION_CONSTRAINT()]
 
     def __str__(self):
         return self.name
@@ -220,7 +217,8 @@ class Invoice(models.Model):
         ("overdue", "Overdue"),
     )
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    organization = models.ForeignKey(Team, on_delete=models.CASCADE, null=True)
     invoice_id = models.IntegerField(unique=True, blank=True, null=True)  # todo: add
 
     client_to = models.ForeignKey(
@@ -259,6 +257,9 @@ class Invoice(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     date_due = models.DateField()
     date_issued = models.DateField(blank=True, null=True)
+
+    class Meta:
+        constraints = [USER_OR_ORGANIZATION_CONSTRAINT()]
 
     @property
     def dynamic_payment_status(self):
@@ -371,8 +372,11 @@ class Notification(models.Model):
 
 class AuditLog(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    organization = models.ForeignKey(
+      Team, on_delete=models.SET_NULL, null=True
+    )
     action = models.CharField(max_length=100)
-    date = models.DateTimeField(auto_now_add=True)  #
+    date = models.DateTimeField(auto_now_add=True)
 
 
 class LoginLog(models.Model):
