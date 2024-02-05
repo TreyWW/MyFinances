@@ -87,31 +87,27 @@
             <ul tabindex="0"
                 class="menu menu-sm dropdown-content border border-primary">
                 <details class="dropdown dropdown-left flex flex-col">
-                    <summary class="btn block text-left p-2 max-h-full h-full">
-                        {% if request.user.logged_in_as_team %}
-                            <h2 class="text-xl mb-1">Organization</h2>
-                            <h2 class="text-md">
-                                Logged in for <strong>{{ request.user.logged_in_as_team.name }}</strong>
-                            </h2>
-                        {% else %}
-                            <h2 class="text-xl mb-1">Personal</h2>
-                            <h2 class="text-md">
-                                Logged in as <strong>{{ request.user.first_name }}</strong>
-                            </h2>
-                        {% endif %}
+                    <summary class="btn block text-left p-2 max-h-full h-full" data-htmx-swap="logged_in_for">
+                        {% component "components:logged_in_for" %}
                     </summary>
-                    <ul class="menu menu-sm dropdown-content border border-primary">
-                        {% for team in request.user.teams_joined.all %}
-                            <li>
-                                <a>{{ team.name }}</a>
-                            </li>
-                        {% endfor %}
-                        {% for team in request.user.teams_leader_of.all %}
-                            <li>
-                                <a>{{ team.name | title }}</a>
-                            </li>
-                        {% endfor %}
-                    </ul>
+                    {% if request.user.in_team %}
+                        <ul class="menu menu-sm dropdown-content border border-primary">
+                            {% for team in request.user.teams_joined.all %}
+                                <li>
+                                    <a hx-post="{% url "api:teams:switch_team" team_id=team.id %}" hx-swap="none">
+                                        {{ team.name | title }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                            {% for team in request.user.teams_leader_of.all %}
+                                <li>
+                                    <a hx-post="{% url "api:teams:switch_team" team_id=team.id %}" hx-swap="none">
+                                        {{ team.name | title }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
                 </details>
                 <div class="divider mt-0 mb-0"></div>
                 <li>

@@ -6,7 +6,7 @@ from django.http import HttpRequest
 from django.urls import reverse
 
 from .models import *
-from .utils import Toast, Modals, load_navbar_items
+from .utils import Toast, Modals
 
 Modals = Modals()
 
@@ -15,15 +15,15 @@ Modals = Modals()
 def navbar(request):
     cached_navbar_items = cache.get("navbar_items")
 
-    if cached_navbar_items is None:
-        navbar_items = load_navbar_items()
-
-        # Cache the sidebar items for a certain time (e.g., 3600 seconds = 1 hr)
-        cache.set("navbar_items", navbar_items, 60 * 60 * 3)  # 3 hrs
-    else:
-        navbar_items = cached_navbar_items
-    context = {"navbar_items": navbar_items}
-    return context
+    # if cached_navbar_items is None:
+    #     navbar_items = load_navbar_items()
+    #
+    #     # Cache the sidebar items for a certain time (e.g., 3600 seconds = 1 hr)
+    #     cache.set("navbar_items", navbar_items, 60 * 60 * 3)  # 3 hrs
+    # else:
+    #     navbar_items = cached_navbar_items
+    # context = {"navbar_items": navbar_items}
+    return {}
 
 
 def extras(request: HttpRequest):

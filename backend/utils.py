@@ -4,16 +4,16 @@ import os, json
 from backend.models import TeamInvitation
 
 
-def load_navbar_items():
-    json_file_path = os.path.join(
-        os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-        "frontend/templates/partials/base/navbar/items.json",
-    )
-
-    with open(json_file_path) as json_file:
-        navbar_items = json.load(json_file)
-
-    return navbar_items
+# def load_navbar_items():
+#     json_file_path = os.path.join(
+#         os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+#         "frontend/templates/partials/base/navbar/items.json",
+#     )
+#
+#     with open(json_file_path) as json_file:
+#         navbar_items = json.load(json_file)
+#
+#     return navbar_items
 
 
 class Toast:
