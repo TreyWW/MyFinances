@@ -48,7 +48,10 @@ def generate_download_link(request, receipt_id):
         JsonResponse: A JSON response containing the unique,onetime download link and filename.
     """
     try:
-        receipt = Receipt.objects.get(id=receipt_id, user=request.user)
+        if request.user.logged_in_as_team:
+            receipt = Receipt.objects.get(id=receipt_id, user=request.user)
+        else:
+            receipt = Receipt.objects.get(id=receipt_id, organization=request.user.logged_in_as_team)
     except Receipt.DoesNotExist:
         return HttpResponse("Receipt not found", status=404)
     token = ReceiptDownloadToken.objects.create(user=request.user, file=receipt)

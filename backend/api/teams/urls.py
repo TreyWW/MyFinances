@@ -11,7 +11,7 @@ urlpatterns = [
         "switch_team/<int:team_id>/",
         switch_team.switch_team,
         name="switch_team",
-    )
+    ),
 ]
 
 app_name = "teams"

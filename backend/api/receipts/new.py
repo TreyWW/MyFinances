@@ -38,8 +38,7 @@ def receipt_create(request: HttpRequest):
     if not date:
         date = None
 
-    receipt = Receipt.objects.create(
-        user=request.user,
+    receipt = Receipt(
         name=name,
         image=file,
         date=date,
@@ -47,6 +46,13 @@ def receipt_create(request: HttpRequest):
         purchase_category=purchase_category,
         total_price=total_price,
     )
+
+    if request.user.logged_in_as_team:
+        receipt.organization = request.user.logged_in_as_team
+    else:
+        receipt.user = request.user
+
+    receipt.save()
     # r = requests.post(
     #     "https://ocr.asprise.com/api/receipt",
     #     data={
@@ -65,7 +71,7 @@ def receipt_create(request: HttpRequest):
     # if receipt_json.get("total"):
     #     # Todo: add currency option
     #     receipt.total_price = receipt_json.get("total")
-    receipt.save()
+    # receipt.save()
 
     messages.success(request, f"Receipt added with the name of {receipt.name}")
     return render(

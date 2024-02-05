@@ -13,6 +13,16 @@ from shortuuid.django_fields import ShortUUIDField
 from settings import settings
 
 
+def USER_OR_ORGANIZATION_CONSTRAINT():
+    return models.CheckConstraint(
+        name=f"%(app_label)s_%(class)s_check_user_or_organization",
+        check=(
+            models.Q(user__isnull=True, organization__isnull=False)
+            | models.Q(user__isnull=False, organization__isnull=True)
+        ),
+    )
+
+
 class GroupConcat(Aggregate):
     function = "GROUP_CONCAT"
     template = "%(function)s(%(distinct)s%(expressions)s)"
@@ -31,7 +41,7 @@ class CustomUserManager(UserManager):
                 in_team=ExpressionWrapper(
                     Q(member_of_teams__gt=0) | Q(leader_of_teams__gt=0),
                     output_field=BooleanField(),
-                )
+                ),
             )
         )
 
@@ -132,7 +142,8 @@ class TeamInvitation(models.Model):
 
 
 class Receipt(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    organization = models.ForeignKey(Team, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=100)
     image = models.ImageField(upload_to="receipts")
     total_price = models.FloatField(null=True, blank=True)
@@ -141,6 +152,9 @@ class Receipt(models.Model):
     receipt_parsed = models.JSONField(null=True, blank=True)
     merchant_store = models.CharField(max_length=255, blank=True, null=True)
     purchase_category = models.CharField(max_length=200, blank=True, null=True)
+
+    class Meta:
+        constraints = [USER_OR_ORGANIZATION_CONSTRAINT()]
 
 
 class ReceiptDownloadToken(models.Model):
