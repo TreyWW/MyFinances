@@ -15,6 +15,13 @@ def edit_invoice(request: HttpRequest):
     except:
         return JsonResponse({"message": "Invoice not found"}, status=404)
 
+    if request.user.logged_in_as_team:
+        if request.user.loogged_in_as_team != invoice.organization:
+            return JsonResponse({"message": "You do not have permission to edit this invoice"}, status=403)
+    else:
+        if request.user != invoice.user:
+            return JsonResponse({"message": "You do not have permission to edit this invoice"}, status=403)
+
     attributes_to_updates = {
         "date_due": datetime.strptime(request.POST.get("date_due"), "%Y-%m-%d").date(),
         "date_issued": request.POST.get("date_issued"),

@@ -28,11 +28,15 @@ def invoice_page_post(request: HttpRequest):
         )
     ]
 
-    invoice = Invoice.objects.create(
-        user=request.user,
+    invoice = Invoice(
         date_due=datetime.strptime(request.POST.get("date_due"), "%Y-%m-%d").date(),
         date_issued=request.POST.get("date_issued"),
     )
+
+    if request.user.logged_in_as_team:
+        invoice.organization = request.user.logged_in_as_team
+    else:
+        invoice.user = request.user
 
     is_existing_client = True if request.POST.get("selected_client") else False
 
