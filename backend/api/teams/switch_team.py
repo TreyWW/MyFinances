@@ -6,6 +6,14 @@ from backend.models import User, Team
 
 
 def switch_team(request: HttpRequest, team_id):
+    if not team_id:
+        if not request.user.logged_in_as_team:
+            messages.error(request, "You are not logged into an organization")
+        request.user.logged_in_as_team = None
+        request.user.save()
+        messages.success(request, "You are now logged into your personal account")
+        return render(request, "components/+logged_in_for.html")
+
     team: Team = Team.objects.filter(id=team_id).first()
 
     if not team:
