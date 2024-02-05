@@ -78,39 +78,45 @@
         {# Right Icons #}
         {#        <div class="flex">#}
         {# Profile Picture  #}
+        <details class="dropdown dropdown-end mr-3">
+            <summary class="btn btn-ghost"
+                     hx-get="{% url "api:base:notifications get" %}"
+                     hx-target='[data-notifications="container"]'
+                     hx-swap="innerHTML"
+                     hx-trigger="click">
+                <i class="fa-solid fa-bell"></i>
+            </summary>
+            <ul class="menu menu-sm dropdown-content border border-primary"
+                data-notifications="container">
+                {% include "base/_notification_dropdown_items.html" %}
+            </ul>
+        </details>
         <div class="dropdown dropdown-end">
             <label tabindex="0" class="btn btn-ghost btn-circle">
-                {#                    <div class="avatar w-10">#}
                 {% component "profile_picture" image_type="small" extra_classes="max-w-12 max-h-12 w-12 h-12 avatar-img-ring" url=request.user.user_profile.profile_picture_url %}
-                {#                    </div>#}
             </label>
             <ul tabindex="0"
                 class="menu menu-sm dropdown-content border border-primary">
                 <details class="dropdown dropdown-left flex flex-col">
-                    <summary class="btn block text-left p-2 max-h-full h-full" data-htmx-swap="logged_in_for">
-                        {% component "components:logged_in_for" %}
-                    </summary>
+                    <summary class="btn block text-left p-2 max-h-full h-full"
+                             data-htmx-swap="logged_in_for">{% component "components:logged_in_for" %}</summary>
                     {% if request.user.in_team %}
                         <ul class="menu menu-sm dropdown-content border border-primary">
                             {% for team in request.user.teams_joined.all %}
                                 <li>
-                                    <a hx-post="{% url "api:teams:switch_team" team_id=team.id %}" hx-swap="none">
-                                        {{ team.name | title }}
-                                    </a>
+                                    <a hx-post="{% url "api:teams:switch_team" team_id=team.id %}"
+                                       hx-swap="none">{{ team.name | title }}</a>
                                 </li>
                             {% endfor %}
                             {% for team in request.user.teams_leader_of.all %}
                                 <li>
-                                    <a hx-post="{% url "api:teams:switch_team" team_id=team.id %}" hx-swap="none">
-                                        {{ team.name | title }}
-                                    </a>
+                                    <a hx-post="{% url "api:teams:switch_team" team_id=team.id %}"
+                                       hx-swap="none">{{ team.name | title }}</a>
                                 </li>
                             {% endfor %}
-                                <li>
-                                    <a hx-post="{% url "api:teams:switch_team" team_id=0 %}" hx-swap="none">
-                                        Personal
-                                    </a>
-                                </li>
+                            <li>
+                                <a hx-post="{% url "api:teams:switch_team" team_id=0 %}" hx-swap="none">Personal</a>
+                            </li>
                         </ul>
                     {% endif %}
                 </details>

@@ -1,8 +1,5 @@
-from django.contrib.auth.models import Permission
-from django.contrib.sessions.models import Session
 from django.http import HttpRequest
 from django.shortcuts import render
-from django.contrib.auth import update_session_auth_hash
 from django.urls import reverse
 
 from backend.decorators import *
@@ -73,7 +70,7 @@ def create_team(request: HttpRequest):
 
 def invite_user_to_team(request: HttpRequest):
     team = Team.objects.filter(leader=request.user).first()
-    user_email = request.POST.get("user_email")
+    user_email = request.POST.get("post_email")
 
     if not user_email:
         messages.error(request, "No user email provided")

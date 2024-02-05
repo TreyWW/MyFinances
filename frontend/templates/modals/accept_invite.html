@@ -1,0 +1,34 @@
+{% component_block "modal" id="modal_accept_invite" start_open="true" title="Accept Invitation" %}
+    {% fill "content" %}
+        <form class="py-4"
+              id="modal_accept_invite-form"
+              hx-post="{% url 'user settings teams invite' %}" hx-swap="none">
+            {% csrf_token %}
+            <div class="form-control w-full">
+                <label class="label justify-start">
+                    Users' Email
+                    <span class="required_star">*</span>
+                </label>
+                <input id="modal_input-email"
+                       name="post_email"
+                       type="email"
+                       class="input input-block input-bordered" required>
+            </div>
+            <div class="modal-action">
+                <button type="submit"
+                        id="modal_accept_invite-submit"
+                        class="btn btn-primary"
+                        _="on click
+                    if #modal_accept_invite-form.checkValidity()
+                     call #modal_accept_invite.close()
+                    end">
+                    Accept
+                </button>
+                <button type="reset" class="btn btn-error">Reset</button>
+                <button type="button" _="on click call #modal_accept_invite.close()" class="btn">
+                    Close
+                </button>
+            </div>
+        </form>
+    {% endfill %}
+{% endcomponent_block %}
