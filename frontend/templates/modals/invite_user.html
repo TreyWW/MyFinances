@@ -2,7 +2,7 @@
     {% fill "content" %}
         <form class="py-4"
               id="modal_invite_user-form"
-              hx-post="{% url 'user settings teams invite' %}" hx-swap="none">
+              hx-post="{% url 'api:teams:invite' %}" hx-swap="none">
             {% csrf_token %}
             <div class="form-control w-full">
                 <label class="label justify-start">
@@ -22,11 +22,10 @@
                     if #modal_invite_user-form.checkValidity()
                      call #modal_invite_user.close()
                     end">
-                    Save
+                    Send Invite
                 </button>
-                <button type="reset" class="btn btn-error">Reset</button>
                 <button type="button" _="on click call #modal_invite_user.close()" class="btn">
-                    Close
+                    Cancel
                 </button>
             </div>
         </form>

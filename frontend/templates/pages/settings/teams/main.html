@@ -43,12 +43,21 @@
             </h1>
             {% if is_team_leader %}
                 <div class="cursor-not-allowed tooltip tooltip-left"
-                     data-tip="You are the team leader, so you cannot leave theteam">
+                     data-tip="You are the team leader, so you cannot leave the team">
             {% endif %}
             {% if has_team %}
-                <a class="btn btn-error {% if is_team_leader %}btn-disabled{% endif %}"
-                   href="{% url "user settings teams join leave" %}">Leave Team
-                </a>
+                 <button onclick="modal_leave_team.showModal();"
+                            class="btn btn-error {% if is_team_leader %}btn-disabled{% endif %}"
+                            hx-get="{% url "api:base:modal retrieve with context" modal_name="leave_team" context_type="team_leave" context_value=team.id %}"
+                            hx-trigger="click once"
+                            hx-swap="beforeend"
+                            hx-target="#modal_container">
+                        {% include 'components/icon.html' with icon="right-from-bracket" classes="pe-2" %}
+                        Leave Team
+                    </button>
+{#                <a class="btn btn-error {% if is_team_leader %}btn-disabled{% endif %}"#}
+{#                   href="{% url "user settings teams join leave" %}">Leave Team#}
+{#                </a>#}
             {% else %}
                 <span></span>
             {% endif %}

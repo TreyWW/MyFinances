@@ -213,7 +213,7 @@ class Modals:
                 "color": "error",
                 "method": "post",
                 "href": reverse(
-                    "user settings teams kick", kwargs={"user_id": user.id}
+                    "api:teams:kick", kwargs={"user_id": user.id}
                 ),
                 "fields": [
                     {

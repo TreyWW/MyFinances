@@ -2,31 +2,21 @@
     {% fill "content" %}
         <form class="py-4"
               id="modal_accept_invite-form"
-              hx-post="{% url 'user settings teams invite' %}" hx-swap="none">
+              hx-post="{% url 'api:teams:join accept' code=code %}" hx-swap="none">
             {% csrf_token %}
-            <div class="form-control w-full">
-                <label class="label justify-start">
-                    Users' Email
-                    <span class="required_star">*</span>
-                </label>
-                <input id="modal_input-email"
-                       name="post_email"
-                       type="email"
-                       class="input input-block input-bordered" required>
-            </div>
             <div class="modal-action">
                 <button type="submit"
                         id="modal_accept_invite-submit"
                         class="btn btn-primary"
                         _="on click
-                    if #modal_accept_invite-form.checkValidity()
-                     call #modal_accept_invite.close()
-                    end">
-                    Accept
+                        if #modal_accept_invite-form.checkValidity()
+                         call #modal_accept_invite.close() then window.location.reload()">
+                    Accept Invite
                 </button>
-                <button type="reset" class="btn btn-error">Reset</button>
-                <button type="button" _="on click call #modal_accept_invite.close()" class="btn">
-                    Close
+                <button type="button" hx-post="" _="on click call
+                #modal_accept_invite.close()
+" class="btn">
+                    Decline Invite
                 </button>
             </div>
         </form>
