@@ -72,7 +72,7 @@ def edit_invoice(request: HttpRequest, invoice_id):
         return JsonResponse({"message": "Invoice not found"}, status=404)
 
     if request.user.logged_in_as_team:
-        if request.user.loogged_in_as_team != invoice.organization:
+        if request.user.logged_in_as_team != invoice.organization:
             return JsonResponse({"message": "You do not have permission to edit this invoice"}, status=403)
     else:
         if request.user != invoice.user:
