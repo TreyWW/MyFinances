@@ -43,26 +43,5 @@ def teams_dashboard(request: HttpRequest):
         },
     )
 
-def create_team(request: HttpRequest):
-    team_name = request.POST.get("name")
-
-    if not team_name:
-        messages.error(request, "No team name provided")
-        return redirect("user settings teams")
-
-    if Team.objects.filter(name=team_name).exists():
-        messages.error(request, "Team already exists")
-        return redirect("user settings teams")
-
-    if request.user.team_set.exists():
-        messages.error(request, "You are already in a team")
-        return redirect("user settings teams")
-
-    team = Team.objects.create(name=team_name, leader=request.user)
-
-    messages.success(request, "Team created")
-
-    return redirect("user settings teams")
-
 def manage_permissions_dashboard(request: HttpRequest):
     return render(request, "pages/settings/teams/permissions.html")

@@ -3,23 +3,26 @@ from django.shortcuts import render
 from django.urls import reverse
 
 from backend.decorators import *
-from backend.models import *
+from backend.models import Notification, Team, TeamInvitation, User
 from settings.settings import EMAIL_SERVER_ENABLED, EMAIL_FROM_ADDRESS
 
 
-def check_team_invitation_is_valid(request, invitation, code=None):
+def delete_notification(user: User, code: TeamInvitation.code):
+    Notification.objects.filter(
+        user=user,
+        message="New Team Invite",
+        action="modal",
+        action_value="accept_invite",
+        extra_type="accept_invite_with_code",
+        extra_value=code
+    ).first().delete()
+
+def check_team_invitation_is_valid(request, invitation: TeamInvitation, code=None):
     valid: bool = True
     if not invitation:
         messages.error(request, "Invalid Invite Code")
         # Force break early to avoid "no invitation" on invitation.code
-        notification = Notification.objects.filter(
-            user=request.user,
-            action="redirect",
-            action_value=reverse("user settings teams join", kwargs={"code": code}),
-        ).first()
-
-        if notification:
-            notification.delete()
+        delete_notification(request.user, code)
         return False
 
     if not invitation.is_active:
@@ -27,16 +30,7 @@ def check_team_invitation_is_valid(request, invitation, code=None):
         messages.error(request, "Invitation has expired")
 
     if not valid:
-        notification = Notification.objects.filter(
-            user=request.user,
-            action="redirect",
-            action_value=reverse(
-                "user settings teams join", kwargs={"code": invitation.code}
-            ),
-        ).first()
-
-        if notification:
-            notification.delete()
+        delete_notification(request.user, code)
         return False
 
     return True
@@ -152,10 +146,10 @@ def decline_team_invite(request: HttpRequest, code):
     confirmation_text = request.POST.get("confirmation_text")
 
     if not check_team_invitation_is_valid(request, invitation, code):
-        return redirect("user settings teams")
+        return render(request, "partials/messages_list.html")
 
-    if confirmation_text != "i confirm i want to decline " + invitation.team.name:
-        messages.error(request, "Invalid confirmation text")
+    # if confirmation_text != "i confirm i want to decline " + invitation.team.name:
+    #     messages.error(request, "Invalid confirmation text")
         # return redirect("user settings teams join", code=code)  # kwargs={"code": code})
 
     invitation.team.members.remove(request.user)
@@ -172,7 +166,9 @@ def decline_team_invite(request: HttpRequest, code):
         action="normal",
     )
 
+    delete_notification(request.user, code)
+
     invitation.delete()
     messages.success(request, "You have successfully declined the team invitation")
 
-    return redirect("user settings teams")
+    return render(request, "partials/messages_list.html")
