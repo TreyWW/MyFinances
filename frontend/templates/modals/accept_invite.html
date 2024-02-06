@@ -10,7 +10,7 @@
                         class="btn btn-primary"
                         _="on click
                         if #modal_accept_invite-form.checkValidity()
-                         call #modal_accept_invite.close() then window.location.reload()">
+                         call #modal_accept_invite.close() then wait 1000ms then window.location.reload()">
                     Accept Invite
                 </button>
                 <button type="button" hx-post="" _="on click call

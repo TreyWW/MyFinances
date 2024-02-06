@@ -2,7 +2,7 @@ import smtplib
 from uuid import uuid4
 
 from django.contrib import messages
-from django.contrib.auth.models import User, UserManager, AbstractUser
+from django.contrib.auth.models import UserManager, AbstractUser
 from django.core.mail import EmailMessage
 from django.db import models
 from django.db.models import Aggregate, Count, Q, BooleanField, ExpressionWrapper
@@ -37,6 +37,7 @@ class CustomUserManager(UserManager):
                     Q(member_of_teams__gt=0) | Q(leader_of_teams__gt=0),
                     output_field=BooleanField(),
                 ),
+                notification_count=Count("user_notifications")
             )
         )
 
@@ -363,7 +364,7 @@ class Notification(models.Model):
         ("redirect", "Redirect"),
     ]
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_notifications")
     message = models.CharField(max_length=100)
     action = models.CharField(max_length=10, choices=action_choices, default="normal")
     action_value = models.CharField(max_length=100, null=True, blank=True)
