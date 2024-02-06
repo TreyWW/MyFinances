@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.models import UserManager, AbstractUser
 from django.core.mail import EmailMessage
 from django.db import models
-from django.db.models import Aggregate, Count, Q, BooleanField, ExpressionWrapper
+from django.db.models import Count, Q, BooleanField, ExpressionWrapper
 from django.utils import timezone
 from django.utils.crypto import get_random_string
 from shortuuid.django_fields import ShortUUIDField
@@ -37,7 +37,7 @@ class CustomUserManager(UserManager):
                     Q(member_of_teams__gt=0) | Q(leader_of_teams__gt=0),
                     output_field=BooleanField(),
                 ),
-                notification_count=Count("user_notifications")
+                notification_count = (Count("user_notifications"),)
             )
         )
 
@@ -93,7 +93,7 @@ class UserSettings(models.Model):
 
 
 class Team(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     leader = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="teams_leader_of"
     )
@@ -364,7 +364,9 @@ class Notification(models.Model):
         ("redirect", "Redirect"),
     ]
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_notifications")
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="user_notifications"
+    )
     message = models.CharField(max_length=100)
     action = models.CharField(max_length=10, choices=action_choices, default="normal")
     action_value = models.CharField(max_length=100, null=True, blank=True)
@@ -375,9 +377,7 @@ class Notification(models.Model):
 
 class AuditLog(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
-    organization = models.ForeignKey(
-      Team, on_delete=models.SET_NULL, null=True
-    )
+    organization = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True)
     action = models.CharField(max_length=100)
     date = models.DateTimeField(auto_now_add=True)
 

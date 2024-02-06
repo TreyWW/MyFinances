@@ -13,10 +13,8 @@
                 <button type="submit"
                         id="modal_leave_team-submit"
                         class="btn btn-primary"
-                        _="on click
-                        if #modal_leave_team-form.checkValidity()
-                         call #modal_leave_team.close() then wait 1000ms then window.location.reload()
-                        end">
+                        x-on:leave_team_error.window="document.getElementById('modal_leave_team').close()"
+                >
                     Leave Team
                 </button>
                 <button type="button" _="on click call #modal_leave_team.close()" class="btn">

@@ -1,6 +1,6 @@
 from django.urls import path
 
-from . import kick, switch_team, invites, leave
+from . import kick, switch_team, invites, leave, create
 
 urlpatterns = [
     path(
@@ -34,6 +34,11 @@ urlpatterns = [
         "leave/<int:team_id>/confirm/",
         leave.leave_team_confirmed,
         name="leave confirm",
+    ),
+    path(
+        "create/",
+        create.create_team,
+        name="create",
     ),
 ]
 

@@ -38,11 +38,6 @@ urlpatterns = [
         name="user settings teams permissions",
     ),
     path(
-        "dashboard/settings/teams/create",
-        settings_v.teams.create_team,
-        name="user settings teams create",
-    ),
-    path(
         "dashboard/profile/change_password/",
         settings_v.view.change_password,
         name="user settings change_password",

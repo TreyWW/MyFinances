@@ -9,7 +9,7 @@
         <button type="submit"
                 id="modal_accept_invite-submit"
                 class="btn btn-primary"
-                _="on click if #modal_accept_invite-form.checkValidity() call #modal_accept_invite.close() then wait 1000ms then window.location.reload()">
+                x-on:accept_invite_error.window="document.getElementById('modal_accept_invite').close()">
             Accept Invite
         </button>
         <button type="button"

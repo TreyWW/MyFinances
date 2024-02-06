@@ -4,7 +4,6 @@ from django.urls import reverse
 
 from backend.decorators import *
 from backend.models import Notification, Team, TeamInvitation, User
-from settings.settings import EMAIL_SERVER_ENABLED, EMAIL_FROM_ADDRESS
 
 
 def delete_notification(user: User, code: TeamInvitation.code):
@@ -14,8 +13,9 @@ def delete_notification(user: User, code: TeamInvitation.code):
         action="modal",
         action_value="accept_invite",
         extra_type="accept_invite_with_code",
-        extra_value=code
+        extra_value=code,
     ).first().delete()
+
 
 def check_team_invitation_is_valid(request, invitation: TeamInvitation, code=None):
     valid: bool = True
@@ -40,44 +40,44 @@ def send_user_team_invite(request: HttpRequest):
     team = Team.objects.filter(leader=request.user).first()
     user_email = request.POST.get("post_email")
 
+    def return_error_notif(request: HttpRequest, message: str):
+        messages.error(request, message)
+        resp = render(request, "partials/messages_list.html", status=200)
+        resp["HX-Trigger-After-Swap"] = "invite_user_error"
+        return resp
+
     if not user_email:
-        messages.error(request, "No user email provided")
-        return redirect("user settings teams")
+        return return_error_notif(request, "Please enter a valid user email")
 
     if not team:
-        messages.error(
-            request, "You are not in a team or you dont have permission to invite users"
-        )
-        return redirect("user settings teams")
+        return return_error_notif(request, "You are not the leader of this team")
 
     user: User = User.objects.filter(email=user_email).first()
 
     if not user:
-        messages.error(request, "User not found")
-        return redirect("user settings teams")
+        return return_error_notif(request, "User not found in this team")
 
     if user.teams_joined.exists():
-        messages.error(request, "User already in a team")
-        return redirect("user settings teams")
+        return return_error_notif(request, "User already is in this team")
 
     invitation = TeamInvitation.objects.create(
         team=team, user=user, invited_by=request.user
     )
 
-    if EMAIL_SERVER_ENABLED and EMAIL_FROM_ADDRESS:
-        SEND_SENDGRID_EMAIL(
-            user.email,
-            "You have been invited to join a team",
-            f"""
-            You have been invited to join the team {team.name}
-
-            Invited by: {request.user}
-
-            Click the link below to join:
-            {request.build_absolute_uri(reverse("api:teams:join accept", kwargs={"code": invitation.code}))}
-            """,
-            from_email=EMAIL_FROM_ADDRESS,
-        )
+    # if EMAIL_SERVER_ENABLED and EMAIL_FROM_ADDRESS:
+    #     SEND_SENDGRID_EMAIL(
+    #         user.email,
+    #         "You have been invited to join a team",
+    #         f"""
+    #         You have been invited to join the team {team.name}
+    #
+    #         Invited by: {request.user}
+    #
+    #         Click the link below to join:
+    #         {request.build_absolute_uri(reverse("api:teams:join accept", kwargs={"code": invitation.code}))}
+    #         """,
+    #         from_email=EMAIL_FROM_ADDRESS,
+    #     )
 
     Notification.objects.create(
         user=user,
@@ -85,7 +85,7 @@ def send_user_team_invite(request: HttpRequest):
         action="modal",
         action_value="accept_invite",
         extra_type="accept_invite_with_code",
-        extra_value=invitation.code
+        extra_value=invitation.code,
     )
 
     print(
@@ -93,7 +93,9 @@ def send_user_team_invite(request: HttpRequest):
     )
 
     messages.success(request, "Invitation successfully sent")
-    return redirect("user settings teams")
+    response = HttpResponse(request, status=200)
+    response["HX-Refresh"] = "true"
+    return response
 
 
 def accept_team_invite(request: HttpRequest, code):
@@ -107,7 +109,9 @@ def accept_team_invite(request: HttpRequest, code):
         messages.error(
             request, "You are already in a team, please leave the team first"
         )
-        return render(request, "partials/messages_list.html")
+        response = render(request, "partials/messages_list.html", status=200)
+        response["HX-Trigger-After-Swap"] = "accept_invite_error"
+        return response
 
     invitation.team.members.add(request.user)
 
@@ -116,7 +120,7 @@ def accept_team_invite(request: HttpRequest, code):
         action="modal",
         action_value="accept_invite",
         extra_type="accept_invite_with_code",
-        extra_value=code
+        extra_value=code,
     ).first()
 
     if notification:
@@ -136,8 +140,12 @@ def accept_team_invite(request: HttpRequest, code):
 
     invitation.delete()
 
-    messages.success(request, f"You have successfully joined the team {invitation.team.name}")
-    return HttpResponse(request, status=200) #render(request, "partials/messages_list.html")
+    messages.success(
+        request, f"You have successfully joined the team {invitation.team.name}"
+    )
+    response = HttpResponse(request, status=200)
+    response["HX-Refresh"] = "true"
+    return response
     # return render(request, "partials/messages_list.html")
 
 
@@ -150,7 +158,7 @@ def decline_team_invite(request: HttpRequest, code):
 
     # if confirmation_text != "i confirm i want to decline " + invitation.team.name:
     #     messages.error(request, "Invalid confirmation text")
-        # return redirect("user settings teams join", code=code)  # kwargs={"code": code})
+    # return redirect("user settings teams join", code=code)  # kwargs={"code": code})
 
     invitation.team.members.remove(request.user)
 

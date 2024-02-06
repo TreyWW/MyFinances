@@ -18,10 +18,7 @@
                 <button type="submit"
                         id="modal_invite_user-submit"
                         class="btn btn-primary"
-                        _="on click
-                    if #modal_invite_user-form.checkValidity()
-                     call #modal_invite_user.close()
-                    end">
+                        x-on:invite_user_error.window="document.getElementById('modal_invite_user').close()">
                     Send Invite
                 </button>
                 <button type="button" _="on click call #modal_invite_user.close()" class="btn">
