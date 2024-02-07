@@ -37,7 +37,7 @@ class CustomUserManager(UserManager):
                     Q(member_of_teams__gt=0) | Q(leader_of_teams__gt=0),
                     output_field=BooleanField(),
                 ),
-                notification_count = (Count("user_notifications"),)
+                notification_count=(Count("user_notifications"))
             )
         )
 
