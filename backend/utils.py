@@ -1,7 +1,6 @@
-from backend.models import User
 from django.urls import reverse, reverse_lazy
-import os, json
-from backend.models import TeamInvitation
+
+from backend.models import User, TeamInvitation
 
 
 # def load_navbar_items():
@@ -212,9 +211,7 @@ class Modals:
                 "text": "Decline",
                 "color": "error",
                 "method": "post",
-                "href": reverse(
-                    "api:teams:kick", kwargs={"user_id": user.id}
-                ),
+                "href": reverse("api:teams:kick", kwargs={"user_id": user.id}),
                 "fields": [
                     {
                         "type": "text",

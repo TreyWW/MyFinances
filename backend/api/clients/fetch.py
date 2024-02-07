@@ -1,5 +1,3 @@
-import time
-
 from django.db.models import Q
 from django.http import HttpRequest
 from django.shortcuts import render, redirect
@@ -16,7 +14,9 @@ def fetch_all_clients(request: HttpRequest):
     search_text = request.GET.get("search")
 
     if request.user.logged_in_as_team:
-        clients = Client.objects.filter(organization=request.user.logged_in_as_team, active=True)
+        clients = Client.objects.filter(
+            organization=request.user.logged_in_as_team, active=True
+        )
     else:
         clients = Client.objects.filter(user=request.user, active=True)
 

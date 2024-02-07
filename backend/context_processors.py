@@ -1,11 +1,9 @@
 import os
 from typing import List, Optional, Dict, Any
 
-from django.core.cache import cache
 from django.http import HttpRequest
 from django.urls import reverse
 
-from .models import *
 from .utils import Toast, Modals
 
 Modals = Modals()

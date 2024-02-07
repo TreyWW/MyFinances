@@ -19,11 +19,9 @@ def fetch_all_receipts(request: HttpRequest):
         results = results.filter(user=request.user)
 
     if search_text:
-        results = (
-            results.filter(
-                Q(name__icontains=search_text) | Q(date__icontains=search_text)
-            ).order_by("-date")
-        )
+        results = results.filter(
+            Q(name__icontains=search_text) | Q(date__icontains=search_text)
+        ).order_by("-date")
 
     context.update({"receipts": results})
     return render(request, "pages/receipts/_search_results.html", context)

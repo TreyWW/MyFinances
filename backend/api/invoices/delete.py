@@ -18,10 +18,17 @@ def delete_invoice(request: HttpRequest):
         return JsonResponse({"message": "Invoice not found"}, status=404)
 
     if not invoice.user.logged_in_as_team and invoice.user != request.user:
-        return JsonResponse({"message": "You do not have permission to delete this invoice"}, status=404)
+        return JsonResponse(
+            {"message": "You do not have permission to delete this invoice"}, status=404
+        )
 
-    if invoice.user.logged_in_as_team and invoice.organization != request.user.logged_in_as_team:
-        return JsonResponse({"message": "You do not have permission to delete this invoice"}, status=404)
+    if (
+        invoice.user.logged_in_as_team
+        and invoice.organization != request.user.logged_in_as_team
+    ):
+        return JsonResponse(
+            {"message": "You do not have permission to delete this invoice"}, status=404
+        )
 
     invoice.delete()
 

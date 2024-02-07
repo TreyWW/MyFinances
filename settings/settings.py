@@ -1,10 +1,10 @@
-import environ
 import json
 import mimetypes
 import os
 import sys
 from pathlib import Path
 
+import environ
 from django.contrib.messages import constants as messages
 
 env = environ.Env(DEBUG=(bool, False))
@@ -166,7 +166,7 @@ MIDDLEWARE = [
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     "login_required.middleware.LoginRequiredMiddleware",
     "social_django.middleware.SocialAuthExceptionMiddleware",
-    "backend.models.CustomUserMiddleware"
+    "backend.models.CustomUserMiddleware",
 ]
 INTERNAL_IPS = [
     # ...
