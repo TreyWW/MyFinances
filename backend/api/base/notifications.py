@@ -5,9 +5,9 @@ from backend.models import Notification
 
 
 def get_notification_html(request: HttpRequest):
-    user_notifications = Notification.objects.filter(user=request.user).order_by("-date")[
-        :5
-    ]
+    user_notifications = Notification.objects.filter(user=request.user).order_by(
+        "-date"
+    )[:5]
 
     return render(
         request,
