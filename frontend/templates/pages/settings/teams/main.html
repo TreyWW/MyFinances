@@ -13,7 +13,8 @@
                 {% if is_team_leader %}
                     <button onclick="modal_invite_user.showModal();"
                             class="btn btn-primary"
-                            hx-get="{% url "api:base:modal retrieve" modal_name="invite_user" %}"
+                            hx-get="
+{% url "api:base:modal retrieve with context" modal_name="invite_user" context_type="team_id" context_value=team.id %}"
                             hx-trigger="click once"
                             hx-swap="beforeend"
                             hx-target="#modal_container">
@@ -34,11 +35,17 @@
                     </button>
                 {% endif %}
             </div>
-            <h1 class="text-3xl text-center">
+            <h1 class="text-2xl text-center">
                 {% if has_team %}
                     Team - {{ team.name }}
                 {% else %}
-                    You aren't in a team
+                    You aren't logged into an organization.
+                    <br>
+                    <span class="text-xl">
+                        You are in <strong>{{ team_count }}</strong> teams.
+                        <br>
+                        Select a team in the top right menu
+                    </span>
                 {% endif %}
             </h1>
             {% if is_team_leader %}
@@ -48,7 +55,8 @@
             {% if has_team %}
                  <button onclick="modal_leave_team.showModal();"
                             class="btn btn-error {% if is_team_leader %}btn-disabled{% endif %}"
-                            hx-get="{% url "api:base:modal retrieve with context" modal_name="leave_team" context_type="team_leave" context_value=team.id %}"
+                            hx-get="
+{% url "api:base:modal retrieve with context" modal_name="leave_team" context_type="leave_team" context_value=team.id %}"
                             hx-trigger="click once"
                             hx-swap="beforeend"
                             hx-target="#modal_container">

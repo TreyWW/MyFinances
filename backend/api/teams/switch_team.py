@@ -34,4 +34,7 @@ def switch_team(request: HttpRequest, team_id):
     messages.success(request, f"Now signing in for {team.name}")
     request.user.logged_in_as_team = team
     request.user.save()
-    return render(request, "components/+logged_in_for.html")
+    response = HttpResponse(request, status=200)
+    response["HX-Refresh"] = "true"
+    return response
+    # return render(request, "components/+logged_in_for.html")

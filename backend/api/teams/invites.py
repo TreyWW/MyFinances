@@ -37,8 +37,9 @@ def check_team_invitation_is_valid(request, invitation: TeamInvitation, code=Non
 
 
 def send_user_team_invite(request: HttpRequest):
-    team = Team.objects.filter(leader=request.user).first()
-    user_email = request.POST.get("post_email")
+    user_email = request.POST.get("email")
+    team_id = request.POST.get("team_id")
+    team = Team.objects.filter(leader=request.user, id=team_id).first()
 
     def return_error_notif(request: HttpRequest, message: str):
         messages.error(request, message)
@@ -55,7 +56,7 @@ def send_user_team_invite(request: HttpRequest):
     user: User = User.objects.filter(email=user_email).first()
 
     if not user:
-        return return_error_notif(request, "User not found in this team")
+        return return_error_notif(request, "User not found")
 
     if user.teams_joined.exists():
         return return_error_notif(request, "User already is in this team")

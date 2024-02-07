@@ -1,7 +1,8 @@
+from typing import Optional
+
 from django.http import HttpRequest
 from django.shortcuts import render
 
-from backend.decorators import *
 from backend.models import *
 from backend.utils import Modals
 
@@ -9,37 +10,30 @@ Modals = Modals()
 
 
 def teams_dashboard(request: HttpRequest):
-    modal_data = []  # [Modals.create_team(), Modals.invite_user_to_team()]
-
-    user_has_team: bool = False
+    user_is_logged_into_team: bool = False
     user_is_team_leader: bool = False
-    users_team: Team = None
+    users_team: Optional[Team] = None
 
-    user_team = Team.objects.filter(leader=request.user).first()
-    if user_team:
-        user_has_team = True
-        users_team = user_team
+    users_team = request.user.logged_in_as_team
+
+    if users_team:
+        user_is_logged_into_team = True
         user_is_team_leader = True
-        [
-            modal_data.append(Modals.team_kick_user(usr))
-            for usr in user_team.members.all()
-        ]
     else:
-        user_team = request.user.teams_joined.first()
+        users_team = request.user.teams_joined.first()
 
-        if user_team:
-            user_has_team = True
-            users_team = user_team
+        if users_team:
+            user_is_logged_into_team = True
 
+    print(users_team)
     return render(
         request,
         "pages/settings/teams/main.html",
         {
-            "modal_data": modal_data,
-            "has_team": user_has_team,
+            "has_team": user_is_logged_into_team,
             "team": users_team,
-            "all_teams": Team.objects.all(),
             "is_team_leader": user_is_team_leader,
+            "team_count": request.user.teams_joined.count() + request.user.teams_leader_of.count(),
         },
     )
 

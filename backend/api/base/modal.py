@@ -21,7 +21,7 @@ def open_modal(request: HttpRequest, modal_name, context_type=None, context_valu
                     pass
             elif context_type == "accept_invite_with_code":
                 context["code"] = context_value
-            elif context_type == "team_leave":
+            elif context_type == "leave_team":
                 if request.user.teams_joined.filter(id=context_value).exists():
                     context["team"] = Team.objects.filter(id=context_value).first()
             elif context_type == "edit_invoice_to":
@@ -46,6 +46,8 @@ def open_modal(request: HttpRequest, modal_name, context_type=None, context_valu
                     # context["to_city"] = invoice.client_city
                     # context["to_county"] = invoice.client_county
                     # context["to_country"] = invoice.client_country
+            else:
+                context[context_type] = context_value
 
         return render(request, template_name, context)
     except Exception as e:
