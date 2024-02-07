@@ -115,7 +115,6 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "social_django.context_processors.backends",
                 "social_django.context_processors.login_redirect",
-                "backend.context_processors.notifications",
                 "backend.context_processors.extras",
                 "backend.context_processors.navbar",
                 "backend.context_processors.toasts",
@@ -167,6 +166,7 @@ MIDDLEWARE = [
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     "login_required.middleware.LoginRequiredMiddleware",
     "social_django.middleware.SocialAuthExceptionMiddleware",
+    "backend.models.CustomUserMiddleware"
 ]
 INTERNAL_IPS = [
     # ...

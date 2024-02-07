@@ -2,7 +2,7 @@ import smtplib
 from uuid import uuid4
 
 from django.contrib import messages
-from django.contrib.auth.models import UserManager, AbstractUser
+from django.contrib.auth.models import UserManager, AbstractUser, AnonymousUser
 from django.core.mail import EmailMessage
 from django.db import models
 from django.db.models import Count, Q, BooleanField, ExpressionWrapper
@@ -29,7 +29,7 @@ class CustomUserManager(UserManager):
             super()
             .get_queryset()
             .select_related("user_profile", "logged_in_as_team")
-            .prefetch_related("teams_leader_of")
+            .prefetch_related("teams_leader_of", "user_notifications")
             .annotate(
                 member_of_teams=Count("teams_joined"),
                 leader_of_teams=Count("teams_leader_of"),
@@ -42,10 +42,27 @@ class CustomUserManager(UserManager):
         )
 
 
+
 class User(AbstractUser):
     objects = CustomUserManager()
 
     logged_in_as_team = models.ForeignKey("Team", on_delete=models.SET_NULL, null=True)
+
+
+class CustomUserMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        # Replace request.user with CustomUser instance if authenticated
+        if request.user.is_authenticated:
+            request.user = User.objects.get(pk=request.user.pk)
+        else:
+            # If user is not authenticated, set request.user to AnonymousUser
+            request.user = AnonymousUser()
+
+        response = self.get_response(request)
+        return response
 
 
 def RandomCode(length=6):
