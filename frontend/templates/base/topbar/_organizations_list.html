@@ -1,0 +1,15 @@
+{% for team in request.user.teams_joined.all %}
+    <li>
+        <a hx-post="{% url "api:teams:switch_team" team_id=team.id %}"
+           hx-swap="none">{{ team.name | title }}</a>
+    </li>
+{% endfor %}
+{% for team in request.user.teams_leader_of.all %}
+    <li>
+        <a hx-post="{% url "api:teams:switch_team" team_id=team.id %}"
+           hx-swap="none">{{ team.name | title }}</a>
+    </li>
+{% endfor %}
+<li>
+    <a hx-post="{% url "api:teams:switch_team" team_id=0 %}" hx-swap="none">Personal</a>
+</li>

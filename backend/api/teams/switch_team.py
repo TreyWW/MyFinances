@@ -1,8 +1,8 @@
 from django.contrib import messages
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import render
 
-from backend.models import User, Team
+from backend.models import Team
 
 
 def switch_team(request: HttpRequest, team_id):
@@ -38,3 +38,10 @@ def switch_team(request: HttpRequest, team_id):
     response["HX-Refresh"] = "true"
     return response
     # return render(request, "components/+logged_in_for.html")
+
+
+def get_dropdown(request: HttpRequest):
+    if not request.htmx:
+        return HttpResponse("Invalid Request", status=405)
+
+    return render(request, "base/topbar/_organizations_list.html")

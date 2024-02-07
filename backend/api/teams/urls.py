@@ -40,6 +40,7 @@ urlpatterns = [
         create.create_team,
         name="create",
     ),
+    path("get_dropdown/", switch_team.get_dropdown, name="get_dropdown"),
 ]
 
 app_name = "teams"

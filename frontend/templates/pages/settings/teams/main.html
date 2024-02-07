@@ -10,18 +10,19 @@
     <div class="card w-full p-6 bg-base-100 shadow-xl mt-2">
         <div class="flex items-center justify-between">
             <div>
-                {% if is_team_leader %}
-                    <button onclick="modal_invite_user.showModal();"
-                            class="btn btn-primary"
-                            hx-get="{% url "api:base:modal retrieve with context" modal_name="invite_user" context_type="team_id" context_value=team.id %}"
-                            hx-trigger="click once"
-                            hx-swap="beforeend"
-                            hx-target="#modal_container">
-                        {% include 'components/icon.html' with icon="plus" classes="pe-2" %}
-                        Invite User
-                    </button>
-                {% endif %}
-                {% if not has_team %}
+                {% if team %}
+                    {% if team.is_leader %}
+                        <button onclick="modal_invite_user.showModal();"
+                                class="btn btn-primary"
+                                hx-get="{% url "api:base:modal retrieve with context" modal_name="invite_user" context_type="team_id" context_value=team.id %}"
+                                hx-trigger="click once"
+                                hx-swap="beforeend"
+                                hx-target="#modal_container">
+                            {% include 'components/icon.html' with icon="plus" classes="pe-2" %}
+                            Invite User
+                        </button>
+                    {% endif %}
+                {% else %}
                     <button onclick="modal_create_team.showModal();"
                             class="btn btn-primary"
                             hx-get="{% url "api:base:modal retrieve" modal_name="create_team" %}"
@@ -34,59 +35,63 @@
                 {% endif %}
             </div>
             <h1 class="text-2xl text-center">
-                {% if has_team %}
+                {% if team %}
                     Team - {{ team.name }}
                 {% else %}
                     You aren't logged into an organization.
                     <br>
                     <span class="text-xl">
-                        You are in <strong>{{ team_count }}</strong> teams.
+                        You are in <strong>{{ team_count }}</strong> team{{ team_count | pluralize }}.
                         <br>
                         Select a team in the top right menu
                     </span>
                 {% endif %}
             </h1>
-            {% if is_team_leader %}
-                <div class="cursor-not-allowed tooltip tooltip-left"
-                     data-tip="You are the team leader, so you cannot leave the team">
-            {% endif %}
-            {% if has_team %}
-                 <button onclick="modal_leave_team.showModal();"
+            {% if team %}
+                {% if team.is_leader %}
+                    <button onclick="modal_leave_team.showModal();"
                             class="btn btn-error {% if is_team_leader %}btn-disabled{% endif %}"
-                            hx-get="
-{% url "api:base:modal retrieve with context" modal_name="leave_team" context_type="leave_team" context_value=team.id %}"
+                            hx-get="{% url "api:base:modal retrieve with context" modal_name="leave_team" context_type="leave_team" context_value=team.id %}"
                             hx-trigger="click once"
                             hx-swap="beforeend"
                             hx-target="#modal_container">
                         {% include 'components/icon.html' with icon="right-from-bracket" classes="pe-2" %}
                         Leave Team
                     </button>
-{#                <a class="btn btn-error {% if is_team_leader %}btn-disabled{% endif %}"#}
-{#                   href="{% url "user settings teams join leave" %}">Leave Team#}
-{#                </a>#}
+                {% else %}
+                    <button onclick="modal_leave_team.showModal();"
+                            class="btn btn-error {% if is_team_leader %}btn-disabled{% endif %}"
+                            hx-get="{% url "api:base:modal retrieve with context" modal_name="leave_team" context_type="leave_team" context_value=team.id %}"
+                            hx-trigger="click once"
+                            hx-swap="beforeend"
+                            hx-target="#modal_container">
+                        {% include 'components/icon.html' with icon="right-from-bracket" classes="pe-2" %}
+                        Leave Team
+                    </button>
+                {% endif %}
             {% else %}
                 <span></span>
             {% endif %}
-            {% if is_team_leader %}</div>{% endif %}
         </div>
     </div>
-    {% if has_team %}
+    {% if team %}
         <div class="card w-full p-6 bg-base-100 shadow-xl mt-2">
             <table class="w-full table mt-3">
                 <thead>
                 <tr>
                     <th>Name</th>
                     <th>Role</th>
-                    {% if is_team_leader %}
-                        <th>Actions</th>{% endif %}
+                    {% if team.is_leader %}
+                        <th>Actions</th>
+                    {% endif %}
                 </tr>
                 </thead>
                 <tbody>
                 {% for user in team.members.all %}
                     <tr>
                         <td>{{ user.username }}</td>
-                        <td>NoIdea</td>
-                        {% if is_team_leader %}
+                        <td>NoIdea -{{ user.first_name }}-</td>
+                        {% if team.is_leader %}
                             <td>
                                 <div class="flex flex-wrap gap-2">
                                     <div class="tooltip" data-tip="Edit Permissions">

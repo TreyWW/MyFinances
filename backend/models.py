@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.models import UserManager, AbstractUser, AnonymousUser
 from django.core.mail import EmailMessage
 from django.db import models
-from django.db.models import Count, Q, BooleanField, ExpressionWrapper
+from django.db.models import Count
 from django.utils import timezone
 from django.utils.crypto import get_random_string
 from shortuuid.django_fields import ShortUUIDField
@@ -29,18 +29,10 @@ class CustomUserManager(UserManager):
             super()
             .get_queryset()
             .select_related("user_profile", "logged_in_as_team")
-            .prefetch_related("teams_leader_of", "user_notifications")
             .annotate(
-                member_of_teams=Count("teams_joined"),
-                leader_of_teams=Count("teams_leader_of"),
-                in_team=ExpressionWrapper(
-                    Q(member_of_teams__gt=0) | Q(leader_of_teams__gt=0),
-                    output_field=BooleanField(),
-                ),
-                notification_count=(Count("user_notifications"))
+                notification_count = ((Count("user_notifications")),)
             )
         )
-
 
 
 class User(AbstractUser):

@@ -101,26 +101,17 @@
                 class="menu menu-sm dropdown-content border border-primary">
                 <details class="dropdown dropdown-left flex flex-col">
                     <summary class="btn block text-left p-2 max-h-full h-full"
-                             data-htmx-swap="logged_in_for">{% component "components:logged_in_for" %}</summary>
-                    {% if request.user.in_team %}
-                        <ul class="menu menu-sm dropdown-content border border-primary">
-                            {% for team in request.user.teams_joined.all %}
-                                <li>
-                                    <a hx-post="{% url "api:teams:switch_team" team_id=team.id %}"
-                                       hx-swap="none">{{ team.name | title }}</a>
-                                </li>
-                            {% endfor %}
-                            {% for team in request.user.teams_leader_of.all %}
-                                <li>
-                                    <a hx-post="{% url "api:teams:switch_team" team_id=team.id %}"
-                                       hx-swap="none">{{ team.name | title }}</a>
-                                </li>
-                            {% endfor %}
-                            <li>
-                                <a hx-post="{% url "api:teams:switch_team" team_id=0 %}" hx-swap="none">Personal</a>
-                            </li>
-                        </ul>
-                    {% endif %}
+                             data-htmx-swap="logged_in_for"
+                             hx-trigger="click"
+                             hx-target='[data-htmx-swap="organization_dropdown_list"]'
+                             hx-get="{% url "api:teams:get_dropdown" %}"
+                             hx-swap="innerHTML"
+                    >
+                        {% component "components:logged_in_for" %}
+                    </summary>
+                    <ul class="menu menu-sm dropdown-content border border-primary"
+                        data-htmx-swap="organization_dropdown_list">
+                    </ul>
                 </details>
                 <div class="divider mt-0 mb-0"></div>
                 <li>
