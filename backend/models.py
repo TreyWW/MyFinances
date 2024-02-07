@@ -29,9 +29,7 @@ class CustomUserManager(UserManager):
             super()
             .get_queryset()
             .select_related("user_profile", "logged_in_as_team")
-            .annotate(
-                notification_count = ((Count("user_notifications")),)
-            )
+            .annotate(notification_count=((Count("user_notifications"))))
         )
 
 
