@@ -6,20 +6,31 @@
   "scripts": {
     "tailwind-build": "npx tailwindcss -i ./frontend/static/src/input.css -o ./frontend/static/src/output.css -w",
     "tailwind-minify": "tailwindcss -o ./frontend/static/src/output.css --minify",
-    "preview-docs": "docsify serve docs"
+    "preview-docs": "docsify serve docs",
+    "webpack-dev": "webpack --watch --config webpack.dev.js",
+    "webpack-build": "webpack --config webpack.prod.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@fortawesome/fontawesome-free": "^6.5.1",
     "daisyui": "^4.6.1",
     "docsify-cli": "^4.4.4",
     "npm-check-updates": "16.14.11",
-    "tailwindcss": "^3.3.6"
+    "tailwindcss": "^3.3.6",
+    "webpack": "^5.90.1",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1",
+    "webpack-merge": "^5.10.0"
   },
   "dependencies": {
+    "alpinejs": "^3.13.5",
     "daisyui": "^4.6.1",
     "docsify-cli": "^4.4.4",
+    "htmx.org": "^1.9.10",
+    "hyperscript.org": "^0.9.12",
+    "jquery": "^3.7.1",
     "tailwindcss": "^3.3.6"
   }
 }

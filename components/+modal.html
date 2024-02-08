@@ -1,4 +1,4 @@
-<dialog id="{% slot "id" %}{{ id }}{% endslot %}" class="modal modal-responsive" _="init me.showModal()">
+<dialog id="{% slot "id" %}{{ id }}{% endslot %}" class="modal modal-responsive" x-init="$el.showModal()">
     <div class="modal-box">
         {% slot "title" %}
             <h3 class="font-bold text-lg">{{ title }}</h3>

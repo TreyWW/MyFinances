@@ -12,7 +12,8 @@
             <div>
                 {% if team %}
                     {% if team.is_leader %}
-                        <button onclick="modal_invite_user.showModal();"
+                        <button
+                                x-on:click="modal_invite_user.showModal();"
                                 class="btn btn-primary"
                                 hx-get="{% url "api:base:modal retrieve with context" modal_name="invite_user" context_type="team_id" context_value=team.id %}"
                                 hx-trigger="click once"
