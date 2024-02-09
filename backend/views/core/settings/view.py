@@ -6,9 +6,6 @@ from django.shortcuts import render
 
 from backend.decorators import *
 from backend.models import *
-from backend.utils import Modals
-
-Modals = Modals()
 
 
 def settings_page(request: HttpRequest):

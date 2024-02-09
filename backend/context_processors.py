@@ -4,10 +4,6 @@ from typing import List, Optional, Dict, Any
 from django.http import HttpRequest
 from django.urls import reverse
 
-from .utils import Toast, Modals
-
-Modals = Modals()
-
 
 ## Context processors need to be put in SETTINGS TEMPLATES to be recognized
 def navbar(request):
@@ -25,22 +21,14 @@ def navbar(request):
 
 
 def extras(request: HttpRequest):
+    # import_method can be one of: "webpack", "public_cdn", "custom_cdn"
     data = {}
 
     data["git_branch"] = os.environ.get("BRANCH")
     data["git_version"] = os.environ.get("VERSION")
+    data["import_method"] = os.environ.get("IMPORT_METHOD", default="webpack")
 
     return data
-
-
-def toasts(request):
-    if request.user.is_authenticated:
-        toasts = Toast.get_from_request(request)
-        return {
-            "toasts": toasts,
-        }
-    return {}
-
 
 def breadcrumbs(request: HttpRequest):
     def get_item(name: str, url_name: str, icon: Optional[str] = None) -> dict:

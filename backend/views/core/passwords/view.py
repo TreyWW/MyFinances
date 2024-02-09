@@ -1,13 +1,9 @@
+from django.contrib.auth.hashers import check_password
 from django.http import HttpRequest
 from django.shortcuts import render
-from django.utils import timezone
+
 from backend.decorators import *
-from backend.utils import Toasts
 from backend.models import *
-
-TOASTS = Toasts()
-
-from django.contrib.auth.hashers import make_password, check_password
 
 
 @not_authenticated

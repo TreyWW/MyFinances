@@ -1,22 +1,12 @@
+from django.contrib.auth.hashers import check_password
 from django.http import (
-    HttpResponse,
     HttpRequest,
-    HttpResponseBadRequest,
-    HttpResponseForbidden,
-    HttpResponseServerError,
-    JsonResponse,
 )
+from django.utils import timezone
 from django.views.decorators.http import require_POST
 
 from backend.decorators import *
-from backend.utils import Toast
 from backend.models import *
-from django.contrib.auth import get_user_model
-from django.core.mail import EmailMessage
-from django.contrib.auth.hashers import make_password, check_password
-import re, json
-from datetime import date, timedelta
-from django.utils import timezone
 
 
 @not_authenticated

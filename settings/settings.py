@@ -117,7 +117,6 @@ TEMPLATES = [
                 "social_django.context_processors.login_redirect",
                 "backend.context_processors.extras",
                 "backend.context_processors.navbar",
-                "backend.context_processors.toasts",
                 "backend.context_processors.breadcrumbs",
             ],
             "loaders": [

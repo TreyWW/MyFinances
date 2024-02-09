@@ -13,7 +13,7 @@
     />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Agbalumo">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
-    {% if public_cdn or 1 == 1 %}
+    {% if import_method == "public_cdn" %}
     <!-- JQuery -->
         <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
                 crossorigin="anonymous"></script>
@@ -41,7 +41,6 @@
         <script src="https://unpkg.com/htmx.org/dist/ext/multi-swap.js"></script>
         <script src="https://unpkg.com/htmx.org/dist/ext/response-targets.js"></script>
         <script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
-        <script src="node_modules/htmx/dist/htmx.js"></script>
     {% else %}
         <script src="{% static "js/bundle.js" %}"></script>
     <!-- Tailwind & DaisyUI -->
