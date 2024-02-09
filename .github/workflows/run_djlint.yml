@@ -1,0 +1,34 @@
+name: Backend Tests
+on: [ push, pull_request ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      #----------------------------------------------
+      #       check-out repo and set-up python
+      #----------------------------------------------
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      #----------------------------------------------
+      #       install and configure poetry
+      #----------------------------------------------
+
+      - name: Install and configure Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: 1.5.1
+          virtualenvs-create: false
+          virtualenvs-in-project: false
+          installer-parallel: true
+
+      - name: Install Poetry dependencies
+        run: poetry install
+
+      #----------------------------------------------
+      #       run djlint
+      #----------------------------------------------
+
+      - name: Run djLint
+        run: poetry run djlint ./frontend/templates/ --check --profile=django
