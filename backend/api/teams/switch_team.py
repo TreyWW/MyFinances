@@ -12,7 +12,9 @@ def switch_team(request: HttpRequest, team_id):
         request.user.logged_in_as_team = None
         request.user.save()
         messages.success(request, "You are now logged into your personal account")
-        return render(request, "components/+logged_in_for.html")
+        response = HttpResponse(request, status=200)
+        response["HX-Refresh"] = "true"
+        return response
 
     team: Team = Team.objects.filter(id=team_id).first()
 
