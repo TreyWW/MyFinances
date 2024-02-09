@@ -1,9 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest
 from django.shortcuts import render
-from backend.utils import Modals
-
-Modals = Modals()
 
 
 @login_required

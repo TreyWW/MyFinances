@@ -3,12 +3,17 @@
     <div class="navbar-start">
         <div class="dropdown">
             <label tabindex="0" class="btn btn-ghost lg:hidden">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     class="h-5 w-5"
+                     fill="none"
+                     viewBox="0 0 24 24"
+                     stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" />
                 </svg>
             </label>
             <!-- Topbar Dropdown (MOBILE ONLY) -->
-            <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] shadow p-2 bg-base-100 rounded-box w-52">
+            <ul tabindex="0"
+                class="menu menu-sm dropdown-content mt-3 z-[1] shadow p-2 bg-base-100 rounded-box w-52">
                 <li>
                     <a href="/dashboard">My Dashboard</a>
                 </li>
@@ -25,18 +30,19 @@
         </div>
         <div class="flex items-center gap-x-3 gap-x-0 md:gap-x-5 ms-4">
             <a href="/" class="hidden md:block">
-                <label for="service_list_drawer" id="service_list_button" aria-label="close sidebar"
+                <label for="service_list_drawer"
+                       id="service_list_button"
+                       aria-label="close sidebar"
                        class="swap-rotate drawer-overlay swap flex items-center">
                     <input type="checkbox" id="logo_single_serivce_list_toggler" />
                     <img src="{% static "img/logo_single.png" %}" class="h-10 swap-off">
                     <i class="absolute fa fa-solid fa-x swap-on flex justify-center items-center"></i>
                 </label>
             </a>
-            <a class="md:text-2xl text-gray-800 font-semibold dark:text-gray-200" href="/">
-                My Finances
+            <a class="md:text-2xl text-gray-800 font-semibold dark:text-gray-200"
+               href="/">My Finances
             </a>
         </div>
-
     </div>
     <div class="navbar-center hidden lg:flex z-50">
         <!-- Topbar Dropdown (LARGE ONLY) -->
@@ -72,13 +78,42 @@
         {# Right Icons #}
         {#        <div class="flex">#}
         {# Profile Picture  #}
+        <details class="dropdown dropdown-end mr-3">
+            <summary class="btn btn-ghost"
+                     data-notifications="bell"
+                     hx-get="{% url "api:base:notifications get" %}"
+                     hx-target='[data-notifications="container"]'
+                     hx-swap="innerHTML"
+                     hx-trigger="click">
+                <i class="fa-solid fa-bell"></i>
+                {{ request.user.notification_count }}
+            </summary>
+            <ul class="menu menu-sm dropdown-content border border-primary"
+                data-notifications="container">
+                {% include "base/topbar/_notification_dropdown_items.html" %}
+            </ul>
+        </details>
         <div class="dropdown dropdown-end">
             <label tabindex="0" class="btn btn-ghost btn-circle">
-                {#                    <div class="avatar w-10">#}
                 {% component "profile_picture" image_type="small" extra_classes="max-w-12 max-h-12 w-12 h-12 avatar-img-ring" url=request.user.user_profile.profile_picture_url %}
-                {#                    </div>#}
             </label>
-            <ul tabindex="0" class="menu menu-sm dropdown-content border border-primary">
+            <ul tabindex="0"
+                class="menu menu-sm dropdown-content border border-primary">
+                <details class="dropdown dropdown-left flex flex-col">
+                    <summary class="btn block text-left p-2 max-h-full h-full"
+                             data-htmx-swap="logged_in_for"
+                             hx-trigger="click"
+                             hx-target='[data-htmx-swap="organization_dropdown_list"]'
+                             hx-get="{% url "api:teams:get_dropdown" %}"
+                             hx-swap="innerHTML"
+                    >
+                        {% component "components:logged_in_for" %}
+                    </summary>
+                    <ul class="menu menu-sm dropdown-content border border-primary"
+                        data-htmx-swap="organization_dropdown_list">
+                    </ul>
+                </details>
+                <div class="divider mt-0 mb-0"></div>
                 <li>
                     <a {% if request.resolver_match.url_name == "user settings" %}class="active"{% endif %}
                        href="{% url 'user settings' %}">
@@ -87,9 +122,8 @@
                     </a>
                 </li>
                 <li>
-                    <a class="justify-between {% if request.resolver_match.url_name == "user settings teams" %}active{% endif %}"
-                       href=
-                               "{% url "user settings teams" %}">
+                    <a class="{% if request.resolver_match.url_name == "user settings teams" %}active{% endif %}"
+                       href="{% url "user settings teams" %}">
                         <i class="fa fa-solid fa-users"></i>
                         Manage Team
                         <span class="badge">New</span>
@@ -103,9 +137,7 @@
                 </li>
                 {% if request.user.is_superuser and request.user.is_staff %}
                     <li>
-                        <a tabindex="-1" class="dropdown-item text text-sm mt-1" href="/admin">
-                            Go to admin dashboard
-                        </a>
+                        <a tabindex="-1" class="dropdown-item text text-sm mt-1" href="/admin">Go to admin dashboard</a>
                     </li>
                 {% endif %}
             </ul>

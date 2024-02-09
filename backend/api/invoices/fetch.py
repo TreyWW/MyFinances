@@ -51,9 +51,13 @@ def fetch_all_invoices(request: HttpRequest):
     sort_by = sort_by if sort_by in all_sort_options else "id"
 
     # Fetch invoices for the user, prefetch related items, and select specific fields
+    if request.user.logged_in_as_team:
+        invoices = Invoice.objects.filter(organization=request.user.logged_in_as_team)
+    else:
+        invoices = Invoice.objects.filter(user=request.user)
+
     invoices = (
-        Invoice.objects.filter(user=request.user)
-        .prefetch_related(
+        invoices.prefetch_related(
             Prefetch(
                 "items",
                 queryset=InvoiceItem.objects.annotate(

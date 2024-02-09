@@ -1,0 +1,13 @@
+<div hx-swap-oob='innerHTML:[data-htmx-swap="logged_in_for"]'>
+    {% if request.user.logged_in_as_team %}
+        <h2 class="text-xl mb-1">Organization</h2>
+        <h2 class="text-md">
+            Logged in for <strong>{{ request.user.logged_in_as_team.name }}</strong>
+        </h2>
+    {% else %}
+        <h2 class="text-xl mb-1">Personal</h2>
+        <h2 class="text-md">
+            Logged in as <strong>{{ request.user.first_name }}</strong>
+        </h2>
+    {% endif %}
+</div>

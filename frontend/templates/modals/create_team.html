@@ -1,0 +1,29 @@
+{% component_block "modal" id="modal_create_team" start_open="true" title="Create Team" %}
+    {% fill "content" %}
+        <form class="py-4"
+              id="modal_create_team-form"
+              hx-post="{% url 'api:teams:create' %}" hx-swap="none">
+            {% csrf_token %}
+            <div class="form-control w-full">
+                <label class="label justify-start">
+                    Team Name
+                    <span class="required_star">*</span>
+                </label>
+                <input id="modal_input-name"
+                       name="name"
+                       type="text"
+                       class="input input-block input-bordered" required>
+            </div>
+            <div class="modal-action">
+                <button type="submit"
+                        id="modal_create_team-submit"
+                        class="btn btn-primary">
+                    Create Team
+                </button>
+                <button type="button" _="on click call #modal_create_team.close()" class="btn">
+                    Cancel
+                </button>
+            </div>
+        </form>
+    {% endfill %}
+{% endcomponent_block %}

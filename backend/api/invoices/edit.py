@@ -1,10 +1,11 @@
+from datetime import datetime
+
 from django.contrib import messages
-from django.http import HttpRequest, JsonResponse, QueryDict
+from django.http import HttpRequest, JsonResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
 from backend.models import Invoice
-from datetime import datetime
 
 
 @require_http_methods(["POST"])
@@ -13,6 +14,19 @@ def edit_invoice(request: HttpRequest):
         invoice = Invoice.objects.get(id=request.POST.get("invoice_id"))
     except:
         return JsonResponse({"message": "Invoice not found"}, status=404)
+
+    if request.user.logged_in_as_team:
+        if request.user.logged_in_as_team != invoice.organization:
+            return JsonResponse(
+                {"message": "You do not have permission to edit this invoice"},
+                status=403,
+            )
+    else:
+        if request.user != invoice.user:
+            return JsonResponse(
+                {"message": "You do not have permission to edit this invoice"},
+                status=403,
+            )
 
     attributes_to_updates = {
         "date_due": datetime.strptime(request.POST.get("date_due"), "%Y-%m-%d").date(),
@@ -45,6 +59,6 @@ def edit_invoice(request: HttpRequest):
 
     if request.htmx:
         messages.success(request, "Invoice edited")
-        return render(request, "partials/base/toasts.html")
+        return render(request, "base/toasts.html")
 
     return JsonResponse({"message": "Invoice successfully edited"}, status=200)

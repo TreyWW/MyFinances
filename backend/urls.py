@@ -38,41 +38,6 @@ urlpatterns = [
         name="user settings teams permissions",
     ),
     path(
-        "dashboard/settings/teams/create",
-        settings_v.teams.create_team,
-        name="user settings teams create",
-    ),
-    path(
-        "dashboard/settings/teams/invite",
-        settings_v.teams.invite_user_to_team,
-        name="user settings teams invite",
-    ),
-    path(
-        "dashboard/settings/teams/join/<str:code>",
-        settings_v.teams.join_team_page,
-        name="user settings teams join",
-    ),
-    path(
-        "dashboard/settings/teams/join/<str:code>/accept/",
-        settings_v.teams.join_team_accepted,
-        name="user settings teams join accept",
-    ),
-    path(
-        "dashboard/settings/teams/join/<str:code>/decline/",
-        settings_v.teams.join_team_declined,
-        name="user settings teams join decline",
-    ),
-    path(
-        "dashboard/settings/teams/leave/",
-        settings_v.teams.leave_team,
-        name="user settings teams join leave",
-    ),
-    path(
-        "dashboard/settings/teams/leave/confirm",
-        settings_v.teams.leave_team_confirm,
-        name="user settings teams join leave confirm",
-    ),
-    path(
         "dashboard/profile/change_password/",
         settings_v.view.change_password,
         name="user settings change_password",
@@ -132,7 +97,6 @@ urlpatterns = [
     path("login/external/", include("social_django.urls", namespace="social")),
     path("login/", other.login.login_page, name="login"),
     path("logout/", other.login.logout_view, name="logout"),
-    # path('logout_test/', other.login.logout_view, name='logout_test'),
     path(
         "login/create_account",
         other.login.CreateAccountChooseView.as_view(),

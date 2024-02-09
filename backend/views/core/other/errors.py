@@ -1,9 +1,9 @@
 import traceback
-from django.http import HttpRequest
 
+from django.http import HttpRequest
 from django_ratelimit.exceptions import Ratelimited
+
 from backend.decorators import *
-from backend.utils import Toast
 from backend.models import *
 
 
@@ -20,13 +20,7 @@ def universal(request: HttpRequest, exception=None):
         return
 
     if request.user.is_authenticated:
-        Toast(
-            request=request,
-            title="Error",
-            message="Sorry, something went wrong!",
-            autohide=False,
-            level="danger",
-        )
+        messages.error(request, "Sorry, something went wrong!")
         TracebackError(user=request.user, error=exec_error).save()
     else:
         TracebackError(error=exec_error).save()
@@ -46,13 +40,6 @@ def e_403(request: HttpRequest, exception=None):
             TracebackError(error=exec_error).save()
         return redirect("login")
     else:
-        Toast(
-            request=request,
-            title="Error",
-            message="Sorry, something went wrong!",
-            autohide=False,
-            level="danger",
-        )
         messages.error(
             request,
             "Sorry, something went wrong on our end!"

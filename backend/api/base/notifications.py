@@ -5,34 +5,24 @@ from backend.models import Notification
 
 
 def get_notification_html(request: HttpRequest):
-    user_notifications = Notification.objects.filter(user=request.user)
-    notifications_normal = user_notifications.filter(action="normal")
-    notifications_redirect = user_notifications.filter(action="redirect")
-    notifications_modal = user_notifications.filter(action="modal")
-    modals = []
+    user_notifications = Notification.objects.filter(user=request.user).order_by(
+        "-date"
+    )
+    above_5 = False
 
-    # TODO: Make modals have their own actual modal that gets loaded ALSO VIA HTMX
-    # TODO: e.g. https://htmx.org/examples/modal-bootstrap/
-    # for modal in notifications_modal:
-    #     modals.append({
-    #
-    #     })
+    if user_notifications.count() > 5:
+        user_notifications = user_notifications[:5]
+        above_5 = True
 
     return render(
         request,
-        "partials/base/_notification_dropdown_items.html",
-        {
-            "notifications": {
-                "normal": notifications_normal,
-                "modal": notifications_modal,
-                "redirect": notifications_redirect,
-            }
-        },
+        "base/topbar/_notification_dropdown_items.html",
+        {"notifications": user_notifications, "notifications_above_max": above_5},
     )
 
 
 def delete_notification(request: HttpRequest, id: int):
-    notif = Notification.objects.filter(id=id).first()
+    notif = Notification.objects.filter(id=id, user=request.user).first()
 
     if notif is None or notif.user != request.user:
         return HttpResponse(status=404, content="Notification not found")

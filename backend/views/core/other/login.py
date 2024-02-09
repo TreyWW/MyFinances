@@ -8,9 +8,12 @@ from django.urls import resolve, Resolver404
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 
-import settings.settings
 from backend.decorators import *
 from backend.models import LoginLog, AuditLog, User
+from settings.settings import (
+    SOCIAL_AUTH_GITHUB_ENABLED,
+    SOCIAL_AUTH_GOOGLE_OAUTH2_ENABLED,
+)
 
 
 @csrf_exempt
@@ -45,8 +48,8 @@ def login_page(request):
         request,
         "pages/login/login.html",
         {
-            "github_enabled": settings.SOCIAL_AUTH_GITHUB_ENABLED,
-            "google_enabled": settings.SOCIAL_AUTH_GOOGLE_OAUTH2_ENABLED,
+            "github_enabled": SOCIAL_AUTH_GITHUB_ENABLED,
+            "google_enabled": SOCIAL_AUTH_GOOGLE_OAUTH2_ENABLED,
         },
     )
 
@@ -67,8 +70,8 @@ class CreateAccountChooseView(View):
             request,
             "pages/login/create_account_choose.html",
             {
-                "github_enabled": settings.SOCIAL_AUTH_GITHUB_ENABLED,
-                "google_enabled": settings.SOCIAL_AUTH_GOOGLE_OAUTH2_ENABLED,
+                "github_enabled": SOCIAL_AUTH_GITHUB_ENABLED,
+                "google_enabled": SOCIAL_AUTH_GOOGLE_OAUTH2_ENABLED,
             },
         )
 

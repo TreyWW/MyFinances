@@ -1,0 +1,75 @@
+{#{% for notification in notifications.normal %}#}
+{#    <li>#}
+{#        <a tabindex="-1"#}
+{#           class="dropdown-item text-sm {% if not forloop.first %}mt-1{% endif %}"#}
+{#           hx-delete="{% url 'api:base:notifications delete' id=notification.id %}"#}
+{#           hx-swap="outerHTML">{{ notification.message }}</a>#}
+{#    </li>#}
+{#{% endfor %}#}
+{#{% for notification in notifications.redirect %}#}
+{#    <li>#}
+{#        <a tabindex="-1"#}
+{#           class="dropdown-item text-sm {% if not forloop.first %}mt-1{% endif %}"#}
+{#           href="{{ notification.action_value }}">{{ notification.message }}</a>#}
+{#    </li>#}
+{#{% endfor %}#}
+{#{% for notification in notifications.modal %}#}
+{#    <li>#}
+{#        <label tabindex="-1"#}
+{#               class="dropdown-item text-sm mt-1 flex cursor-pointer"#}
+{#               onclick="modal_{{ notification.action_value }}.showModal();"#}
+{#               hx-trigger="click once"#}
+{#               hx-swap="beforeend"#}
+{#               hx-target="#modal_container"#}
+{#               hx-get="{% url "api:base:modal retrieve with context" modal_name=notification.action_value context_type=notification.extra_type context_value=notification.extra_value %}">#}
+{#            {{ notification.message }}#}
+{#        </label>#}
+{#    </li>#}
+{#{% endfor %}#}
+{#{% if not notifications.modal and not notifications.redirect and not notifications.normal %}#}
+{#    <li>#}
+{#        <div class="dropdown-item text-sm mt-1 hover-none pointer-events-none">No notifications</div>#}
+{#    </li>#}
+{#{% endif %}#}
+
+{% for notification in notifications %}
+    {% if notification.action == "normal" %}
+        <li>
+            <a tabindex="-1"
+               class="dropdown-item text-sm {% if not forloop.first %}mt-1{% endif %}"
+               hx-delete="{% url 'api:base:notifications delete' id=notification.id %}"
+               hx-swap="outerHTML">{{ notification.message }}</a>
+        </li>
+    {% elif notification.action == "redirect" %}
+        <li>
+            <a tabindex="-1"
+               class="dropdown-item text-sm {% if not forloop.first %}mt-1{% endif %}"
+               href="{{ notification.action_value }}">{{ notification.message }}</a>
+        </li>
+    {% elif notification.action == "modal" %}
+        <li>
+            <label tabindex="-1"
+                   class="dropdown-item text-sm mt-1 flex cursor-pointer"
+                   onclick="modal_{{ notification.action_value }}.showModal();"
+                   hx-trigger="click once"
+                   hx-swap="beforeend"
+                   hx-target="#modal_container"
+                   hx-get="{% url "api:base:modal retrieve with context" modal_name=notification.action_value context_type=notification.extra_type context_value=notification.extra_value %}">
+                {{ notification.message }}
+            </label>
+        </li>
+    {% endif %}
+{% empty %}
+    <li>
+        <div class="dropdown-item text-sm mt-1 hover-none pointer-events-none">No notifications</div>
+    </li>
+{% endfor %}
+{% if notifications_above_max %}
+    <li>
+        <strong>
+            You have older notifications.<br>Clear some to see more.
+        </strong>
+    </li>
+{% endif %}
+
+{% include "base/topbar/_notification_bell.html" %}

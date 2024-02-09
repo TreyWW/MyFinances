@@ -2,9 +2,10 @@ import smtplib
 from uuid import uuid4
 
 from django.contrib import messages
-from django.contrib.auth.models import User, UserManager, AbstractUser
+from django.contrib.auth.models import UserManager, AbstractUser, AnonymousUser
 from django.core.mail import EmailMessage
 from django.db import models
+from django.db.models import Count
 from django.utils import timezone
 from django.utils.crypto import get_random_string
 from shortuuid.django_fields import ShortUUIDField
@@ -12,13 +13,46 @@ from shortuuid.django_fields import ShortUUIDField
 from settings import settings
 
 
+def USER_OR_ORGANIZATION_CONSTRAINT():
+    return models.CheckConstraint(
+        name=f"%(app_label)s_%(class)s_check_user_or_organization",
+        check=(
+            models.Q(user__isnull=True, organization__isnull=False)
+            | models.Q(user__isnull=False, organization__isnull=True)
+        ),
+    )
+
+
 class CustomUserManager(UserManager):
     def get_queryset(self):
-        return super().get_queryset().select_related("user_profile")
+        return (
+            super()
+            .get_queryset()
+            .select_related("user_profile", "logged_in_as_team")
+            .annotate(notification_count=((Count("user_notifications"))))
+        )
 
 
 class User(AbstractUser):
     objects = CustomUserManager()
+
+    logged_in_as_team = models.ForeignKey("Team", on_delete=models.SET_NULL, null=True)
+
+
+class CustomUserMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        # Replace request.user with CustomUser instance if authenticated
+        if request.user.is_authenticated:
+            request.user = User.objects.get(pk=request.user.pk)
+        else:
+            # If user is not authenticated, set request.user to AnonymousUser
+            request.user = AnonymousUser()
+
+        response = self.get_response(request)
+        return response
 
 
 def RandomCode(length=6):
@@ -66,8 +100,10 @@ class UserSettings(models.Model):
 
 
 class Team(models.Model):
-    name = models.CharField(max_length=100)
-    leader = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100, unique=True)
+    leader = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="teams_leader_of"
+    )
     members = models.ManyToManyField(User, related_name="teams_joined")
 
 
@@ -109,7 +145,8 @@ class TeamInvitation(models.Model):
 
 
 class Receipt(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    organization = models.ForeignKey(Team, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=100)
     image = models.ImageField(upload_to="receipts")
     total_price = models.FloatField(null=True, blank=True)
@@ -119,6 +156,9 @@ class Receipt(models.Model):
     merchant_store = models.CharField(max_length=255, blank=True, null=True)
     purchase_category = models.CharField(max_length=200, blank=True, null=True)
 
+    class Meta:
+        constraints = [USER_OR_ORGANIZATION_CONSTRAINT()]
+
 
 class ReceiptDownloadToken(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -127,7 +167,8 @@ class ReceiptDownloadToken(models.Model):
 
 
 class Client(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    organization = models.ForeignKey(Team, on_delete=models.CASCADE, null=True)
     active = models.BooleanField(default=True)
 
     name = models.CharField(max_length=64)
@@ -140,7 +181,8 @@ class Client(models.Model):
     city = models.CharField(max_length=100, blank=True, null=True)
     country = models.CharField(max_length=100, blank=True, null=True)
 
-    # team = models.ForeignKey(Team,  on_delete=models.BLANK, blank=True, null=True)
+    class Meta:
+        constraints = [USER_OR_ORGANIZATION_CONSTRAINT()]
 
     def __str__(self):
         return self.name
@@ -183,7 +225,8 @@ class Invoice(models.Model):
         ("overdue", "Overdue"),
     )
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    organization = models.ForeignKey(Team, on_delete=models.CASCADE, null=True)
     invoice_id = models.IntegerField(unique=True, blank=True, null=True)  # todo: add
 
     client_to = models.ForeignKey(
@@ -222,6 +265,9 @@ class Invoice(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     date_due = models.DateField()
     date_issued = models.DateField(blank=True, null=True)
+
+    class Meta:
+        constraints = [USER_OR_ORGANIZATION_CONSTRAINT()]
 
     @property
     def dynamic_payment_status(self):
@@ -325,17 +371,22 @@ class Notification(models.Model):
         ("redirect", "Redirect"),
     ]
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="user_notifications"
+    )
     message = models.CharField(max_length=100)
     action = models.CharField(max_length=10, choices=action_choices, default="normal")
     action_value = models.CharField(max_length=100, null=True, blank=True)
+    extra_type = models.CharField(max_length=100, null=True, blank=True)
+    extra_value = models.CharField(max_length=100, null=True, blank=True)
     date = models.DateTimeField(auto_now_add=True)
 
 
 class AuditLog(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    organization = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True)
     action = models.CharField(max_length=100)
-    date = models.DateTimeField(auto_now_add=True)  #
+    date = models.DateTimeField(auto_now_add=True)
 
 
 class LoginLog(models.Model):

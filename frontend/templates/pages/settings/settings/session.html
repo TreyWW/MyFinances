@@ -2,9 +2,9 @@
     <div class="flex items-center space-x-4">
         <div class="flex-shrink-0">
             {% if "12"|random == "1" %}
-                {% include 'components/icon.html' with icon="desktop" tags="dark:text-white" %}
+                <i class="fa-solid fa-desktop dark:text-white"></i>
             {% else %}
-                {% include 'components/icon.html' with icon="mobile-screen-button" tags="dark:text-white" %}
+                <i class="fa-solid fa-mobile-screen-button dark:text-white"></i>
             {% endif %}
         </div>
         <div class="min-w-0 flex-1">

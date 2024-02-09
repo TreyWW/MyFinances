@@ -1,0 +1,22 @@
+{% component_block "modal" id="modal_accept_invite" start_open="true" title="Accept Invitation" %}
+{% fill "content" %}
+<form class="py-4"
+      id="modal_accept_invite-form"
+      hx-post="{% url 'api:teams:join accept' code=code %}"
+      hx-swap="none">
+    {% csrf_token %}
+    <div class="modal-action">
+        <button type="submit"
+                id="modal_accept_invite-submit"
+                class="btn btn-primary"
+                x-on:accept_invite_error.window="document.getElementById('modal_accept_invite').close()">
+            Accept Invite
+        </button>
+        <button type="button"
+                hx-post="{% url "api:teams:join decline" code=code %}"
+                _="on click call #modal_accept_invite.close() "
+                class="btn">Decline Invite</button>
+    </div>
+</form>
+{% endfill %}
+{% endcomponent_block %}
