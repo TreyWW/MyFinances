@@ -105,10 +105,7 @@
                              hx-trigger="click"
                              hx-target='[data-htmx-swap="organization_dropdown_list"]'
                              hx-get="{% url "api:teams:get_dropdown" %}"
-                             hx-swap="innerHTML"
-                    >
-                        {% component "components:logged_in_for" %}
-                    </summary>
+                             hx-swap="innerHTML">{% component "components:logged_in_for" %}</summary>
                     <ul class="menu menu-sm dropdown-content border border-primary"
                         data-htmx-swap="organization_dropdown_list">
                     </ul>

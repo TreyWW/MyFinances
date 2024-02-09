@@ -6,12 +6,16 @@
         <td>
             {% if row.id %}
                 <input class="hidden" name="service_name[]" value="{{ row.name }}">
-                <input class="hidden" name="service_description[]" value="{{ row.description }}">
+                <input class="hidden"
+                       name="service_description[]"
+                       value="{{ row.description }}">
                 {{ row.name|markdownify }}
                 {{ row.description|markdownify }}
             {% else %}
                 <input class="hidden" name="service_name[]" value="{{ row.service_name }}">
-                <input class="hidden" name="service_description[]" value="{{ row.service_description }}">
+                <input class="hidden"
+                       name="service_description[]"
+                       value="{{ row.service_description }}">
                 {{ row.service_name|markdownify }}
                 {{ row.service_description|markdownify }}
             {% endif %}
@@ -21,20 +25,26 @@
             {{ row.hours|intcomma }}
         </td>
         <td>
-            <input class="hidden" name="price_per_hour[]" value="{{ row.price_per_hour }}">
+            <input class="hidden"
+                   name="price_per_hour[]"
+                   value="{{ row.price_per_hour }}">
             £{{ row.price_per_hour }}
         </td>
         <td>
             {% if row.id %}
-            <input class="hidden" name="total_price[]" value="{{ row.hours|mul:row.price_per_hour|floatformat:2 }}">
+                <input class="hidden"
+                       name="total_price[]"
+                       value="{{ row.hours|mul:row.price_per_hour|floatformat:2 }}">
                 £{{ row.hours|mul:row.price_per_hour|floatformat:2|intcomma }}
             {% else %}
-            <input class="hidden" name="total_price[]" value="{{ row.total_price }}">
+                <input class="hidden" name="total_price[]" value="{{ row.total_price }}">
                 £{{ row.total_price|floatformat:2|intcomma }}
             {% endif %}
         </td>
         <td>
-            <button type="button" class="btn btn-outline btn-error btn-xs" _="on click remove closest <tr/>">
+            <button type="button" class="btn btn-outline btn-error btn-xs" _="on click remove closest
+                <tr/>
+                ">
                 <i class="fa-solid fa-trash-can pe-2"></i>
                 Delete
             </button>

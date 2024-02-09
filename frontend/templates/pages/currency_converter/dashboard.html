@@ -1,7 +1,8 @@
 {% extends 'base/base.html' %}
 {% block content %}
     <form class="my-4 max-w-screen-xl card border border-gray-700 dark:border-gray-700"
-          hx-post="{% url 'api:currency_converter:convert' %}" hx-target='div[data-type="results"]'
+          hx-post="{% url 'api:currency_converter:convert' %}"
+          hx-target='div[data-type="results"]'
           method="post">
         {% csrf_token %}
         <div class="mb-4 flex w-full flex-col">
@@ -10,45 +11,42 @@
                 <div class="form-field">
                     <label class="text-lg font-semibold text-gray-900 dark:text-white mb-1">Currency Amount</label>
                     <br>
-                    <input name="currency_amount" placeholder="100" max="9999999999" maxlength="10" type="text"
+                    <input name="currency_amount"
+                           placeholder="100"
+                           max="9999999999"
+                           maxlength="10"
+                           type="text"
                            class="peer input-ghost-secondary input input-bordered input-block">
                     <label class="form-label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden ">
                         <span class="form-label-alt">Please enter a valid currency amount name.</span>
                     </label>
                 </div>
-
-
                 <div class="divide-y divide-gray-200 dark:divide-gray-700">
                     <div class="flex items-center justify-between py-4 gap-x-4">
                         <div class="w-[50%]">
                             <label class="text-lg font-semibold text-gray-900 dark:text-white mb-1">From Currency</label>
-                            <select name="from_currency" class="select select-bordered select-solid-primary w-[100%]">
+                            <select name="from_currency"
+                                    class="select select-bordered select-solid-primary w-[100%]">
                                 {% for code, info in currency_signs.items %}
-                                    <option value="{{ code }}" {% if currency == code %}selected{% endif %}>
-                                        {{ info.symbol }} - {{ code }}
-                                    </option>
+                                    <option value="{{ code }}" {% if currency == code %}selected{% endif %}>{{ info.symbol }}
+                                        - {{ code }}</option>
                                 {% endfor %}
                             </select>
                         </div>
-
                         <div class="w-[50%]">
                             <label class="text-lg font-semibold text-gray-900 dark:text-white mb-1">To Currency</label>
-                            <select name="to_currency" class="select select-bordered select-solid-primary w-[100%]">
+                            <select name="to_currency"
+                                    class="select select-bordered select-solid-primary w-[100%]">
                                 {% for code, info in currency_signs.items %}
-                                    <option value="{{ code }}" {% if currency == code %}selected{% endif %}>
-                                        {{ info.symbol }} - {{ code }}
-                                    </option>
+                                    <option value="{{ code }}" {% if currency == code %}selected{% endif %}>{{ info.symbol }}
+                                        - {{ code }}</option>
                                 {% endfor %}
                             </select>
                         </div>
                     </div>
                 </div>
-
                 <div data-type="results"></div>
-
-                <button class="btn btn-primary mb-2 loading-htmx" data-type="convert-btn">
-                    Convert
-                </button>
+                <button class="btn btn-primary mb-2 loading-htmx" data-type="convert-btn">Convert</button>
             </div>
         </div>
     </form>

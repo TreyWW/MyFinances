@@ -5,7 +5,9 @@
             <p class="text-content2">{% lorem 10 w %}</p>
             <div class="divide-y divide-gray-200 dark:divide-gray-700">
                 <!-- Profile Name -->
-                <form hx-post="{% url "api:settings:change_name" %}" hx-swap="none" hx-indicator="#save_account_name"
+                <form hx-post="{% url "api:settings:change_name" %}"
+                      hx-swap="none"
+                      hx-indicator="#save_account_name"
                       class="flex items-center justify-between py-4">
                     <div class="flex flex-col flex-grow">
                         <p class="text-lg font-semibold text-gray-900 dark:text-white">Account Name</p>
@@ -13,11 +15,19 @@
                         </p>
                     </div>
                     <input type="hidden" name="section" value="name" />
-                    <input type="text" name="first_name" class="input input-bordered w-[30%]"
-                           placeholder="John" value="{{ request.user.first_name }}" />
-                    <input type="text" name="last_name" class="input input-bordered w-[30%] mx-1"
-                           placeholder="Doe" value="{{ request.user.last_name }}" />
-                    <button id="save_account_name" type="submit" class="btn btn-outline btn-primary loading-htmx">
+                    <input type="text"
+                           name="first_name"
+                           class="input input-bordered w-[30%]"
+                           placeholder="John"
+                           value="{{ request.user.first_name }}" />
+                    <input type="text"
+                           name="last_name"
+                           class="input input-bordered w-[30%] mx-1"
+                           placeholder="Doe"
+                           value="{{ request.user.last_name }}" />
+                    <button id="save_account_name"
+                            type="submit"
+                            class="btn btn-outline btn-primary loading-htmx">
                         <span class="loading-htmx-text">
                             <i class="fa fa-solid fa-save"></i>
                         </span>

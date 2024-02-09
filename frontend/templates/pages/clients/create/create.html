@@ -6,9 +6,12 @@
             {% csrf_token %}
             <div class="divider mb-6">REQUIRED DETAILS</div>
             <div class="w-full md:w-1/3 lg:1/4">
-                <label class="label">Single
-                    <input type="checkbox" name="is_representative" class="toggle toggle-primary" />
-                                     Representative
+                <label class="label">
+                    Single
+                    <input type="checkbox"
+                           name="is_representative"
+                           class="toggle toggle-primary" />
+                    Representative
                 </label>
             </div>
             <div class="my-4 flex w-full  grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -19,8 +22,12 @@
                             <label class="label">
                                 <span class="label-text">Client Name</span>
                             </label>
-                            <input required id="clientName" name="client_name"
-                                   minlength="3" type="text" class="peer input input-bordered w-full"
+                            <input required
+                                   id="clientName"
+                                   name="client_name"
+                                   minlength="3"
+                                   type="text"
+                                   class="peer input input-bordered w-full"
                                    placeholder="Bob Smith" />
                             <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden">
                                 <span class="label-text-alt text-error">Please enter a valid client name</span>
@@ -35,8 +42,12 @@
                             <label class="label">
                                 <span class="label-text">Client Email</span>
                             </label>
-                            <input required id="clientEmail" name="client_email"
-                                   minlength="4" type="email" class="peer input input-bordered w-full"
+                            <input required
+                                   id="clientEmail"
+                                   name="client_email"
+                                   minlength="4"
+                                   type="email"
+                                   class="peer input input-bordered w-full"
                                    placeholder="bsmith@example.com" />
                             <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden">
                                 <span class="label-text-alt text-error">Please enter a valid client email address</span>
@@ -53,8 +64,11 @@
                         <label class="label">
                             <span class="label-text">Client Company</span>
                         </label>
-                        <input id="companyName" name="company_name"
-                               minlength="3" type="text" class="peer input input-bordered w-full"
+                        <input id="companyName"
+                               name="company_name"
+                               minlength="3"
+                               type="text"
+                               class="peer input input-bordered w-full"
                                placeholder="Bob Smith" />
                         <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden">
                             <span class="label-text-alt text-error">Please enter a valid company name</span>
@@ -71,18 +85,20 @@
                             <label class="label">
                                 <span class="label-text">Client Address</span>
                             </label>
-                            <input id="clientName" name="client_address"
-                                   minlength="3" type="text" class="peer input input-bordered w-full"
+                            <input id="clientName"
+                                   name="client_address"
+                                   minlength="3"
+                                   type="text"
+                                   class="peer input input-bordered w-full"
                                    placeholder="1234 Main St" />
                             <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden">
-                                    <span class="label-text-alt text-error">Please enter a valid client address or no
-                                                                            address</span>
+                                <span class="label-text-alt text-error">Please enter a valid client address or no
+                                address</span>
                             </label>
                         </div>
                     </div>
                 </div>
                 {# Client Phone Number Card #}
-
                 <div class="card me-3 w-full bg-base-200 border border-base-200 hover:border-gray-400">
                     <div class="card-body w-full">
                         <div class="form-control w-full">
@@ -90,7 +106,8 @@
                                 <span class="label-text">Client Telephone Number</span>
                             </label>
                             <input name="client_phone"
-                                   type="tel" class="peer input input-bordered w-full"
+                                   type="tel"
+                                   class="peer input input-bordered w-full"
                                    placeholder="07000000000" />
                             <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden">
                                 <span class="label-text-alt text-error">Please enter a valid phone number</span>
@@ -99,9 +116,7 @@
                     </div>
                 </div>
             </div>
-            <button type="submit" class="btn float-right w-[150px] btn-primary">
-                Create
-            </button>
+            <button type="submit" class="btn float-right w-[150px] btn-primary">Create</button>
         </form>
     </div>
     <script>

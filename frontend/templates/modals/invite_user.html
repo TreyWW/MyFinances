@@ -2,7 +2,8 @@
     {% fill "content" %}
         <form class="py-4"
               id="modal_invite_user-form"
-              hx-post="{% url 'api:teams:invite' %}" hx-swap="none">
+              hx-post="{% url 'api:teams:invite' %}"
+              hx-swap="none">
             {% csrf_token %}
             <div class="form-control w-full">
                 <label class="label justify-start">
@@ -12,7 +13,8 @@
                 <input id="modal_input-email"
                        name="email"
                        type="email"
-                       class="input input-block input-bordered" required>
+                       class="input input-block input-bordered"
+                       required>
             </div>
             <input type="hidden" name="team_id" value="{{ team_id }}">
             <div class="modal-action">
@@ -22,8 +24,9 @@
                         x-on:invite_user_error.window="document.getElementById('modal_invite_user').close()">
                     Send Invite
                 </button>
-                <button type="button" _="on click call #modal_invite_user.close()" class="btn">
-                    Cancel
+                <button type="button"
+                        _="on click call #modal_invite_user.close()"
+                        class="btn">Cancel
                 </button>
             </div>
         </form>
