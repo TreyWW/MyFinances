@@ -53,6 +53,9 @@ psycopg2 = "2.9.9"
 [tool.poetry.group.dev.dependencies]
 black = "^24.1.1"
 
+[tool.djlint]
+profile = "django"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
