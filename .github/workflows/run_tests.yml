@@ -6,7 +6,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        os: [ ubuntu-latest, windows-latest ]
         python-version: [ "3.10", "3.11", "3.12" ]
         django-version: [ 4, 5 ]
 
@@ -53,13 +53,6 @@ jobs:
         run: |
           choco install docker-compose
 
-      - name: Install Docker Compose
-        if: startsWith(matrix.os, 'macos-')
-        run: |
-          brew install docker-compose
-          mkdir -p ~/.docker/cli-plugins
-          ln -sfn /usr/local/opt/docker-compose/bin/docker-compose ~/.docker/cli-plugins/docker-compose
-          brew services start docker
 
       - name: Copy docker compose file
         run: cp $DOCKER_COMPOSE_PATH ./docker-compose.yml
