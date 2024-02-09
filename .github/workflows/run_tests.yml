@@ -43,7 +43,7 @@ jobs:
       #       setup + configure docker compose
       #----------------------------------------------
       - name: Install Docker Compose
-        if: startsWith(matrix.os, 'ubuntu-') || startsWith(matrix.os, 'macos-')
+        if: startsWith(matrix.os, 'ubuntu-')
         run: |
           sudo apt-get update
           sudo apt-get install -y docker-compose
@@ -52,6 +52,11 @@ jobs:
         if: startsWith(matrix.os, 'windows-')
         run: |
           choco install docker-compose
+
+      - name: Install Docker Compose
+        if: startsWith(matrix.os, 'macos-')
+        run: |
+          brew install docker-compose
 
       - name: Copy docker compose file
         run: cp $DOCKER_COMPOSE_PATH ./docker-compose.yml
