@@ -64,5 +64,12 @@
         <div class="dropdown-item text-sm mt-1 hover-none pointer-events-none">No notifications</div>
     </li>
 {% endfor %}
+{% if notifications_above_max %}
+    <li>
+        <strong>
+            You have older notifications.<br>Clear some to see more.
+        </strong>
+    </li>
+{% endif %}
 
 {% include "base/topbar/_notification_bell.html" %}

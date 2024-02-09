@@ -7,12 +7,18 @@ from backend.models import Notification
 def get_notification_html(request: HttpRequest):
     user_notifications = Notification.objects.filter(user=request.user).order_by(
         "-date"
-    )[:5]
+    )
+    above_5 = False
+
+
+    if user_notifications.count() > 5:
+        user_notifications = user_notifications[:5]
+        above_5 = True
 
     return render(
         request,
         "base/topbar/_notification_dropdown_items.html",
-        {"notifications": user_notifications},
+        {"notifications": user_notifications, "notifications_above_max": above_5},
     )
 
 
