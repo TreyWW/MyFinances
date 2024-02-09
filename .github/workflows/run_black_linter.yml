@@ -1,4 +1,4 @@
-name: djLint
+name: Black Linter (PY)
 
 on: [push, pull_request]
 
