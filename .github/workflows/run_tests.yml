@@ -53,9 +53,12 @@ jobs:
         run: |
           choco install docker-compose
 
-
+      #----------------------------------------------
+      #       copy docker compose file
+      #----------------------------------------------
       - name: Copy docker compose file
-        run: cp $DOCKER_COMPOSE_PATH ./docker-compose.yml
+        run: |
+          cp $GITHUB_WORKSPACE/$DOCKER_COMPOSE_PATH ./docker-compose.yml
 
       #----------------------------------------------
       #       run docker compose & tests
