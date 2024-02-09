@@ -19,13 +19,12 @@ jobs:
         uses: snok/install-poetry@v1
         with:
           version: 1.5.1
-          virtualenvs-create: false
+          virtualenvs-create: true
           virtualenvs-in-project: false
           installer-parallel: true
 
       - name: Setup VENV
         run: |
-          python -m venv venv
           source .venv/bin/activate
 
       - name: Install dependencies
