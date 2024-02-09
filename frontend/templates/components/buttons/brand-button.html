@@ -1,18 +1,8 @@
-<a class="mt-4 flex w-full items-center justify-center rounded-lg border border-gray-300 px-4 py-2 text-sm
-               font-medium leading-5 text-white text-gray-700 transition-colors duration-150 hover:border-gray-500
-                focus:border-gray-500 focus:outline-none dark:text-gray-400
-                {% if disabled %}
-                cursor-not-allowed opacity-50
-                {% else %}
-                active:bg-transparent
-                 active:text-gray-500
-                 focus:shadow-outline-gray
-                {% endif %}"
-        href="{% if brand == "Github" %}{% url 'social:begin' 'github' %}{% else %}{% endif %}"
->
+<a class="mt-4 flex w-full items-center justify-center rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium leading-5 text-white text-gray-700 transition-colors duration-150 hover:border-gray-500 focus:border-gray-500 focus:outline-none dark:text-gray-400 {% if disabled %} cursor-not-allowed opacity-50 {% else %} active:bg-transparent active:text-gray-500 focus:shadow-outline-gray {% endif %}"
+   href="{% if brand == "Github" %}{% url 'social:begin' 'github' %}{% else %}{% endif %}">
     <div class="flex items-center">
-            <i class="mr-3 fa-brands fa-{{ brand |lower }} {% if not disabled %}fa-flip{% endif %}"
-               style="--fa-animation-duration: 2s;"></i>
-            <span>{{ text | default:brand }}</span>
+        <i class="mr-3 fa-brands fa-{{ brand |lower }} {% if not disabled %}fa-flip{% endif %}"
+           style="--fa-animation-duration: 2s"></i>
+        <span>{{ text | default:brand }}</span>
     </div>
 </a>

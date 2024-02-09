@@ -1,12 +1,14 @@
 <form method="post">
     {% csrf_token %}
-    <input type="text" placeholder="Search" class="input input-bordered input-block my-3"
+    <input type="text"
+           placeholder="Search"
+           class="input input-bordered input-block my-3"
            hx-get="{% url 'api:receipts:fetch' %}"
            hx-target="#items"
            hx-trigger="keyup changed delay:500ms"
            hx-indicator="#search_loading"
            name="search">
-    <span id="search_loading" class="loading loading-spinner loading-htmx-loader-individual"></span>
-    <div id="results">
-    </div>
+    <span id="search_loading"
+          class="loading loading-spinner loading-htmx-loader-individual"></span>
+    <div id="results"></div>
 </form>

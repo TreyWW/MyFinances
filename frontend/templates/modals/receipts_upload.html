@@ -7,8 +7,7 @@
               enctype="multipart/form-data"
               hx-encoding="multipart/form-data"
               hx-target="#items"
-              hx-indicator="#upload_receipt_button"
-        >
+              hx-indicator="#upload_receipt_button">
             {% csrf_token %}
             <div class="form-control">
                 <label class="label justify-start">
@@ -22,8 +21,11 @@
                     Receipt Image
                     <span class="required_star">*</span>
                 </label>
-                <input required type="file" name="receipt_image"
-                       class="file-input file-input-bordered max-w-full" accept="image/jpeg,image/png,image/jpg">
+                <input required
+                       type="file"
+                       name="receipt_image"
+                       class="file-input file-input-bordered max-w-full"
+                       accept="image/jpeg,image/png,image/jpg">
             </div>
             <div class="form-control">
                 <label class="label">Receipt Date</label>
@@ -42,21 +44,22 @@
                     Total Price
                     <span class="required_star">*</span>
                 </label>
-                <input required type="number" name="total_price" class="input input-bordered">
+                <input required
+                       type="number"
+                       name="total_price"
+                       class="input input-bordered">
             </div>
             <div class="modal-action">
                 <button type="submit"
                         id="modal_receipts_upload-action-btn"
                         class="btn btn-primary"
-                        _="on click
-                    if #modal_receipts_upload-form.checkValidity()
-                     call #modal_receipts_upload.close()
-                    end">
+                        _="on click if #modal_receipts_upload-form.checkValidity() call #modal_receipts_upload.close() end">
                     Save
                 </button>
                 <button type="reset" class="btn btn-error">Reset</button>
-                <button type="button" _="on click call #modal_receipts_upload.close()" class="btn btn-neutral">
-                    Close
+                <button type="button"
+                        _="on click call #modal_receipts_upload.close()"
+                        class="btn btn-neutral">Close
                 </button>
             </div>
         </form>

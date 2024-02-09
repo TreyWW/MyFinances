@@ -1,8 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html :class="{ 'theme-dark': dark }"
-      x-data="data()"
-      lang="en">
+<html :class="{ 'theme-dark': dark }" x-data="data()" lang="en">
 {% include 'base/_head.html' %}
 <body>
 <div class="navbar bg-base-100 p-4">
@@ -13,8 +11,8 @@
                     <img src="{% static 'img/logo_single.png' %}" class="h-10">
                 </a>
                 <div class="grow">
-                    <a class="md:text-xl text-gray-800 font-semibold dark:text-gray-200" href="/">
-                        My Finances
+                    <a class="md:text-xl text-gray-800 font-semibold dark:text-gray-200"
+                       href="/">My Finances
                     </a>
                 </div>
             </div>
@@ -23,13 +21,9 @@
     <div class="navbar-end">
         <div class="text-center sm:text-left flex sm:justify-end sm:items-center gap-x-3 md:gap-x-4">
             <a class="btn btn-primary rounded-full"
-               href="{% url 'login create_account' %}">
-                Register
+               href="{% url 'login create_account' %}">Register
             </a>
-            <a class="btn btn-outline rounded-full "
-               href="{% url 'login' %}">
-                Login
-            </a>
+            <a class="btn btn-outline rounded-full " href="{% url 'login' %}">Login</a>
         </div>
     </div>
 </div>

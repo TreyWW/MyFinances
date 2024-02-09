@@ -10,7 +10,8 @@
                 <h3 class="text-sm text-natural font-semibold ms-3">From</h3>
                 <h3 class="text-sm text-natural font-semibold hidden lg:block text-end me-6">To</h3>
             </div>
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full" id="to_and_from_container">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full"
+                 id="to_and_from_container">
                 {% include 'pages/invoices/edit/edit_from_destination.html' %}
                 {% include 'pages/invoices/edit/edit_to_destination.html' %}
             </div>
@@ -25,8 +26,12 @@
                                 Issue date
                                 <span class="required_star">*</span>
                             </label>
-                            <input required id="dateIssued" name="date_issued" placeholder=""
-                                   value="{{ og_issue_date | date:"Y-m-d" }}" type="date"
+                            <input required
+                                   id="dateIssued"
+                                   name="date_issued"
+                                   placeholder=""
+                                   value="{{ og_issue_date | date:"Y-m-d" }}"
+                                   type="date"
                                    class="peer input input-bordered input-block">
                             <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden ">
                                 <span class="label-text-alt text-error">Please enter a valid date.</span>
@@ -41,8 +46,13 @@
                                 Due date
                                 <span class="required_star">*</span>
                             </label>
-                            <input required name="date_due" id="dueDate" placeholder="" type="date"
-                                   class="peer input-bordered input input-block" value="{{ og_due_date | date:"Y-m-d" }}">
+                            <input required
+                                   name="date_due"
+                                   id="dueDate"
+                                   placeholder=""
+                                   type="date"
+                                   class="peer input-bordered input input-block"
+                                   value="{{ og_due_date | date:"Y-m-d" }}">
                             <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden ">
                                 <span class="label-text-alt text-error">Please enter a valid date.</span>
                             </label>
@@ -53,22 +63,11 @@
         </div>
         <div class="divider my-4">STEP 3 - SERVICES</div>
         {% component_block "pages:invoices:create:services_table" %}
-
         {% endcomponent_block %}
-
-        <div class="group-invalid:tooltip mt-4" data-tip="Fill out all required details to save the invoice.">
-            <button class="btn btn-primary group-invalid:btn-disabled btn-block">
-                Update Invoice
-            </button>
+        <div class="group-invalid:tooltip mt-4"
+             data-tip="Fill out all required details to save the invoice.">
+            <button class="btn btn-primary group-invalid:btn-disabled btn-block">Update Invoice</button>
         </div>
-
-
     </form>
-
-
-
     <!-- still need to add SERVICE & PAYMENT INFORMATION fields for editing -->
-
-
-
 {% endblock content %}

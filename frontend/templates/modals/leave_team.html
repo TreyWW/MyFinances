@@ -2,24 +2,19 @@
     {% fill "content" %}
         <form class="py-4"
               id="modal_leave_team-form"
-              hx-post="{% url 'api:teams:leave confirm' team_id=team.id %} " hx-swap="none">
+              hx-post="{% url 'api:teams:leave confirm' team_id=team.id %} "
+              hx-swap="none">
             {% csrf_token %}
             <div class="form-control">
-                <p class="text-lg font-bold">
-                    Are you sure you would like to leave {{ team.name }}?
-                </p>
+                <p class="text-lg font-bold">Are you sure you would like to leave {{ team.name }}?</p>
             </div>
             <div class="modal-action">
                 <button type="submit"
                         id="modal_leave_team-submit"
                         class="btn btn-primary"
-                        x-on:leave_team_error.window="document.getElementById('modal_leave_team').close()"
-                >
-                    Leave Team
+                        x-on:leave_team_error.window="document.getElementById('modal_leave_team').close()">Leave Team
                 </button>
-                <button type="button" _="on click call #modal_leave_team.close()" class="btn">
-                    Cancel
-                </button>
+                <button type="button" _="on click call #modal_leave_team.close()" class="btn">Cancel</button>
             </div>
         </form>
     {% endfill %}

@@ -6,21 +6,18 @@
     <input id="left-sidebar-drawer" type="checkbox" class="drawer-toggle">
     <div class="drawer-content flex flex-col ">
         {% include 'base/topbar/_topbar.html' %}
-
         <div class="flex-1 min-h-screen overflow-y-auto pt-8 px-6 pb-4 bg-base-200">
             {#            <div id="messages_list">#}
             {#                {% component "messages_list" with_js="true" %}#}
             {#            </div>#}
             {% include 'base/breadcrumbs.html' %}
             {% include 'base/toasts.html' %}
-
-            <div id="modal_container">
-                {# Leave here #}
-            </div>
+            <div id="modal_container">{# Leave here #}</div>
             <div class="drawer">
                 <input id="service_list_drawer" type="checkbox" class="drawer-toggle" />
                 <div class="drawer-content">
-                    {% block content %}{% endblock content %}
+                    {% block content %}
+                    {% endblock content %}
                 </div>
                 {% component "base:left_drawer" %}
             </div>
@@ -28,9 +25,9 @@
                 <ul class="menu menu-horizontal bg-base-100 rounded-box">
                     <li>
                         <label for="service_list_drawer"
-                               id="service_list_button" aria-label="close sidebar"
-                               class="swap-rotate
-                        drawer-overlay swap">
+                               id="service_list_button"
+                               aria-label="close sidebar"
+                               class="swap-rotate drawer-overlay swap">
                             <input type="checkbox" id="service_list_toggler" />
                             <i class="fa fa-solid fa-ellipsis swap-off"></i>
                             <i class="fa fa-solid fa-x swap-on"></i>
