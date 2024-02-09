@@ -10,7 +10,10 @@ from django.views.decorators.csrf import csrf_exempt
 
 from backend.decorators import *
 from backend.models import LoginLog, AuditLog, User
-from settings.settings import SOCIAL_AUTH_GITHUB_ENABLED, SOCIAL_AUTH_GOOGLE_OAUTH2_ENABLED
+from settings.settings import (
+    SOCIAL_AUTH_GITHUB_ENABLED,
+    SOCIAL_AUTH_GOOGLE_OAUTH2_ENABLED,
+)
 
 
 @csrf_exempt

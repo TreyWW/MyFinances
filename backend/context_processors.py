@@ -30,6 +30,7 @@ def extras(request: HttpRequest):
 
     return data
 
+
 def breadcrumbs(request: HttpRequest):
     def get_item(name: str, url_name: str, icon: Optional[str] = None) -> dict:
         """

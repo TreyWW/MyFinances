@@ -10,7 +10,6 @@ def get_notification_html(request: HttpRequest):
     )
     above_5 = False
 
-
     if user_notifications.count() > 5:
         user_notifications = user_notifications[:5]
         above_5 = True
