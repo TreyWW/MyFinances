@@ -65,11 +65,11 @@ jobs:
       #----------------------------------------------
       - name: Build and run docker-compose.ci.yml
         if: startsWith(matrix.os, 'windows-')
-        run: docker-compose up -d --wait --wait-timeout 30
+        run: docker-compose up -d --force-recreate --wait --wait-timeout 30
 
       - name: Build and run docker-compose.ci.yml
         if: startsWith(matrix.os, 'ubuntu-')
-        run: docker compose up -d --force-recreate --wait --wait-timeout 30
+        run: docker compose up -d --wait --wait-timeout 30
 
       - name: Run the test scripts
         if: startsWith(matrix.os, 'ubuntu-')
