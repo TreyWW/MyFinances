@@ -23,12 +23,18 @@ jobs:
           virtualenvs-in-project: false
           installer-parallel: true
 
-      - name: Install Poetry dependencies
-        run: poetry install
+      - name: Install dependencies
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        run: poetry install --no-interaction --no-root
+
+      - name: Install project
+        run: poetry install --no-interaction
 
       #----------------------------------------------
       #       run djlint
       #----------------------------------------------
 
       - name: Run djLint
-        run: poetry run djlint ./frontend/templates/ --check --profile=django
+        run: |
+          source .venv/bin/activate
+          poetry run djlint ./frontend/templates/ --check --profile=django

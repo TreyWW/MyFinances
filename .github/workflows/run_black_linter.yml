@@ -1,4 +1,4 @@
-name: Black Formatter
+name: djLint
 
 on: [push, pull_request]
 
