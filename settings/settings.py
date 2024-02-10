@@ -93,7 +93,6 @@ STATICFILES_DIRS = [
     BASE_DIR / "frontend/static",
 ]
 mimetypes.add_type("text/javascript", ".js", True)
-mimetypes.add_type("application/pdf", ".pdf", False)
 
 MESSAGE_STORAGE = "django.contrib.messages.storage.cookie.CookieStorage"
 
