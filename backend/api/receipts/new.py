@@ -1,12 +1,29 @@
-import os
-import requests
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import HttpRequest, JsonResponse, HttpResponseBadRequest
+from django.http import HttpRequest, HttpResponseBadRequest
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
 
 from backend.models import Receipt
+from backend.utils import boto_session, AWS_TEXTRACT_ENABLED
+from .results_handler import parse_analysis
+
+
+def get_analysis(file):
+    boto_client = boto_session.client("textract")
+
+    response = boto_client.analyze_expense(
+        Document={
+            # "Bytes": file.read(),
+            "S3Object": {
+                "Bucket": "myfinances-media",
+                "Name": "receipt_new.png",
+                # "Version": "1",
+            }
+        }
+    )
+
+    return parse_analysis(response)
 
 
 @require_http_methods(["POST"])
@@ -53,6 +70,19 @@ def receipt_create(request: HttpRequest):
         receipt.user = request.user
 
     receipt.save()
+
+    if AWS_TEXTRACT_ENABLED and request.user.user_profile.allow_receipt_parsing:
+        analysis = get_analysis(file)
+
+        if not receipt.merchant_store and analysis.get("TOTAL"):
+            receipt.merchant_store = analysis.get("VENDOR_NAME").title()
+            receipt.save()
+
+    # if not receipt.date and analysis.get("INVOICE_RECEIPT_DATE"):
+    #     receipt.date = analysis.get("INVOICE_RECEIPT_DATE")
+
+
+
     # r = requests.post(
     #     "https://ocr.asprise.com/api/receipt",
     #     data={

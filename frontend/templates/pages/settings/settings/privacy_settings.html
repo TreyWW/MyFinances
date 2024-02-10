@@ -1,0 +1,31 @@
+<div class="my-4 max-w-screen-xl card border border-gray-700 dark:border-gray-700 col-span-2">
+    <div class="card-body flex flex-col h-full">
+        <div class="card-title flex-grow">Privacy Settings</div>
+        <div class="flex flex-col flex-grow">
+            <p class="text-content2">{% lorem 10 w %}</p>
+            <div class="divide-y divide-gray-200 dark:divide-gray-700">
+                <!-- Profile Name -->
+                <form hx-post="{% url "api:settings:change_name" %}"
+                      hx-swap="none"
+                      hx-indicator="#save_account_name"
+                      class="flex items-center justify-between py-4">
+                    <div class="flex flex-col flex-grow">
+                        <p class="text-lg font-semibold text-gray-900 dark:text-white">Allow receipt parsing</p>
+                        <p class="text-base font-normal text-gray-500 dark:text-gray-400">
+                            This will allow receipt parsing to
+                            be made via ML to automatically fill
+                            out receipt fields when uploading.
+                        </p>
+                    </div>
+                    <input type="checkbox"
+                           name="allow_receipt_parsing"
+                           class="toggle toggle-primary"
+                           hx-trigger="change"
+                           hx-post="{% url "api:settings:allow_receipt_parsing" %}"
+                           {% if request.user.user_profile.allow_receipt_parsing %}checked{% endif %} />
+                </form>
+            </div>
+        </div>
+        <button disabled class="btn btn-primary mt-auto">Save All</button>
+    </div>
+</div>

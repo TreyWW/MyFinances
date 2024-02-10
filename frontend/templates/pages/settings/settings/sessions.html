@@ -9,7 +9,7 @@
             <div class="card-title">Sessions</div>
             <ul class="divide-y divide-gray-200 dark:divide-gray-700">
                 {% for session in sessions|slice:":3" %}
-                    {% include 'pages/settings/settings/session.html' with session=session %}
+                    {% include "pages/settings/settings/session.html" with session=session %}
                 {% endfor %}
             </ul>
             {% if sessions.count > 3 %}<a class="text-white font-medium text-sm" href="#">See more</a>{% endif %}

@@ -82,6 +82,8 @@ class UserSettings(models.Model):
         upload_to="profile_pictures/", blank=True, null=True
     )
 
+    allow_receipt_parsing = models.BooleanField(default=False)
+
     @property
     def profile_picture_url(self):
         if self.profile_picture and hasattr(self.profile_picture, "url"):
