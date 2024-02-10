@@ -17,7 +17,7 @@ urlpatterns = [
         "toggle/privacy/allow_receipt_parsing/",
         privacy_settings.allow_receipt_parsing,
         name="allow_receipt_parsing",
-    )
+    ),
 ]
 
 app_name = "settings"

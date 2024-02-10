@@ -81,8 +81,6 @@ def receipt_create(request: HttpRequest):
     # if not receipt.date and analysis.get("INVOICE_RECEIPT_DATE"):
     #     receipt.date = analysis.get("INVOICE_RECEIPT_DATE")
 
-
-
     # r = requests.post(
     #     "https://ocr.asprise.com/api/receipt",
     #     data={

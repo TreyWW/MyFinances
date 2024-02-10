@@ -22,7 +22,9 @@ def allow_receipt_parsing(request: HttpRequest):
 
     else:
         if not request.user.user_profile.allow_receipt_parsing:
-            messages.warning(request, "You already have allow receipt parsing disabled.")
+            messages.warning(
+                request, "You already have allow receipt parsing disabled."
+            )
             return render(request, htmx_return)
 
         request.user.user_profile.allow_receipt_parsing = False
