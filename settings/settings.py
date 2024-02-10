@@ -87,11 +87,13 @@ SESSION_ENGINE = "django.contrib.sessions.backends.db"
 STATIC_URL = "/static/"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+X_FRAME_OPTIONS = "SAMEORIGIN"
 
 STATICFILES_DIRS = [
     BASE_DIR / "frontend/static",
 ]
 mimetypes.add_type("text/javascript", ".js", True)
+mimetypes.add_type("application/pdf", ".pdf", False)
 
 MESSAGE_STORAGE = "django.contrib.messages.storage.cookie.CookieStorage"
 
@@ -152,6 +154,7 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
+
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
