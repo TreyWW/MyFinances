@@ -1,12 +1,20 @@
 name: Backend Tests
 on: [ push, pull_request ]
 
-env:
-  DOCKER_COMPOSE_PATH: ./infrastructure/backend/docker-compose.ci.yml
-
 jobs:
   build:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [ ubuntu-latest ]
+        python-version: [ "3.10", "3.11", "3.12" ]
+        django-version: [ 4, 5 ]
+
+    runs-on: ${{ matrix.os }}
+
+    env:
+      DOCKER_COMPOSE_PATH: ./infrastructure/backend/docker-compose.ci.yml
+
     steps:
       #----------------------------------------------
       #       check-out repo and set-up python
@@ -14,10 +22,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
       #----------------------------------------------
       #       install and configure poetry
       #----------------------------------------------
-
       - name: Install and configure Poetry
         uses: snok/install-poetry@v1
         with:
@@ -30,19 +42,22 @@ jobs:
       #       install docker compose
       #       setup + configure docker compose
       #----------------------------------------------
-
       - name: Install Docker Compose
         run: |
           sudo apt-get update
           sudo apt-get install -y docker-compose
 
+
+      #----------------------------------------------
+      #       copy docker compose file
+      #----------------------------------------------
       - name: Copy docker compose file
-        run: cp $DOCKER_COMPOSE_PATH ./docker-compose.yml
+        run: |
+          cp $GITHUB_WORKSPACE/$DOCKER_COMPOSE_PATH ./docker-compose.yml
 
       #----------------------------------------------
       #       run docker compose & tests
       #----------------------------------------------
-
       - name: Build and run docker-compose.ci.yml
         run: docker compose up -d --wait --wait-timeout 30
 
