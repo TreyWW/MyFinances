@@ -4,8 +4,7 @@
         <div class=" text-3xl w-full grid grid-cols-3">
             <div>
                 <a href="{% url "invoices dashboard" %}"
-                   class="btn btn-sm btn-outline btn-secondary me-3 float-left">Back to invoices
-                </a>
+                   class="btn btn-sm btn-outline btn-secondary me-3 float-left">Back to invoices</a>
             </div>
             <h1 class="text-left col-span-2">Manage Access to Invoice #{{ invoice.id }}</h1>
         </div>
@@ -21,18 +20,18 @@
         </button>
         <table class="w-full table mt-3">
             <thead>
-            <tr>
-                <th>Code</th>
-                <th>Date Created</th>
-                <th>Actions</th>
-            </tr>
+                <tr>
+                    <th>Code</th>
+                    <th>Date Created</th>
+                    <th>Actions</th>
+                </tr>
             </thead>
             <tbody id="tbody">
-            {% for url in invoice.invoice_urls.all %}
-                {% with code=url.uuid created_on=url.created_on %}
-                    {% include 'pages/invoices/manage_access/_table_row.html' %}
-                {% endwith %}
-            {% endfor %}
+                {% for url in invoice.invoice_urls.all %}
+                    {% with code=url.uuid created_on=url.created_on %}
+                        {% include 'pages/invoices/manage_access/_table_row.html' %}
+                    {% endwith %}
+                {% endfor %}
             </tbody>
         </table>
     </div>

@@ -2,70 +2,68 @@
 <div class="flex w-full overflow-x-auto" id="items">
     <table class="table">
         <thead>
-        <tr>
-            <th>ID</th>
-            <th>Date</th>
-            <th>Name</th>
-            <th>Merchant/Store</th>
-            <th>Category</th>
-            <th>Amount</th>
-            <th>Actions</th>
-        </tr>
+            <tr>
+                <th>ID</th>
+                <th>Date</th>
+                <th>Name</th>
+                <th>Merchant/Store</th>
+                <th>Category</th>
+                <th>Amount</th>
+                <th>Actions</th>
+            </tr>
         </thead>
         <tbody>
-        {% for row in receipts %}
-            <tr id="row-{{ row.id }}">
-                <td>
-                    <button onclick="modal_receipt_{{ row.id }}.showModal();"
-                            class="link link-primary">{{ row.id }}</button>
-                </td>
-                <td>{{ row.date }}</td>
-                <td>{{ row.name }}</td>
-                <td>{{ row.merchant_store }}</td>
-                <td>{{ row.purchase_category }}</td>
-                <td>{{ currency_symbol }}{{ row.total_price | default:"0.00" }}</td>
-                <td>
-                    <form method="post">
-                        <button type="button"
-                                onclick="modal_receipt_{{ row.id }}.showModal();"
-                                class="btn btn-outline btn-success btn-sm">Preview
-                        </button>
-                        <button type="button"
-                                class="btn btn-outline btn-primary btn-sm "
-                                onclick="Download_file('{% url 'api:receipts:generate_download_link' receipt_id=row.id %}')">
-                            Download
-                        </button>
-                        <button class="btn btn-outline btn-error btn-sm"
-                                hx-delete="{% url 'api:receipts:delete' id=row.id %}"
-                                hx-target="#items"
-                                hx-confirm="Are you sure you would like to delete the receipt?">Delete
-                        </button>
-                    </form>
-                </td>
-            </tr>
-            <dialog class="modal modal-responsive" id="modal_receipt_{{ row.id }}">
-                <div class="modal-box">
-                    <h2 class="text-xl">
-                        {{ row.name | title }}
-                        <span class="text-xs">{{ row.date }}  Uploaded on {{ row.date_uploaded | date:"d/m/Y" }}</span>
-                    </h2>
-                    <img class="w-full my-3" src="{{ row.image.url }}" alt="Receipt">
-                    <div class="flex gap-3">
-                        <button type="button"
-                                class="btn btn-primary"
-                                onclick="Download_file('{% url 'api:receipts:generate_download_link' receipt_id=row.id %}')">
-                            Download
-                        </button>
-                        <button class="btn" onclick="modal_receipt_{{ row.id }}.close();">Cancel</button>
+            {% for row in receipts %}
+                <tr id="row-{{ row.id }}">
+                    <td>
+                        <button onclick="modal_receipt_{{ row.id }}.showModal();"
+                                class="link link-primary">{{ row.id }}</button>
+                    </td>
+                    <td>{{ row.date }}</td>
+                    <td>{{ row.name }}</td>
+                    <td>{{ row.merchant_store }}</td>
+                    <td>{{ row.purchase_category }}</td>
+                    <td>{{ currency_symbol }}{{ row.total_price | default:"0.00" }}</td>
+                    <td>
+                        <form method="post">
+                            <button type="button"
+                                    onclick="modal_receipt_{{ row.id }}.showModal();"
+                                    class="btn btn-outline btn-success btn-sm">Preview</button>
+                            <button type="button"
+                                    class="btn btn-outline btn-primary btn-sm "
+                                    onclick="Download_file('{% url 'api:receipts:generate_download_link' receipt_id=row.id %}')">
+                                Download
+                            </button>
+                            <button class="btn btn-outline btn-error btn-sm"
+                                    hx-delete="{% url 'api:receipts:delete' id=row.id %}"
+                                    hx-target="#items"
+                                    hx-confirm="Are you sure you would like to delete the receipt?">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                <dialog class="modal modal-responsive" id="modal_receipt_{{ row.id }}">
+                    <div class="modal-box">
+                        <h2 class="text-xl">
+                            {{ row.name | title }}
+                            <span class="text-xs">{{ row.date }}  Uploaded on {{ row.date_uploaded | date:"d/m/Y" }}</span>
+                        </h2>
+                        <img class="w-full my-3" src="{{ row.image.url }}" alt="Receipt">
+                        <div class="flex gap-3">
+                            <button type="button"
+                                    class="btn btn-primary"
+                                    onclick="Download_file('{% url 'api:receipts:generate_download_link' receipt_id=row.id %}')">
+                                Download
+                            </button>
+                            <button class="btn" onclick="modal_receipt_{{ row.id }}.close();">Cancel</button>
+                        </div>
                     </div>
-                </div>
-                <div class="modal-backdrop">
-                    <button onclick="modal_receipt_{{ row.id }}.close();">close</button>
-                </div>
-            </dialog>
-        {% empty %}
-            <td colspan="100%" class="text-center">No receipts found.</td>
-        {% endfor %}
+                    <div class="modal-backdrop">
+                        <button onclick="modal_receipt_{{ row.id }}.close();">close</button>
+                    </div>
+                </dialog>
+            {% empty %}
+                <td colspan="100%" class="text-center">No receipts found.</td>
+            {% endfor %}
         </tbody>
     </table>
 </div>

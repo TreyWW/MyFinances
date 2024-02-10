@@ -1,64 +1,63 @@
 {% component_block "modal" id="modal_invoices_add_service" start_open="true" title="Add service" %}
-    {% fill "content" %}
-        <form class="py-4"
-              id="modal_invoices_add_service-form"
-              hx-post="{% url 'api:invoices:services add' %}"
-              hx-include="#services_table_body"
-              hx-swap="innerHTML"
-              hx-target="#services_table_body">
-            {% csrf_token %}
-            <div class="form-control w-full">
-                <label class="label justify-start">
-                    Service Name
-                    <span class="required_star">*</span>
-                </label>
-                <input id="modal_input-service_name"
-                       name="post_service_name"
-                       type="text"
-                       class="input input-block input-bordered"
-                       required>
-            </div>
-            <div class="form-control">
-                <label class="label">Service Description</label>
-                <textarea id="modal_input-service_description"
-                          name="post_service_description"
-                          class="textarea textarea-block textarea-bordered"></textarea>
-            </div>
-            <div class="form-control">
-                <label class="label justify-start">
-                    Quantity
-                    <span class="required_star">*</span>
-                </label>
-                <input id="modal_input-hours"
-                       type="number"
-                       name="post_hours"
-                       class="input input-bordered input-block"
-                       required>
-            </div>
-            <div class="form-control">
-                <label class="label justify-start">
-                    Rate
-                    <span class="required_star">*</span>
-                </label>
-                <input id="modal_input-price_per_hour"
-                       type="number"
-                       name="post_rate"
-                       class="input input-block input-bordered"
-                       required>
-            </div>
-            <div class="modal-action">
-                <button type="submit"
-                        id="modal_invoices_add_service-submit"
-                        class="btn btn-primary"
-                        _="on click if #modal_invoices_add_service-form.checkValidity() call #modal_invoices_add_service.close() end">
-                    Save
-                </button>
-                <button type="reset" class="btn btn-error">Reset</button>
-                <button type="button"
-                        _="on click call #modal_invoices_add_service.close()"
-                        class="btn">Close
-                </button>
-            </div>
-        </form>
-    {% endfill %}
+{% fill "content" %}
+<form class="py-4"
+      id="modal_invoices_add_service-form"
+      hx-post="{% url 'api:invoices:services add' %}"
+      hx-include="#services_table_body"
+      hx-swap="innerHTML"
+      hx-target="#services_table_body">
+    {% csrf_token %}
+    <div class="form-control w-full">
+        <label class="label justify-start">
+            Service Name
+            <span class="required_star">*</span>
+        </label>
+        <input id="modal_input-service_name"
+               name="post_service_name"
+               type="text"
+               class="input input-block input-bordered"
+               required>
+    </div>
+    <div class="form-control">
+        <label class="label">Service Description</label>
+        <textarea id="modal_input-service_description"
+                  name="post_service_description"
+                  class="textarea textarea-block textarea-bordered"></textarea>
+    </div>
+    <div class="form-control">
+        <label class="label justify-start">
+            Quantity
+            <span class="required_star">*</span>
+        </label>
+        <input id="modal_input-hours"
+               type="number"
+               name="post_hours"
+               class="input input-bordered input-block"
+               required>
+    </div>
+    <div class="form-control">
+        <label class="label justify-start">
+            Rate
+            <span class="required_star">*</span>
+        </label>
+        <input id="modal_input-price_per_hour"
+               type="number"
+               name="post_rate"
+               class="input input-block input-bordered"
+               required>
+    </div>
+    <div class="modal-action">
+        <button type="submit"
+                id="modal_invoices_add_service-submit"
+                class="btn btn-primary"
+                _="on click if #modal_invoices_add_service-form.checkValidity() call #modal_invoices_add_service.close() end">
+            Save
+        </button>
+        <button type="reset" class="btn btn-error">Reset</button>
+        <button type="button"
+                _="on click call #modal_invoices_add_service.close()"
+                class="btn">Close</button>
+    </div>
+</form>
+{% endfill %}
 {% endcomponent_block %}

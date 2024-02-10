@@ -1,49 +1,47 @@
 {% component_block "modal" id="modal_change_profile_picture" start_open="true" title="Change profile picture" %}
-    {% fill "content" %}
-        <form class="py-4"
-              id="modal_change_profile_picture-form"
-              hx-post="{% url 'user settings' %}"
-              hx-swap="none"
-              enctype="multipart/form-data"
-              hx-encoding="multipart/form-data">
-            {% csrf_token %}
-            <div>
-                <label class="label">Old Profile Picture</label>
-                <div class="flex justify-center items-center pt-12">
-                    {#
+{% fill "content" %}
+<form class="py-4"
+      id="modal_change_profile_picture-form"
+      hx-post="{% url 'user settings' %}"
+      hx-swap="none"
+      enctype="multipart/form-data"
+      hx-encoding="multipart/form-data">
+    {% csrf_token %}
+    <div>
+        <label class="label">Old Profile Picture</label>
+        <div class="flex justify-center items-center pt-12">
+            {#
                     <div id="modal_change_profile_picture-profile_picture"
                          class="w-full h-full flex justify-center items-center pt-12">#}
-                        {% component "profile_picture" image_type="change_modal" url=users_profile_picture extra_classes="max-w-44 max-h-44 w-44 h-44 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2" %}
-                        {#                    </div>#}
-                    </div>
-                </div>
-                <div class="form-control mt-4">
-                    <label class="label">Upload new profile picture</label>
-                    <input required
-                           type="file"
-                           name="profile_image"
-                           class="file-input file-input-bordered max-w-full"
-                           accept="image/jpeg,image/png,image/jpg">
-                </div>
-                <div class="modal-action">
-                    <button type="submit"
-                            id="modal_change_profile_picture-action-btn"
-                            class="btn btn-primary">Save
-                    </button>
-                    <script>
+            {% component "profile_picture" image_type="change_modal" url=users_profile_picture extra_classes="max-w-44 max-h-44 w-44 h-44 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2" %}
+            {#                    </div>#}
+        </div>
+    </div>
+    <div class="form-control mt-4">
+        <label class="label">Upload new profile picture</label>
+        <input required
+               type="file"
+               name="profile_image"
+               class="file-input file-input-bordered max-w-full"
+               accept="image/jpeg,image/png,image/jpg">
+    </div>
+    <div class="modal-action">
+        <button type="submit"
+                id="modal_change_profile_picture-action-btn"
+                class="btn btn-primary">Save</button>
+        <script>
                     document.getElementById('modal_change_profile_picture-action-btn').addEventListener("click", function () {
                         if (document.getElementById('modal_change_profile_picture-form').checkValidity()) {
                             document.getElementById('modal_change_profile_picture').close();
                         }
                     });
-                    </script>
-                    <button type="reset" class="btn btn-error">Reset</button>
-                    <button type="button"
-                            onclick="document.getElementById('modal_change_profile_picture').close();"
-                            class="btn">Close
-                    </button>
-                </div>
-                <input type="hidden" name="section" value="profile_picture">
-        </form>
-    {% endfill %}
+        </script>
+        <button type="reset" class="btn btn-error">Reset</button>
+        <button type="button"
+                onclick="document.getElementById('modal_change_profile_picture').close();"
+                class="btn">Close</button>
+    </div>
+    <input type="hidden" name="section" value="profile_picture">
+</form>
+{% endfill %}
 {% endcomponent_block %}

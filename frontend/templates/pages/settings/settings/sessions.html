@@ -12,8 +12,7 @@
                     {% include 'pages/settings/settings/session.html' with session=session %}
                 {% endfor %}
             </ul>
-            {% if sessions.count > 3 %}
-                <a class="text-white font-medium text-sm" href="#">See more</a>{% endif %}
+            {% if sessions.count > 3 %}<a class="text-white font-medium text-sm" href="#">See more</a>{% endif %}
         </div>
     </div>
 {% endif %}

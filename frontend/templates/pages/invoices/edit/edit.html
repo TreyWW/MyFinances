@@ -63,11 +63,11 @@
         </div>
         <div class="divider my-4">STEP 3 - SERVICES</div>
         {% component_block "pages:invoices:create:services_table" %}
-        {% endcomponent_block %}
-        <div class="group-invalid:tooltip mt-4"
-             data-tip="Fill out all required details to save the invoice.">
-            <button class="btn btn-primary group-invalid:btn-disabled btn-block">Update Invoice</button>
-        </div>
-    </form>
-    <!-- still need to add SERVICE & PAYMENT INFORMATION fields for editing -->
+    {% endcomponent_block %}
+    <div class="group-invalid:tooltip mt-4"
+         data-tip="Fill out all required details to save the invoice.">
+        <button class="btn btn-primary group-invalid:btn-disabled btn-block">Update Invoice</button>
+    </div>
+</form>
+<!-- still need to add SERVICE & PAYMENT INFORMATION fields for editing -->
 {% endblock content %}
