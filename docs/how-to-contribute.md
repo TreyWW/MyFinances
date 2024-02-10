@@ -33,8 +33,22 @@ prevent someone else working on the issue and submitting it before you, or the i
 You can do this by going to the [issues page](https://github.com/TreyWW/MyFinances/issues), finding an issue you want to work
 on that isn't already assigned, and **adding a comment asking to be assigned**.
 
+#### Test and Lint
+
 Once you have made all the code changes, we require tests to be added. We don't mind if you don't want to add these, that's
 completely fine! Just make sure that you put in your PR that tests are still required, so we know.
+
+```bash
+### first time setup
+pip install poetry # installs poetry
+poetry install --with dev # installs djlint and black
+### tests
+python manage.py test --parallel # runs our django tests
+djlint ./frontend/templates --reformat # runs our djLint formatter for HTML
+black ./ # runs our black formatter for python files
+```
+
+#### Pull in your changes
 
 What was that I mentioned? A PR, what's that? A Pull Request is a way of merging your forked code into our shared repo. You
 can [create a PR here](https://github.com/TreyWW/MyFinances/pulls), but when you go to
