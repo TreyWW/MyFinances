@@ -1,17 +1,19 @@
----
-title: Issue # | Title goes here
----
+## Description
 
-<!-- Please ensure your PR title follows the pattern:
-[Issue ID] | Short description of the changes made
--->
+<!-- Please include a summary of the change and which issue is fixed. Please also include relevant motivation and context. List any dependencies that are required for this change. -->
+
 
 # Checklist
 
-- [ ] Ran the [Black Formatter]() on any new code (checks will fail without)
-- [ ] Made any changes or additions to the documentation where required
+- [ ] Ran the [Black Formatter](https://myfinances.strelix.org/#/how-to-contribute?id=test-and-lint) and
+  [djLint-er](https://myfinances.strelix.org/#/how-to-contribute?id=test-and-lint) on any new code
+  (checks
+  will
+  fail without)
+- [ ] Made any changes or additions to the documentation _where required_
 - [ ] Changes generate no new warnings/errors
-- [ ] New and existing unit tests pass locally with my changes
+- [ ] New and existing [unit tests](https://myfinances.strelix.org/#/how-to-contribute?id=test-and-lint) pass locally with my
+  changes
 
 
 ## What type of PR is this?
@@ -21,11 +23,8 @@ title: Issue # | Title goes here
 - 🚨 Breaking Change
 - ♻️ Code Refactor
 - 📝 Documentation Update
-- Other <!-- (optionally add your own bullet points) -->
 
-## Description
-
-<!-- Please include a summary of the change and which issue is fixed. Please also include relevant motivation and context. List any dependencies that are required for this change. -->
+<!-- (optionally add your own bullet points) -->
 
 ## Added/updated tests?
 <!-- delete all that don't apply -->
