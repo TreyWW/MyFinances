@@ -1,11 +1,6 @@
 name: Deploy Release to ECR
 on:
-  #  release:
-  #    types:
-  #      - released
-  push:
-    branches:
-      - enhance/production
+  release:
   workflow_dispatch: # Allow manual invocation of the workflow
 
 jobs:
@@ -15,9 +10,6 @@ jobs:
     permissions:
       id-token: write
       contents: read
-
-    env:
-      DOCKER_COMPOSE_PATH: ./infrastructure/backend/docker-compose.ci.yml
 
     steps:
       - name: Checkout
