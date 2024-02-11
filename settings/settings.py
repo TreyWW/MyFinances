@@ -87,6 +87,7 @@ SESSION_ENGINE = "django.contrib.sessions.backends.db"
 STATIC_URL = "/static/"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+X_FRAME_OPTIONS = "SAMEORIGIN"
 
 STATICFILES_DIRS = [
     BASE_DIR / "frontend/static",

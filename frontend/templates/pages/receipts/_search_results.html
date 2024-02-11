@@ -47,7 +47,19 @@
                             {{ row.name | title }}
                             <span class="text-xs">{{ row.date }}  Uploaded on {{ row.date_uploaded | date:"d/m/Y" }}</span>
                         </h2>
-                        <img class="w-full my-3" src="{{ row.image.url }}" alt="Receipt">
+                        {% if row.image %}
+                            <div class="w-full my-3">
+                                {% if row.image.url|slice:"-3:" == 'pdf' %}
+                                    <embed class="w-full"
+                                           src="{{ row.image.url }}"
+                                           type="application/pdf"
+                                           width="100%"
+                                           height="600px">
+                                {% else %}
+                                    <img class="w-full" src="{{ row.image.url }}" alt="Receipt">
+                                {% endif %}
+                            </div>
+                        {% endif %}
                         <div class="flex gap-3">
                             <button type="button"
                                     class="btn btn-primary"
