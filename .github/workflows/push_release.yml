@@ -16,6 +16,9 @@ jobs:
       id-token: write
       contents: read
 
+    env:
+      DOCKER_COMPOSE_PATH: ./infrastructure/backend/docker-compose.ci.yml
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -44,6 +47,7 @@ jobs:
           ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
+          cp $GITHUB_WORKSPACE/$DOCKER_COMPOSE_PATH ./docker-compose.yml
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"  
