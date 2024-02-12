@@ -32,9 +32,13 @@ DATABASES = {
         "HOST": os.environ.get("DATABASE_HOST") or "localhost",
         "PORT": os.environ.get("DATABASE_PORT")
         or (3306 if DB_TYPE == "mysql" else 5432),
-        "OPTIONS": {
-            "sql_mode": "traditional",
-        } if DB_TYPE == "mysql" else {},
+        "OPTIONS": (
+            {
+                "sql_mode": "traditional",
+            }
+            if DB_TYPE == "mysql"
+            else {}
+        ),
     }
 }
 
