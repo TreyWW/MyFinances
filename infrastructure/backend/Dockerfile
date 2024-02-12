@@ -11,15 +11,24 @@ WORKDIR /MyFinances
 
 COPY . .
 
-RUN apk --no-cache --update add \
-    mariadb-connector-c-dev \
-    py-pip \
-    musl-dev \
-    gcc \
-    mariadb-dev \
-    libffi-dev
+#RUN #apk --no-cache --update add \
+#    mariadb-connector-c-dev \
+#    py-pip \
+#    musl-dev \
+#    gcc \
+#    mariadb-dev \
+#    libffi-dev
 
-RUN poetry install --without dev,mysql --no-root && rm -rf $POETRY_CACHE_DIR
+
+RUN if [ ${DATABASE_TYPE} = "mysql" ]; then \
+        RUN apk add --no-cache --virtual .build-deps py-pip musl-dev gcc mariadb-dev && \
+        RUN poetry install --only mysql \
+    elif [ ${DATABASE_TYPE} = "postgres" ]; then \
+        RUN apk add --no-cache --virtual .build-deps py-pip musl-dev gcc postgresql-dev && \
+        RUN poetry install --only postgres \
+    fi
+
+RUN poetry install --without dev,mysql,postgres --no-root && rm -rf $POETRY_CACHE_DIR
 
 RUN chmod +x infrastructure/backend/scripts/*
 RUN chmod +x infrastructure/backend/scripts/tests/*
