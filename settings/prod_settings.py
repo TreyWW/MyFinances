@@ -34,7 +34,7 @@ DATABASES = {
         or (3306 if DB_TYPE == "mysql" else 5432),
         "OPTIONS": {
             "sql_mode": "traditional",
-        },
+        } if DB_TYPE == "mysql" else {},
     }
 }
 
