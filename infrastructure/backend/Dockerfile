@@ -24,7 +24,7 @@ RUN apk add --no-cache --virtual .build-deps py-pip musl-dev gcc \
     && if [ "${DATABASE_TYPE}" = "mysql" ]; then \
         apk add --no-cache mariadb-dev \
         && poetry install --only mysql; \
-    elif [ "${DATABASE_TYPE}" = "postgres" ]; then \
+    elif ["${TESTING}" != "true"] || ["${DATABASE_TYPE}" = "postgres"]; then \
         apk add --no-cache postgresql-dev \
         && poetry install --only postgres; \
     fi \
