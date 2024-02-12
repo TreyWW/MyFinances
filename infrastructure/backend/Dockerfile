@@ -20,13 +20,15 @@ COPY . .
 #    libffi-dev
 
 
-RUN if [ ${DATABASE_TYPE} = "mysql" ]; then \
-        RUN apk add --no-cache --virtual .build-deps py-pip musl-dev gcc mariadb-dev && \
-        RUN poetry install --only mysql \
-    elif [ ${DATABASE_TYPE} = "postgres" ]; then \
-        RUN apk add --no-cache --virtual .build-deps py-pip musl-dev gcc postgresql-dev && \
-        RUN poetry install --only postgres \
-    fi
+RUN apk add --no-cache --virtual .build-deps py-pip musl-dev gcc \
+    && if [ "${DATABASE_TYPE}" = "mysql" ]; then \
+        apk add --no-cache mariadb-dev \
+        && poetry install --only mysql; \
+    elif [ "${DATABASE_TYPE}" = "postgres" ]; then \
+        apk add --no-cache postgresql-dev \
+        && poetry install --only postgres; \
+    fi \
+    && apk del .build-deps
 
 RUN poetry install --without dev,mysql,postgres --no-root && rm -rf $POETRY_CACHE_DIR
 
