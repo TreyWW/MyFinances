@@ -5,3 +5,6 @@
 - [Social Login Setup](getting-setup/social-logins?id=social-login)
     * [Github](getting-setup/social-logins?id=set-up-social-login-with-github)
     * [Google](getting-setup/social-logins?id=set-up-social-login-with-google)
+- [Using AWS](getting-setup/aws)
+  * [S3 For Media storage (uploaded files from users)](getting-setup/aws?id=)
+  * [Github](getting-setup/aws?id=)
