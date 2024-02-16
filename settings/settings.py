@@ -231,15 +231,15 @@ class CustomStaticStorage(S3Storage):
     location = get_var("AWS_STATIC_LOCATION", default="static")
     default_acl = None
     bucket_name = get_var("AWS_STATIC_BUCKET_NAME")
-    custom_domain = get_var('AWS_STATIC_CUSTOM_DOMAIN')
-    region_name = get_var('AWS_STATIC_REGION_NAME')
+    custom_domain = get_var("AWS_STATIC_CUSTOM_DOMAIN")
+    region_name = get_var("AWS_STATIC_REGION_NAME")
 
 
 class CustomPublicMediaStorage(S3Storage):
     location = get_var("AWS_MEDIA_PUBLIC_LOCATION", default="media/public")
     bucket_name = get_var("AWS_MEDIA_PUBLIC_BUCKET_NAME")
     file_overwrite = get_var("AWS_MEDIA_PUBLIC_FILE_OVERWRITE", default=False)
-    custom_domain = get_var('AWS_MEDIA_PUBLIC_CUSTOM_DOMAIN')
+    custom_domain = get_var("AWS_MEDIA_PUBLIC_CUSTOM_DOMAIN")
     querystring_auth = False  # Removes auth from URL in case of shared media
 
     access_key = get_var("AWS_MEDIA_PUBLIC_ACCESS_KEY_ID")
@@ -263,41 +263,48 @@ class CustomPrivateMediaStorage(S3Storage):
     secret_key = get_var("AWS_MEDIA_PRIVATE_ACCESS_KEY")
 
     cloudfront_key_id = get_var("AWS_MEDIA_PRIVATE_CLOUDFRONT_PUBLIC_KEY_ID")
-    cloudfront_key = base64.b64decode(get_var("AWS_MEDIA_PRIVATE_CLOUDFRONT_PRIVATE_KEY"))
+    cloudfront_key = base64.b64decode(
+        get_var("AWS_MEDIA_PRIVATE_CLOUDFRONT_PRIVATE_KEY")
+    )
 
 
 AWS_STATIC_ENABLED = get_var("AWS_STATIC_ENABLED", default=False).lower() == "true"
 AWS_STATIC_CDN_TYPE = get_var("AWS_STATIC_CDN_TYPE")
 
 if AWS_STATIC_ENABLED or AWS_STATIC_CDN_TYPE.lower() == "aws":
-    STATICFILES_STORAGE = 'settings.settings.CustomStaticStorage'
+    STATICFILES_STORAGE = "settings.settings.CustomStaticStorage"
     STATIC_LOCATION = get_var("AWS_STATIC_LOCATION", default="static")
 else:
     STATIC_URL = f"/static/"
     STATIC_ROOT = os.path.join(BASE_DIR, "static")
     STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
 
-AWS_MEDIA_PUBLIC_ENABLED = get_var("AWS_MEDIA_PUBLIC_ENABLED", default=False).lower() == "true"
+AWS_MEDIA_PUBLIC_ENABLED = (
+    get_var("AWS_MEDIA_PUBLIC_ENABLED", default=False).lower() == "true"
+)
 
 if AWS_MEDIA_PUBLIC_ENABLED:
-    DEFAULT_FILE_STORAGE = 'settings.settings.CustomPublicMediaStorage'
+    DEFAULT_FILE_STORAGE = "settings.settings.CustomPublicMediaStorage"
 else:
     MEDIA_URL = "/media/"
     MEDIA_ROOT = os.path.join(BASE_DIR, "media")
     DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 
-
     class CustomPublicMediaStorage(FileSystemStorage):  # This overrides the AWS version
         ...
 
-AWS_MEDIA_PRIVATE_ENABLED = get_var("AWS_MEDIA_PRIVATE_ENABLED", default=False).lower() == "true"
+AWS_MEDIA_PRIVATE_ENABLED = (
+    get_var("AWS_MEDIA_PRIVATE_ENABLED", default=False).lower() == "true"
+)
 
 if AWS_MEDIA_PRIVATE_ENABLED:
-    PRIVATE_FILE_STORAGE = 'settings.settings.CustomPrivateMediaStorage'
+    PRIVATE_FILE_STORAGE = "settings.settings.CustomPrivateMediaStorage"
 else:
-    class CustomPrivateMediaStorage(FileSystemStorage):  # This overrides the AWS version
-        ...
 
+    class CustomPrivateMediaStorage(
+        FileSystemStorage
+    ):  # This overrides the AWS version
+        ...
 
     PRIVATE_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 

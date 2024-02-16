@@ -1,7 +1,11 @@
 from django.utils.deconstruct import deconstructible
 from storages.backends.s3boto3 import S3Boto3Storage
 
-from settings.settings import STATICFILES_LOCATION, AWS_CDN_S3_CUSTOM_DOMAIN, AWS_STORAGE_BUCKET_NAME
+from settings.settings import (
+    STATICFILES_LOCATION,
+    AWS_CDN_S3_CUSTOM_DOMAIN,
+    AWS_STORAGE_BUCKET_NAME,
+)
 
 
 @deconstructible
