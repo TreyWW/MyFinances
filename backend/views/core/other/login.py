@@ -10,7 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from backend.decorators import *
 from backend.models import LoginLog, AuditLog, User
-from backend.utils import appconfig, update_feature_flags
+from backend.utils import appconfig
 from settings.settings import (
     SOCIAL_AUTH_GITHUB_ENABLED,
     SOCIAL_AUTH_GOOGLE_OAUTH2_ENABLED,
@@ -67,8 +67,8 @@ class CreateAccountChooseView(View):
     def get(self, request):
         if request.user.is_authenticated:
             return redirect("dashboard")
-        update_feature_flags()
-        SIGNUPS_ENABLED = appconfig.config.get("areSignupsEnabled", {}).get("enabled", True)
+        appconfig.update_feature_flags()
+        SIGNUPS_ENABLED = appconfig.get_feature_status("areSignupsEnabled")
         if not SIGNUPS_ENABLED:
             messages.error(request, "New account signups are currently disabled")
             return redirect("login")
@@ -86,8 +86,8 @@ class CreateAccountManualView(View):
     def get(self, request):
         if request.user.is_authenticated:
             return redirect("dashboard")
-        update_feature_flags()
-        SIGNUPS_ENABLED = appconfig.config.get("areSignupsEnabled", {}).get("enabled", True)
+        appconfig.update_feature_flags()
+        SIGNUPS_ENABLED = appconfig.get_feature_status("areSignupsEnabled")
         if not SIGNUPS_ENABLED:
             messages.error(request, "New account signups are currently disabled")
             return redirect("login")
@@ -96,8 +96,8 @@ class CreateAccountManualView(View):
     def post(self, request):
         if request.user.is_authenticated:
             return redirect("dashboard")
-        update_feature_flags()
-        SIGNUPS_ENABLED = appconfig.config.get("areSignupsEnabled", {}).get("enabled", True)
+        appconfig.update_feature_flags()
+        SIGNUPS_ENABLED = appconfig.get_feature_status("areSignupsEnabled")
         if not SIGNUPS_ENABLED:
             messages.error(request, "New account signups are currently disabled")
             return redirect("login")

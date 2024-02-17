@@ -1,5 +1,8 @@
 # Feature flags with AWS
 
+Be sure to check out the [pricing page](https://aws.amazon.com/config/pricing/) of AWS before setting this up so you don't get an
+unexpected bill :)
+
 ## Setup on AWS
 
 1. Go to AWS Systems Manager
@@ -47,3 +50,12 @@ Make sure you have set AppConfig up first, then you can start creating flags.
     - Set your Deployment strategy, I use `AppConfig.AllAtOnce (QUICK)`, though AWS do recommend `Linear20PercentEvery6Minutes`.
       Up to you based on your deployment whether you're production or staging.
     - Done! MyFinances will pick this up within [UPDATE_CHECK_INTERVAL] time, without any restart!
+
+## Official Feature Flag List
+
+Please keep in mind if you have AWS_FEATURE_FLAGS_ENABLED set to True, any flags that aren't created will be set to False.
+This may break core functionality such as allowing signups. Makes sure you add all of these feature flags to your AWS Flags.
+
+|     Flag Name     | Data Type | Example |                   Description                   |
+|:-----------------:|:---------:|:-------:|:-----------------------------------------------:|
+| areSignupsEnabled |  Boolean  |  True   | Whether new user registration should be allowed |

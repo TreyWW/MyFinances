@@ -2,32 +2,37 @@ from appconfig_helper import AppConfigHelper
 
 from settings.helpers import get_var
 
-ENABLED = get_var("AWS_FEATURE_FLAGS_ENABLED")
-APPLICATION = get_var("AWS_FEATURE_FLAGS_APPLICATION")
-ENVIRONMENT = get_var("AWS_FEATURE_FLAGS_ENVIRONMENT")
-PROFILE = get_var("AWS_FEATURE_FLAGS_PROFILE")
-UPDATE_CHECK_INTERVAL = get_var("AWS_FEATURE_FLAGS_UPDATE_CHECK_INTERVAL", default=45)
 
-if ENABLED:
-    appconfig = AppConfigHelper(
-        APPLICATION,
-        ENVIRONMENT,
-        PROFILE,
-        UPDATE_CHECK_INTERVAL  # minimum interval between update checks (SECONDS)
-    )
-else:
-    appconfig = {
-        "config": {
-            "areSignupsEnabled": {
-                "enabled": True
-            }
-        }
-    }
+class AppConfig:
+    def __init__(self):
+        self.ENABLED = get_var("AWS_FEATURE_FLAGS_ENABLED")
+        self.APPLICATION = get_var("AWS_FEATURE_FLAGS_APPLICATION")
+        self.ENVIRONMENT = get_var("AWS_FEATURE_FLAGS_ENVIRONMENT")
+        self.PROFILE = get_var("AWS_FEATURE_FLAGS_PROFILE")
+        self.UPDATE_CHECK_INTERVAL = get_var("AWS_FEATURE_FLAGS_UPDATE_CHECK_INTERVAL", default=45)
+
+        if self.ENABLED:
+            self.appconfig: AppConfigHelper = AppConfigHelper(
+                self.APPLICATION,
+                self.ENVIRONMENT,
+                self.PROFILE,
+                self.UPDATE_CHECK_INTERVAL  # minimum interval between update checks (SECONDS)
+            )
+        else:
+            class AppConfigMock:
+                config = {
+                    "areSignupsEnabled": {
+                        "enabled": True
+                    }
+                }
+
+            self.appconfig = AppConfigMock()
+
+    def update_feature_flags(self):
+        return self.appconfig.update_config() if self.ENABLED else False
+
+    def get_feature_status(self, feature):
+        return self.appconfig.config.get(feature, {}).get("enabled", False)
 
 
-def update_feature_flags():
-    return appconfig.update_config() if enabled else False
-
-
-if update_feature_flags():
-    print("[BACKEND] There has been changes to APP_CONFIG. New config will now be in place.")
+appconfig = AppConfig()
