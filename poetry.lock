@@ -1325,6 +1325,21 @@ botocore = ">=1.33.2,<2.0a.0"
 crt = ["botocore[crt] (>=1.33.2,<2.0a.0)"]
 
 [[package]]
+name = "sample-helper-aws-appconfig"
+version = "2.1.0"
+description = "Sample helper library for AWS AppConfig"
+optional = false
+python-versions = ">=3.7,<4.0"
+files = [
+    { file = "sample_helper_aws_appconfig-2.1.0.tar.gz", hash = "sha256:568b9891e3e9e66e73f096122eb8a348142cf9f5057a0eff85b918fe35ea5fd5" },
+]
+
+[package.dependencies]
+boto3 = ">=1.20.8,<2.0.0"
+botocore = ">=1.23.8,<2.0.0"
+PyYAML = ">=6.0,<7.0"
+
+[[package]]
 name = "sendgrid"
 version = "6.11.0"
 description = "Twilio SendGrid library for Python"
@@ -1659,4 +1674,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<4.0"
-content-hash = "8370010cfa4f7b60c878d906bd4ddedab17aa0375340d41e0f5b2ba47409a974"
+content-hash = "8ca91b7ce47c326cd50ed7108d551760b442318edfd0ee671284545fa5ee9d2c"
