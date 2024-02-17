@@ -293,6 +293,7 @@ else:
     class CustomPublicMediaStorage(FileSystemStorage):  # This overrides the AWS version
         ...
 
+
 AWS_MEDIA_PRIVATE_ENABLED = (
     get_var("AWS_MEDIA_PRIVATE_ENABLED", default=False).lower() == "true"
 )
