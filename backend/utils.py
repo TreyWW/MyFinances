@@ -9,7 +9,9 @@ class AppConfig:
         self.APPLICATION = get_var("AWS_FEATURE_FLAGS_APPLICATION")
         self.ENVIRONMENT = get_var("AWS_FEATURE_FLAGS_ENVIRONMENT")
         self.PROFILE = get_var("AWS_FEATURE_FLAGS_PROFILE")
-        self.UPDATE_CHECK_INTERVAL = get_var("AWS_FEATURE_FLAGS_UPDATE_CHECK_INTERVAL", default=45)
+        self.UPDATE_CHECK_INTERVAL = get_var(
+            "AWS_FEATURE_FLAGS_UPDATE_CHECK_INTERVAL", default=45
+        )
 
         if self.ENABLED:
             print("[BACKEND] Feature flags enabled", flush=True)
@@ -17,16 +19,15 @@ class AppConfig:
                 self.APPLICATION,
                 self.ENVIRONMENT,
                 self.PROFILE,
-                self.UPDATE_CHECK_INTERVAL  # minimum interval between update checks (SECONDS)
+                self.UPDATE_CHECK_INTERVAL,  # minimum interval between update checks (SECONDS)
             )
         else:
-            print("[BACKEND] Feature flags disabled; using mock feature flags", flush=True)
+            print(
+                "[BACKEND] Feature flags disabled; using mock feature flags", flush=True
+            )
+
             class AppConfigMock:
-                config = {
-                    "areSignupsEnabled": {
-                        "enabled": True
-                    }
-                }
+                config = {"areSignupsEnabled": {"enabled": True}}
 
             self.appconfig = AppConfigMock()
 
