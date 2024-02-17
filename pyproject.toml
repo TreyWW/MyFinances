@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "MyFinances"
-version = "0.2.1-alpha.6"
+version = "0.2.1-alpha.7"
 description = "github.com/TreyWW/MyFinances"
 authors = []
 readme = "README.md"
