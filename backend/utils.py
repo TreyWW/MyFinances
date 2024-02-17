@@ -15,12 +15,19 @@ class AppConfig:
 
         if self.ENABLED:
             print("[BACKEND] Feature flags enabled", flush=True)
+            print(f"""Using these variables:
+                APPLICATION: {self.APPLICATION}
+                ENVIRONMENT: {self.ENVIRONMENT}
+                PROFILE: {self.PROFILE}
+                UPDATE_CHECK_INTERVAL: {self.UPDATE_CHECK_INTERVAL}
+            """, flush=True)
             self.appconfig: AppConfigHelper = AppConfigHelper(
                 self.APPLICATION,
                 self.ENVIRONMENT,
                 self.PROFILE,
                 self.UPDATE_CHECK_INTERVAL,  # minimum interval between update checks (SECONDS)
             )
+            print("[BACKEND] Got past app config init...", flush=True)
         else:
             print(
                 "[BACKEND] Feature flags disabled; using mock feature flags", flush=True
