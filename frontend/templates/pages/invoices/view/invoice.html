@@ -55,9 +55,7 @@
                         Print
                     </button>
                     <a class="btn btn-sm gradient-btn me-8"
-                       href="{% url "invoices dashboard manage_access" id=invoice.id %}">
-                        Share Invoice
-                    </a>
+                       href="{% url "invoices dashboard manage_access" id=invoice.id %}">Share Invoice</a>
                     <div class="flex items-center">
                         <button onclick="document.getElementById('status_banner').remove();"
                                 type="button"
@@ -74,29 +72,30 @@
                     <!-- Company Logo and Info -->
                     <div>
                         {% if invoice.logo %}
-                            <img src="{{ invoice.logo.url }}" alt="company-logo" class="h-24 w-24 object-cover rounded-full">
+                            <img src="{{ invoice.logo.url }}"
+                                 alt="company-logo"
+                                 class="h-24 w-24 object-cover rounded-full">
                         {% else %}
                             <img src="https://github.com/TreyWW/MyFinances/blob/main/documentation/assets/logo_single.png?raw=true"
-                                 alt="company-logo" class="h-24 w-24 object-cover rounded-full">
+                                 alt="company-logo"
+                                 class="h-24 w-24 object-cover rounded-full">
                         {% endif %}
                         <div class="mt-4">
                             <h3 class="text-lg text-gray-800">{{ invoice.self_company|default_if_none:"" }}</h3>
                             <p class="text-gray-600">{{ invoice.self_name|default_if_none:"" }}</p>
                             <p class="text-gray-600">{{ invoice.self_phone|default_if_none:"" }}</p>
-                            {% if invoice.vat_number %}
-                                <p class="text-gray-600">VAT: {{ invoice.vat_number }}</p>
-                            {% endif %}
+                            {% if invoice.vat_number %}<p class="text-gray-600">VAT: {{ invoice.vat_number }}</p>{% endif %}
                         </div>
                     </div>
-                            <!-- Invoice Info -->
-                 <div class="text-right">
-                    <h2 class="text-2xl font-bold text-gray-800">INVOICE</h2>
-                    <p class="mt-2 text-gray-600">INV #{{ invoice.invoice_id|default:invoice.id }}</p>
-                    <p class="text-gray-600">Invoice date: {{ invoice.date_issued|date:"d/m/Y" }}</p>
-                    <p class="text-gray-600">Due date: {{ invoice.date_due|date:"d/m/Y" }}</p>
-                    <p class="text-gray-600">Balance Due: {{ currency_symbol }}{{ invoice.get_total_price }}</p>
+                    <!-- Invoice Info -->
+                    <div class="text-right">
+                        <h2 class="text-2xl font-bold text-gray-800">INVOICE</h2>
+                        <p class="mt-2 text-gray-600">INV #{{ invoice.invoice_id|default:invoice.id }}</p>
+                        <p class="text-gray-600">Invoice date: {{ invoice.date_issued|date:"d/m/Y" }}</p>
+                        <p class="text-gray-600">Due date: {{ invoice.date_due|date:"d/m/Y" }}</p>
+                        <p class="text-gray-600">Balance Due: {{ currency_symbol }}{{ invoice.get_total_price }}</p>
+                    </div>
                 </div>
-            </div>            
                 <!-- Client info -->
                 <div class="grid grid-cols-2 items-center mt-7">
                     <div>
@@ -149,7 +148,8 @@
                         </tbody>
                         <tfoot>
                             <tr class="bg-gray-50">
-                                <th colspan="3" class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                                <th colspan="3"
+                                    class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
                                     Subtotal
                                 </th>
                                 <td class="px-6 py-3 text-right text-sm font-medium text-gray-500 uppercase tracking-wider">
@@ -159,7 +159,8 @@
                             {% if tax %}
                                 {# todo add tax #}
                                 <tr class="bg-gray-50">
-                                    <th colspan="3" class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                                    <th colspan="3"
+                                        class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
                                         Tax
                                     </th>
                                     <td class="px-6 py-3 text-right text-sm font-medium text-gray-500 uppercase tracking-wider">
@@ -169,7 +170,8 @@
                             {% endif %}
                             {% if invoice.discount %}
                                 <tr class="bg-gray-50">
-                                    <th colspan="3" class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                                    <th colspan="3"
+                                        class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
                                         Discount
                                     </th>
                                     <td class="px-6 py-3 text-right text-sm font-medium text-gray-500 uppercase tracking-wider">
@@ -178,7 +180,8 @@
                                 </tr>
                             {% endif %}
                             <tr class="bg-gray-50">
-                                <th colspan="3" class="px-6 py-3 text-left text-sm font-bold text-gray-900 uppercase tracking-wider">
+                                <th colspan="3"
+                                    class="px-6 py-3 text-left text-sm font-bold text-gray-900 uppercase tracking-wider">
                                     Total
                                 </th>
                                 <td class="px-6 py-3 text-right text-sm font-bold text-gray-900 uppercase tracking-wider">
@@ -293,7 +296,7 @@
 
         /* Scale the content if it still doesn't fit */
         @page {
-            size: auto; /* Adjust page size to content */
+            size: portrait; /* Adjust page size to content */
             margin: 5mm; /* Reduce page margin to fit content */
         }
 
