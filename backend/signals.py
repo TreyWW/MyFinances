@@ -1,8 +1,8 @@
 from django.core.files.storage import default_storage
-from django.db.models.signals import pre_save, post_delete, post_save
+from django.db.models.signals import pre_save, post_delete, post_save, post_migrate
 from django.dispatch import receiver
 
-from backend.models import UserSettings, Receipt, User
+from backend.models import UserSettings, Receipt, User, FeatureFlags
 
 
 @receiver(pre_save, sender=UserSettings)
@@ -56,3 +56,24 @@ def user_account_create_make_usersettings(sender, instance, created, **kwargs):
 @receiver(post_delete, sender=Receipt)
 def delete_receipt_image_on_delete(sender, instance: Receipt, **kwargs):
     instance.image.delete(False)
+
+
+feature_flags = [
+    {
+        "name": "areSignupsEnabled",
+        "default": True,
+        "pk": 1
+    }
+]
+
+
+def insert_initial_data(**kwargs):
+    for feature in feature_flags:
+        FeatureFlags.objects.get_or_create(
+            id=feature.get("pk"),
+            name=feature.get("name"),
+            value=feature.get("default"),
+        )
+
+
+post_migrate.connect(insert_initial_data)

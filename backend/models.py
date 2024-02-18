@@ -424,6 +424,12 @@ class TracebackError(models.Model):
         return str(self.error)
 
 
+class FeatureFlags(models.Model):
+    name = models.CharField(max_length=100)
+    value = models.BooleanField(default=False)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
 def SEND_SENDGRID_EMAIL(
     to_email,
     subject,

@@ -1,6 +1,7 @@
 import base64
 import json
 import mimetypes
+import os
 import sys
 from pathlib import Path
 
@@ -10,6 +11,8 @@ from storages.backends.s3 import S3Storage
 
 import settings.settings
 from .helpers import get_var
+
+# from backend.utils import appconfig
 
 DEBUG = True if get_var("DEBUG") in ["True", "true", "TRUE", True] else False
 
@@ -171,12 +174,22 @@ INTERNAL_IPS = [
     "localhost",
     # ...
 ]
-CACHES = {
-    "default": {
-        "BACKEND": "django.core.cache.backends.filebased.FileBasedCache",
-        "LOCATION": "/tmp/cache/",  # Set the path to a directory for caching
+
+if get_var("REDIS_CACHE_HOST"):
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.redis.RedisCache",
+            "LOCATION": f"redis://{get_var('REDIS_CACHE_HOST')}",
+        }
     }
-}
+else:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+            "LOCATION": "myfinances",
+        }
+    }
+
 
 # STORAGES = {
 #     "default": {
@@ -225,6 +238,8 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_ENABLED = (
 # SOCIAL_AUTH_LOGIN_REDIRECT_URL = "/"
 SOCIAL_AUTH_USER_MODEL = "backend.User"
 
+
+# APP_CONFIG = appconfig
 
 # MEDIA
 class CustomStaticStorage(S3Storage):

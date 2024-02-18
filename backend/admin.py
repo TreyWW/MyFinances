@@ -1,3 +1,4 @@
+from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
 from backend.models import (
@@ -16,8 +17,8 @@ from backend.models import (
     TeamInvitation,
     User,
     InvoiceProduct,
+    FeatureFlags
 )
-from django.contrib import admin
 
 # admin.register(Invoice)
 admin.site.register(UserSettings)
@@ -34,6 +35,7 @@ admin.site.register(Notification)
 admin.site.register(Team)
 admin.site.register(TeamInvitation)
 admin.site.register(InvoiceProduct)
+admin.site.register(FeatureFlags)
 admin.site.register(User, UserAdmin)
 
 admin.site.site_header = "MyFinances Admin"
