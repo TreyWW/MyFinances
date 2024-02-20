@@ -1,6 +1,9 @@
 import os
+from typing import Union, List
 
+import boto3
 import environ
+from mypy_boto3_sesv2.client import SESV2Client
 
 ### NEEDS REFACTOR
 
@@ -19,3 +22,35 @@ def get_var(key, default=None, required=False):
     if not default and not value:  # So methods like .lower() don't error
         value = ""
     return value
+
+
+EMAIL_CLIENT: SESV2Client = boto3.client("sesv2",
+                                         region_name="eu-west-2",
+                                         aws_access_key_id=get_var("AWS_SES_ACCESS_KEY_ID"),
+                                         aws_secret_access_key=get_var("AWS_SES_SECRET_ACCESS_KEY"))
+
+
+def send_email(destination: Union[str, List[str]], subject: str, message: str):
+    if not isinstance(destination, list):
+        destination = [destination]
+    return EMAIL_CLIENT.send_email(
+        FromEmailAddress=get_var("AWS_SES_FROM_ADDRESS"),
+        Destination={
+            "ToAddresses": destination
+        },
+        Content={
+            "Simple": {
+                "Subject": {
+                    "Data": subject
+                },
+                "Body": {
+                    "Text": {
+                        "Data": message
+                    }
+                }
+            }
+        }
+    )
+
+# print(send_email("testemail", "MyFinances Account Created",
+#                  "Your MyFinances account has finished initialising. \n\nLogin to the dashboard to continue."))
