@@ -1,6 +1,6 @@
 {
   "name": "myfinances",
-  "version": "0.2.1-alpha.7",
+  "version": "0.2.1",
   "description": "",
   "main": "index.js",
   "scripts": {
