@@ -32,7 +32,7 @@ def extras(request: HttpRequest):
 
 
 def breadcrumbs(request: HttpRequest):
-    def get_item(name: str, url_name: str, icon: Optional[str] = None) -> dict:
+    def get_item(name: str, url_name: Optional[str] = None, icon: Optional[str] = None) -> dict:
         """
         Create a breadcrumb item dictionary.
 
@@ -46,7 +46,7 @@ def breadcrumbs(request: HttpRequest):
         """
         return {
             "name": name,
-            "url": reverse(url_name),
+            "url": reverse(url_name) if url_name else None,
             "icon": icon,
         }
 
@@ -70,6 +70,7 @@ def breadcrumbs(request: HttpRequest):
             "Invoices", "invoices dashboard", "file-invoice"
         ),
         "invoices dashboard create": get_item("Create", "invoices dashboard create"),
+        "invoices dashboard edit": get_item("Edit", None, "pencil"),
         "receipts dashboard": get_item(
             "Receipts", "receipts dashboard", "file-invoice"
         ),
@@ -86,6 +87,9 @@ def breadcrumbs(request: HttpRequest):
         "invoices dashboard": generate_breadcrumbs("dashboard", "invoices dashboard"),
         "invoices dashboard create": generate_breadcrumbs(
             "dashboard", "invoices dashboard", "invoices dashboard create"
+        ),
+        "invoices dashboard edit": generate_breadcrumbs(
+            "dashboard", "invoices dashboard", "invoices dashboard edit"
         ),
         "clients dashboard": generate_breadcrumbs("dashboard", "clients dashboard"),
         "clients create": generate_breadcrumbs(
