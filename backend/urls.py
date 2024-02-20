@@ -68,7 +68,7 @@ urlpatterns = [
         name="invoices dashboard manage_access delete",
     ),
     path(
-        "dashboard/invoices/preview/<str:id>",
+        "dashboard/invoices/preview/<str:invoice_id>",
         invoices.view.preview,
         name="invoices dashboard preview",
     ),
