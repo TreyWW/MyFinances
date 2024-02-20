@@ -38,6 +38,15 @@ class User(AbstractUser):
 
     logged_in_as_team = models.ForeignKey("Team", on_delete=models.SET_NULL, null=True)
 
+    class Role(models.TextChoices):
+        #        NAME     DJANGO ADMIN NAME
+        DEV = "DEV", "Developer"
+        STAFF = "STAFF", "Staff"
+        USER = "USER", "User"
+        TESTER = "TESTER", "Tester"
+
+    role = models.CharField(max_length=10, choices=Role.choices, default=Role.USER)
+
 
 class CustomUserMiddleware:
     def __init__(self, get_response):
@@ -79,7 +88,10 @@ class UserSettings(models.Model):
         choices=[(code, info["name"]) for code, info in CURRENCIES.items()],
     )
     profile_picture = models.ImageField(
-        upload_to="profile_pictures/", blank=True, null=True
+        upload_to="profile_pictures/",
+        storage=settings.CustomPublicMediaStorage(),
+        blank=True,
+        null=True,
     )
 
     @property
@@ -148,7 +160,9 @@ class Receipt(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     organization = models.ForeignKey(Team, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=100)
-    image = models.ImageField(upload_to="receipts")
+    image = models.ImageField(
+        upload_to="receipts", storage=settings.CustomPrivateMediaStorage()
+    )
     total_price = models.FloatField(null=True, blank=True)
     date = models.DateField(null=True, blank=True)
     date_uploaded = models.DateTimeField(auto_now_add=True)
@@ -254,7 +268,12 @@ class Invoice(models.Model):
     reference = models.CharField(max_length=100, blank=True, null=True)
     invoice_number = models.CharField(max_length=100, blank=True, null=True)
     vat_number = models.CharField(max_length=100, blank=True, null=True)
-    logo = models.ImageField(upload_to="invoice_logos", blank=True, null=True)
+    logo = models.ImageField(
+        upload_to="invoice_logos",
+        storage=settings.CustomPrivateMediaStorage(),
+        blank=True,
+        null=True,
+    )
     notes = models.TextField(blank=True, null=True)
 
     payment_status = models.CharField(
@@ -412,6 +431,12 @@ class TracebackError(models.Model):
 
     def __str__(self):
         return str(self.error)
+
+
+class FeatureFlags(models.Model):
+    name = models.CharField(max_length=100)
+    value = models.BooleanField(default=False)
+    updated_at = models.DateTimeField(auto_now=True)
 
 
 def SEND_SENDGRID_EMAIL(

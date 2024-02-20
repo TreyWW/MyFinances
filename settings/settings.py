@@ -1,21 +1,20 @@
+import base64
 import json
 import mimetypes
 import os
 import sys
 from pathlib import Path
 
-import environ
 from django.contrib.messages import constants as messages
+from django.contrib.staticfiles.storage import FileSystemStorage
+from storages.backends.s3 import S3Storage
 
-env = environ.Env(DEBUG=(bool, False))
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
+import settings.settings
+from .helpers import get_var
 
-DEBUG = True if os.environ.get("DEBUG") in ["True", "true", "TRUE", True] else False
+# from backend.utils import appconfig
 
-env = environ.Env()
-environ.Env.read_env()
-DEBUG = True if os.environ.get("DEBUG") in ["True", "true", "TRUE", True] else False
+DEBUG = True if get_var("DEBUG") in ["True", "true", "TRUE", True] else False
 
 try:
     if DEBUG:
@@ -76,7 +75,7 @@ AUTHENTICATION_BACKENDS = [
     "social_core.backends.google.GoogleOAuth2",
 ]
 
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = get_var("SECRET_KEY", required=True)
 
 LOGIN_URL = "/login/"
 LOGIN_REDIRECT_URL = "/dashboard"
@@ -136,6 +135,7 @@ TEMPLATES = [
         },
     },
 ]
+import os
 
 WSGI_APPLICATION = "settings.wsgi.application"
 
@@ -174,21 +174,31 @@ INTERNAL_IPS = [
     "localhost",
     # ...
 ]
-CACHES = {
-    "default": {
-        "BACKEND": "django.core.cache.backends.filebased.FileBasedCache",
-        "LOCATION": "/tmp/cache/",  # Set the path to a directory for caching
-    }
-}
 
-STORAGES = {
-    "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
-    },
-    "staticfiles": {
-        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
-    },
-}
+if get_var("REDIS_CACHE_HOST"):
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.redis.RedisCache",
+            "LOCATION": f"redis://{get_var('REDIS_CACHE_HOST')}",
+        }
+    }
+else:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+            "LOCATION": "myfinances",
+        }
+    }
+
+
+# STORAGES = {
+#     "default": {
+#         "BACKEND": "django.core.files.storage.FileSystemStorage",
+#     },
+#     "staticfiles": {
+#         "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+#     },
+# }
 
 MARKDOWNIFY = {
     "default": {
@@ -210,8 +220,8 @@ USE_TZ = True
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 SOCIAL_AUTH_GITHUB_SCOPE = ["user:email"]
-SOCIAL_AUTH_GITHUB_KEY = os.environ.get("GITHUB_KEY")
-SOCIAL_AUTH_GITHUB_SECRET = os.environ.get("GITHUB_SECRET")
+SOCIAL_AUTH_GITHUB_KEY = get_var("GITHUB_KEY")
+SOCIAL_AUTH_GITHUB_SECRET = get_var("GITHUB_SECRET")
 SOCIAL_AUTH_GITHUB_ENABLED = (
     True if SOCIAL_AUTH_GITHUB_KEY and SOCIAL_AUTH_GITHUB_SECRET else False
 )
@@ -229,35 +239,105 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_ENABLED = (
 SOCIAL_AUTH_USER_MODEL = "backend.User"
 
 
-AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
-AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
-AWS_STORAGE_BUCKET_NAME = os.environ.get("AWS_STORAGE_BUCKET_NAME")
-AWS_S3_SIGNATURE_NAME = "s3v4"
-AWS_S3_REGION_NAME = os.environ.get("AWS_S3_REGION_NAME")
-AWS_S3_FILE_OVERWRITE = False
-AWS_DEFAULT_ACL = None
-AWS_S3_VERITY = True
-AWS_ENABLED = (
-    True if os.environ.get("AWS_ENABLED") in [True, "True", "true", "TRUE"] else False
+# APP_CONFIG = appconfig
+
+
+# MEDIA
+class CustomStaticStorage(S3Storage):
+    location = get_var("AWS_STATIC_LOCATION", default="static")
+    default_acl = None
+    bucket_name = get_var("AWS_STATIC_BUCKET_NAME")
+    custom_domain = get_var("AWS_STATIC_CUSTOM_DOMAIN")
+    region_name = get_var("AWS_STATIC_REGION_NAME")
+
+
+class CustomPublicMediaStorage(S3Storage):
+    location = get_var("AWS_MEDIA_PUBLIC_LOCATION", default="media/public")
+    bucket_name = get_var("AWS_MEDIA_PUBLIC_BUCKET_NAME")
+    file_overwrite = get_var("AWS_MEDIA_PUBLIC_FILE_OVERWRITE", default=False)
+    custom_domain = get_var("AWS_MEDIA_PUBLIC_CUSTOM_DOMAIN")
+    querystring_auth = False  # Removes auth from URL in case of shared media
+
+    access_key = get_var("AWS_MEDIA_PUBLIC_ACCESS_KEY_ID")
+    secret_key = get_var("AWS_MEDIA_PUBLIC_ACCESS_KEY")
+
+
+LOGGING = {}
+
+
+class CustomPrivateMediaStorage(S3Storage):
+    location = get_var("AWS_MEDIA_PRIVATE_LOCATION", default="media/private")
+    bucket_name = get_var("AWS_MEDIA_PRIVATE_BUCKET_NAME")
+    custom_domain = get_var("AWS_MEDIA_PRIVATE_CUSTOM_DOMAIN")
+    file_overwrite = get_var("AWS_MEDIA_PRIVATE_FILE_OVERWRITE", default=False)
+
+    signature_version = "s3v4"
+
+    region_name = get_var("AWS_MEDIA_PRIVATE_REGION_NAME")
+
+    access_key = get_var("AWS_MEDIA_PRIVATE_ACCESS_KEY_ID")
+    secret_key = get_var("AWS_MEDIA_PRIVATE_ACCESS_KEY")
+
+    cloudfront_key_id = get_var("AWS_MEDIA_PRIVATE_CLOUDFRONT_PUBLIC_KEY_ID")
+    cloudfront_key = base64.b64decode(
+        get_var("AWS_MEDIA_PRIVATE_CLOUDFRONT_PRIVATE_KEY")
+    )
+
+
+AWS_STATIC_ENABLED = get_var("AWS_STATIC_ENABLED", default=False).lower() == "true"
+AWS_STATIC_CDN_TYPE = get_var("AWS_STATIC_CDN_TYPE")
+
+if AWS_STATIC_ENABLED or AWS_STATIC_CDN_TYPE.lower() == "aws":
+    STATICFILES_STORAGE = "settings.settings.CustomStaticStorage"
+    STATIC_LOCATION = get_var("AWS_STATIC_LOCATION", default="static")
+else:
+    STATIC_URL = f"/static/"
+    STATIC_ROOT = os.path.join(BASE_DIR, "static")
+    STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
+
+AWS_MEDIA_PUBLIC_ENABLED = (
+    get_var("AWS_MEDIA_PUBLIC_ENABLED", default=False).lower() == "true"
 )
 
-if (AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY) and AWS_ENABLED:
-    print("[BACKEND] AWS S3 Media storage is enabled.")
-    DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+if AWS_MEDIA_PUBLIC_ENABLED:
+    DEFAULT_FILE_STORAGE = "settings.settings.CustomPublicMediaStorage"
+else:
+    MEDIA_URL = "/media/"
+    MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+    DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 
-SENDGRID_TEMPLATE = os.environ.get("SENDGRID_TEMPLATE")
+    class CustomPublicMediaStorage(FileSystemStorage):  # This overrides the AWS version
+        ...
+
+
+AWS_MEDIA_PRIVATE_ENABLED = (
+    get_var("AWS_MEDIA_PRIVATE_ENABLED", default=False).lower() == "true"
+)
+
+if AWS_MEDIA_PRIVATE_ENABLED:
+    PRIVATE_FILE_STORAGE = "settings.settings.CustomPrivateMediaStorage"
+else:
+
+    class CustomPrivateMediaStorage(
+        FileSystemStorage
+    ):  # This overrides the AWS version
+        ...
+
+    PRIVATE_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
+
+SENDGRID_TEMPLATE = get_var("SENDGRID_TEMPLATE")
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 # EMAIL_BACKEND = "sendgrid_backend.SendgridBackend"
 # EMAIL_BACKEND = "sendgrid_backend.SendgridBackend"
 EMAIL_HOST = "smtp.sendgrid.net"
 EMAIL_HOST_USER = "apikey"
-EMAIL_FROM_ADDRESS = os.environ.get("SENDGRID_FROM_ADDRESS")
-EMAIL_HOST_PASSWORD = os.environ.get("SENDGRID_API_KEY")
+EMAIL_FROM_ADDRESS = get_var("SENDGRID_FROM_ADDRESS")
+EMAIL_HOST_PASSWORD = get_var("SENDGRID_API_KEY")
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_SERVER_ENABLED = True if EMAIL_HOST_PASSWORD else False
 
-SENDGRID_SANDBOX_MODE_IN_DEBUG = True
+# SENDGRID_SANDBOX_MODE_IN_DEBUG = True
 
 if "test" in sys.argv[1:]:
     print("[BACKEND] Using sqlite3 database due to a test being ran", flush=True)
