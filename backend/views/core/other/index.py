@@ -4,8 +4,6 @@ from django.shortcuts import render
 
 
 def index(request: HttpRequest):
-    print(cache.set("test", "test_value"))
-    print(cache.get("test"))
     return render(request, "pages/index.html")
 
     # login(request, User.objects.first())

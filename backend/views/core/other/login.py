@@ -70,7 +70,6 @@ class CreateAccountChooseView(View):
         if request.user.is_authenticated:
             return redirect("dashboard")
         SIGNUPS_ENABLED = get_feature_status("areSignupsEnabled")
-        print(SIGNUPS_ENABLED)
         if not SIGNUPS_ENABLED:
             messages.error(request, "New account signups are currently disabled")
             return redirect("login")
