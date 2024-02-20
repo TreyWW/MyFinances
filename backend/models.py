@@ -38,6 +38,14 @@ class User(AbstractUser):
 
     logged_in_as_team = models.ForeignKey("Team", on_delete=models.SET_NULL, null=True)
 
+    class Role(models.TextChoices):
+        #        NAME     DJANGO ADMIN NAME
+        DEV = "DEV", "Developer"
+        STAFF = "STAFF", "Staff"
+        USER = "USER", "User"
+        TESTER = "TESTER", "Tester"
+    role = models.CharField(max_length=10, choices=Role.choices, default=Role.USER)
+
 
 class CustomUserMiddleware:
     def __init__(self, get_response):
