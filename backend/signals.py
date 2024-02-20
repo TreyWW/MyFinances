@@ -58,13 +58,7 @@ def delete_receipt_image_on_delete(sender, instance: Receipt, **kwargs):
     instance.image.delete(False)
 
 
-feature_flags = [
-    {
-        "name": "areSignupsEnabled",
-        "default": True,
-        "pk": 1
-    }
-]
+feature_flags = [{"name": "areSignupsEnabled", "default": True, "pk": 1}]
 
 
 def insert_initial_data(**kwargs):

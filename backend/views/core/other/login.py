@@ -11,6 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 from backend.decorators import *
 from backend.models import LoginLog, AuditLog, User
 from backend.utils import get_feature_status
+
 # from backend.utils import appconfig
 from settings.settings import (
     SOCIAL_AUTH_GITHUB_ENABLED,
@@ -91,8 +92,7 @@ class CreateAccountManualView(View):
         if not SIGNUPS_ENABLED:
             messages.error(request, "New account signups are currently disabled")
             return redirect("login")
-        return render(request,
-                      "pages/login/create_account_manual.html")
+        return render(request, "pages/login/create_account_manual.html")
 
     def post(self, request):
         if request.user.is_authenticated:

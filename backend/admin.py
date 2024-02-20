@@ -17,7 +17,7 @@ from backend.models import (
     TeamInvitation,
     User,
     InvoiceProduct,
-    FeatureFlags
+    FeatureFlags,
 )
 
 # admin.register(Invoice)

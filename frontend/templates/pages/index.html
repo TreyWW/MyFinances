@@ -20,12 +20,8 @@
             <div class="navbar-end">
                 <div class="text-center sm:text-left flex sm:justify-end sm:items-center gap-x-3 md:gap-x-4">
                     {% if request.user.is_authenticated %}
-                        <a class="btn btn-primary rounded-full" href="{% url "dashboard" %}">
-                            Dashboard
-                        </a>
-                        <a class="btn btn-outline rounded-full" href="{% url 'logout' %}">
-                            Logout
-                        </a>
+                        <a class="btn btn-primary rounded-full" href="{% url "dashboard" %}">Dashboard</a>
+                        <a class="btn btn-outline rounded-full" href="{% url 'logout' %}">Logout</a>
                     {% else %}
                         <a class="btn btn-primary rounded-full"
                            href="{% url 'login create_account' %}">Register</a>

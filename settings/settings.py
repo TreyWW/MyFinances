@@ -241,6 +241,7 @@ SOCIAL_AUTH_USER_MODEL = "backend.User"
 
 # APP_CONFIG = appconfig
 
+
 # MEDIA
 class CustomStaticStorage(S3Storage):
     location = get_var("AWS_STATIC_LOCATION", default="static")

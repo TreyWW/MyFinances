@@ -44,6 +44,7 @@ class User(AbstractUser):
         STAFF = "STAFF", "Staff"
         USER = "USER", "User"
         TESTER = "TESTER", "Tester"
+
     role = models.CharField(max_length=10, choices=Role.choices, default=Role.USER)
 
 
