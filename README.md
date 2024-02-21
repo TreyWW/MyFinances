@@ -44,7 +44,7 @@ user-friendly platform to streamline these tasks.
 
 ### Installation
 
-View our documentation to get started [https://myfinances.strelix.org](https://myfinances.strelix.org)
+View our documentation to get started [https://docs.strelix.org/MyFinances](https://docs.strelix.org/MyFinances)
 
 ## Contributing
 
@@ -118,7 +118,7 @@ Make sure you have the necessary prerequisites for development. These are detail
 
 #### Getting Started
 
-View our documentation to get started [https://myfinances.strelix.org](https://myfinances.strelix.org)
+View our documentation to get started [https://docs.strelix.org/MyFinances](https://docs.strelix.org/MyFinances)
 
 Thank you for your contributions!
 
