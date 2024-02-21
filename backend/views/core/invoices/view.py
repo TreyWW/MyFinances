@@ -8,11 +8,7 @@ from backend.models import Invoice, UserSettings, InvoiceURL, User
 def preview(request, invoice_id):
     context = {"type": "preview"}
 
-    invoice = (
-        Invoice.objects.filter(id=invoice_id)
-        .prefetch_related("items")
-        .first()
-    )
+    invoice = Invoice.objects.filter(id=invoice_id).prefetch_related("items").first()
 
     if not invoice:
         messages.error(request, "Invoice not found")
