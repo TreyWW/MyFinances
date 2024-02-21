@@ -51,6 +51,3 @@ def send_email(destination: Union[str, List[str]], subject: str, message: str):
             }
         }
     )
-
-# print(send_email("testemail", "MyFinances Account Created",
-#                  "Your MyFinances account has finished initialising. \n\nLogin to the dashboard to continue."))
