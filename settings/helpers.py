@@ -29,6 +29,8 @@ EMAIL_CLIENT: SESV2Client = boto3.client("sesv2",
                                          aws_access_key_id=get_var("AWS_SES_ACCESS_KEY_ID"),
                                          aws_secret_access_key=get_var("AWS_SES_SECRET_ACCESS_KEY"))
 
+ARE_EMAILS_ENABLED = get_var("AWS_SES_ACCESS_KEY_ID") and get_var("AWS_SES_SECRET_ACCESS_KEY")
+
 
 def send_email(destination: Union[str, List[str]], subject: str, message: str):
     if not isinstance(destination, list):

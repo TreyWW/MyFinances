@@ -438,6 +438,13 @@ class FeatureFlags(models.Model):
     value = models.BooleanField(default=False)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Feature Flag"
+        verbose_name_plural = "Feature Flags"
+
 
 def SEND_SENDGRID_EMAIL(
     to_email,
