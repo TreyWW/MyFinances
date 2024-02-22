@@ -7,7 +7,7 @@
     Create an account
 {% endblock title %}
 {% block content %}
-    <a href="{% url 'login create_account manual' %}" class="btn-large-card">Create with manual details</a>
+    <a href="{% url 'auth:login create_account manual' %}" class="btn-large-card">Create with manual details</a>
     {% if github_enabled %}
         <a href="{% url 'social:begin' 'github' %}" class="btn-large-card">
             <i class="fa-brands fa-github mr-2"></i>

@@ -33,7 +33,7 @@ class CurrencyAPIChange(ViewTestCase):
     # Test that non-authenticated users are redirected to the login page for GET requests
     def test_302_for_non_authenticated_users(self):
         response = self.client.get(reverse(self.url_name))
-        self.assertRedirects(response, f"/login/?next={self.url_path}", 302)
+        self.assertRedirects(response, f"/auth/login/?next={self.url_path}", 302)
 
     # Test that an error message is displayed when no currency is provided in the POST request
     def test_no_currency_provided(self):
@@ -88,7 +88,7 @@ class AccountNameChange(ViewTestCase):
     def test_redirects_to_login_for_unauthenticated_users(self):
         # Ensure that unauthenticated users are redirected to the login page
         response = self.make_request()
-        self.assertRedirects(response, f"/login/?next={self.url_path}", 302)
+        self.assertRedirects(response, f"/auth/login/?next={self.url_path}", 302)
 
     def test_validation_error_no_name_provided(self):
         # Ensure that a validation error message is displayed when neither a first name nor a last name is provided

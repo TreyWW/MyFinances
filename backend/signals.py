@@ -1,8 +1,10 @@
 from django.core.files.storage import default_storage
 from django.db.models.signals import pre_save, post_delete, post_save, post_migrate
 from django.dispatch import receiver
+from django.urls import reverse
 
-from backend.models import UserSettings, Receipt, User, FeatureFlags
+import settings.settings
+from backend.models import UserSettings, Receipt, User, FeatureFlags, MagicLoginLink
 from settings.helpers import ARE_EMAILS_ENABLED
 
 
@@ -89,10 +91,15 @@ def send_welcome_email(sender, instance: User, created, **kwargs):
             
         """
         if ARE_EMAILS_ENABLED:
+            magic_link = MagicLoginLink.objects.create(
+                user=instance
+            )
+            magic_link_url = f"{settings.settings.SITE_URL}/magic_link/{magic_link.uuid}"
+            magic_link_url = reverse("auth:login create_account verify", kwargs={"uuid": magic_link.uuid})
             email_message += f"""
                 To start with, you must first **verify this email** so that we can link your account to this email.
                 Click the link below to activate your account, no details are required, once pressed you're all set!
                 
-                Magic Link: 
+                Magic Link: {magic_link_url}
             """
         #     User.send_welcome_email(instance)

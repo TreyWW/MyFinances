@@ -16,6 +16,8 @@ from .helpers import get_var
 
 DEBUG = True if get_var("DEBUG") in ["True", "true", "TRUE", True] else False
 
+SITE_URL = get_var("SITE_URL") or "http://127.0.0.1:8000"
+
 try:
     if DEBUG:
         print("[BACKEND] Using local settings", flush=True)
@@ -46,14 +48,14 @@ INSTALLED_APPS = [
 
 LOGIN_REQUIRED_IGNORE_VIEW_NAMES = [
     "index",
-    "login",
-    "login create_account",
-    "login create_account manual",
-    "login forgot_password",
+    "auth:login",
+    "auth:login create_account",
+    "auth:login create_account manual",
+    "auth:login forgot_password",
     "user set password reset",
     "user set password",
     "user set password set",
-    "logout",
+    "auth:logout",
     "invoices view invoice",
     "social:begin",
     "social:complete",
@@ -62,7 +64,7 @@ LOGIN_REQUIRED_IGNORE_VIEW_NAMES = [
 
 # @login_required()
 
-LOGIN_REQUIRED_IGNORE_PATHS = [r"/login/$", "/accounts/github/login/callback/$"]
+LOGIN_REQUIRED_IGNORE_PATHS = [r"/auth/login/$", "/accounts/github/login/callback/$"]
 # for some reason only allows "login" and not "login create account" or anything
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -77,7 +79,7 @@ AUTHENTICATION_BACKENDS = [
 
 SECRET_KEY = get_var("SECRET_KEY", required=True)
 
-LOGIN_URL = "/login/"
+LOGIN_URL = "/auth/login/"
 LOGIN_REDIRECT_URL = "/dashboard"
 
 ROOT_URLCONF = "backend.urls"

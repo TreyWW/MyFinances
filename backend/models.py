@@ -37,6 +37,7 @@ class User(AbstractUser):
     objects = CustomUserManager()
 
     logged_in_as_team = models.ForeignKey("Team", on_delete=models.SET_NULL, null=True)
+    awaiting_email_verification = models.BooleanField(default=True)
 
     class Role(models.TextChoices):
         #        NAME     DJANGO ADMIN NAME
@@ -63,6 +64,21 @@ class CustomUserMiddleware:
         response = self.get_response(request)
         return response
 
+
+def add_3hrs_from_now():
+    return timezone.now() + timezone.timedelta(hours=3)
+
+
+class VerificationCodes(models.Model):
+    class ServiceTypes(models.TextChoices):
+        CREATE_ACCOUNT = "create_account", "Create Account"
+        RESET_PASSWORD = "reset_password", "Reset Password"
+
+    uuid = models.UUIDField(default=uuid4, editable=False, unique=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True)
+    expiry = models.DateTimeField(default=add_3hrs_from_now())
+    service = models.CharField(max_length=10, choices=ServiceTypes.choices)
 
 def RandomCode(length=6):
     return get_random_string(length=length).upper()
@@ -444,55 +460,3 @@ class FeatureFlags(models.Model):
     class Meta:
         verbose_name = "Feature Flag"
         verbose_name_plural = "Feature Flags"
-
-
-def SEND_SENDGRID_EMAIL(
-    to_email,
-    subject,
-    content,
-    from_email="myfinances@strelix.org",
-    request=None,
-    **kwargs,
-):
-    DESTINATION = kwargs.get("DESTINATION") or to_email
-    SUBJECT = kwargs.get("SUBJECT") or subject
-    CONTENT = kwargs.get("CONTENT") or content
-    FROM = kwargs.get("FROM") or from_email
-    request = kwargs.get("request") or request
-
-    if not isinstance(DESTINATION, list):
-        DESTINATION = [DESTINATION]
-    msg = EmailMessage(subject=SUBJECT, from_email=FROM, to=DESTINATION, body=CONTENT)
-
-    DATA = {"first_name": "list", "content": CONTENT}
-
-    msg.template_id = settings.SENDGRID_TEMPLATE
-    msg.dynamic_template_data = DATA
-    msg.template_data = DATA
-
-    try:
-        msg.send(fail_silently=False)
-
-    except smtplib.SMTPConnectError as error:
-        if request:
-            messages.error(
-                request,
-                "Failed to connect to our email server. Please try again later or report this issue to our team.",
-            )
-        print(f"[ERROR] {error}", flush=True)
-        TracebackError(error=error).save()
-        return False, "Failed to connect to our email server."
-
-    except smtplib.SMTPException as error:
-        if request:
-            messages.error(
-                request,
-                "Failed to connect to our email server. Please try again later or report this issue to our team.",
-            )
-        print(f"[ERROR] {error}", flush=True)
-        TracebackError(error=error).save()
-        return False, error
-    except Exception as error:
-        print(f"[ERROR] {error}", flush=True)
-        TracebackError(error=error).save()
-        return False, "Error"

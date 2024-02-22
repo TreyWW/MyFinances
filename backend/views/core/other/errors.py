@@ -38,7 +38,7 @@ def e_403(request: HttpRequest, exception=None):
         exec_error = traceback.format_exc()
         if len(exec_error) < 4999:
             TracebackError(error=exec_error).save()
-        return redirect("login")
+        return redirect("auth:login")
     else:
         messages.error(
             request,

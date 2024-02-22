@@ -37,7 +37,7 @@
             </div>
         </div>
         <div class="text-right text-secondary">
-            <a href="{% url "login forgot_password" %}">
+            <a href="{% url "auth:login forgot_password" %}">
                 <span class="text-sm inline-block hover:underline hover:cursor-pointer transition duration-200">Forgot Password?</span>
             </a>
         </div>
@@ -45,7 +45,7 @@
         <button type="submit" class="btn mt-2 w-full btn-primary">Login</button>
         <div class="text-center mt-4">
             Don't have an account yet?
-            <a href="{% url 'login create_account' %}"
+            <a href="{% url 'auth:login create_account' %}"
                class="my-4 group text-secondary transition duration-300">
                 Create one!
                 <span class="my-2 block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-secondary"></span>

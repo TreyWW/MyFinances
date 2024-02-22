@@ -1,68 +1,15 @@
-from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
+from django.contrib.auth import authenticate, login
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from django.db.models import Q
-from django.http import HttpRequest
-from django.shortcuts import render
-from django.urls import resolve, Resolver404
+from django.shortcuts import redirect, render
+from django.utils import timezone
 from django.views import View
-from django.views.decorators.csrf import csrf_exempt
 
-from backend.decorators import *
-from backend.models import LoginLog, AuditLog, User
+from backend.models import User, VerificationCodes
 from backend.utils import get_feature_status
-
-# from backend.utils import appconfig
-from settings.settings import (
-    SOCIAL_AUTH_GITHUB_ENABLED,
-    SOCIAL_AUTH_GOOGLE_OAUTH2_ENABLED,
-)
-
-
-@csrf_exempt
-@not_authenticated
-def login_page(request):
-    if request.user.is_authenticated:
-        return redirect("dashboard")
-
-    if request.method == "POST":
-        email = request.POST.get("email")
-        password = request.POST.get("password")
-
-        user = authenticate(request, username=email, password=password)
-
-        if not user:
-            messages.error(request, "Invalid email or password")
-            return render(request, "pages/login/login.html", {"attempted_email": email})
-
-        login(request, user)
-        LoginLog.objects.create(user=user)
-        AuditLog.objects.create(user=user, action="Login")
-
-        try:
-            resolve(request.POST.get("next"))
-            if request.POST.get("logout"):
-                redirect("dashboard")
-            return redirect(request.POST.get("next"))
-        except Resolver404:
-            return redirect("dashboard")
-
-    return render(
-        request,
-        "pages/login/login.html",
-        {
-            "github_enabled": SOCIAL_AUTH_GITHUB_ENABLED,
-            "google_enabled": SOCIAL_AUTH_GOOGLE_OAUTH2_ENABLED,
-        },
-    )
-
-
-def logout_view(request):
-    logout(request)
-
-    messages.success(request, "You've now been logged out.")
-
-    return redirect("login")  # + "?next=" + request.POST.get('next'))
+from settings.settings import SOCIAL_AUTH_GITHUB_ENABLED, SOCIAL_AUTH_GOOGLE_OAUTH2_ENABLED
 
 
 class CreateAccountChooseView(View):
@@ -72,7 +19,7 @@ class CreateAccountChooseView(View):
         SIGNUPS_ENABLED = get_feature_status("areSignupsEnabled")
         if not SIGNUPS_ENABLED:
             messages.error(request, "New account signups are currently disabled")
-            return redirect("login")
+            return redirect("auth:login")
         return render(
             request,
             "pages/login/create_account_choose.html",
@@ -90,7 +37,7 @@ class CreateAccountManualView(View):
         SIGNUPS_ENABLED = get_feature_status("areSignupsEnabled")
         if not SIGNUPS_ENABLED:
             messages.error(request, "New account signups are currently disabled")
-            return redirect("login")
+            return redirect("auth:login")
         return render(request, "pages/login/create_account_manual.html")
 
     def post(self, request):
@@ -99,7 +46,7 @@ class CreateAccountManualView(View):
         SIGNUPS_ENABLED = get_feature_status("areSignupsEnabled")
         if not SIGNUPS_ENABLED:
             messages.error(request, "New account signups are currently disabled")
-            return redirect("login")
+            return redirect("auth:login")
 
         email = request.POST.get("email")
         password = request.POST.get("password")
@@ -142,8 +89,26 @@ class CreateAccountManualView(View):
         return redirect("dashboard")
 
 
-@not_authenticated
-def forgot_password_page(request: HttpRequest):
-    if request.user.is_authenticated:
-        return redirect("dashboard")
-    return render(request, "pages/login/forgot_password.html")
+def create_account_verify(request, uuid):
+    object = VerificationCodes.objects.first(uuid=uuid)
+
+    if not object:
+        messages.error(request, "Invalid URL")  # Todo: add some way a user can resend code?
+        return redirect("auth:create_account")
+
+    if object.expiry < timezone.now():
+        messages.error(request, "This code has already expired")  # Todo: add some way a user can resend code?
+        return redirect("auth:create_account")
+
+    if object.user.awaiting_email_verification == False:
+        messages.error(request, "Your email has already been verified. You can login.")
+        return redirect("auth:login")
+
+    object.user.is_active = True
+    object.user.awaiting_email_verification = False
+    object.user.save()
+    object.delete()
+
+    messages.success(request, "Successfully verified your email! You can now login in.")
+    return redirect("auth:login")
+
