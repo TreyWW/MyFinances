@@ -1,9 +1,7 @@
-import smtplib
 from uuid import uuid4
 
-from django.contrib import messages
+from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import UserManager, AbstractUser, AnonymousUser
-from django.core.mail import EmailMessage
 from django.db import models
 from django.db.models import Count
 from django.utils import timezone
@@ -11,6 +9,10 @@ from django.utils.crypto import get_random_string
 from shortuuid.django_fields import ShortUUIDField
 
 from settings import settings
+
+
+def RandomCode(length=6):
+    return get_random_string(length=length).upper()
 
 
 def USER_OR_ORGANIZATION_CONSTRAINT():
@@ -75,13 +77,24 @@ class VerificationCodes(models.Model):
         RESET_PASSWORD = "reset_password", "Reset Password"
 
     uuid = models.UUIDField(default=uuid4, editable=False, unique=True)
+    token = models.TextField(default=RandomCode(6), editable=False)
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     expiry = models.DateTimeField(default=add_3hrs_from_now())
-    service = models.CharField(max_length=10, choices=ServiceTypes.choices)
+    service = models.CharField(max_length=14, choices=ServiceTypes.choices)
 
-def RandomCode(length=6):
-    return get_random_string(length=length).upper()
+    def __str__(self):
+        return self.user.username
+
+    def hash_token(self):
+        self.token = make_password(self.token)
+        self.save()
+        return True
+
+    class Meta:
+        verbose_name = "Verification Code"
+        verbose_name_plural = "Verification Codes"
 
 
 class UserSettings(models.Model):

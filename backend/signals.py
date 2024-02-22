@@ -3,9 +3,8 @@ from django.db.models.signals import pre_save, post_delete, post_save, post_migr
 from django.dispatch import receiver
 from django.urls import reverse
 
-import settings.settings
-from backend.models import UserSettings, Receipt, User, FeatureFlags, MagicLoginLink
-from settings.helpers import ARE_EMAILS_ENABLED
+from backend.models import UserSettings, Receipt, User, FeatureFlags, VerificationCodes
+from settings.helpers import ARE_EMAILS_ENABLED, send_email
 
 
 @receiver(pre_save, sender=UserSettings)
@@ -84,22 +83,25 @@ def send_welcome_email(sender, instance: User, created, **kwargs):
             
             We're happy to have you join us. We are still in development and are still working on the core mechanics.
             If you find any bugs with our software, create a bug report on our 
-            [Github Issues](https://github.com/TreyWW/MyFinances/issues/new?assignees=&labels=bug&projects=&template=bug-report.md&title=%5BBUG%5D+)
+            Github Issues (https://github.com/TreyWW/MyFinances/issues/new?assignees=&labels=bug&projects=&template=bug-report.md&title=%5BBUG%5D+)
             and we'll try to help debug the issue or squash the bug.
             
             Thank you for using MyFinances.
-            
         """
         if ARE_EMAILS_ENABLED:
-            magic_link = MagicLoginLink.objects.create(
-                user=instance
+            magic_link = VerificationCodes.objects.create(user=instance, service="create_account")
+            token_plain = magic_link.token
+            magic_link.hash_token()
+            magic_link_url = reverse(
+                "auth:login create_account verify", kwargs={"uuid": magic_link.uuid, "token": token_plain}
             )
-            magic_link_url = f"{settings.settings.SITE_URL}/magic_link/{magic_link.uuid}"
-            magic_link_url = reverse("auth:login create_account verify", kwargs={"uuid": magic_link.uuid})
             email_message += f"""
                 To start with, you must first **verify this email** so that we can link your account to this email.
                 Click the link below to activate your account, no details are required, once pressed you're all set!
                 
                 Magic Link: {magic_link_url}
             """
+
+        email = send_email(destination=instance.email, subject="Welcome to MyFinances", message=email_message)
+
         #     User.send_welcome_email(instance)

@@ -1,5 +1,6 @@
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate
+from django.contrib.auth.hashers import check_password
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from django.db.models import Q
@@ -9,7 +10,10 @@ from django.views import View
 
 from backend.models import User, VerificationCodes
 from backend.utils import get_feature_status
-from settings.settings import SOCIAL_AUTH_GITHUB_ENABLED, SOCIAL_AUTH_GOOGLE_OAUTH2_ENABLED
+from settings.settings import (
+    SOCIAL_AUTH_GITHUB_ENABLED,
+    SOCIAL_AUTH_GOOGLE_OAUTH2_ENABLED,
+)
 
 
 class CreateAccountChooseView(View):
@@ -68,8 +72,7 @@ class CreateAccountManualView(View):
 
         emails_taken = User.objects.filter(
             Q(username=email) | Q(email=email)
-        ).exists()  # may want to change to "email" once we add email
-        # backend for logins
+        ).exists()
 
         if emails_taken:
             messages.error(request, "Email is already taken")
@@ -79,36 +82,49 @@ class CreateAccountManualView(View):
             messages.error(request, "Password must be at least 6 characters")
             return render(request, "pages/login/create_account_manual.html")
 
-        User.objects.create_user(email=email, username=email, password=password)
+        created_user = User.objects.create_user(email=email, username=email, password=password)
+        created_user.is_active = False
+        created_user.save()
+
         user = authenticate(request, username=email, password=password)
         if not user:
             messages.error(request, "Something went wrong")
             return render(request, "pages/login/create_account_manual.html")
 
-        login(request, user)
-        return redirect("dashboard")
+        # login(request, user)
+        messages.success(request, "Successfully created account. Please verify your account via the email we are "
+                                  "sending you now!")
+        return redirect("auth:login")
 
 
-def create_account_verify(request, uuid):
-    object = VerificationCodes.objects.first(uuid=uuid)
+def create_account_verify(request, uuid, token):
+    object = VerificationCodes.objects.filter(uuid=uuid, service="create_account").first()
 
     if not object:
-        messages.error(request, "Invalid URL")  # Todo: add some way a user can resend code?
+        messages.error(
+            request, "Invalid URL"
+        )  # Todo: add some way a user can resend code?
         return redirect("auth:create_account")
 
     if object.expiry < timezone.now():
-        messages.error(request, "This code has already expired")  # Todo: add some way a user can resend code?
+        messages.error(
+            request, "This code has already expired"
+        )  # Todo: add some way a user can resend code?
         return redirect("auth:create_account")
 
-    if object.user.awaiting_email_verification == False:
+    if not object.user.awaiting_email_verification:
         messages.error(request, "Your email has already been verified. You can login.")
         return redirect("auth:login")
 
-    object.user.is_active = True
-    object.user.awaiting_email_verification = False
-    object.user.save()
+    if not check_password(token, object.token):
+        messages.error(request, "This verification token is invalid.")
+        return redirect("auth:create_account")
+
+    user = object.user
+    user.is_active = True
+    user.awaiting_email_verification = False
+    user.save()
     object.delete()
 
-    messages.success(request, "Successfully verified your email! You can now login in.")
+    messages.success(request, "Successfully verified your email! You can now login.")
     return redirect("auth:login")
-

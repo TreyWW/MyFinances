@@ -64,7 +64,11 @@ LOGIN_REQUIRED_IGNORE_VIEW_NAMES = [
 
 # @login_required()
 
-LOGIN_REQUIRED_IGNORE_PATHS = [r"/auth/login/$", "/accounts/github/login/callback/$"]
+LOGIN_REQUIRED_IGNORE_PATHS = [
+    r"/\/auth\/login\/(.*)/",
+    r"\/auth\/create_account\/(.*)/",
+    r"/accounts/github/login/callback/$"
+]
 # for some reason only allows "login" and not "login create account" or anything
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -192,7 +196,6 @@ else:
         }
     }
 
-
 # STORAGES = {
 #     "default": {
 #         "BACKEND": "django.core.files.storage.FileSystemStorage",
@@ -308,9 +311,9 @@ else:
     MEDIA_ROOT = os.path.join(BASE_DIR, "media")
     DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 
+
     class CustomPublicMediaStorage(FileSystemStorage):  # This overrides the AWS version
         ...
-
 
 AWS_MEDIA_PRIVATE_ENABLED = (
     get_var("AWS_MEDIA_PRIVATE_ENABLED", default=False).lower() == "true"
@@ -324,6 +327,7 @@ else:
         FileSystemStorage
     ):  # This overrides the AWS version
         ...
+
 
     PRIVATE_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 

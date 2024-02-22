@@ -1,7 +1,8 @@
-from backend.models import User
-from django.urls import reverse, resolve
-from tests.handler import ViewTestCase
 from django.contrib.messages import get_messages
+from django.urls import reverse
+
+from backend.models import User
+from tests.handler import ViewTestCase
 
 
 class LoginTestCases(ViewTestCase):
@@ -11,6 +12,7 @@ class LoginTestCases(ViewTestCase):
         self.url_name = "auth:login"
         self.view_function_path = "backend.api.invoices.fetch.fetch_all_invoices"
         self.login_rev = reverse("auth:login")
+
     def test_login_redirects_for_auth_user(self):
         self.client.force_login(User.objects.first())  # Log in as an authenticated user
         response = self.client.get(self.login_rev)

@@ -2,17 +2,13 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 from login_required import login_not_required
 
-from backend.models import Invoice, UserSettings, InvoiceURL, User
+from backend.models import Invoice, UserSettings, InvoiceURL
 
 
 def preview(request, invoice_id):
     context = {"type": "preview"}
 
-    invoice = (
-        Invoice.objects.filter(id=invoice_id)
-        .prefetch_related("items")
-        .first()
-    )
+    invoice = Invoice.objects.filter(id=invoice_id).prefetch_related("items").first()
 
     if not invoice:
         messages.error(request, "Invoice not found")

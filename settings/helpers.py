@@ -24,32 +24,35 @@ def get_var(key, default=None, required=False):
     return value
 
 
-EMAIL_CLIENT: SESV2Client = boto3.client("sesv2",
-                                         region_name="eu-west-2",
-                                         aws_access_key_id=get_var("AWS_SES_ACCESS_KEY_ID"),
-                                         aws_secret_access_key=get_var("AWS_SES_SECRET_ACCESS_KEY"))
+EMAIL_CLIENT: SESV2Client = boto3.client(
+    "sesv2",
+    region_name="eu-west-2",
+    aws_access_key_id=get_var("AWS_SES_ACCESS_KEY_ID"),
+    aws_secret_access_key=get_var("AWS_SES_SECRET_ACCESS_KEY"),
+)
 
-ARE_EMAILS_ENABLED = get_var("AWS_SES_ACCESS_KEY_ID") and get_var("AWS_SES_SECRET_ACCESS_KEY")
+ARE_EMAILS_ENABLED = get_var("AWS_SES_ACCESS_KEY_ID") and get_var(
+    "AWS_SES_SECRET_ACCESS_KEY"
+)
 
 
 def send_email(destination: Union[str, List[str]], subject: str, message: str):
+    """
+    Args:
+    destination (email addr or list of email addr): The email address or list of email addresses to send the
+    email to.
+    subject (str): The subject of the email.
+    message (str): The content of the email.
+    """
     if not isinstance(destination, list):
         destination = [destination]
     return EMAIL_CLIENT.send_email(
         FromEmailAddress=get_var("AWS_SES_FROM_ADDRESS"),
-        Destination={
-            "ToAddresses": destination
-        },
+        Destination={"ToAddresses": destination},
         Content={
             "Simple": {
-                "Subject": {
-                    "Data": subject
-                },
-                "Body": {
-                    "Text": {
-                        "Data": message
-                    }
-                }
+                "Subject": {"Data": subject},
+                "Body": {"Text": {"Data": message}},
             }
-        }
+        },
     )

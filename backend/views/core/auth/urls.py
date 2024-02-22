@@ -1,9 +1,7 @@
 from django.urls import path
 
 from . import login, create_account
-from .passwords import view as passwords_view
-from .passwords import generate as passwords_generate
-from .passwords import set as passwords_set
+from .passwords import view as passwords_view, generate as passwords_generate, set as passwords_set
 
 urlpatterns = [
     path("login/", login.login_page, name="login"),
@@ -24,7 +22,7 @@ urlpatterns = [
         name="login create_account manual",
     ),
     path(
-        "create_account/verify/<uuid:uuid>/",
+        "create_account/verify/<uuid:uuid>/<str:token>/",
         create_account.create_account_verify,
         name="login create_account verify",
     ),
