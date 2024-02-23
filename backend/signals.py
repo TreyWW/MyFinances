@@ -99,9 +99,9 @@ def send_welcome_email(sender, instance: User, created, **kwargs):
                 To start with, you must first **verify this email** so that we can link your account to this email.
                 Click the link below to activate your account, no details are required, once pressed you're all set!
                 
-                Magic Link: {magic_link_url}
+                Verify Link: {magic_link_url}
             """
 
-        email = send_email(destination=instance.email, subject="Welcome to MyFinances", message=email_message)
+            email = send_email(destination=instance.email, subject="Welcome to MyFinances", message=email_message)
 
         #     User.send_welcome_email(instance)

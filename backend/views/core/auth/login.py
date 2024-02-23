@@ -1,17 +1,11 @@
 from django.contrib.auth import authenticate, login, logout
-from django.core.exceptions import ValidationError
-from django.core.validators import validate_email
-from django.db.models import Q
 from django.http import HttpRequest
 from django.shortcuts import render
 from django.urls import resolve, Resolver404
-from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 
 from backend.decorators import *
-from backend.models import LoginLog, AuditLog, User
-from backend.utils import get_feature_status
-
+from backend.models import LoginLog, AuditLog
 # from backend.utils import appconfig
 from settings.settings import (
     SOCIAL_AUTH_GITHUB_ENABLED,
@@ -35,9 +29,17 @@ def login_page(request):
             messages.error(request, "Invalid email or password")
             return render(request, "pages/login/login.html", {"attempted_email": email})
 
+        if not user.is_active:
+            if user.awaiting_email_verification:
+                messages.error(request, "Your account is awaiting email verification.")
+            else:
+                messages.error(request, "Your account is not currently active.")
+            return render(request, "pages/login/login.html", {"attempted_email": email})
+
+
         login(request, user)
         LoginLog.objects.create(user=user)
-        AuditLog.objects.create(user=user, action="Login")
+        # AuditLog.objects.create(user=user, action="Login")
 
         try:
             resolve(request.POST.get("next"))
