@@ -3,6 +3,7 @@ from django.db.models.signals import pre_save, post_delete, post_save, post_migr
 from django.dispatch import receiver
 from django.urls import reverse
 
+import settings.settings
 from backend.models import UserSettings, Receipt, User, FeatureFlags, VerificationCodes
 from settings.helpers import ARE_EMAILS_ENABLED, send_email
 
@@ -92,7 +93,7 @@ def send_welcome_email(sender, instance: User, created, **kwargs):
             magic_link = VerificationCodes.objects.create(user=instance, service="create_account")
             token_plain = magic_link.token
             magic_link.hash_token()
-            magic_link_url = reverse(
+            magic_link_url = settings.settings.SITE_URL + reverse(
                 "auth:login create_account verify", kwargs={"uuid": magic_link.uuid, "token": token_plain}
             )
             email_message += f"""

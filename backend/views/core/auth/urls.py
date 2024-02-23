@@ -1,6 +1,6 @@
 from django.urls import path
 
-from . import login, create_account
+from . import login, create_account,verify
 from .passwords import view as passwords_view, generate as passwords_generate, set as passwords_set
 
 urlpatterns = [
@@ -23,8 +23,13 @@ urlpatterns = [
     ),
     path(
         "create_account/verify/<uuid:uuid>/<str:token>/",
-        create_account.create_account_verify,
+        verify.create_account_verify,
         name="login create_account verify",
+    ),
+    path(
+        "create_account/verify/resend/<int:uid>/",
+        verify.resend_verification_code,
+        name="login create_account verify resend",
     ),
     # path(
     #     "login/magic_link/<str:uuid>/",

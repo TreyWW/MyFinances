@@ -1,11 +1,11 @@
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpRequest
 from django.shortcuts import render
-from django.urls import resolve, Resolver404
+from django.urls import resolve, Resolver404, reverse
 from django.views.decorators.csrf import csrf_exempt
 
 from backend.decorators import *
-from backend.models import LoginLog, AuditLog
+from backend.models import LoginLog
 # from backend.utils import appconfig
 from settings.settings import (
     SOCIAL_AUTH_GITHUB_ENABLED,
@@ -31,11 +31,16 @@ def login_page(request):
 
         if not user.is_active:
             if user.awaiting_email_verification:
-                messages.error(request, "Your account is awaiting email verification.")
+                messages.error(request, f"""
+                    Your account is awaiting email verification
+                    <a href='{request.build_absolute_uri(reverse("auth:login create_account verify resend", kwargs={"uid": user.id}))}'
+                    class='link link-success'>
+                        click here to send a new verification email
+                    </a>.
+                """)
             else:
                 messages.error(request, "Your account is not currently active.")
             return render(request, "pages/login/login.html", {"attempted_email": email})
-
 
         login(request, user)
         LoginLog.objects.create(user=user)

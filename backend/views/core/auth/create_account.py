@@ -95,36 +95,3 @@ class CreateAccountManualView(View):
         messages.success(request, "Successfully created account. Please verify your account via the email we are "
                                   "sending you now!")
         return redirect("auth:login")
-
-
-def create_account_verify(request, uuid, token):
-    object = VerificationCodes.objects.filter(uuid=uuid, service="create_account").first()
-
-    if not object:
-        messages.error(
-            request, "Invalid URL"
-        )  # Todo: add some way a user can resend code?
-        return redirect("auth:create_account")
-
-    if object.expiry < timezone.now():
-        messages.error(
-            request, "This code has already expired"
-        )  # Todo: add some way a user can resend code?
-        return redirect("auth:create_account")
-
-    if not object.user.awaiting_email_verification:
-        messages.error(request, "Your email has already been verified. You can login.")
-        return redirect("auth:login")
-
-    if not check_password(token, object.token):
-        messages.error(request, "This verification token is invalid.")
-        return redirect("auth:create_account")
-
-    user = object.user
-    user.is_active = True
-    user.awaiting_email_verification = False
-    user.save()
-    object.delete()
-
-    messages.success(request, "Successfully verified your email! You can now login.")
-    return redirect("auth:login")
