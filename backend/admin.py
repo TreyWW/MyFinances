@@ -21,6 +21,7 @@ from backend.models import (
     VerificationCodes
 )
 
+# from django.contrib.auth.models imp/ort User
 # admin.register(Invoice)
 admin.site.register([UserSettings,
                      Client,
@@ -39,6 +40,11 @@ admin.site.register([UserSettings,
                      FeatureFlags,
                      VerificationCodes
                      ])
+
+# admin.site.unregister(User)
+fields = list(UserAdmin.fieldsets)
+fields[0] = (None, {"fields": ("username", "password", "logged_in_as_team", "awaiting_email_verification")})
+UserAdmin.fieldsets = tuple(fields)
 admin.site.register(User, UserAdmin)
 
 admin.site.site_header = "MyFinances Admin"
