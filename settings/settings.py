@@ -48,14 +48,10 @@ INSTALLED_APPS = [
 
 LOGIN_REQUIRED_IGNORE_VIEW_NAMES = [
     "index",
-    "auth:login",
-    "auth:login create_account",
-    "auth:login create_account manual",
     "auth:login forgot_password",
     "user set password reset",
     "user set password",
     "user set password set",
-    "auth:logout",
     "invoices view invoice",
     "social:begin",
     "social:complete",
@@ -65,9 +61,12 @@ LOGIN_REQUIRED_IGNORE_VIEW_NAMES = [
 # @login_required()
 
 LOGIN_REQUIRED_IGNORE_PATHS = [
-    r"/\/auth\/login\/(.*)/",
-    r"\/auth\/create_account\/(.*)/",
-    r"/accounts/github/login/callback/$"
+    "/auth/login/manual/",
+    r"^/auth/login/$",
+    r"^/__debug__/(.*)/",
+    r"^/auth/login/(.*)/",
+    r"^/auth/create_account(/.*)?$",
+    r"^/accounts/github/login/callback/$"
 ]
 # for some reason only allows "login" and not "login create account" or anything
 

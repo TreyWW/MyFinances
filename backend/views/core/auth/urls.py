@@ -4,7 +4,8 @@ from . import login, create_account, verify
 from .passwords import view as passwords_view, generate as passwords_generate, set as passwords_set
 
 urlpatterns = [
-    path("login/", login.login_page, name="login"),
+    path("login/", login.login_initial_page, name="login"),
+    path("login/manual/", login.login_manual, name="login manual"),
     path(
         "login/forgot_password/",
         login.forgot_password_page,

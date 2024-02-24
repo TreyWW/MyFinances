@@ -7,9 +7,50 @@
     Login
 {% endblock title %}
 {% block content %}
-    <form method="post">
+    <style>
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+            }
+        }
+
+        @keyframes fade-out {
+            to {
+                opacity: 0;
+            }
+        }
+
+        @keyframes slide-from-right {
+            from {
+                transform: translateX(90px);
+            }
+        }
+
+        @keyframes slide-to-left {
+            to {
+                transform: translateX(-90px);
+            }
+        }
+
+        /* define animations for the old and new content */
+        ::view-transition-old(slide-it) {
+            animation: 180ms cubic-bezier(0.4, 0, 1, 1) both fade-out,
+            600ms cubic-bezier(0.4, 0, 0.2, 1) both slide-to-left;
+        }
+
+        ::view-transition-new(slide-it) {
+            animation: 420ms cubic-bezier(0, 0, 0.2, 1) 90ms both fade-in,
+            600ms cubic-bezier(0.4, 0, 0.2, 1) both slide-from-right;
+        }
+
+        /* tie the view transition to a given CSS class */
+        .slide-transition {
+            view-transition-name: slide-it;
+        }
+    </style>
+    <form method="post" class="slide-transition" hx-swap="none" hx-post="{% url 'auth:login manual' %}">
         {% csrf_token %}
-        <div class="mb-1">
+        <div data-swap="form_fields">
             <div class="form-control w-full mt-4">
                 <label class="label">
                     <span class="label-text text-base-content undefined">Email Address</span>
@@ -25,25 +66,13 @@
                     <span class="label-text-alt text-error">Please enter a valid email.</span>
                 </label>
             </div>
-            <div class="form-control w-full mt-4">
-                <label class="label">
-                    <span class="label-text text-base-content undefined">Password</span>
-                </label>
-                <input required
-                       type="password"
-                       name="password"
-                       placeholder="********"
-                       class="input input-bordered w-full">
-            </div>
+            <button hx-swap="none" hx-target="form" class="btn mt-6 w-full btn-primary">
+                Next
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
         </div>
-        <div class="text-right text-secondary">
-            <a href="{% url "auth:login forgot_password" %}">
-                <span class="text-sm inline-block hover:underline hover:cursor-pointer transition duration-200">Forgot Password?</span>
-            </a>
-        </div>
-        <p class="text-center  text-error mt-8"></p>
-        <button type="submit" class="btn mt-2 w-full btn-primary">Login</button>
-        <div class="text-center mt-4">
+
+        <div class="text-center mt-3">
             Don't have an account yet?
             <a href="{% url 'auth:login create_account' %}"
                class="my-4 group text-secondary transition duration-300">

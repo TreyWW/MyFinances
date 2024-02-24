@@ -1,0 +1,31 @@
+<div hx-swap-oob='innerHTML:[data-swap="form_fields"]'>
+    {% if email %}
+        <div class="text-center mt-4">
+            <small class="text-center">
+                (You are currently logging in as <strong>{{ email }}</strong>)
+            </small>
+        </div>
+    {% endif %}
+    <div class="form-control w-full mt-4">
+        <label class="label">
+            <span class="label-text text-base-content undefined">Password</span>
+        </label>
+        <input required
+               type="password"
+               name="password"
+               placeholder="********"
+               class="input input-bordered w-full">
+    </div>
+    <button class="btn mt-2 w-full btn-primary" hx-swap-oob=>
+        Login
+    </button>
+
+    <div class="divider mt-8">
+        OR
+    </div>
+
+    <button class="btn-large-card flex flex-col items-center">
+        <span>Login with email magic link</span>
+        <span class="text-xs text-center">This sends an email to your address, all you need to do is press the link and you're in!</span>
+    </button>
+</div>
