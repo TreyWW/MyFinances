@@ -3,6 +3,8 @@ from django.contrib.auth.hashers import check_password
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils import timezone
+from django.views.decorators.http import require_POST
+from django_ratelimit.decorators import ratelimit
 
 from backend.models import VerificationCodes, User, TracebackError
 from settings import settings
@@ -42,7 +44,17 @@ def create_account_verify(request, uuid, token):
     return redirect("auth:login")
 
 
-def resend_verification_code(request, uid):
+@ratelimit(group="resend_verification_code", key="ip", rate="1/m")
+@ratelimit(group="resend_verification_code", key="ip", rate="3/25m")
+@ratelimit(group="resend_verification_code", key="ip", rate="10/6h")
+@ratelimit(group="resend_verification_code", key="post:email", rate="1/m")
+@ratelimit(group="resend_verification_code", key="post:email", rate="3/25m")
+@require_POST
+def resend_verification_code(request):
+    email = request.POST.get("email")
+    if not email:
+        messages.error(request, "Invalid resend verification request")
+        return redirect("auth:login")
     if not ARE_EMAILS_ENABLED:
         messages.error(request, "Emails are currently disabled.")
         TracebackError.objects.create(
@@ -50,7 +62,7 @@ def resend_verification_code(request, uid):
         )
         return redirect("auth:login create_account")
     try:
-        user = User.objects.get(pk=uid)
+        user = User.objects.get(email=email)
     except User.DoesNotExist:
         messages.error(request, "Invalid resend verification request")
         return redirect("auth:create_account")
@@ -62,8 +74,8 @@ def resend_verification_code(request, uid):
         "auth:login create_account verify", kwargs={"uuid": magic_link.uuid, "token": token_plain}
     )
 
-    send_email(destination=request.user.email, subject="Verify your email", message=f"""
-        Hi {request.user.first_name if request.user.first_name else "User"},
+    send_email(destination=email, subject="Verify your email", message=f"""
+        Hi {user.first_name if user.first_name else "User"},
         
         Verification for your email has been requested to link this email to your MyFinances account.
         If this wasn't you, you can simply ignore this email.

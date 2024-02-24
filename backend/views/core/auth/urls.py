@@ -1,6 +1,6 @@
 from django.urls import path
 
-from . import login, create_account,verify
+from . import login, create_account, verify
 from .passwords import view as passwords_view, generate as passwords_generate, set as passwords_set
 
 urlpatterns = [
@@ -27,7 +27,7 @@ urlpatterns = [
         name="login create_account verify",
     ),
     path(
-        "create_account/verify/resend/<int:uid>/",
+        "create_account/verify/resend/",
         verify.resend_verification_code,
         name="login create_account verify resend",
     ),

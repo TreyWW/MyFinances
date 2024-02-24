@@ -1,8 +1,10 @@
+import django_ratelimit
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpRequest
 from django.shortcuts import render
 from django.urls import resolve, Resolver404, reverse
 from django.views.decorators.csrf import csrf_exempt
+from django_ratelimit.decorators import ratelimit
 
 from backend.decorators import *
 from backend.models import LoginLog
@@ -15,6 +17,9 @@ from settings.settings import (
 
 @csrf_exempt
 @not_authenticated
+@ratelimit(key="post:email", method=django_ratelimit.UNSAFE, rate="5/m")
+@ratelimit(key="post:email", method=django_ratelimit.UNSAFE, rate="10/5m")
+@ratelimit(key="ip", method=django_ratelimit.UNSAFE, rate="5/m")
 def login_page(request):
     if request.user.is_authenticated:
         return redirect("dashboard")
@@ -32,8 +37,11 @@ def login_page(request):
         if not user.is_active:
             if user.awaiting_email_verification:
                 messages.error(request, f"""
+                    
                     Your account is awaiting email verification
-                    <a href='{request.build_absolute_uri(reverse("auth:login create_account verify resend", kwargs={"uid": user.id}))}'
+                    <button hx-post='
+                    {request.build_absolute_uri(reverse("auth:login create_account verify resend"))}'
+                    hx-vals='{{"email": "{email}"}}'
                     class='link link-success'>
                         click here to send a new verification email
                     </a>.

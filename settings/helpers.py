@@ -3,6 +3,7 @@ from typing import Union, List
 
 import boto3
 import environ
+from django_ratelimit.core import get_usage
 from mypy_boto3_sesv2.client import SESV2Client
 
 ### NEEDS REFACTOR
@@ -22,6 +23,16 @@ def get_var(key, default=None, required=False):
     if not default and not value:  # So methods like .lower() don't error
         value = ""
     return value
+
+
+def increment_rate_limit(request, group):
+    """
+    Alias of is_ratelimited that just increments the rate limit for the given group.
+
+    Returns the new usage count.
+    """
+    usage = get_usage(request, group, increment=True)
+    return usage.get("count", 0)
 
 
 EMAIL_CLIENT: SESV2Client = boto3.client(
