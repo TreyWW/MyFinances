@@ -76,8 +76,8 @@ class VerificationCodes(models.Model):
         CREATE_ACCOUNT = "create_account", "Create Account"
         RESET_PASSWORD = "reset_password", "Reset Password"
 
-    uuid = models.UUIDField(default=uuid4, editable=False, unique=True)
-    token = models.TextField(default=RandomCode(6), editable=False)
+    uuid = models.UUIDField(default=uuid4, editable=False, unique=True)  # This is the public identifier
+    token = models.TextField(default=RandomCode(6), editable=False)  # This is the private token (should be hashed)
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
@@ -86,6 +86,12 @@ class VerificationCodes(models.Model):
 
     def __str__(self):
         return self.user.username
+
+    def is_expired(self):
+        if timezone.now() > self.expiry:
+            self.delete()
+            return True
+        return False
 
     def hash_token(self):
         self.token = make_password(self.token)

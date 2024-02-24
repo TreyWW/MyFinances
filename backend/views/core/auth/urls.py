@@ -6,6 +6,13 @@ from .passwords import view as passwords_view, generate as passwords_generate, s
 urlpatterns = [
     path("login/", login.login_initial_page, name="login"),
     path("login/manual/", login.login_manual, name="login manual"),
+    path("login/magic_link/request/", login.MagicLinkRequestView.as_view(), name="login magic_link request"),
+    path("login/magic_link/request/wait/", login.MagicLinkWaitingView.as_view(), name="login magic_link request wait"),
+    path("login/magic_link/verify/<uuid:uuid>/<str:token>/", login.MagicLinkVerifyView.as_view(), name="login magic_link verify"),
+    path("login/magic_link/verify/<uuid:uuid>/<str:token>/accept/", login.MagicLinkVerifyDecline.as_view(),
+         name="login magic_link verify accept"),
+    path("login/magic_link/verify/<uuid:uuid>/<str:token>/decline/", login.MagicLinkVerifyDecline.as_view(),
+         name="login magic_link verify decline"),
     path(
         "login/forgot_password/",
         login.forgot_password_page,

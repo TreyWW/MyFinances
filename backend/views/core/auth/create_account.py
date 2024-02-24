@@ -68,9 +68,7 @@ class CreateAccountManualView(View):
             messages.error(request, "Invalid email")
             return render(request, "pages/auth/create_account_manual.html")
 
-        emails_taken = User.objects.filter(
-            Q(username=email) | Q(email=email)
-        ).exists()
+        emails_taken = User.objects.filter(Q(username=email) | Q(email=email)).exists()
 
         if emails_taken:
             messages.error(request, "Email is already taken")
@@ -90,6 +88,9 @@ class CreateAccountManualView(View):
             return render(request, "pages/auth/create_account_manual.html")
 
         # login(request, user)
-        messages.success(request, "Successfully created account. Please verify your account via the email we are "
-                                  "sending you now!")
+        messages.success(
+            request,
+            "Successfully created account. Please verify your account via the email we are "
+            "sending you now!",
+        )
         return redirect("auth:login")

@@ -15,9 +15,7 @@ def create_account_verify(request, uuid, token):
     object = VerificationCodes.objects.filter(uuid=uuid, service="create_account").first()
 
     if not object:
-        messages.error(
-            request, "Invalid URL"
-        )  # Todo: add some way a user can resend code?
+        messages.error(request, "Invalid URL")  # Todo: add some way a user can resend code?
         return redirect("auth:create_account")
 
     if object.expiry < timezone.now():
@@ -44,6 +42,12 @@ def create_account_verify(request, uuid, token):
     return redirect("auth:login")
 
 
+def create_magic_link(user: User, service: str) -> tuple[VerificationCodes, str]:
+    magic_link = VerificationCodes.objects.create(user=user, service=service)
+    token_plain = magic_link.token
+    magic_link.hash_token()
+    return magic_link, token_plain
+
 @ratelimit(group="resend_verification_code", key="ip", rate="1/m")
 @ratelimit(group="resend_verification_code", key="ip", rate="3/25m")
 @ratelimit(group="resend_verification_code", key="ip", rate="10/6h")
@@ -57,9 +61,7 @@ def resend_verification_code(request):
         return redirect("auth:login")
     if not ARE_EMAILS_ENABLED:
         messages.error(request, "Emails are currently disabled.")
-        TracebackError.objects.create(
-            error="Emails are currently disabled."
-        )
+        TracebackError.objects.create(error="Emails are currently disabled.")
         return redirect("auth:login create_account")
     try:
         user = User.objects.get(email=email)
@@ -67,14 +69,15 @@ def resend_verification_code(request):
         messages.error(request, "Invalid resend verification request")
         return redirect("auth:create_account")
     VerificationCodes.objects.filter(user=user, service="create_account").delete()
-    magic_link = VerificationCodes.objects.create(user=user, service="create_account")
-    token_plain = magic_link.token
-    magic_link.hash_token()
+    magic_link = create_magic_link(user, "create_account")
     magic_link_url = settings.SITE_URL + reverse(
         "auth:login create_account verify", kwargs={"uuid": magic_link.uuid, "token": token_plain}
     )
 
-    send_email(destination=email, subject="Verify your email", message=f"""
+    send_email(
+        destination=email,
+        subject="Verify your email",
+        message=f"""
         Hi {user.first_name if user.first_name else "User"},
         
         Verification for your email has been requested to link this email to your MyFinances account.
@@ -82,7 +85,8 @@ def resend_verification_code(request):
         
         If it was you, you can complete the verification by clicking the link below.
         Verify Link: {magic_link_url}
-    """)
+    """,
+    )
 
     messages.success(request, "Verification email sent, check your inbox or spam!")
     return redirect("auth:login")
