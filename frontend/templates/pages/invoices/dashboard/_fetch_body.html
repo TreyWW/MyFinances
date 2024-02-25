@@ -74,7 +74,7 @@
 </tbody>
 {% for option in all_sort_options %}
     <div hx-swap-oob="innerHTML:li[data-sort='{{ option }}'] button">
-        {% if sort == option %}<i class="fa fa-solid fa-sort"></i>{% endif %}
+        {% if sort == option or sort == "-"|add:option %}<i class="fa fa-solid fa-sort"></i>{% endif %}
         {% if option == "payment_status" %}
             Payment Status
         {% elif option == "date_due" %}

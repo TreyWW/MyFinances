@@ -48,7 +48,14 @@ def fetch_all_invoices(request: HttpRequest):
     # Validate and sanitize the sort_by parameter
     all_sort_options = ["date_due", "id", "payment_status"]
     context["all_sort_options"] = all_sort_options
-    sort_by = sort_by if sort_by in all_sort_options else "id"
+    if sort_by == "date_due":
+        sort_by = "-date_due"
+    elif sort_by == "id":
+        sort_by = "-id"
+    elif sort_by == "payment_status":
+        sort_by = "-payment_status"
+    else:
+        sort_by = "id"
 
     # Fetch invoices for the user, prefetch related items, and select specific fields
     if request.user.logged_in_as_team:
