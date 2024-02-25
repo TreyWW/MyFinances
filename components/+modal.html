@@ -3,13 +3,13 @@
         x-init="$el.showModal()">
     <div class="modal-box">
         {% slot "title" %}
-            <h3 class="font-bold text-lg">{{ title }}</h3>
-        {% endslot %}
-        {% slot "content" %}
-            <p class="py-4">{{ content }}</p>
-        {% endslot %}
-    </div>
-    <form method="dialog" class="modal-backdrop">
-        <button>close</button>
-    </form>
+        <h3 class="font-bold text-lg">{{ title }}</h3>
+    {% endslot %}
+    {% slot "content" %}
+    <p class="py-4">{{ content }}</p>
+{% endslot %}
+</div>
+<form method="dialog" class="modal-backdrop">
+    <button>close</button>
+</form>
 </dialog>
