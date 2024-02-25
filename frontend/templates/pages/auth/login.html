@@ -24,9 +24,11 @@
         OR
     </div>
 
-    <button type="button" hx-post="{% url 'auth:login magic_link request' %}" hx-vals='{"email": "{{ email }}"}'
-            class="btn-large-card flex flex-col items-center">
-        <span>Login with email magic link</span>
-        <span class="text-xs text-center">This sends an email to your address, all you need to do is press the link and you're in!</span>
-    </button>
+    {% if magic_links_enabled %}
+        <button type="button" hx-post="{% url 'auth:login magic_link request' %}" hx-vals='{"email": "{{ email }}"}'
+                class="btn-large-card flex flex-col items-center">
+            <span>Login with email magic link</span>
+            <span class="text-xs text-center">This sends an email to your address, all you need to do is press the link and you're in!</span>
+        </button>
+    {% endif %}
 </div>

@@ -77,11 +77,11 @@ class VerificationCodes(models.Model):
         RESET_PASSWORD = "reset_password", "Reset Password"
 
     uuid = models.UUIDField(default=uuid4, editable=False, unique=True)  # This is the public identifier
-    token = models.TextField(default=RandomCode(6), editable=False)  # This is the private token (should be hashed)
+    token = models.TextField(default=RandomCode, editable=False)  # This is the private token (should be hashed)
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
-    expiry = models.DateTimeField(default=add_3hrs_from_now())
+    expiry = models.DateTimeField(default=add_3hrs_from_now)
     service = models.CharField(max_length=14, choices=ServiceTypes.choices)
 
     def __str__(self):
@@ -444,7 +444,12 @@ class AuditLog(models.Model):
 
 
 class LoginLog(models.Model):
+    class ServiceTypes(models.TextChoices):
+        MANUAL = "manual"
+        MAGIC_LINK = "magic_link"
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    service = models.CharField(max_length=14, choices=ServiceTypes.choices, default="manual")
     date = models.DateTimeField(auto_now_add=True)
 
 

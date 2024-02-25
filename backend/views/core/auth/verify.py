@@ -19,9 +19,7 @@ def create_account_verify(request, uuid, token):
         return redirect("auth:create_account")
 
     if object.expiry < timezone.now():
-        messages.error(
-            request, "This code has already expired"
-        )  # Todo: add some way a user can resend code?
+        messages.error(request, "This code has already expired")  # Todo: add some way a user can resend code?
         return redirect("auth:create_account")
 
     if not object.user.awaiting_email_verification:
@@ -48,6 +46,7 @@ def create_magic_link(user: User, service: str) -> tuple[VerificationCodes, str]
     magic_link.hash_token()
     return magic_link, token_plain
 
+
 @ratelimit(group="resend_verification_code", key="ip", rate="1/m")
 @ratelimit(group="resend_verification_code", key="ip", rate="3/25m")
 @ratelimit(group="resend_verification_code", key="ip", rate="10/6h")
@@ -70,9 +69,7 @@ def resend_verification_code(request):
         return redirect("auth:create_account")
     VerificationCodes.objects.filter(user=user, service="create_account").delete()
     magic_link = create_magic_link(user, "create_account")
-    magic_link_url = settings.SITE_URL + reverse(
-        "auth:login create_account verify", kwargs={"uuid": magic_link.uuid, "token": token_plain}
-    )
+    magic_link_url = settings.SITE_URL + reverse("auth:login create_account verify", kwargs={"uuid": magic_link.uuid, "token": token_plain})
 
     send_email(
         destination=email,

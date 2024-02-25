@@ -90,7 +90,6 @@ class CreateAccountManualView(View):
         # login(request, user)
         messages.success(
             request,
-            "Successfully created account. Please verify your account via the email we are "
-            "sending you now!",
+            "Successfully created account. Please verify your account via the email we are " "sending you now!",
         )
         return redirect("auth:login")

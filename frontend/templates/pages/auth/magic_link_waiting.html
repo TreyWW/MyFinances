@@ -29,6 +29,15 @@
                 if (window.localStorage.getItem("refresh_tab_login_status") === "accepted") {
                     document.getElementById("status").innerText = "Accepted"
                     document.getElementById("status").className = "text-success text-2xl"
+                    setTimeout(() => {
+                        const urlParams = new URLSearchParams(window.location.search);
+                        new_url = urlParams.get('next')
+                        console.log(new_url)
+                        if (!new_url) {
+                            new_url = "/dashboard/"
+                        }
+                        window.location.href = new_url
+                    }, 1500)
                 } else {
                     document.getElementById("status").innerText = "Declined"
                     document.getElementById("status").className = "text-error text-2xl"
