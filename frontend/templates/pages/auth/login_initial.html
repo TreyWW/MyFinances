@@ -48,7 +48,10 @@
             view-transition-name: slide-it;
         }
     </style>
-    <form method="post" class="slide-transition" hx-swap="none" hx-post="{% url 'auth:login manual' %}">
+    <form method="post"
+          class="slide-transition"
+          hx-swap="none"
+          hx-post="{% url 'auth:login manual' %}">
         {% csrf_token %}
         <div data-swap="form_fields">
             <div class="form-control w-full mt-4">
@@ -71,7 +74,6 @@
                 <i class="fa-solid fa-arrow-right"></i>
             </button>
         </div>
-
         <div class="text-center mt-3">
             Don't have an account yet?
             <a href="{% url 'auth:login create_account' %}"

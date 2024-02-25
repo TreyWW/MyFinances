@@ -16,16 +16,12 @@
                placeholder="********"
                class="input input-bordered w-full">
     </div>
-    <button class="btn mt-2 w-full btn-primary" hx-swap-oob=>
-        Login
-    </button>
-
-    <div class="divider mt-8">
-        OR
-    </div>
-
+    <button class="btn mt-2 w-full btn-primary" hx-swap-oob=>Login</button>
+    <div class="divider mt-8">OR</div>
     {% if magic_links_enabled %}
-        <button type="button" hx-post="{% url 'auth:login magic_link request' %}" hx-vals='{"email": "{{ email }}"}'
+        <button type="button"
+                hx-post="{% url 'auth:login magic_link request' %}"
+                hx-vals='{"email": "{{ email }}"}'
                 class="btn-large-card flex flex-col items-center">
             <span>Login with email magic link</span>
             <span class="text-xs text-center">This sends an email to your address, all you need to do is press the link and you're in!</span>
