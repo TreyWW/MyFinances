@@ -102,9 +102,7 @@ def change_status(request: HttpRequest, invoice_id: int, status: str) -> HttpRes
 
     send_message(request, f"Invoice status been changed to <strong>{status}</strong>", success=True)
 
-    return render(request, "pages/invoices/dashboard/_modify_payment_status.html", {
-        "status": status, "invoice_id": invoice_id
-    })
+    return render(request, "pages/invoices/dashboard/_modify_payment_status.html", {"status": status, "invoice_id": invoice_id})
 
 
 def return_message(request: HttpRequest, message: str, success: bool = True) -> HttpResponse:
