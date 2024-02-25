@@ -1,10 +1,10 @@
+import uuid
+
 from django.contrib.messages import get_messages
 from django.urls import reverse, resolve
-import uuid
+
 from backend.models import Receipt, ReceiptDownloadToken
 from tests.handler import ViewTestCase, create_mock_image
-
-from model_bakery import baker
 
 
 class ReceiptsViewTestCase(ViewTestCase):
@@ -30,9 +30,7 @@ class ReceiptsViewTestCase(ViewTestCase):
         func = resolve("/dashboard/receipts/").func
         func_name = f"{func.__module__}.{func.__name__}"
         self.assertEqual("/dashboard/receipts/", self._receipts_dashboard_url)
-        self.assertEqual(
-            "backend.views.core.receipts.dashboard.receipts_dashboard", func_name
-        )
+        self.assertEqual("backend.views.core.receipts.dashboard.receipts_dashboard", func_name)
 
 
 class ReceiptsAPITestCase(ViewTestCase):
@@ -90,18 +88,10 @@ class ReceiptsAPITestCase(ViewTestCase):
 class ReceiptDownloadEndpointsTest(ViewTestCase):
     def setUp(self):
         super().setUp()
-        self.receipt = Receipt.objects.create(
-            user=self.log_in_user, image=create_mock_image()
-        )
-        self.token = ReceiptDownloadToken.objects.create(
-            user=self.log_in_user, file=self.receipt
-        )
-        self.download_receipt_url = reverse(
-            "api:receipts:download_receipt", args=[self.token.token]
-        )
-        self.generate_download_link_url = reverse(
-            "api:receipts:generate_download_link", args=[self.receipt.id]
-        )
+        self.receipt = Receipt.objects.create(user=self.log_in_user, image=create_mock_image())
+        self.token = ReceiptDownloadToken.objects.create(user=self.log_in_user, file=self.receipt)
+        self.download_receipt_url = reverse("api:receipts:download_receipt", args=[self.token.token])
+        self.generate_download_link_url = reverse("api:receipts:generate_download_link", args=[self.receipt.id])
 
     def test_download_receipt_valid_token(self):
         self.login_user()
@@ -119,9 +109,7 @@ class ReceiptDownloadEndpointsTest(ViewTestCase):
     def test_download_receipt_used_token(self):
         self.login_user()
         self.client.get(self.download_receipt_url)  # Use the token once
-        response = self.client.get(
-            self.download_receipt_url
-        )  # Try to use the token again
+        response = self.client.get(self.download_receipt_url)  # Try to use the token again
         self.assertEqual(response.status_code, 404)  # Expect a 404 response
 
     def test_generate_download_link_valid_receipt(self):
@@ -132,8 +120,6 @@ class ReceiptDownloadEndpointsTest(ViewTestCase):
 
     def test_generate_download_link_invalid_receipt(self):
         self.login_user()
-        invalid_url = reverse(
-            "api:receipts:generate_download_link", args=[9999]
-        )  # Assuming 9999 is an invalid receipt id
+        invalid_url = reverse("api:receipts:generate_download_link", args=[9999])  # Assuming 9999 is an invalid receipt id
         response = self.client.get(invalid_url)
         self.assertEqual(response.status_code, 404)

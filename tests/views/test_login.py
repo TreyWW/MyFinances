@@ -1,7 +1,8 @@
-from backend.models import User
-from django.urls import reverse, resolve
-from tests.handler import ViewTestCase
 from django.contrib.messages import get_messages
+from django.urls import reverse
+
+from backend.models import User
+from tests.handler import ViewTestCase
 
 
 class LoginTestCases(ViewTestCase):
@@ -15,9 +16,7 @@ class LoginTestCases(ViewTestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_actual_login_functionality(self):
-        response = self.client.post(
-            reverse("login"), {"email": "user@example.com", "password": "user"}
-        )
+        response = self.client.post(reverse("login"), {"email": "user@example.com", "password": "user"})
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response.wsgi_request.user.is_authenticated)
@@ -27,9 +26,7 @@ class LoginTestCases(ViewTestCase):
         self.assertEqual(response.status_code, 302)
 
     def test_actual_login_functionality_fails_on_invalid(self):
-        response = self.client.post(
-            reverse("login"), {"email": "user@example.com", "password": "invalid"}
-        )
+        response = self.client.post(reverse("login"), {"email": "user@example.com", "password": "invalid"})
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(response.status_code, 200)
         self.assertFalse(response.wsgi_request.user.is_authenticated)
@@ -119,9 +116,7 @@ class TestLogout(ViewTestCase):
         self.client.force_login(User.objects.first())  # Log in as an authenticated user
         response = self.client.get(reverse("logout"))
         self.assertEqual(response.status_code, 302)
-        self.assertFalse(
-            response.wsgi_request.user.is_authenticated
-        )  # check to make sure no longer authenticated
+        self.assertFalse(response.wsgi_request.user.is_authenticated)  # check to make sure no longer authenticated
         self.assertEqual(response.wsgi_request.user.id, None)
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(len(messages), 1)
@@ -129,8 +124,6 @@ class TestLogout(ViewTestCase):
 
     def test_logout_fails_for_unauthenticated_user(self):
         response = self.client.get(reverse("logout"))
-        self.assertFalse(
-            response.wsgi_request.user.is_authenticated
-        )  # check to make sure no longer authenticated
+        self.assertFalse(response.wsgi_request.user.is_authenticated)  # check to make sure no longer authenticated
         self.assertEqual(response.wsgi_request.user.id, None)
         self.assertRedirects(response, reverse("login"), status_code=302)

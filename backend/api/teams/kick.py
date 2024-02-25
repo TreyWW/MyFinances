@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest
 from django.shortcuts import redirect
 
 from backend.models import User, Team
@@ -22,9 +22,7 @@ def kick_user(request: HttpRequest, user_id):
         return redirect("user settings teams")
 
     if team.leader != request.user:
-        messages.error(
-            request, "You don't have the required permissions to kick this user"
-        )
+        messages.error(request, "You don't have the required permissions to kick this user")
         return redirect("user settings teams")
 
     team.members.remove(user)

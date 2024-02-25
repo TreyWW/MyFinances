@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 from login_required import login_not_required
 
-from backend.models import Invoice, UserSettings, InvoiceURL, User
+from backend.models import Invoice, UserSettings, InvoiceURL
 
 
 def preview(request, invoice_id):
@@ -42,11 +42,7 @@ def view(request, uuid):
     context = {"type": "view"}
 
     try:
-        url = (
-            InvoiceURL.objects.select_related("invoice")
-            .prefetch_related("invoice", "invoice__items")
-            .get(uuid=uuid)
-        )
+        url = InvoiceURL.objects.select_related("invoice").prefetch_related("invoice", "invoice__items").get(uuid=uuid)
         invoice = url.invoice
         if not invoice:
             raise InvoiceURL.DoesNotExist

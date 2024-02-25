@@ -16,10 +16,7 @@ from settings import settings
 def USER_OR_ORGANIZATION_CONSTRAINT():
     return models.CheckConstraint(
         name=f"%(app_label)s_%(class)s_check_user_or_organization",
-        check=(
-            models.Q(user__isnull=True, organization__isnull=False)
-            | models.Q(user__isnull=False, organization__isnull=True)
-        ),
+        check=(models.Q(user__isnull=True, organization__isnull=False) | models.Q(user__isnull=False, organization__isnull=True)),
     )
 
 
@@ -78,9 +75,7 @@ class UserSettings(models.Model):
         "AUD": {"name": "Australian Dollar", "symbol": "$"},
         "CAD": {"name": "Canadian Dollar", "symbol": "$"},
     }
-    user = models.OneToOneField(
-        User, on_delete=models.CASCADE, related_name="user_profile"
-    )
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="user_profile")
     dark_mode = models.BooleanField(default=True)
     currency = models.CharField(
         max_length=3,
@@ -113,20 +108,14 @@ class UserSettings(models.Model):
 
 class Team(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    leader = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="teams_leader_of"
-    )
+    leader = models.ForeignKey(User, on_delete=models.CASCADE, related_name="teams_leader_of")
     members = models.ManyToManyField(User, related_name="teams_joined")
 
 
 class TeamInvitation(models.Model):
     code = models.CharField(max_length=10)
-    team = models.ForeignKey(
-        Team, on_delete=models.CASCADE, related_name="team_invitations"
-    )
-    user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="team_invitations"
-    )
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="team_invitations")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="team_invitations")
     invited_by = models.ForeignKey(User, on_delete=models.CASCADE)
     expires = models.DateTimeField(null=True, blank=True)
     active = models.BooleanField(default=True)
@@ -160,9 +149,7 @@ class Receipt(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     organization = models.ForeignKey(Team, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=100)
-    image = models.ImageField(
-        upload_to="receipts", storage=settings.CustomPrivateMediaStorage()
-    )
+    image = models.ImageField(upload_to="receipts", storage=settings.CustomPrivateMediaStorage())
     total_price = models.FloatField(null=True, blank=True)
     date = models.DateField(null=True, blank=True)
     date_uploaded = models.DateTimeField(auto_now_add=True)
@@ -216,9 +203,7 @@ class InvoiceItem(models.Model):
     is_service = models.BooleanField(default=True)
     # if service
     hours = models.DecimalField(max_digits=15, decimal_places=2, blank=True, null=True)
-    price_per_hour = models.DecimalField(
-        max_digits=15, decimal_places=2, blank=True, null=True
-    )
+    price_per_hour = models.DecimalField(max_digits=15, decimal_places=2, blank=True, null=True)
     # if product
     price = models.DecimalField(max_digits=15, decimal_places=2, blank=True, null=True)
 
@@ -243,9 +228,7 @@ class Invoice(models.Model):
     organization = models.ForeignKey(Team, on_delete=models.CASCADE, null=True)
     invoice_id = models.IntegerField(unique=True, blank=True, null=True)  # todo: add
 
-    client_to = models.ForeignKey(
-        Client, on_delete=models.SET_NULL, blank=True, null=True
-    )
+    client_to = models.ForeignKey(Client, on_delete=models.SET_NULL, blank=True, null=True)
 
     client_name = models.CharField(max_length=100, blank=True, null=True)
     client_company = models.CharField(max_length=100, blank=True, null=True)
@@ -276,9 +259,7 @@ class Invoice(models.Model):
     )
     notes = models.TextField(blank=True, null=True)
 
-    payment_status = models.CharField(
-        max_length=10, choices=STATUS_CHOICES, default="pending"
-    )
+    payment_status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="pending")
     items = models.ManyToManyField(InvoiceItem)
 
     date_created = models.DateTimeField(auto_now_add=True)
@@ -290,11 +271,7 @@ class Invoice(models.Model):
 
     @property
     def dynamic_payment_status(self):
-        if (
-            self.date_due
-            and timezone.now().date() > self.date_due
-            and self.payment_status == "pending"
-        ):
+        if self.date_due and timezone.now().date() > self.date_due and self.payment_status == "pending":
             return "overdue"
         else:
             return self.payment_status
@@ -343,9 +320,7 @@ class Invoice(models.Model):
 
 class InvoiceURL(models.Model):
     uuid = ShortUUIDField(length=8, primary_key=True)
-    invoice = models.ForeignKey(
-        Invoice, on_delete=models.CASCADE, related_name="invoice_urls"
-    )
+    invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE, related_name="invoice_urls")
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_on = models.DateTimeField(auto_now_add=True)
     expires = models.DateTimeField(null=True, blank=True)
@@ -376,9 +351,7 @@ class InvoiceURL(models.Model):
 
 
 class PasswordSecret(models.Model):
-    user = models.OneToOneField(
-        User, on_delete=models.CASCADE, related_name="password_secrets"
-    )
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="password_secrets")
     secret = models.TextField(max_length=300)
     expires = models.DateTimeField(null=True, blank=True)
 
@@ -390,9 +363,7 @@ class Notification(models.Model):
         ("redirect", "Redirect"),
     ]
 
-    user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="user_notifications"
-    )
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_notifications")
     message = models.CharField(max_length=100)
     action = models.CharField(max_length=10, choices=action_choices, default="normal")
     action_value = models.CharField(max_length=100, null=True, blank=True)

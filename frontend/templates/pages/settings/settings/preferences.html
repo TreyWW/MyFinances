@@ -12,7 +12,9 @@
             name="currency"
             class="select select-bordered w-[25%]">
         {% for code, info in currency_signs.items %}
-            <option value="{{ code }}" {% if currency == code %}selected{% endif %}>{{ info.symbol }} - {{ code }}</option>
+            <option value="{{ code }}" {% if currency == code %}selected{% endif %}>
+                {{ info.symbol }} - {{ code }}
+            </option>
         {% endfor %}
     </select>
 {% else %}

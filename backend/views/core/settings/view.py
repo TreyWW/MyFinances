@@ -42,9 +42,7 @@ def settings_page(request: HttpRequest):
                         if img.format.lower() in ["jpeg", "png", "jpg"]:
                             usersettings.profile_picture = profile_picture
                             usersettings.save()
-                            messages.success(
-                                request, "Successfully updated profile picture"
-                            )
+                            messages.success(request, "Successfully updated profile picture")
                         else:
                             messages.error(
                                 request,
@@ -82,9 +80,7 @@ def change_password(request: HttpRequest):
         password = request.POST.get("password")
         confirm_password = request.POST.get("confirm_password")
 
-        error = validate_password_change(
-            request.user, current_password, password, confirm_password
-        )
+        error = validate_password_change(request.user, current_password, password, confirm_password)
 
         if error:
             messages.error(request, error)

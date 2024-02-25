@@ -2,7 +2,9 @@
     <option selected disabled>View Clients</option>
     {% for client in clients %}
         <option value="{{ client.id }}"
-                {% if client.id|slugify == selected_client|slugify %}selected{% endif %}>{{ client.name }}</option>
+                {% if client.id|slugify == selected_client|slugify %}selected{% endif %}>
+            {{ client.name }}
+        </option>
     {% endfor %}
 {% else %}
     <option selected disabled>No clients</option>
