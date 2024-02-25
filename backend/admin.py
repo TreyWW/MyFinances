@@ -18,28 +18,31 @@ from backend.models import (
     User,
     InvoiceProduct,
     FeatureFlags,
-    VerificationCodes
+    VerificationCodes,
 )
 
 # from django.contrib.auth.models imp/ort User
 # admin.register(Invoice)
-admin.site.register([UserSettings,
-                     Client,
-                     Invoice,
-                     InvoiceURL,
-                     InvoiceItem,
-                     PasswordSecret,
-                     AuditLog,
-                     LoginLog,
-                     Error,
-                     TracebackError,
-                     Notification,
-                     Team,
-                     TeamInvitation,
-                     InvoiceProduct,
-                     FeatureFlags,
-                     VerificationCodes
-                     ])
+admin.site.register(
+    [
+        UserSettings,
+        Client,
+        Invoice,
+        InvoiceURL,
+        InvoiceItem,
+        PasswordSecret,
+        AuditLog,
+        LoginLog,
+        Error,
+        TracebackError,
+        Notification,
+        Team,
+        TeamInvitation,
+        InvoiceProduct,
+        FeatureFlags,
+        VerificationCodes,
+    ]
+)
 
 # admin.site.unregister(User)
 fields = list(UserAdmin.fieldsets)
