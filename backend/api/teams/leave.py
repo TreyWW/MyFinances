@@ -17,9 +17,7 @@ def leave_team_confirmed(request: HttpRequest, team_id):
     if not team:
         return return_error_notif(request, "Team not found")
 
-    if (
-        team.leader == request.user
-    ):  # may be changed in the future. If no members allow delete
+    if team.leader == request.user:  # may be changed in the future. If no members allow delete
         return return_error_notif(request, "You cannot leave your own team")
 
     if not request.user.teams_joined.filter(id=team_id).exists():

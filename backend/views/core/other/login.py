@@ -11,7 +11,6 @@ from django.views.decorators.csrf import csrf_exempt
 from backend.decorators import *
 from backend.models import LoginLog, AuditLog, User
 from backend.utils import get_feature_status
-
 # from backend.utils import appconfig
 from settings.settings import (
     SOCIAL_AUTH_GITHUB_ENABLED,
@@ -119,9 +118,7 @@ class CreateAccountManualView(View):
             messages.error(request, "Invalid email")
             return render(request, "pages/login/create_account_manual.html")
 
-        emails_taken = User.objects.filter(
-            Q(username=email) | Q(email=email)
-        ).exists()  # may want to change to "email" once we add email
+        emails_taken = User.objects.filter(Q(username=email) | Q(email=email)).exists()  # may want to change to "email" once we add email
         # backend for logins
 
         if emails_taken:

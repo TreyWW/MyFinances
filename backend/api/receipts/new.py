@@ -1,8 +1,7 @@
-import os
-import requests
+from django.contrib import messages
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import HttpRequest, JsonResponse, HttpResponseBadRequest
+from django.http import HttpRequest, HttpResponseBadRequest
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
 
@@ -28,12 +27,8 @@ def receipt_create(request: HttpRequest):
     name = file.name.split(".")[0] if not name else name
 
     if not name:
-        messages.error(
-            request, "No name provided, or image doesn't contain a valid name."
-        )
-        return HttpResponseBadRequest(
-            "No name provided, or image doesn't contain a valid name.", status=400
-        )
+        messages.error(request, "No name provided, or image doesn't contain a valid name.")
+        return HttpResponseBadRequest("No name provided, or image doesn't contain a valid name.", status=400)
 
     if not date:
         date = None

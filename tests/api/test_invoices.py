@@ -69,9 +69,7 @@ class InvoicesAPIFetch(ViewTestCase):
         self.assertEqual(response.status_code, 200)
 
         # Check that the number of invoices returned matches the number created
-        self.assertEqual(
-            len(response.context.get("invoices")), random_amount_of_invoices
-        )
+        self.assertEqual(len(response.context.get("invoices")), random_amount_of_invoices)
 
         # Check that all created invoices are in the response
         for invoice in invoices:

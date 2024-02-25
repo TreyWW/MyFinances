@@ -1,8 +1,8 @@
-from django.http import FileResponse, Http404
-from backend.models import Receipt, ReceiptDownloadToken
-from django.shortcuts import get_object_or_404, render
+from django.http import FileResponse, HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404
 from django.urls import reverse
-from django.http import HttpResponse, JsonResponse
+
+from backend.models import Receipt, ReceiptDownloadToken
 
 
 def download_receipt(request, token):
@@ -51,15 +51,11 @@ def generate_download_link(request, receipt_id):
         if request.user.logged_in_as_team:
             receipt = Receipt.objects.get(id=receipt_id, user=request.user)
         else:
-            receipt = Receipt.objects.get(
-                id=receipt_id, organization=request.user.logged_in_as_team
-            )
+            receipt = Receipt.objects.get(id=receipt_id, organization=request.user.logged_in_as_team)
     except Receipt.DoesNotExist:
         return HttpResponse("Receipt not found", status=404)
     token = ReceiptDownloadToken.objects.create(user=request.user, file=receipt)
-    download_link = request.build_absolute_uri(
-        reverse("api:receipts:download_receipt", args=[token.token])
-    )
+    download_link = request.build_absolute_uri(reverse("api:receipts:download_receipt", args=[token.token]))
 
     response_data = {
         "download_link": download_link,

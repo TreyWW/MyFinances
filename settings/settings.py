@@ -222,16 +222,10 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 SOCIAL_AUTH_GITHUB_SCOPE = ["user:email"]
 SOCIAL_AUTH_GITHUB_KEY = get_var("GITHUB_KEY")
 SOCIAL_AUTH_GITHUB_SECRET = get_var("GITHUB_SECRET")
-SOCIAL_AUTH_GITHUB_ENABLED = (
-    True if SOCIAL_AUTH_GITHUB_KEY and SOCIAL_AUTH_GITHUB_SECRET else False
-)
+SOCIAL_AUTH_GITHUB_ENABLED = True if SOCIAL_AUTH_GITHUB_KEY and SOCIAL_AUTH_GITHUB_SECRET else False
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = None
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = None
-SOCIAL_AUTH_GOOGLE_OAUTH2_ENABLED = (
-    True
-    if SOCIAL_AUTH_GOOGLE_OAUTH2_KEY and SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET
-    else False
-)
+SOCIAL_AUTH_GOOGLE_OAUTH2_ENABLED = True if SOCIAL_AUTH_GOOGLE_OAUTH2_KEY and SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET else False
 
 # SOCIAL_AUTH_LOGIN_URL = "/login/external/"
 # SOCIAL_AUTH_NEW_USER_REDIRECT_URL = "/login/external/new_user/"
@@ -279,9 +273,7 @@ class CustomPrivateMediaStorage(S3Storage):
     secret_key = get_var("AWS_MEDIA_PRIVATE_ACCESS_KEY")
 
     cloudfront_key_id = get_var("AWS_MEDIA_PRIVATE_CLOUDFRONT_PUBLIC_KEY_ID")
-    cloudfront_key = base64.b64decode(
-        get_var("AWS_MEDIA_PRIVATE_CLOUDFRONT_PRIVATE_KEY")
-    )
+    cloudfront_key = base64.b64decode(get_var("AWS_MEDIA_PRIVATE_CLOUDFRONT_PRIVATE_KEY"))
 
 
 AWS_STATIC_ENABLED = get_var("AWS_STATIC_ENABLED", default=False).lower() == "true"
@@ -295,9 +287,7 @@ else:
     STATIC_ROOT = os.path.join(BASE_DIR, "static")
     STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
 
-AWS_MEDIA_PUBLIC_ENABLED = (
-    get_var("AWS_MEDIA_PUBLIC_ENABLED", default=False).lower() == "true"
-)
+AWS_MEDIA_PUBLIC_ENABLED = get_var("AWS_MEDIA_PUBLIC_ENABLED", default=False).lower() == "true"
 
 if AWS_MEDIA_PUBLIC_ENABLED:
     DEFAULT_FILE_STORAGE = "settings.settings.CustomPublicMediaStorage"
@@ -309,18 +299,13 @@ else:
     class CustomPublicMediaStorage(FileSystemStorage):  # This overrides the AWS version
         ...
 
-
-AWS_MEDIA_PRIVATE_ENABLED = (
-    get_var("AWS_MEDIA_PRIVATE_ENABLED", default=False).lower() == "true"
-)
+AWS_MEDIA_PRIVATE_ENABLED = get_var("AWS_MEDIA_PRIVATE_ENABLED", default=False).lower() == "true"
 
 if AWS_MEDIA_PRIVATE_ENABLED:
     PRIVATE_FILE_STORAGE = "settings.settings.CustomPrivateMediaStorage"
 else:
 
-    class CustomPrivateMediaStorage(
-        FileSystemStorage
-    ):  # This overrides the AWS version
+    class CustomPrivateMediaStorage(FileSystemStorage):  # This overrides the AWS version
         ...
 
     PRIVATE_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"

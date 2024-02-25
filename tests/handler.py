@@ -35,9 +35,7 @@ def create_mock_image():
     image = Image.new("RGB", (100, 100), "white")
     image_io = BytesIO()
     image.save(image_io, "JPEG")
-    return SimpleUploadedFile(
-        "mock_image.jpg", image_io.getvalue(), content_type="image/jpeg"
-    )
+    return SimpleUploadedFile("mock_image.jpg", image_io.getvalue(), content_type="image/jpeg")
 
 
 def cleanup_uploaded_files(files):
@@ -52,9 +50,7 @@ def cleanup_uploaded_files(files):
 
 class ViewTestCase(TestCase):
     def setUp(self):
-        self.log_in_user = User.objects.create_user(
-            username="user@example.com", password="user", email="user@example.com"
-        )
+        self.log_in_user = User.objects.create_user(username="user@example.com", password="user", email="user@example.com")
         self.mock_images = []
         self.htmx_headers = {"HTTP_HX-Request": "true"}
 
@@ -62,9 +58,7 @@ class ViewTestCase(TestCase):
         # Cleanup uploaded files
         cleanup_uploaded_files(self.mock_images)
         cleanup_uploaded_files([receipt.image for receipt in Receipt.objects.all()])
-        cleanup_uploaded_files(
-            [pfp.profile_picture for pfp in UserSettings.objects.all()]
-        )
+        cleanup_uploaded_files([pfp.profile_picture for pfp in UserSettings.objects.all()])
         super().tearDown()
 
     def call_index(self):

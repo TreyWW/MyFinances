@@ -1,7 +1,9 @@
 import random
-from django.urls import reverse, resolve
-from tests.handler import ViewTestCase, assert_url_matches_view
+
+from django.urls import reverse
 from model_bakery import baker
+
+from tests.handler import ViewTestCase, assert_url_matches_view
 
 
 class ReceiptsAPIFetch(ViewTestCase):
@@ -59,9 +61,7 @@ class ReceiptsAPIFetch(ViewTestCase):
         self.assertEqual(response.status_code, 200)
 
         # Check that the number of clients returned matches the number created
-        self.assertEqual(
-            len(response.context.get("receipts")), random_amount_of_clients
-        )
+        self.assertEqual(len(response.context.get("receipts")), random_amount_of_clients)
 
         # Check that all created clients are in the response
         for receipt in receipts:
