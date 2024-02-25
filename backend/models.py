@@ -1,9 +1,7 @@
-import smtplib
 from uuid import uuid4
 
-from django.contrib import messages
+from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import UserManager, AbstractUser, AnonymousUser
-from django.core.mail import EmailMessage
 from django.db import models
 from django.db.models import Count
 from django.utils import timezone
@@ -11,6 +9,10 @@ from django.utils.crypto import get_random_string
 from shortuuid.django_fields import ShortUUIDField
 
 from settings import settings
+
+
+def RandomCode(length=6):
+    return get_random_string(length=length).upper()
 
 
 def USER_OR_ORGANIZATION_CONSTRAINT():
@@ -34,6 +36,7 @@ class User(AbstractUser):
     objects = CustomUserManager()
 
     logged_in_as_team = models.ForeignKey("Team", on_delete=models.SET_NULL, null=True)
+    awaiting_email_verification = models.BooleanField(default=True)
 
     class Role(models.TextChoices):
         #        NAME     DJANGO ADMIN NAME
@@ -61,8 +64,40 @@ class CustomUserMiddleware:
         return response
 
 
-def RandomCode(length=6):
-    return get_random_string(length=length).upper()
+def add_3hrs_from_now():
+    return timezone.now() + timezone.timedelta(hours=3)
+
+
+class VerificationCodes(models.Model):
+    class ServiceTypes(models.TextChoices):
+        CREATE_ACCOUNT = "create_account", "Create Account"
+        RESET_PASSWORD = "reset_password", "Reset Password"
+
+    uuid = models.UUIDField(default=uuid4, editable=False, unique=True)  # This is the public identifier
+    token = models.TextField(default=RandomCode, editable=False)  # This is the private token (should be hashed)
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True)
+    expiry = models.DateTimeField(default=add_3hrs_from_now)
+    service = models.CharField(max_length=14, choices=ServiceTypes.choices)
+
+    def __str__(self):
+        return self.user.username
+
+    def is_expired(self):
+        if timezone.now() > self.expiry:
+            self.delete()
+            return True
+        return False
+
+    def hash_token(self):
+        self.token = make_password(self.token)
+        self.save()
+        return True
+
+    class Meta:
+        verbose_name = "Verification Code"
+        verbose_name_plural = "Verification Codes"
 
 
 class UserSettings(models.Model):
@@ -380,7 +415,12 @@ class AuditLog(models.Model):
 
 
 class LoginLog(models.Model):
+    class ServiceTypes(models.TextChoices):
+        MANUAL = "manual"
+        MAGIC_LINK = "magic_link"
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    service = models.CharField(max_length=14, choices=ServiceTypes.choices, default="manual")
     date = models.DateTimeField(auto_now_add=True)
 
 
@@ -409,54 +449,9 @@ class FeatureFlags(models.Model):
     value = models.BooleanField(default=False)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.name
 
-def SEND_SENDGRID_EMAIL(
-    to_email,
-    subject,
-    content,
-    from_email="myfinances@strelix.org",
-    request=None,
-    **kwargs,
-):
-    DESTINATION = kwargs.get("DESTINATION") or to_email
-    SUBJECT = kwargs.get("SUBJECT") or subject
-    CONTENT = kwargs.get("CONTENT") or content
-    FROM = kwargs.get("FROM") or from_email
-    request = kwargs.get("request") or request
-
-    if not isinstance(DESTINATION, list):
-        DESTINATION = [DESTINATION]
-    msg = EmailMessage(subject=SUBJECT, from_email=FROM, to=DESTINATION, body=CONTENT)
-
-    DATA = {"first_name": "list", "content": CONTENT}
-
-    msg.template_id = settings.SENDGRID_TEMPLATE
-    msg.dynamic_template_data = DATA
-    msg.template_data = DATA
-
-    try:
-        msg.send(fail_silently=False)
-
-    except smtplib.SMTPConnectError as error:
-        if request:
-            messages.error(
-                request,
-                "Failed to connect to our email server. Please try again later or report this issue to our team.",
-            )
-        print(f"[ERROR] {error}", flush=True)
-        TracebackError(error=error).save()
-        return False, "Failed to connect to our email server."
-
-    except smtplib.SMTPException as error:
-        if request:
-            messages.error(
-                request,
-                "Failed to connect to our email server. Please try again later or report this issue to our team.",
-            )
-        print(f"[ERROR] {error}", flush=True)
-        TracebackError(error=error).save()
-        return False, error
-    except Exception as error:
-        print(f"[ERROR] {error}", flush=True)
-        TracebackError(error=error).save()
-        return False, "Error"
+    class Meta:
+        verbose_name = "Feature Flag"
+        verbose_name_plural = "Feature Flags"

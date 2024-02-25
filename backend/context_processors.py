@@ -32,7 +32,9 @@ def extras(request: HttpRequest):
 
 
 def breadcrumbs(request: HttpRequest):
-    def get_item(name: str, url_name: Optional[str] = None, icon: Optional[str] = None) -> dict:
+    def get_item(
+        name: str, url_name: Optional[str] = None, icon: Optional[str] = None
+    ) -> dict:
         """
         Create a breadcrumb item dictionary.
 
