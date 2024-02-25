@@ -34,11 +34,14 @@ def e_403(request: HttpRequest, exception=None):
             request,
             "Woah, slow down there. You've been temporarily blocked from this page due to extreme requests.",
         )
-        traceback.print_exc()
-        exec_error = traceback.format_exc()
-        if len(exec_error) < 4999:
-            TracebackError(error=exec_error).save()
-        return redirect("login")
+        user_ip = request.META.get("REMOTE_ADDR")
+        user_id = f"User #{request.user.id}" if request.user.is_authenticated else "Not logged in"
+        action = f"{user_ip} | Ratelimited | {user_id}"
+        auditlog = AuditLog(action=action)
+        if request.user.is_authenticated:
+            auditlog.user = request.user
+        auditlog.save()
+        return redirect("auth:login")
     else:
         messages.error(
             request,

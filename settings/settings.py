@@ -16,6 +16,8 @@ from .helpers import get_var
 
 DEBUG = True if get_var("DEBUG") in ["True", "true", "TRUE", True] else False
 
+SITE_URL = get_var("SITE_URL") or "http://127.0.0.1:8000"
+
 try:
     if DEBUG:
         print("[BACKEND] Using local settings", flush=True)
@@ -46,14 +48,10 @@ INSTALLED_APPS = [
 
 LOGIN_REQUIRED_IGNORE_VIEW_NAMES = [
     "index",
-    "login",
-    "login create_account",
-    "login create_account manual",
-    "login forgot_password",
+    "auth:login forgot_password",
     "user set password reset",
     "user set password",
     "user set password set",
-    "logout",
     "invoices view invoice",
     "social:begin",
     "social:complete",
@@ -62,7 +60,14 @@ LOGIN_REQUIRED_IGNORE_VIEW_NAMES = [
 
 # @login_required()
 
-LOGIN_REQUIRED_IGNORE_PATHS = [r"/login/$", "/accounts/github/login/callback/$"]
+LOGIN_REQUIRED_IGNORE_PATHS = [
+    "/auth/login/manual/",
+    r"^/auth/login/$",
+    r"^/__debug__/(.*)/",
+    r"^/auth/login/(.*)/",
+    r"^/auth/create_account(/.*)?$",
+    r"^/accounts/github/login/callback/$"
+]
 # for some reason only allows "login" and not "login create account" or anything
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -77,7 +82,7 @@ AUTHENTICATION_BACKENDS = [
 
 SECRET_KEY = get_var("SECRET_KEY", required=True)
 
-LOGIN_URL = "/login/"
+LOGIN_URL = "/auth/login/"
 LOGIN_REDIRECT_URL = "/dashboard"
 
 ROOT_URLCONF = "backend.urls"
@@ -190,7 +195,6 @@ else:
         }
     }
 
-
 # STORAGES = {
 #     "default": {
 #         "BACKEND": "django.core.files.storage.FileSystemStorage",
@@ -296,6 +300,7 @@ else:
     MEDIA_ROOT = os.path.join(BASE_DIR, "media")
     DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 
+
     class CustomPublicMediaStorage(FileSystemStorage):  # This overrides the AWS version
         ...
 
@@ -309,19 +314,8 @@ else:
     class CustomPrivateMediaStorage(FileSystemStorage):  # This overrides the AWS version
         ...
 
-    PRIVATE_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 
-SENDGRID_TEMPLATE = get_var("SENDGRID_TEMPLATE")
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-# EMAIL_BACKEND = "sendgrid_backend.SendgridBackend"
-# EMAIL_BACKEND = "sendgrid_backend.SendgridBackend"
-EMAIL_HOST = "smtp.sendgrid.net"
-EMAIL_HOST_USER = "apikey"
-EMAIL_FROM_ADDRESS = get_var("SENDGRID_FROM_ADDRESS")
-EMAIL_HOST_PASSWORD = get_var("SENDGRID_API_KEY")
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_SERVER_ENABLED = True if EMAIL_HOST_PASSWORD else False
+    PRIVATE_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 
 # SENDGRID_SANDBOX_MODE_IN_DEBUG = True
 

@@ -9,7 +9,6 @@ def not_authenticated(view_func):
             return redirect("dashboard")
         else:
             return view_func(request, *args, **kwargs)
-
     return wrapper_func
 
 

@@ -1,5 +1,6 @@
 import datetime
 
+from django.contrib import messages
 from django.http import HttpResponse, HttpRequest
 from django.shortcuts import render, redirect
 from forex_python.converter import CurrencyRates
