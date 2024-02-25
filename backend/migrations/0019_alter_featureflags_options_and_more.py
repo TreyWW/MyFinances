@@ -46,11 +46,7 @@ class Migration(migrations.Migration):
                 ("created", models.DateTimeField(auto_now_add=True)),
                 (
                     "expiry",
-                    models.DateTimeField(
-                        default=datetime.datetime(
-                            2024, 2, 22, 21, 16, 55, 46745, tzinfo=datetime.timezone.utc
-                        )
-                    ),
+                    models.DateTimeField(default=datetime.datetime(2024, 2, 22, 21, 16, 55, 46745, tzinfo=datetime.timezone.utc)),
                 ),
                 (
                     "service",

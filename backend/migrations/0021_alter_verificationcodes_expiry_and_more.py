@@ -15,11 +15,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="verificationcodes",
             name="expiry",
-            field=models.DateTimeField(
-                default=datetime.datetime(
-                    2024, 2, 23, 22, 0, 25, 744643, tzinfo=datetime.timezone.utc
-                )
-            ),
+            field=models.DateTimeField(default=datetime.datetime(2024, 2, 23, 22, 0, 25, 744643, tzinfo=datetime.timezone.utc)),
         ),
         migrations.AlterField(
             model_name="verificationcodes",

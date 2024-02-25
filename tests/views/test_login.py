@@ -127,9 +127,7 @@ class TestLogout(ViewTestCase):
         self.client.force_login(User.objects.first())  # Log in as an authenticated user
         response = self.client.get(reverse("auth:logout"))
         self.assertEqual(response.status_code, 302)
-        self.assertFalse(
-            response.wsgi_request.user.is_authenticated
-        )  # check to make sure no longer authenticated
+        self.assertFalse(response.wsgi_request.user.is_authenticated)  # check to make sure no longer authenticated
         self.assertEqual(response.wsgi_request.user.id, None)
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(len(messages), 1)

@@ -76,6 +76,7 @@ def login_manual(request: HttpRequest):  # HTMX POST
     response["HX-Refresh"] = "true"
     return response
 
+
 def render_toast_message(request: HttpRequest) -> HttpResponse:
     return render(request, "base/toasts.html")  # htmx will handle the toast
 
