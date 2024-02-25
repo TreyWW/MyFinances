@@ -162,9 +162,7 @@ class MagicLinkVerifyDecline(View):
 
         user = magic_link.user
         magic_link.delete()
-        AuditLog.objects.create(
-            user=user, action="magic link declined"
-        )
+        AuditLog.objects.create(user=user, action="magic link declined")
         messages.success(request, "Successfully declined the magic link verification request.")
         return render(request, "pages/auth/_magic_link_partial.html", {"declined": True})
 
@@ -186,9 +184,7 @@ class MagicLinkVerifyAccept(View):
 
         user.backend = "backend.auth_backends.EmailInsteadOfUsernameBackend"
         LoginLog.objects.create(user=user, service=LoginLog.ServiceTypes.MAGIC_LINK)
-        AuditLog.objects.create(
-            user=user, action="magic link accepted"
-        )
+        AuditLog.objects.create(user=user, action="magic link accepted")
         login(request, magic_link.user)
 
         messages.success(request, "Successfully accepted the magic link verification request.")
