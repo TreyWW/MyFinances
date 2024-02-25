@@ -1,0 +1,17 @@
+{% if declined %}
+    <div hx-swap-oob="outerHTML:#actions">
+        <div class="divider"></div>
+        <p>
+            You can now close this tab. The login request has been <strong class="text-error">declined</strong>.
+        </p>
+    </div>
+{% elif accepted %}
+    <div hx-swap-oob="outerHTML:#actions">
+        <div class="divider"></div>
+        <p>
+            You can now close this tab. The login request has been <strong class="text-success">accepted</strong>.
+            The original tab will now be logged in.
+        </p>
+    </div>
+{% endif %}
+<div id="messages_list">{% component "messages_list" with_js=True %}</div>

@@ -1,8 +1,11 @@
 from django.core.files.storage import default_storage
-from django.db.models.signals import pre_save, post_delete, post_save
+from django.db.models.signals import pre_save, post_delete, post_save, post_migrate
 from django.dispatch import receiver
+from django.urls import reverse
 
-from backend.models import UserSettings, Receipt, User
+import settings.settings
+from backend.models import UserSettings, Receipt, User, FeatureFlags, VerificationCodes
+from settings.helpers import ARE_EMAILS_ENABLED, send_email
 
 
 @receiver(pre_save, sender=UserSettings)
@@ -15,10 +18,7 @@ def delete_old_profile_picture(sender, instance, **kwargs):
     except UserSettings.DoesNotExist:
         return
 
-    if (
-        old_profile.profile_picture
-        and old_profile.profile_picture != instance.profile_picture
-    ):
+    if old_profile.profile_picture and old_profile.profile_picture != instance.profile_picture:
         # If the profile picture has been updated, delete the old file
         old_profile.profile_picture.delete(save=False)
 
@@ -51,3 +51,55 @@ def user_account_create_make_usersettings(sender, instance, created, **kwargs):
 
         if not users_settings:
             UserSettings.objects.create(user=instance)
+
+
+@receiver(post_delete, sender=Receipt)
+def delete_receipt_image_on_delete(sender, instance: Receipt, **kwargs):
+    instance.image.delete(False)
+
+
+feature_flags = [{"name": "areSignupsEnabled", "default": True, "pk": 1}]
+
+
+def insert_initial_data(**kwargs):
+    for feature in feature_flags:
+        FeatureFlags.objects.get_or_create(
+            id=feature.get("pk"),
+            name=feature.get("name"),
+            value=feature.get("default"),
+        )
+
+
+post_migrate.connect(insert_initial_data)
+
+
+@receiver(post_save, sender=User)
+def send_welcome_email(sender, instance: User, created, **kwargs):
+    if created:
+        email_message = f"""
+            Welcome to MyFinances{f", {instance.first_name}" if instance.first_name else ""}!
+            
+            We're happy to have you join us. We are still in development and are still working on the core mechanics.
+            If you find any bugs with our software, create a bug report on our 
+            Github Issues (https://github.com/TreyWW/MyFinances/issues/new?assignees=&labels=bug&projects=&template=bug-report.md&title=%5BBUG%5D+)
+            and we'll try to help debug the issue or squash the bug.
+            
+            Thank you for using MyFinances.
+        """
+        if ARE_EMAILS_ENABLED:
+            magic_link = VerificationCodes.objects.create(user=instance, service="create_account")
+            token_plain = magic_link.token
+            magic_link.hash_token()
+            magic_link_url = settings.settings.SITE_URL + reverse(
+                "auth:login create_account verify", kwargs={"uuid": magic_link.uuid, "token": token_plain}
+            )
+            email_message += f"""
+                To start with, you must first **verify this email** so that we can link your account to this email.
+                Click the link below to activate your account, no details are required, once pressed you're all set!
+                
+                Verify Link: {magic_link_url}
+            """
+
+            email = send_email(destination=instance.email, subject="Welcome to MyFinances", message=email_message)
+
+        #     User.send_welcome_email(instance)

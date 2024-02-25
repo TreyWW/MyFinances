@@ -1,9 +1,7 @@
-import smtplib
 from uuid import uuid4
 
-from django.contrib import messages
+from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import UserManager, AbstractUser, AnonymousUser
-from django.core.mail import EmailMessage
 from django.db import models
 from django.db.models import Count
 from django.utils import timezone
@@ -13,13 +11,14 @@ from shortuuid.django_fields import ShortUUIDField
 from settings import settings
 
 
+def RandomCode(length=6):
+    return get_random_string(length=length).upper()
+
+
 def USER_OR_ORGANIZATION_CONSTRAINT():
     return models.CheckConstraint(
         name=f"%(app_label)s_%(class)s_check_user_or_organization",
-        check=(
-            models.Q(user__isnull=True, organization__isnull=False)
-            | models.Q(user__isnull=False, organization__isnull=True)
-        ),
+        check=(models.Q(user__isnull=True, organization__isnull=False) | models.Q(user__isnull=False, organization__isnull=True)),
     )
 
 
@@ -37,6 +36,16 @@ class User(AbstractUser):
     objects = CustomUserManager()
 
     logged_in_as_team = models.ForeignKey("Team", on_delete=models.SET_NULL, null=True)
+    awaiting_email_verification = models.BooleanField(default=True)
+
+    class Role(models.TextChoices):
+        #        NAME     DJANGO ADMIN NAME
+        DEV = "DEV", "Developer"
+        STAFF = "STAFF", "Staff"
+        USER = "USER", "User"
+        TESTER = "TESTER", "Tester"
+
+    role = models.CharField(max_length=10, choices=Role.choices, default=Role.USER)
 
 
 class CustomUserMiddleware:
@@ -55,8 +64,40 @@ class CustomUserMiddleware:
         return response
 
 
-def RandomCode(length=6):
-    return get_random_string(length=length).upper()
+def add_3hrs_from_now():
+    return timezone.now() + timezone.timedelta(hours=3)
+
+
+class VerificationCodes(models.Model):
+    class ServiceTypes(models.TextChoices):
+        CREATE_ACCOUNT = "create_account", "Create Account"
+        RESET_PASSWORD = "reset_password", "Reset Password"
+
+    uuid = models.UUIDField(default=uuid4, editable=False, unique=True)  # This is the public identifier
+    token = models.TextField(default=RandomCode, editable=False)  # This is the private token (should be hashed)
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True)
+    expiry = models.DateTimeField(default=add_3hrs_from_now)
+    service = models.CharField(max_length=14, choices=ServiceTypes.choices)
+
+    def __str__(self):
+        return self.user.username
+
+    def is_expired(self):
+        if timezone.now() > self.expiry:
+            self.delete()
+            return True
+        return False
+
+    def hash_token(self):
+        self.token = make_password(self.token)
+        self.save()
+        return True
+
+    class Meta:
+        verbose_name = "Verification Code"
+        verbose_name_plural = "Verification Codes"
 
 
 class UserSettings(models.Model):
@@ -69,9 +110,7 @@ class UserSettings(models.Model):
         "AUD": {"name": "Australian Dollar", "symbol": "$"},
         "CAD": {"name": "Canadian Dollar", "symbol": "$"},
     }
-    user = models.OneToOneField(
-        User, on_delete=models.CASCADE, related_name="user_profile"
-    )
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="user_profile")
     dark_mode = models.BooleanField(default=True)
     currency = models.CharField(
         max_length=3,
@@ -79,7 +118,10 @@ class UserSettings(models.Model):
         choices=[(code, info["name"]) for code, info in CURRENCIES.items()],
     )
     profile_picture = models.ImageField(
-        upload_to="profile_pictures/", blank=True, null=True
+        upload_to="profile_pictures/",
+        storage=settings.CustomPublicMediaStorage(),
+        blank=True,
+        null=True,
     )
 
     @property
@@ -101,20 +143,14 @@ class UserSettings(models.Model):
 
 class Team(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    leader = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="teams_leader_of"
-    )
+    leader = models.ForeignKey(User, on_delete=models.CASCADE, related_name="teams_leader_of")
     members = models.ManyToManyField(User, related_name="teams_joined")
 
 
 class TeamInvitation(models.Model):
     code = models.CharField(max_length=10)
-    team = models.ForeignKey(
-        Team, on_delete=models.CASCADE, related_name="team_invitations"
-    )
-    user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="team_invitations"
-    )
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="team_invitations")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="team_invitations")
     invited_by = models.ForeignKey(User, on_delete=models.CASCADE)
     expires = models.DateTimeField(null=True, blank=True)
     active = models.BooleanField(default=True)
@@ -148,7 +184,7 @@ class Receipt(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     organization = models.ForeignKey(Team, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=100)
-    image = models.ImageField(upload_to="receipts")
+    image = models.ImageField(upload_to="receipts", storage=settings.CustomPrivateMediaStorage())
     total_price = models.FloatField(null=True, blank=True)
     date = models.DateField(null=True, blank=True)
     date_uploaded = models.DateTimeField(auto_now_add=True)
@@ -202,9 +238,7 @@ class InvoiceItem(models.Model):
     is_service = models.BooleanField(default=True)
     # if service
     hours = models.DecimalField(max_digits=15, decimal_places=2, blank=True, null=True)
-    price_per_hour = models.DecimalField(
-        max_digits=15, decimal_places=2, blank=True, null=True
-    )
+    price_per_hour = models.DecimalField(max_digits=15, decimal_places=2, blank=True, null=True)
     # if product
     price = models.DecimalField(max_digits=15, decimal_places=2, blank=True, null=True)
 
@@ -229,9 +263,7 @@ class Invoice(models.Model):
     organization = models.ForeignKey(Team, on_delete=models.CASCADE, null=True)
     invoice_id = models.IntegerField(unique=True, blank=True, null=True)  # todo: add
 
-    client_to = models.ForeignKey(
-        Client, on_delete=models.SET_NULL, blank=True, null=True
-    )
+    client_to = models.ForeignKey(Client, on_delete=models.SET_NULL, blank=True, null=True)
 
     client_name = models.CharField(max_length=100, blank=True, null=True)
     client_company = models.CharField(max_length=100, blank=True, null=True)
@@ -254,12 +286,15 @@ class Invoice(models.Model):
     reference = models.CharField(max_length=100, blank=True, null=True)
     invoice_number = models.CharField(max_length=100, blank=True, null=True)
     vat_number = models.CharField(max_length=100, blank=True, null=True)
-    logo = models.ImageField(upload_to="invoice_logos", blank=True, null=True)
+    logo = models.ImageField(
+        upload_to="invoice_logos",
+        storage=settings.CustomPrivateMediaStorage(),
+        blank=True,
+        null=True,
+    )
     notes = models.TextField(blank=True, null=True)
 
-    payment_status = models.CharField(
-        max_length=10, choices=STATUS_CHOICES, default="pending"
-    )
+    payment_status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="pending")
     items = models.ManyToManyField(InvoiceItem)
 
     date_created = models.DateTimeField(auto_now_add=True)
@@ -271,11 +306,7 @@ class Invoice(models.Model):
 
     @property
     def dynamic_payment_status(self):
-        if (
-            self.date_due
-            and timezone.now().date() > self.date_due
-            and self.payment_status == "pending"
-        ):
+        if self.date_due and timezone.now().date() > self.date_due and self.payment_status == "pending":
             return "overdue"
         else:
             return self.payment_status
@@ -324,9 +355,7 @@ class Invoice(models.Model):
 
 class InvoiceURL(models.Model):
     uuid = ShortUUIDField(length=8, primary_key=True)
-    invoice = models.ForeignKey(
-        Invoice, on_delete=models.CASCADE, related_name="invoice_urls"
-    )
+    invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE, related_name="invoice_urls")
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_on = models.DateTimeField(auto_now_add=True)
     expires = models.DateTimeField(null=True, blank=True)
@@ -357,9 +386,7 @@ class InvoiceURL(models.Model):
 
 
 class PasswordSecret(models.Model):
-    user = models.OneToOneField(
-        User, on_delete=models.CASCADE, related_name="password_secrets"
-    )
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="password_secrets")
     secret = models.TextField(max_length=300)
     expires = models.DateTimeField(null=True, blank=True)
 
@@ -371,9 +398,7 @@ class Notification(models.Model):
         ("redirect", "Redirect"),
     ]
 
-    user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="user_notifications"
-    )
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_notifications")
     message = models.CharField(max_length=100)
     action = models.CharField(max_length=10, choices=action_choices, default="normal")
     action_value = models.CharField(max_length=100, null=True, blank=True)
@@ -390,7 +415,12 @@ class AuditLog(models.Model):
 
 
 class LoginLog(models.Model):
+    class ServiceTypes(models.TextChoices):
+        MANUAL = "manual"
+        MAGIC_LINK = "magic_link"
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    service = models.CharField(max_length=14, choices=ServiceTypes.choices, default="manual")
     date = models.DateTimeField(auto_now_add=True)
 
 
@@ -414,53 +444,14 @@ class TracebackError(models.Model):
         return str(self.error)
 
 
-def SEND_SENDGRID_EMAIL(
-    to_email,
-    subject,
-    content,
-    from_email="myfinances@strelix.org",
-    request=None,
-    **kwargs,
-):
-    DESTINATION = kwargs.get("DESTINATION") or to_email
-    SUBJECT = kwargs.get("SUBJECT") or subject
-    CONTENT = kwargs.get("CONTENT") or content
-    FROM = kwargs.get("FROM") or from_email
-    request = kwargs.get("request") or request
+class FeatureFlags(models.Model):
+    name = models.CharField(max_length=100)
+    value = models.BooleanField(default=False)
+    updated_at = models.DateTimeField(auto_now=True)
 
-    if not isinstance(DESTINATION, list):
-        DESTINATION = [DESTINATION]
-    msg = EmailMessage(subject=SUBJECT, from_email=FROM, to=DESTINATION, body=CONTENT)
+    def __str__(self):
+        return self.name
 
-    DATA = {"first_name": "list", "content": CONTENT}
-
-    msg.template_id = settings.SENDGRID_TEMPLATE
-    msg.dynamic_template_data = DATA
-    msg.template_data = DATA
-
-    try:
-        msg.send(fail_silently=False)
-
-    except smtplib.SMTPConnectError as error:
-        if request:
-            messages.error(
-                request,
-                "Failed to connect to our email server. Please try again later or report this issue to our team.",
-            )
-        print(f"[ERROR] {error}", flush=True)
-        TracebackError(error=error).save()
-        return False, "Failed to connect to our email server."
-
-    except smtplib.SMTPException as error:
-        if request:
-            messages.error(
-                request,
-                "Failed to connect to our email server. Please try again later or report this issue to our team.",
-            )
-        print(f"[ERROR] {error}", flush=True)
-        TracebackError(error=error).save()
-        return False, error
-    except Exception as error:
-        print(f"[ERROR] {error}", flush=True)
-        TracebackError(error=error).save()
-        return False, "Error"
+    class Meta:
+        verbose_name = "Feature Flag"
+        verbose_name_plural = "Feature Flags"

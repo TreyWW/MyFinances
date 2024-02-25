@@ -19,9 +19,14 @@
             </div>
             <div class="navbar-end">
                 <div class="text-center sm:text-left flex sm:justify-end sm:items-center gap-x-3 md:gap-x-4">
-                    <a class="btn btn-primary rounded-full"
-                       href="{% url 'login create_account' %}">Register</a>
-                    <a class="btn btn-outline rounded-full " href="{% url 'login' %}">Login</a>
+                    {% if request.user.is_authenticated %}
+                        <a class="btn btn-primary rounded-full" href="{% url "dashboard" %}">Dashboard</a>
+                        <a class="btn btn-outline rounded-full" href="{% url 'auth:logout' %}">Logout</a>
+                    {% else %}
+                        <a class="btn btn-primary rounded-full"
+                           href="{% url 'auth:login create_account' %}">Register</a>
+                        <a class="btn btn-outline rounded-full " href="{% url 'auth:login' %}">Login</a>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -31,7 +36,7 @@
                 <div class="navbar-sticky">
                     <div class="text-4xl center text-center mt-8">
                         <p>We're still in development!</p>
-                        <a class="btn btn-lg btn-primary mt-3" href="/dashboard">Go to dashboard</a>
+                        <a class="btn btn-lg btn-primary mt-3" href="/dashboard/">Go to dashboard</a>
                     </div>
                 </div>
             </main>

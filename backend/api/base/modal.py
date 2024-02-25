@@ -14,9 +14,7 @@ def open_modal(request: HttpRequest, modal_name, context_type=None, context_valu
         if context_type and context_value:
             if context_type == "profile_picture":
                 try:
-                    context["users_profile_picture"] = (
-                        request.user.user_profile.profile_picture_url
-                    )
+                    context["users_profile_picture"] = request.user.user_profile.profile_picture_url
                 except UserSettings.DoesNotExist:
                     pass
             elif context_type == "accept_invite_with_code":

@@ -1,7 +1,9 @@
 import random
-from django.urls import reverse, resolve
-from tests.handler import ViewTestCase, assert_url_matches_view
+
+from django.urls import reverse
 from model_bakery import baker
+
+from tests.handler import ViewTestCase, assert_url_matches_view
 
 
 class ClientsAPIFetch(ViewTestCase):
@@ -14,7 +16,7 @@ class ClientsAPIFetch(ViewTestCase):
     def test_clients_view_302_for_all_normal_get_requests(self):
         # Ensure that non-HTMX GET requests are redirected to the login page
         response = self.client.get(reverse(self.url_name))
-        self.assertRedirects(response, f"/login/?next={self.url_path}", 302)
+        self.assertRedirects(response, f"/auth/login/?next={self.url_path}", 302)
 
         # Ensure that authenticated users are redirected to the clients dashboard
         self.login_user()
@@ -48,9 +50,7 @@ class ClientsAPIFetch(ViewTestCase):
 
         random_amount_of_clients = random.randrange(2, 10)
         # Use baker to create a random amount of clients
-        clients = baker.make(
-            "backend.Client", _quantity=random_amount_of_clients, user=self.log_in_user
-        )
+        clients = baker.make("backend.Client", _quantity=random_amount_of_clients, user=self.log_in_user)
 
         response = self.make_request()
         self.assertEqual(response.status_code, 200)

@@ -1,3 +1,4 @@
+from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
 from backend.models import (
@@ -16,24 +17,37 @@ from backend.models import (
     TeamInvitation,
     User,
     InvoiceProduct,
+    FeatureFlags,
+    VerificationCodes,
 )
-from django.contrib import admin
 
+# from django.contrib.auth.models imp/ort User
 # admin.register(Invoice)
-admin.site.register(UserSettings)
-admin.site.register(Client)
-admin.site.register(Invoice)
-admin.site.register(InvoiceURL)
-admin.site.register(InvoiceItem)
-admin.site.register(PasswordSecret)
-admin.site.register(AuditLog)
-admin.site.register(LoginLog)
-admin.site.register(Error)
-admin.site.register(TracebackError)
-admin.site.register(Notification)
-admin.site.register(Team)
-admin.site.register(TeamInvitation)
-admin.site.register(InvoiceProduct)
+admin.site.register(
+    [
+        UserSettings,
+        Client,
+        Invoice,
+        InvoiceURL,
+        InvoiceItem,
+        PasswordSecret,
+        AuditLog,
+        LoginLog,
+        Error,
+        TracebackError,
+        Notification,
+        Team,
+        TeamInvitation,
+        InvoiceProduct,
+        FeatureFlags,
+        VerificationCodes,
+    ]
+)
+
+# admin.site.unregister(User)
+fields = list(UserAdmin.fieldsets)
+fields[0] = (None, {"fields": ("username", "password", "logged_in_as_team", "awaiting_email_verification")})
+UserAdmin.fieldsets = tuple(fields)
 admin.site.register(User, UserAdmin)
 
 admin.site.site_header = "MyFinances Admin"

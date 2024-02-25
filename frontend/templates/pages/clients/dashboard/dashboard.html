@@ -21,6 +21,8 @@
         <div hx-swap="outerHTML"
              hx-trigger="load"
              id="items"
-             hx-get="{% url 'api:clients:fetch' %}">{% include 'components/table/skeleton_table.html' %}</div>
+             hx-get="{% url 'api:clients:fetch' %}">
+            {% include 'components/table/skeleton_table.html' %}
+        </div>
     </div>
 {% endblock content %}

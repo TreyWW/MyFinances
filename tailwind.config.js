@@ -3,7 +3,9 @@ module.exports = {
     content: [
         './frontend/templates/**/*.html',
         './components/**/*.html',
-        './frontend/templates/base/base.html', './backend/**/views/*.py',
+        './frontend/templates/base/base.html',
+        './backend/**/views/*.py',
+        '/backend/views/core/**/*.py',
     ],
     safelist: [
         'alert',
@@ -13,7 +15,10 @@ module.exports = {
         'alert-warning',
         'mask',
         'mask-half-1',
-        'mask-half-2'
+        'mask-half-2',
+        {
+            pattern: /link-(.*)/
+        }
     ],
     plugins: [require("daisyui")],
     daisyui: {

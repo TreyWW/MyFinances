@@ -8,14 +8,12 @@ class CurrencyConverterConvertAPI(ViewTestCase):
         super().setUp()
         self.url_path = "/api/currency_converter/convert/"
         self.url_name = "api:currency_converter:convert"
-        self.view_function_path = (
-            "backend.api.currency_converter.convert.currency_conversion"
-        )
+        self.view_function_path = "backend.api.currency_converter.convert.currency_conversion"
 
     def test_clients_view_302_for_all_normal_get_requests(self):
         # Ensure that non-HTMX GET requests are redirected to the login page
         response = self.client.get(reverse(self.url_name))
-        self.assertRedirects(response, f"/login/?next={self.url_path}", 302)
+        self.assertRedirects(response, f"/auth/login/?next={self.url_path}", 302)
 
         # Ensure that authenticated users are redirected to the currency dashboard that are not htmx requests
         self.login_user()

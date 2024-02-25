@@ -1,17 +1,14 @@
+from datetime import datetime, timedelta, date
+
+from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
 from django.http import HttpRequest
 from django.shortcuts import redirect
 from django.urls import reverse, resolve
-from backend.models import *
-from django.contrib.auth.hashers import make_password
-from django.core.validators import validate_email
-from datetime import date, timedelta, datetime
-
-from django.utils.timezone import make_aware
 from django.utils import timezone
-from datetime import timedelta, date
 
-from settings.settings import EMAIL_SERVER_ENABLED
+from backend.models import *
 
 
 def msg_if_valid_email_then_sent(request):
@@ -84,13 +81,9 @@ def password_reset(request: HttpRequest):
     CODE = RandomCode(40)
     HASHED_CODE = make_password(CODE)
     expires_date = date.today() + timedelta(days=3)
-    expires_datetime = timezone.make_aware(
-        datetime.combine(expires_date, datetime.min.time())
-    )
+    expires_datetime = timezone.make_aware(datetime.combine(expires_date, datetime.min.time()))
 
-    PasswordSecret.objects.create(
-        user=USER, expires=expires_datetime, secret=HASHED_CODE
-    )
+    PasswordSecret.objects.create(user=USER, expires=expires_datetime, secret=HASHED_CODE)
 
     # SEND_SENDGRID_EMAIL(USER.email, "Password Reset" ,f"""
     #         My Finances | Password Reset

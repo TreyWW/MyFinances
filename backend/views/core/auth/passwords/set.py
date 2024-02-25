@@ -2,7 +2,6 @@ from django.contrib.auth.hashers import check_password
 from django.http import (
     HttpRequest,
 )
-from django.utils import timezone
 from django.views.decorators.http import require_POST
 
 from backend.decorators import *
@@ -26,20 +25,18 @@ def set_password_set(request: HttpRequest, secret):
                 USER.save()
                 SECRET.delete()
                 messages.success(request, "Successfully changed your password.")
-                return redirect("login")
+                return redirect("auth:login")
 
         messages.error(
             request,
             "Invalid password code. The code has either expired or was not entered correctly."
             "Please contact an administrator for support.",
         )
-        return redirect("login")
+        return redirect("auth:login")
 
     else:
-        messages.error(
-            request, "No code provided. Please contact an administrator for support."
-        )
-        return redirect("login")
+        messages.error(request, "No code provided. Please contact an administrator for support.")
+        return redirect("auth:login")
 
     messages.error(request, "Sorry, somethging went wrong!")
-    return redirect("login")
+    return redirect("auth:login")

@@ -6,7 +6,6 @@ from django.views.static import serve
 
 from backend.views.core import (
     other,
-    passwords,
     settings as settings_v,
     invoices,
     clients,
@@ -25,7 +24,7 @@ url(
 urlpatterns = [
     path("api/", include("backend.api.urls")),
     path("", index, name="index"),
-    path("dashboard", dashboard, name="dashboard"),
+    path("dashboard/", dashboard, name="dashboard"),
     path("dashboard/settings/", settings_v.view.settings_page, name="user settings"),
     path(
         "dashboard/settings/teams",
@@ -68,7 +67,7 @@ urlpatterns = [
         name="invoices dashboard manage_access delete",
     ),
     path(
-        "dashboard/invoices/preview/<str:id>",
+        "dashboard/invoices/preview/<str:invoice_id>",
         invoices.view.preview,
         name="invoices dashboard preview",
     ),
@@ -95,43 +94,7 @@ urlpatterns = [
     ),
     # path('dashboard/invoices/<str:id>/edit', invoices.dashboard.invoices_dash~board_id, name='invoices dashboard'),
     path("login/external/", include("social_django.urls", namespace="social")),
-    path("login/", other.login.login_page, name="login"),
-    path("logout/", other.login.logout_view, name="logout"),
-    path(
-        "login/create_account",
-        other.login.CreateAccountChooseView.as_view(),
-        name="login create_account",
-    ),
-    path(
-        "login/create_account/manual",
-        other.login.CreateAccountManualView.as_view(),
-        name="login create_account manual",
-    ),
-    path(
-        "login/forgot_password",
-        other.login.forgot_password_page,
-        name="login forgot_password",
-    ),
-    path(
-        "login/reset-password/",
-        passwords.generate.password_reset,
-        name="user set password reset",
-    ),
-    path(
-        "login/set-password/<str:secret>",
-        passwords.view.set_password,
-        name="user set password",
-    ),
-    path(
-        "login/set-password/<str:secret>/set",
-        passwords.set.set_password_set,
-        name="user set password set",
-    ),
-    path(
-        "admin/generate-password",
-        passwords.generate.set_password_generate,
-        name="admin set password generate",
-    ),
+    path("auth/", include("backend.views.core.auth.urls")),
     path(
         "dashboard/clients/",
         clients.dashboard.clients_dashboard,
@@ -159,9 +122,7 @@ if settings.DEBUG:
 
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     # may not need to be in debug
-    urlpatterns += static(
-        settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0]
-    )
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
 
 handler500 = "backend.views.core.other.errors.universal"
 handler404 = "backend.views.core.other.errors.universal"
