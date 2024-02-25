@@ -11,6 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 from backend.decorators import *
 from backend.models import LoginLog, AuditLog, User
 from backend.utils import get_feature_status
+
 # from backend.utils import appconfig
 from settings.settings import (
     SOCIAL_AUTH_GITHUB_ENABLED,
