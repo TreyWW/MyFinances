@@ -1,8 +1,9 @@
 from typing import NoReturn
 
 import django_ratelimit
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.hashers import check_password
+from django.core.validators import validate_email
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
@@ -32,20 +33,48 @@ def login_initial_page(request: HttpRequest):
     )
 
 
-# @csrf_exempt
 @not_authenticated
 @require_POST
 def login_manual(request: HttpRequest):  # HTMX POST
     if not request.htmx:
         return redirect("auth:login")
     email = request.POST.get("email")
+    password = request.POST.get("password")
+    page = str(request.POST.get("page"))
+    print(email, password, page)
 
-    return render(
-        request,
-        "pages/auth/login.html",
-        context={"email": email, "magic_links_enabled": ARE_EMAILS_ENABLED},
-    )
+    if not page or page == "1":
+        return render(
+            request,
+            "pages/auth/login.html",
+            context={"email": email, "magic_links_enabled": ARE_EMAILS_ENABLED},
+        )
 
+    if not email:
+        messages.error(request, "Please enter an email")
+        return render_toast_message(request)
+
+    try:
+        validate_email(email)
+    except:
+        messages.error(request, "Please enter a valid email")
+        return render_toast_message(request)
+
+    if not password:
+        messages.error(request, "Please enter a password")
+        return render_toast_message(request)
+
+    user = authenticate(request, username=email, password=password)
+
+    if not user:
+        messages.error(request, "Incorrect email or password")
+        return render_toast_message(request)
+
+    login(request, user)
+    messages.success(request, "Successfully logged in")
+    response = HttpResponse(request, status=200)
+    response["HX-Refresh"] = "true"
+    return response
 
 def render_toast_message(request: HttpRequest) -> HttpResponse:
     return render(request, "base/toasts.html")  # htmx will handle the toast
