@@ -42,8 +42,7 @@ def e_403(request: HttpRequest, exception=None):
     else:
         messages.error(
             request,
-            "Sorry, something went wrong on our end!"
-            "We've contacted our team, please email us if this issue continues.",
+            "Sorry, something went wrong on our end!" "We've contacted our team, please email us if this issue continues.",
         )
         traceback.print_exc()
         exec_error = traceback.format_exc()

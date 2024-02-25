@@ -26,14 +26,10 @@ def register_components(base_path, component_base_class):
                 # Generate the template name from the file path
                 template_name = os.path.relpath(os.path.join(root, file), base_path)
                 # Convert the template name to a component name
-                component_name = template_name.replace(os.path.sep, ":").replace(
-                    "+", ""
-                )[:-5]
+                component_name = template_name.replace(os.path.sep, ":").replace("+", "")[:-5]
                 component_name = component_name.replace(":", ":")
                 # Generate a class name from the component name
-                class_name = "".join(
-                    part.capitalize() for part in component_name.split(":")
-                )
+                class_name = "".join(part.capitalize() for part in component_name.split(":"))
 
                 def class_decorator(cls):
                     # Add the @component.register decorator to the dynamically generated class
@@ -67,10 +63,7 @@ DIR = os.path.join(BASE_DIR, "frontend/templates")
 register_components(DIR, SimpleComponent)
 
 if SHOW_PRINT_STATEMENTS:
-    all_components = [
-        f"{a}    {b}"
-        for a, b in zip(list_of_components_registered, list_of_created_classes)
-    ]
+    all_components = [f"{a}    {b}" for a, b in zip(list_of_components_registered, list_of_created_classes)]
 
     print("[BACKEND] Registered GLOBAL Components: ", all_components)
     print(

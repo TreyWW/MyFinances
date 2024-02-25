@@ -61,9 +61,7 @@ def send_user_team_invite(request: HttpRequest):
     if user.teams_joined.exists():
         return return_error_notif(request, "User already is in this team")
 
-    invitation = TeamInvitation.objects.create(
-        team=team, user=user, invited_by=request.user
-    )
+    invitation = TeamInvitation.objects.create(team=team, user=user, invited_by=request.user)
 
     # if EMAIL_SERVER_ENABLED and EMAIL_FROM_ADDRESS:
     #     SEND_SENDGRID_EMAIL(
@@ -89,9 +87,7 @@ def send_user_team_invite(request: HttpRequest):
         extra_value=invitation.code,
     )
 
-    print(
-        f"Invitation: {request.build_absolute_uri(reverse('api:teams:join accept', kwargs={'code': invitation.code}))}"
-    )
+    print(f"Invitation: {request.build_absolute_uri(reverse('api:teams:join accept', kwargs={'code': invitation.code}))}")
 
     messages.success(request, "Invitation successfully sent")
     response = HttpResponse(request, status=200)
@@ -107,9 +103,7 @@ def accept_team_invite(request: HttpRequest, code):
         return render(request, "partials/messages_list.html")
 
     if request.user.teams_joined.exists():
-        messages.error(
-            request, "You are already in a team, please leave the team first"
-        )
+        messages.error(request, "You are already in a team, please leave the team first")
         response = render(request, "partials/messages_list.html", status=200)
         response["HX-Trigger-After-Swap"] = "accept_invite_error"
         return response
@@ -141,9 +135,7 @@ def accept_team_invite(request: HttpRequest, code):
 
     invitation.delete()
 
-    messages.success(
-        request, f"You have successfully joined the team {invitation.team.name}"
-    )
+    messages.success(request, f"You have successfully joined the team {invitation.team.name}")
     response = HttpResponse(request, status=200)
     response["HX-Refresh"] = "true"
     return response

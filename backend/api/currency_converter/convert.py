@@ -53,13 +53,9 @@ def convert_currency(init_currency, target_currency, amount, date=None):
 
     try:
         if date is not None:
-            target_amount = currency_rates.convert(
-                init_currency, target_currency, amount, date
-            )
+            target_amount = currency_rates.convert(init_currency, target_currency, amount, date)
         else:
-            target_amount = currency_rates.convert(
-                init_currency, target_currency, amount
-            )
+            target_amount = currency_rates.convert(init_currency, target_currency, amount)
         return round(target_amount, 2)
     except Exception as e:
         # Handle specific exceptions raised by forex_python if needed
@@ -88,12 +84,8 @@ def currency_conversion(request: HttpRequest):
             request.POST["to_currency"],
             amount,
         )
-        original_currency_sign = UserSettings.CURRENCIES.get(
-            request.POST["from_currency"], {}
-        ).get("symbol", None)
-        target_currency_sign = UserSettings.CURRENCIES.get(
-            request.POST["to_currency"], {}
-        ).get("symbol", None)
+        original_currency_sign = UserSettings.CURRENCIES.get(request.POST["from_currency"], {}).get("symbol", None)
+        target_currency_sign = UserSettings.CURRENCIES.get(request.POST["to_currency"], {}).get("symbol", None)
 
         context.update(
             {
@@ -107,7 +99,5 @@ def currency_conversion(request: HttpRequest):
         )
         return render(request, "pages/currency_converter/result.html", context)
     except Exception as e:
-        messages.error(
-            request, f"Failed to convert currency. Make sure the amount is valid."
-        )
+        messages.error(request, f"Failed to convert currency. Make sure the amount is valid.")
         return render(request, "partials/messages_list.html")

@@ -39,9 +39,7 @@ class UserSettingsProfileSettingsViewTestCase(ViewTestCase):
 
         # Check that the user's profile picture URL is updated in the response
         expected_profile_picture_filename = os.path.basename(mock_image.name)
-        expected_profile_picture_filename = expected_profile_picture_filename[
-            :-4
-        ]  # Remove .jpg suffix
+        expected_profile_picture_filename = expected_profile_picture_filename[:-4]  # Remove .jpg suffix
         self.assertIn(
             expected_profile_picture_filename,
             response.context["users_profile_picture"],

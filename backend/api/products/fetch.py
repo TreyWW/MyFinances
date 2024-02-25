@@ -11,14 +11,10 @@ def fetch_products(request: HttpRequest):
     if search_text:
         results = (
             InvoiceProduct.objects.filter(user=request.user)
-            .filter(
-                Q(name__icontains=search_text) | Q(description__icontains=search_text)
-            )
+            .filter(Q(name__icontains=search_text) | Q(description__icontains=search_text))
             .order_by("name")
         )
     else:
         results = InvoiceProduct.objects.filter(user=request.user).order_by("name")
 
-    return render(
-        request, "pages/products/fetched_items.html", {"products": results[:5]}
-    )
+    return render(request, "pages/products/fetched_items.html", {"products": results[:5]})

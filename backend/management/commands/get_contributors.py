@@ -23,18 +23,10 @@ class Command(BaseCommand):
                 contributors_json = json_file.read()
                 contributors_data = json.loads(contributors_json)
         except FileNotFoundError:
-            self.stderr.write(
-                self.style.ERROR(
-                    "contributors.json file not found. Please make sure the file exists."
-                )
-            )
+            self.stderr.write(self.style.ERROR("contributors.json file not found. Please make sure the file exists."))
             return
         except json.JSONDecodeError:
-            self.stderr.write(
-                self.style.ERROR(
-                    "Error decoding JSON data from contributors.json file. Please check the file contents."
-                )
-            )
+            self.stderr.write(self.style.ERROR("Error decoding JSON data from contributors.json file. Please check the file contents."))
             return
 
         # HTML template for each contributor entry
@@ -114,11 +106,7 @@ class Command(BaseCommand):
             with open(readme_path, "r", encoding="utf-8") as readme_file:
                 readme_content = readme_file.read()
         except FileNotFoundError:
-            self.stderr.write(
-                self.style.ERROR(
-                    "README.md file not found. Please make sure the file exists."
-                )
-            )
+            self.stderr.write(self.style.ERROR("README.md file not found. Please make sure the file exists."))
             return
 
         # Insert the generated HTML between the comments
@@ -127,18 +115,10 @@ class Command(BaseCommand):
         start_index = readme_content.find(start_comment) + len(start_comment)
         end_index = readme_content.find(end_comment)
 
-        new_readme_content = (
-            readme_content[:start_index]
-            + "\n<table>\n"
-            + contributors_html
-            + "</table>\n"
-            + readme_content[end_index:]
-        )
+        new_readme_content = readme_content[:start_index] + "\n<table>\n" + contributors_html + "</table>\n" + readme_content[end_index:]
 
         # Write the modified content back to the README.md file
         with open(readme_path, "w", encoding="utf-8") as readme_file:
             readme_file.write(new_readme_content)
 
-        self.stdout.write(
-            self.style.SUCCESS("HTML table inserted into README.md successfully.")
-        )
+        self.stdout.write(self.style.SUCCESS("HTML table inserted into README.md successfully."))

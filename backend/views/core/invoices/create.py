@@ -1,10 +1,11 @@
+from datetime import datetime
+
 from django.contrib import messages
 from django.http import HttpRequest
 from django.shortcuts import render, redirect
-from django.urls import reverse_lazy
 from django.views.decorators.http import require_http_methods
+
 from backend.models import Invoice, InvoiceItem, Client, InvoiceProduct
-from datetime import datetime
 
 
 def invoice_page_get(request: HttpRequest):
@@ -17,9 +18,7 @@ def invoice_page_get(request: HttpRequest):
 
 def invoice_page_post(request: HttpRequest):
     invoice_items = [
-        InvoiceItem.objects.create(
-            name=row[0], description=row[1], hours=row[2], price_per_hour=row[3]
-        )
+        InvoiceItem.objects.create(name=row[0], description=row[1], hours=row[2], price_per_hour=row[3])
         for row in zip(
             request.POST.getlist("service_name[]"),
             request.POST.getlist("service_description[]"),
@@ -42,9 +41,7 @@ def invoice_page_post(request: HttpRequest):
 
     if is_existing_client:
         try:
-            client = Client.objects.get(
-                user=request.user, id=request.POST.get("selected_client")
-            )
+            client = Client.objects.get(user=request.user, id=request.POST.get("selected_client"))
         except:
             messages.error(request, "Client not found")
             invoice.delete()

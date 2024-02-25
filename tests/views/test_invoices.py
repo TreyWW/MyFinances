@@ -1,10 +1,9 @@
 from datetime import date
+
 from django.urls import reverse, resolve
 
 from backend.models import Invoice
 from tests.handler import ViewTestCase
-
-from model_bakery import baker
 
 
 class InvoicesViewTestCase(ViewTestCase):
@@ -31,9 +30,7 @@ class InvoicesViewTestCase(ViewTestCase):
         func = resolve("/dashboard/invoices/").func
         func_name = f"{func.__module__}.{func.__name__}"
         self.assertEqual("/dashboard/invoices/", self._invoices_dashboard_url)
-        self.assertEqual(
-            "backend.views.core.invoices.dashboard.invoices_dashboard", func_name
-        )
+        self.assertEqual("backend.views.core.invoices.dashboard.invoices_dashboard", func_name)
 
 
 class InvoicesCreateTestCase(ViewTestCase):
@@ -60,9 +57,7 @@ class InvoicesCreateTestCase(ViewTestCase):
         func = resolve("/dashboard/invoices/create/").func
         func_name = f"{func.__module__}.{func.__name__}"
         self.assertEqual("/dashboard/invoices/create/", self._invoices_create_url)
-        self.assertEqual(
-            "backend.views.core.invoices.create.create_invoice_page", func_name
-        )
+        self.assertEqual("backend.views.core.invoices.create.create_invoice_page", func_name)
 
     def test_invoices_create_invoice_from_post_data(self):
         self.login_user()
