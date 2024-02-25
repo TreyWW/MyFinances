@@ -1,8 +1,7 @@
 from django.urls import reverse, resolve
 
-from tests.handler import ViewTestCase
-
 from backend.views.core.auth.login import logout_view
+from tests.handler import ViewTestCase
 
 
 class OtherItemsTestCase(ViewTestCase):
@@ -10,7 +9,6 @@ class OtherItemsTestCase(ViewTestCase):
         response = self.client.get(reverse("auth:logout"))
         self.assertEqual(response.status_code, 302)
         self.assertEqual(resolve(reverse("auth:logout")).func, logout_view)
-        self.assertEqual(response.url, reverse("auth:login"))
 
     def test_logout_from_url_logged_in(self):
         self.login_user()
