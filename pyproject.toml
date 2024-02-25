@@ -17,6 +17,8 @@ forex-python = "^1.8"
 django = "^5.0.2"
 sample-helper-aws-appconfig = "^2.1.0"
 redis = { extras = ["hiredis"], version = "^5.0.1" }
+boto3-stubs = { extras = ["sesv2"], version = "^1.34.46" }
+
 
 [tool.poetry.group.django.dependencies]
 Django = "^5.0.2"
@@ -54,8 +56,6 @@ psycopg2 = "2.9.9"
 [tool.poetry.group.dev.dependencies]
 black = "^24.1.1"
 djlint = "^1.34.1"
-boto3-stubs = { extras = ["sesv2"], version = "^1.34.46" }
-
 
 [tool.djlint]
 profile = "django"
