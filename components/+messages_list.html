@@ -1,16 +1,16 @@
-<div {% if not no_swap %}hx-swap-oob='{% if custom_oob %}{{ custom_oob }}{% else %}innerHTML:#messages_list{% endif %}'{% endif %}>
+<div {% if not no_swap %}hx-swap-oob='{% if custom_oob %}{{ custom_oob }}{% else %}innerHTML:#messages_list{% endif %}
+     '
+     {% endif %}>
     {% for message in messages %}
-        <div onclick="clicked_alert_to_close(this);" class="mb-4 rounded-lg alert {{ message.tags }}" role="alert">
-            <i class="mr-3 inline h-4 w-4 flex-shrink-0 fa-solid fa-shake
-                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
-                fa-triangle-exclamation
-                {% else %}
-                fa-circle-info
-                {% endif %}
-                "
-               style="--fa-animation-duration: 2s;"></i>
+        <div onclick="clicked_alert_to_close(this);"
+             class="mb-4 rounded-lg alert {{ message.tags }}"
+             role="alert">
+            <i class="mr-3 inline h-4 w-4 flex-shrink-0 fa-solid fa-shake {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %} fa-triangle-exclamation {% else %} fa-circle-info {% endif %} "
+               style="--fa-animation-duration: 2s"></i>
             <div>
-                {% autoescape off %}{{ message }}{% endautoescape %}
+                {% autoescape off %}
+                    {{ message }}
+                {% endautoescape %}
             </div>
             <script>
                 var scriptElement = document.currentScript;

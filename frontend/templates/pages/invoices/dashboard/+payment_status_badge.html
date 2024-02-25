@@ -1,15 +1,13 @@
 {% if status == "paid" %}
-    <span class="badge badge-outline rounded p-3 badge-success" data-status="paid" data-invoice-id="{{ inv_id }}">
-        Paid
-    </span>
+    <span class="badge badge-outline rounded p-3 badge-success"
+          data-status="paid"
+          data-invoice-id="{{ inv_id }}">Paid</span>
 {% elif status == "overdue" %}
-    <span class="badge badge-outline rounded p-3 badge-error drop-shadow drop-shadow-glow_red" data-status="overdue"
-          data-invoice-id="{{ inv_id }}">
-        Overdue
-    </span>
+    <span class="badge badge-outline rounded p-3 badge-error drop-shadow drop-shadow-glow_red"
+          data-status="overdue"
+          data-invoice-id="{{ inv_id }}">Overdue</span>
 {% else %}
-    <span class="badge badge-outline rounded p-3 badge-info" data-status="{{ invoice.payment_status | lower }}"
-          data-invoice-id="{{ inv_id }}">
-        {{ status | default:"sent" | title }}
-    </span>
+    <span class="badge badge-outline rounded p-3 badge-info"
+          data-status="{{ invoice.payment_status | lower }}"
+          data-invoice-id="{{ inv_id }}">{{ status | default:"sent" | title }}</span>
 {% endif %}
