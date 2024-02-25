@@ -30,6 +30,7 @@ urlpatterns = [
         edit.edit_invoice,
         name="edit",
     ),
+    path("edit/<int:invoice_id>/set_status/<str:status>/", edit.change_status, name="edit status"),
     path("fetch/", fetch.fetch_all_invoices, name="fetch"),
 ]
 
