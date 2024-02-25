@@ -122,9 +122,7 @@ if settings.DEBUG:
 
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     # may not need to be in debug
-    urlpatterns += static(
-        settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0]
-    )
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
 
 handler500 = "backend.views.core.other.errors.universal"
 handler404 = "backend.views.core.other.errors.universal"

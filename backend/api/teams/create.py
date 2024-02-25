@@ -19,9 +19,7 @@ def create_team(request: HttpRequest):
         request.user.logged_in_as_team = team
         request.user.save()
 
-    messages.success(
-        request, f"Successfully created team {name} with the ID of #{team.id}"
-    )
+    messages.success(request, f"Successfully created team {name} with the ID of #{team.id}")
     response = render(request, "partials/messages_list.html")
     response["HX-Refresh"] = "true"
     return response

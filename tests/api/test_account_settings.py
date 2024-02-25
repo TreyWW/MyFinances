@@ -47,22 +47,16 @@ class CurrencyAPIChange(ViewTestCase):
     # Test that users receive a message when trying to update to their current currency
     def test_currency_is_already_that(self):
         self.login_user()
-        response = self.make_request(
-            method="post", data={"currency": "GBP"}, with_htmx=True
-        )
+        response = self.make_request(method="post", data={"currency": "GBP"}, with_htmx=True)
         self.assertEqual(response.status_code, 200)
         messages = self.get_all_messages(response)
         self.assertEqual(len(messages), 1)
-        self.assertEqual(
-            str(messages[0]), "You are already using this currency, no change was made"
-        )
+        self.assertEqual(str(messages[0]), "You are already using this currency, no change was made")
 
     # Test that the user's currency is updated successfully
     def test_currency_is_updated(self):
         self.login_user()
-        response = self.make_request(
-            method="post", data={"currency": "EUR"}, with_htmx=True
-        )
+        response = self.make_request(method="post", data={"currency": "EUR"}, with_htmx=True)
         self.assertEqual(response.status_code, 200)
         messages = self.get_all_messages(response)
         self.assertEqual(len(messages), 1)
@@ -97,9 +91,7 @@ class AccountNameChange(ViewTestCase):
         self.assertEqual(response.status_code, 200)
         messages = self.get_all_messages(response)
         self.assertEqual(len(messages), 1)
-        self.assertEqual(
-            str(messages[0]), "Please enter a valid firstname or lastname."
-        )
+        self.assertEqual(str(messages[0]), "Please enter a valid firstname or lastname.")
 
     def test_name_didnt_change(self):
         # Ensure that a warning message is displayed when the provided name is the same as the current name

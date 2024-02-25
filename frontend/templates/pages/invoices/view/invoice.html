@@ -85,7 +85,9 @@
                         <p class="text-gray-700">{{ invoice.self_company|default_if_none:"" }}</p>
                         <p class="text-gray-500 text-sm">{{ invoice.self_name|default_if_none:"" }}</p>
                         <p class="text-gray-500 text-sm mt-1">{{ invoice.self_phone|default_if_none:"" }}</p>
-                        {% if invoice.vat_number %}<p class="text-gray-500 text-sm mt-1">VAT: {{ invoice.vat_number }}</p>{% endif %}
+                        {% if invoice.vat_number %}
+                            <p class="text-gray-500 text-sm mt-1">VAT: {{ invoice.vat_number }}</p>
+                        {% endif %}
                     </div>
                 </div>
                 <!-- Client info -->

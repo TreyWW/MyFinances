@@ -26,10 +26,7 @@ def switch_team(request: HttpRequest, team_id):
         messages.error(request, "You are already logged in for this team")
         return render(request, "partials/messages_list.html")
 
-    if (
-        not request.user.teams_leader_of.filter(id=team_id).exists()
-        and not request.user.teams_joined.filter(id=team_id).exists()
-    ):
+    if not request.user.teams_leader_of.filter(id=team_id).exists() and not request.user.teams_joined.filter(id=team_id).exists():
         messages.error(request, "You are not a member of this team")
         return render(request, "partials/messages_list.html")
 

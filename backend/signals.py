@@ -18,10 +18,7 @@ def delete_old_profile_picture(sender, instance, **kwargs):
     except UserSettings.DoesNotExist:
         return
 
-    if (
-        old_profile.profile_picture
-        and old_profile.profile_picture != instance.profile_picture
-    ):
+    if old_profile.profile_picture and old_profile.profile_picture != instance.profile_picture:
         # If the profile picture has been updated, delete the old file
         old_profile.profile_picture.delete(save=False)
 

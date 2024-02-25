@@ -42,11 +42,7 @@ def view(request, uuid):
     context = {"type": "view"}
 
     try:
-        url = (
-            InvoiceURL.objects.select_related("invoice")
-            .prefetch_related("invoice", "invoice__items")
-            .get(uuid=uuid)
-        )
+        url = InvoiceURL.objects.select_related("invoice").prefetch_related("invoice", "invoice__items").get(uuid=uuid)
         invoice = url.invoice
         if not invoice:
             raise InvoiceURL.DoesNotExist

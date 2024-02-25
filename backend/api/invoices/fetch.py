@@ -69,9 +69,7 @@ def fetch_all_invoices(request: HttpRequest):
             ),
         )
         .select_related("client_to", "client_to__user")
-        .only(
-            "invoice_id", "id", "payment_status", "date_due", "client_to", "client_name"
-        )
+        .only("invoice_id", "id", "payment_status", "date_due", "client_to", "client_name")
         .annotate(
             subtotal=Sum(F("items__hours") * F("items__price_per_hour")),
             amount=Case(
@@ -85,10 +83,7 @@ def fetch_all_invoices(request: HttpRequest):
 
     # Initialize context variables
     context["selected_filters"] = []
-    context["all_filters"] = {
-        item: [i for i, _ in dictio.items()]
-        for item, dictio in previous_filters.items()
-    }
+    context["all_filters"] = {item: [i for i, _ in dictio.items()] for item, dictio in previous_filters.items()}
 
     # Initialize OR conditions for filters using Q objects
     or_conditions = Q()
@@ -100,16 +95,10 @@ def fetch_all_invoices(request: HttpRequest):
             # Determine if the filter was selected in the previous request
             was_previous_selection = True if status else False
             # Determine if the filter is selected in the current request
-            has_just_been_selected = (
-                True
-                if action_filter_by == filter_by and action_filter_type == filter_type
-                else False
-            )
+            has_just_been_selected = True if action_filter_by == filter_by and action_filter_type == filter_type else False
 
             # Check if the filter status has changed
-            if (was_previous_selection and not has_just_been_selected) or (
-                not was_previous_selection and has_just_been_selected
-            ):
+            if (was_previous_selection and not has_just_been_selected) or (not was_previous_selection and has_just_been_selected):
                 # Construct filter condition dynamically based on filter_type
                 if "+" in filter_by:
                     numeric_part = float(filter_by.split("+")[0])

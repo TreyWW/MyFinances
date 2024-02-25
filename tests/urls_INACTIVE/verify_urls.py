@@ -1,7 +1,9 @@
-import os
 import json
+import os
+
 from django.test import TestCase
 from django.urls import reverse
+
 from backend.models import *
 
 
@@ -9,9 +11,7 @@ class UrlTestCase(TestCase):
     was_logged_in = False
 
     def setUp(self):
-        self.user = User.objects.create_user(
-            username="testuser", password="testpassword"
-        )
+        self.user = User.objects.create_user(username="testuser", password="testpassword")
         # self.customer = Clients.objects.create(id=1, name="Test Customer")
 
     def load_json_data(self, filename):
@@ -31,9 +31,7 @@ class UrlTestCase(TestCase):
         expected_status_code = status_codes[0] if status_codes else 200
         star = "***" if expected_status_code != response.status_code else ""
 
-        print(
-            f"{star}  Testing URL (Logged Out) - {url} || exp: {expected_status_code} - actual: {response.status_code}"
-        )
+        print(f"{star}  Testing URL (Logged Out) - {url} || exp: {expected_status_code} - actual: {response.status_code}")
         self.assertEqual(response.status_code, expected_status_code)
 
     def test_logged_in_urls(self):
@@ -55,9 +53,7 @@ class UrlTestCase(TestCase):
         expected_status_code = status_codes[0] if status_codes else 200
         star = "***" if expected_status_code != response.status_code else ""
 
-        print(
-            f"{star}  Testing URL (Logged In) - {url} || exp: {expected_status_code} - actual: {response.status_code}"
-        )
+        print(f"{star}  Testing URL (Logged In) - {url} || exp: {expected_status_code} - actual: {response.status_code}")
 
         if expected_status_code != response.status_code:
             print("Response Content Type:", response.get("Content-Type"))
