@@ -16,7 +16,7 @@
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^6.5.1",
     "daisyui": "^4.6.1",
-    "docsify-cli": "^4.4.4",
+    "docsify-cli": "^4.4.2",
     "npm-check-updates": "16.14.11",
     "tailwindcss": "^3.3.6",
     "webpack": "^5.90.1",
@@ -27,7 +27,6 @@
   "dependencies": {
     "alpinejs": "^3.13.5",
     "daisyui": "^4.6.1",
-    "docsify-cli": "^4.4.4",
     "htmx.org": "^1.9.10",
     "hyperscript.org": "^0.9.12",
     "jquery": "^3.7.1",
