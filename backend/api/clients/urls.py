@@ -1,5 +1,5 @@
 from django.urls import path
-from . import fetch
+from . import fetch, delete
 
 urlpatterns = [
     path(
@@ -11,6 +11,11 @@ urlpatterns = [
         "fetch/dropdown/",
         fetch.fetch_clients_dropdown,
         name="fetch dropdown",
+    ),
+    path(
+        "delete/<int:client_id>/",
+        delete.delete_client,
+        name="delete",
     ),
 ]
 

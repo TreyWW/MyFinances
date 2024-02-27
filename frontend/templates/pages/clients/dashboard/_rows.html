@@ -6,13 +6,20 @@
         <td>{{ client.email }}</td>
         <td>
             <div class="flex flex-wrap gap-2">
+                <div class="tooltip" data-tip="Create login">
+                    <button class="btn btn-outline btn-primary btn-sm">
+                        <i class="fa fa-solid fa-key"></i>
+                    </button>
+                </div>
                 <div class="tooltip" data-tip="Edit">
                     <button class="btn btn-outline btn-success btn-sm btn-disabled">
                         <i class="fa fa-solid fa-pencil"></i>
                     </button>
                 </div>
                 <div class="tooltip" data-tip="Delete">
-                    <button class="btn btn-outline btn-error btn-sm btn-disabled">
+                    <button hx-target="closest tr" hx-delete="{% url "api:clients:delete" client_id=client.id %}" class="btn 
+                    btn-outline 
+                    btn-error btn-sm">
                         <i class="fa fa-solid fa-trash"></i>
                     </button>
                 </div>
