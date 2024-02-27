@@ -3,7 +3,7 @@ from django.http import HttpRequest
 from django.shortcuts import render, redirect
 
 from backend.decorators import not_customer
-from backend.models import Client
+from backend.models import Client, AuditLog
 
 
 @not_customer
@@ -30,14 +30,18 @@ def create_client(request: HttpRequest):
         client = Client.objects.create(
             organization=request.user.logged_in_as_team,
         )
+        audit_log = AuditLog(organization=request.user.logged_in_as_team)
     else:
         client = Client.objects.create(
             user=request.user,
         )
+        audit_log = AuditLog(user=request.user)
 
     for model_field, new_value in client_details.items():
         setattr(client, model_field, new_value)
 
+    audit_log.action = f"Created client #{client.id}"
+    audit_log.save()
     client.save()
 
     if client:

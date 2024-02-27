@@ -19,8 +19,9 @@
                 <div class="card me-3 w-full bg-base-200 border border-base-200 hover:border-gray-400">
                     <div class="card-body w-full">
                         <div class="form-control w-full">
-                            <label class="label">
+                            <label class="label justify-start">
                                 <span class="label-text">Client Name</span>
+                                <span class="required_star">*</span>
                             </label>
                             <input required
                                    id="clientName"
@@ -39,8 +40,9 @@
                 <div class="card me-3 w-full bg-base-200 border border-base-200 hover:border-gray-400">
                     <div class="card-body w-full">
                         <div class="form-control w-full">
-                            <label class="label">
+                            <label class="label justify-start">
                                 <span class="label-text">Client Email</span>
+                                <span class="required_star">*</span>
                             </label>
                             <input required
                                    id="clientEmail"
@@ -122,6 +124,7 @@
     <script>
         is_rep_inp = document.querySelector('input[name="is_representative"]');
         is_rep_div = document.querySelector('div[data-selection="representative"]');
+
         function check_is_rep() {
             if (is_rep_inp.checked) {
                 is_rep_div.style.display = "block";

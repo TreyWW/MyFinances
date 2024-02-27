@@ -38,6 +38,7 @@ class User(AbstractUser):
     logged_in_as_team = models.ForeignKey("Team", on_delete=models.SET_NULL, null=True)
     awaiting_email_verification = models.BooleanField(default=True)
     is_customer = models.BooleanField(default=False)
+    managers = models.ManyToManyField("User", related_name="managed_clients")
 
     class Role(models.TextChoices):
         #        NAME     DJANGO ADMIN NAME
