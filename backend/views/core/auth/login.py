@@ -42,7 +42,7 @@ def login_manual(request: HttpRequest):  # HTMX POST
     email = request.POST.get("email")
     password = request.POST.get("password")
     page = str(request.POST.get("page"))
-    print(email, password, page)
+    login_type = request.POST.get("type")
 
     if not page or page == "1":
         return render(
@@ -69,6 +69,13 @@ def login_manual(request: HttpRequest):  # HTMX POST
 
     if not user:
         messages.error(request, "Incorrect email or password")
+        return render_toast_message(request)
+
+    if login_type == "customer" and not user.is_customer:
+        messages.error(request, "This is not a customer account")
+        return render_toast_message(request)
+    elif login_type != "customer" and user.is_customer:
+        messages.error(request, "Please login to a customer account")
         return render_toast_message(request)
 
     login(request, user)

@@ -35,7 +35,7 @@ class CustomUserManager(UserManager):
 class User(AbstractUser):
     objects = CustomUserManager()
 
-    logged_in_as_team = models.ForeignKey("Team", on_delete=models.SET_NULL, null=True)
+    logged_in_as_team = models.ForeignKey("Team", on_delete=models.SET_NULL, null=True, blank=True)
     awaiting_email_verification = models.BooleanField(default=True)
     is_customer = models.BooleanField(default=False)
     managers = models.ManyToManyField("User", related_name="managed_clients")

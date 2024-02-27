@@ -18,7 +18,10 @@
         <input type="hidden" name="email" value="{{ email }}">
         <input type="hidden" name="page" value="2">
     </div>
-    <button class="btn mt-2 w-full btn-primary">Login</button>
+    <div class="flex justify-center gap-2 mt-3">
+        <button name="type" value="management" hx-vals='{"a": "b"}' class="btn btn-primary">Login to management account</button>
+        <button name="type" value="customer" hx-vals='{"a": "c"}' class="btn btn-default">Login to customer account</button>
+    </div>
     <div class="divider mt-8">OR</div>
     {% if magic_links_enabled %}
         <button type="button"
