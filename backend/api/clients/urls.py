@@ -17,6 +17,7 @@ urlpatterns = [
         delete.delete_client,
         name="delete",
     ),
+    # path("invite/<int:client_id>/", invite.invite_client, name="invite"),
 ]
 
 app_name = "clients"
