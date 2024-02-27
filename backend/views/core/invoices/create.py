@@ -5,6 +5,7 @@ from django.http import HttpRequest
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
 
+from backend.decorators import not_customer
 from backend.models import Invoice, InvoiceItem, Client, InvoiceProduct
 
 
@@ -85,6 +86,7 @@ def invoice_page_post(request: HttpRequest):
 
 
 @require_http_methods(["GET", "POST"])
+@not_customer
 def create_invoice_page(request: HttpRequest):
     if request.method == "POST":
         return invoice_page_post(request)
@@ -92,6 +94,7 @@ def create_invoice_page(request: HttpRequest):
 
 
 @require_http_methods(["GET", "POST"])
+@not_customer
 def edit_invoice_page(request: HttpRequest):
     if request.method == "POST":
         return invoice_page_post(request)

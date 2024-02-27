@@ -2,10 +2,12 @@ from django.http import HttpRequest, JsonResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
+from backend.decorators import not_customer
 from backend.models import InvoiceProduct
 
 
 @require_http_methods(["POST"])
+@not_customer
 def add_service(request: HttpRequest):
     context = {}
     existing_service = request.POST.get("existing_service")

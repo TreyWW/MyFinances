@@ -2,9 +2,11 @@ from django.contrib import messages
 from django.http import HttpRequest
 from django.shortcuts import render, redirect
 
+from backend.decorators import not_customer
 from backend.models import Client
 
 
+@not_customer
 def create_client(request: HttpRequest):
     if request.method == "GET":
         return render(request, "pages/clients/create/create.html")

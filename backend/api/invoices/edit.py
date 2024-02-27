@@ -5,10 +5,12 @@ from django.http import HttpRequest, JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods, require_POST
 
+from backend.decorators import not_customer
 from backend.models import Invoice
 
 
 @require_http_methods(["POST"])
+@not_customer
 def edit_invoice(request: HttpRequest):
     try:
         invoice = Invoice.objects.get(id=request.POST.get("invoice_id"))
@@ -65,6 +67,7 @@ def edit_invoice(request: HttpRequest):
 
 
 @require_POST
+@not_customer
 def change_status(request: HttpRequest, invoice_id: int, status: str) -> HttpResponse:
     status = status.lower() if status else ""
 

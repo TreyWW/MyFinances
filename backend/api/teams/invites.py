@@ -6,6 +6,7 @@ from backend.decorators import *
 from backend.models import Notification, Team, TeamInvitation, User
 
 
+@not_customer
 def delete_notification(user: User, code: TeamInvitation.code):
     Notification.objects.filter(
         user=user,
@@ -17,6 +18,7 @@ def delete_notification(user: User, code: TeamInvitation.code):
     ).first().delete()
 
 
+@not_customer
 def check_team_invitation_is_valid(request, invitation: TeamInvitation, code=None):
     valid: bool = True
     if not invitation:
@@ -36,6 +38,7 @@ def check_team_invitation_is_valid(request, invitation: TeamInvitation, code=Non
     return True
 
 
+@not_customer
 def send_user_team_invite(request: HttpRequest):
     user_email = request.POST.get("email")
     team_id = request.POST.get("team_id")
@@ -95,6 +98,7 @@ def send_user_team_invite(request: HttpRequest):
     return response
 
 
+@not_customer
 def accept_team_invite(request: HttpRequest, code):
     invitation: TeamInvitation = TeamInvitation.objects.filter(code=code).first()
 
@@ -142,6 +146,7 @@ def accept_team_invite(request: HttpRequest, code):
     # return render(request, "partials/messages_list.html")
 
 
+@not_customer
 def decline_team_invite(request: HttpRequest, code):
     invitation: TeamInvitation = TeamInvitation.objects.filter(code=code).first()
     confirmation_text = request.POST.get("confirmation_text")

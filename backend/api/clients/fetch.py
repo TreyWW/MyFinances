@@ -3,10 +3,12 @@ from django.http import HttpRequest
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
 
+from backend.decorators import not_customer
 from backend.models import Client
 
 
 @require_http_methods(["GET"])
+@not_customer
 def fetch_all_clients(request: HttpRequest):
     if not request.htmx:
         return redirect("clients dashboard")
@@ -25,6 +27,7 @@ def fetch_all_clients(request: HttpRequest):
 
 
 @require_http_methods(["GET"])
+@not_customer
 def fetch_clients_dropdown(request: HttpRequest):
     if not request.htmx:
         return redirect("clients dashboard")

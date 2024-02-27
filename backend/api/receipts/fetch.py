@@ -2,9 +2,11 @@ from django.db.models import Q
 from django.http import HttpRequest
 from django.shortcuts import render, redirect
 
+from backend.decorators import not_customer
 from backend.models import Receipt
 
 
+@not_customer
 def fetch_all_receipts(request: HttpRequest):
     context = {}
     if not request.htmx:

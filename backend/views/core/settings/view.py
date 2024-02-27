@@ -8,6 +8,7 @@ from backend.decorators import *
 from backend.models import *
 
 
+@not_customer
 def settings_page(request: HttpRequest):
     context = {}
 
@@ -74,6 +75,7 @@ def settings_page(request: HttpRequest):
     return render(request, "pages/settings/main.html", context)
 
 
+@not_customer
 def change_password(request: HttpRequest):
     if request.method == "POST":
         current_password = request.POST.get("current_password")

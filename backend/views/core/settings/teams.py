@@ -4,9 +4,11 @@ from django.db.models import When, Case, BooleanField
 from django.http import HttpRequest
 from django.shortcuts import render
 
+from backend.decorators import not_customer
 from backend.models import *
 
 
+@not_customer
 def teams_dashboard(request: HttpRequest):
     request.user: User = request.user
     users_team: Optional[Team] = request.user.logged_in_as_team
@@ -55,5 +57,6 @@ def teams_dashboard(request: HttpRequest):
     )
 
 
+@not_customer
 def manage_permissions_dashboard(request: HttpRequest):
     return render(request, "pages/settings/teams/permissions.html")

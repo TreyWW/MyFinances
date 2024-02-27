@@ -7,6 +7,7 @@ from backend.models import Team
 
 
 @require_POST
+@not_customer
 def create_team(request: HttpRequest):
     name = request.POST.get("name")
 

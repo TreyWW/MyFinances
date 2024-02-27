@@ -4,9 +4,11 @@ from django.http import HttpRequest
 from django.shortcuts import render
 
 from backend.api.products.fetch import fetch_products
+from backend.decorators import not_customer
 from backend.models import InvoiceProduct
 
 
+@not_customer
 def create_product(request: HttpRequest):
     try:
         quantity = int(request.POST.get("post_quantity"))

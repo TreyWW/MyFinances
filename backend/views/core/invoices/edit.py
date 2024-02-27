@@ -5,6 +5,7 @@ from django.http import HttpRequest, JsonResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
+from backend.decorators import not_customer
 from backend.models import Invoice, Client, InvoiceItem
 
 
@@ -52,6 +53,8 @@ def invoice_get_existing_data(invoice_obj):
 
 
 # gets invoice object from invoice id, convert obj to dict, and renders edit.html while passing the stored invoice values to frontend
+@require_http_methods(["GET"])
+@not_customer
 def invoice_edit_page_get(request, invoice_id):
     try:
         invoice = Invoice.objects.get(id=invoice_id)
@@ -65,6 +68,7 @@ def invoice_edit_page_get(request, invoice_id):
 
 # when user changes/modifies any of the fields with new information (during edit invoice)
 @require_http_methods(["POST"])
+@not_customer
 def edit_invoice(request: HttpRequest, invoice_id):
     try:
         invoice = Invoice.objects.get(id=invoice_id)
@@ -149,6 +153,7 @@ def edit_invoice(request: HttpRequest, invoice_id):
 
 # decorator & view function for rendering page and updating invoice items in the backend
 @require_http_methods(["GET", "POST"])
+@not_customer
 def edit_invoice_page(request: HttpRequest, id):
     if request.method == "POST":
         return edit_invoice(request, id)

@@ -37,6 +37,7 @@ class User(AbstractUser):
 
     logged_in_as_team = models.ForeignKey("Team", on_delete=models.SET_NULL, null=True)
     awaiting_email_verification = models.BooleanField(default=True)
+    is_customer = models.BooleanField(default=False)
 
     class Role(models.TextChoices):
         #        NAME     DJANGO ADMIN NAME
@@ -44,6 +45,7 @@ class User(AbstractUser):
         STAFF = "STAFF", "Staff"
         USER = "USER", "User"
         TESTER = "TESTER", "Tester"
+        CUSTOMER = "CUSTOMER", "Customer"
 
     role = models.CharField(max_length=10, choices=Role.choices, default=Role.USER)
 

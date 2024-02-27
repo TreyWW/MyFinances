@@ -2,9 +2,11 @@ from django.contrib import messages
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 
+from backend.decorators import not_customer
 from backend.models import Invoice, InvoiceURL
 
 
+@not_customer
 def manage_access(request: HttpRequest, id):
     try:
         invoice = Invoice.objects.prefetch_related("invoice_urls").get(id=id, user=request.user)
@@ -21,6 +23,7 @@ def manage_access(request: HttpRequest, id):
     )
 
 
+@not_customer
 def create_code(request: HttpRequest, id):
     if not request.htmx:
         return redirect("invoices dashboard")
@@ -43,6 +46,7 @@ def create_code(request: HttpRequest, id):
     )
 
 
+@not_customer
 def delete_code(request: HttpRequest, id):
     if request.method != "DELETE" or not request.htmx:
         return HttpResponse("Request invalid", status=400)

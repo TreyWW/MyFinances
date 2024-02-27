@@ -2,9 +2,11 @@ from django.contrib import messages
 from django.http import HttpRequest
 from django.shortcuts import redirect
 
+from backend.decorators import not_customer
 from backend.models import User, Team
 
 
+@not_customer
 def kick_user(request: HttpRequest, user_id):
     user: User = User.objects.filter(id=user_id).first()
     confirmation_text = request.POST.get("confirmation_text")

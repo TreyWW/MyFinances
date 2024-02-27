@@ -15,10 +15,12 @@ from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods
 
+from backend.decorators import not_customer
 from backend.models import Invoice, InvoiceItem
 
 
 @require_http_methods(["GET"])
+@not_customer
 def fetch_all_invoices(request: HttpRequest):
     # Redirect if not an HTMX request
     if not request.htmx:
