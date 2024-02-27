@@ -2,8 +2,9 @@
 {% for client in clients %}
     <tr>
         <td>{{ client.id }}</td>
-        <td colspan="2">{{ client.name }}</td>
-        <td colspan="2">
+        <td>{{ client.name }}</td>
+        <td>{{ client.email }}</td>
+        <td>
             <div class="flex flex-wrap gap-2">
                 <div class="tooltip" data-tip="Edit">
                     <button class="btn btn-outline btn-success btn-sm btn-disabled">
