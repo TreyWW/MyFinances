@@ -223,6 +223,8 @@ USE_TZ = True
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+ANALYTICS = get_var("ANALYTICS_SCRIPT")
+
 SOCIAL_AUTH_GITHUB_SCOPE = ["user:email"]
 SOCIAL_AUTH_GITHUB_KEY = get_var("GITHUB_KEY")
 SOCIAL_AUTH_GITHUB_SECRET = get_var("GITHUB_SECRET")

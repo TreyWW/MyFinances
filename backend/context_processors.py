@@ -1,8 +1,9 @@
-import os
 from typing import List, Optional, Dict, Any
 
 from django.http import HttpRequest
 from django.urls import reverse
+
+from settings.helpers import get_var
 
 
 ## Context processors need to be put in SETTINGS TEMPLATES to be recognized
@@ -24,9 +25,10 @@ def extras(request: HttpRequest):
     # import_method can be one of: "webpack", "public_cdn", "custom_cdn"
     data = {}
 
-    data["git_branch"] = os.environ.get("BRANCH")
-    data["git_version"] = os.environ.get("VERSION")
-    data["import_method"] = os.environ.get("IMPORT_METHOD", default="webpack")
+    data["git_branch"] = get_var("BRANCH")
+    data["git_version"] = get_var("VERSION")
+    data["import_method"] = get_var("IMPORT_METHOD", default="webpack")
+    data["analytics"] = get_var("ANALYTICS_STRING")
 
     return data
 
