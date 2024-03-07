@@ -230,14 +230,14 @@ class Client(models.Model):
 class InvoiceProduct(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
-    description = models.CharField(max_length=100)
+    description = models.CharField(max_length=100, null=True, blank=True)
     quantity = models.IntegerField()
     rate = models.DecimalField(max_digits=15, decimal_places=2, blank=True, null=True)
 
 
 class InvoiceItem(models.Model):
     name = models.CharField(max_length=50)
-    description = models.CharField(max_length=100)
+    description = models.CharField(max_length=100, null=True, blank=True)
     is_service = models.BooleanField(default=True)
     # if service
     hours = models.DecimalField(max_digits=15, decimal_places=2, blank=True, null=True)
@@ -252,7 +252,7 @@ class InvoiceItem(models.Model):
             return self.price
 
     def __str__(self):
-        return self.description
+        return self.description or self.name
 
 
 class Invoice(models.Model):
@@ -263,7 +263,7 @@ class Invoice(models.Model):
     )
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    organization = models.ForeignKey(Team, on_delete=models.CASCADE, null=True)
+    organization = models.ForeignKey(Team, on_delete=models.CASCADE, null=True, blank=True)
     invoice_id = models.IntegerField(unique=True, blank=True, null=True)  # todo: add
 
     client_to = models.ForeignKey(Client, on_delete=models.SET_NULL, blank=True, null=True)
@@ -288,6 +288,8 @@ class Invoice(models.Model):
     account_number = models.CharField(max_length=100, blank=True, null=True)
     reference = models.CharField(max_length=100, blank=True, null=True)
     invoice_number = models.CharField(max_length=100, blank=True, null=True)
+    discount_number = models.DecimalField(default=0, max_digits=15, decimal_places=2)
+    discount_percentage = models.SmallIntegerField(default=0)
     vat_number = models.CharField(max_length=100, blank=True, null=True)
     logo = models.ImageField(
         upload_to="invoice_logos",
@@ -346,13 +348,35 @@ class Invoice(models.Model):
             subtotal += item.get_total_price()
         return round(subtotal, 2)
 
-    def get_total_price(self):
-        total = 0
-        subtotal = self.get_subtotal()
+    def get_tax(self) -> float:
         if self.vat_number:
-            total = subtotal * 1.2
+            return round(self.get_subtotal() * 0.2, 2)
+        return 0
+
+    def get_percentage_discount_amt(self, subtotal: float = 0.00) -> float:
+        total = subtotal or self.get_subtotal()
+
+        if self.discount_percentage > 0:
+            return round((total * self.discount_percentage) / 100, 2)
+        return 0
+
+    def get_total_price(self):
+        total = self.get_subtotal() or 0
+
+        total -= self.get_percentage_discount_amt(total)
+
+        discount_number = self.discount_number
+        if discount_number is not None:
+            if (total - discount_number) > 0:
+                total -= discount_number
+            else:
+                total = 0  # Set total to 0 if discount_number is greater than total
+
+        if total < 0:
+            total = 0
         else:
-            total = subtotal
+            total += self.get_tax()  # No need to get tax if total is 0
+
         return round(total, 2)
 
 
