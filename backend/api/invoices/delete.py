@@ -3,10 +3,12 @@ from django.http import HttpRequest, JsonResponse, QueryDict
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
+from backend.decorators import not_customer
 from backend.models import Invoice
 
 
 @require_http_methods(["DELETE"])
+@not_customer
 def delete_invoice(request: HttpRequest):
     delete_items = QueryDict(request.body)
 

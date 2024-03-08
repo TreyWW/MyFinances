@@ -5,12 +5,14 @@ from backend.decorators import *
 from backend.models import *
 
 
+@not_customer
 def invoices_dashboard(request: HttpRequest):
     context = {}
 
     return render(request, "pages/invoices/dashboard/dashboard.html", context)
 
 
+@not_customer
 def invoices_dashboard_id(request: HttpRequest, invoice_id):
     if invoice_id == "create":
         return redirect("invoices dashboard create")

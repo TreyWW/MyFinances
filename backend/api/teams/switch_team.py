@@ -2,9 +2,11 @@ from django.contrib import messages
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 
+from backend.decorators import not_customer
 from backend.models import Team
 
 
+@not_customer
 def switch_team(request: HttpRequest, team_id):
     if not team_id:
         if not request.user.logged_in_as_team:
@@ -39,6 +41,7 @@ def switch_team(request: HttpRequest, team_id):
     # return render(request, "components/+logged_in_for.html")
 
 
+@not_customer
 def get_dropdown(request: HttpRequest):
     if not request.htmx:
         return HttpResponse("Invalid Request", status=405)

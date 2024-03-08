@@ -2,9 +2,11 @@ from django.http import FileResponse, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 
+from backend.decorators import not_customer
 from backend.models import Receipt, ReceiptDownloadToken
 
 
+@not_customer
 def download_receipt(request, token):
     """
     Downloads a receipt file based on the provided token.
@@ -36,6 +38,7 @@ def download_receipt(request, token):
     return response
 
 
+@not_customer
 def generate_download_link(request, receipt_id):
     """
     Generates a download link for a receipt file.

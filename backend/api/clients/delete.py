@@ -1,29 +1,40 @@
+from django.contrib import messages
 from django.db.models import Q
 from django.http import HttpRequest
 from django.shortcuts import render, redirect
-from django.views.decorators.http import require_http_methods
+from django.views.decorators.http import require_http_methods, require_POST
 
 from backend.decorators import not_customer
-from backend.models import Client
+from backend.models import Client, AuditLog
 
 
-@require_http_methods(["GET"])
+# @require_POST
+@require_http_methods(["DELETE"])
 @not_customer
-def fetch_all_clients(request: HttpRequest):
+def delete_client(request: HttpRequest, client_id: int):
     if not request.htmx:
         return redirect("clients dashboard")
 
-    search_text = request.GET.get("search")
-
     if request.user.logged_in_as_team:
         clients = Client.objects.filter(organization=request.user.logged_in_as_team, active=True)
+        audit_log = AuditLog(organization=request.user.logged_in_as_team)
     else:
         clients = Client.objects.filter(user=request.user, active=True)
+        audit_log = AuditLog(user=request.user)
 
-    if search_text:
-        clients = clients.filter(Q(name__icontains=search_text) | Q(email__icontains=search_text) | Q(id__icontains=search_text))
+    client = clients.filter(id=client_id)
 
-    return render(request, "pages/clients/dashboard/_table.html", {"clients": clients})
+    if not client:
+        messages.error(request, "Client not found")
+        return render(request, "base/toasts.html")  # htmx will handle the toast
+
+    audit_log.action = f"Deleted client #{client_id}"
+    audit_log.save()
+    client.delete()
+
+    messages.success(request, f"Client #{client_id} was successfully deleted.")
+
+    return render(request, "base/toasts.html")  # htmx will handle the toast
 
 
 @require_http_methods(["GET"])

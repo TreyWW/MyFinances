@@ -4,12 +4,14 @@ from django.http import HttpRequest, JsonResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
+from backend.decorators import not_customer
 from backend.models import Receipt
 from django.db.models import Q
 
 
 @require_http_methods(["DELETE"])
 @login_required
+@not_customer
 def receipt_delete(request: HttpRequest, id: int):
     receipt = Receipt.objects.filter(id=id).first()
     if not receipt:

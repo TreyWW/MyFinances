@@ -4,9 +4,11 @@ from django.http import HttpRequest
 from django.shortcuts import render
 from forex_python.converter import CurrencyRates
 
+from backend.decorators import not_customer
 from backend.models import *
 
 
+@not_customer
 def currency_convert_view(request: HttpRequest):
     context = {}
 

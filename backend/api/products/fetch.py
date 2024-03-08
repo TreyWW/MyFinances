@@ -2,9 +2,11 @@ from django.db.models import Q
 from django.http import HttpRequest
 from django.shortcuts import render
 
+from backend.decorators import not_customer
 from backend.models import InvoiceProduct
 
 
+@not_customer
 def fetch_products(request: HttpRequest):
     results = []
     search_text = request.GET.get("search_existing_service")

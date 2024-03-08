@@ -117,14 +117,16 @@
                         Account Settings
                     </a>
                 </li>
-                <li>
-                    <a class="{% if request.resolver_match.url_name == "user settings teams" %}active{% endif %}"
-                       href="{% url "user settings teams" %}">
-                        <i class="fa fa-solid fa-users"></i>
-                        Manage Team
-                        <span class="badge">New</span>
-                    </a>
-                </li>
+                {% if not request.user.is_customer %}
+                    <li>
+                        <a class="{% if request.resolver_match.url_name == "user settings teams" %}active{% endif %}"
+                           href="{% url "user settings teams" %}">
+                            <i class="fa fa-solid fa-users"></i>
+                            Manage Team
+                            <span class="badge">New</span>
+                        </a>
+                    </li>
+                {% endif %}
                 <li>
                     <label for="logout_modal">
                         <i class="fa fa-solid fa-right-from-bracket"></i>

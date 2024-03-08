@@ -5,11 +5,13 @@ from django.http import HttpRequest, HttpResponseBadRequest
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
 
+from backend.decorators import not_customer
 from backend.models import Receipt
 
 
 @require_http_methods(["POST"])
 @login_required
+@not_customer
 def receipt_create(request: HttpRequest):
     if not request.htmx:
         return redirect("receipts dashboard")

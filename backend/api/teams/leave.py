@@ -1,9 +1,12 @@
+from django.contrib import messages
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 
+from backend.decorators import not_customer
 from backend.models import *
 
 
+@not_customer
 def return_error_notif(request: HttpRequest, message: str):
     messages.error(request, message)
     resp = render(request, "partials/messages_list.html", status=200)
@@ -11,6 +14,7 @@ def return_error_notif(request: HttpRequest, message: str):
     return resp
 
 
+@not_customer
 def leave_team_confirmed(request: HttpRequest, team_id):
     team: Team = Team.objects.filter(id=team_id).first()
 

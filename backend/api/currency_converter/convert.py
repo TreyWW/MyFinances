@@ -5,6 +5,7 @@ from django.http import HttpResponse, HttpRequest
 from django.shortcuts import render, redirect
 from forex_python.converter import CurrencyRates
 
+from backend.decorators import not_customer
 from backend.models import *
 
 
@@ -63,6 +64,7 @@ def convert_currency(init_currency, target_currency, amount, date=None):
         raise ValueError(f"Error in currency conversion: {e}")
 
 
+@not_customer
 def currency_conversion(request: HttpRequest):
     context = {}
 

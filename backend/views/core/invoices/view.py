@@ -2,9 +2,11 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 from login_required import login_not_required
 
+from backend.decorators import not_customer
 from backend.models import Invoice, UserSettings, InvoiceURL
 
 
+@not_customer
 def preview(request, invoice_id):
     context = {"type": "preview"}
 
