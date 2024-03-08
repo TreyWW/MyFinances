@@ -1,6 +1,6 @@
 from uuid import uuid4
 
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth.models import UserManager, AbstractUser, AnonymousUser
 from django.db import models
 from django.db.models import Count
@@ -9,10 +9,15 @@ from django.utils.crypto import get_random_string
 from shortuuid.django_fields import ShortUUIDField
 
 from settings import settings
+from settings.settings import AWS_TAGS_APP_NAME
 
 
 def RandomCode(length=6):
     return get_random_string(length=length).upper()
+
+
+def RandomAPICode(length=89):
+    return get_random_string(length=length).lower()
 
 
 def USER_OR_ORGANIZATION_CONSTRAINT():
@@ -385,6 +390,65 @@ class InvoiceURL(models.Model):
         verbose_name_plural = "Invoice URLs"
 
 
+class InvoiceSchedule(models.Model):
+    class StatusTypes(models.TextChoices):
+        PENDING = "pending", "Pending"
+        CREATING = "creating", "Creating"
+        COMPLETED = "completed", "Completed"
+        FAILED = "failed", "Failed"
+        DELETING = "deleting", "Deleting"
+        CANCELLED = "cancelled", "Cancelled"
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    stored_schedule_arn = models.CharField(max_length=100, null=True, blank=True)
+    received = models.BooleanField(default=False)
+    status = models.CharField(max_length=100, choices=StatusTypes.choices, default=StatusTypes.PENDING)
+
+    def get_tags(self):
+        return {
+            "invoice_id": self.invoice.id,
+            "schedule_id": self.id,
+            "app": AWS_TAGS_APP_NAME
+        }
+
+    class Meta:
+        abstract = True
+
+
+class InvoiceOnetimeSchedule(InvoiceSchedule):
+    invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE, related_name="onetime_invoice_schedules")
+    due = models.DateTimeField()
+
+    class Meta:
+        verbose_name = "One-Time Invoice Schedule"
+        verbose_name_plural = "One-Time Invoice Schedules"
+
+
+class APIKey(models.Model):
+    class ServiceTypes(models.TextChoices):
+        AWS_API_DESTINATION = "aws_api_destination"
+
+    service = models.CharField(max_length=20, choices=ServiceTypes.choices, null=True)
+    key = models.CharField(max_length=100, default=RandomAPICode)
+    last_used = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "API Key"
+        verbose_name_plural = "API Keys"
+
+    def __str__(self):
+        return self.service
+
+    def verify(self, key):
+        return check_password(key, self.key)
+
+    def hash(self):
+        self.key = make_password(f"{self.id}{self.key}")
+        self.save()
+
+
+
+
 class PasswordSecret(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="password_secrets")
     secret = models.TextField(max_length=300)
@@ -412,6 +476,9 @@ class AuditLog(models.Model):
     organization = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True)
     action = models.CharField(max_length=100)
     date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.action} - {self.date}"
 
 
 class LoginLog(models.Model):

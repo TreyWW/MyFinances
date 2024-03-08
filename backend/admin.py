@@ -19,6 +19,8 @@ from backend.models import (
     InvoiceProduct,
     FeatureFlags,
     VerificationCodes,
+    APIKey,
+    InvoiceOnetimeSchedule
 )
 
 # from django.contrib.auth.models imp/ort User
@@ -41,6 +43,8 @@ admin.site.register(
         InvoiceProduct,
         FeatureFlags,
         VerificationCodes,
+        APIKey,
+        InvoiceOnetimeSchedule
     ]
 )
 

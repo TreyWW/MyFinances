@@ -1,4 +1,5 @@
 import os
+import sys
 from typing import Union, List
 
 import boto3
@@ -60,6 +61,9 @@ EMAIL_SERVER_ENABLED = True if EMAIL_HOST_PASSWORD else False
 
 EMAIL_SERVICE = "SES" if ARE_AWS_EMAILS_ENABLED else "SendGrid" if EMAIL_SERVER_ENABLED else None
 ARE_EMAILS_ENABLED = True if EMAIL_SERVICE else False
+
+if "test" in sys.argv[1:]:
+    ARE_EMAILS_ENABLED = False
 
 
 def send_email(destination: Union[str, List[str]], subject: str, message: str):

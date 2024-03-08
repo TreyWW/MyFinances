@@ -69,7 +69,7 @@ def change_status(request: HttpRequest, invoice_id: int, status: str) -> HttpRes
     status = status.lower() if status else ""
 
     if not request.htmx:
-        return redirect("invoices dashboard")
+        return redirect("invoices:dashboard")
 
     try:
         invoice = Invoice.objects.get(id=invoice_id)

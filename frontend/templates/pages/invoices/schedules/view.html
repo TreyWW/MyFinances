@@ -1,0 +1,124 @@
+{% extends 'base/base.html' %}
+{% block content %}
+    <form id="filter_list_storage">
+    </form>
+    <div class="mb-4 p-6 shadow-xl card bg-base-100">
+        <div class="grid w-full grid-cols-3 text-3xl">
+            <div>
+                <a href="{% url "invoices:dashboard" %}"
+                   class="float-left btn btn-sm btn-outline btn-secondary me-3">Back to invoices
+                </a>
+            </div>
+            <h1 class="col-span-2 text-left">Schedules for Invoice #{{ invoice.id }}</h1>
+        </div>
+    </div>
+    <h2 class="mb-4 text-center text-3xl">
+        One Time
+    </h2>
+    <div class="grid grid-cols-2 gap-x-4">
+        <div class="w-full p-6 shadow-xl card bg-base-100">
+            <div class="grid w-full grid-cols-3 text-xl font-medium">
+                <div>
+                    <a hx-get="{% url 'api:invoices:schedules onetime fetch' invoice_id=invoice.id %}"
+                       hx-trigger="click"
+                       hx-swap="outerHTML"
+                       hx-target="#tbody"
+                       hx-indicator="this"
+                       hx-vals='{"refresh-statuses": "true"}'
+                       class="float-left btn btn-sm btn-outline btn-accent me-3 loading-htmx">
+                        <span class="loading-htmx-text">
+                            <i class="fa-solid fa-rotate-right"></i>
+                        Refresh statuses
+                        </span>
+                        <span class="loading loading-spinner loading-htmx-loader"></span>
+                    </a>
+                </div>
+                <h1 class="col-span-2 text-left">View scheduled invoices</h1>
+            </div>
+            <div class="divider"></div>
+            <table class="mt-3 table w-full">
+                <thead>
+                <tr hx-swap="outerHTML"
+                    hx-target="#tbody"
+                    hx-indicator=""
+                    hx-include="#filter_list_storage">
+                    <th>ID</th>
+                    <th>
+                        <div class="dropdown"
+                             data-filter-type="status"
+                             hx-vals='{"filter_type": "status"}'>
+                            <label tabindex="0" class="border-none">
+                                Status
+                                <i class="border-none pt-1 fa-solid fa-caret-down pl-1/2"></i>
+                            </label>
+                            <ul class="dropdown-content">
+                                <h2 class="menu-title">Status</h2>
+                                <div class="-mt-2 -mb-1 divider"></div>
+                                <li data-filter-by="completed">
+                                    <button class="border-none text-sm dropdown-item"
+                                            hx-get="{% url "api:invoices:schedules onetime fetch" invoice_id=invoice.id %}"
+                                            name="filter"
+                                            value="completed">
+                                        Completed
+                                    </button>
+                                </li>
+                                <li data-filter-by="pending">
+                                    <button class="border-none text-sm dropdown-item"
+                                            hx-get="{% url "api:invoices:schedules onetime fetch" invoice_id=invoice.id %}"
+                                            name="filter"
+                                            value="pending">
+                                        Pending
+                                    </button>
+                                </li>
+                                <li data-filter-by="creating">
+                                    <button class="border-none text-sm dropdown-item"
+                                            hx-get="{% url "api:invoices:schedules onetime fetch" invoice_id=invoice.id %}"
+                                            name="filter"
+                                            value="creating">
+                                        Creating
+                                    </button>
+                                </li>
+                                <li data-filter-by="deleting">
+                                    <button class="border-none text-sm dropdown-item"
+                                            hx-get="{% url "api:invoices:schedules onetime fetch" invoice_id=invoice.id %}"
+                                            name="filter"
+                                            value="deleting">
+                                        Deleting
+                                    </button>
+                                </li>
+                                <li data-filter-by="cancelled">
+                                    <button class="border-none text-sm dropdown-item"
+                                            hx-get="{% url "api:invoices:schedules onetime fetch" invoice_id=invoice.id %}"
+                                            name="filter"
+                                            value="cancelled">
+                                        Cancelled
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody id="tbody" hx-swap="outerHTML" hx-trigger="load"
+                       hx-get="{% url "api:invoices:schedules onetime fetch" invoice_id=invoice.id %}">
+                </tbody>
+            </table>
+        </div>
+        <div class="w-full p-6 shadow-xl card bg-base-100">
+            <h2 class="text-center text-xl font-medium">
+                Create onetime scheduled send
+            </h2>
+            <div class="divider"></div>
+            <form method="post" hx-post="{% url "api:invoices:create_schedule" %}" hx-swap="beforeend" hx-target="#tbody">
+                <input type="hidden" name="option" value="one-time">
+                <div class="form-control">
+                    <label class="label">Datetime of send</label>
+                    <input type="datetime-local" name="date_time" class="flex-grow input input-bordered" />
+                </div>
+                <button class="mt-3 w-full btn btn-primary">Create</button>
+            </form>
+        </div>
+    </div>
+{% endblock content %}

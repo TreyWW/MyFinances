@@ -63,11 +63,17 @@ feature_flags = [{"name": "areSignupsEnabled", "default": True, "pk": 1}]
 
 def insert_initial_data(**kwargs):
     for feature in feature_flags:
-        FeatureFlags.objects.get_or_create(
-            id=feature.get("pk"),
-            name=feature.get("name"),
-            value=feature.get("default"),
-        )
+        try:
+            flag = FeatureFlags.objects.get(name=feature.get("name"))
+        except FeatureFlags.DoesNotExist:
+            flag = FeatureFlags.objects.create(name=feature.get("name"))
+
+        flag.value = feature.get("default")
+        flag.save()
+        # FeatureFlags.objects.get_or_create(
+        #     name=feature.get("name"),
+        #     value=feature.get("default"),
+        # )
 
 
 post_migrate.connect(insert_initial_data)

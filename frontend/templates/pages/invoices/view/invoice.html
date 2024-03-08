@@ -11,7 +11,7 @@
                  class="print-ignore fixed top-0 left-0 z-50 grid grid-cols-3 w-full p-4 bg-base-100 shadow text-base-content">
                 <div>
                     {% if type == "preview" %}
-                        <a href="{% url 'invoices dashboard' %}" class="btn btn-sm btn-outline">
+                        <a href="{% url 'invoices:dashboard' %}" class="btn btn-sm btn-outline">
                             <i class="fa-solid fa-arrow-left me-2"></i>
                             Go Back
                         </a>
@@ -55,7 +55,8 @@
                         Print
                     </button>
                     <a class="btn btn-sm gradient-btn me-8"
-                       href="{% url "invoices dashboard manage_access" id=invoice.id %}">Share Invoice</a>
+                       href="{% url "invoices:manage_access" invoice_id=invoice.id %}">Share Invoice
+                    </a>
                     <div class="flex items-center">
                         <button onclick="document.getElementById('status_banner').remove();"
                                 type="button"

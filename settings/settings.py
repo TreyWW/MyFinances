@@ -10,7 +10,7 @@ from django.contrib.staticfiles.storage import FileSystemStorage
 from storages.backends.s3 import S3Storage
 
 import settings.settings
-from .helpers import get_var
+from .helpers import get_var, ARE_EMAILS_ENABLED
 
 # from backend.utils import appconfig
 
@@ -44,7 +44,17 @@ INSTALLED_APPS = [
     "django_components",
     "django_components.safer_staticfiles",
     "social_django",
+    "rest_framework",
+    "rest_framework.authtoken",
+    "tz_detect"
 ]
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.BasicAuthentication",
+        "rest_framework.authentication.TokenAuthentication"
+    ]
+}
 
 LOGIN_REQUIRED_IGNORE_VIEW_NAMES = [
     "index",
@@ -56,6 +66,7 @@ LOGIN_REQUIRED_IGNORE_VIEW_NAMES = [
     "social:begin",
     "social:complete",
     "social:disconnect",
+    "api:invoices:create_schedule"
 ]
 
 # @login_required()
@@ -67,6 +78,7 @@ LOGIN_REQUIRED_IGNORE_PATHS = [
     r"^/auth/login/(.*)/",
     r"^/auth/create_account(/.*)?$",
     r"^/accounts/github/login/callback/$",
+    r"^/api/invoices/schedule_test/$"
 ]
 # for some reason only allows "login" and not "login create account" or anything
 
@@ -172,6 +184,7 @@ MIDDLEWARE = [
     "login_required.middleware.LoginRequiredMiddleware",
     "social_django.middleware.SocialAuthExceptionMiddleware",
     "backend.models.CustomUserMiddleware",
+    "tz_detect.middleware.TimezoneMiddleware"
 ]
 INTERNAL_IPS = [
     # ...
@@ -215,7 +228,7 @@ AUTH_USER_MODEL = "backend.User"
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "GMT"
+TIME_ZONE = "UTC"
 
 USE_I18N = True
 
@@ -238,6 +251,7 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_ENABLED = True if SOCIAL_AUTH_GOOGLE_OAUTH2_KEY and SO
 # SOCIAL_AUTH_LOGIN_REDIRECT_URL = "/"
 SOCIAL_AUTH_USER_MODEL = "backend.User"
 
+AWS_TAGS_APP_NAME = get_var("AWS_TAGS_APP_NAME", default="myfinances")
 
 # APP_CONFIG = appconfig
 

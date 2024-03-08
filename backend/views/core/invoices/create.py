@@ -81,7 +81,7 @@ def invoice_page_post(request: HttpRequest):
     invoice.save()
     invoice.items.set(invoice_items)
 
-    return redirect("invoices dashboard")
+    return redirect("invoices:dashboard")
 
 
 @require_http_methods(["GET", "POST"])

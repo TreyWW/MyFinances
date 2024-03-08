@@ -10,7 +10,7 @@ class InvoicesViewTestCase(ViewTestCase):
     def setUp(self):
         super().setUp()
 
-        self._invoices_dashboard_url = reverse("invoices dashboard")
+        self._invoices_dashboard_url = reverse("invoices:dashboard")
 
     def test_invoices_view_302_for_non_authenticated_users(self):
         response = self.client.get(self._invoices_dashboard_url)
@@ -37,7 +37,7 @@ class InvoicesCreateTestCase(ViewTestCase):
     def setUp(self):
         super().setUp()
 
-        self._invoices_create_url = reverse("invoices dashboard create")
+        self._invoices_create_url = reverse("invoices:create")
 
     def test_invoices_create_302_for_non_authenticated_users(self):
         response = self.client.get(self._invoices_create_url)

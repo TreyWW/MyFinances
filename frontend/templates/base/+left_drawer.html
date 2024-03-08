@@ -22,7 +22,7 @@
             {% endwith %}
         </li>
         <li>
-            {% with i_url="invoices dashboard" %}
+            {% with i_url="invoices:dashboard" %}
                 <a href="{% url i_url %}"
                    {% if request.resolver_match.url_name == i_url %}class="active"{% endif %}>Invoices</a>
             {% endwith %}
