@@ -30,9 +30,7 @@ class ChangePasswordViewTestCase(ViewTestCase):
             },
         )
 
-        self.assertTrue(
-            check_password("changed_password", response.wsgi_request.user.password)
-        )
+        self.assertTrue(check_password("changed_password", response.wsgi_request.user.password))
 
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(len(messages), 1)
@@ -44,17 +42,13 @@ class ChangePasswordViewTestCase(ViewTestCase):
         self,
     ):
         self.login_user()
-        response = self.client.post(
-            reverse("user settings change_password"), {"current_password": "user"}
-        )
+        response = self.client.post(reverse("user settings change_password"), {"current_password": "user"})
 
         self.assertTrue(check_password("user", response.wsgi_request.user.password))
 
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(len(messages), 1)
-        self.assertEqual(
-            str(messages[0]), "Something went wrong, no password was provided."
-        )
+        self.assertEqual(str(messages[0]), "Something went wrong, no password was provided.")
 
         self.assertEqual(response.status_code, 302)
 

@@ -14,7 +14,9 @@
     <p class="text-gray-500">
         {% if invoice.client_is_representative %}
             <p class="text-lg">{{ invoice.client_company|default_if_none:"" }}</p>
-            {% if invoice.client_name %}Represented by <strong>{{ invoice.client_name|default_if_none:"" }}</strong>{% endif %}
+            {% if invoice.client_name %}
+                Represented by <strong>{{ invoice.client_name|default_if_none:"" }}</strong>
+            {% endif %}
         {% else %}
             {{ invoice.client_name|default_if_none:"" }}
             <br />

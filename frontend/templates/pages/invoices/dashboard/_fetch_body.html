@@ -22,9 +22,7 @@
             </td>
             <td>£{{ invoice.amount | floatformat:2 | intcomma }}</td>
             <td>
-                <span class="badge badge-outline rounded p-3 {% if invoice.payment_status == "paid" %} badge-success {% elif invoice.payment_status == "overdue" %} badge-error drop-shadow drop-shadow-glow_red {% endif %} ">
-                    {{ invoice.payment_status | default:"sent" | title }}
-                </span>
+                {% component "pages:invoices:dashboard:payment_status_badge" status=invoice.payment_status inv_id=invoice.id %}
             </td>
             <td colspan="2">
                 {# The if statement for dropdown top goes as followes #}
@@ -33,13 +31,13 @@
                 {# - is last item           (and not first item) #}
                 <div class="dropdown dropdown-left {% if forloop.last and invoices.count > 1 or forloop.counter == invoices.count|sub:1 and not forloop.first %}dropdown-top {% endif %}">
                     <label tabindex="0" class="btn btn-primary btn-outline btn-sm">
-                        <i class="fa-solid fa-regular fa-ellipsis-vertical"></i>
+                        <i class="fa-solid fa-ellipsis-vertical"></i>
                     </label>
                     <ul tabindex="0"
                         class="dropdown-content z-[1] menu wp-2 shadow-2xl bg-base-200 rounded-box w-52">
                         <li>
                             <a href="{% url "invoices dashboard preview" invoice_id=invoice.id %}">
-                                <i class="fa-solid fa-regular fa-file-pdf"></i>
+                                <i class="fa-solid fa-file-pdf"></i>
                                 Preview
                             </a>
                         </li>
@@ -51,9 +49,40 @@
                         </li>
                         <li>
                             <a href="{% url "invoices dashboard edit" id=invoice.id %}">
-                                <i class="fa-solid fa-regular fa-pencil"></i>
+                                <i class="fa-solid fa-pencil"></i>
                                 Edit
                             </a>
+                        </li>
+                        <li>
+                            <details open>
+                                <summary>
+                                    <i class="fa-solid fa-flag"></i>
+                                    Mark As
+                                </summary>
+                                <ul>
+                                    <li>
+                                        <button hx-swap="none"
+                                                hx-post="{% url "api:invoices:edit status" invoice_id=invoice.id status='pending' %}">
+                                            <i class="fa-solid fa-hourglass-half"></i>
+                                            Pending
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button hx-swap="none"
+                                                hx-post="{% url "api:invoices:edit status" invoice_id=invoice.id status='paid' %}">
+                                            <i class="fa-solid fa-circle-check"></i>
+                                            Paid
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button hx-swap="none"
+                                                hx-post="{% url "api:invoices:edit status" invoice_id=invoice.id status='overdue' %}">
+                                            <i class="fa-solid fa-exclamation-triangle"></i>
+                                            Overdue
+                                        </button>
+                                    </li>
+                                </ul>
+                            </details>
                         </li>
                         <li>
                             <button hx-delete="{% url 'api:invoices:delete' %}"
@@ -74,7 +103,7 @@
 </tbody>
 {% for option in all_sort_options %}
     <div hx-swap-oob="innerHTML:li[data-sort='{{ option }}'] button">
-        {% if sort == option %}<i class="fa fa-solid fa-sort"></i>{% endif %}
+        {% if sort == option or sort == "-"|add:option %}<i class="fa fa-solid fa-sort"></i>{% endif %}
         {% if option == "payment_status" %}
             Payment Status
         {% elif option == "date_due" %}

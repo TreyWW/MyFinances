@@ -1,0 +1,101 @@
+{% extends 'base/auth.html' %}
+{% load static %}
+{% block image %}
+    {% static 'img/mobile_login.svg' %}
+{% endblock image %}
+{% block title %}
+    Login
+{% endblock title %}
+{% block content %}
+    <style>
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+            }
+        }
+
+        @keyframes fade-out {
+            to {
+                opacity: 0;
+            }
+        }
+
+        @keyframes slide-from-right {
+            from {
+                transform: translateX(90px);
+            }
+        }
+
+        @keyframes slide-to-left {
+            to {
+                transform: translateX(-90px);
+            }
+        }
+
+        /* define animations for the old and new content */
+        ::view-transition-old(slide-it) {
+            animation: 180ms cubic-bezier(0.4, 0, 1, 1) both fade-out,
+            600ms cubic-bezier(0.4, 0, 0.2, 1) both slide-to-left;
+        }
+
+        ::view-transition-new(slide-it) {
+            animation: 420ms cubic-bezier(0, 0, 0.2, 1) 90ms both fade-in,
+            600ms cubic-bezier(0.4, 0, 0.2, 1) both slide-from-right;
+        }
+
+        /* tie the view transition to a given CSS class */
+        .slide-transition {
+            view-transition-name: slide-it;
+        }
+    </style>
+    <form method="post"
+          class="slide-transition"
+          hx-swap="none"
+          hx-post="{% url 'auth:login manual' %}">
+        {% csrf_token %}
+        <div data-swap="form_fields">
+            <div class="form-control w-full mt-4">
+                <label class="label">
+                    <span class="label-text text-base-content undefined">Email Address</span>
+                </label>
+                <input required
+                       type="email"
+                       name="email"
+                       pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
+                       placeholder="jsmith@example.com"
+                       class="peer input input-bordered w-full"
+                       value="{{ attempted_email|default_if_none:'' }}">
+                <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden">
+                    <span class="label-text-alt text-error">Please enter a valid email.</span>
+                </label>
+                <input type="hidden" name="page" value="1">
+            </div>
+            <button hx-swap="none" hx-target="form" class="btn mt-6 w-full btn-primary">
+                Next
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </div>
+        <div class="text-center mt-3">
+            Don't have an account yet?
+            <a href="{% url 'auth:login create_account' %}"
+               class="my-4 group text-secondary transition duration-300">
+                Create one!
+                <span class="my-2 block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-secondary"></span>
+            </a>
+            <a href="{% url 'index' %}" class="text-primary inline-block">Back to homepage</a>
+        </div>
+        {% if github_enabled %}
+            <a href="{% url 'social:begin' 'github' %}" class="btn-large-card">
+                <i class="fa-brands fa-github mr-2"></i>
+                Login with github
+            </a>
+        {% endif %}
+        {% if google_enabled %}
+            <a href="{% url 'social:begin' 'google-oauth2' %}"
+               class="btn-large-card">
+                <i class="fa-brands fa-google mr-2 text-orange-500"></i>
+                Login with google
+            </a>
+        {% endif %}
+    </form>
+{% endblock %}

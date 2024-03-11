@@ -15,7 +15,7 @@ class InvoicesAPIFetch(ViewTestCase):
     def test_302_for_all_normal_get_requests(self):
         # Ensure that non-HTMX GET requests are redirected to the login page
         response = self.make_request(with_htmx=False)
-        self.assertRedirects(response, f"/login/?next={self.url_path}", 302)
+        self.assertRedirects(response, f"/auth/login/?next={self.url_path}", 302)
 
         # Ensure that authenticated users with HTMX headers are redirected to the invoices dashboard
         self.login_user()
@@ -69,9 +69,7 @@ class InvoicesAPIFetch(ViewTestCase):
         self.assertEqual(response.status_code, 200)
 
         # Check that the number of invoices returned matches the number created
-        self.assertEqual(
-            len(response.context.get("invoices")), random_amount_of_invoices
-        )
+        self.assertEqual(len(response.context.get("invoices")), random_amount_of_invoices)
 
         # Check that all created invoices are in the response
         for invoice in invoices:
@@ -88,7 +86,7 @@ class InvoicesAPIDelete(ViewTestCase):
     def test_302_for_all_normal_get_requests(self):
         # Ensure that non-HTMX GET requests are redirected to the login page
         response = self.make_request(with_htmx=False)
-        self.assertRedirects(response, f"/login/?next={self.url_path}", 302)
+        self.assertRedirects(response, f"/auth/login/?next={self.url_path}", 302)
 
         # Ensure that authenticated users with HTMX headers are redirected to the invoices dashboard
         self.login_user()

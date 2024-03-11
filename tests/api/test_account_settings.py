@@ -33,7 +33,7 @@ class CurrencyAPIChange(ViewTestCase):
     # Test that non-authenticated users are redirected to the login page for GET requests
     def test_302_for_non_authenticated_users(self):
         response = self.client.get(reverse(self.url_name))
-        self.assertRedirects(response, f"/login/?next={self.url_path}", 302)
+        self.assertRedirects(response, f"/auth/login/?next={self.url_path}", 302)
 
     # Test that an error message is displayed when no currency is provided in the POST request
     def test_no_currency_provided(self):
@@ -47,22 +47,16 @@ class CurrencyAPIChange(ViewTestCase):
     # Test that users receive a message when trying to update to their current currency
     def test_currency_is_already_that(self):
         self.login_user()
-        response = self.make_request(
-            method="post", data={"currency": "GBP"}, with_htmx=True
-        )
+        response = self.make_request(method="post", data={"currency": "GBP"}, with_htmx=True)
         self.assertEqual(response.status_code, 200)
         messages = self.get_all_messages(response)
         self.assertEqual(len(messages), 1)
-        self.assertEqual(
-            str(messages[0]), "You are already using this currency, no change was made"
-        )
+        self.assertEqual(str(messages[0]), "You are already using this currency, no change was made")
 
     # Test that the user's currency is updated successfully
     def test_currency_is_updated(self):
         self.login_user()
-        response = self.make_request(
-            method="post", data={"currency": "EUR"}, with_htmx=True
-        )
+        response = self.make_request(method="post", data={"currency": "EUR"}, with_htmx=True)
         self.assertEqual(response.status_code, 200)
         messages = self.get_all_messages(response)
         self.assertEqual(len(messages), 1)
@@ -88,7 +82,7 @@ class AccountNameChange(ViewTestCase):
     def test_redirects_to_login_for_unauthenticated_users(self):
         # Ensure that unauthenticated users are redirected to the login page
         response = self.make_request()
-        self.assertRedirects(response, f"/login/?next={self.url_path}", 302)
+        self.assertRedirects(response, f"/auth/login/?next={self.url_path}", 302)
 
     def test_validation_error_no_name_provided(self):
         # Ensure that a validation error message is displayed when neither a first name nor a last name is provided
@@ -97,9 +91,7 @@ class AccountNameChange(ViewTestCase):
         self.assertEqual(response.status_code, 200)
         messages = self.get_all_messages(response)
         self.assertEqual(len(messages), 1)
-        self.assertEqual(
-            str(messages[0]), "Please enter a valid firstname or lastname."
-        )
+        self.assertEqual(str(messages[0]), "Please enter a valid firstname or lastname.")
 
     def test_name_didnt_change(self):
         # Ensure that a warning message is displayed when the provided name is the same as the current name

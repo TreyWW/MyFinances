@@ -23,9 +23,7 @@ def update_currency_view(request):
         return render(request, htmx_return)
 
     if usersettings.currency == currency:
-        messages.warning(
-            request, "You are already using this currency, no change was made"
-        )
+        messages.warning(request, "You are already using this currency, no change was made")
         return render(request, htmx_return)
 
     usersettings.currency = currency

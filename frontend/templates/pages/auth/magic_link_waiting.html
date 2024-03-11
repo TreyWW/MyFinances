@@ -1,0 +1,48 @@
+<div hx-swap-oob='innerHTML:[data-swap="form_fields"]'>
+    {% if email %}
+        <div class="text-center mt-4">
+            <small class="text-center">
+                (You are currently logging in as <strong>{{ email }}</strong>)
+            </small>
+        </div>
+    {% endif %}
+    <p class="my-8 font-semibold text-center">
+        An email has been sent to you with a link to login. Please click the link to login and return here afterwards.
+    </p>
+    <div>
+        Status: <strong class="text-base-content" id="status">Pending</strong>
+    </div>
+    <div>
+        <h2 class="text-lg underline my-4">Accepted Request?</h2>
+        <small>
+            If you have accepted the request and we haven't automatically reloaded this page, you can manually reload it below.
+        </small>
+        <button onclick="window.location.reload()"
+                class="btn btn-primary w-full my-4">Reload</button>
+    </div>
+    <script>
+        window.addEventListener("storage", (event) => {
+            if (event.key === "refresh_tab_login") {
+                window.localStorage.removeItem("refresh_tab_login")
+                if (window.localStorage.getItem("refresh_tab_login_status") === "accepted") {
+                    document.getElementById("status").innerText = "Accepted"
+                    document.getElementById("status").className = "text-success text-2xl"
+                    setTimeout(() => {
+                        const urlParams = new URLSearchParams(window.location.search);
+                        new_url = urlParams.get('next')
+                        console.log(new_url)
+                        if (!new_url) {
+                            new_url = "/dashboard/"
+                        }
+                        window.location.href = new_url
+                    }, 1500)
+                } else {
+                    document.getElementById("status").innerText = "Declined"
+                    document.getElementById("status").className = "text-error text-2xl"
+                }
+                {#window.location.reload()#}
+            }
+        })
+    </script>
+</div>
+<div id="messages_list">{% component "messages_list" with_js=True %}</div>

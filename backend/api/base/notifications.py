@@ -5,9 +5,7 @@ from backend.models import Notification
 
 
 def get_notification_html(request: HttpRequest):
-    user_notifications = Notification.objects.filter(user=request.user).order_by(
-        "-date"
-    )
+    user_notifications = Notification.objects.filter(user=request.user).order_by("-date")
     above_5 = False
 
     if user_notifications.count() > 5:

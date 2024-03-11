@@ -1,9 +1,9 @@
 from datetime import datetime
 
 from django.contrib import messages
-from django.http import HttpRequest, JsonResponse
-from django.shortcuts import render
-from django.views.decorators.http import require_http_methods
+from django.http import HttpRequest, JsonResponse, HttpResponse
+from django.shortcuts import render, redirect
+from django.views.decorators.http import require_http_methods, require_POST
 
 from backend.models import Invoice
 
@@ -62,3 +62,56 @@ def edit_invoice(request: HttpRequest):
         return render(request, "base/toasts.html")
 
     return JsonResponse({"message": "Invoice successfully edited"}, status=200)
+
+
+@require_POST
+def change_status(request: HttpRequest, invoice_id: int, status: str) -> HttpResponse:
+    status = status.lower() if status else ""
+
+    if not request.htmx:
+        return redirect("invoices dashboard")
+
+    try:
+        invoice = Invoice.objects.get(id=invoice_id)
+    except Invoice.DoesNotExist:
+        return return_message(request, "Invoice not found")
+
+    if request.user.logged_in_as_team and request.user.logged_in_as_team != invoice.organization:
+        return return_message(request, "You don't have permission to make changes to this invoice.")
+
+    else:
+        if request.user != invoice.user:
+            return return_message(request, "You don't have permission to make changes to this invoice.")
+
+    if status not in ["paid", "overdue", "pending"]:
+        return return_message(request, "Invalid status. Please choose from: pending, paid, overdue")
+
+    if invoice.payment_status == status:
+        return return_message(request, f"Invoice status is already {status}")
+
+    invoice.payment_status = status
+    invoice.save()
+
+    dps = invoice.dynamic_payment_status
+    if (status == "overdue" and dps == "pending") or (status == "pending" and dps == "overdue"):
+        message = f"""
+            The invoice status was automatically changed from <strong>{status}</strong> to <strong>{dps}</strong>
+            as the invoice dates override the manual status.
+        """
+        return return_message(request, message, success=False)
+
+    send_message(request, f"Invoice status been changed to <strong>{status}</strong>", success=True)
+
+    return render(request, "pages/invoices/dashboard/_modify_payment_status.html", {"status": status, "invoice_id": invoice_id})
+
+
+def return_message(request: HttpRequest, message: str, success: bool = True) -> HttpResponse:
+    send_message(request, message, success)
+    return render(request, "base/toasts.html")
+
+
+def send_message(request: HttpRequest, message: str, success: bool = False) -> HttpResponse:
+    if success:
+        messages.success(request, message)
+    else:
+        messages.error(request, message)

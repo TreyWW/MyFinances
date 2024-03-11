@@ -1,8 +1,9 @@
-import os
 from typing import List, Optional, Dict, Any
 
 from django.http import HttpRequest
 from django.urls import reverse
+
+from settings.helpers import get_var
 
 
 ## Context processors need to be put in SETTINGS TEMPLATES to be recognized
@@ -24,17 +25,16 @@ def extras(request: HttpRequest):
     # import_method can be one of: "webpack", "public_cdn", "custom_cdn"
     data = {}
 
-    data["git_branch"] = os.environ.get("BRANCH")
-    data["git_version"] = os.environ.get("VERSION")
-    data["import_method"] = os.environ.get("IMPORT_METHOD", default="webpack")
+    data["git_branch"] = get_var("BRANCH")
+    data["git_version"] = get_var("VERSION")
+    data["import_method"] = get_var("IMPORT_METHOD", default="webpack")
+    data["analytics"] = get_var("ANALYTICS_STRING")
 
     return data
 
 
 def breadcrumbs(request: HttpRequest):
-    def get_item(
-        name: str, url_name: Optional[str] = None, icon: Optional[str] = None
-    ) -> dict:
+    def get_item(name: str, url_name: Optional[str] = None, icon: Optional[str] = None) -> dict:
         """
         Create a breadcrumb item dictionary.
 
@@ -68,14 +68,10 @@ def breadcrumbs(request: HttpRequest):
 
     all_items: Dict[str, dict] = {
         "dashboard": get_item("Dashboard", "dashboard", "house"),
-        "invoices dashboard": get_item(
-            "Invoices", "invoices dashboard", "file-invoice"
-        ),
+        "invoices dashboard": get_item("Invoices", "invoices dashboard", "file-invoice"),
         "invoices dashboard create": get_item("Create", "invoices dashboard create"),
         "invoices dashboard edit": get_item("Edit", None, "pencil"),
-        "receipts dashboard": get_item(
-            "Receipts", "receipts dashboard", "file-invoice"
-        ),
+        "receipts dashboard": get_item("Receipts", "receipts dashboard", "file-invoice"),
         "user settings teams": get_item("Teams", "user settings teams", "users"),
         "user settings": get_item("Settings", "user settings", "gear"),
         "clients dashboard": get_item("Clients", "clients dashboard", "users"),
@@ -87,16 +83,10 @@ def breadcrumbs(request: HttpRequest):
         "user settings teams": generate_breadcrumbs("dashboard", "user settings teams"),
         "receipts dashboard": generate_breadcrumbs("dashboard", "receipts dashboard"),
         "invoices dashboard": generate_breadcrumbs("dashboard", "invoices dashboard"),
-        "invoices dashboard create": generate_breadcrumbs(
-            "dashboard", "invoices dashboard", "invoices dashboard create"
-        ),
-        "invoices dashboard edit": generate_breadcrumbs(
-            "dashboard", "invoices dashboard", "invoices dashboard edit"
-        ),
+        "invoices dashboard create": generate_breadcrumbs("dashboard", "invoices dashboard", "invoices dashboard create"),
+        "invoices dashboard edit": generate_breadcrumbs("dashboard", "invoices dashboard", "invoices dashboard edit"),
         "clients dashboard": generate_breadcrumbs("dashboard", "clients dashboard"),
-        "clients create": generate_breadcrumbs(
-            "dashboard", "clients dashboard", "clients create"
-        ),
+        "clients create": generate_breadcrumbs("dashboard", "clients dashboard", "clients create"),
         "user settings": generate_breadcrumbs("dashboard", "user settings"),
     }
 

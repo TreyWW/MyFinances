@@ -12,16 +12,13 @@ def teams_dashboard(request: HttpRequest):
     users_team: Optional[Team] = request.user.logged_in_as_team
 
     if not users_team:
-        user_with_counts = User.objects.prefetch_related(
-            "teams_joined", "teams_leader_of"
-        ).get(pk=request.user.pk)
+        user_with_counts = User.objects.prefetch_related("teams_joined", "teams_leader_of").get(pk=request.user.pk)
         return render(
             request,
             "pages/settings/teams/main.html",
             {
                 "team": None,
-                "team_count": user_with_counts.teams_joined.count()
-                + user_with_counts.teams_leader_of.count(),
+                "team_count": user_with_counts.teams_joined.count() + user_with_counts.teams_leader_of.count(),
             },
         )
 
@@ -39,16 +36,13 @@ def teams_dashboard(request: HttpRequest):
         )
 
     except Team.DoesNotExist:
-        user_with_counts = User.objects.prefetch_related(
-            "teams_joined", "teams_leader_of"
-        ).get(pk=request.user.pk)
+        user_with_counts = User.objects.prefetch_related("teams_joined", "teams_leader_of").get(pk=request.user.pk)
         return render(
             request,
             "pages/settings/teams/main.html",
             {
                 "team": None,
-                "team_count": user_with_counts.teams_joined.count()
-                + user_with_counts.teams_leader_of.count(),
+                "team_count": user_with_counts.teams_joined.count() + user_with_counts.teams_leader_of.count(),
             },
         )
 

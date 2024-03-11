@@ -1,0 +1,33 @@
+{% extends 'base/auth.html' %}
+{% load static %}
+{% block image %}
+    {% static 'img/verified.svg' %}
+{% endblock image %}
+{% block title %}New login request{% endblock %}
+{% block content %}
+    <p class="my-8 font-semibold text-center">
+        There has been a login request made on your MyFinances account. If this was not you, please <strong class="underline decoration-error">decline</strong>
+        this request.
+    </p>
+    <form method="post">
+        <div id="actions"
+             class="flex py-3 gap-x-3"
+             _="def wait(item, after_value, wait) repeat until wait is 0 set item.innerText to wait then decrement wait wait 1s end then set item.innerText to after_value toggle [@disabled='true'] on item def get_time() return Date.now()">
+            <button id="accepted"
+                    class="btn mt-2 w-1/2 btn-primary"
+                    hx-post="{% url "auth:login magic_link verify accept" uuid=uuid token=token %}"
+                    hx-swap="none"
+                    _="init add @disabled to me then call wait(me, 'Accept Login Request', 4) then on click set localStorage.refresh_tab_login to get_time() set localStorage.refresh_tab_login_status to me.id">
+                Accept Login Request
+            </button>
+            <button id="declined"
+                    class="btn mt-2 w-1/2 btn-error"
+                    hx-post="{% url "auth:login magic_link verify decline" uuid=uuid token=token %}"
+                    hx-swap="none"
+                    _=" init add @disabled to me then call wait(me, 'Decline Login Request', 4) then on click set localStorage.refresh_tab_login to get_time() set localStorage.refresh_tab_login_status to me.id ">
+                Decline Login Request
+            </button>
+        </div>
+    </form>
+    <div id="response"></div>
+{% endblock %}

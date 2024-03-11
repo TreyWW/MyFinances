@@ -126,9 +126,7 @@ def edit_invoice(request: HttpRequest, invoice_id):
         setattr(invoice, column_name, new_value)
 
     invoice_items = [
-        InvoiceItem.objects.create(
-            name=row[0], description=row[1], hours=row[2], price_per_hour=row[3]
-        )
+        InvoiceItem.objects.create(name=row[0], description=row[1], hours=row[2], price_per_hour=row[3])
         for row in zip(
             request.POST.getlist("service_name[]"),
             request.POST.getlist("service_description[]"),
