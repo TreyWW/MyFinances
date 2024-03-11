@@ -1,6 +1,6 @@
 import json
 from dataclasses import dataclass
-from typing import Optional, Union
+from typing import Optional, Union, Literal
 
 import pytz
 from django.utils import timezone
@@ -28,13 +28,17 @@ CreateOnetimeScheduleResponse = Union[ErrorResponse, SuccessResponse]
 
 @dataclass(frozen=True)
 class CreateOnetimeScheduleInputData:
+    invoice: Invoice
     option: int
+    email_type: Literal["client_to_email", "client_email"]
     date: Optional[str] = None
     time: Optional[str] = None
     datetime: Optional[str] = None
 
 
 def create_onetime_schedule(data: CreateOnetimeScheduleInputData) -> CreateOnetimeScheduleResponse:
+    print(f"Creating onetime schedule for {data.invoice}", flush=True)
+    print(f"Creating onetime schedule for {data.invoice} (no flush)")
     get_or_create_api_destination()
 
     date_time = data.datetime
@@ -53,9 +57,8 @@ def create_onetime_schedule(data: CreateOnetimeScheduleInputData) -> CreateOneti
     if date_time_to_obj < timezone.now():
         return ErrorResponse("Date time cannot be in the past")
 
-    invoice = Invoice.objects.first()
     schedule = InvoiceOnetimeSchedule.objects.create(
-        invoice=invoice,
+        invoice=data.invoice,
         due=date_time_to_obj,
         status=InvoiceOnetimeSchedule.StatusTypes.CREATING
     )
@@ -65,11 +68,11 @@ def create_onetime_schedule(data: CreateOnetimeScheduleInputData) -> CreateOneti
     scheduler_step_function = get_or_create_schedule_step_function()
 
     if not scheduler_step_function.get("stateMachineArn"):
-        print("[AWS] [SFN] Step function not found")
-        return ErrorResponse("Step function not found")
+        print("[AWS] [SFN] Step function not found", flush=True)
+        return ErrorResponse("Step function not found", flush=True)
 
     CREATED_SCHEDULE = event_bridge_scheduler.create_schedule(
-        Name=f"{AWS_TAGS_APP_NAME}-scheduled-invoices-{invoice.id}-{schedule.id}",
+        Name=f"{AWS_TAGS_APP_NAME}-scheduled-invoices-{data.invoice.id}-{schedule.id}",
         FlexibleTimeWindow={
             "Mode": "OFF"
         },
@@ -78,7 +81,12 @@ def create_onetime_schedule(data: CreateOnetimeScheduleInputData) -> CreateOneti
             "Arn": scheduler_step_function["stateMachineArn"],
             "RoleArn": get_or_create_sfn_execute_role_arn(),
             "Input": json.dumps({
-                "headers": {"invoice_id": str(invoice.id)},
+                "headers": {
+                    "invoice_id": str(data.invoice.id),
+                    "schedule_id": str(schedule.id),
+                    "schedule_type": "1",
+                    "email_type": "1"
+                },
                 "body": {}
             })
         },

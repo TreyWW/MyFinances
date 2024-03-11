@@ -149,7 +149,7 @@ def edit_invoice(request: HttpRequest, invoice_id):
 
 # decorator & view function for rendering page and updating invoice items in the backend
 @require_http_methods(["GET", "POST"])
-def edit_invoice_page(request: HttpRequest, id):
+def edit_invoice_page(request: HttpRequest, invoice_id):
     if request.method == "POST":
-        return edit_invoice(request, id)
-    return invoice_edit_page_get(request, id)
+        return edit_invoice(request, invoice_id)
+    return invoice_edit_page_get(request, invoice_id)

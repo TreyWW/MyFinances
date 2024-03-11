@@ -1,17 +1,21 @@
 import json
+from typing import List
 
+from mypy_boto3_stepfunctions.type_defs import CreateStateMachineOutputTypeDef, StateMachineListItemTypeDef
+
+from infrastructure.aws.api_destination.api_destination import get_or_create_api_connection_arn
 from infrastructure.aws.handler import sfn_client, APP_TAGS, DEBUG_LEVEL
 from infrastructure.aws.iam.sfn import get_or_create_sfn_execute_role_arn
-from settings.settings import AWS_TAGS_APP_NAME
+from settings.settings import AWS_TAGS_APP_NAME, SITE_URL
 
 
-def get_or_create_schedule_step_function() -> dict:
+def get_or_create_schedule_step_function() -> CreateStateMachineOutputTypeDef | StateMachineListItemTypeDef:
     if DEBUG_LEVEL == "debug":
-        print("[AWS] [SFN] Fetching scheduler step function by name...")
+        print("[AWS] [SFN] Fetching scheduler step function by name...", flush=True)
 
     functions = sfn_client.list_state_machines()
 
-    invoice_functions = [
+    invoice_functions: List[StateMachineListItemTypeDef] = [
         function
         for function in functions.get("stateMachines", [])
         if function.get("name") == f"{AWS_TAGS_APP_NAME}-invoicing-scheduler-fn"
@@ -19,17 +23,19 @@ def get_or_create_schedule_step_function() -> dict:
 
     if len(invoice_functions) == 1:
         if DEBUG_LEVEL == "debug":
-            print("[AWS] [SFN] Found scheduler step function!")
+            print("[AWS] [SFN] Found scheduler step function!", flush=True)
         return invoice_functions[0]
 
     if len(invoice_functions) > 1:
         if DEBUG_LEVEL == "debug":
-            print("[AWS] [SFN] Found more than one scheduler step function! Not yet implemented a way to filter.")
+            print("[AWS] [SFN] Found more than one scheduler step function! Not yet implemented a way to filter.", flush=True)
         raise Exception("More than one invoice scheduler function found. Not yet implemented a way to filter.")
 
     role_arn = get_or_create_sfn_execute_role_arn()
 
-    print("[AWS] [SFN] Creating scheduler step function...")
+    API_DESTINATION_CONNECTION_ARN = get_or_create_api_connection_arn()
+
+    print("[AWS] [SFN] Creating scheduler step function...", flush=True)
 
     return sfn_client.create_state_machine(
         name=f"{AWS_TAGS_APP_NAME}-invoicing-scheduler-fn",
@@ -53,10 +59,10 @@ def get_or_create_schedule_step_function() -> dict:
                         "Resource": "arn:aws:states:::http:invoke",
                         "Parameters": {
                             "Authentication": {
-                                "ConnectionArn": "arn:aws:events:eu-west-2:303674098874:connection/MyFinances-AppRunner/25cfe143-ca0f-4d4f-803e-0ca9467436e9"
+                                "ConnectionArn": API_DESTINATION_CONNECTION_ARN
                             },
                             "Method": "POST",
-                            "ApiEndpoint": "https://myfinances.strelix.dev/api/invoices/schedule_test/",
+                            "ApiEndpoint": f"{SITE_URL}/api/invoices/schedules/receive/",
                             "RequestBody.$": "$.body",
                             "Headers.$": "$.headers"
                         },

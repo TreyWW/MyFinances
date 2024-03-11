@@ -1,15 +1,18 @@
+from mypy_boto3_events.type_defs import CreateApiDestinationResponseTypeDef, DescribeApiDestinationResponseTypeDef
+
 from backend.models import APIKey
 from settings.settings import AWS_TAGS_APP_NAME, SITE_URL
 from ..handler import event_bridge_client
 
 
-def get_or_create_api_destination() -> dict:
+def get_or_create_api_destination() -> CreateApiDestinationResponseTypeDef | DescribeApiDestinationResponseTypeDef:
     try:
+        print("[AWS] [API_D] Describing API Destination...", flush=True)
         response = event_bridge_client.describe_api_destination(Name=f"{AWS_TAGS_APP_NAME}-scheduled-invoices")
 
         if response.get("ApiDestinationState") == "INACTIVE":
             connection_arn = get_or_create_api_connection_arn()
-            print("[AWS] [API_D] Updating API Destination with updated connection...")
+            print("[AWS] [API_D] Updating API Destination with updated connection...", flush=True)
             event_bridge_client.update_api_destination(
                 Name=f"{AWS_TAGS_APP_NAME}-scheduled-invoices",
                 ConnectionArn=connection_arn
@@ -23,7 +26,7 @@ def get_or_create_api_destination() -> dict:
             Description="MyFinances Scheduled Invoices",
             ConnectionArn=connection_arn,
             HttpMethod="POST",
-            InvocationEndpoint=f"{SITE_URL}/api/invoices/schedule_test/",
+            InvocationEndpoint=f"{SITE_URL}/api/invoices/schedules/receive/",
         )
 
 

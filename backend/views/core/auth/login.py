@@ -16,7 +16,6 @@ from backend.decorators import *
 from backend.models import LoginLog, User, VerificationCodes, AuditLog
 from backend.views.core.auth.verify import create_magic_link
 from settings.helpers import send_email, ARE_EMAILS_ENABLED
-
 # from backend.utils import appconfig
 from settings.settings import (
     SOCIAL_AUTH_GITHUB_ENABLED,
@@ -42,7 +41,6 @@ def login_manual(request: HttpRequest):  # HTMX POST
     email = request.POST.get("email")
     password = request.POST.get("password")
     page = str(request.POST.get("page"))
-    print(email, password, page)
 
     if not page or page == "1":
         return render(

@@ -361,9 +361,11 @@ class Invoice(models.Model):
 class InvoiceURL(models.Model):
     uuid = ShortUUIDField(length=8, primary_key=True)
     invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE, related_name="invoice_urls")
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    system_created = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
     expires = models.DateTimeField(null=True, blank=True)
+    never_expire = models.BooleanField(default=False)
     active = models.BooleanField(default=True)
 
     def is_active(self):
@@ -379,7 +381,8 @@ class InvoiceURL(models.Model):
         self.expires = timezone.now() + timezone.timedelta(days=7)
 
     def save(self, *args, **kwargs):
-        self.set_expires()
+        if not self.never_expire:
+            self.set_expires()
         super().save()
 
     def __str__(self):

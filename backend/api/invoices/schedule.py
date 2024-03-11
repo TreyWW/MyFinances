@@ -1,34 +1,31 @@
 import json
 
-import boto3
 from django.contrib import messages
 from django.db.models import Q
 from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
 from django.shortcuts import render
+from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods, require_POST, require_GET
 from django_ratelimit.core import is_ratelimited
-from mypy_boto3_events.client import EventBridgeClient
-from mypy_boto3_iam.client import IAMClient
-# from botocore.errorfactory
-from mypy_boto3_scheduler.client import EventBridgeSchedulerClient
 
-from backend.models import Invoice, AuditLog, APIKey, InvoiceOnetimeSchedule
+from backend.models import Invoice, AuditLog, APIKey, InvoiceOnetimeSchedule, InvoiceURL
+from infrastructure.aws.handler import iam_client
 from infrastructure.aws.schedules.create_schedule import create_onetime_schedule, CreateOnetimeScheduleInputData, \
     SuccessResponse as CreateOnetimeScheduleSuccessResponse
 from infrastructure.aws.schedules.delete_schedule import delete_schedule
 from infrastructure.aws.schedules.list_schedules import list_schedules, ScheduleListResponse, ErrorResponse as ListSchedulesErrorResponse
-from settings.helpers import get_var
+from settings.helpers import send_email
 from settings.settings import AWS_TAGS_APP_NAME
 
 
-# @api_view(["POST"])
-# @permission_classes([IsAuthenticated])
-# @authentication_classes([TokenAuthentication])
+# from botocore.errorfactory
+
+
 @require_POST
 @csrf_exempt
-def scheduled_invoice(request: HttpRequest):
+def receive_scheduled_invoice(request: HttpRequest):
     valid, reason, status = authenticate_api_key(request)
 
     if not valid:
@@ -36,22 +33,75 @@ def scheduled_invoice(request: HttpRequest):
 
     invoice_id = request.POST.get("invoice_id") or request.headers.get("invoice_id")
     schedule_id = request.POST.get("schedule_id") or request.headers.get("schedule_id")
+    schedule_type = request.POST.get("schedule_type") or request.headers.get("schedule_type")
+    email_type = request.POST.get("email_type") or request.headers.get("email_type")
 
-    print(f"[TASK] Scheduled Invoice: {invoice_id}", flush=True)
-    if invoice_id:
-        AuditLog.objects.create(action=f"scheduled invoice: {invoice_id}")
-    return HttpResponse("OK")
+    print(f"[TASK] Scheduled Invoice: {invoice_id}. Schedule Type: {schedule_type}. Schedule: {schedule_id}. Email: {email_type}",
+          flush=True)
 
+    if not invoice_id or not schedule_id or not schedule_type:
+        return HttpResponse("Missing invoice_id or schedule_id or schedule_type", status=400)
 
-EventBridgeSession = boto3.session.Session(
-    aws_access_key_id=get_var("AWS_SCHEDULES_ACCESS_KEY_ID"),
-    aws_secret_access_key=get_var("AWS_SCHEDULES_SECRET_ACCESS_KEY"),
-    region_name=get_var("AWS_SCHEDULES_REGION_NAME", default="eu-west-2"),
-)
+    try:
+        invoice = Invoice.objects.get(id=invoice_id)
+    except Invoice.DoesNotExist:
+        return HttpResponse("Invoice not found", status=404)
 
-event_bridge_client: EventBridgeClient = EventBridgeSession.client("events")
-event_bridge_scheduler: EventBridgeSchedulerClient = EventBridgeSession.client("scheduler")
-iam_client: IAMClient = EventBridgeSession.client("iam")
+    try:
+        schedule_type = int(schedule_type)
+    except ValueError:
+        return HttpResponse("Invalid schedule_type. Must be an integer; 1=one-time, 2=recurring", status=400)
+
+    if schedule_type == 1:
+        schedule = InvoiceOnetimeSchedule.objects.get(id=schedule_id)
+    else:
+        return HttpResponse("Invalid schedule_type. Must be an integer; 1=one-time, 2=recurring", status=400)
+
+    if email_type == "client_email":
+        email = invoice.client_email
+    elif invoice.client_to:
+        email = invoice.client_to.email
+    else:
+        email = None
+
+    if not email:
+        return HttpResponse("No client email address stored", status=400)
+
+    invoice_url_object = InvoiceURL.objects.create(
+        invoice=invoice,
+        system_created=True,
+        never_expire=True,
+    )
+
+    invoice_url = request.build_absolute_uri(reverse("invoices view invoice", kwargs={"uuid": invoice_url_object.uuid}))
+
+    AuditLog.objects.create(action=f"scheduled invoice: {invoice_id} send to {email_type} - {email}")
+
+    client_name = invoice.client_name or invoice.client_to.name or "there"
+    # Todo: add better email message
+    email = send_email(
+        destination=email,
+        subject=f"Invoice #{invoice_id} ready",
+        message=f"""
+            Hi {client_name},
+            
+            This is an automated email to let you know that your invoice #{invoice_id} is now ready. The due date is {invoice.date_due}.
+            
+            You can view the invoice here: {invoice_url}
+            
+            Best regards
+            
+            Note: This is an automated email sent out by MyFinances on behalf of '{invoice.self_company or invoice.self_name}'. If you
+            believe this is spam or fraudulent please report it to us and DO NOT pay the invoice. Once a report has been made you will
+            have a case opened.
+        """
+    )
+
+    schedule.status = schedule.StatusTypes.COMPLETED
+    schedule.received = True
+    schedule.save()
+
+    return HttpResponse("Sent", status=200)
 
 
 @csrf_exempt
@@ -72,9 +122,30 @@ def create_schedule(request: HttpRequest):
     return HttpResponse("WHATT?!")
 
 
-def create_ots(request: HttpRequest):
+def create_ots(request: HttpRequest) -> HttpResponse:
 
-    schedule = create_onetime_schedule(CreateOnetimeScheduleInputData(option=1, datetime=request.POST.get("date_time")))
+    invoice_id = request.POST.get("invoice_id") or request.POST.get("invoice")
+    print(invoice_id)
+
+    try:
+        invoice = Invoice.objects.get(id=invoice_id)
+    except Invoice.DoesNotExist:
+        messages.error(request, "Invoice not found")
+        return render(request, "base/toasts.html")
+
+    if (request.user.logged_in_as_team and invoice.organization != request.user.logged_in_as_team) or \
+        (not request.user.logged_in_as_team and invoice.user != request.user):
+        messages.error(request, "You do not have permission to create schedules for this invoice")
+        return render(request, "base/toasts.html")
+
+    schedule = create_onetime_schedule(
+        CreateOnetimeScheduleInputData(
+            invoice=invoice,
+            option=1,
+            datetime=request.POST.get("date_time"),
+            email_type=request.POST.get("email_type")
+        )
+    )
 
     print(schedule)
 
@@ -278,10 +349,8 @@ def fetch_onetime_schedules(request: HttpRequest, invoice_id: str):
                         schedule.save()
                 else:  # Schedule doesn't exist on AWS
                     if schedule.status == "pending":
-                        if schedule.due > timezone.now():
+                        if schedule.due < timezone.now():
                             schedule.status = "failed"
-                        else:
-                            schedule.status = "cancelled"
                     elif schedule.status == "deleting":
                         schedule.status = "cancelled"
                     schedule.save()

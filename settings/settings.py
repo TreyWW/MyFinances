@@ -18,6 +18,9 @@ DEBUG = True if get_var("DEBUG") in ["True", "true", "TRUE", True] else False
 
 SITE_URL = get_var("SITE_URL") or "http://127.0.0.1:8000"
 
+if not SITE_URL.startswith("http"):
+    exit("[BACKEND] SITE_URL must start with http:// or https://")
+
 try:
     if DEBUG:
         print("[BACKEND] Using local settings", flush=True)
@@ -78,7 +81,7 @@ LOGIN_REQUIRED_IGNORE_PATHS = [
     r"^/auth/login/(.*)/",
     r"^/auth/create_account(/.*)?$",
     r"^/accounts/github/login/callback/$",
-    r"^/api/invoices/schedule_test/$"
+    r"^/api/invoices/schedules/receive/$"
 ]
 # for some reason only allows "login" and not "login create account" or anything
 

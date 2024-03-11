@@ -21,7 +21,7 @@ COPY . .
 
 
 # Install build dependencies
-RUN apk add --no-cache --virtual .build-deps py-pip musl-dev gcc
+RUN apk add --virtual .build-deps py-pip musl-dev gcc
 
 # Install MySQL dependencies and packages if DATABASE_TYPE is mysql
 RUN if [ "${DATABASE_TYPE}" = "mysql" ]; then \

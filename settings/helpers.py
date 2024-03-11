@@ -6,6 +6,7 @@ import boto3
 import environ
 from django_ratelimit.core import get_usage
 from mypy_boto3_sesv2.client import SESV2Client
+from mypy_boto3_sesv2.type_defs import SendEmailResponseTypeDef
 
 ### NEEDS REFACTOR
 
@@ -66,7 +67,7 @@ if "test" in sys.argv[1:]:
     ARE_EMAILS_ENABLED = False
 
 
-def send_email(destination: Union[str, List[str]], subject: str, message: str):
+def send_email(destination: Union[str, List[str]], subject: str, message: str) -> SendEmailResponseTypeDef:
     """
     Args:
     destination (email addr or list of email addr): The email address or list of email addresses to send the

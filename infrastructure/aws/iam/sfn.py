@@ -12,7 +12,7 @@ def get_or_create_sfn_execute_role_arn() -> str:
     :returns: RoleArn
     """
     if DEBUG_LEVEL == "debug":
-        print("[AWS] Fetching scheduler role by name...")
+        print("[AWS] Fetching scheduler role by name...", flush=True)
 
     try:
         response = iam_client.get_role(
@@ -31,7 +31,7 @@ def get_or_create_sfn_execute_role_arn() -> str:
         return response.get("Role").get("Arn")
 
     if DEBUG_LEVEL:
-        print("[AWS] Creating scheduler role...")
+        print("[AWS] Creating scheduler role...", flush=True)
     response = iam_client.create_role(
         RoleName=f"{AWS_TAGS_APP_NAME}-invoicing-scheduler-fn",
         Path=f"/{AWS_TAGS_APP_NAME}-scheduled-invoices/",
@@ -64,25 +64,25 @@ def assign_policy(check=False) -> NoReturn:
                 RoleName=f"{AWS_TAGS_APP_NAME}-invoicing-scheduler-fn",
                 PolicyName=policy.get("PolicyName")
             )
-            print("[AWS] Policy already attached to scheduler role!")
+            print("[AWS] Policy already attached to scheduler role!", flush=True)
             return
         except iam_client.exceptions.NoSuchEntityException:
-            print("[AWS] Policy not attached to scheduler role, attaching now...")
+            print("[AWS] Policy not attached to scheduler role, attaching now...", flush=True)
 
     if DEBUG_LEVEL:
-        print("[AWS] Attaching policy to scheduler role...")
+        print("[AWS] Attaching policy to scheduler role...", flush=True)
 
     iam_client.attach_role_policy(
         RoleName=f"{AWS_TAGS_APP_NAME}-invoicing-scheduler-fn",
         PolicyArn=policy.get("Arn")
     )
 
-    print("[AWS] Attached policy to scheduler role!")
+    print("[AWS] Attached policy to scheduler role!", flush=True)
 
 
 def get_or_create_policy() -> CreatePolicyResponseTypeDef | PolicyTypeDef:
     if DEBUG_LEVEL == "debug":
-        print("[AWS] Fetching all policies by prefix...")
+        print("[AWS] Fetching all policies by prefix...", flush=True)
 
     response = iam_client.list_policies(
         Scope="Local",
@@ -97,7 +97,7 @@ def get_or_create_policy() -> CreatePolicyResponseTypeDef | PolicyTypeDef:
 
     if len(policies) == 1:
         if DEBUG_LEVEL == "debug":
-            print("[AWS] Found policy!")
+            print("[AWS] Found policy!", flush=True)
         return policies[0]
 
     if len(policies) > 1:
@@ -106,7 +106,7 @@ def get_or_create_policy() -> CreatePolicyResponseTypeDef | PolicyTypeDef:
         raise Exception("More than one invoice scheduler function found. Not yet implemented a way to filter.")
 
     if DEBUG_LEVEL:
-        print("[AWS] Creating new policy for scheduler step function to access API Destination...")
+        print("[AWS] Creating new policy for scheduler step function to access API Destination...", flush=True)
 
     return iam_client.create_policy(
         PolicyName=f"{AWS_TAGS_APP_NAME}-invoicing-scheduler-fn",
