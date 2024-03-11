@@ -310,6 +310,18 @@ Thank you for your contributions!
             <br />
             <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Amatthewjuarez1" title="Backend">🖥</a><a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Amatthewjuarez1" title="Frontend">🎨</a>
         </td>
+        </td><td>
+        <td align="center">
+            <a href="https://github.com/SBMOYO">
+                <img src="https://github.com/SBMOYO.png" width="100px;" alt="" />
+                <br />
+                <sub>
+                    <b>SBMOYO</b>
+                </sub>
+            </a>
+            <br />
+            <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3ASBMOYO" title="Added Tests">🧪</a>
+        </td>
         </td></tr></table>
 <!-- CONTRIBUTORS TABLE END -->
 
