@@ -14,14 +14,12 @@ def preview(request, invoice_id):
         messages.error(request, "Invoice not found")
         return redirect("invoices dashboard")
 
-    if request.user.logged_in_as_team:
-        if invoice.organization != request.user.logged_in_as_team:
-            messages.error(request, "You don't have access to this invoice")
-            return redirect("invoices dashboard")
-    else:
-        if invoice.user != request.user:
-            messages.error(request, "You don't have access to this invoice")
-            return redirect("invoices dashboard")
+    if request.user.logged_in_as_team and invoice.organization != request.user.logged_in_as_team:
+        messages.error(request, "You don't have access to this invoice")
+        return redirect("invoices dashboard")
+    elif invoice.user != request.user:
+        messages.error(request, "You don't have access to this invoice")
+        return redirect("invoices dashboard")
 
     try:
         currency_symbol = request.user.user_profile.get_currency_symbol

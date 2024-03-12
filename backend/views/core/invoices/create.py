@@ -42,7 +42,7 @@ def invoice_page_post(request: HttpRequest):
     if is_existing_client:
         try:
             client = Client.objects.get(user=request.user, id=request.POST.get("selected_client"))
-        except:
+        except Client.DoesNotExist:
             messages.error(request, "Client not found")
             invoice.delete()
             return render(request, "pages/invoices/create/create.html")
@@ -55,10 +55,7 @@ def invoice_page_post(request: HttpRequest):
         invoice.client_city = request.POST.get("to_city")
         invoice.client_county = request.POST.get("to_county")
         invoice.client_country = request.POST.get("to_country")
-        if request.POST.get("is_representative") == "on":
-            invoice.client_is_representative = True
-        else:
-            invoice.client_is_representative = False
+        invoice.client_is_representative = True if request.POST.get("is_representative") == "on" else Fals
 
     invoice.self_name = request.POST.get("from_name")
     invoice.self_company = request.POST.get("from_company")
@@ -86,13 +83,6 @@ def invoice_page_post(request: HttpRequest):
 
 @require_http_methods(["GET", "POST"])
 def create_invoice_page(request: HttpRequest):
-    if request.method == "POST":
-        return invoice_page_post(request)
-    return invoice_page_get(request)
-
-
-@require_http_methods(["GET", "POST"])
-def edit_invoice_page(request: HttpRequest):
     if request.method == "POST":
         return invoice_page_post(request)
     return invoice_page_get(request)

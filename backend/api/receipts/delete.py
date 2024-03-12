@@ -15,12 +15,10 @@ def receipt_delete(request: HttpRequest, id: int):
     if not receipt:
         return JsonResponse(status=404, data={"message": "Receipt not found"})
 
-    if request.user.logged_in_as_team:
-        if receipt.organization != request.user.logged_in_as_team:
-            return JsonResponse(status=403, data={"message": "Forbidden"})
-    else:
-        if receipt.user != request.user:
-            return JsonResponse(status=403, data={"message": "Forbidden"})
+    if request.user.logged_in_as_team and receipt.organization != request.user.logged_in_as_team:
+        return JsonResponse(status=403, data={"message": "Forbidden"})
+    elif receipt.user != request.user:
+        return JsonResponse(status=403, data={"message": "Forbidden"})
 
     receipt.delete()
     messages.success(request, "Receipt deleted")

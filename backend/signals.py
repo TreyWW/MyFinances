@@ -25,20 +25,18 @@ def delete_old_profile_picture(sender, instance, **kwargs):
 
 @receiver(post_delete, sender=UserSettings)
 def set_profile_picture_to_none(sender, instance, **kwargs):
-    if instance.profile_picture:
-        # Check if the file exists in the storage
-        if default_storage.exists(instance.profile_picture.name):
-            instance.profile_picture.delete(save=False)
+    # Check if the file exists in the storage
+    if instance.profile_picture and default_storage.exists(instance.profile_picture.name):
+        instance.profile_picture.delete(save=False)
 
 
 @receiver(post_delete, sender=Receipt)
 def set_profile_picture_to_none(sender, instance, **kwargs):
-    if instance.image:
-        # Check if the file exists in the storage
-        if default_storage.exists(instance.image.name):
-            instance.image.delete(save=False)
-            instance.image = None
-            instance.save()
+    # Check if the file exists in the storage
+    if instance.image and default_storage.exists(instance.image.name):
+        instance.image.delete(save=False)
+        instance.image = None
+        instance.save()
 
 
 @receiver(post_save, sender=User)

@@ -18,10 +18,5 @@ class EmailInsteadOfUsernameBackend(ModelBackend):
             return None
         else:
             if user.check_password(password):
-                if user.is_active:
-                    return user
-
-                if user.awaiting_email_verification:
-                    return user
                 return user
         return None
