@@ -55,7 +55,7 @@ def invoice_page_post(request: HttpRequest):
         invoice.client_city = request.POST.get("to_city")
         invoice.client_county = request.POST.get("to_county")
         invoice.client_country = request.POST.get("to_country")
-        invoice.client_is_representative = True if request.POST.get("is_representative") == "on" else Fals
+        invoice.client_is_representative = True if request.POST.get("is_representative") == "on" else False
 
     invoice.self_name = request.POST.get("from_name")
     invoice.self_company = request.POST.get("from_company")
