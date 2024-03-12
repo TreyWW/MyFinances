@@ -118,32 +118,52 @@ def get_or_create_policy() -> CreatePolicyResponseTypeDef | PolicyTypeDef:
                     "Sid": "CallAPIDestination",
                     "Effect": "Allow",
                     "Action": [
-                        "states:InvokeHTTPEndpoint"
+                        "states:InvokeHTTPEndpoint",
+                        "states:StartExecution"
                     ],
                     "Resource": [
                         "*"
                     ]
                 },
                 {
-                    "Sid": "AccessSecrets",  # To connect to API Connection
+                    "Sid": "AccessSecrets",
                     "Effect": "Allow",
                     "Action": [
                         "events:RetrieveConnectionCredentials",
                         "secretsmanager:GetSecretValue",
-                        "secretsmanager:DescribeSecret",
+                        "secretsmanager:DescribeSecret"
                     ],
                     "Resource": [
                         "*"
                     ]
                 },
                 {
-                    "Sid": "AssumeRoleForStepFunc",
+                    "Sid": "CreateLogDelivery",
                     "Effect": "Allow",
-                    "Principal": {
-                        "Service": "states.amazonaws.com"
-                    },
-                    "Action": "sts:AssumeRole"
+                    "Action": [
+                        "logs:CreateLogDelivery",
+                        "logs:CreateLogStream",
+                        "logs:GetLogDelivery",
+                        "logs:UpdateLogDelivery",
+                        "logs:DeleteLogDelivery",
+                        "logs:ListLogDeliveries",
+                        "logs:PutLogEvents",
+                        "logs:PutResourcePolicy",
+                        "logs:DescribeResourcePolicies",
+                        "logs:DescribeLogGroups"
+                    ],
+                    "Resource": "*"
                 },
+                {
+                    "Sid": "AllowEventbridgeScheduler",
+                    "Effect": "Allow",
+                    "Action": [
+                        "scheduler:*"
+                    ],
+                    "Resource": [
+                        "*"
+                    ]
+                }
             ]
         })
     )

@@ -26,6 +26,13 @@ sfn_client: SFNClient = Boto3HandlerSession.client("stepfunctions", config=confi
 DEBUG_LEVEL = get_var("AWS_PRINT_DEBUG_LEVEL", default="debug")
 DEBUG_LEVEL = "debug" if DEBUG_LEVEL == "debug" else "info" if DEBUG_LEVEL == "info" else None
 
+if get_var("LOG_LEVEL", default="info") == "debug":
+    logging.basicConfig(level=logging.DEBUG)
+else:
+    logging.basicConfig(level=logging.INFO)
+
+logger = logging.getLogger()
+
 if DEBUG_LEVEL == "debug":
     boto3.set_stream_logger("", level=logging.DEBUG)
 else:

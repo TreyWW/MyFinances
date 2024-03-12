@@ -119,11 +119,11 @@ def create_schedule(request: HttpRequest):
             return render(request, "base/toasts.html")
         return create_ots(request)
 
-    return HttpResponse("WHATT?!")
+    messages.error(request, "Invalid option. Something went wrong.")
+    return render(request, "base/toasts.html")
 
 
 def create_ots(request: HttpRequest) -> HttpResponse:
-
     invoice_id = request.POST.get("invoice_id") or request.POST.get("invoice")
     print(invoice_id)
 

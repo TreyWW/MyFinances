@@ -14,3 +14,6 @@ app/*/*/*/__pycache__/
 .venv/
 venv/
 env/
+
+# Node
+node_modules
