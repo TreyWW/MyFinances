@@ -13,6 +13,7 @@ from backend.views.core import (
 )
 from backend.views.core.currency_converter import dashboard as cc_dashboard
 from backend.views.core.other.index import index, dashboard
+from .views.core.invoices import edit, manage
 
 url(
     r"^frontend/static/(?P<path>.*)$",
