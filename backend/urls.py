@@ -13,7 +13,7 @@ from backend.views.core import (
 )
 from backend.views.core.currency_converter import dashboard as cc_dashboard
 from backend.views.core.other.index import index, dashboard
-from .views.core.invoices import edit
+from .views.core.invoices import edit, manage
 
 url(
     r"^frontend/static/(?P<path>.*)$",
@@ -51,6 +51,7 @@ urlpatterns = [
         invoices.dashboard.invoices_dashboard,
         name="invoices dashboard",
     ),
+    path("dashboard/invoice/<str:invoice_id>/", invoices.manage.manage_invoice, name="invoice"),
     path(
         "dashboard/invoices/access/<str:id>",
         invoices.manage_access.manage_access,

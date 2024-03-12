@@ -1,310 +1,161 @@
 {% load static %}
 {% load mathfilters %}
 {% load markdownify %}
-<!DOCTYPE html>
-<html :class="{ 'theme-dark': dark }" x-data="data()" lang="en" style="">
-    {% include 'base/_head.html' %}
-    <body style="background-color: #94c0eb;">
-        <div class="flex-1 min-h-screen overflow-y-auto pt-8 px-6 pb-4 bg-base-200">
-            <div tabindex="-1"
-                 id="status_banner"
-                 class="print-ignore fixed top-0 left-0 z-50 grid grid-cols-3 w-full p-4 bg-base-100 shadow text-base-content">
-                <div>
-                    {% if type == "preview" %}
-                        <a href="{% url 'invoices dashboard' %}" class="btn btn-sm btn-outline">
-                            <i class="fa-solid fa-arrow-left me-2"></i>
-                            Go Back
-                        </a>
-                    {% endif %}
-                </div>
-                <div class="flex items-center mx-auto">
-                    <p class="flex items-center text-sm font-normal">
-                        {% with ps=invoice.payment_status %}
-                            {% if ps == "paid" %}
-                                <span class="circle-tick bg-success text-neutral">
-                                    <i class="fa-solid fa-check"></i>
-                                </span>
-                            {% elif ps == "pending" %}
-                                <span class="circle-tick bg-gray-500 text-black">
-                                    <i class="fa-solid fa-question"></i>
-                                </span>
-                            {% elif ps == "overdue" %}
-                                <span class="circle-tick bg-error text-neutral drop-shadow drop-shadow-glow_red">
-                                    <i class="fa-solid fa-x"></i>
-                                </span>
-                            {% endif %}
-                            <span>
-                                {% if ps == "paid" %}
-                                    This invoice has been <strong>paid</strong>
-                                {% elif ps == "pending" %}
-                                    This invoice is <strong>pending</strong>
-                                {% elif ps == "overdue" %}
-                                    This invoice is <strong>overdue</strong>
-                                {% endif %}
-                            </span>
-                        </p>
-                    {% endwith %}
-                </div>
-                <div class="flex justify-end float-right">
-                    <a class="btn btn-sm gradient-btn me-2" href="" download>
-                        <i class="fa-solid fa-download me-2"></i>
-                        Download
-                    </a>
-                    <button onclick="window.print()" class="btn btn-sm gradient-btn me-2">
-                        <i class="fa-solid fa-print me-2"></i>
-                        Print
-                    </button>
-                    <a class="btn btn-sm gradient-btn me-8"
-                       href="{% url "invoices dashboard manage_access" id=invoice.id %}">Share Invoice</a>
-                    <div class="flex items-center">
-                        <button onclick="document.getElementById('status_banner').remove();"
-                                type="button"
-                                class="flex-shrink-0 inline-flex justify-center w-7 h-7 items-center rounded-lg text-sm p-1.5 hover:bg-gray-600 hover:text-white">
-                            <i class="fa-solid fa-xmark"></i>
-                            <span class="sr-only">Close Popup</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <!-- Start of Invoice -->
-            <div class="max-w-3xl mx-auto p-6 bg-white rounded-lg shadow my-6 mt-16 min-h-screen">
-                <div class="flex justify-between items-center mb-8">
-                    <!-- Company Logo and Info -->
-                    <div>
-                        {% if invoice.logo %}
-                            <img src="{{ invoice.logo.url }}"
-                                 alt="company-logo"
-                                 class="h-24 w-24 object-cover rounded-full">
-                        {% else %}
-                            <img src="https://github.com/TreyWW/MyFinances/blob/main/documentation/assets/logo_single.png?raw=true"
-                                 alt="company-logo"
-                                 class="h-24 w-24 object-cover rounded-full">
-                        {% endif %}
-                        <div class="mt-4">
-                            <h3 class="text-lg text-gray-800">{{ invoice.self_company|default_if_none:"" }}</h3>
-                            <p class="text-gray-600">{{ invoice.self_name|default_if_none:"" }}</p>
-                            <p class="text-gray-600">{{ invoice.self_phone|default_if_none:"" }}</p>
-                            {% if invoice.vat_number %}<p class="text-gray-600">VAT: {{ invoice.vat_number }}</p>{% endif %}
-                        </div>
-                    </div>
-                    <!-- Invoice Info -->
-                    <div class="text-right">
-                        <h2 class="text-2xl font-bold text-gray-800">INVOICE</h2>
-                        <p class="mt-2 text-gray-600">INV #{{ invoice.invoice_id|default:invoice.id }}</p>
-                        <p class="text-gray-600">Invoice date: {{ invoice.date_issued|date:"d/m/Y" }}</p>
-                        <p class="text-gray-600">Due date: {{ invoice.date_due|date:"d/m/Y" }}</p>
-                        <p class="text-gray-600">Balance Due: {{ currency_symbol }}{{ invoice.get_total_price }}</p>
-                    </div>
-                </div>
-                <!-- Client info -->
-                <div class="grid grid-cols-2 items-center mt-7">
-                    <div>
-                        {% with details=invoice.get_to_details %}
-                            {% include 'pages/invoices/view/_client-details.html' with c_type=details.0 c_details=details.1 %}
-                        {% endwith %}
-                    </div>
-                </div>
-                <!-- Invoice Items -->
-                <div class="-mx-4 mt-8 overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Items
-                                </th>
-                                <th scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Quantity
-                                </th>
-                                <th scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Price
-                                </th>
-                                <th scope="col"
-                                    class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Amount
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            {% for item in invoice.items.all %}
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">{{ item.name }}</div>
-                                        <div class="text-sm text-gray-500">{{ item.description|markdownify }}</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="text-sm text-gray-900">{{ item.hours }}</span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="text-sm text-gray-900">{{ item.price_per_hour }}</span>
-                                    </td>
-                                    <td class="px-6 py-4 text-right whitespace-nowrap">
-                                        <span class="text-sm text-gray-900">{{ currency_symbol }}{{ item.get_total_price | floatformat:2 }}</span>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                        <tfoot>
-                            <tr class="bg-gray-50">
-                                <th colspan="3"
-                                    class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                                    Subtotal
-                                </th>
-                                <td class="px-6 py-3 text-right text-sm font-medium text-gray-500 uppercase tracking-wider">
-                                    {{ currency_symbol }}{{ invoice.get_subtotal }}
-                                </td>
-                            </tr>
-                            {% if tax %}
-                                {# todo add tax #}
-                                <tr class="bg-gray-50">
-                                    <th colspan="3"
-                                        class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                                        Tax
-                                    </th>
-                                    <td class="px-6 py-3 text-right text-sm font-medium text-gray-500 uppercase tracking-wider">
-                                        {{ currency_symbol }}0.00
-                                    </td>
-                                </tr>
-                            {% endif %}
-                            {% if invoice.discount %}
-                                <tr class="bg-gray-50">
-                                    <th colspan="3"
-                                        class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                                        Discount
-                                    </th>
-                                    <td class="px-6 py-3 text-right text-sm font-medium text-gray-500 uppercase tracking-wider">
-                                        -{{ invoice.discount }}%
-                                    </td>
-                                </tr>
-                            {% endif %}
-                            <tr class="bg-gray-50">
-                                <th colspan="3"
-                                    class="px-6 py-3 text-left text-sm font-bold text-gray-900 uppercase tracking-wider">
-                                    Total
-                                </th>
-                                <td class="px-6 py-3 text-right text-sm font-bold text-gray-900 uppercase tracking-wider">
-                                    {{ currency_symbol }}{{ invoice.get_total_price }}
-                                </td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-                <!-- Payment Details -->
-                <div class="text-sm text-gray-600 mt-16">
-                    {% if invoice.account_holder_name %}
-                        <p>
-                            Account Holder Name: <span class="font-semibold ms-2">{{ invoice.account_holder_name }}</span>
-                        </p>
-                    {% endif %}
-                    {% if invoice.account_number %}
-                        <p>
-                            Account Number: <span class="font-semibold ms-2">{{ invoice.account_number }}</span>
-                        </p>
-                    {% endif %}
-                    {% if invoice.sort_code %}
-                        <p>
-                            Account Sort Code: <span class="font-semibold ms-2">{{ invoice.sort_code }}</span>
-                        </p>
-                    {% endif %}
-                </div>
-                <!--  Footer  -->
-                {% if invoice.notes %}
-                    <div class="border-t-2 pt-4 text-xs text-gray-500 text-center mt-4">
-                        {#        Please pay the invoice before the due date. You can pay the invoice by logging in to your account from our client portal.#}
-                        {{ invoice.notes|markdownify }}
-                    </div>
-                {% endif %}
-                <!-- Credits -->
-                <div class="border-t-2 pt-4 text-xs text-gray-500 text-center mt-4 print-ignore">
-                    {# Print ignored #}
-                    This invoice was generated with 💜 by
-                    <a class="underline" href="https://github.com/TreyWW/MyFinances">MyFinances</a>
-                    .
-                </div>
+<div class="max-w-3xl mx-auto p-6 bg-white rounded-lg shadow my-6 mt-16 min-h-screen">
+    <div class="flex justify-between items-center mb-8">
+        <!-- Company Logo and Info -->
+        <div>
+            {% if invoice.logo %}
+                <img src="{{ invoice.logo.url }}"
+                     alt="company-logo"
+                     class="h-24 w-24 object-cover rounded-full">
+            {% else %}
+                <img src="https://github.com/TreyWW/MyFinances/blob/main/documentation/assets/logo_single.png?raw=true"
+                     alt="company-logo"
+                     class="h-24 w-24 object-cover rounded-full">
+            {% endif %}
+            <div class="mt-4">
+                <h3 class="text-lg text-gray-800">{{ invoice.self_company|default_if_none:"" }}</h3>
+                <p class="text-gray-600">{{ invoice.self_name|default_if_none:"" }}</p>
+                <p class="text-gray-600">{{ invoice.self_phone|default_if_none:"" }}</p>
+                {% if invoice.vat_number %}
+                    <p class="text-gray-600">VAT: {{ invoice.vat_number }}</p>{% endif %}
             </div>
         </div>
-    </body>
-    <style>
-        body { 
-            font-family: 'Inter', sans-serif;
-            font-size: 16px;
-            line-height: 1.6;
-            color: #333;
-            background-size: cover;
-        }
-
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            border-radius: 10px;
-            border: 1px solid rgba(22, 22, 22, 0.18);
-        }
-
-        .gradient-btn {
-            background: linear-gradient(45deg, #6f26ff, #db93db);
-            color: #fff;
-            border: none;
-        }
-
-        .gradient-btn:hover {
-            background: linear-gradient(45deg, #6874fc, #80e1ff);
-        }
-        
-        @media print {
-
-        .print-ignore {
-            display: none;
-        }
-
-        body, html {
-            visibility: visible;
-            margin: 0;
-            padding: 0;
-        }
-
-
-        #invoice, #invoice * {
-            visibility: visible;
-            box-shadow: none;
-        }
-
-        #invoice {
-            width: 100%;
-            position: absolute;
-            left: 0;
-            top: 0;
-            margin: 0 auto;
-            padding: 10mm; /*Adjust padding to reduce white space */
-            box-shadow: none;
-            height: auto;
-            background: none;
-            overflow: visible;
-            border: none; /* Remove borders for printing */  
-        }
-
-        .glass-effect {
-            background: none;
-            backdrop-filter: none;
-        }
-
-        /* Avoid breaking inside these elements */
-        .avoid-page-break {
-            page-break-inside: avoid;
-        }
-
-        /* Scale the content if it still doesn't fit */
-        @page {
-            size: portrait; /* Adjust page size to content */
-            margin: 5mm; /* Reduce page margin to fit content */
-        }
-
-        .page-scale {
-            transform-origin: top left; 
-            transform: scale(0.95); 
-            width: 100% !important;
-        }
-    }
-    </style>
-</html>
+        <!-- Invoice Info -->
+        <div class="text-right">
+            <h2 class="text-2xl font-bold text-gray-800">INVOICE</h2>
+            <p class="mt-2 text-gray-600">INV #{{ invoice.invoice_id|default:invoice.id }}</p>
+            <p class="text-gray-600">Invoice date: {{ invoice.date_issued|date:"d/m/Y" }}</p>
+            <p class="text-gray-600">Due date: {{ invoice.date_due|date:"d/m/Y" }}</p>
+            <p class="text-gray-600">Balance Due: {{ currency_symbol }}{{ invoice.get_total_price }}</p>
+        </div>
+    </div>
+    <!-- Client info -->
+    <div class="grid grid-cols-2 items-center mt-7">
+        <div>
+            {% with details=invoice.get_to_details %}
+                {% include 'pages/invoices/view/_client-details.html' with c_type=details.0 c_details=details.1 %}
+            {% endwith %}
+        </div>
+    </div>
+    <!-- Invoice Items -->
+    <div class="-mx-4 mt-8 overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+            <tr>
+                <th scope="col"
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Items
+                </th>
+                <th scope="col"
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Quantity
+                </th>
+                <th scope="col"
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Price
+                </th>
+                <th scope="col"
+                    class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Amount
+                </th>
+            </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+            {% for item in invoice.items.all %}
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">{{ item.name }}</div>
+                        <div class="text-sm text-gray-500">{{ item.description|markdownify }}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="text-sm text-gray-900">{{ item.hours }}</span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="text-sm text-gray-900">{{ item.price_per_hour }}</span>
+                    </td>
+                    <td class="px-6 py-4 text-right whitespace-nowrap">
+                        <span class="text-sm text-gray-900">{{ currency_symbol }}{{ item.get_total_price | floatformat:2 }}</span>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+            <tfoot>
+            <tr class="bg-gray-50">
+                <th colspan="3"
+                    class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                    Subtotal
+                </th>
+                <td class="px-6 py-3 text-right text-sm font-medium text-gray-500 uppercase tracking-wider">
+                    {{ currency_symbol }}{{ invoice.get_subtotal }}
+                </td>
+            </tr>
+            {% if tax %}
+                {# todo add tax #}
+                <tr class="bg-gray-50">
+                    <th colspan="3"
+                        class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                        Tax
+                    </th>
+                    <td class="px-6 py-3 text-right text-sm font-medium text-gray-500 uppercase tracking-wider">
+                        {{ currency_symbol }}0.00
+                    </td>
+                </tr>
+            {% endif %}
+            {% if invoice.discount %}
+                <tr class="bg-gray-50">
+                    <th colspan="3"
+                        class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                        Discount
+                    </th>
+                    <td class="px-6 py-3 text-right text-sm font-medium text-gray-500 uppercase tracking-wider">
+                        -{{ invoice.discount }}%
+                    </td>
+                </tr>
+            {% endif %}
+            <tr class="bg-gray-50">
+                <th colspan="3"
+                    class="px-6 py-3 text-left text-sm font-bold text-gray-900 uppercase tracking-wider">
+                    Total
+                </th>
+                <td class="px-6 py-3 text-right text-sm font-bold text-gray-900 uppercase tracking-wider">
+                    {{ currency_symbol }}{{ invoice.get_total_price }}
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+    <!-- Payment Details -->
+    <div class="text-sm text-gray-600 mt-16">
+        {% if invoice.account_holder_name %}
+            <p>
+                Account Holder Name: <span class="font-semibold ms-2">{{ invoice.account_holder_name }}</span>
+            </p>
+        {% endif %}
+        {% if invoice.account_number %}
+            <p>
+                Account Number: <span class="font-semibold ms-2">{{ invoice.account_number }}</span>
+            </p>
+        {% endif %}
+        {% if invoice.sort_code %}
+            <p>
+                Account Sort Code: <span class="font-semibold ms-2">{{ invoice.sort_code }}</span>
+            </p>
+        {% endif %}
+    </div>
+    <!--  Footer  -->
+    {% if invoice.notes %}
+        <div class="border-t-2 pt-4 text-xs text-gray-500 text-center mt-4">
+            {#        Please pay the invoice before the due date. You can pay the invoice by logging in to your account from our client portal.#}
+            {{ invoice.notes|markdownify }}
+        </div>
+    {% endif %}
+    <!-- Credits -->
+    <div class="border-t-2 pt-4 text-xs text-gray-500 text-center mt-4 print-ignore">
+        {# Print ignored #}
+        This invoice was generated with 💜 by
+        <a class="underline" href="https://github.com/TreyWW/MyFinances">MyFinances</a>
+        .
+    </div>
+</div>

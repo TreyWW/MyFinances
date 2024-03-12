@@ -1,5 +1,5 @@
 /*
-! tailwindcss v3.3.6 | MIT License | https://tailwindcss.com
+! tailwindcss v3.4.1 | MIT License | https://tailwindcss.com
 */
 
 /*
@@ -32,9 +32,11 @@
 4. Use the user's configured `sans` font-family by default.
 5. Use the user's configured `sans` font-feature-settings by default.
 6. Use the user's configured `sans` font-variation-settings by default.
+7. Disable tap highlights on iOS
 */
 
-html {
+html,
+:host {
   line-height: 1.5;
   /* 1 */
   -webkit-text-size-adjust: 100%;
@@ -44,12 +46,14 @@ html {
   -o-tab-size: 4;
      tab-size: 4;
   /* 3 */
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   /* 4 */
   font-feature-settings: normal;
   /* 5 */
   font-variation-settings: normal;
   /* 6 */
+  -webkit-tap-highlight-color: transparent;
+  /* 7 */
 }
 
 /*
@@ -898,8 +902,8 @@ html {
     color: var(--fallback-bc,oklch(var(--bc)/var(--tw-text-opacity)));
   }
 
-  .menu li > *:not(ul):not(.menu-title):not(details):active,
-.menu li > *:not(ul):not(.menu-title):not(details).active,
+  .menu li > *:not(ul, .menu-title, details, .btn):active,
+.menu li > *:not(ul, .menu-title, details, .btn).active,
 .menu li > details > summary:active {
     --tw-bg-opacity: 1;
     background-color: var(--fallback-n,oklch(var(--n)/var(--tw-bg-opacity)));
@@ -1105,6 +1109,19 @@ html {
   opacity: 0;
 }
 
+.collapse-content {
+  visibility: hidden;
+  grid-column-start: 1;
+  grid-row-start: 2;
+  min-height: 0px;
+  transition: visibility 0.2s;
+  transition: padding 0.2s ease-out,
+    background-color 0.2s ease-out;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  cursor: unset;
+}
+
 .collapse[open],
 .collapse-open,
 .collapse:focus:not(.collapse-close) {
@@ -1173,7 +1190,8 @@ html {
   grid-template-rows: repeat(1, minmax(0, 1fr));
   align-items: flex-start;
   justify-items: start;
-  overflow-y: auto;
+  overflow-x: hidden;
+  overflow-y: hidden;
   overscroll-behavior: contain;
   height: 100vh;
   height: 100dvh;
@@ -1222,6 +1240,7 @@ html {
 .drawer-toggle:checked ~ .drawer-side {
   pointer-events: auto;
   visibility: visible;
+  overflow-y: auto;
 }
 
 .drawer-toggle:checked ~ .drawer-side > *:not(.drawer-overlay) {
@@ -1501,14 +1520,14 @@ html {
     transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
   }
 
-  :where(.menu li:not(.menu-title):not(.disabled) > *:not(ul):not(details):not(.menu-title)):not(.active):hover, :where(.menu li:not(.menu-title):not(.disabled) > details > summary:not(.menu-title)):not(.active):hover {
+  :where(.menu li:not(.menu-title, .disabled) > *:not(ul, details, .menu-title)):not(.active, .btn):hover, :where(.menu li:not(.menu-title, .disabled) > details > summary:not(.menu-title)):not(.active, .btn):hover {
     cursor: pointer;
     outline: 2px solid transparent;
     outline-offset: 2px;
   }
 
   @supports (color: oklch(0 0 0)) {
-    :where(.menu li:not(.menu-title):not(.disabled) > *:not(ul):not(details):not(.menu-title)):not(.active):hover, :where(.menu li:not(.menu-title):not(.disabled) > details > summary:not(.menu-title)):not(.active):hover {
+    :where(.menu li:not(.menu-title, .disabled) > *:not(ul, details, .menu-title)):not(.active, .btn):hover, :where(.menu li:not(.menu-title, .disabled) > details > summary:not(.menu-title)):not(.active, .btn):hover {
       background-color: var(--fallback-bc,oklch(var(--bc)/0.1));
     }
   }
@@ -1579,34 +1598,6 @@ html {
   animation: button-pop var(--animation-btn, 0.25s) ease-out;
 }
 
-.footer {
-  display: grid;
-  width: 100%;
-  grid-auto-flow: row;
-  place-items: start;
-  -moz-column-gap: 1rem;
-       column-gap: 1rem;
-  row-gap: 2.5rem;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-}
-
-.footer > * {
-  display: grid;
-  place-items: start;
-  gap: 0.5rem;
-}
-
-@media (min-width: 48rem) {
-  .footer {
-    grid-auto-flow: column;
-  }
-
-  .footer-center {
-    grid-auto-flow: row dense;
-  }
-}
-
 .form-control {
   display: flex;
   flex-direction: column;
@@ -1664,6 +1655,13 @@ html {
   border-color: transparent;
   --tw-bg-opacity: 1;
   background-color: var(--fallback-b1,oklch(var(--b1)/var(--tw-bg-opacity)));
+}
+
+.input[type="number"]::-webkit-inner-spin-button,
+.input-md[type="number"]::-webkit-inner-spin-button {
+  margin-top: -1rem;
+  margin-bottom: -1rem;
+  margin-inline-end: -1rem;
 }
 
 .join {
@@ -1787,8 +1785,7 @@ html {
   padding-inline-start: 0.5rem;
 }
 
-.menu :where(li:not(.menu-title) > *:not(ul):not(details):not(.menu-title)),
-  .menu :where(li:not(.menu-title) > details > summary:not(.menu-title)) {
+.menu :where(li:not(.menu-title) > *:not(ul, details, .menu-title, .btn)), .menu :where(li:not(.menu-title) > details > summary:not(.menu-title)) {
   display: grid;
   grid-auto-flow: column;
   align-content: flex-start;
@@ -1916,7 +1913,7 @@ html {
   width: 100%;
 }
 
-:where(.navbar > *) {
+:where(.navbar > *:not(script, style)) {
   display: inline-flex;
   align-items: center;
 }
@@ -1933,6 +1930,21 @@ html {
 .navbar-end {
   width: 50%;
   justify-content: flex-end;
+}
+
+.radio {
+  flex-shrink: 0;
+  --chkbg: var(--bc);
+  height: 1.5rem;
+  width: 1.5rem;
+  cursor: pointer;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  border-radius: 9999px;
+  border-width: 1px;
+  border-color: var(--fallback-bc,oklch(var(--bc)/var(--tw-border-opacity)));
+  --tw-border-opacity: 0.2;
 }
 
 .range {
@@ -2336,10 +2348,6 @@ input.tab:checked + .tab-content,
     --btn-color: var(--fallback-s);
   }
 
-  .btn-accent {
-    --btn-color: var(--fallback-a);
-  }
-
   .btn-neutral {
     --btn-color: var(--fallback-n);
   }
@@ -2411,10 +2419,6 @@ input.tab:checked + .tab-content,
     --btn-color: var(--s);
   }
 
-  .btn-accent {
-    --btn-color: var(--a);
-  }
-
   .btn-neutral {
     --btn-color: var(--n);
   }
@@ -2432,12 +2436,6 @@ input.tab:checked + .tab-content,
   --tw-text-opacity: 1;
   color: var(--fallback-sc,oklch(var(--sc)/var(--tw-text-opacity)));
   outline-color: var(--fallback-s,oklch(var(--s)/1));
-}
-
-.btn-accent {
-  --tw-text-opacity: 1;
-  color: var(--fallback-ac,oklch(var(--ac)/var(--tw-text-opacity)));
-  outline-color: var(--fallback-a,oklch(var(--a)/1));
 }
 
 .btn-neutral {
@@ -2841,6 +2839,42 @@ details.collapse summary::-webkit-details-marker {
   outline-color: var(--fallback-bc,oklch(var(--bc)/1));
 }
 
+.collapse-arrow > .collapse-title:after {
+  position: absolute;
+  display: block;
+  height: 0.5rem;
+  width: 0.5rem;
+  --tw-translate-y: -100%;
+  --tw-rotate: 45deg;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  transition-duration: 150ms;
+  transition-duration: 0.2s;
+  top: 1.9rem;
+  inset-inline-end: 1.4rem;
+  content: "";
+  transform-origin: 75% 75%;
+  box-shadow: 2px 2px;
+  pointer-events: none;
+}
+
+.collapse-plus > .collapse-title:after {
+  position: absolute;
+  display: block;
+  height: 0.5rem;
+  width: 0.5rem;
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  transition-duration: 300ms;
+  top: 0.9rem;
+  inset-inline-end: 1.4rem;
+  content: "+";
+  pointer-events: none;
+}
+
 .collapse:not(.collapse-open):not(.collapse-close) > input[type="checkbox"],
 .collapse:not(.collapse-open):not(.collapse-close) > input[type="radio"]:not(:checked),
 .collapse:not(.collapse-open):not(.collapse-close) > .collapse-title {
@@ -2849,6 +2883,10 @@ details.collapse summary::-webkit-details-marker {
 
 .collapse:focus:not(.collapse-open):not(.collapse-close):not(.collapse[open]) > .collapse-title {
   cursor: unset;
+}
+
+.collapse-title {
+  position: relative;
 }
 
 :where(.collapse > input[type="checkbox"]),
@@ -2968,6 +3006,12 @@ details.collapse summary::-webkit-details-marker {
   line-height: 1rem;
   --tw-text-opacity: 1;
   color: var(--fallback-bc,oklch(var(--bc)/var(--tw-text-opacity)));
+}
+
+.input input {
+  --tw-bg-opacity: 1;
+  background-color: var(--fallback-p,oklch(var(--p)/var(--tw-bg-opacity)));
+  background-color: transparent;
 }
 
 .input input:focus {
@@ -3157,7 +3201,7 @@ details.collapse summary::-webkit-details-marker {
   content: "";
 }
 
-.menu :where(li:not(.menu-title) > *:not(ul):not(details):not(.menu-title)),
+.menu :where(li:not(.menu-title) > *:not(ul, details, .menu-title, .btn)),
 .menu :where(li:not(.menu-title) > details > summary:not(.menu-title)) {
   border-radius: var(--rounded-btn, 0.5rem);
   padding-left: 1rem;
@@ -3174,12 +3218,7 @@ details.collapse summary::-webkit-details-marker {
   text-wrap: balance;
 }
 
-:where(.menu li:not(.menu-title):not(.disabled) > *:not(ul):not(details):not(.menu-title)):not(summary):not(.active).focus,
-  :where(.menu li:not(.menu-title):not(.disabled) > *:not(ul):not(details):not(.menu-title)):not(summary):not(.active):focus,
-  :where(.menu li:not(.menu-title):not(.disabled) > *:not(ul):not(details):not(.menu-title)):is(summary):not(.active):focus-visible,
-  :where(.menu li:not(.menu-title):not(.disabled) > details > summary:not(.menu-title)):not(summary):not(.active).focus,
-  :where(.menu li:not(.menu-title):not(.disabled) > details > summary:not(.menu-title)):not(summary):not(.active):focus,
-  :where(.menu li:not(.menu-title):not(.disabled) > details > summary:not(.menu-title)):is(summary):not(.active):focus-visible {
+:where(.menu li:not(.menu-title, .disabled) > *:not(ul, details, .menu-title)):not(summary, .active, .btn).focus, :where(.menu li:not(.menu-title, .disabled) > *:not(ul, details, .menu-title)):not(summary, .active, .btn):focus, :where(.menu li:not(.menu-title, .disabled) > *:not(ul, details, .menu-title)):is(summary):not(.active, .btn):focus-visible, :where(.menu li:not(.menu-title, .disabled) > details > summary:not(.menu-title)):not(summary, .active, .btn).focus, :where(.menu li:not(.menu-title, .disabled) > details > summary:not(.menu-title)):not(summary, .active, .btn):focus, :where(.menu li:not(.menu-title, .disabled) > details > summary:not(.menu-title)):is(summary):not(.active, .btn):focus-visible {
   cursor: pointer;
   background-color: var(--fallback-bc,oklch(var(--bc)/0.1));
   --tw-text-opacity: 1;
@@ -3188,8 +3227,8 @@ details.collapse summary::-webkit-details-marker {
   outline-offset: 2px;
 }
 
-.menu li > *:not(ul):not(.menu-title):not(details):active,
-.menu li > *:not(ul):not(.menu-title):not(details).active,
+.menu li > *:not(ul, .menu-title, details, .btn):active,
+.menu li > *:not(ul, .menu-title, details, .btn).active,
 .menu li > details > summary:active {
   --tw-bg-opacity: 1;
   background-color: var(--fallback-n,oklch(var(--n)/var(--tw-bg-opacity)));
@@ -3329,6 +3368,32 @@ details.collapse summary::-webkit-details-marker {
   50% {
     background-position-x: -115%;
   }
+}
+
+.radio:focus {
+  box-shadow: none;
+}
+
+.radio:focus-visible {
+  outline-style: solid;
+  outline-width: 2px;
+  outline-offset: 2px;
+  outline-color: var(--fallback-bc,oklch(var(--bc)/1));
+}
+
+.radio:checked,
+  .radio[aria-checked="true"] {
+  --tw-bg-opacity: 1;
+  background-color: var(--fallback-bc,oklch(var(--bc)/var(--tw-bg-opacity)));
+  background-image: none;
+  animation: radiomark var(--animation-input, 0.2s) ease-out;
+  box-shadow: 0 0 0 4px var(--fallback-b1,oklch(var(--b1)/1)) inset,
+      0 0 0 4px var(--fallback-b1,oklch(var(--b1)/1)) inset;
+}
+
+.radio:disabled {
+  cursor: not-allowed;
+  opacity: 0.2;
 }
 
 @keyframes radiomark {
@@ -3916,6 +3981,14 @@ details.collapse summary::-webkit-details-marker {
   font-size: 0.875rem;
 }
 
+.btn-md {
+  height: 3rem;
+  min-height: 3rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  font-size: 0.875rem;
+}
+
 .btn-lg {
   height: 4rem;
   min-height: 4rem;
@@ -4004,6 +4077,15 @@ details.collapse summary::-webkit-details-marker {
 .drawer-open > .drawer-toggle:checked ~ .drawer-side {
   pointer-events: auto;
   visibility: visible;
+}
+
+.drawer-open > .drawer-side {
+  overflow-y: auto;
+}
+
+html:has(.drawer-toggle:checked) {
+  overflow-y: hidden;
+  scrollbar-gutter: stable;
 }
 
 .join.join-vertical {
@@ -4172,8 +4254,7 @@ details.collapse summary::-webkit-details-marker {
   padding-bottom: 0.25rem;
 }
 
-.menu-sm :where(li:not(.menu-title) > *:not(ul):not(details):not(.menu-title)),
-  .menu-sm :where(li:not(.menu-title) > details > summary:not(.menu-title)) {
+.menu-sm :where(li:not(.menu-title) > *:not(ul, details, .menu-title)), .menu-sm :where(li:not(.menu-title) > details > summary:not(.menu-title)) {
   border-radius: var(--rounded-btn, 0.5rem);
   padding-left: 0.75rem;
   padding-right: 0.75rem;
@@ -4519,6 +4600,10 @@ details.collapse summary::-webkit-details-marker {
   margin-bottom: 1.5rem;
 }
 
+.mb-8 {
+  margin-bottom: 2rem;
+}
+
 .me-2 {
   margin-inline-end: 0.5rem;
 }
@@ -4545,10 +4630,6 @@ details.collapse summary::-webkit-details-marker {
 
 .mr-3 {
   margin-right: 0.75rem;
-}
-
-.ms-1 {
-  margin-inline-start: 0.25rem;
 }
 
 .ms-2 {
@@ -4607,10 +4688,6 @@ details.collapse summary::-webkit-details-marker {
   margin-top: auto;
 }
 
-.mt-10 {
-  margin-top: 2.5rem;
-}
-
 .block {
   display: block;
 }
@@ -4633,10 +4710,6 @@ details.collapse summary::-webkit-details-marker {
 
 .table {
   display: table;
-}
-
-.flow-root {
-  display: flow-root;
 }
 
 .grid {
@@ -4699,10 +4772,6 @@ details.collapse summary::-webkit-details-marker {
   height: 100vh;
 }
 
-.h-20 {
-  height: 5rem;
-}
-
 .max-h-12 {
   max-height: 3rem;
 }
@@ -4745,6 +4814,10 @@ details.collapse summary::-webkit-details-marker {
 
 .w-2\/3 {
   width: 66.666667%;
+}
+
+.w-24 {
+  width: 6rem;
 }
 
 .w-4 {
@@ -4812,11 +4885,19 @@ details.collapse summary::-webkit-details-marker {
 }
 
 .max-w-0 {
-  max-width: 0rem;
+  max-width: 0px;
+}
+
+.max-w-12 {
+  max-width: 3rem;
 }
 
 .max-w-3xl {
   max-width: 48rem;
+}
+
+.max-w-44 {
+  max-width: 11rem;
 }
 
 .max-w-4xl {
@@ -4863,10 +4944,6 @@ details.collapse summary::-webkit-details-marker {
   flex-grow: 1;
 }
 
-.border-collapse {
-  border-collapse: collapse;
-}
-
 .transform {
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
@@ -4889,6 +4966,10 @@ details.collapse summary::-webkit-details-marker {
 
 .grid-cols-3 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.grid-cols-4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 .flex-row {
@@ -5034,20 +5115,8 @@ details.collapse summary::-webkit-details-marker {
   border-width: 1px;
 }
 
-.border-b {
-  border-bottom-width: 1px;
-}
-
 .border-t-2 {
   border-top-width: 2px;
-}
-
-.border-b-2 {
-  border-bottom-width: 2px;
-}
-
-.border-t {
-  border-top-width: 1px;
 }
 
 .border-none {
@@ -5138,21 +5207,6 @@ details.collapse summary::-webkit-details-marker {
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
-.bg-red-500 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(239 68 68 / var(--tw-bg-opacity));
-}
-
-.bg-yellow-400 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(250 204 21 / var(--tw-bg-opacity));
-}
-
-.bg-gray-100 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(243 244 246 / var(--tw-bg-opacity));
-}
-
 .fill-primary {
   fill: var(--fallback-p,oklch(var(--p)/1));
 }
@@ -5190,10 +5244,6 @@ details.collapse summary::-webkit-details-marker {
   padding: 2rem;
 }
 
-.p-5 {
-  padding: 1.25rem;
-}
-
 .px-1 {
   padding-left: 0.25rem;
   padding-right: 0.25rem;
@@ -5202,11 +5252,6 @@ details.collapse summary::-webkit-details-marker {
 .px-10 {
   padding-left: 2.5rem;
   padding-right: 2.5rem;
-}
-
-.px-3 {
-  padding-left: 0.75rem;
-  padding-right: 0.75rem;
 }
 
 .px-4 {
@@ -5249,24 +5294,9 @@ details.collapse summary::-webkit-details-marker {
   padding-bottom: 0.75rem;
 }
 
-.py-3\.5 {
-  padding-top: 0.875rem;
-  padding-bottom: 0.875rem;
-}
-
 .py-4 {
   padding-top: 1rem;
   padding-bottom: 1rem;
-}
-
-.py-5 {
-  padding-top: 1.25rem;
-  padding-bottom: 1.25rem;
-}
-
-.px-2 {
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
 }
 
 .pb-16 {
@@ -5289,30 +5319,6 @@ details.collapse summary::-webkit-details-marker {
   padding-inline-end: 0.5rem;
 }
 
-.pl-3 {
-  padding-left: 0.75rem;
-}
-
-.pl-4 {
-  padding-left: 1rem;
-}
-
-.pl-6 {
-  padding-left: 1.5rem;
-}
-
-.pr-3 {
-  padding-right: 0.75rem;
-}
-
-.pr-4 {
-  padding-right: 1rem;
-}
-
-.pr-6 {
-  padding-right: 1.5rem;
-}
-
 .pt-1 {
   padding-top: 0.25rem;
 }
@@ -5333,16 +5339,8 @@ details.collapse summary::-webkit-details-marker {
   padding-top: 1.25rem;
 }
 
-.pt-6 {
-  padding-top: 1.5rem;
-}
-
 .pt-8 {
   padding-top: 2rem;
-}
-
-.pb-2 {
-  padding-bottom: 0.5rem;
 }
 
 .text-left {
@@ -5359,10 +5357,6 @@ details.collapse summary::-webkit-details-marker {
 
 .text-end {
   text-align: end;
-}
-
-.font-sans {
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
 .text-2xl {
@@ -5517,11 +5511,6 @@ details.collapse summary::-webkit-details-marker {
   color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
-.text-gray-400 {
-  --tw-text-opacity: 1;
-  color: rgb(156 163 175 / var(--tw-text-opacity));
-}
-
 .underline {
   text-decoration-line: underline;
 }
@@ -5562,18 +5551,6 @@ details.collapse summary::-webkit-details-marker {
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
-.shadow-md {
-  --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
-  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
-}
-
-.shadow-lg {
-  --tw-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  --tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);
-  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
-}
-
 .ring {
   --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
   --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(3px + var(--tw-ring-offset-width)) var(--tw-ring-color);
@@ -5591,11 +5568,6 @@ details.collapse summary::-webkit-details-marker {
 
 .ring-offset-base-100 {
   --tw-ring-offset-color: var(--fallback-b1,oklch(var(--b1)/1));
-}
-
-.blur {
-  --tw-blur: blur(8px);
-  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 
 .drop-shadow {
@@ -5833,7 +5805,7 @@ details.collapse summary::-webkit-details-marker {
 }
 
 @media (hover:hover) {
-  .dropdown ul.dropdown-content li > *:not(ul):not(.menu-title):not(details):active,.dropdown ul.dropdown-content li > *:not(ul):not(.menu-title):not(details).active,.dropdown ul.dropdown-content li > details > summary:active {
+  .dropdown ul.dropdown-content li > *:not(ul, .menu-title, details, .btn):active,.dropdown ul.dropdown-content li > *:not(ul, .menu-title, details, .btn).active,.dropdown ul.dropdown-content li > details > summary:active {
     --tw-bg-opacity: 1;
     background-color: var(--fallback-n,oklch(var(--n)/var(--tw-bg-opacity)));
     --tw-text-opacity: 1;
@@ -5842,50 +5814,50 @@ details.collapse summary::-webkit-details-marker {
 }
 
 @media (hover: hover) {
-  :where(.dropdown ul.dropdown-content li:not(.menu-title):not(.disabled) > *:not(ul):not(details):not(.menu-title)):not(.active):hover, :where(.dropdown ul.dropdown-content li:not(.menu-title):not(.disabled) > details > summary:not(.menu-title)):not(.active):hover {
+  :where(.dropdown ul.dropdown-content li:not(.menu-title, .disabled) > *:not(ul, details, .menu-title)):not(.active, .btn):hover, :where(.dropdown ul.dropdown-content li:not(.menu-title, .disabled) > details > summary:not(.menu-title)):not(.active, .btn):hover {
     cursor: pointer;
     outline: 2px solid transparent;
     outline-offset: 2px;
   }
 
   @supports (color: oklch(0 0 0)) {
-    :where(.dropdown ul.dropdown-content li:not(.menu-title):not(.disabled) > *:not(ul):not(details):not(.menu-title)):not(.active):hover, :where(.dropdown ul.dropdown-content li:not(.menu-title):not(.disabled) > details > summary:not(.menu-title)):not(.active):hover {
+    :where(.dropdown ul.dropdown-content li:not(.menu-title, .disabled) > *:not(ul, details, .menu-title)):not(.active, .btn):hover, :where(.dropdown ul.dropdown-content li:not(.menu-title, .disabled) > details > summary:not(.menu-title)):not(.active, .btn):hover {
       background-color: var(--fallback-bc,oklch(var(--bc)/0.1));
     }
   }
 
-  :where(.dropdown ul.dropdown-content li:not(.menu-title):not(.disabled) > *:not(ul):not(details):not(.menu-title)):not(.active):hover, :where(.dropdown ul.dropdown-content li:not(.menu-title):not(.disabled) > details > summary:not(.menu-title)):not(.active):hover {
+  :where(.dropdown ul.dropdown-content li:not(.menu-title, .disabled) > *:not(ul, details, .menu-title)):not(.active, .btn):hover, :where(.dropdown ul.dropdown-content li:not(.menu-title, .disabled) > details > summary:not(.menu-title)):not(.active, .btn):hover {
     cursor: pointer;
     outline: 2px solid transparent;
     outline-offset: 2px;
   }
 
   @supports (color: oklch(0 0 0)) {
-    :where(.dropdown ul.dropdown-content li:not(.menu-title):not(.disabled) > *:not(ul):not(details):not(.menu-title)):not(.active):hover, :where(.dropdown ul.dropdown-content li:not(.menu-title):not(.disabled) > details > summary:not(.menu-title)):not(.active):hover {
+    :where(.dropdown ul.dropdown-content li:not(.menu-title, .disabled) > *:not(ul, details, .menu-title)):not(.active, .btn):hover, :where(.dropdown ul.dropdown-content li:not(.menu-title, .disabled) > details > summary:not(.menu-title)):not(.active, .btn):hover {
       background-color: var(--fallback-bc,oklch(var(--bc)/0.1));
     }
   }
 
-  :where(.dropdown ul.dropdown-content li:not(.menu-title):not(.disabled) > *:not(ul):not(details):not(.menu-title)):not(.active):hover, :where(.dropdown ul.dropdown-content li:not(.menu-title):not(.disabled) > details > summary:not(.menu-title)):not(.active):hover {
+  :where(.dropdown ul.dropdown-content li:not(.menu-title, .disabled) > *:not(ul, details, .menu-title)):not(.active, .btn):hover, :where(.dropdown ul.dropdown-content li:not(.menu-title, .disabled) > details > summary:not(.menu-title)):not(.active, .btn):hover {
     cursor: pointer;
     outline: 2px solid transparent;
     outline-offset: 2px;
   }
 
   @supports (color: oklch(0 0 0)) {
-    :where(.dropdown ul.dropdown-content li:not(.menu-title):not(.disabled) > *:not(ul):not(details):not(.menu-title)):not(.active):hover, :where(.dropdown ul.dropdown-content li:not(.menu-title):not(.disabled) > details > summary:not(.menu-title)):not(.active):hover {
+    :where(.dropdown ul.dropdown-content li:not(.menu-title, .disabled) > *:not(ul, details, .menu-title)):not(.active, .btn):hover, :where(.dropdown ul.dropdown-content li:not(.menu-title, .disabled) > details > summary:not(.menu-title)):not(.active, .btn):hover {
       background-color: var(--fallback-bc,oklch(var(--bc)/0.1));
     }
   }
 
-  :where(.dropdown ul.dropdown-content li:not(.menu-title):not(.disabled) > *:not(ul):not(details):not(.menu-title)):not(.active):hover, :where(.dropdown ul.dropdown-content li:not(.menu-title):not(.disabled) > details > summary:not(.menu-title)):not(.active):hover {
+  :where(.dropdown ul.dropdown-content li:not(.menu-title, .disabled) > *:not(ul, details, .menu-title)):not(.active, .btn):hover, :where(.dropdown ul.dropdown-content li:not(.menu-title, .disabled) > details > summary:not(.menu-title)):not(.active, .btn):hover {
     cursor: pointer;
     outline: 2px solid transparent;
     outline-offset: 2px;
   }
 
   @supports (color: oklch(0 0 0)) {
-    :where(.dropdown ul.dropdown-content li:not(.menu-title):not(.disabled) > *:not(ul):not(details):not(.menu-title)):not(.active):hover, :where(.dropdown ul.dropdown-content li:not(.menu-title):not(.disabled) > details > summary:not(.menu-title)):not(.active):hover {
+    :where(.dropdown ul.dropdown-content li:not(.menu-title, .disabled) > *:not(ul, details, .menu-title)):not(.active, .btn):hover, :where(.dropdown ul.dropdown-content li:not(.menu-title, .disabled) > details > summary:not(.menu-title)):not(.active, .btn):hover {
       background-color: var(--fallback-bc,oklch(var(--bc)/0.1));
     }
   }
@@ -5907,7 +5879,7 @@ details.collapse summary::-webkit-details-marker {
   padding-inline-start: 0.5rem;
 }
 
-.dropdown ul.dropdown-content :where(li:not(.menu-title) > *:not(ul):not(details):not(.menu-title)),.dropdown ul.dropdown-content :where(li:not(.menu-title) > details > summary:not(.menu-title)) {
+.dropdown ul.dropdown-content :where(li:not(.menu-title) > *:not(ul, details, .menu-title, .btn)),.dropdown ul.dropdown-content :where(li:not(.menu-title) > details > summary:not(.menu-title)) {
   display: grid;
   grid-auto-flow: column;
   align-content: flex-start;
@@ -5964,7 +5936,7 @@ details.collapse summary::-webkit-details-marker {
   content: "";
 }
 
-.dropdown ul.dropdown-content :where(li:not(.menu-title) > *:not(ul):not(details):not(.menu-title)),.dropdown ul.dropdown-content :where(li:not(.menu-title) > details > summary:not(.menu-title)) {
+.dropdown ul.dropdown-content :where(li:not(.menu-title) > *:not(ul, details, .menu-title, .btn)),.dropdown ul.dropdown-content :where(li:not(.menu-title) > details > summary:not(.menu-title)) {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
   border-radius: var(--rounded-btn, 0.5rem);
@@ -5982,12 +5954,7 @@ details.collapse summary::-webkit-details-marker {
   text-wrap: balance;
 }
 
-:where(.dropdown ul.dropdown-content li:not(.menu-title):not(.disabled) > *:not(ul):not(details):not(.menu-title)):not(summary):not(.active).focus,
-  :where(.dropdown ul.dropdown-content li:not(.menu-title):not(.disabled) > *:not(ul):not(details):not(.menu-title)):not(summary):not(.active):focus,
-  :where(.dropdown ul.dropdown-content li:not(.menu-title):not(.disabled) > *:not(ul):not(details):not(.menu-title)):is(summary):not(.active):focus-visible,
-  :where(.dropdown ul.dropdown-content li:not(.menu-title):not(.disabled) > details > summary:not(.menu-title)):not(summary):not(.active).focus,
-  :where(.dropdown ul.dropdown-content li:not(.menu-title):not(.disabled) > details > summary:not(.menu-title)):not(summary):not(.active):focus,
-  :where(.dropdown ul.dropdown-content li:not(.menu-title):not(.disabled) > details > summary:not(.menu-title)):is(summary):not(.active):focus-visible {
+:where(.dropdown ul.dropdown-content li:not(.menu-title, .disabled) > *:not(ul, details, .menu-title)):not(summary, .active, .btn).focus, :where(.dropdown ul.dropdown-content li:not(.menu-title, .disabled) > *:not(ul, details, .menu-title)):not(summary, .active, .btn):focus, :where(.dropdown ul.dropdown-content li:not(.menu-title, .disabled) > *:not(ul, details, .menu-title)):is(summary):not(.active, .btn):focus-visible, :where(.dropdown ul.dropdown-content li:not(.menu-title, .disabled) > details > summary:not(.menu-title)):not(summary, .active, .btn).focus, :where(.dropdown ul.dropdown-content li:not(.menu-title, .disabled) > details > summary:not(.menu-title)):not(summary, .active, .btn):focus, :where(.dropdown ul.dropdown-content li:not(.menu-title, .disabled) > details > summary:not(.menu-title)):is(summary):not(.active, .btn):focus-visible {
   cursor: pointer;
   background-color: var(--fallback-bc,oklch(var(--bc)/0.1));
   --tw-text-opacity: 1;
@@ -5996,7 +5963,7 @@ details.collapse summary::-webkit-details-marker {
   outline-offset: 2px;
 }
 
-.dropdown ul.dropdown-content li > *:not(ul):not(.menu-title):not(details):active,.dropdown ul.dropdown-content li > *:not(ul):not(.menu-title):not(details).active,.dropdown ul.dropdown-content li > details > summary:active {
+.dropdown ul.dropdown-content li > *:not(ul, .menu-title, details, .btn):active,.dropdown ul.dropdown-content li > *:not(ul, .menu-title, details, .btn).active,.dropdown ul.dropdown-content li > details > summary:active {
   --tw-bg-opacity: 1;
   background-color: var(--fallback-n,oklch(var(--n)/var(--tw-bg-opacity)));
   --tw-text-opacity: 1;
@@ -6504,19 +6471,9 @@ button.btn.loading-htmx.htmx-request {
   background-color: rgb(107 33 168 / var(--tw-bg-opacity));
 }
 
-.hover\:bg-gray-200:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(229 231 235 / var(--tw-bg-opacity));
-}
-
 .hover\:text-white:hover {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
-}
-
-.hover\:text-gray-600:hover {
-  --tw-text-opacity: 1;
-  color: rgb(75 85 99 / var(--tw-text-opacity));
 }
 
 .hover\:underline:hover {
@@ -6619,98 +6576,7 @@ button.btn.loading-htmx.htmx-request {
   display: block;
 }
 
-@media (prefers-color-scheme: dark) {
-  .dark\:block {
-    display: block;
-  }
-
-  .dark\:hidden {
-    display: none;
-  }
-
-  .dark\:divide-gray-700 > :not([hidden]) ~ :not([hidden]) {
-    --tw-divide-opacity: 1;
-    border-color: rgb(55 65 81 / var(--tw-divide-opacity));
-  }
-
-  .dark\:border-gray-600 {
-    --tw-border-opacity: 1;
-    border-color: rgb(75 85 99 / var(--tw-border-opacity));
-  }
-
-  .dark\:border-gray-700 {
-    --tw-border-opacity: 1;
-    border-color: rgb(55 65 81 / var(--tw-border-opacity));
-  }
-
-  .dark\:bg-gray-700 {
-    --tw-bg-opacity: 1;
-    background-color: rgb(55 65 81 / var(--tw-bg-opacity));
-  }
-
-  .dark\:bg-gray-800 {
-    --tw-bg-opacity: 1;
-    background-color: rgb(31 41 55 / var(--tw-bg-opacity));
-  }
-
-  .dark\:bg-gray-900 {
-    --tw-bg-opacity: 1;
-    background-color: rgb(17 24 39 / var(--tw-bg-opacity));
-  }
-
-  .dark\:text-gray-200 {
-    --tw-text-opacity: 1;
-    color: rgb(229 231 235 / var(--tw-text-opacity));
-  }
-
-  .dark\:text-gray-300 {
-    --tw-text-opacity: 1;
-    color: rgb(209 213 219 / var(--tw-text-opacity));
-  }
-
-  .dark\:text-gray-400 {
-    --tw-text-opacity: 1;
-    color: rgb(156 163 175 / var(--tw-text-opacity));
-  }
-
-  .dark\:text-purple-400 {
-    --tw-text-opacity: 1;
-    color: rgb(192 132 252 / var(--tw-text-opacity));
-  }
-
-  .dark\:text-white {
-    --tw-text-opacity: 1;
-    color: rgb(255 255 255 / var(--tw-text-opacity));
-  }
-
-  .peer:focus ~ .dark\:peer-focus\:ring-blue-800 {
-    --tw-ring-opacity: 1;
-    --tw-ring-color: rgb(30 64 175 / var(--tw-ring-opacity));
-  }
-}
-
 @media (min-width: 640px) {
-  .sm\:mx-0 {
-    margin-left: 0px;
-    margin-right: 0px;
-  }
-
-  .sm\:table-cell {
-    display: table-cell;
-  }
-
-  .sm\:hidden {
-    display: none;
-  }
-
-  .sm\:w-1\/2 {
-    width: 50%;
-  }
-
-  .sm\:w-1\/6 {
-    width: 16.666667%;
-  }
-
   .sm\:grid-cols-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -6733,14 +6599,6 @@ button.btn.loading-htmx.htmx-request {
 
   .sm\:p-6 {
     padding: 1.5rem;
-  }
-
-  .sm\:pl-0 {
-    padding-left: 0px;
-  }
-
-  .sm\:pr-0 {
-    padding-right: 0px;
   }
 
   .sm\:text-left {
@@ -6845,6 +6703,76 @@ button.btn.loading-htmx.htmx-request {
 @media (min-width: 1536px) {
   .\32xl\:col-span-2 {
     grid-column: span 2 / span 2;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .dark\:block {
+    display: block;
+  }
+
+  .dark\:hidden {
+    display: none;
+  }
+
+  .dark\:divide-gray-700 > :not([hidden]) ~ :not([hidden]) {
+    --tw-divide-opacity: 1;
+    border-color: rgb(55 65 81 / var(--tw-divide-opacity));
+  }
+
+  .dark\:border-gray-600 {
+    --tw-border-opacity: 1;
+    border-color: rgb(75 85 99 / var(--tw-border-opacity));
+  }
+
+  .dark\:border-gray-700 {
+    --tw-border-opacity: 1;
+    border-color: rgb(55 65 81 / var(--tw-border-opacity));
+  }
+
+  .dark\:bg-gray-700 {
+    --tw-bg-opacity: 1;
+    background-color: rgb(55 65 81 / var(--tw-bg-opacity));
+  }
+
+  .dark\:bg-gray-800 {
+    --tw-bg-opacity: 1;
+    background-color: rgb(31 41 55 / var(--tw-bg-opacity));
+  }
+
+  .dark\:bg-gray-900 {
+    --tw-bg-opacity: 1;
+    background-color: rgb(17 24 39 / var(--tw-bg-opacity));
+  }
+
+  .dark\:text-gray-200 {
+    --tw-text-opacity: 1;
+    color: rgb(229 231 235 / var(--tw-text-opacity));
+  }
+
+  .dark\:text-gray-300 {
+    --tw-text-opacity: 1;
+    color: rgb(209 213 219 / var(--tw-text-opacity));
+  }
+
+  .dark\:text-gray-400 {
+    --tw-text-opacity: 1;
+    color: rgb(156 163 175 / var(--tw-text-opacity));
+  }
+
+  .dark\:text-purple-400 {
+    --tw-text-opacity: 1;
+    color: rgb(192 132 252 / var(--tw-text-opacity));
+  }
+
+  .dark\:text-white {
+    --tw-text-opacity: 1;
+    color: rgb(255 255 255 / var(--tw-text-opacity));
+  }
+
+  .peer:focus ~ .dark\:peer-focus\:ring-blue-800 {
+    --tw-ring-opacity: 1;
+    --tw-ring-color: rgb(30 64 175 / var(--tw-ring-opacity));
   }
 }
 

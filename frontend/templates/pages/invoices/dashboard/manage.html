@@ -1,0 +1,48 @@
+{% extends 'base/base.html' %}
+{% block content %}
+    <div class="card p-6 shadow-xl bg-base-100 mb-4">
+        <div class=" text-3xl w-full grid grid-cols-4">
+            <div>
+                <a href="{% url "invoices dashboard" %}"
+                   class="btn btn-sm btn-outline btn-secondary me-3 float-left">
+                    Back to list
+                </a>
+            </div>
+            <h1 class="text-center col-span-2">Invoice #{{ invoice.id }}</h1>
+            <div>
+                <a href="{% url "invoices dashboard" %}"
+                   class="btn btn-sm btn-outline btn-error me-3 float-right">
+                    <i class="fa-solid fa-trash"></i>
+                    Delete
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="card bg-base-100 shadow-xl w-full p-6 flex-row gap-x-4">
+        <button class="btn btn-md btn-outline btn-default grow"
+                hx-target="#container"
+                hx-get="{% url "api:invoices:tab preview" invoice_id=invoice.id %}"
+                hx-swap="innerHTML"
+                hx-trigger="load,click,queue:last"
+        >
+            <i class="fa-solid fa-up-right-from-square"></i>
+            Preview Invoice
+        </button>
+        <button class="btn btn-md btn-outline btn-default grow">
+            <i class="fa-solid fa-pencil"></i>
+            Edit Invoice
+        </button>
+        <button class="btn btn-md btn-outline btn-default grow">
+            <i class="fa-solid fa-share-nodes"></i>
+            Send Invoice
+        </button>
+    </div>
+    <div class="collapse collapse-arrow card bg-base-100 shadow-xl w-full p-6 flex-row gap-x-4 mt-4">
+        <input type="checkbox" checked />
+        <div class="collapse-title text-xl font-medium">
+            Manage Invoice Content
+        </div>
+        <div id="container" class="collapse-content">
+        </div>
+    </div>
+{% endblock content %}

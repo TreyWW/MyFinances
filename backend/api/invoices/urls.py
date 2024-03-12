@@ -1,6 +1,6 @@
 from django.urls import path
 
-from . import fetch, delete, edit
+from . import fetch, delete, edit, manage
 from .create import set_destination
 from .create.services import add
 
@@ -32,6 +32,7 @@ urlpatterns = [
     ),
     path("edit/<int:invoice_id>/set_status/<str:status>/", edit.change_status, name="edit status"),
     path("fetch/", fetch.fetch_all_invoices, name="fetch"),
+    path("manage/<int:invoice_id>/tabs/preview/", manage.tab_preview_invoice, name="tab preview"),
 ]
 
 app_name = "invoices"

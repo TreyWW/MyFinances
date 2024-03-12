@@ -32,7 +32,7 @@ def preview(request, invoice_id):
 
     return render(
         request,
-        "pages/invoices/view/invoice.html",
+        "pages/invoices/view/invoice_page.html",
         context,
     )
 
@@ -59,6 +59,6 @@ def view(request, uuid):
 
     return render(
         request,
-        "pages/invoices/view/invoice.html",
+        "pages/invoices/view/invoice_page.html",
         context,
     )
