@@ -14,7 +14,7 @@ def delete_invoice(request: HttpRequest):
 
     try:
         invoice = Invoice.objects.get(id=invoice)
-    except:
+    except Invoice.DoesNotExist:
         return JsonResponse({"message": "Invoice not found"}, status=404)
 
     if not invoice.user.logged_in_as_team and invoice.user != request.user:

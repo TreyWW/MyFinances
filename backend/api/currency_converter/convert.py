@@ -39,28 +39,29 @@ def convert_currency(init_currency, target_currency, amount, date=None):
     if not isinstance(amount, (int, float)):
         raise ValueError("Amount is not an accepted datatype")
 
+    currency_rates = CurrencyRates()
+
     if date is not None:
         if not isinstance(date, datetime.datetime):
             raise ValueError("Date is not an accepted datatype")
-
-    if date is not None:
         # Check if date was a weekend
         # Forex's source has no records on weekends (5,6 = Sat, Sun)
-        if date.weekday() >= 5:
+        elif date.weekday() >= 5:
             # move to friday before the weekend
             date = date.replace(day=date.day - (date.weekday() - 4))
 
-    currency_rates = CurrencyRates()
-
-    try:
-        if date is not None:
+        try:
             target_amount = currency_rates.convert(init_currency, target_currency, amount, date)
-        else:
+            return round(target_amount, 2)
+        except Exception as e:
+            # Handle specific exceptions raised by forex_python if needed
+            raise ValueError(f"Error in currency conversion: {e}")
+    else:
+        try:
             target_amount = currency_rates.convert(init_currency, target_currency, amount)
-        return round(target_amount, 2)
-    except Exception as e:
-        # Handle specific exceptions raised by forex_python if needed
-        raise ValueError(f"Error in currency conversion: {e}")
+            return round(target_amount, 2)
+        except Exception as e:
+            raise ValueError(f"Error in currency conversion: {e}")
 
 
 def currency_conversion(request: HttpRequest):

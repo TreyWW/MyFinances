@@ -21,7 +21,7 @@ def set_destination_to(request: HttpRequest):
         try:
             client = Client.objects.get(user=request.user, id=selected_client)
             context["existing_client"] = client
-        except:
+        except Client.DoesNotExist:
             messages.error("Client not found")
 
     return render(request, "pages/invoices/create/_to_destination.html", context)
