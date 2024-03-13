@@ -129,16 +129,15 @@ class InvoicesCreateTestCase(ViewTestCase):
         self.login_user()
         self.login_to_team()
 
-        data = self.data
-        data["user"] = self.log_in_user.pk
-        data["organization"] = self.created_team.pk
+        self.data["organization"] = self.created_team.pk
 
-        self.client.post(self._invoices_create_url, data)
+        self.client.post(self._invoices_create_url, self.data)
 
-        invoices = Invoice.objects.filter(user=self.log_in_user)
+        invoices = Invoice.objects.filter(
+            organization=self.log_in_user.logged_in_as_team
+        )
 
         self.assertEqual(len(invoices), 1)
         invoice = invoices[0]
 
-        self.assertEqual(invoice.user, self.log_in_user)
         self.assertEqual(invoice.organization, self.created_team)

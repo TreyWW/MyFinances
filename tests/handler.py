@@ -62,6 +62,7 @@ class ViewTestCase(TestCase):
     def login_to_team(self):
         self.login_user()
         self.log_in_user.logged_in_as_team = self.created_team
+        self.log_in_user.save()
 
     def tearDown(self):
         # Cleanup uploaded files
