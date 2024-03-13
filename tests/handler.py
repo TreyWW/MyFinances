@@ -51,9 +51,7 @@ def cleanup_uploaded_files(files):
 
 class ViewTestCase(TestCase):
     def setUp(self):
-        self.log_in_user = User.objects.create_user(
-            username="user@example.com", password="user", email="user@example.com"
-        )
+        self.log_in_user = User.objects.create_user(username="user@example.com", password="user", email="user@example.com")
         self.created_team = Team.objects.create(name="Testing", leader=self.log_in_user)
         self.created_team.members.add(self.log_in_user)
         self.mock_images = []

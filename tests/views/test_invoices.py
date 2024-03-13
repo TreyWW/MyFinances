@@ -89,9 +89,7 @@ class InvoicesCreateTestCase(ViewTestCase):
         func = resolve("/dashboard/invoices/create/").func
         func_name = f"{func.__module__}.{func.__name__}"
         self.assertEqual("/dashboard/invoices/create/", self._invoices_create_url)
-        self.assertEqual(
-            "backend.views.core.invoices.create.create_invoice_page", func_name
-        )
+        self.assertEqual("backend.views.core.invoices.create.create_invoice_page", func_name)
 
     def test_invoices_create_invoice_from_post_data(self):
         self.login_user()
@@ -133,9 +131,7 @@ class InvoicesCreateTestCase(ViewTestCase):
 
         self.client.post(self._invoices_create_url, self.data)
 
-        invoices = Invoice.objects.filter(
-            organization=self.log_in_user.logged_in_as_team
-        )
+        invoices = Invoice.objects.filter(organization=self.log_in_user.logged_in_as_team)
 
         self.assertEqual(len(invoices), 1)
         invoice = invoices[0]
