@@ -5,8 +5,9 @@ from django.contrib.messages import get_messages
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase, SimpleTestCase
 from django.urls import resolve, reverse
+from datetime import date, timedelta
 
-from backend.models import User, Receipt, UserSettings
+from backend.models import User, Team, Receipt, UserSettings, Invoice
 
 
 def assert_url_matches_view(url_path, url_name, view_function_path):
@@ -51,8 +52,15 @@ def cleanup_uploaded_files(files):
 class ViewTestCase(TestCase):
     def setUp(self):
         self.log_in_user = User.objects.create_user(username="user@example.com", password="user", email="user@example.com")
+        self.created_team = Team.objects.create(name="Testing", leader=self.log_in_user)
+        self.created_team.members.add(self.log_in_user)
         self.mock_images = []
         self.htmx_headers = {"HTTP_HX-Request": "true"}
+
+    def login_to_team(self):
+        self.login_user()
+        self.log_in_user.logged_in_as_team = self.created_team
+        self.log_in_user.save()
 
     def tearDown(self):
         # Cleanup uploaded files

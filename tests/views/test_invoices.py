@@ -20,6 +20,9 @@ class InvoicesViewTestCase(ViewTestCase):
         self.login_user()
         response = self.client.get(self._invoices_dashboard_url)
         self.assertEqual(response.status_code, 200)
+        self.login_to_team()
+        response = self.client.get(self._invoices_dashboard_url)
+        self.assertEqual(response.status_code, 200)
 
     def test_invoices_view_match_with_template(self):
         self.login_user()
@@ -38,31 +41,7 @@ class InvoicesCreateTestCase(ViewTestCase):
         super().setUp()
 
         self._invoices_create_url = reverse("invoices dashboard create")
-
-    def test_invoices_create_302_for_non_authenticated_users(self):
-        response = self.client.get(self._invoices_create_url)
-        self.assertEqual(response.status_code, 302)
-
-    def test_invoices_create_200_for_authenticated_users(self):
-        self.login_user()
-        response = self.client.get(self._invoices_create_url)
-        self.assertEqual(response.status_code, 200)
-
-    def test_invoices_create_match_with_template(self):
-        self.login_user()
-        response = self.client.get(self._invoices_create_url)
-        self.assertTemplateUsed(response, "pages/invoices/create/create.html")
-
-    def test_invoices_create_matches_with_urls_view(self):
-        func = resolve("/dashboard/invoices/create/").func
-        func_name = f"{func.__module__}.{func.__name__}"
-        self.assertEqual("/dashboard/invoices/create/", self._invoices_create_url)
-        self.assertEqual("backend.views.core.invoices.create.create_invoice_page", func_name)
-
-    def test_invoices_create_invoice_from_post_data(self):
-        self.login_user()
-
-        data = {
+        self.data = {
             "service_name[]": ["Service 1", "Service 2"],
             "hours[]": [2, 3],
             "price_per_hour[]": [50, 60],
@@ -89,7 +68,33 @@ class InvoicesCreateTestCase(ViewTestCase):
             "account_holder_name": "Account Holder Name",
         }
 
-        self.client.post(self._invoices_create_url, data)
+    def test_invoices_create_302_for_non_authenticated_users(self):
+        response = self.client.get(self._invoices_create_url)
+        self.assertEqual(response.status_code, 302)
+
+    def test_invoices_create_200_for_authenticated_users(self):
+        self.login_user()
+        response = self.client.get(self._invoices_create_url)
+        self.assertEqual(response.status_code, 200)
+        self.login_to_team()
+        response = self.client.get(self._invoices_create_url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_invoices_create_match_with_template(self):
+        self.login_user()
+        response = self.client.get(self._invoices_create_url)
+        self.assertTemplateUsed(response, "pages/invoices/create/create.html")
+
+    def test_invoices_create_matches_with_urls_view(self):
+        func = resolve("/dashboard/invoices/create/").func
+        func_name = f"{func.__module__}.{func.__name__}"
+        self.assertEqual("/dashboard/invoices/create/", self._invoices_create_url)
+        self.assertEqual("backend.views.core.invoices.create.create_invoice_page", func_name)
+
+    def test_invoices_create_invoice_from_post_data(self):
+        self.login_user()
+
+        self.client.post(self._invoices_create_url, self.data)
 
         invoices = Invoice.objects.filter(user=self.log_in_user)
 
@@ -117,3 +122,18 @@ class InvoicesCreateTestCase(ViewTestCase):
         self.assertEqual(invoice.sort_code, "123456")
         self.assertEqual(invoice.account_number, "12345678")
         self.assertEqual(invoice.account_holder_name, "Account Holder Name")
+
+    def test_invoices_create_invoice_from_post_data_for_Teams(self):
+        self.login_user()
+        self.login_to_team()
+
+        self.data["organization"] = self.created_team.pk
+
+        self.client.post(self._invoices_create_url, self.data)
+
+        invoices = Invoice.objects.filter(organization=self.log_in_user.logged_in_as_team)
+
+        self.assertEqual(len(invoices), 1)
+        invoice = invoices[0]
+
+        self.assertEqual(invoice.organization, self.created_team)
