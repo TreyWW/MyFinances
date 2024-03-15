@@ -55,10 +55,10 @@ variable "availability_zones" {
 
 # Step functions
 
-variable "sfn_machine_name" {
-  description = "Name for main step function"
-  default     = "myfinances-invoicing-scheduler-fn"
-}
+#variable "sfn_machine_name" {
+#  description = "Name for main step function"
+#  default     = "myfinances-invoicing-scheduler-fn"
+#}
 
 # API Destination
 

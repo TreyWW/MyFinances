@@ -1,44 +1,40 @@
 resource "aws_sfn_state_machine" "scheduler-step-function" {
-  name     = var.sfn_machine_name
+  name     = "${var.SITE_NAME}-invoicing-scheduler-fn"
   role_arn = aws_iam_role.scheduler-execution-role.arn
-  type     = "STANDARD"
+
   logging_configuration {
     level = "OFF"
   }
   definition = jsonencode({
-    "Comment" : "A description of my state machine",
     "StartAt" : "Call Schedule Endpoint",
     "States" : {
-      "StartAt" : "Call Schedule Endpoint",
-      "States" : {
-        "Call Schedule Endpoint" : {
-          "Type" : "Task",
-          "Resource" : "arn:aws:states:::http:invoke",
-          "Parameters" : {
-            "Authentication" : {
-              "ConnectionArn" : aws_cloudwatch_event_connection.invoice-scheduler-connection.arn
-            },
-            "Method" : "POST",
-            "ApiEndpoint" : "${var.SITE_URL}/api/invoices/schedules/receive/",
-            "RequestBody.$" : "$.body",
-            "Headers.$" : "$.headers"
+      "Call Schedule Endpoint" : {
+        "Type" : "Task",
+        "Resource" : "arn:aws:states:::http:invoke",
+        "Parameters" : {
+          "Authentication" : {
+            "ConnectionArn" : aws_cloudwatch_event_connection.invoice-scheduler-connection.arn
           },
-          "Retry" : [
-            {
-              "ErrorEquals" : [
-                "States.ALL"
-              ],
-              "BackoffRate" : 2,
-              "IntervalSeconds" : 1,
-              "MaxAttempts" : 3,
-              "JitterStrategy" : "FULL"
-            }
-          ],
-          "End" : true
-        }
-      },
-      "Comment" : "Call our django api to alert the schedule timestamp has reached."
-    }
+          "Method" : "POST",
+          "ApiEndpoint" : "${var.SITE_URL}/api/invoices/schedules/receive/",
+          "RequestBody.$" : "$.body",
+          "Headers.$" : "$.headers"
+        },
+        "Retry" : [
+          {
+            "ErrorEquals" : [
+              "States.ALL"
+            ],
+            "BackoffRate" : 2,
+            "IntervalSeconds" : 1,
+            "MaxAttempts" : 3,
+            "JitterStrategy" : "FULL"
+          }
+        ],
+        "End" : true
+      }
+    },
+    "Comment" : "Call our django api to alert the schedule timestamp has reached."
   })
   tags = local.app_tags
 }
@@ -62,7 +58,7 @@ resource "aws_iam_role" "scheduler-execution-role" {
 }
 
 resource "aws_iam_role_policy" "scheduler-execution-policy" {
-  policy     = aws_iam_policy.scheduler-execution-policy.id
+  policy     = aws_iam_policy.scheduler-execution-policy.policy
   role       = aws_iam_role.scheduler-execution-role.id
   depends_on = [
     aws_iam_policy.scheduler-execution-policy,
