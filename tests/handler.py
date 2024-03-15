@@ -39,22 +39,11 @@ def create_mock_image():
     return SimpleUploadedFile("mock_image.jpg", image_io.getvalue(), content_type="image/jpeg")
 
 
-def cleanup_uploaded_files(files):
-    """
-    Cleanup uploaded files.
-
-    Args:
-        files (list): List of files to delete.
-    """
-    [file.delete() for file in files]
-
-
 class ViewTestCase(TestCase):
     def setUp(self):
         self.log_in_user = User.objects.create_user(username="user@example.com", password="user", email="user@example.com")
         self.created_team = Team.objects.create(name="Testing", leader=self.log_in_user)
         self.created_team.members.add(self.log_in_user)
-        self.mock_images = []
         self.htmx_headers = {"HTTP_HX-Request": "true"}
 
     def login_to_team(self):
@@ -64,9 +53,8 @@ class ViewTestCase(TestCase):
 
     def tearDown(self):
         # Cleanup uploaded files
-        cleanup_uploaded_files(self.mock_images)
-        cleanup_uploaded_files([receipt.image for receipt in Receipt.objects.all()])
-        cleanup_uploaded_files([pfp.profile_picture for pfp in UserSettings.objects.all()])
+        Receipt.objects.all().delete()
+        UserSettings.objects.all().delete()
         super().tearDown()
 
     def call_index(self):
