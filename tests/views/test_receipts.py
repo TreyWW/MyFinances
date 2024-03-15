@@ -1,10 +1,11 @@
 import uuid
 
 from django.contrib.messages import get_messages
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse, resolve
 
 from backend.models import Receipt, ReceiptDownloadToken
-from tests.handler import ViewTestCase, create_mock_image
+from tests.handler import ViewTestCase
 
 
 class ReceiptsViewTestCase(ViewTestCase):
@@ -45,7 +46,7 @@ class ReceiptsAPITestCase(ViewTestCase):
         self.login_user()
         self.assertEqual(len(Receipt.objects.all()), 0)
         # Create a mock receipt image
-        mock_image = create_mock_image()
+        mock_image = SimpleUploadedFile("mock_image.jpg", b"image_content", "image/jpeg")
 
         data = {"receipt_name": "some name", "receipt_image": mock_image}
         headers = {"HTTP_HX-Request": "true"}
@@ -62,7 +63,7 @@ class ReceiptsAPITestCase(ViewTestCase):
         self.login_user()
         self.assertEqual(len(Receipt.objects.all()), 0)
         # Create a mock receipt image
-        mock_image = create_mock_image()
+        mock_image = SimpleUploadedFile("mock_image.jpg", b"image_content", "image/jpeg")
         data = {"receipt_name": "", "receipt_image": mock_image}
         headers = {"HTTP_HX-Request": "true"}
         response = self.client.post(self._receipts_api_create_url, data, **headers)
@@ -88,7 +89,9 @@ class ReceiptsAPITestCase(ViewTestCase):
 class ReceiptDownloadEndpointsTest(ViewTestCase):
     def setUp(self):
         super().setUp()
-        self.receipt = Receipt.objects.create(user=self.log_in_user, image=create_mock_image())
+        self.receipt = Receipt.objects.create(
+            user=self.log_in_user, image=SimpleUploadedFile("mock_image.jpg", b"image_content", "image/jpeg")
+        )
         self.token = ReceiptDownloadToken.objects.create(user=self.log_in_user, file=self.receipt)
         self.download_receipt_url = reverse("api:receipts:download_receipt", args=[self.token.token])
         self.generate_download_link_url = reverse("api:receipts:generate_download_link", args=[self.receipt.id])
