@@ -1,3 +1,4 @@
+import json
 import os
 import sys
 from typing import Union, List
@@ -89,3 +90,16 @@ def send_email(destination: Union[str, List[str]], subject: str, message: str) -
             },
         )
     # TODO: Add sendgrid emails
+
+
+try:
+    with open(os.path.join(BASE_DIR, "infrastructure/aws/terraform/terraform.tfvars.json")) as tfvars_file:
+        tf_vars = json.load(tfvars_file)
+
+        if get_var("SITE_URL") != tf_vars.get("SITE_URL"):
+            raise ValueError("environment variable SITE_URL does not match the one in 'terraform.tfvars.json'")
+
+        if get_var("SITE_NAME") != tf_vars.get("SITE_NAME"):
+            raise ValueError("environment variable SITE_NAME does not match the one in 'terraform.tfvars.json'")
+except FileNotFoundError:
+    raise FileNotFoundError("/infrastructure/aws/terraform.tfvars.json was not found. You can copy sample.tfvars.json")

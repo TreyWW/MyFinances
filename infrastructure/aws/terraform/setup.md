@@ -4,7 +4,7 @@
 
 1. Install Terraform
 2. Run "terraform init"
-3. Create a "terraform.tfvars" file
+3. Create a "terraform.tfvars.json" file
 4. Add the default values to tfvars but change to fit your needs
 
 ```terraform

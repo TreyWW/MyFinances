@@ -16,7 +16,9 @@ from .helpers import get_var, ARE_EMAILS_ENABLED
 
 DEBUG = True if get_var("DEBUG") in ["True", "true", "TRUE", True] else False
 
-SITE_URL = get_var("SITE_URL") or "http://127.0.0.1:8000"
+SITE_URL = get_var("SITE_URL", default="http://127.0.0.1:8000")
+SITE_NAME = get_var("SITE_NAME", default="myfinances")
+SITE_NAME_FRIENDLY = get_var("SITE_NAME_FRIENDLY", default="MyFinances")
 
 if not SITE_URL.startswith("http"):
     exit("[BACKEND] SITE_URL must start with http:// or https://")
@@ -256,6 +258,7 @@ SOCIAL_AUTH_USER_MODEL = "backend.User"
 
 AWS_TAGS_APP_NAME = get_var("AWS_TAGS_APP_NAME", default="myfinances")
 
+
 # APP_CONFIG = appconfig
 
 
@@ -319,9 +322,9 @@ else:
     MEDIA_ROOT = os.path.join(BASE_DIR, "media")
     DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 
+
     class CustomPublicMediaStorage(FileSystemStorage):  # This overrides the AWS version
         ...
-
 
 AWS_MEDIA_PRIVATE_ENABLED = get_var("AWS_MEDIA_PRIVATE_ENABLED", default=False).lower() == "true"
 
@@ -331,6 +334,7 @@ else:
 
     class CustomPrivateMediaStorage(FileSystemStorage):  # This overrides the AWS version
         ...
+
 
     PRIVATE_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 

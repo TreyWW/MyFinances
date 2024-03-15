@@ -104,6 +104,10 @@ celerybeat.pid
 
 # Environments
 .env
+*.env
+
+!.env.sample
+
 .venv
 env/
 venv/
@@ -144,6 +148,8 @@ node_modules
 
 *.tfvars
 *.tfvars.json
+
+!sample.tfvars.json
 
 override.tf
 override.tf.json
