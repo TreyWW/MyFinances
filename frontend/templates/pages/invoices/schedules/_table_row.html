@@ -1,0 +1,47 @@
+<tr data-onetime-id="{{ schedule.id }}">
+    <td class="text-secondary">{{ schedule.id }}</td>
+    <td>
+        {% if schedule.status == schedule.StatusTypes.COMPLETED %}
+            <div class="tooltip" data-tip="Sent invoice">
+                <i class="fa-solid fa-check text-success"></i>
+            </div>
+        {% elif schedule.status == schedule.StatusTypes.PENDING %}
+            <div class="tooltip" data-tip="Pending">
+                <i class="fa-solid fa-clock text-neutral-content"></i>
+            </div>
+        {% elif schedule.status == schedule.StatusTypes.DELETING %}
+            <div class="tooltip" data-tip="Currently being deleted">
+                <i class="fa-solid fa-warning text-primary"></i>
+            </div>
+        {% elif schedule.status == schedule.StatusTypes.CANCELLED %}
+            <div class="tooltip"
+                 data-tip="Schedule was cancelled, didn't send invoice.">
+                <i class="fa-solid fa-cancel text-error"></i>
+            </div>
+        {% elif schedule.status == schedule.StatusTypes.CREATING %}
+            <div class="tooltip" data-tip="Schedule is currently being created.">
+                <i class="fa-solid fa-hourglass-half text-primary"></i>
+            </div>
+        {% elif schedule.status == schedule.StatusTypes.FAILED %}
+            <div class="tooltip drop-shadow drop-shadow-glow_red"
+                 data-tip="Schedule failed.">
+                <i class="fa-solid fa-exclamation-triangle text-warning"></i>
+            </div>
+        {% endif %}
+    </td>
+    <td>{{ schedule.due }}</td>
+    <td>
+        <div class="tooltip tooltip-top" data-tip="Cancel scheduled event">
+            {% if schedule.status == schedule.StatusTypes.DELETING or schedule.status == schedule.StatusTypes.PENDING %}
+                <button class="btn btn-error btn-outline btn-sm"
+                        {% if schedule.status == schedule.StatusTypes.DELETING %}disabled{% endif %}
+                        hx-post="{% url "api:invoices:schedules onetime cancel" schedule_id=schedule.id %}"
+                        hx-target="closest tr"
+                        hx-swap="outerHTML">
+                    <i class="fa-solid fa-cancel"></i>
+                </button>
+            {% endif %}
+        </div>
+    </td>
+</tr>
+{% component "messages_list" %}

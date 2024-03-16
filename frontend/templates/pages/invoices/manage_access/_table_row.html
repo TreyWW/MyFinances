@@ -6,9 +6,9 @@
         </td>
         <td>{{ created_on }}</td>
         <td>
-            <span class="tooltip tooltip-top" data-tooltip="Delete Code">
+            <span class="tooltip tooltip-top" data-tip="Delete Code">
                 <button class="btn btn-error btn-outline btn-sm"
-                        hx-delete="{% url 'invoices dashboard manage_access delete' id=code %}"
+                        hx-delete="{% url 'invoices:manage_access delete' code=code %}"
                         hx-target="closest tr"
                         hx-swap="outerHTML">
                     <i class="fa-solid fa-trash"></i>

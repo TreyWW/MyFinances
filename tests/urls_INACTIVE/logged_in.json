@@ -7,7 +7,9 @@
   "login forgot_password": [302],
   "user settings": [200],
   "user settings change_password": [200],
-  "invoices dashboard": [200],
+  "invoices:dashboard": [
+    200
+  ],
   "receipts dashboard": [200],
   "api:receipts:new": [405]
 }

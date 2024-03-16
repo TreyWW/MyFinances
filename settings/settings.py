@@ -10,13 +10,18 @@ from django.contrib.staticfiles.storage import FileSystemStorage
 from storages.backends.s3 import S3Storage
 
 import settings.settings
-from .helpers import get_var
+from .helpers import get_var, ARE_EMAILS_ENABLED
 
 # from backend.utils import appconfig
 
 DEBUG = True if get_var("DEBUG") in ["True", "true", "TRUE", True] else False
 
-SITE_URL = get_var("SITE_URL") or "http://127.0.0.1:8000"
+SITE_URL = get_var("SITE_URL", default="http://127.0.0.1:8000")
+SITE_NAME = get_var("SITE_NAME", default="myfinances")
+SITE_NAME_FRIENDLY = get_var("SITE_NAME_FRIENDLY", default="MyFinances")
+
+if not SITE_URL.startswith("http"):
+    exit("[BACKEND] SITE_URL must start with http:// or https://")
 
 try:
     if DEBUG:
@@ -44,7 +49,17 @@ INSTALLED_APPS = [
     "django_components",
     "django_components.safer_staticfiles",
     "social_django",
+    "rest_framework",
+    "rest_framework.authtoken",
+    "tz_detect",
 ]
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.BasicAuthentication",
+        "rest_framework.authentication.TokenAuthentication",
+    ]
+}
 
 LOGIN_REQUIRED_IGNORE_VIEW_NAMES = [
     "index",
@@ -56,6 +71,7 @@ LOGIN_REQUIRED_IGNORE_VIEW_NAMES = [
     "social:begin",
     "social:complete",
     "social:disconnect",
+    "api:invoices:create_schedule",
 ]
 
 # @login_required()
@@ -67,6 +83,7 @@ LOGIN_REQUIRED_IGNORE_PATHS = [
     r"^/auth/login/(.*)/",
     r"^/auth/create_account(/.*)?$",
     r"^/accounts/github/login/callback/$",
+    r"^/api/invoices/schedules/receive/$",
 ]
 # for some reason only allows "login" and not "login create account" or anything
 
@@ -160,6 +177,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 MIDDLEWARE = [
+    "backend.middleware.HealthCheckMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -172,6 +190,7 @@ MIDDLEWARE = [
     "login_required.middleware.LoginRequiredMiddleware",
     "social_django.middleware.SocialAuthExceptionMiddleware",
     "backend.models.CustomUserMiddleware",
+    "tz_detect.middleware.TimezoneMiddleware",
 ]
 INTERNAL_IPS = [
     # ...
@@ -215,7 +234,7 @@ AUTH_USER_MODEL = "backend.User"
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "GMT"
+TIME_ZONE = "UTC"
 
 USE_I18N = True
 
@@ -237,6 +256,8 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_ENABLED = True if SOCIAL_AUTH_GOOGLE_OAUTH2_KEY and SO
 # SOCIAL_AUTH_NEW_USER_REDIRECT_URL = "/login/external/new_user/"
 # SOCIAL_AUTH_LOGIN_REDIRECT_URL = "/"
 SOCIAL_AUTH_USER_MODEL = "backend.User"
+
+AWS_TAGS_APP_NAME = get_var("AWS_TAGS_APP_NAME", default="myfinances")
 
 
 # APP_CONFIG = appconfig

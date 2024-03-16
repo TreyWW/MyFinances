@@ -104,6 +104,10 @@ celerybeat.pid
 
 # Environments
 .env
+*.env
+
+!.env.sample
+
 .venv
 env/
 venv/
@@ -137,3 +141,24 @@ dmypy.json
 
 # Node
 node_modules
+
+# Terraform
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+
+*.tfvars
+*.tfvars.json
+
+!sample.tfvars.json
+
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+.terraformrc
+terraform.rc
+
+# Temporary (WRITERSIDE)
+Writerside/**

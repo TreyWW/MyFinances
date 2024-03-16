@@ -3,7 +3,7 @@
     <div class="card p-6 shadow-xl bg-base-100 mb-4">
         <div class=" text-3xl w-full grid grid-cols-3">
             <div>
-                <a href="{% url "invoices dashboard" %}"
+                <a href="{% url "invoices:dashboard" %}"
                    class="btn btn-sm btn-outline btn-secondary me-3 float-left">Back to invoices</a>
             </div>
             <h1 class="text-left col-span-2">Manage Access to Invoice #{{ invoice.id }}</h1>
@@ -11,7 +11,7 @@
     </div>
     <div class="card bg-base-100 shadow-xl w-full p-6">
         <button hx-trigger="click"
-                hx-post="{% url "invoices dashboard manage_access create" id=invoice.id %}"
+                hx-post="{% url "invoices:manage_access create" invoice_id=invoice.id %}"
                 hx-swap="afterbegin"
                 hx-target="#tbody"
                 class="btn btn-primary">
