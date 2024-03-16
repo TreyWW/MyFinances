@@ -2,8 +2,9 @@ from mypy_boto3_events.type_defs import CreateApiDestinationResponseTypeDef, Des
 
 from backend.models import APIKey
 from settings.settings import AWS_TAGS_APP_NAME, SITE_URL
-from ..handler import event_bridge_client
+from ..handler import get_event_bridge_client
 
+event_bridge_client = get_event_bridge_client
 
 def get_or_create_api_destination() -> CreateApiDestinationResponseTypeDef | DescribeApiDestinationResponseTypeDef:
     try:

@@ -6,7 +6,7 @@ import pytz
 from django.utils import timezone
 
 from backend.models import Invoice, InvoiceOnetimeSchedule
-from infrastructure.aws.handler import event_bridge_scheduler
+from infrastructure.aws.handler import get_event_bridge_scheduler
 from infrastructure.aws.iam.sfn import get_or_create_sfn_execute_role_arn
 from infrastructure.aws.step_functions.scheduler import get_step_function
 from settings.settings import AWS_TAGS_APP_NAME
@@ -69,6 +69,7 @@ def create_onetime_schedule(data: CreateOnetimeScheduleInputData) -> CreateOneti
         print("[AWS] [SFN] Step function not found", flush=True)
         return ErrorResponse("Step function not found", flush=True)
 
+    event_bridge_scheduler = get_event_bridge_scheduler()
     CREATED_SCHEDULE = event_bridge_scheduler.create_schedule(
         Name=f"{AWS_TAGS_APP_NAME}-scheduled-invoices-{data.invoice.id}-{schedule.id}",
         FlexibleTimeWindow={

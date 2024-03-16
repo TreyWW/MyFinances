@@ -2,7 +2,7 @@ from typing import List
 
 from mypy_boto3_stepfunctions.type_defs import StateMachineListItemTypeDef
 
-from infrastructure.aws.handler import sfn_client, DEBUG_LEVEL
+from infrastructure.aws.handler import get_sfn_client, DEBUG_LEVEL
 from settings.settings import AWS_TAGS_APP_NAME
 
 
@@ -10,6 +10,7 @@ def get_step_function() -> None | StateMachineListItemTypeDef:
     if DEBUG_LEVEL == "debug":
         print("[AWS] [SFN] Fetching scheduler step function by name...", flush=True)
 
+    sfn_client = get_sfn_client()
     functions = sfn_client.list_state_machines()
 
     invoice_functions: List[StateMachineListItemTypeDef] = [

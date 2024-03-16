@@ -12,7 +12,7 @@ from django_ratelimit.core import is_ratelimited
 
 from backend.decorators import feature_flag_check
 from backend.models import Invoice, AuditLog, APIKey, InvoiceOnetimeSchedule, InvoiceURL
-from infrastructure.aws.handler import iam_client
+from infrastructure.aws.handler import get_iam_client
 from infrastructure.aws.schedules.create_schedule import create_onetime_schedule, CreateOnetimeScheduleInputData, \
     SuccessResponse as CreateOnetimeScheduleSuccessResponse
 from infrastructure.aws.schedules.delete_schedule import delete_schedule
@@ -160,6 +160,7 @@ def create_ots(request: HttpRequest) -> HttpResponse:
 
 
 def get_or_create_role_arn():
+    iam_client = get_iam_client()
     response = iam_client.list_roles(
         PathPrefix=f"/{AWS_TAGS_APP_NAME}-scheduled-invoices/",
         MaxItems=1

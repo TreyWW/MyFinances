@@ -3,9 +3,10 @@ from typing import List
 
 from mypy_boto3_scheduler.type_defs import ScheduleSummaryTypeDef
 
-from infrastructure.aws.handler import event_bridge_scheduler
+from infrastructure.aws.handler import get_event_bridge_scheduler
 from settings.settings import AWS_TAGS_APP_NAME
 
+event_bridge_scheduler = get_event_bridge_scheduler
 
 @dataclass(frozen=True)
 class SuccessResponse:
