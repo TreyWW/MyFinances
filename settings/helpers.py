@@ -100,12 +100,7 @@ def send_email(destination: Union[str, List[str]], subject: str, message: str) -
             response: SendEmailResponseTypeDef = EMAIL_CLIENT.send_email(
                 FromEmailAddress=get_var("AWS_SES_FROM_ADDRESS"),
                 Destination={"ToAddresses": destination},
-                Content={
-                    "Simple": {
-                        "Subject": {"Data": subject},
-                        "Body": {"Text": {"Data": message}}
-                    }
-                }
+                Content={"Simple": {"Subject": {"Data": subject}, "Body": {"Text": {"Data": message}}}},
             )
             return SentEmailSuccessResponse(response)
         except EMAIL_CLIENT.exceptions.MessageRejected:
