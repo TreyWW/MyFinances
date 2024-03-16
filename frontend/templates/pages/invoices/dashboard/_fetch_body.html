@@ -1,5 +1,8 @@
 {% load humanize %}
 {% load mathfilters %}
+{% load feature_enabled %}
+{% feature_enabled "isInvoiceSchedulingEnabled" as schedule_invoices_enabled %}
+
 <tbody id="table_body">
     {% for invoice in invoices %}
         <tr>
@@ -84,12 +87,14 @@
                                 </ul>
                             </details>
                         </li>
+                        {% if schedule_invoices_enabled %}
                         <li>
                             <a href="{% url "invoices:schedules view" invoice_id=invoice.id %}">
                                 <i class="fa-solid fa-clock"></i>
                                 Schedule
                             </a>
                         </li>
+                        {% endif %}
                         <li>
                             <button hx-delete="{% url 'api:invoices:delete' %}"
                                     hx-target="closest tr"

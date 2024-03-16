@@ -86,12 +86,10 @@ post_migrate.connect(insert_initial_data)
 def refresh_feature_cache(sender, instance: FeatureFlags, **kwargs):
     feature = instance.name
     key = f"myfinances:feature_flag:{feature}"
-    print(key)
 
     cached_value = cache.get(key)
 
     if cached_value:
-        print("deleting")
         return cache.delete(key)
 
 
