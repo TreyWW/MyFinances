@@ -21,7 +21,6 @@ class ReceiptDownloadEndpointsTest(TestCase):
                 '"ReceiptDownloadEndpointsTest" tearDownClass() failed due to random PermissionError '
                 "(only on Windows). Files in /media/receipts have not been deleted. Run tests again to delete files."
             )
-            pass
         super().tearDownClass()
 
     def setUp(self):
