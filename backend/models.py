@@ -403,7 +403,7 @@ class InvoiceSchedule(models.Model):
         CANCELLED = "cancelled", "Cancelled"
 
     created_at = models.DateTimeField(auto_now_add=True)
-    stored_schedule_arn = models.CharField(max_length=100, null=True, blank=True)
+    stored_schedule_arn = models.CharField(max_length=500, null=True, blank=True)
     received = models.BooleanField(default=False)
     status = models.CharField(max_length=100, choices=StatusTypes.choices, default=StatusTypes.PENDING)
 
@@ -446,7 +446,7 @@ class APIKey(models.Model):
         return check_password(key, self.key)
 
     def hash(self):
-        self.key = make_password(f"{self.id}{self.key}")
+        self.key = make_password(f"{self.id}:{self.key}")
         self.save()
 
 
