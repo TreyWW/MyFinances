@@ -9,10 +9,7 @@
         </div>
         {% include 'pages/settings/settings/danger_zone.html' %}
     </div>
-
     {% if request.user.is_superuser %}
-        <div class="card bg-base-100 p-6 mb-4">
-            {% include 'pages/settings/settings/admin.html' %}
-        </div>
+        <div class="card bg-base-100 p-6 mb-4">{% include 'pages/settings/settings/admin.html' %}</div>
     {% endif %}
 {% endblock content %}

@@ -1,7 +1,5 @@
 <tr data-onetime-id="{{ schedule.id }}">
-    <td class="text-secondary">
-        {{ schedule.id }}
-    </td>
+    <td class="text-secondary">{{ schedule.id }}</td>
     <td>
         {% if schedule.status == schedule.StatusTypes.COMPLETED %}
             <div class="tooltip" data-tip="Sent invoice">
@@ -16,7 +14,8 @@
                 <i class="fa-solid fa-warning text-primary"></i>
             </div>
         {% elif schedule.status == schedule.StatusTypes.CANCELLED %}
-            <div class="tooltip" data-tip="Schedule was cancelled, didn't send invoice.">
+            <div class="tooltip"
+                 data-tip="Schedule was cancelled, didn't send invoice.">
                 <i class="fa-solid fa-cancel text-error"></i>
             </div>
         {% elif schedule.status == schedule.StatusTypes.CREATING %}
@@ -24,14 +23,13 @@
                 <i class="fa-solid fa-hourglass-half text-primary"></i>
             </div>
         {% elif schedule.status == schedule.StatusTypes.FAILED %}
-            <div class="tooltip drop-shadow drop-shadow-glow_red" data-tip="Schedule failed.">
+            <div class="tooltip drop-shadow drop-shadow-glow_red"
+                 data-tip="Schedule failed.">
                 <i class="fa-solid fa-exclamation-triangle text-warning"></i>
             </div>
         {% endif %}
     </td>
-    <td>
-        {{ schedule.due }}
-    </td>
+    <td>{{ schedule.due }}</td>
     <td>
         <div class="tooltip tooltip-top" data-tip="Cancel scheduled event">
             {% if schedule.status == schedule.StatusTypes.DELETING or schedule.status == schedule.StatusTypes.PENDING %}
