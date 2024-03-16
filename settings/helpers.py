@@ -1,6 +1,8 @@
 import os
 import sys
-from typing import Union, List
+from dataclasses import dataclass
+from logging import exception
+from typing import Union, List, Literal, Optional
 
 import boto3
 import environ
@@ -67,7 +69,20 @@ if "test" in sys.argv[1:]:
     ARE_EMAILS_ENABLED = False
 
 
-def send_email(destination: Union[str, List[str]], subject: str, message: str) -> SendEmailResponseTypeDef:
+@dataclass(frozen=True)
+class SentEmailSuccessResponse:
+    response: SendEmailResponseTypeDef
+    success: Literal[True] = True
+
+
+@dataclass(frozen=True)
+class SentEmailErrorResponse:
+    message: str
+    response: Optional[SendEmailResponseTypeDef]
+    success: Literal[False] = False
+
+
+def send_email(destination: Union[str, List[str]], subject: str, message: str) -> SentEmailSuccessResponse | SentEmailErrorResponse:
     """
     Args:
     destination (email addr or list of email addr): The email address or list of email addresses to send the
@@ -78,17 +93,35 @@ def send_email(destination: Union[str, List[str]], subject: str, message: str) -
     if EMAIL_SERVICE == "SES":
         if not isinstance(destination, list):
             destination = [destination]
-        return EMAIL_CLIENT.send_email(
-            FromEmailAddress=get_var("AWS_SES_FROM_ADDRESS"),
-            Destination={"ToAddresses": destination},
-            Content={
-                "Simple": {
-                    "Subject": {"Data": subject},
-                    "Body": {"Text": {"Data": message}},
+
+        response: Optional[SendEmailResponseTypeDef] = None
+
+        try:
+            response: SendEmailResponseTypeDef = EMAIL_CLIENT.send_email(
+                FromEmailAddress=get_var("AWS_SES_FROM_ADDRESS"),
+                Destination={"ToAddresses": destination},
+                Content={
+                    "Simple": {
+                        "Subject": {"Data": subject},
+                        "Body": {"Text": {"Data": message}}
+                    }
                 }
-            },
-        )
-    # TODO: Add sendgrid emails
+            )
+            return SentEmailSuccessResponse(response)
+        except EMAIL_CLIENT.exceptions.MessageRejected:
+            return SentEmailErrorResponse(message="Email rejected", response=response)
+
+        except EMAIL_CLIENT.exceptions.AccountSuspendedException:
+            return SentEmailErrorResponse(message="Email account suspended", response=response)
+
+        except EMAIL_CLIENT.exceptions.SendingPausedException:
+            return SentEmailErrorResponse(message="Email sending paused", response=response)
+
+        except Exception as error:
+            exception(f"Unexpected error occurred: {error}")
+            return SentEmailErrorResponse(message="Email service error", response=response)
+
+    return SentEmailErrorResponse(message="No email service configured")
 
 
 if not get_var("SITE_URL"):

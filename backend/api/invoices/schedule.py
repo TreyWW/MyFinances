@@ -40,10 +40,6 @@ def receive_scheduled_invoice(request: HttpRequest):
     schedule_type = request.POST.get("schedule_type") or request.headers.get("schedule_type")
     email_type = request.POST.get("email_type") or request.headers.get("email_type")
 
-    print(
-        f"[TASK] Scheduled Invoice: {invoice_id}. Schedule Type: {schedule_type}. Schedule: {schedule_id}. Email: {email_type}", flush=True
-    )
-
     if not invoice_id or not schedule_id or not schedule_type:
         return HttpResponse("Missing invoice_id or schedule_id or schedule_type", status=400)
 
@@ -84,7 +80,7 @@ def receive_scheduled_invoice(request: HttpRequest):
 
     client_name = invoice.client_name or invoice.client_to.name or "there"
     # Todo: add better email message
-    email = send_email(
+    email_response = send_email(
         destination=email,
         subject=f"Invoice #{invoice_id} ready",
         message=f"""
@@ -101,6 +97,12 @@ def receive_scheduled_invoice(request: HttpRequest):
             have a case opened.
         """,
     )
+
+    if not email_response.success:
+        schedule.status = schedule.StatusTypes.FAILED
+        schedule.received = False
+        schedule.save()
+        return HttpResponse(f"Failed to send email: {email_response.message}", status=500)
 
     schedule.status = schedule.StatusTypes.COMPLETED
     schedule.received = True
