@@ -17,3 +17,5 @@ services:
       BRANCH: "debug"
       DEBUG: "true"
       DATABASE_TYPE: "sqlite3"
+      SITE_URL: "http://myfinances.example.com"
+      SITE_NAME: "myfinances"
