@@ -12,6 +12,7 @@ from backend.views.core import (
     receipts,
 )
 from backend.views.core.currency_converter import dashboard as cc_dashboard
+from backend.views.core.invoices.overview import manage_invoice
 from backend.views.core.other.index import index, dashboard
 
 url(
@@ -26,6 +27,11 @@ urlpatterns = [
     path("dashboard/", dashboard, name="dashboard"),
     path("dashboard/settings/", settings_v.view.settings_page, name="user settings"),
     path("dashboard/invoices/", include("backend.views.core.invoices.urls")),
+    path(
+        "dashboard/invoice/<str:invoice_id>/",
+        manage_invoice,
+        name="invoice overview",
+    ),
     path("favicon.ico", RedirectView.as_view(url="favicon.ico")),
     path(
         "dashboard/settings/teams",

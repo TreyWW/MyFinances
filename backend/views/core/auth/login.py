@@ -5,7 +5,8 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.hashers import check_password
 from django.core.validators import validate_email
 from django.http import HttpRequest
-from django.urls import reverse
+from django.urls import reverse, resolve
+from django.urls.exceptions import Resolver404
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.http import require_GET, require_POST
@@ -26,10 +27,12 @@ from settings.settings import (
 @require_GET
 @not_authenticated
 def login_initial_page(request: HttpRequest):
+    next = request.GET.get("next")
+
     return render(
         request,
         "pages/auth/login_initial.html",
-        {"github_enabled": SOCIAL_AUTH_GITHUB_ENABLED, "google_enabled": SOCIAL_AUTH_GOOGLE_OAUTH2_ENABLED},
+        {"github_enabled": SOCIAL_AUTH_GITHUB_ENABLED, "next": next, "google_enabled": SOCIAL_AUTH_GOOGLE_OAUTH2_ENABLED},
     )
 
 
@@ -41,12 +44,13 @@ def login_manual(request: HttpRequest):  # HTMX POST
     email = request.POST.get("email")
     password = request.POST.get("password")
     page = str(request.POST.get("page"))
+    next = request.POST.get("next")
 
     if not page or page == "1":
         return render(
             request,
             "pages/auth/login.html",
-            context={"email": email, "magic_links_enabled": ARE_EMAILS_ENABLED},
+            context={"email": email, "next": next, "magic_links_enabled": ARE_EMAILS_ENABLED},
         )
 
     if not email:
@@ -71,8 +75,16 @@ def login_manual(request: HttpRequest):  # HTMX POST
 
     login(request, user)
     messages.success(request, "Successfully logged in")
+
     response = HttpResponse(request, status=200)
-    response["HX-Refresh"] = "true"
+
+    try:
+        resolve(next)
+        response["HX-Location"] = next
+    except Resolver404:
+        print(f"did not resolve: {next}")
+        ...
+
     return response
 
 
