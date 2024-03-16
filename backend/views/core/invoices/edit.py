@@ -55,7 +55,7 @@ def invoice_get_existing_data(invoice_obj):
 def invoice_edit_page_get(request, invoice_id):
     try:
         invoice = Invoice.objects.get(id=invoice_id)
-    except:
+    except Invoice.DoesNotExist:
         return JsonResponse({"message": "Invoice not found"}, status=404)
 
     # use to populate fields with existing data in edit_from_destination.html AND edit_to_destination.html
@@ -68,21 +68,19 @@ def invoice_edit_page_get(request, invoice_id):
 def edit_invoice(request: HttpRequest, invoice_id):
     try:
         invoice = Invoice.objects.get(id=invoice_id)
-    except:
+    except Invoice.DoesNotExist:
         return JsonResponse({"message": "Invoice not found"}, status=404)
 
-    if request.user.logged_in_as_team:
-        if request.user.logged_in_as_team != invoice.organization:
-            return JsonResponse(
-                {"message": "You do not have permission to edit this invoice"},
-                status=403,
-            )
-    else:
-        if request.user != invoice.user:
-            return JsonResponse(
-                {"message": "You do not have permission to edit this invoice"},
-                status=403,
-            )
+    if request.user.logged_in_as_team and request.user.logged_in_as_team != invoice.organization:
+        return JsonResponse(
+            {"message": "You do not have permission to edit this invoice"},
+            status=403,
+        )
+    elif request.user != invoice.user:
+        return JsonResponse(
+            {"message": "You do not have permission to edit this invoice"},
+            status=403,
+        )
 
     attributes_to_updates = {
         "date_due": datetime.strptime(request.POST.get("date_due"), "%Y-%m-%d").date(),
@@ -105,7 +103,7 @@ def edit_invoice(request: HttpRequest, invoice_id):
     client_to_id = request.POST.get("selected_client")
     try:
         client_to_obj = Client.objects.get(id=client_to_id, user=request.user)
-    except:
+    except Client.DoesNotExist:
         client_to_obj = None
 
     if client_to_obj:

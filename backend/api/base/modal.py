@@ -26,7 +26,7 @@ def open_modal(request: HttpRequest, modal_name, context_type=None, context_valu
                 invoice = context_value
                 try:
                     invoice = Invoice.objects.get(user=request.user, id=invoice)
-                except:
+                except Invoice.DoesNotExist:
                     return render(request, template_name, context)
 
                 if invoice.client_to:

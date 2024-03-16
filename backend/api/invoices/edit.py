@@ -12,21 +12,19 @@ from backend.models import Invoice
 def edit_invoice(request: HttpRequest):
     try:
         invoice = Invoice.objects.get(id=request.POST.get("invoice_id"))
-    except:
+    except Invoice.DoesNotExist:
         return JsonResponse({"message": "Invoice not found"}, status=404)
 
-    if request.user.logged_in_as_team:
-        if request.user.logged_in_as_team != invoice.organization:
-            return JsonResponse(
-                {"message": "You do not have permission to edit this invoice"},
-                status=403,
-            )
-    else:
-        if request.user != invoice.user:
-            return JsonResponse(
-                {"message": "You do not have permission to edit this invoice"},
-                status=403,
-            )
+    if request.user.logged_in_as_team and request.user.logged_in_as_team != invoice.organization:
+        return JsonResponse(
+            {"message": "You do not have permission to edit this invoice"},
+            status=403,
+        )
+    elif request.user != invoice.user:
+        return JsonResponse(
+            {"message": "You do not have permission to edit this invoice"},
+            status=403,
+        )
 
     attributes_to_updates = {
         "date_due": datetime.strptime(request.POST.get("date_due"), "%Y-%m-%d").date(),
@@ -76,12 +74,8 @@ def change_status(request: HttpRequest, invoice_id: int, status: str) -> HttpRes
     except Invoice.DoesNotExist:
         return return_message(request, "Invoice not found")
 
-    if request.user.logged_in_as_team and request.user.logged_in_as_team != invoice.organization:
+    if request.user.logged_in_as_team and request.user.logged_in_as_team != invoice.organization or request.user != invoice.user:
         return return_message(request, "You don't have permission to make changes to this invoice.")
-
-    else:
-        if request.user != invoice.user:
-            return return_message(request, "You don't have permission to make changes to this invoice.")
 
     if status not in ["paid", "overdue", "pending"]:
         return return_message(request, "Invalid status. Please choose from: pending, paid, overdue")

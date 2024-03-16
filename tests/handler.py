@@ -5,8 +5,9 @@ from django.contrib.messages import get_messages
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase, SimpleTestCase
 from django.urls import resolve, reverse
+from datetime import date, timedelta
 
-from backend.models import User, Receipt, UserSettings
+from backend.models import User, Team, Receipt, UserSettings, Invoice
 
 
 def assert_url_matches_view(url_path, url_name, view_function_path):
@@ -38,27 +39,22 @@ def create_mock_image():
     return SimpleUploadedFile("mock_image.jpg", image_io.getvalue(), content_type="image/jpeg")
 
 
-def cleanup_uploaded_files(files):
-    """
-    Cleanup uploaded files.
-
-    Args:
-        files (list): List of files to delete.
-    """
-    [file.delete() for file in files]
-
-
 class ViewTestCase(TestCase):
     def setUp(self):
         self.log_in_user = User.objects.create_user(username="user@example.com", password="user", email="user@example.com")
-        self.mock_images = []
+        self.created_team = Team.objects.create(name="Testing", leader=self.log_in_user)
+        self.created_team.members.add(self.log_in_user)
         self.htmx_headers = {"HTTP_HX-Request": "true"}
+
+    def login_to_team(self):
+        self.login_user()
+        self.log_in_user.logged_in_as_team = self.created_team
+        self.log_in_user.save()
 
     def tearDown(self):
         # Cleanup uploaded files
-        cleanup_uploaded_files(self.mock_images)
-        cleanup_uploaded_files([receipt.image for receipt in Receipt.objects.all()])
-        cleanup_uploaded_files([pfp.profile_picture for pfp in UserSettings.objects.all()])
+        Receipt.objects.all().delete()
+        UserSettings.objects.all().delete()
         super().tearDown()
 
     def call_index(self):

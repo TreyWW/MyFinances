@@ -112,6 +112,7 @@ celerybeat.pid
 env/
 venv/
 ENV/
+ENV_DIR/
 env.bak/
 venv.bak/
 media/*

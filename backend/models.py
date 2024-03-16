@@ -248,10 +248,7 @@ class InvoiceItem(models.Model):
     price = models.DecimalField(max_digits=15, decimal_places=2, blank=True, null=True)
 
     def get_total_price(self):
-        if self.is_service:
-            return self.hours * self.price_per_hour
-        else:
-            return self.price
+        return self.hours * self.price_per_hour if self.is_service else self.price
 
     def __str__(self):
         return self.description
@@ -351,10 +348,7 @@ class Invoice(models.Model):
     def get_total_price(self):
         total = 0
         subtotal = self.get_subtotal()
-        if self.vat_number:
-            total = subtotal * 1.2
-        else:
-            total = subtotal
+        total = subtotal * 1.2 if self.vat_number else subtotal
         return round(total, 2)
 
 
