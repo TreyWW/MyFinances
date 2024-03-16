@@ -1,6 +1,10 @@
-from django.contrib import messages
+from functools import wraps
 
-from django.shortcuts import redirect
+from django.contrib import messages
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import redirect, render
+
+from backend.utils import get_feature_status
 
 
 def not_authenticated(view_func):
@@ -33,6 +37,28 @@ def superuser_only(view_func):
             return redirect("dashboard")
 
     return wrapper_func
+
+
+def feature_flag_check(flag, status=True, api=False, htmx=False):
+    def decorator(view_func):
+        @wraps(view_func)
+        def wrapper(request, *args, **kwargs):
+            feat_status = get_feature_status(flag)
+
+            if feat_status == status:
+                return view_func(request, *args, **kwargs)
+
+            if api and htmx:
+                messages.error(request, "This feature is currently disabled.")
+                return render(request, "base/toasts.html")
+            elif api:
+                return HttpResponse(status=403, content="This feature is currently disabled.")
+            messages.error(request, "This feature is currently disabled.")
+            return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+
+        return wrapper
+
+    return decorator
 
 
 not_logged_in = not_authenticated

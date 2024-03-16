@@ -10,6 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods, require_POST, require_GET
 from django_ratelimit.core import is_ratelimited
 
+from backend.decorators import feature_flag_check
 from backend.models import Invoice, AuditLog, APIKey, InvoiceOnetimeSchedule, InvoiceURL
 from infrastructure.aws.handler import iam_client
 from infrastructure.aws.schedules.create_schedule import create_onetime_schedule, CreateOnetimeScheduleInputData, \
@@ -20,11 +21,9 @@ from settings.helpers import send_email
 from settings.settings import AWS_TAGS_APP_NAME
 
 
-# from botocore.errorfactory
-
-
 @require_POST
 @csrf_exempt
+@feature_flag_check("isInvoiceSchedulingEnabled", True, api=True)
 def receive_scheduled_invoice(request: HttpRequest):
     print("Received Scheduled Invoice", flush=True)
     valid, reason, status = authenticate_api_key(request)
@@ -107,6 +106,7 @@ def receive_scheduled_invoice(request: HttpRequest):
 
 
 @csrf_exempt
+@feature_flag_check("isInvoiceSchedulingEnabled", True, api=True)
 def create_schedule(request: HttpRequest):
     option = request.POST.get("option")  # 1=one time 2=recurring
 
@@ -225,6 +225,7 @@ def authenticate_api_key(request: HttpRequest):
 
 
 @require_http_methods(["DELETE", "POST"])
+@feature_flag_check("isInvoiceSchedulingEnabled", True, api=True)
 def cancel_onetime_schedule(request: HttpRequest, schedule_id: str):
     if not request.htmx:
         return HttpResponseForbidden()
@@ -261,6 +262,7 @@ def cancel_onetime_schedule(request: HttpRequest, schedule_id: str):
 
 
 @require_GET
+@feature_flag_check("isInvoiceSchedulingEnabled", True, api=True, htmx=True)
 def fetch_onetime_schedules(request: HttpRequest, invoice_id: str):
     # ratelimit = is_ratelimited(request, group="fetch_onetime_schedules", key="user", rate="5/30s", increment=True)
     # if ratelimit:

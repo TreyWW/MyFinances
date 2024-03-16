@@ -1,3 +1,7 @@
+from django.core.cache import cache
+from django.core.cache.backends.redis import RedisCacheClient
+
+cache: RedisCacheClient = cache
 from django.core.files.storage import default_storage
 from django.db.models.signals import pre_save, post_delete, post_save, post_migrate
 from django.dispatch import receiver
@@ -58,25 +62,37 @@ def delete_receipt_image_on_delete(sender, instance: Receipt, **kwargs):
     instance.image.delete(False)
 
 
-feature_flags = [{"name": "areSignupsEnabled", "default": True, "pk": 1}]
+feature_flags = [
+    {"name": "areSignupsEnabled", "default": True, "pk": 1},
+    {"name": "isInvoiceSchedulingEnabled", "default": False, "pk": 2},
+]
 
 
 def insert_initial_data(**kwargs):
     for feature in feature_flags:
         try:
-            flag = FeatureFlags.objects.get(name=feature.get("name"))
+            FeatureFlags.objects.get(name=feature.get("name"))
         except FeatureFlags.DoesNotExist:
             flag = FeatureFlags.objects.create(name=feature.get("name"))
 
-        flag.value = feature.get("default")
-        flag.save()
-        # FeatureFlags.objects.get_or_create(
-        #     name=feature.get("name"),
-        #     value=feature.get("default"),
-        # )
+            flag.value = feature.get("default")
+            flag.save()
 
 
 post_migrate.connect(insert_initial_data)
+
+
+@receiver(post_save, sender=FeatureFlags)
+def refresh_feature_cache(sender, instance: FeatureFlags, **kwargs):
+    feature = instance.name
+    key = f"myfinances:feature_flag:{feature}"
+    print(key)
+
+    cached_value = cache.get(key)
+
+    if cached_value:
+        print("deleting")
+        return cache.delete(key)
 
 
 @receiver(post_save, sender=User)
