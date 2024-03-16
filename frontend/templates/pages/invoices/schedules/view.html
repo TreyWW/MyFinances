@@ -6,8 +6,7 @@
         <div class="grid w-full grid-cols-3 text-3xl">
             <div>
                 <a href="{% url "invoices:dashboard" %}"
-                   class="float-left btn btn-sm btn-outline btn-secondary me-3">Back to invoices
-                </a>
+                   class="float-left btn btn-sm btn-outline btn-secondary me-3">Back to invoices</a>
             </div>
             <h1 class="col-span-2 text-left">Schedules for Invoice #{{ invoice.id }}</h1>
         </div>
@@ -36,63 +35,58 @@
             <div class="divider"></div>
             <table class="mt-3 table w-full">
                 <thead>
-                <tr hx-swap="outerHTML"
-                    hx-target="#tbody"
-                    hx-indicator=""
-                    hx-include="#filter_list_storage">
-                    <th>ID</th>
-                    <th>
-                        <div class="dropdown"
-                             data-filter-type="status"
-                             hx-vals='{"filter_type": "status"}'>
-                            <label tabindex="0" class="border-none">
-                                Status
-                                <i class="border-none pt-1 fa-solid fa-caret-down pl-1/2"></i>
-                            </label>
-                            <ul class="dropdown-content">
-                                <h2 class="menu-title">Status</h2>
-                                <div class="-mt-2 -mb-1 divider"></div>
-                                <li data-filter-by="completed">
-                                    <button class="border-none text-sm dropdown-item"
-                                            hx-get="{% url "api:invoices:schedules onetime fetch" invoice_id=invoice.id %}"
-                                            name="filter"
-                                            value="completed">Completed
-                                    </button>
-                                </li>
-                                <li data-filter-by="pending">
-                                    <button class="border-none text-sm dropdown-item"
-                                            hx-get="{% url "api:invoices:schedules onetime fetch" invoice_id=invoice.id %}"
-                                            name="filter"
-                                            value="pending">Pending
-                                    </button>
-                                </li>
-                                <li data-filter-by="creating">
-                                    <button class="border-none text-sm dropdown-item"
-                                            hx-get="{% url "api:invoices:schedules onetime fetch" invoice_id=invoice.id %}"
-                                            name="filter"
-                                            value="creating">Creating
-                                    </button>
-                                </li>
-                                <li data-filter-by="deleting">
-                                    <button class="border-none text-sm dropdown-item"
-                                            hx-get="{% url "api:invoices:schedules onetime fetch" invoice_id=invoice.id %}"
-                                            name="filter"
-                                            value="deleting">Deleting
-                                    </button>
-                                </li>
-                                <li data-filter-by="cancelled">
-                                    <button class="border-none text-sm dropdown-item"
-                                            hx-get="{% url "api:invoices:schedules onetime fetch" invoice_id=invoice.id %}"
-                                            name="filter"
-                                            value="cancelled">Cancelled
-                                    </button>
-                                </li>
-                            </ul>
-                        </div>
-                    </th>
-                    <th>Date</th>
-                    <th>Actions</th>
-                </tr>
+                    <tr hx-swap="outerHTML"
+                        hx-target="#tbody"
+                        hx-indicator=""
+                        hx-include="#filter_list_storage">
+                        <th>ID</th>
+                        <th>
+                            <div class="dropdown"
+                                 data-filter-type="status"
+                                 hx-vals='{"filter_type": "status"}'>
+                                <label tabindex="0" class="border-none">
+                                    Status
+                                    <i class="border-none pt-1 fa-solid fa-caret-down pl-1/2"></i>
+                                </label>
+                                <ul class="dropdown-content">
+                                    <h2 class="menu-title">Status</h2>
+                                    <div class="-mt-2 -mb-1 divider"></div>
+                                    <li data-filter-by="completed">
+                                        <button class="border-none text-sm dropdown-item"
+                                                hx-get="{% url "api:invoices:schedules onetime fetch" invoice_id=invoice.id %}"
+                                                name="filter"
+                                                value="completed">Completed</button>
+                                    </li>
+                                    <li data-filter-by="pending">
+                                        <button class="border-none text-sm dropdown-item"
+                                                hx-get="{% url "api:invoices:schedules onetime fetch" invoice_id=invoice.id %}"
+                                                name="filter"
+                                                value="pending">Pending</button>
+                                    </li>
+                                    <li data-filter-by="creating">
+                                        <button class="border-none text-sm dropdown-item"
+                                                hx-get="{% url "api:invoices:schedules onetime fetch" invoice_id=invoice.id %}"
+                                                name="filter"
+                                                value="creating">Creating</button>
+                                    </li>
+                                    <li data-filter-by="deleting">
+                                        <button class="border-none text-sm dropdown-item"
+                                                hx-get="{% url "api:invoices:schedules onetime fetch" invoice_id=invoice.id %}"
+                                                name="filter"
+                                                value="deleting">Deleting</button>
+                                    </li>
+                                    <li data-filter-by="cancelled">
+                                        <button class="border-none text-sm dropdown-item"
+                                                hx-get="{% url "api:invoices:schedules onetime fetch" invoice_id=invoice.id %}"
+                                                name="filter"
+                                                value="cancelled">Cancelled</button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
                 </thead>
                 <tbody id="tbody"
                        hx-swap="outerHTML"
@@ -133,8 +127,7 @@
                         {% if invoice.client_to and invoice.client_to.email %}
                             <option selected value="client_to_email">{{ invoice.client_to.email }}</option>
                         {% endif %}
-                        {% if invoice.client_email %}
-                            <option value="client_email">{{ invoice.client_email }}</option>{% endif %}
+                        {% if invoice.client_email %}<option value="client_email">{{ invoice.client_email }}</option>{% endif %}
                         {% if not invoice.client_to and not invoice.client_email %}
                             <option value="" selected disabled>No client email address stored.</option>
                         {% endif %}

@@ -1,7 +1,7 @@
 <tbody id="tbody">
-{% for schedule in schedules %}
-    {% include 'pages/invoices/schedules/_table_row.html' with schedule=schedule %}
-{% endfor %}
+    {% for schedule in schedules %}
+        {% include 'pages/invoices/schedules/_table_row.html' with schedule=schedule %}
+    {% endfor %}
 </tbody>
 {% for filter_type, inner_filters in all_filters.items %}
     {% for filter in inner_filters %}
