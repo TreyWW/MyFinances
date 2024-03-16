@@ -20,13 +20,13 @@ url(
     {"document_root": settings.STATICFILES_DIRS[0]},
 )
 urlpatterns = [
-                  path("tz_detect/", include("tz_detect.urls")),
+    path("tz_detect/", include("tz_detect.urls")),
     path("api/", include("backend.api.urls")),
     path("", index, name="index"),
     path("dashboard/", dashboard, name="dashboard"),
     path("dashboard/settings/", settings_v.view.settings_page, name="user settings"),
-                  path("dashboard/invoices/", include("backend.views.core.invoices.urls")),
-                  path("favicon.ico", RedirectView.as_view(url="favicon.ico")),
+    path("dashboard/invoices/", include("backend.views.core.invoices.urls")),
+    path("favicon.ico", RedirectView.as_view(url="favicon.ico")),
     path(
         "dashboard/settings/teams",
         settings_v.teams.teams_dashboard,
@@ -47,7 +47,7 @@ urlpatterns = [
         receipts.dashboard.receipts_dashboard,
         name="receipts dashboard",
     ),
-                  path(
+    path(
         "invoice/<str:uuid>",
         invoices.view.view,
         name="invoices view invoice",

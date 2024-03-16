@@ -159,3 +159,6 @@ override.tf.json
 
 .terraformrc
 terraform.rc
+
+# Temporary (WRITERSIDE)
+Writerside/**
