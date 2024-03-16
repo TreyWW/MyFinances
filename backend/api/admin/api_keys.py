@@ -7,6 +7,7 @@ from backend.models import APIKey
 
 # Still working on
 
+
 def generate_api_key(request: HttpRequest) -> HttpResponse():
     if not request.htmx:
         return redirect("user settings")

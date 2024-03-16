@@ -14,7 +14,8 @@ def view_schedules(request: HttpRequest, invoice_id) -> HttpResponse:
         messages.error(request, "Invoice not found")
         return redirect("invoices:dashboard")
 
-    return render(request, "pages/invoices/schedules/view.html", {
-        "invoice": invoice,
-        "schedules": invoice.onetime_invoice_schedules.order_by("due").only("id", "due", "status")
-    })
+    return render(
+        request,
+        "pages/invoices/schedules/view.html",
+        {"invoice": invoice, "schedules": invoice.onetime_invoice_schedules.order_by("due").only("id", "due", "status")},
+    )

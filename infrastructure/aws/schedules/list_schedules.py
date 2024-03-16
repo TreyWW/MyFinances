@@ -8,6 +8,7 @@ from settings.settings import AWS_TAGS_APP_NAME
 
 event_bridge_scheduler = get_event_bridge_scheduler
 
+
 @dataclass(frozen=True)
 class SuccessResponse:
     schedules: List[ScheduleSummaryTypeDef]

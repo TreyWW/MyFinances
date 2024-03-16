@@ -14,9 +14,7 @@ def get_step_function() -> None | StateMachineListItemTypeDef:
     functions = sfn_client.list_state_machines()
 
     invoice_functions: List[StateMachineListItemTypeDef] = [
-        function
-        for function in functions.get("stateMachines", [])
-        if function.get("name") == f"{AWS_TAGS_APP_NAME}-invoicing-scheduler-fn"
+        function for function in functions.get("stateMachines", []) if function.get("name") == f"{AWS_TAGS_APP_NAME}-invoicing-scheduler-fn"
     ]
 
     if len(invoice_functions) == 1:

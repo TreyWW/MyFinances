@@ -12,13 +12,15 @@ from backend.utils import get_feature_status
 from settings.helpers import get_var
 from settings.settings import AWS_TAGS_APP_NAME
 
-config = Config(connect_timeout=5, retries={'max_attempts': 2})
+config = Config(connect_timeout=5, retries={"max_attempts": 2})
 
 AWS_SCHEDULES_ENABLED = get_var("AWS_SCHEDULES_ACCESS_KEY_ID") and get_var("AWS_SCHEDULES_SECRET_ACCESS_KEY")
 
 if not AWS_SCHEDULES_ENABLED and get_feature_status("isInvoiceSchedulingEnabled", should_use_cache=False):
-    raise ValueError("If using schedules, the variables MUST be set. If you are not going to use schedules, "
-                     "set the isInvoiceSchedulingEnabled feature flag to False")
+    raise ValueError(
+        "If using schedules, the variables MUST be set. If you are not going to use schedules, "
+        "set the isInvoiceSchedulingEnabled feature flag to False"
+    )
 
 if not AWS_SCHEDULES_ENABLED:
     try:
@@ -30,7 +32,7 @@ if AWS_SCHEDULES_ENABLED:
     Boto3HandlerSession = boto3.session.Session(
         aws_access_key_id=get_var("AWS_SCHEDULES_ACCESS_KEY_ID"),
         aws_secret_access_key=get_var("AWS_SCHEDULES_SECRET_ACCESS_KEY"),
-        region_name=get_var("AWS_SCHEDULES_REGION_NAME", default="eu-west-2")
+        region_name=get_var("AWS_SCHEDULES_REGION_NAME", default="eu-west-2"),
     )
 
     event_bridge_client: EventBridgeClient = Boto3HandlerSession.client("events")
@@ -78,7 +80,4 @@ if DEBUG_LEVEL == "debug":
 else:
     boto3.set_stream_logger("", level=logging.INFO)
 
-APP_TAGS = [{
-    "key": "app",
-    "value": AWS_TAGS_APP_NAME
-}]
+APP_TAGS = [{"key": "app", "value": AWS_TAGS_APP_NAME}]

@@ -408,11 +408,7 @@ class InvoiceSchedule(models.Model):
     status = models.CharField(max_length=100, choices=StatusTypes.choices, default=StatusTypes.PENDING)
 
     def get_tags(self):
-        return {
-            "invoice_id": self.invoice.id,
-            "schedule_id": self.id,
-            "app": AWS_TAGS_APP_NAME
-        }
+        return {"invoice_id": self.invoice.id, "schedule_id": self.id, "app": AWS_TAGS_APP_NAME}
 
     class Meta:
         abstract = True
@@ -448,8 +444,6 @@ class APIKey(models.Model):
     def hash(self):
         self.key = make_password(f"{self.id}:{self.key}")
         self.save()
-
-
 
 
 class PasswordSecret(models.Model):

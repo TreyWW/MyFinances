@@ -51,13 +51,13 @@ INSTALLED_APPS = [
     "social_django",
     "rest_framework",
     "rest_framework.authtoken",
-    "tz_detect"
+    "tz_detect",
 ]
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.BasicAuthentication",
-        "rest_framework.authentication.TokenAuthentication"
+        "rest_framework.authentication.TokenAuthentication",
     ]
 }
 
@@ -71,7 +71,7 @@ LOGIN_REQUIRED_IGNORE_VIEW_NAMES = [
     "social:begin",
     "social:complete",
     "social:disconnect",
-    "api:invoices:create_schedule"
+    "api:invoices:create_schedule",
 ]
 
 # @login_required()
@@ -83,7 +83,7 @@ LOGIN_REQUIRED_IGNORE_PATHS = [
     r"^/auth/login/(.*)/",
     r"^/auth/create_account(/.*)?$",
     r"^/accounts/github/login/callback/$",
-    r"^/api/invoices/schedules/receive/$"
+    r"^/api/invoices/schedules/receive/$",
 ]
 # for some reason only allows "login" and not "login create account" or anything
 
@@ -190,7 +190,7 @@ MIDDLEWARE = [
     "login_required.middleware.LoginRequiredMiddleware",
     "social_django.middleware.SocialAuthExceptionMiddleware",
     "backend.models.CustomUserMiddleware",
-    "tz_detect.middleware.TimezoneMiddleware"
+    "tz_detect.middleware.TimezoneMiddleware",
 ]
 INTERNAL_IPS = [
     # ...
@@ -323,7 +323,6 @@ else:
     MEDIA_ROOT = os.path.join(BASE_DIR, "media")
     DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 
-
     class CustomPublicMediaStorage(FileSystemStorage):  # This overrides the AWS version
         ...
 
@@ -335,7 +334,6 @@ else:
 
     class CustomPrivateMediaStorage(FileSystemStorage):  # This overrides the AWS version
         ...
-
 
     PRIVATE_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 

@@ -6,6 +6,7 @@ from ..handler import get_event_bridge_client
 
 event_bridge_client = get_event_bridge_client
 
+
 def get_or_create_api_destination() -> CreateApiDestinationResponseTypeDef | DescribeApiDestinationResponseTypeDef:
     try:
         print("[AWS] [API_D] Describing API Destination...", flush=True)
@@ -14,10 +15,7 @@ def get_or_create_api_destination() -> CreateApiDestinationResponseTypeDef | Des
         if response.get("ApiDestinationState") == "INACTIVE":
             connection_arn = get_or_create_api_connection_arn()
             print("[AWS] [API_D] Updating API Destination with updated connection...", flush=True)
-            event_bridge_client.update_api_destination(
-                Name=f"{AWS_TAGS_APP_NAME}-scheduled-invoices",
-                ConnectionArn=connection_arn
-            )
+            event_bridge_client.update_api_destination(Name=f"{AWS_TAGS_APP_NAME}-scheduled-invoices", ConnectionArn=connection_arn)
         response = event_bridge_client.describe_api_destination(Name=f"{AWS_TAGS_APP_NAME}-scheduled-invoices")
         return response
     except event_bridge_client.exceptions.ResourceNotFoundException:
@@ -46,10 +44,5 @@ def get_or_create_api_connection_arn() -> str:
             Name=f"{AWS_TAGS_APP_NAME}-scheduled-invoices",
             Description="MyFinances Scheduled Invoices",
             AuthorizationType="API_KEY",
-            AuthParameters={
-                "ApiKeyAuthParameters": {
-                    "ApiKeyName": "Authorization",
-                    "ApiKeyValue": f"Token {key}"
-                }
-            }
+            AuthParameters={"ApiKeyAuthParameters": {"ApiKeyName": "Authorization", "ApiKeyValue": f"Token {key}"}},
         ).get("ConnectionArn")

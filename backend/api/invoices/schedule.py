@@ -13,8 +13,11 @@ from django_ratelimit.core import is_ratelimited
 from backend.decorators import feature_flag_check
 from backend.models import Invoice, AuditLog, APIKey, InvoiceOnetimeSchedule, InvoiceURL
 from infrastructure.aws.handler import get_iam_client
-from infrastructure.aws.schedules.create_schedule import create_onetime_schedule, CreateOnetimeScheduleInputData, \
-    SuccessResponse as CreateOnetimeScheduleSuccessResponse
+from infrastructure.aws.schedules.create_schedule import (
+    create_onetime_schedule,
+    CreateOnetimeScheduleInputData,
+    SuccessResponse as CreateOnetimeScheduleSuccessResponse,
+)
 from infrastructure.aws.schedules.delete_schedule import delete_schedule
 from infrastructure.aws.schedules.list_schedules import list_schedules, ScheduleListResponse, ErrorResponse as ListSchedulesErrorResponse
 from settings.helpers import send_email
@@ -37,8 +40,9 @@ def receive_scheduled_invoice(request: HttpRequest):
     schedule_type = request.POST.get("schedule_type") or request.headers.get("schedule_type")
     email_type = request.POST.get("email_type") or request.headers.get("email_type")
 
-    print(f"[TASK] Scheduled Invoice: {invoice_id}. Schedule Type: {schedule_type}. Schedule: {schedule_id}. Email: {email_type}",
-          flush=True)
+    print(
+        f"[TASK] Scheduled Invoice: {invoice_id}. Schedule Type: {schedule_type}. Schedule: {schedule_id}. Email: {email_type}", flush=True
+    )
 
     if not invoice_id or not schedule_id or not schedule_type:
         return HttpResponse("Missing invoice_id or schedule_id or schedule_type", status=400)
@@ -95,7 +99,7 @@ def receive_scheduled_invoice(request: HttpRequest):
             Note: This is an automated email sent out by MyFinances on behalf of '{invoice.self_company or invoice.self_name}'. If you
             believe this is spam or fraudulent please report it to us and DO NOT pay the invoice. Once a report has been made you will
             have a case opened.
-        """
+        """,
     )
 
     schedule.status = schedule.StatusTypes.COMPLETED
@@ -111,10 +115,12 @@ def create_schedule(request: HttpRequest):
     option = request.POST.get("option")  # 1=one time 2=recurring
 
     if option in ["1", "one-time", "onetime", "one"]:
-        ratelimited = is_ratelimited(request, group="create_schedule", key="user", rate="2/30s", increment=True) or \
-                      is_ratelimited(request, group="create_schedule", key="user", rate="5/m", increment=True) or \
-                      is_ratelimited(request, group="create_schedule", key="ip", rate="5/m", increment=True) or \
-                      is_ratelimited(request, group="create_schedule", key="ip", rate="10/h", increment=True)
+        ratelimited = (
+            is_ratelimited(request, group="create_schedule", key="user", rate="2/30s", increment=True)
+            or is_ratelimited(request, group="create_schedule", key="user", rate="5/m", increment=True)
+            or is_ratelimited(request, group="create_schedule", key="ip", rate="5/m", increment=True)
+            or is_ratelimited(request, group="create_schedule", key="ip", rate="10/h", increment=True)
+        )
 
         if ratelimited:
             messages.error(request, "Woah, slow down!")
@@ -134,18 +140,16 @@ def create_ots(request: HttpRequest) -> HttpResponse:
         messages.error(request, "Invoice not found")
         return render(request, "base/toasts.html")
 
-    if (request.user.logged_in_as_team and invoice.organization != request.user.logged_in_as_team) or \
-        (not request.user.logged_in_as_team and invoice.user != request.user):
+    if (request.user.logged_in_as_team and invoice.organization != request.user.logged_in_as_team) or (
+        not request.user.logged_in_as_team and invoice.user != request.user
+    ):
         messages.error(request, "You do not have permission to create schedules for this invoice")
         return render(request, "base/toasts.html")
 
     print("[BACKEND] About to create ots", flush=True)
     schedule = create_onetime_schedule(
         CreateOnetimeScheduleInputData(
-            invoice=invoice,
-            option=1,
-            datetime=request.POST.get("date_time"),
-            email_type=request.POST.get("email_type")
+            invoice=invoice, option=1, datetime=request.POST.get("date_time"), email_type=request.POST.get("email_type")
         )
     )
 
@@ -161,10 +165,7 @@ def create_ots(request: HttpRequest) -> HttpResponse:
 
 def get_or_create_role_arn():
     iam_client = get_iam_client()
-    response = iam_client.list_roles(
-        PathPrefix=f"/{AWS_TAGS_APP_NAME}-scheduled-invoices/",
-        MaxItems=1
-    )
+    response = iam_client.list_roles(PathPrefix=f"/{AWS_TAGS_APP_NAME}-scheduled-invoices/", MaxItems=1)
 
     if response.get("Roles"):
         return response.get("Roles")[0].get("Arn")
@@ -172,18 +173,12 @@ def get_or_create_role_arn():
     response = iam_client.create_role(
         RoleName=f"{AWS_TAGS_APP_NAME}-scheduled-invoices",
         Path=f"/{AWS_TAGS_APP_NAME}-scheduled-invoices/",
-        AssumeRolePolicyDocument=json.dumps({
-            "Version": "2012-10-17",
-            "Statement": [
-                {
-                    "Effect": "Allow",
-                    "Principal": {
-                        "Service": "scheduler.amazonaws.com"
-                    },
-                    "Action": "sts:AssumeRole"
-                }
-            ]
-        })
+        AssumeRolePolicyDocument=json.dumps(
+            {
+                "Version": "2012-10-17",
+                "Statement": [{"Effect": "Allow", "Principal": {"Service": "scheduler.amazonaws.com"}, "Action": "sts:AssumeRole"}],
+            }
+        ),
     )
 
     return response.get("Role").get("Arn")
@@ -329,10 +324,12 @@ def fetch_onetime_schedules(request: HttpRequest, invoice_id: str):
 
     # Apply OR conditions to the invoices queryset
     if request.GET.get("refresh-statuses"):
-        ratelimited = is_ratelimited(request, group="schedules-refresh-statuses", key="user", rate="2/30s", increment=True) or \
-                      is_ratelimited(request, group="schedules-refresh-statuses", key="user", rate="5/m", increment=True) or \
-                      is_ratelimited(request, group="schedules-refresh-statuses", key="ip", rate="5/m", increment=True) or \
-                      is_ratelimited(request, group="schedules-refresh-statuses", key="ip", rate="10/h", increment=True)
+        ratelimited = (
+            is_ratelimited(request, group="schedules-refresh-statuses", key="user", rate="2/30s", increment=True)
+            or is_ratelimited(request, group="schedules-refresh-statuses", key="user", rate="5/m", increment=True)
+            or is_ratelimited(request, group="schedules-refresh-statuses", key="ip", rate="5/m", increment=True)
+            or is_ratelimited(request, group="schedules-refresh-statuses", key="ip", rate="10/h", increment=True)
+        )
 
         if ratelimited:
             messages.error(request, "Woah, slow down!")

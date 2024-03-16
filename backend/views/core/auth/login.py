@@ -4,8 +4,7 @@ import django_ratelimit
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.hashers import check_password
 from django.core.validators import validate_email
-from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render
+from django.http import HttpRequest
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views import View

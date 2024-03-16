@@ -7,7 +7,7 @@ class HealthCheckMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        if request.path == '/api/hc/healthcheck/':
+        if request.path == "/api/hc/healthcheck/":
             try:
                 status = connection.ensure_connection()
             except OperationalError:

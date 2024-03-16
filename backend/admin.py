@@ -20,7 +20,7 @@ from backend.models import (
     FeatureFlags,
     VerificationCodes,
     APIKey,
-    InvoiceOnetimeSchedule
+    InvoiceOnetimeSchedule,
 )
 
 # from django.contrib.auth.models imp/ort User
@@ -44,7 +44,7 @@ admin.site.register(
         FeatureFlags,
         VerificationCodes,
         APIKey,
-        InvoiceOnetimeSchedule
+        InvoiceOnetimeSchedule,
     ]
 )
 

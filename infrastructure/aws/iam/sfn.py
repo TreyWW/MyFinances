@@ -8,6 +8,7 @@ from settings.settings import AWS_TAGS_APP_NAME
 
 iam_client = get_iam_client
 
+
 def get_or_create_sfn_execute_role_arn() -> str:
     """
     :returns: RoleArn
@@ -16,9 +17,7 @@ def get_or_create_sfn_execute_role_arn() -> str:
         print("[AWS] Fetching scheduler role by name...", flush=True)
 
     try:
-        response = iam_client.get_role(
-            RoleName=f"{AWS_TAGS_APP_NAME}-invoicing-scheduler-fn"
-        )
+        response = iam_client.get_role(RoleName=f"{AWS_TAGS_APP_NAME}-invoicing-scheduler-fn")
 
     except iam_client.exceptions.NoSuchEntityException:
         response = {}
@@ -36,18 +35,12 @@ def get_or_create_sfn_execute_role_arn() -> str:
     response = iam_client.create_role(
         RoleName=f"{AWS_TAGS_APP_NAME}-invoicing-scheduler-fn",
         Path=f"/{AWS_TAGS_APP_NAME}-scheduled-invoices/",
-        AssumeRolePolicyDocument=json.dumps({
-            "Version": "2012-10-17",
-            "Statement": [
-                {
-                    "Effect": "Allow",
-                    "Principal": {
-                        "Service": "scheduler.amazonaws.com"
-                    },
-                    "Action": "sts:AssumeRole"
-                }
-            ]
-        })
+        AssumeRolePolicyDocument=json.dumps(
+            {
+                "Version": "2012-10-17",
+                "Statement": [{"Effect": "Allow", "Principal": {"Service": "scheduler.amazonaws.com"}, "Action": "sts:AssumeRole"}],
+            }
+        ),
     )  #
 
     assign_policy()
@@ -61,10 +54,7 @@ def assign_policy(check=False) -> NoReturn:
     print(f"{AWS_TAGS_APP_NAME}-invoicing-scheduler-fn")
     if check:
         try:
-            iam_client.get_role_policy(
-                RoleName=f"{AWS_TAGS_APP_NAME}-invoicing-scheduler-fn",
-                PolicyName=policy.get("PolicyName")
-            )
+            iam_client.get_role_policy(RoleName=f"{AWS_TAGS_APP_NAME}-invoicing-scheduler-fn", PolicyName=policy.get("PolicyName"))
             print("[AWS] Policy already attached to scheduler role!", flush=True)
             return
         except iam_client.exceptions.NoSuchEntityException:
@@ -73,10 +63,7 @@ def assign_policy(check=False) -> NoReturn:
     if DEBUG_LEVEL:
         print("[AWS] Attaching policy to scheduler role...", flush=True)
 
-    iam_client.attach_role_policy(
-        RoleName=f"{AWS_TAGS_APP_NAME}-invoicing-scheduler-fn",
-        PolicyArn=policy.get("Arn")
-    )
+    iam_client.attach_role_policy(RoleName=f"{AWS_TAGS_APP_NAME}-invoicing-scheduler-fn", PolicyArn=policy.get("Arn"))
 
     print("[AWS] Attached policy to scheduler role!", flush=True)
 
@@ -85,15 +72,10 @@ def get_or_create_policy() -> CreatePolicyResponseTypeDef | PolicyTypeDef:
     if DEBUG_LEVEL == "debug":
         print("[AWS] Fetching all policies by prefix...", flush=True)
 
-    response = iam_client.list_policies(
-        Scope="Local",
-        PathPrefix=f"/{AWS_TAGS_APP_NAME}-scheduled-invoices/"
-    )
+    response = iam_client.list_policies(Scope="Local", PathPrefix=f"/{AWS_TAGS_APP_NAME}-scheduled-invoices/")
 
     policies = [
-        policy
-        for policy in response.get("Policies", [])
-        if policy.get("PolicyName") == f"{AWS_TAGS_APP_NAME}-invoicing-scheduler-fn"
+        policy for policy in response.get("Policies", []) if policy.get("PolicyName") == f"{AWS_TAGS_APP_NAME}-invoicing-scheduler-fn"
     ]
 
     if len(policies) == 1:
@@ -112,59 +94,45 @@ def get_or_create_policy() -> CreatePolicyResponseTypeDef | PolicyTypeDef:
     return iam_client.create_policy(
         PolicyName=f"{AWS_TAGS_APP_NAME}-invoicing-scheduler-fn",
         Path=f"/{AWS_TAGS_APP_NAME}-scheduled-invoices/",
-        PolicyDocument=json.dumps({
-            "Version": "2012-10-17",
-            "Statement": [
-                {
-                    "Sid": "CallAPIDestination",
-                    "Effect": "Allow",
-                    "Action": [
-                        "states:InvokeHTTPEndpoint",
-                        "states:StartExecution"
-                    ],
-                    "Resource": [
-                        "*"
-                    ]
-                },
-                {
-                    "Sid": "AccessSecrets",
-                    "Effect": "Allow",
-                    "Action": [
-                        "events:RetrieveConnectionCredentials",
-                        "secretsmanager:GetSecretValue",
-                        "secretsmanager:DescribeSecret"
-                    ],
-                    "Resource": [
-                        "*"
-                    ]
-                },
-                {
-                    "Sid": "CreateLogDelivery",
-                    "Effect": "Allow",
-                    "Action": [
-                        "logs:CreateLogDelivery",
-                        "logs:CreateLogStream",
-                        "logs:GetLogDelivery",
-                        "logs:UpdateLogDelivery",
-                        "logs:DeleteLogDelivery",
-                        "logs:ListLogDeliveries",
-                        "logs:PutLogEvents",
-                        "logs:PutResourcePolicy",
-                        "logs:DescribeResourcePolicies",
-                        "logs:DescribeLogGroups"
-                    ],
-                    "Resource": "*"
-                },
-                {
-                    "Sid": "AllowEventbridgeScheduler",
-                    "Effect": "Allow",
-                    "Action": [
-                        "scheduler:*"
-                    ],
-                    "Resource": [
-                        "*"
-                    ]
-                }
-            ]
-        })
+        PolicyDocument=json.dumps(
+            {
+                "Version": "2012-10-17",
+                "Statement": [
+                    {
+                        "Sid": "CallAPIDestination",
+                        "Effect": "Allow",
+                        "Action": ["states:InvokeHTTPEndpoint", "states:StartExecution"],
+                        "Resource": ["*"],
+                    },
+                    {
+                        "Sid": "AccessSecrets",
+                        "Effect": "Allow",
+                        "Action": [
+                            "events:RetrieveConnectionCredentials",
+                            "secretsmanager:GetSecretValue",
+                            "secretsmanager:DescribeSecret",
+                        ],
+                        "Resource": ["*"],
+                    },
+                    {
+                        "Sid": "CreateLogDelivery",
+                        "Effect": "Allow",
+                        "Action": [
+                            "logs:CreateLogDelivery",
+                            "logs:CreateLogStream",
+                            "logs:GetLogDelivery",
+                            "logs:UpdateLogDelivery",
+                            "logs:DeleteLogDelivery",
+                            "logs:ListLogDeliveries",
+                            "logs:PutLogEvents",
+                            "logs:PutResourcePolicy",
+                            "logs:DescribeResourcePolicies",
+                            "logs:DescribeLogGroups",
+                        ],
+                        "Resource": "*",
+                    },
+                    {"Sid": "AllowEventbridgeScheduler", "Effect": "Allow", "Action": ["scheduler:*"], "Resource": ["*"]},
+                ],
+            }
+        ),
     )

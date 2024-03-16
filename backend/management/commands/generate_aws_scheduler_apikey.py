@@ -13,7 +13,8 @@ class Command(BaseCommand):
         key = f"{token.id}:{token.key}"
         token.hash()
 
-        self.stdout.write(f"""
+        self.stdout.write(
+            f"""
         NOTE: Keep this key secret. It is used to authenticate your API requests with the AWS EventBridge API.
         
         Your API Key: {key}
@@ -21,4 +22,5 @@ class Command(BaseCommand):
         You should put this key under "/infrastructure/aws/terraform/terraform.tfvars" and then add this line: 
         
         api_destination-api_key = "{key}"
-        """)
+        """
+        )

@@ -20,7 +20,7 @@ url(
     {"document_root": settings.STATICFILES_DIRS[0]},
 )
 urlpatterns = [
-                  path('tz_detect/', include('tz_detect.urls')),
+                  path("tz_detect/", include("tz_detect.urls")),
     path("api/", include("backend.api.urls")),
     path("", index, name="index"),
     path("dashboard/", dashboard, name="dashboard"),
@@ -47,7 +47,6 @@ urlpatterns = [
         receipts.dashboard.receipts_dashboard,
         name="receipts dashboard",
     ),
-
                   path(
         "invoice/<str:uuid>",
         invoices.view.view,

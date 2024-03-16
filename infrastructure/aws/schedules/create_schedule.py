@@ -56,9 +56,7 @@ def create_onetime_schedule(data: CreateOnetimeScheduleInputData) -> CreateOneti
         return ErrorResponse("Date time cannot be in the past")
 
     schedule = InvoiceOnetimeSchedule.objects.create(
-        invoice=data.invoice,
-        due=date_time_to_obj,
-        status=InvoiceOnetimeSchedule.StatusTypes.CREATING
+        invoice=data.invoice, due=date_time_to_obj, status=InvoiceOnetimeSchedule.StatusTypes.CREATING
     )
 
     # TODO: Add a signal to delete AWS Rule on OntimeSchedule model object delete
@@ -72,24 +70,24 @@ def create_onetime_schedule(data: CreateOnetimeScheduleInputData) -> CreateOneti
     event_bridge_scheduler = get_event_bridge_scheduler()
     CREATED_SCHEDULE = event_bridge_scheduler.create_schedule(
         Name=f"{AWS_TAGS_APP_NAME}-scheduled-invoices-{data.invoice.id}-{schedule.id}",
-        FlexibleTimeWindow={
-            "Mode": "OFF"
-        },
+        FlexibleTimeWindow={"Mode": "OFF"},
         ScheduleExpression=f"at({date_time})",
         Target={
             "Arn": scheduler_step_function["stateMachineArn"],
             "RoleArn": get_or_create_sfn_execute_role_arn(),
-            "Input": json.dumps({
-                "headers": {
-                    "invoice_id": str(data.invoice.id),
-                    "schedule_id": str(schedule.id),
-                    "schedule_type": "1",
-                    "email_type": "1"
-                },
-                "body": {}
-            })
+            "Input": json.dumps(
+                {
+                    "headers": {
+                        "invoice_id": str(data.invoice.id),
+                        "schedule_id": str(schedule.id),
+                        "schedule_type": "1",
+                        "email_type": "1",
+                    },
+                    "body": {},
+                }
+            ),
         },
-        ActionAfterCompletion="DELETE"
+        ActionAfterCompletion="DELETE",
     )
 
     schedule.stored_schedule_arn = CREATED_SCHEDULE.get("ScheduleArn")

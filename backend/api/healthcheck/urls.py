@@ -12,7 +12,7 @@ urlpatterns = [
         "healthcheck/",
         healthcheck.healthcheck,
         name="healthcheck",
-    )
+    ),
 ]
 
 app_name = "healthcheck"
