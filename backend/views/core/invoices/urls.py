@@ -33,7 +33,7 @@ invoice_urls = [
         edit.edit_invoice_page,
         # invoices.edit.invoice_edit_page_get,
         name="edit",
-    )
+    ),
 ]
 
 urlpatterns = invoice_urls + [

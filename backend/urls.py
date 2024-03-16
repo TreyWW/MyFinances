@@ -27,11 +27,11 @@ urlpatterns = [
     path("dashboard/", dashboard, name="dashboard"),
     path("dashboard/settings/", settings_v.view.settings_page, name="user settings"),
     path("dashboard/invoices/", include("backend.views.core.invoices.urls")),
-                  path(
-                      "dashboard/invoice/<str:invoice_id>/",
-                      manage_invoice,
-                      name="invoice overview",
-                  ),
+    path(
+        "dashboard/invoice/<str:invoice_id>/",
+        manage_invoice,
+        name="invoice overview",
+    ),
     path("favicon.ico", RedirectView.as_view(url="favicon.ico")),
     path(
         "dashboard/settings/teams",

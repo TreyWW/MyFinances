@@ -6,9 +6,7 @@
         <div class=" text-3xl w-full grid grid-cols-4">
             <div>
                 <a href="{% url "invoices:dashboard" %}"
-                   class="btn btn-sm btn-outline btn-secondary me-3 float-left">
-                    Back to list
-                </a>
+                   class="btn btn-sm btn-outline btn-secondary me-3 float-left">Back to list</a>
             </div>
             <h1 class="text-center col-span-2">Invoice #{{ invoice.id }}</h1>
             <div>
@@ -31,13 +29,14 @@
                     hx-swap="innerHTML"
                     hx-trigger="load,click,queue:last"
                     hx-indicator="this">
-            <span class="loading-htmx-text">
-                <i class="fa-solid fa-file-pdf"></i>
-                Preview Invoice
-            </span>
+                <span class="loading-htmx-text">
+                    <i class="fa-solid fa-file-pdf"></i>
+                    Preview Invoice
+                </span>
                 <span class="loading loading-spinner loading-htmx-loader"></span>
             </button>
-            <a href="{% url "invoices:edit" invoice_id=invoice.id %}" class="btn btn-md btn-outline btn-default grow mr-4">
+            <a href="{% url "invoices:edit" invoice_id=invoice.id %}"
+               class="btn btn-md btn-outline btn-default grow mr-4">
                 <i class="fa-solid fa-up-right-from-square"></i>
                 Edit Invoice
             </a>
@@ -47,7 +46,8 @@
                 Send Invoice
             </a>
             {% if schedule_invoices_enabled %}
-                <a href="{% url "invoices:schedules view" invoice_id=invoice.id %}" class="btn btn-outline btn-default grow mr-4">
+                <a href="{% url "invoices:schedules view" invoice_id=invoice.id %}"
+                   class="btn btn-outline btn-default grow mr-4">
                     <i class="fa-solid fa-clock"></i>
                     Schedule Invoice
                 </a>
@@ -65,7 +65,8 @@
                         <i class="fa-solid fa-flag"></i>
                         Mark As
                     </div>
-                    <ul tabindex="0" class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
+                    <ul tabindex="0"
+                        class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
                         <li>
                             <button hx-swap="none"
                                     hx-post="{% url "api:invoices:edit status" invoice_id=invoice.id status='pending' %}">
@@ -91,14 +92,10 @@
                 </div>
             </div>
         </div>
-
     </div>
     <div class="collapse collapse-arrow card bg-base-100 shadow-xl w-full p-6 flex-row gap-x-4 mt-4">
         <input type="checkbox" checked />
-        <div class="collapse-title text-xl font-medium">
-            Manage Invoice Content
-        </div>
-        <div id="container" class="collapse-content">
-        </div>
+        <div class="collapse-title text-xl font-medium">Manage Invoice Content</div>
+        <div id="container" class="collapse-content"></div>
     </div>
 {% endblock content %}

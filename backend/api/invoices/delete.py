@@ -42,5 +42,4 @@ def delete_invoice(request: HttpRequest):
         except Resolver404:
             ...
 
-
     return JsonResponse({"message": "Invoice successfully deleted"}, status=200)

@@ -1,9 +1,5 @@
 {% if design == "default" %}
-    <span class="p-3 rounded border border-2 shadow-2xl 
-            {% if status == "overdue" %}drop-shadow drop-shadow-glow_red text-error border-error
-            {% elif status == "pending" %}text-base-400 border-base-400
-            {% elif status == "paid" %}text-success border-success
-                {% endif %}">
+    <span class="p-3 rounded border border-2 shadow-2xl {% if status == "overdue" %}drop-shadow drop-shadow-glow_red text-error border-error {% elif status == "pending" %}text-base-400 border-base-400 {% elif status == "paid" %}text-success border-success {% endif %}">
         {% if status == "paid" %}
             <i class="fa-solid fa-check text-success mr-1"></i>
             <span>Paid</span>
