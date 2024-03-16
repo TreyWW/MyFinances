@@ -22,7 +22,7 @@
                     </div>
                 </div>
             </td>
-            <td>£{{ invoice.amount | floatformat:2 | intcomma }}</td>
+            <td>£{{ invoice.amount | default_if_none:0 | floatformat:2 | intcomma }}</td>
             <td>
                 {% component "pages:invoices:dashboard:payment_status_badge" status=invoice.payment_status inv_id=invoice.id %}
             </td>
@@ -37,6 +37,12 @@
                     </label>
                     <ul tabindex="0"
                         class="dropdown-content z-[1] menu wp-2 shadow-2xl bg-base-200 rounded-box w-52">
+                        <li>
+                            <a href="{% url "invoice overview" invoice_id=invoice.id %}">
+                                <i class="fa-solid fa-eye"></i>
+                                Overview
+                            </a>
+                        </li>
                         <li>
                             <a href="{% url "invoices:preview" invoice_id=invoice.id %}">
                                 <i class="fa-solid fa-file-pdf"></i>
