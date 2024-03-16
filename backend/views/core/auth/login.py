@@ -4,8 +4,7 @@ import django_ratelimit
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.hashers import check_password
 from django.core.validators import validate_email
-from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render
+from django.http import HttpRequest
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views import View
@@ -42,7 +41,6 @@ def login_manual(request: HttpRequest):  # HTMX POST
     email = request.POST.get("email")
     password = request.POST.get("password")
     page = str(request.POST.get("page"))
-    print(email, password, page)
 
     if not page or page == "1":
         return render(

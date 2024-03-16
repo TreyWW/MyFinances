@@ -1,0 +1,11 @@
+<div hx-swap-oob='innerHTML:div[data-id="generate_api_key"]'>
+    <p class="text-lg font-semibold text-gray-900 dark:text-white w-full">API Key</p>
+    <div class="rounded-lg alert alert-warning my-2 w-full">
+        Make sure to copy your API Key now, you won't be able to view it again.
+    </div>
+    <input type="text"
+           name="apikey"
+           class="input input-bordered disabled w-3/4"
+           disabled
+           value="{{ key }}" />
+</div>

@@ -5,12 +5,12 @@ from django.shortcuts import redirect, render
 from backend.models import Invoice, InvoiceURL
 
 
-def manage_access(request: HttpRequest, id):
+def manage_access(request: HttpRequest, invoice_id):
     try:
-        invoice = Invoice.objects.prefetch_related("invoice_urls").get(id=id, user=request.user)
+        invoice = Invoice.objects.prefetch_related("invoice_urls").get(id=invoice_id, user=request.user)
     except Invoice.DoesNotExist:
         messages.error(request, "Invoice not found")
-        return redirect("invoices dashboard")
+        return redirect("invoices:dashboard")
 
     all_access_codes = invoice.invoice_urls.values_list("uuid", "created_on").order_by("-created_on")
 
@@ -21,15 +21,15 @@ def manage_access(request: HttpRequest, id):
     )
 
 
-def create_code(request: HttpRequest, id):
+def create_code(request: HttpRequest, invoice_id):
     if not request.htmx:
-        return redirect("invoices dashboard")
+        return redirect("invoices:dashboard")
 
     if request.method != "POST":
         return HttpResponse("Invalid request", status=400)
 
     try:
-        invoice = Invoice.objects.get(id=id, user=request.user)
+        invoice = Invoice.objects.get(id=invoice_id, user=request.user)
     except Invoice.DoesNotExist:
         return HttpResponse("Invoice not found", status=400)
 
@@ -43,15 +43,15 @@ def create_code(request: HttpRequest, id):
     )
 
 
-def delete_code(request: HttpRequest, id):
+def delete_code(request: HttpRequest, code):
     if request.method != "DELETE" or not request.htmx:
         return HttpResponse("Request invalid", status=400)
 
     try:
-        code_obj = InvoiceURL.objects.get(uuid=id)
+        code_obj = InvoiceURL.objects.get(uuid=code)
         invoice = Invoice.objects.get(id=code_obj.invoice.id, user=request.user)
     except (Invoice.DoesNotExist, InvoiceURL.DoesNotExist):
-        return redirect("invoices dashboard")
+        return redirect("invoices:dashboard")
 
     code_obj.delete()
 

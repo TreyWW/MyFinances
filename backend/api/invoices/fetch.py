@@ -22,7 +22,7 @@ from backend.models import Invoice, InvoiceItem
 def fetch_all_invoices(request: HttpRequest):
     # Redirect if not an HTMX request
     if not request.htmx:
-        return redirect("invoices dashboard")
+        return redirect("invoices:dashboard")
 
     context = {}
 

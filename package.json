@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "tailwind-build": "npx tailwindcss -i ./frontend/static/src/input.css -o ./frontend/static/src/output.css -w",
+    "tailwind-build": "tailwindcss -i .\\\\frontend\\\\static\\\\src\\\\input.css -o .\\\\frontend\\\\static\\\\src\\\\output.css -w",
     "tailwind-minify": "tailwindcss -o ./frontend/static/src/output.css --minify",
     "preview-docs": "docsify serve docs",
     "webpack-dev": "webpack --watch --config webpack.dev.js",
@@ -15,21 +15,21 @@
   "license": "ISC",
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^6.5.1",
-    "daisyui": "^4.6.1",
+    "daisyui": "^4.7.3",
     "docsify-cli": "^4.4.2",
-    "npm-check-updates": "16.14.11",
-    "tailwindcss": "^3.3.6",
-    "webpack": "^5.90.1",
+    "npm-check-updates": "16.14.17",
+    "tailwindcss": "^3.4.1",
+    "webpack": "^5.90.3",
     "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^4.15.1",
+    "webpack-dev-server": "^5.0.3",
     "webpack-merge": "^5.10.0"
   },
   "dependencies": {
-    "alpinejs": "^3.13.5",
-    "daisyui": "^4.6.1",
-    "htmx.org": "^1.9.10",
+    "alpinejs": "^3.13.7",
+    "daisyui": "^4.7.3",
+    "htmx.org": "^1.9.11",
     "hyperscript.org": "^0.9.12",
     "jquery": "^3.7.1",
-    "tailwindcss": "^3.3.6"
+    "tailwindcss": "^3.4.1"
   }
 }

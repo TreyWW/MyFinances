@@ -1,0 +1,132 @@
+{
+  "name": "These go on the user that has AWS_SCHEDULES_ACCESS_KEY_ID and AWS_SCHEDULES_SECRET_ACCESS_KEY",
+  "description": [
+    "To use this, copy all of 'POLICY' below (only the dictionary, not the 'policy' key",
+    "Then go to aws and press 'Add Permissions' -> 'Create inline policy'"
+  ],
+  "policies": [
+    {
+      "policy": {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": [
+              "scheduler:GetSchedule",
+              "scheduler:UntagResource",
+              "scheduler:DeleteSchedule",
+              "scheduler:UpdateSchedule",
+              "scheduler:ListSchedules",
+              "scheduler:GetScheduleGroup",
+              "scheduler:ListScheduleGroups",
+              "scheduler:DeleteScheduleGroup",
+              "scheduler:CreateScheduleGroup",
+              "scheduler:ListTagsForResource",
+              "events:EnableRule",
+              "events:CreateApiDestination",
+              "scheduler:TagResource",
+              "events:PutRule",
+              "events:DescribeConnection",
+              "events:UpdateApiDestination",
+              "events:ListRuleNamesByTarget",
+              "events:ListRules",
+              "events:RemoveTargets",
+              "events:ListTargetsByRule",
+              "events:DescribeApiDestination",
+              "events:DisableRule",
+              "events:PutEvents",
+              "events:DescribeRule",
+              "events:ListApiDestinations",
+              "events:ListConnections",
+              "events:DeauthorizeConnection",
+              "events:TagResource",
+              "events:DeleteRule",
+              "events:PutTargets",
+              "events:CreateConnection",
+              "events:DeleteApiDestination",
+              "scheduler:CreateSchedule",
+              "events:ListTagsForResource",
+              "events:DeleteConnection",
+              "events:UpdateConnection",
+              "events:UntagResource",
+              "states:*"
+            ],
+            "Resource": "*"
+          },
+          {
+            "Sid": "IAMPolicies",
+            "Effect": "Allow",
+            "Action": [
+              "iam:ListPolicyTags",
+              "iam:ListEntitiesForPolicy",
+              "iam:GetPolicy",
+              "iam:GetGroupPolicy",
+              "iam:GetRolePolicy",
+              "iam:GetUserPolicy",
+              "iam:AttachGroupPolicy",
+              "iam:AttachRolePolicy",
+              "iam:AttachUserPolicy",
+              "iam:CreatePolicy",
+              "iam:CreatePolicyVersion",
+              "iam:ListRolePolicies",
+              "iam:PutRolePolicy",
+              "iam:CreateServiceLinkedRole",
+              "iam:ListPolicies",
+              "iam:UntagRole",
+              "iam:ListRoleTags",
+              "iam:TagRole",
+              "iam:CreateRole",
+              "iam:PassRole",
+              "iam:GetRole",
+              "iam:ListRoles",
+              "iam:UpdateRole"
+            ],
+            "Resource": [
+              "arn:aws:iam::*:policy/*",
+              "arn:aws:iam::*:role/*"
+            ]
+          },
+          {
+            "Sid": "SecretsManagerPolicy",
+            "Effect": "Allow",
+            "Action": [
+              "secretsmanager:GetSecretValue",
+              "secretsmanager:DescribeSecret",
+              "secretsmanager:PutSecretValue",
+              "secretsmanager:CreateSecret",
+              "secretsmanager:DeleteSecret",
+              "secretsmanager:UpdateSecret"
+            ],
+            "Resource": "arn:aws:secretsmanager:*:*:secret:events!connection/*"
+          }
+        ]
+      }
+    },
+    {
+      "policy": {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Sid": "Allow sending emails to users",
+            "Effect": "Allow",
+            "Action": [
+              "ses:SendEmail",
+              "ses:SendTemplatedEmail",
+              "ses:SendRawEmail"
+            ],
+            "Resource": [
+              "arn:aws:ses:*"
+            ]
+          },
+          {
+            "Sid": "Allow send quota access",
+            "Effect": "Allow",
+            "Action": "ses:GetSendQuota",
+            "Resource": "*"
+          }
+        ]
+      }
+    }
+  ]
+}
