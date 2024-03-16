@@ -1,4 +1,4 @@
-<div hx-swap-oob='innerHTML:[data-swap="form_fields"]'>
+<div hx-swap-oob='innerHTML:[data-swap="form_fields"]' hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
     {% if email %}
         <div class="text-center mt-4">
             <small class="text-center">
@@ -17,13 +17,14 @@
                class="input input-bordered w-full">
         <input type="hidden" name="email" value="{{ email }}">
         <input type="hidden" name="page" value="2">
+        <input type="hidden" name="next" value="{{ next }}">
     </div>
     <button class="btn mt-2 w-full btn-primary">Login</button>
     <div class="divider mt-8">OR</div>
     {% if magic_links_enabled %}
         <button type="button"
                 hx-post="{% url 'auth:login magic_link request' %}"
-                hx-vals='{"email": "{{ email }}"}'
+                hx-vals='{"email": "{{ email }}", "next": "{{ next }}"}'
                 class="btn-large-card flex flex-col items-center">
             <span>Login with email magic link</span>
             <span class="text-xs text-center">This sends an email to your address, all you need to do is press the link and you're in!</span>

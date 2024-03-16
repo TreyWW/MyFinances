@@ -6,7 +6,7 @@
     {% for invoice in invoices %}
         <tr>
             <td class="link link-primary">
-                <a href="{% url "invoices:preview" invoice_id=invoice.id %}">{{ invoice.id }}</a>
+                <a href="{% url "invoice overview" invoice_id=invoice.id %}">{{ invoice.id }}</a>
             </td>
             <td>{{ invoice.date_due | date:"d/m/Y" }}</td>
             <td>

@@ -1,13 +1,34 @@
-{% if status == "paid" %}
-    <span class="badge badge-outline rounded p-3 badge-success"
-          data-status="paid"
-          data-invoice-id="{{ inv_id }}">Paid</span>
-{% elif status == "overdue" %}
-    <span class="badge badge-outline rounded p-3 badge-error drop-shadow drop-shadow-glow_red"
-          data-status="overdue"
-          data-invoice-id="{{ inv_id }}">Overdue</span>
+{% if design == "default" %}
+    <span class="p-3 rounded border border-2 shadow-2xl 
+            {% if status == "overdue" %}drop-shadow drop-shadow-glow_red text-error border-error
+            {% elif status == "pending" %}text-base-400 border-base-400
+            {% elif status == "paid" %}text-success border-success
+                {% endif %}">
+        {% if status == "paid" %}
+            <i class="fa-solid fa-check text-success mr-1"></i>
+            <span>Paid</span>
+        {% elif status == "overdue" %}
+            <i class="fa-solid fa-exclamation-triangle mr-1"></i>
+            <span>Overdue</span>
+        {% elif status == "pending" %}
+            <i class="fa-solid fa-hourglass-half mr-1"></i>
+            <span>Pending</span>
+        {% else %}
+            <span>{{ status }}</span>
+        {% endif %}
+    </span>
 {% else %}
-    <span class="badge badge-outline rounded p-3 badge-info"
-          data-status="{{ invoice.payment_status | lower }}"
-          data-invoice-id="{{ inv_id }}">{{ status | default:"sent" | title }}</span>
+    {% if status == "paid" %}
+        <span class="badge badge-outline rounded p-3 badge-success"
+              data-status="paid"
+              data-invoice-id="{{ inv_id }}">Paid</span>
+    {% elif status == "overdue" %}
+        <span class="badge badge-outline rounded p-3 badge-error drop-shadow drop-shadow-glow_red"
+              data-status="overdue"
+              data-invoice-id="{{ inv_id }}">Overdue</span>
+    {% else %}
+        <span class="badge badge-outline rounded p-3 badge-info"
+              data-status="{{ invoice.payment_status | lower }}"
+              data-invoice-id="{{ inv_id }}">{{ status | default:"sent" | title }}</span>
+    {% endif %}
 {% endif %}

@@ -69,6 +69,7 @@
                     <span class="label-text-alt text-error">Please enter a valid email.</span>
                 </label>
                 <input type="hidden" name="page" value="1">
+                <input type="hidden" name="next" value="{{ request.GET.next }}">
             </div>
             <button hx-swap="none" hx-target="form" class="btn mt-6 w-full btn-primary">
                 Next
