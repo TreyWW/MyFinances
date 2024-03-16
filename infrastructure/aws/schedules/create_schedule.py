@@ -6,10 +6,9 @@ import pytz
 from django.utils import timezone
 
 from backend.models import Invoice, InvoiceOnetimeSchedule
-from infrastructure.aws.api_destination.api_destination import get_or_create_api_destination
 from infrastructure.aws.handler import event_bridge_scheduler
 from infrastructure.aws.iam.sfn import get_or_create_sfn_execute_role_arn
-from infrastructure.aws.step_functions.scheduler import get_or_create_schedule_step_function
+from infrastructure.aws.step_functions.scheduler import get_step_function
 from settings.settings import AWS_TAGS_APP_NAME
 
 
@@ -39,7 +38,6 @@ class CreateOnetimeScheduleInputData:
 def create_onetime_schedule(data: CreateOnetimeScheduleInputData) -> CreateOnetimeScheduleResponse:
     print(f"Creating onetime schedule for {data.invoice}", flush=True)
     print(f"Creating onetime schedule for {data.invoice} (no flush)")
-    get_or_create_api_destination()
 
     date_time = data.datetime
 
@@ -65,7 +63,7 @@ def create_onetime_schedule(data: CreateOnetimeScheduleInputData) -> CreateOneti
 
     # TODO: Add a signal to delete AWS Rule on OntimeSchedule model object delete
 
-    scheduler_step_function = get_or_create_schedule_step_function()
+    scheduler_step_function = get_step_function()
 
     if not scheduler_step_function.get("stateMachineArn"):
         print("[AWS] [SFN] Step function not found", flush=True)

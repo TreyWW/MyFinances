@@ -26,9 +26,11 @@ from settings.settings import AWS_TAGS_APP_NAME
 @require_POST
 @csrf_exempt
 def receive_scheduled_invoice(request: HttpRequest):
+    print("Received Scheduled Invoice", flush=True)
     valid, reason, status = authenticate_api_key(request)
 
     if not valid:
+        print(f"[BACKEND] ERROR recieving scheduled invoice: {reason}", flush=True)
         return HttpResponse(reason, status=status)
 
     invoice_id = request.POST.get("invoice_id") or request.headers.get("invoice_id")
@@ -125,7 +127,6 @@ def create_schedule(request: HttpRequest):
 
 def create_ots(request: HttpRequest) -> HttpResponse:
     invoice_id = request.POST.get("invoice_id") or request.POST.get("invoice")
-    print(invoice_id)
 
     try:
         invoice = Invoice.objects.get(id=invoice_id)
@@ -138,6 +139,7 @@ def create_ots(request: HttpRequest) -> HttpResponse:
         messages.error(request, "You do not have permission to create schedules for this invoice")
         return render(request, "base/toasts.html")
 
+    print("[BACKEND] About to create ots", flush=True)
     schedule = create_onetime_schedule(
         CreateOnetimeScheduleInputData(
             invoice=invoice,
@@ -147,7 +149,7 @@ def create_ots(request: HttpRequest) -> HttpResponse:
         )
     )
 
-    print(schedule)
+    print(schedule, flush=True)
 
     if isinstance(schedule, CreateOnetimeScheduleSuccessResponse):
         messages.success(request, "Schedule created!")
@@ -187,7 +189,8 @@ def get_or_create_role_arn():
 
 
 def authenticate_api_key(request: HttpRequest):
-    token = request.META.get("HTTP_AUTHORIZATION").split()
+    token = request.META.get("HTTP_AUTHORIZATION", "").split()
+    print(token)
 
     if not token or token[0].lower() != "token":
         return False, "Unauthorized", 401
@@ -199,9 +202,14 @@ def authenticate_api_key(request: HttpRequest):
         return False, "Invalid token. Token should not contain spaces.", 400
 
     try:
-        apikey = APIKey.objects.get(id=token[1][0])
+        key_id = token[1].split(":")[0]
+        key_str = token[1].split(":")[1]
+        print(key_id)
+        apikey = APIKey.objects.get(id=key_id)
+        print(apikey)
 
         correct = apikey.verify(token[1])
+        print(correct)
     except APIKey.DoesNotExist:
         return False, "Token not found", 400
     except ValueError:

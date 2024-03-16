@@ -10,7 +10,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         token = APIKey.objects.create(service=APIKey.ServiceTypes.AWS_API_DESTINATION)
-        key = f"{token.id}{token.key}"
+        key = f"{token.id}:{token.key}"
         token.hash()
 
         self.stdout.write(f"""

@@ -19,8 +19,8 @@ SITE_URL = "myfinances.mydomain.com"
 SITE_NAME = "myfinances"
 ```
 
-5. Generate a API scheduler API key from django using "py manage.py generate_aws_scheduler_apikey" from the **root** of 
-   /Myfinances
+5. Generate a API scheduler API key from django using "py manage.py generate_aws_scheduler_apikey" from the **root** of
+   /Myfinances or go to domain.com/dashboard/settings/ and generate an API key at the bottom of the page
 
 6. Add this to tfvars as
 ```terraform

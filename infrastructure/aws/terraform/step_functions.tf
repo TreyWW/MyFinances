@@ -51,6 +51,13 @@ resource "aws_iam_role" "scheduler-execution-role" {
           "Service" : "scheduler.amazonaws.com"
         },
         "Action" : "sts:AssumeRole"
+      },
+      {
+        "Effect" : "Allow",
+        "Principal" : {
+          "Service" : "states.amazonaws.com"
+        },
+        "Action" : "sts:AssumeRole"
       }
     ]
   })

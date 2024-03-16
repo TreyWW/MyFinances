@@ -4572,6 +4572,10 @@ input.tab:checked + .tab-content,
     width: 6rem;
 }
 
+.w-3\/4 {
+    width: 75%;
+}
+
 .w-4 {
   width: 1rem;
 }
@@ -4618,6 +4622,10 @@ input.tab:checked + .tab-content,
 
 .w-\[50\%\] {
   width: 50%;
+}
+
+.w-\[55\%\] {
+    width: 55%;
 }
 
 .w-\[60\%\] {
@@ -6527,67 +6535,6 @@ button.btn.loading-htmx.htmx-request {
     --tw-border-opacity: 1;
     border-color: var(--fallback-er, oklch(var(--er)/var(--tw-border-opacity)));
     outline-color: var(--fallback-er, oklch(var(--er)/1));
-}
-
-@media (hover: hover) {
-    .\[\&\:not\(group-invalid\)\]\:btn-primary:not(group-invalid).btn-outline:hover {
-        --tw-text-opacity: 1;
-        color: var(--fallback-pc, oklch(var(--pc)/var(--tw-text-opacity)));
-    }
-
-    @supports (color: color-mix(in oklab, black, black)) {
-        .\[\&\:not\(group-invalid\)\]\:btn-primary:not(group-invalid).btn-outline:hover {
-            background-color: color-mix(in oklab, var(--fallback-p, oklch(var(--p)/1)) 90%, black);
-            border-color: color-mix(in oklab, var(--fallback-p, oklch(var(--p)/1)) 90%, black);
-        }
-    }
-
-    .\[\&\:not\(group-invalid\)\]\:btn-primary:not(group-invalid).btn-outline:hover {
-        --tw-text-opacity: 1;
-        color: var(--fallback-pc, oklch(var(--pc)/var(--tw-text-opacity)));
-    }
-
-    @supports (color: color-mix(in oklab, black, black)) {
-        .\[\&\:not\(group-invalid\)\]\:btn-primary:not(group-invalid).btn-outline:hover {
-            background-color: color-mix(in oklab, var(--fallback-p, oklch(var(--p)/1)) 90%, black);
-            border-color: color-mix(in oklab, var(--fallback-p, oklch(var(--p)/1)) 90%, black);
-        }
-    }
-}
-
-@supports not (color: oklch(0 0 0)) {
-    .\[\&\:not\(group-invalid\)\]\:btn-primary:not(group-invalid) {
-        --btn-color: var(--fallback-p);
-    }
-}
-
-@supports (color: color-mix(in oklab, black, black)) {
-    .\[\&\:not\(group-invalid\)\]\:btn-primary:not(group-invalid).btn-outline.btn-active {
-        background-color: color-mix(in oklab, var(--fallback-p, oklch(var(--p)/1)) 90%, black);
-        border-color: color-mix(in oklab, var(--fallback-p, oklch(var(--p)/1)) 90%, black);
-    }
-}
-
-.\[\&\:not\(group-invalid\)\]\:btn-primary:not(group-invalid) {
-    --tw-text-opacity: 1;
-    color: var(--fallback-pc, oklch(var(--pc)/var(--tw-text-opacity)));
-    outline-color: var(--fallback-p, oklch(var(--p)/1));
-}
-
-@supports (color: oklch(0 0 0)) {
-    .\[\&\:not\(group-invalid\)\]\:btn-primary:not(group-invalid) {
-        --btn-color: var(--p);
-    }
-}
-
-.\[\&\:not\(group-invalid\)\]\:btn-primary:not(group-invalid).btn-outline {
-    --tw-text-opacity: 1;
-    color: var(--fallback-p, oklch(var(--p)/var(--tw-text-opacity)));
-}
-
-.\[\&\:not\(group-invalid\)\]\:btn-primary:not(group-invalid).btn-outline.btn-active {
-    --tw-text-opacity: 1;
-    color: var(--fallback-pc, oklch(var(--pc)/var(--tw-text-opacity)));
 }
 
 .after\:absolute::after {

@@ -36,7 +36,7 @@ def get_or_create_api_connection_arn() -> str:
         return response
     except event_bridge_client.exceptions.ResourceNotFoundException:
         token = APIKey.objects.create(service=APIKey.ServiceTypes.AWS_API_DESTINATION)
-        key = f"{token.id}{token.key}"
+        key = f"{token.id}:{token.key}"
         token.hash()
 
         print(key)
