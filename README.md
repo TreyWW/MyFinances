@@ -322,6 +322,42 @@ Thank you for your contributions!
             <br />
             <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3ASBMOYO" title="Added Tests">🧪</a>
         </td>
+        </td><td>
+        <td align="center">
+            <a href="https://github.com/kliu6151">
+                <img src="https://github.com/kliu6151.png" width="100px;" alt="" />
+                <br />
+                <sub>
+                    <b>Kevin Liu</b>
+                </sub>
+            </a>
+            <br />
+            <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Akliu6151" title="Backend">🖥</a>
+        </td>
+        </td><td>
+        <td align="center">
+            <a href="https://github.com/HappyLife2">
+                <img src="https://github.com/HappyLife2.png" width="100px;" alt="" />
+                <br />
+                <sub>
+                    <b>Jehad Altoutou</b>
+                </sub>
+            </a>
+            <br />
+            <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3AHappyLife2" title="Frontend">🎨</a>
+        </td>
+        </td></tr><tr><td>
+        <td align="center">
+            <a href="https://github.com/Domejko">
+                <img src="https://github.com/Domejko.png" width="100px;" alt="" />
+                <br />
+                <sub>
+                    <b>Slawek Bierwiaczonek</b>
+                </sub>
+            </a>
+            <br />
+            <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3ADomejko" title="Added Tests">🧪</a>
+        </td>
         </td></tr></table>
 <!-- CONTRIBUTORS TABLE END -->
 

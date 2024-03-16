@@ -128,5 +128,29 @@
     "tags": [
       "🧪"
     ]
+  },
+  {
+    "name": "Kevin Liu",
+    "username": "kliu6151",
+    "role": "Backend",
+    "tags": [
+      "🖥"
+    ]
+  },
+  {
+    "name": "Jehad Altoutou",
+    "username": "HappyLife2",
+    "role": "Frontend",
+    "tags": [
+      "🎨"
+    ]
+  },
+  {
+    "name": "Slawek Bierwiaczonek",
+    "username": "Domejko",
+    "role": "Added tests",
+    "tags": [
+      "🧪"
+    ]
   }
 ]
