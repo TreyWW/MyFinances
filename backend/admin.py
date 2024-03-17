@@ -21,6 +21,7 @@ from backend.models import (
     VerificationCodes,
     APIKey,
     InvoiceOnetimeSchedule,
+    InvoiceReminder
 )
 
 # from django.contrib.auth.models imp/ort User
@@ -45,6 +46,7 @@ admin.site.register(
         VerificationCodes,
         APIKey,
         InvoiceOnetimeSchedule,
+        InvoiceReminder
     ]
 )
 

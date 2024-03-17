@@ -1,6 +1,6 @@
 from django.urls import path
 
-from . import fetch, delete, edit, schedule, manage
+from . import fetch, delete, edit, schedule, manage, reminders
 from .create import set_destination
 from .create.services import add
 
@@ -36,6 +36,7 @@ urlpatterns = [
     path("create_schedule/", schedule.create_schedule, name="create_schedule"),
     path("schedules/onetime/<str:schedule_id>/cancel/", schedule.cancel_onetime_schedule, name="schedules onetime cancel"),
     path("schedules/onetime/fetch/<str:invoice_id>/", schedule.fetch_onetime_schedules, name="schedules onetime fetch"),
+    path("reminders/fetch/<str:invoice_id>", reminders.fetch_reminders, name="reminders fetch"),
     path("manage/<int:invoice_id>/tabs/preview/", manage.tab_preview_invoice, name="tab preview"),
 ]
 

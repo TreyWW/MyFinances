@@ -2333,9 +2333,9 @@ input.tab:checked + .tab-content,
     --btn-color: var(--fallback-s);
   }
 
-    .btn-accent {
-        --btn-color: var(--fallback-a);
-    }
+  .btn-accent {
+    --btn-color: var(--fallback-a);
+  }
 
   .btn-neutral {
     --btn-color: var(--fallback-n);
@@ -2408,9 +2408,9 @@ input.tab:checked + .tab-content,
     --btn-color: var(--s);
   }
 
-    .btn-accent {
-        --btn-color: var(--a);
-    }
+  .btn-accent {
+    --btn-color: var(--a);
+  }
 
   .btn-neutral {
     --btn-color: var(--n);
@@ -2432,9 +2432,9 @@ input.tab:checked + .tab-content,
 }
 
 .btn-accent {
-    --tw-text-opacity: 1;
-    color: var(--fallback-ac, oklch(var(--ac)/var(--tw-text-opacity)));
-    outline-color: var(--fallback-a, oklch(var(--a)/1));
+  --tw-text-opacity: 1;
+  color: var(--fallback-ac, oklch(var(--ac)/var(--tw-text-opacity)));
+  outline-color: var(--fallback-a, oklch(var(--a)/1));
 }
 
 .btn-neutral {
@@ -3922,14 +3922,6 @@ details.collapse summary::-webkit-details-marker {
   width: 320px;
 }
 
-.badge-lg {
-    height: 1.5rem;
-    font-size: 1rem;
-    line-height: 1.5rem;
-    padding-left: 0.688rem;
-    padding-right: 0.688rem;
-}
-
 .btm-nav-xs > *:where(.active) {
   border-top-width: 1px;
 }
@@ -4493,7 +4485,7 @@ html:has(.drawer-toggle:checked) {
 }
 
 .m-1 {
-    margin: 0.25rem;
+  margin: 0.25rem;
 }
 
 .m-auto {
@@ -4610,7 +4602,7 @@ html:has(.drawer-toggle:checked) {
 }
 
 .mr-1 {
-    margin-right: 0.25rem;
+  margin-right: 0.25rem;
 }
 
 .mr-2 {
@@ -4622,7 +4614,7 @@ html:has(.drawer-toggle:checked) {
 }
 
 .mr-4 {
-    margin-right: 1rem;
+  margin-right: 1rem;
 }
 
 .ms-2 {
@@ -4814,7 +4806,7 @@ html:has(.drawer-toggle:checked) {
 }
 
 .w-3\/4 {
-    width: 75%;
+  width: 75%;
 }
 
 .w-4 {
@@ -4866,7 +4858,7 @@ html:has(.drawer-toggle:checked) {
 }
 
 .w-\[55\%\] {
-    width: 55%;
+  width: 55%;
 }
 
 .w-\[60\%\] {
@@ -5037,13 +5029,13 @@ html:has(.drawer-toggle:checked) {
 }
 
 .gap-y-4 {
-    row-gap: 1rem;
+  row-gap: 1rem;
 }
 
 .space-x-2 > :not([hidden]) ~ :not([hidden]) {
-    --tw-space-x-reverse: 0;
-    margin-right: calc(0.5rem * var(--tw-space-x-reverse));
-    margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
+  --tw-space-x-reverse: 0;
+  margin-right: calc(0.5rem * var(--tw-space-x-reverse));
+  margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
 }
 
 .space-x-4 > :not([hidden]) ~ :not([hidden]) {
@@ -5126,20 +5118,12 @@ html:has(.drawer-toggle:checked) {
   border-width: 1px;
 }
 
-.border-4 {
-    border-width: 4px;
-}
-
 .border-2 {
-    border-width: 2px;
+  border-width: 2px;
 }
 
 .border-t-2 {
   border-top-width: 2px;
-}
-
-.border-s {
-    border-inline-start-width: 1px;
 }
 
 .border-none {
@@ -5149,6 +5133,11 @@ html:has(.drawer-toggle:checked) {
 .border-base-200 {
   --tw-border-opacity: 1;
   border-color: var(--fallback-b2,oklch(var(--b2)/var(--tw-border-opacity)));
+}
+
+.border-error {
+  --tw-border-opacity: 1;
+  border-color: var(--fallback-er, oklch(var(--er)/var(--tw-border-opacity)));
 }
 
 .border-gray-200 {
@@ -5176,18 +5165,13 @@ html:has(.drawer-toggle:checked) {
   border-color: var(--fallback-p,oklch(var(--p)/var(--tw-border-opacity)));
 }
 
+.border-success {
+  --tw-border-opacity: 1;
+  border-color: var(--fallback-su, oklch(var(--su)/var(--tw-border-opacity)));
+}
+
 .border-transparent {
   border-color: transparent;
-}
-
-.border-error {
-    --tw-border-opacity: 1;
-    border-color: var(--fallback-er, oklch(var(--er)/var(--tw-border-opacity)));
-}
-
-.border-success {
-    --tw-border-opacity: 1;
-    border-color: var(--fallback-su, oklch(var(--su)/var(--tw-border-opacity)));
 }
 
 .bg-base-100 {
@@ -5510,8 +5494,8 @@ html:has(.drawer-toggle:checked) {
 }
 
 .text-neutral-content {
-    --tw-text-opacity: 1;
-    color: var(--fallback-nc, oklch(var(--nc)/var(--tw-text-opacity)));
+  --tw-text-opacity: 1;
+  color: var(--fallback-nc, oklch(var(--nc)/var(--tw-text-opacity)));
 }
 
 .text-orange-500 {
@@ -5545,8 +5529,8 @@ html:has(.drawer-toggle:checked) {
 }
 
 .text-warning {
-    --tw-text-opacity: 1;
-    color: var(--fallback-wa, oklch(var(--wa)/var(--tw-text-opacity)));
+  --tw-text-opacity: 1;
+  color: var(--fallback-wa, oklch(var(--wa)/var(--tw-text-opacity)));
 }
 
 .text-white {
@@ -6293,206 +6277,206 @@ button.btn.loading-htmx.htmx-request {
     --tw-text-opacity: 0.2;
   }
 
-    .group:invalid .group-invalid\:btn-outline:hover {
-        --tw-border-opacity: 1;
-        border-color: var(--fallback-bc, oklch(var(--bc)/var(--tw-border-opacity)));
-        --tw-bg-opacity: 1;
-        background-color: var(--fallback-bc, oklch(var(--bc)/var(--tw-bg-opacity)));
-        --tw-text-opacity: 1;
-        color: var(--fallback-b1, oklch(var(--b1)/var(--tw-text-opacity)));
-    }
+  .group:invalid .group-invalid\:btn-outline:hover {
+    --tw-border-opacity: 1;
+    border-color: var(--fallback-bc, oklch(var(--bc)/var(--tw-border-opacity)));
+    --tw-bg-opacity: 1;
+    background-color: var(--fallback-bc, oklch(var(--bc)/var(--tw-bg-opacity)));
+    --tw-text-opacity: 1;
+    color: var(--fallback-b1, oklch(var(--b1)/var(--tw-text-opacity)));
+  }
 
+  .group:invalid .group-invalid\:btn-outline.btn-primary:hover {
+    --tw-text-opacity: 1;
+    color: var(--fallback-pc, oklch(var(--pc)/var(--tw-text-opacity)));
+  }
+
+  @supports (color: color-mix(in oklab, black, black)) {
     .group:invalid .group-invalid\:btn-outline.btn-primary:hover {
-        --tw-text-opacity: 1;
-        color: var(--fallback-pc, oklch(var(--pc)/var(--tw-text-opacity)));
+      background-color: color-mix(in oklab, var(--fallback-p, oklch(var(--p)/1)) 90%, black);
+      border-color: color-mix(in oklab, var(--fallback-p, oklch(var(--p)/1)) 90%, black);
     }
+  }
 
-    @supports (color: color-mix(in oklab, black, black)) {
-        .group:invalid .group-invalid\:btn-outline.btn-primary:hover {
-            background-color: color-mix(in oklab, var(--fallback-p, oklch(var(--p)/1)) 90%, black);
-            border-color: color-mix(in oklab, var(--fallback-p, oklch(var(--p)/1)) 90%, black);
-        }
-    }
+  .group:invalid .group-invalid\:btn-outline.btn-primary:hover {
+    --tw-text-opacity: 1;
+    color: var(--fallback-pc, oklch(var(--pc)/var(--tw-text-opacity)));
+  }
 
+  @supports (color: color-mix(in oklab, black, black)) {
     .group:invalid .group-invalid\:btn-outline.btn-primary:hover {
-        --tw-text-opacity: 1;
-        color: var(--fallback-pc, oklch(var(--pc)/var(--tw-text-opacity)));
+      background-color: color-mix(in oklab, var(--fallback-p, oklch(var(--p)/1)) 90%, black);
+      border-color: color-mix(in oklab, var(--fallback-p, oklch(var(--p)/1)) 90%, black);
     }
+  }
 
-    @supports (color: color-mix(in oklab, black, black)) {
-        .group:invalid .group-invalid\:btn-outline.btn-primary:hover {
-            background-color: color-mix(in oklab, var(--fallback-p, oklch(var(--p)/1)) 90%, black);
-            border-color: color-mix(in oklab, var(--fallback-p, oklch(var(--p)/1)) 90%, black);
-        }
-    }
+  .group:invalid .group-invalid\:btn-outline.btn-secondary:hover {
+    --tw-text-opacity: 1;
+    color: var(--fallback-sc, oklch(var(--sc)/var(--tw-text-opacity)));
+  }
 
+  @supports (color: color-mix(in oklab, black, black)) {
     .group:invalid .group-invalid\:btn-outline.btn-secondary:hover {
-        --tw-text-opacity: 1;
-        color: var(--fallback-sc, oklch(var(--sc)/var(--tw-text-opacity)));
+      background-color: color-mix(in oklab, var(--fallback-s, oklch(var(--s)/1)) 90%, black);
+      border-color: color-mix(in oklab, var(--fallback-s, oklch(var(--s)/1)) 90%, black);
     }
+  }
 
-    @supports (color: color-mix(in oklab, black, black)) {
-        .group:invalid .group-invalid\:btn-outline.btn-secondary:hover {
-            background-color: color-mix(in oklab, var(--fallback-s, oklch(var(--s)/1)) 90%, black);
-            border-color: color-mix(in oklab, var(--fallback-s, oklch(var(--s)/1)) 90%, black);
-        }
-    }
+  .group:invalid .group-invalid\:btn-outline.btn-secondary:hover {
+    --tw-text-opacity: 1;
+    color: var(--fallback-sc, oklch(var(--sc)/var(--tw-text-opacity)));
+  }
 
+  @supports (color: color-mix(in oklab, black, black)) {
     .group:invalid .group-invalid\:btn-outline.btn-secondary:hover {
-        --tw-text-opacity: 1;
-        color: var(--fallback-sc, oklch(var(--sc)/var(--tw-text-opacity)));
+      background-color: color-mix(in oklab, var(--fallback-s, oklch(var(--s)/1)) 90%, black);
+      border-color: color-mix(in oklab, var(--fallback-s, oklch(var(--s)/1)) 90%, black);
     }
+  }
 
-    @supports (color: color-mix(in oklab, black, black)) {
-        .group:invalid .group-invalid\:btn-outline.btn-secondary:hover {
-            background-color: color-mix(in oklab, var(--fallback-s, oklch(var(--s)/1)) 90%, black);
-            border-color: color-mix(in oklab, var(--fallback-s, oklch(var(--s)/1)) 90%, black);
-        }
-    }
+  .group:invalid .group-invalid\:btn-outline.btn-accent:hover {
+    --tw-text-opacity: 1;
+    color: var(--fallback-ac, oklch(var(--ac)/var(--tw-text-opacity)));
+  }
 
+  @supports (color: color-mix(in oklab, black, black)) {
     .group:invalid .group-invalid\:btn-outline.btn-accent:hover {
-        --tw-text-opacity: 1;
-        color: var(--fallback-ac, oklch(var(--ac)/var(--tw-text-opacity)));
+      background-color: color-mix(in oklab, var(--fallback-a, oklch(var(--a)/1)) 90%, black);
+      border-color: color-mix(in oklab, var(--fallback-a, oklch(var(--a)/1)) 90%, black);
     }
+  }
 
-    @supports (color: color-mix(in oklab, black, black)) {
-        .group:invalid .group-invalid\:btn-outline.btn-accent:hover {
-            background-color: color-mix(in oklab, var(--fallback-a, oklch(var(--a)/1)) 90%, black);
-            border-color: color-mix(in oklab, var(--fallback-a, oklch(var(--a)/1)) 90%, black);
-        }
-    }
+  .group:invalid .group-invalid\:btn-outline.btn-accent:hover {
+    --tw-text-opacity: 1;
+    color: var(--fallback-ac, oklch(var(--ac)/var(--tw-text-opacity)));
+  }
 
+  @supports (color: color-mix(in oklab, black, black)) {
     .group:invalid .group-invalid\:btn-outline.btn-accent:hover {
-        --tw-text-opacity: 1;
-        color: var(--fallback-ac, oklch(var(--ac)/var(--tw-text-opacity)));
+      background-color: color-mix(in oklab, var(--fallback-a, oklch(var(--a)/1)) 90%, black);
+      border-color: color-mix(in oklab, var(--fallback-a, oklch(var(--a)/1)) 90%, black);
     }
+  }
 
-    @supports (color: color-mix(in oklab, black, black)) {
-        .group:invalid .group-invalid\:btn-outline.btn-accent:hover {
-            background-color: color-mix(in oklab, var(--fallback-a, oklch(var(--a)/1)) 90%, black);
-            border-color: color-mix(in oklab, var(--fallback-a, oklch(var(--a)/1)) 90%, black);
-        }
-    }
+  .group:invalid .group-invalid\:btn-outline.btn-success:hover {
+    --tw-text-opacity: 1;
+    color: var(--fallback-suc, oklch(var(--suc)/var(--tw-text-opacity)));
+  }
 
+  @supports (color: color-mix(in oklab, black, black)) {
     .group:invalid .group-invalid\:btn-outline.btn-success:hover {
-        --tw-text-opacity: 1;
-        color: var(--fallback-suc, oklch(var(--suc)/var(--tw-text-opacity)));
+      background-color: color-mix(in oklab, var(--fallback-su, oklch(var(--su)/1)) 90%, black);
+      border-color: color-mix(in oklab, var(--fallback-su, oklch(var(--su)/1)) 90%, black);
     }
+  }
 
-    @supports (color: color-mix(in oklab, black, black)) {
-        .group:invalid .group-invalid\:btn-outline.btn-success:hover {
-            background-color: color-mix(in oklab, var(--fallback-su, oklch(var(--su)/1)) 90%, black);
-            border-color: color-mix(in oklab, var(--fallback-su, oklch(var(--su)/1)) 90%, black);
-        }
-    }
+  .group:invalid .group-invalid\:btn-outline.btn-success:hover {
+    --tw-text-opacity: 1;
+    color: var(--fallback-suc, oklch(var(--suc)/var(--tw-text-opacity)));
+  }
 
+  @supports (color: color-mix(in oklab, black, black)) {
     .group:invalid .group-invalid\:btn-outline.btn-success:hover {
-        --tw-text-opacity: 1;
-        color: var(--fallback-suc, oklch(var(--suc)/var(--tw-text-opacity)));
+      background-color: color-mix(in oklab, var(--fallback-su, oklch(var(--su)/1)) 90%, black);
+      border-color: color-mix(in oklab, var(--fallback-su, oklch(var(--su)/1)) 90%, black);
     }
+  }
 
-    @supports (color: color-mix(in oklab, black, black)) {
-        .group:invalid .group-invalid\:btn-outline.btn-success:hover {
-            background-color: color-mix(in oklab, var(--fallback-su, oklch(var(--su)/1)) 90%, black);
-            border-color: color-mix(in oklab, var(--fallback-su, oklch(var(--su)/1)) 90%, black);
-        }
-    }
+  .group:invalid .group-invalid\:btn-outline.btn-info:hover {
+    --tw-text-opacity: 1;
+    color: var(--fallback-inc, oklch(var(--inc)/var(--tw-text-opacity)));
+  }
 
+  @supports (color: color-mix(in oklab, black, black)) {
     .group:invalid .group-invalid\:btn-outline.btn-info:hover {
-        --tw-text-opacity: 1;
-        color: var(--fallback-inc, oklch(var(--inc)/var(--tw-text-opacity)));
+      background-color: color-mix(in oklab, var(--fallback-in, oklch(var(--in)/1)) 90%, black);
+      border-color: color-mix(in oklab, var(--fallback-in, oklch(var(--in)/1)) 90%, black);
     }
+  }
 
-    @supports (color: color-mix(in oklab, black, black)) {
-        .group:invalid .group-invalid\:btn-outline.btn-info:hover {
-            background-color: color-mix(in oklab, var(--fallback-in, oklch(var(--in)/1)) 90%, black);
-            border-color: color-mix(in oklab, var(--fallback-in, oklch(var(--in)/1)) 90%, black);
-        }
-    }
+  .group:invalid .group-invalid\:btn-outline.btn-info:hover {
+    --tw-text-opacity: 1;
+    color: var(--fallback-inc, oklch(var(--inc)/var(--tw-text-opacity)));
+  }
 
+  @supports (color: color-mix(in oklab, black, black)) {
     .group:invalid .group-invalid\:btn-outline.btn-info:hover {
-        --tw-text-opacity: 1;
-        color: var(--fallback-inc, oklch(var(--inc)/var(--tw-text-opacity)));
+      background-color: color-mix(in oklab, var(--fallback-in, oklch(var(--in)/1)) 90%, black);
+      border-color: color-mix(in oklab, var(--fallback-in, oklch(var(--in)/1)) 90%, black);
     }
+  }
 
-    @supports (color: color-mix(in oklab, black, black)) {
-        .group:invalid .group-invalid\:btn-outline.btn-info:hover {
-            background-color: color-mix(in oklab, var(--fallback-in, oklch(var(--in)/1)) 90%, black);
-            border-color: color-mix(in oklab, var(--fallback-in, oklch(var(--in)/1)) 90%, black);
-        }
-    }
+  .group:invalid .group-invalid\:btn-outline.btn-warning:hover {
+    --tw-text-opacity: 1;
+    color: var(--fallback-wac, oklch(var(--wac)/var(--tw-text-opacity)));
+  }
 
+  @supports (color: color-mix(in oklab, black, black)) {
     .group:invalid .group-invalid\:btn-outline.btn-warning:hover {
-        --tw-text-opacity: 1;
-        color: var(--fallback-wac, oklch(var(--wac)/var(--tw-text-opacity)));
+      background-color: color-mix(in oklab, var(--fallback-wa, oklch(var(--wa)/1)) 90%, black);
+      border-color: color-mix(in oklab, var(--fallback-wa, oklch(var(--wa)/1)) 90%, black);
     }
+  }
 
-    @supports (color: color-mix(in oklab, black, black)) {
-        .group:invalid .group-invalid\:btn-outline.btn-warning:hover {
-            background-color: color-mix(in oklab, var(--fallback-wa, oklch(var(--wa)/1)) 90%, black);
-            border-color: color-mix(in oklab, var(--fallback-wa, oklch(var(--wa)/1)) 90%, black);
-        }
-    }
+  .group:invalid .group-invalid\:btn-outline.btn-warning:hover {
+    --tw-text-opacity: 1;
+    color: var(--fallback-wac, oklch(var(--wac)/var(--tw-text-opacity)));
+  }
 
+  @supports (color: color-mix(in oklab, black, black)) {
     .group:invalid .group-invalid\:btn-outline.btn-warning:hover {
-        --tw-text-opacity: 1;
-        color: var(--fallback-wac, oklch(var(--wac)/var(--tw-text-opacity)));
+      background-color: color-mix(in oklab, var(--fallback-wa, oklch(var(--wa)/1)) 90%, black);
+      border-color: color-mix(in oklab, var(--fallback-wa, oklch(var(--wa)/1)) 90%, black);
     }
+  }
 
-    @supports (color: color-mix(in oklab, black, black)) {
-        .group:invalid .group-invalid\:btn-outline.btn-warning:hover {
-            background-color: color-mix(in oklab, var(--fallback-wa, oklch(var(--wa)/1)) 90%, black);
-            border-color: color-mix(in oklab, var(--fallback-wa, oklch(var(--wa)/1)) 90%, black);
-        }
-    }
+  .group:invalid .group-invalid\:btn-outline.btn-error:hover {
+    --tw-text-opacity: 1;
+    color: var(--fallback-erc, oklch(var(--erc)/var(--tw-text-opacity)));
+  }
 
+  @supports (color: color-mix(in oklab, black, black)) {
     .group:invalid .group-invalid\:btn-outline.btn-error:hover {
-        --tw-text-opacity: 1;
-        color: var(--fallback-erc, oklch(var(--erc)/var(--tw-text-opacity)));
+      background-color: color-mix(in oklab, var(--fallback-er, oklch(var(--er)/1)) 90%, black);
+      border-color: color-mix(in oklab, var(--fallback-er, oklch(var(--er)/1)) 90%, black);
     }
+  }
 
-    @supports (color: color-mix(in oklab, black, black)) {
-        .group:invalid .group-invalid\:btn-outline.btn-error:hover {
-            background-color: color-mix(in oklab, var(--fallback-er, oklch(var(--er)/1)) 90%, black);
-            border-color: color-mix(in oklab, var(--fallback-er, oklch(var(--er)/1)) 90%, black);
-        }
-    }
+  .group:invalid .group-invalid\:btn-error.btn-outline:hover {
+    --tw-text-opacity: 1;
+    color: var(--fallback-erc, oklch(var(--erc)/var(--tw-text-opacity)));
+  }
 
+  @supports (color: color-mix(in oklab, black, black)) {
     .group:invalid .group-invalid\:btn-error.btn-outline:hover {
-        --tw-text-opacity: 1;
-        color: var(--fallback-erc, oklch(var(--erc)/var(--tw-text-opacity)));
+      background-color: color-mix(in oklab, var(--fallback-er, oklch(var(--er)/1)) 90%, black);
+      border-color: color-mix(in oklab, var(--fallback-er, oklch(var(--er)/1)) 90%, black);
     }
+  }
 
-    @supports (color: color-mix(in oklab, black, black)) {
-        .group:invalid .group-invalid\:btn-error.btn-outline:hover {
-            background-color: color-mix(in oklab, var(--fallback-er, oklch(var(--er)/1)) 90%, black);
-            border-color: color-mix(in oklab, var(--fallback-er, oklch(var(--er)/1)) 90%, black);
-        }
-    }
+  .group:invalid .group-invalid\:btn-outline.btn-error:hover {
+    --tw-text-opacity: 1;
+    color: var(--fallback-erc, oklch(var(--erc)/var(--tw-text-opacity)));
+  }
 
+  @supports (color: color-mix(in oklab, black, black)) {
     .group:invalid .group-invalid\:btn-outline.btn-error:hover {
-        --tw-text-opacity: 1;
-        color: var(--fallback-erc, oklch(var(--erc)/var(--tw-text-opacity)));
+      background-color: color-mix(in oklab, var(--fallback-er, oklch(var(--er)/1)) 90%, black);
+      border-color: color-mix(in oklab, var(--fallback-er, oklch(var(--er)/1)) 90%, black);
     }
+  }
 
-    @supports (color: color-mix(in oklab, black, black)) {
-        .group:invalid .group-invalid\:btn-outline.btn-error:hover {
-            background-color: color-mix(in oklab, var(--fallback-er, oklch(var(--er)/1)) 90%, black);
-            border-color: color-mix(in oklab, var(--fallback-er, oklch(var(--er)/1)) 90%, black);
-        }
-    }
+  .group:invalid .group-invalid\:btn-error.btn-outline:hover {
+    --tw-text-opacity: 1;
+    color: var(--fallback-erc, oklch(var(--erc)/var(--tw-text-opacity)));
+  }
 
+  @supports (color: color-mix(in oklab, black, black)) {
     .group:invalid .group-invalid\:btn-error.btn-outline:hover {
-        --tw-text-opacity: 1;
-        color: var(--fallback-erc, oklch(var(--erc)/var(--tw-text-opacity)));
+      background-color: color-mix(in oklab, var(--fallback-er, oklch(var(--er)/1)) 90%, black);
+      border-color: color-mix(in oklab, var(--fallback-er, oklch(var(--er)/1)) 90%, black);
     }
-
-    @supports (color: color-mix(in oklab, black, black)) {
-        .group:invalid .group-invalid\:btn-error.btn-outline:hover {
-            background-color: color-mix(in oklab, var(--fallback-er, oklch(var(--er)/1)) 90%, black);
-            border-color: color-mix(in oklab, var(--fallback-er, oklch(var(--er)/1)) 90%, black);
-        }
-    }
+  }
 
   .group:invalid .group-invalid\:btn-disabled:hover {
     --tw-border-opacity: 0;
@@ -6521,162 +6505,162 @@ button.btn.loading-htmx.htmx-request {
 }
 
 @supports not (color: oklch(0 0 0)) {
-    .group:invalid .group-invalid\:btn-error {
-        --btn-color: var(--fallback-er);
-    }
+  .group:invalid .group-invalid\:btn-error {
+    --btn-color: var(--fallback-er);
+  }
 }
 
 @supports (color: color-mix(in oklab, black, black)) {
-    .group:invalid .group-invalid\:btn-outline.btn-primary.btn-active {
-        background-color: color-mix(in oklab, var(--fallback-p, oklch(var(--p)/1)) 90%, black);
-        border-color: color-mix(in oklab, var(--fallback-p, oklch(var(--p)/1)) 90%, black);
-    }
+  .group:invalid .group-invalid\:btn-outline.btn-primary.btn-active {
+    background-color: color-mix(in oklab, var(--fallback-p, oklch(var(--p)/1)) 90%, black);
+    border-color: color-mix(in oklab, var(--fallback-p, oklch(var(--p)/1)) 90%, black);
+  }
 
-    .group:invalid .group-invalid\:btn-outline.btn-secondary.btn-active {
-        background-color: color-mix(in oklab, var(--fallback-s, oklch(var(--s)/1)) 90%, black);
-        border-color: color-mix(in oklab, var(--fallback-s, oklch(var(--s)/1)) 90%, black);
-    }
+  .group:invalid .group-invalid\:btn-outline.btn-secondary.btn-active {
+    background-color: color-mix(in oklab, var(--fallback-s, oklch(var(--s)/1)) 90%, black);
+    border-color: color-mix(in oklab, var(--fallback-s, oklch(var(--s)/1)) 90%, black);
+  }
 
-    .group:invalid .group-invalid\:btn-outline.btn-accent.btn-active {
-        background-color: color-mix(in oklab, var(--fallback-a, oklch(var(--a)/1)) 90%, black);
-        border-color: color-mix(in oklab, var(--fallback-a, oklch(var(--a)/1)) 90%, black);
-    }
+  .group:invalid .group-invalid\:btn-outline.btn-accent.btn-active {
+    background-color: color-mix(in oklab, var(--fallback-a, oklch(var(--a)/1)) 90%, black);
+    border-color: color-mix(in oklab, var(--fallback-a, oklch(var(--a)/1)) 90%, black);
+  }
 
-    .group:invalid .group-invalid\:btn-outline.btn-success.btn-active {
-        background-color: color-mix(in oklab, var(--fallback-su, oklch(var(--su)/1)) 90%, black);
-        border-color: color-mix(in oklab, var(--fallback-su, oklch(var(--su)/1)) 90%, black);
-    }
+  .group:invalid .group-invalid\:btn-outline.btn-success.btn-active {
+    background-color: color-mix(in oklab, var(--fallback-su, oklch(var(--su)/1)) 90%, black);
+    border-color: color-mix(in oklab, var(--fallback-su, oklch(var(--su)/1)) 90%, black);
+  }
 
-    .group:invalid .group-invalid\:btn-outline.btn-info.btn-active {
-        background-color: color-mix(in oklab, var(--fallback-in, oklch(var(--in)/1)) 90%, black);
-        border-color: color-mix(in oklab, var(--fallback-in, oklch(var(--in)/1)) 90%, black);
-    }
+  .group:invalid .group-invalid\:btn-outline.btn-info.btn-active {
+    background-color: color-mix(in oklab, var(--fallback-in, oklch(var(--in)/1)) 90%, black);
+    border-color: color-mix(in oklab, var(--fallback-in, oklch(var(--in)/1)) 90%, black);
+  }
 
-    .group:invalid .group-invalid\:btn-outline.btn-warning.btn-active {
-        background-color: color-mix(in oklab, var(--fallback-wa, oklch(var(--wa)/1)) 90%, black);
-        border-color: color-mix(in oklab, var(--fallback-wa, oklch(var(--wa)/1)) 90%, black);
-    }
+  .group:invalid .group-invalid\:btn-outline.btn-warning.btn-active {
+    background-color: color-mix(in oklab, var(--fallback-wa, oklch(var(--wa)/1)) 90%, black);
+    border-color: color-mix(in oklab, var(--fallback-wa, oklch(var(--wa)/1)) 90%, black);
+  }
 
-    .group:invalid .group-invalid\:btn-outline.btn-error.btn-active {
-        background-color: color-mix(in oklab, var(--fallback-er, oklch(var(--er)/1)) 90%, black);
-        border-color: color-mix(in oklab, var(--fallback-er, oklch(var(--er)/1)) 90%, black);
-    }
+  .group:invalid .group-invalid\:btn-outline.btn-error.btn-active {
+    background-color: color-mix(in oklab, var(--fallback-er, oklch(var(--er)/1)) 90%, black);
+    border-color: color-mix(in oklab, var(--fallback-er, oklch(var(--er)/1)) 90%, black);
+  }
 
-    .group:invalid .group-invalid\:btn-error.btn-outline.btn-active {
-        background-color: color-mix(in oklab, var(--fallback-er, oklch(var(--er)/1)) 90%, black);
-        border-color: color-mix(in oklab, var(--fallback-er, oklch(var(--er)/1)) 90%, black);
-    }
+  .group:invalid .group-invalid\:btn-error.btn-outline.btn-active {
+    background-color: color-mix(in oklab, var(--fallback-er, oklch(var(--er)/1)) 90%, black);
+    border-color: color-mix(in oklab, var(--fallback-er, oklch(var(--er)/1)) 90%, black);
+  }
 }
 
 @supports (color: oklch(0 0 0)) {
-    .group:invalid .group-invalid\:btn-error {
-        --btn-color: var(--er);
-    }
+  .group:invalid .group-invalid\:btn-error {
+    --btn-color: var(--er);
+  }
 }
 
 .group:invalid .group-invalid\:btn-error {
-    --tw-text-opacity: 1;
-    color: var(--fallback-erc, oklch(var(--erc)/var(--tw-text-opacity)));
-    outline-color: var(--fallback-er, oklch(var(--er)/1));
+  --tw-text-opacity: 1;
+  color: var(--fallback-erc, oklch(var(--erc)/var(--tw-text-opacity)));
+  outline-color: var(--fallback-er, oklch(var(--er)/1));
 }
 
 .group:invalid .group-invalid\:btn-outline {
-    border-color: currentColor;
-    background-color: transparent;
-    --tw-text-opacity: 1;
-    color: var(--fallback-bc, oklch(var(--bc)/var(--tw-text-opacity)));
-    --tw-shadow: 0 0 #0000;
-    --tw-shadow-colored: 0 0 #0000;
-    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  border-color: currentColor;
+  background-color: transparent;
+  --tw-text-opacity: 1;
+  color: var(--fallback-bc, oklch(var(--bc)/var(--tw-text-opacity)));
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
 .group:invalid .group-invalid\:btn-outline.btn-active {
-    --tw-border-opacity: 1;
-    border-color: var(--fallback-bc, oklch(var(--bc)/var(--tw-border-opacity)));
-    --tw-bg-opacity: 1;
-    background-color: var(--fallback-bc, oklch(var(--bc)/var(--tw-bg-opacity)));
-    --tw-text-opacity: 1;
-    color: var(--fallback-b1, oklch(var(--b1)/var(--tw-text-opacity)));
+  --tw-border-opacity: 1;
+  border-color: var(--fallback-bc, oklch(var(--bc)/var(--tw-border-opacity)));
+  --tw-bg-opacity: 1;
+  background-color: var(--fallback-bc, oklch(var(--bc)/var(--tw-bg-opacity)));
+  --tw-text-opacity: 1;
+  color: var(--fallback-b1, oklch(var(--b1)/var(--tw-text-opacity)));
 }
 
 .group:invalid .group-invalid\:btn-outline.btn-primary {
-    --tw-text-opacity: 1;
-    color: var(--fallback-p, oklch(var(--p)/var(--tw-text-opacity)));
+  --tw-text-opacity: 1;
+  color: var(--fallback-p, oklch(var(--p)/var(--tw-text-opacity)));
 }
 
 .group:invalid .group-invalid\:btn-outline.btn-primary.btn-active {
-    --tw-text-opacity: 1;
-    color: var(--fallback-pc, oklch(var(--pc)/var(--tw-text-opacity)));
+  --tw-text-opacity: 1;
+  color: var(--fallback-pc, oklch(var(--pc)/var(--tw-text-opacity)));
 }
 
 .group:invalid .group-invalid\:btn-outline.btn-secondary {
-    --tw-text-opacity: 1;
-    color: var(--fallback-s, oklch(var(--s)/var(--tw-text-opacity)));
+  --tw-text-opacity: 1;
+  color: var(--fallback-s, oklch(var(--s)/var(--tw-text-opacity)));
 }
 
 .group:invalid .group-invalid\:btn-outline.btn-secondary.btn-active {
-    --tw-text-opacity: 1;
-    color: var(--fallback-sc, oklch(var(--sc)/var(--tw-text-opacity)));
+  --tw-text-opacity: 1;
+  color: var(--fallback-sc, oklch(var(--sc)/var(--tw-text-opacity)));
 }
 
 .group:invalid .group-invalid\:btn-outline.btn-accent {
-    --tw-text-opacity: 1;
-    color: var(--fallback-a, oklch(var(--a)/var(--tw-text-opacity)));
+  --tw-text-opacity: 1;
+  color: var(--fallback-a, oklch(var(--a)/var(--tw-text-opacity)));
 }
 
 .group:invalid .group-invalid\:btn-outline.btn-accent.btn-active {
-    --tw-text-opacity: 1;
-    color: var(--fallback-ac, oklch(var(--ac)/var(--tw-text-opacity)));
+  --tw-text-opacity: 1;
+  color: var(--fallback-ac, oklch(var(--ac)/var(--tw-text-opacity)));
 }
 
 .group:invalid .group-invalid\:btn-outline.btn-success {
-    --tw-text-opacity: 1;
-    color: var(--fallback-su, oklch(var(--su)/var(--tw-text-opacity)));
+  --tw-text-opacity: 1;
+  color: var(--fallback-su, oklch(var(--su)/var(--tw-text-opacity)));
 }
 
 .group:invalid .group-invalid\:btn-outline.btn-success.btn-active {
-    --tw-text-opacity: 1;
-    color: var(--fallback-suc, oklch(var(--suc)/var(--tw-text-opacity)));
+  --tw-text-opacity: 1;
+  color: var(--fallback-suc, oklch(var(--suc)/var(--tw-text-opacity)));
 }
 
 .group:invalid .group-invalid\:btn-outline.btn-info {
-    --tw-text-opacity: 1;
-    color: var(--fallback-in, oklch(var(--in)/var(--tw-text-opacity)));
+  --tw-text-opacity: 1;
+  color: var(--fallback-in, oklch(var(--in)/var(--tw-text-opacity)));
 }
 
 .group:invalid .group-invalid\:btn-outline.btn-info.btn-active {
-    --tw-text-opacity: 1;
-    color: var(--fallback-inc, oklch(var(--inc)/var(--tw-text-opacity)));
+  --tw-text-opacity: 1;
+  color: var(--fallback-inc, oklch(var(--inc)/var(--tw-text-opacity)));
 }
 
 .group:invalid .group-invalid\:btn-outline.btn-warning {
-    --tw-text-opacity: 1;
-    color: var(--fallback-wa, oklch(var(--wa)/var(--tw-text-opacity)));
+  --tw-text-opacity: 1;
+  color: var(--fallback-wa, oklch(var(--wa)/var(--tw-text-opacity)));
 }
 
 .group:invalid .group-invalid\:btn-outline.btn-warning.btn-active {
-    --tw-text-opacity: 1;
-    color: var(--fallback-wac, oklch(var(--wac)/var(--tw-text-opacity)));
+  --tw-text-opacity: 1;
+  color: var(--fallback-wac, oklch(var(--wac)/var(--tw-text-opacity)));
 }
 
 .group:invalid .group-invalid\:btn-outline.btn-error {
-    --tw-text-opacity: 1;
-    color: var(--fallback-er, oklch(var(--er)/var(--tw-text-opacity)));
+  --tw-text-opacity: 1;
+  color: var(--fallback-er, oklch(var(--er)/var(--tw-text-opacity)));
 }
 
 .group:invalid .group-invalid\:btn-error.btn-outline {
-    --tw-text-opacity: 1;
-    color: var(--fallback-er, oklch(var(--er)/var(--tw-text-opacity)));
+  --tw-text-opacity: 1;
+  color: var(--fallback-er, oklch(var(--er)/var(--tw-text-opacity)));
 }
 
 .group:invalid .group-invalid\:btn-outline.btn-error.btn-active {
-    --tw-text-opacity: 1;
-    color: var(--fallback-erc, oklch(var(--erc)/var(--tw-text-opacity)));
+  --tw-text-opacity: 1;
+  color: var(--fallback-erc, oklch(var(--erc)/var(--tw-text-opacity)));
 }
 
 .group:invalid .group-invalid\:btn-error.btn-outline.btn-active {
-    --tw-text-opacity: 1;
-    color: var(--fallback-erc, oklch(var(--erc)/var(--tw-text-opacity)));
+  --tw-text-opacity: 1;
+  color: var(--fallback-erc, oklch(var(--erc)/var(--tw-text-opacity)));
 }
 
 .group:invalid .group-invalid\:btn-disabled.btn {
@@ -6791,25 +6775,25 @@ button.btn.loading-htmx.htmx-request {
 }
 
 .invalid\:\[\&\:not\(\:-moz-placeholder-shown\)\:not\(\:focus\)\]\:input-error:not(:-moz-placeholder-shown):not(:focus):invalid {
-    --tw-border-opacity: 1;
-    border-color: var(--fallback-er, oklch(var(--er)/var(--tw-border-opacity)));
+  --tw-border-opacity: 1;
+  border-color: var(--fallback-er, oklch(var(--er)/var(--tw-border-opacity)));
 }
 
 .invalid\:\[\&\:not\(\:placeholder-shown\)\:not\(\:focus\)\]\:input-error:not(:placeholder-shown):not(:focus):invalid {
-    --tw-border-opacity: 1;
-    border-color: var(--fallback-er, oklch(var(--er)/var(--tw-border-opacity)));
+  --tw-border-opacity: 1;
+  border-color: var(--fallback-er, oklch(var(--er)/var(--tw-border-opacity)));
 }
 
 .invalid\:\[\&\:not\(\:-moz-placeholder-shown\)\:not\(\:focus\)\]\:input-error:not(:-moz-placeholder-shown):not(:focus):invalid:focus, .invalid\:\[\&\:not\(\:-moz-placeholder-shown\)\:not\(\:focus\)\]\:input-error:not(:-moz-placeholder-shown):not(:focus):invalid:focus-within {
-    --tw-border-opacity: 1;
-    border-color: var(--fallback-er, oklch(var(--er)/var(--tw-border-opacity)));
-    outline-color: var(--fallback-er, oklch(var(--er)/1));
+  --tw-border-opacity: 1;
+  border-color: var(--fallback-er, oklch(var(--er)/var(--tw-border-opacity)));
+  outline-color: var(--fallback-er, oklch(var(--er)/1));
 }
 
 .invalid\:\[\&\:not\(\:placeholder-shown\)\:not\(\:focus\)\]\:input-error:not(:placeholder-shown):not(:focus):invalid:focus, .invalid\:\[\&\:not\(\:placeholder-shown\)\:not\(\:focus\)\]\:input-error:not(:placeholder-shown):not(:focus):invalid:focus-within {
-    --tw-border-opacity: 1;
-    border-color: var(--fallback-er, oklch(var(--er)/var(--tw-border-opacity)));
-    outline-color: var(--fallback-er, oklch(var(--er)/1));
+  --tw-border-opacity: 1;
+  border-color: var(--fallback-er, oklch(var(--er)/var(--tw-border-opacity)));
+  outline-color: var(--fallback-er, oklch(var(--er)/1));
 }
 
 .after\:absolute::after {

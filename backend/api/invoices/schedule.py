@@ -296,6 +296,7 @@ def fetch_onetime_schedules(request: HttpRequest, invoice_id: str):
             "deleting": True if request.GET.get("status_deleting") else False,
             "cancelled": True if request.GET.get("status_cancelled") else False,
             "creating": True if request.GET.get("status_creating") else False,
+            "failed": True if request.GET.get("status_failed") else False
         }
     }
 

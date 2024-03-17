@@ -63,6 +63,7 @@ def delete_receipt_image_on_delete(sender, instance: Receipt, **kwargs):
 feature_flags = [
     {"name": "areSignupsEnabled", "default": True, "pk": 1},
     {"name": "isInvoiceSchedulingEnabled", "default": False, "pk": 2},
+    {"name": "areInvoiceRemindersEnabled", "default": False, "pk": 3},
 ]
 
 

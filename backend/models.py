@@ -417,6 +417,21 @@ class InvoiceOnetimeSchedule(InvoiceSchedule):
         verbose_name_plural = "One-Time Invoice Schedules"
 
 
+class InvoiceReminder(InvoiceSchedule):
+    class ReminderTypes(models.TextChoices):
+        BEFORE_DUE = "before_due", "Before Due"
+        AFTER_DUE = "after_due", "After Due"
+        ON_OVERDUE = "on_overdue", "On Overdue"
+
+    invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE, related_name="invoice_reminders")
+    days = models.PositiveIntegerField(blank=True, null=True)
+    reminder_type = models.CharField(max_length=100, choices=ReminderTypes.choices, default=ReminderTypes.BEFORE_DUE)
+
+    class Meta:
+        verbose_name = "Invoice Reminder"
+        verbose_name_plural = "Invoice Reminders"
+
+
 class APIKey(models.Model):
     class ServiceTypes(models.TextChoices):
         AWS_API_DESTINATION = "aws_api_destination"
@@ -508,7 +523,15 @@ class FeatureFlags(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.name
+        return f"{self.name} - {self.value}"
+
+    def enable(self):
+        self.value = True
+        self.save()
+
+    def disable(self):
+        self.value = False
+        self.save()
 
     class Meta:
         verbose_name = "Feature Flag"

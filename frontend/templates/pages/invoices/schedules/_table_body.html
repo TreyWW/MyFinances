@@ -1,7 +1,7 @@
-<tbody id="tbody">
-    {% for schedule in schedules %}
-        {% include 'pages/invoices/schedules/_table_row.html' with schedule=schedule %}
-    {% endfor %}
+<tbody data-hx-swap="onetime_schedules">
+{% for schedule in schedules %}
+    {% include 'pages/invoices/schedules/_table_row.html' with schedule=schedule %}
+{% endfor %}
 </tbody>
 {% for filter_type, inner_filters in all_filters.items %}
     {% for filter in inner_filters %}
@@ -11,7 +11,7 @@
         </div>
     {% endfor %}
 {% endfor %}
-<div hx-swap-oob="innerHTML:#filter_list_storage">
+<div hx-swap-oob="innerHTML:#filter_schedules_list_storage">
     <input type="hidden"
            name="status_completed"
            value="{% if 'completed' in selected_filters %}true{% endif %}">
@@ -27,4 +27,7 @@
     <input type="hidden"
            name="status_cancelled"
            value="{% if 'cancelled' in selected_filters %}true{% endif %}">
+    <input type="hidden"
+           name="status_failed"
+           value="{% if 'failed' in selected_filters %}true{% endif %}">
 </div>
