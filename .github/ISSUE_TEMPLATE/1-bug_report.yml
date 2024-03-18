@@ -1,0 +1,45 @@
+name: 🐛 Report a bug
+description: If you have found a bug on MyFinances report it here!
+title: "bug: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+
+        Hey there, thanks for creating a bug report, it's much appreciated!
+        > Note: This is strictly for **bug** reports, issues setting up or feature requests should be discussed on the Discussions tab.
+
+        Before creating the bug report, please make sure that you have done the following steps:
+        - [ ] Only post **one** problem *per* bug report
+        - [ ] Updated to the latest [official release](https://github.com/TreyWW/MyFinances/releases)
+        - [ ] Update your database with the latest migrations `py manage.py migrate`
+
+  - type: input
+    id: version
+    validations:
+      required: true
+    attributes:
+      label: What version of MyFinances are you currently using?
+      description: You can view by using the command `git describe --tags`
+      placeholder: "v0.2.1"
+  - type: dropdown
+    id: device
+    validations:
+      required: false
+    attributes:
+      label: What device type are you currently facing the issue on?
+      multiple: true
+      options:
+        - Mobile
+        - Desktop
+  - type: input
+    id: description
+    validations:
+      required: true
+    attributes:
+      label: Describe the bug
+      description: |
+        Please describe the bug in detail, make sure to list HOW you get the bug to come up (steps exactly what you follow, including the page path)
+        > To use code blocks, use ``` at the start and end of your code snippets. DO NOT USE SCREENSHOTS OF CODE.
+
+        You may paste links of any images, please use a trusted source like imgur, or upload directly using github
