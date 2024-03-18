@@ -4476,6 +4476,10 @@ html:has(.drawer-toggle:checked) {
   grid-column: span 2 / span 2;
 }
 
+.col-span-3 {
+    grid-column: span 3 / span 3;
+}
+
 .float-right {
   float: right;
 }
@@ -4963,6 +4967,10 @@ html:has(.drawer-toggle:checked) {
 
 .grid-cols-4 {
   grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.grid-cols-7 {
+    grid-template-columns: repeat(7, minmax(0, 1fr));
 }
 
 .flex-row {

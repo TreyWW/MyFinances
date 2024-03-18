@@ -1,6 +1,6 @@
-from django.urls import path
+from django.urls import path, include
 
-from . import fetch, delete, edit, schedule, manage, reminders
+from . import fetch, delete, edit, manage
 from .create import set_destination
 from .create.services import add
 
@@ -32,12 +32,9 @@ urlpatterns = [
     ),
     path("edit/<int:invoice_id>/set_status/<str:status>/", edit.change_status, name="edit status"),
     path("fetch/", fetch.fetch_all_invoices, name="fetch"),
-    path("schedules/receive/", schedule.receive_scheduled_invoice, name="receive_scheduled_invoice"),
-    path("create_schedule/", schedule.create_schedule, name="create_schedule"),
-    path("schedules/onetime/<str:schedule_id>/cancel/", schedule.cancel_onetime_schedule, name="schedules onetime cancel"),
-    path("schedules/onetime/fetch/<str:invoice_id>/", schedule.fetch_onetime_schedules, name="schedules onetime fetch"),
-    path("reminders/fetch/<str:invoice_id>", reminders.fetch_reminders, name="reminders fetch"),
     path("manage/<int:invoice_id>/tabs/preview/", manage.tab_preview_invoice, name="tab preview"),
+    path("", include("backend.api.invoices.reminders.urls")),
+    path("", include("backend.api.invoices.schedules.urls")),
 ]
 
 app_name = "invoices"

@@ -2,7 +2,7 @@
     <h2 class="text-center text-xl font-medium">Create onetime scheduled send</h2>
     <div class="divider"></div>
     <form method="post"
-          hx-post="{% url "api:invoices:create_schedule" %}"
+          hx-post="{% url "api:invoices:schedules:create" %}"
           hx-swap="beforeend"
           hx-target='tbody[data-hx-swap="onetime_schedules"]'
           class="group"

@@ -16,7 +16,7 @@ resource "aws_sfn_state_machine" "scheduler-step-function" {
             "ConnectionArn" : aws_cloudwatch_event_connection.invoice-scheduler-connection.arn
           },
           "Method" : "POST",
-          "ApiEndpoint" : "${var.SITE_URL}/api/invoices/schedules/receive/",
+          "ApiEndpoint.$" : "$.receive_url",
           "RequestBody.$" : "$.body",
           "Headers.$" : "$.headers"
         },
@@ -37,6 +37,9 @@ resource "aws_sfn_state_machine" "scheduler-step-function" {
     "Comment" : "Call our django api to alert the schedule timestamp has reached."
   })
   tags = local.app_tags
+  depends_on = [
+    aws_iam_role.scheduler-execution-role
+  ]
 }
 
 resource "aws_iam_role" "scheduler-execution-role" {

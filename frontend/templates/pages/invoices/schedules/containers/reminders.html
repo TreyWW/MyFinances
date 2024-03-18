@@ -1,10 +1,27 @@
 <h2 class="text-center text-3xl">Reminders</h2>
 <div class="w-full p-6 my-8 shadow-xl card bg-base-100">
     <div class="grid w-full grid-cols-3 text-xl font-medium">
-        <div></div>
+        <div>
+            <a hx-get="{% url 'api:invoices:reminders:fetch' invoice_id=invoice.id %}"
+               hx-trigger="click"
+               hx-swap="outerHTML"
+               hx-target='tbody[data-hx-swap="reminders"]'
+               hx-indicator="this"
+               class="float-left btn btn-sm btn-outline btn-square btn-white me-3 loading-htmx">
+                <span class="loading-htmx-text">
+                    <i class="fa-solid fa-rotate-right"></i>
+                </span>
+                <span class="loading loading-spinner loading-htmx-loader"></span>
+            </a>
+        </div>
         <h1 class="text-center">View Reminders</h1>
         <div>
-            <button class="float-right btn btn-sm btn-outline btn-primary me-3">
+            <button class="float-right btn btn-sm btn-outline btn-primary me-3"
+                    onclick="modal_create_reminder.showModal();"
+                    hx-get="{% url "api:base:modal retrieve" modal_name="create_reminder" %}"
+                    hx-trigger="click once"
+                    hx-swap="beforeend"
+                    hx-target="#modal_container">
                 <i class="fa-solid fa-calendar-plus mr-2"></i>
                 Create Reminder
             </button>
@@ -23,29 +40,29 @@
                      data-filter-type="reminder_type"
                      hx-vals='{"filter_type": "reminder_type"}'>
                     <label tabindex="0" class="border-none">
-                        Status
+                        Due Type
                         <i class="border-none pt-1 fa-solid fa-caret-down pl-1/2"></i>
                     </label>
                     <ul class="dropdown-content">
-                        <h2 class="menu-title">Status</h2>
+                        <h2 class="menu-title">Due Type</h2>
                         <div class="-mt-2 -mb-1 divider"></div>
                         <li data-filter-by="before_due">
                             <button class="border-none text-sm dropdown-item"
-                                    hx-get="{% url "api:invoices:reminders fetch" invoice_id=invoice.id %}"
+                                    hx-get="{% url "api:invoices:reminders:fetch" invoice_id=invoice.id %}"
                                     name="filter"
                                     value="before_due">Before Due
                             </button>
                         </li>
                         <li data-filter-by="after_due">
                             <button class="border-none text-sm dropdown-item"
-                                    hx-get="{% url "api:invoices:reminders fetch" invoice_id=invoice.id %}"
+                                    hx-get="{% url "api:invoices:reminders:fetch" invoice_id=invoice.id %}"
                                     name="filter"
                                     value="after_due">After Due
                             </button>
                         </li>
                         <li data-filter-by="on_overdue">
                             <button class="border-none text-sm dropdown-item"
-                                    hx-get="{% url "api:invoices:reminders fetch" invoice_id=invoice.id %}"
+                                    hx-get="{% url "api:invoices:reminders:fetch" invoice_id=invoice.id %}"
                                     name="filter"
                                     value="on_overdue">On overdue day
                             </button>
@@ -60,7 +77,7 @@
         <tbody data-hx-swap="reminders"
                hx-swap="outerHTML"
                hx-trigger="load"
-               hx-get="{% url "api:invoices:reminders fetch" invoice_id=invoice.id %}">
+               hx-get="{% url "api:invoices:reminders:fetch" invoice_id=invoice.id %}">
         </tbody>
     </table>
 </div>

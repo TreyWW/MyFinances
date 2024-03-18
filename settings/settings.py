@@ -71,7 +71,6 @@ LOGIN_REQUIRED_IGNORE_VIEW_NAMES = [
     "social:begin",
     "social:complete",
     "social:disconnect",
-    "api:invoices:create_schedule",
 ]
 
 # @login_required()

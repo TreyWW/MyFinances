@@ -9,60 +9,6 @@ from backend.decorators import feature_flag_check
 from backend.models import Invoice
 
 
-# @csrf_exempt
-# @feature_flag_check("isInvoiceSchedulingEnabled", True, api=True)
-# def create_schedule(request: HttpRequest):
-#     option = request.POST.get("option")  # 1=one time 2=recurring
-#
-#     if option in ["1", "one-time", "onetime", "one"]:
-#         ratelimited = (
-#             is_ratelimited(request, group="create_schedule", key="user", rate="2/30s", increment=True)
-#             or is_ratelimited(request, group="create_schedule", key="user", rate="5/m", increment=True)
-#             or is_ratelimited(request, group="create_schedule", key="ip", rate="5/m", increment=True)
-#             or is_ratelimited(request, group="create_schedule", key="ip", rate="10/h", increment=True)
-#         )
-#
-#         if ratelimited:
-#             messages.error(request, "Woah, slow down!")
-#             return render(request, "base/toasts.html")
-#         return create_ots(request)
-#
-#     messages.error(request, "Invalid option. Something went wrong.")
-#     return render(request, "base/toasts.html")
-#
-#
-# def create_ots(request: HttpRequest) -> HttpResponse:
-#     invoice_id = request.POST.get("invoice_id") or request.POST.get("invoice")
-#
-#     try:
-#         invoice = Invoice.objects.get(id=invoice_id)
-#     except Invoice.DoesNotExist:
-#         messages.error(request, "Invoice not found")
-#         return render(request, "base/toasts.html")
-#
-#     if (request.user.logged_in_as_team and invoice.organization != request.user.logged_in_as_team) or (
-#         not request.user.logged_in_as_team and invoice.user != request.user
-#     ):
-#         messages.error(request, "You do not have permission to create schedules for this invoice")
-#         return render(request, "base/toasts.html")
-#
-#     print("[BACKEND] About to create ots", flush=True)
-#     schedule = create_onetime_schedule(
-#         CreateOnetimeScheduleInputData(
-#             invoice=invoice, option=1, datetime=request.POST.get("date_time"), email_type=request.POST.get("email_type")
-#         )
-#     )
-#
-#     print(schedule, flush=True)
-#
-#     if isinstance(schedule, CreateOnetimeScheduleSuccessResponse):
-#         messages.success(request, "Schedule created!")
-#         return render(request, "pages/invoices/reminders/_table_row.html", {"schedule": schedule.schedule})
-#
-#     messages.error(request, schedule.message)
-#     return render(request, "base/toasts.html")
-
-
 @require_GET
 @feature_flag_check("areInvoiceRemindersEnabled", True, api=True, htmx=True)
 def fetch_reminders(request: HttpRequest, invoice_id: str):
@@ -87,7 +33,7 @@ def fetch_reminders(request: HttpRequest, invoice_id: str):
 
     context = {}
 
-    schedules = invoice.invoice_reminders.order_by("reminder_type").only("id", "days", "reminder_type")
+    reminders = invoice.invoice_reminders.order_by("reminder_type").only("id", "days", "reminder_type")
 
     action_filter_type = request.GET.get("filter_type")
     action_filter_by = request.GET.get("filter")
@@ -126,6 +72,6 @@ def fetch_reminders(request: HttpRequest, invoice_id: str):
         # Combine OR conditions for each filter type with AND
         or_conditions &= or_conditions_filter
 
-    context["schedules"] = schedules.filter(or_conditions)
+    context["reminders"] = reminders.filter(or_conditions)
 
     return render(request, "pages/invoices/schedules/reminders/_table_body.html", context)

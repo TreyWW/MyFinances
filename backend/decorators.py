@@ -71,7 +71,7 @@ def feature_flag_check(flag, status=True, api=False, htmx=False):
 
 def feature_flag_check_multi(flag_list: List[FlagItem], api=False, htmx=False):
     """
-        Checks if at least one of the flags in the list is the desired status
+    Checks if at least one of the flags in the list is the desired status
     """
 
     def decorator(view_func):
@@ -89,6 +89,7 @@ def feature_flag_check_multi(flag_list: List[FlagItem], api=False, htmx=False):
             return view_func(request, *args, **kwargs)
 
         return wrapper
+
     return decorator
 
 

@@ -306,6 +306,17 @@ class Invoice(models.Model):
     class Meta:
         constraints = [USER_OR_ORGANIZATION_CONSTRAINT()]
 
+    def __str__(self):
+        invoice_id = self.invoice_id or self.id
+        if self.client_name:
+            client = self.client_name
+        elif self.client_to:
+            client = self.client_to.name
+        else:
+            client = "Unknown Client"
+
+        return f"Invoice #{invoice_id} for {client}"
+
     @property
     def dynamic_payment_status(self):
         if self.date_due and timezone.now().date() > self.date_due and self.payment_status == "pending":
@@ -328,17 +339,6 @@ class Invoice(models.Model):
                 "company": self.client_company,
             }
 
-    def __str__(self):
-        invoice_id = self.invoice_id or self.id
-        if self.client_name:
-            client = self.client_name
-        elif self.client_to:
-            client = self.client_to.name
-        else:
-            client = "Unknown Client"
-
-        return f"Invoice #{invoice_id} for {client}"
-
     def get_subtotal(self):
         subtotal = 0
         for item in self.items.all():
@@ -350,6 +350,15 @@ class Invoice(models.Model):
         subtotal = self.get_subtotal()
         total = subtotal * 1.2 if self.vat_number else subtotal
         return round(total, 2)
+
+    def has_access(self, user: User) -> bool:
+        if not user.is_authenticated:
+            return False
+
+        if user.logged_in_as_team:
+            return self.organization == user.logged_in_as_team
+        else:
+            return self.user == user
 
 
 class InvoiceURL(models.Model):
@@ -401,11 +410,15 @@ class InvoiceSchedule(models.Model):
     received = models.BooleanField(default=False)
     status = models.CharField(max_length=100, choices=StatusTypes.choices, default=StatusTypes.PENDING)
 
+    class Meta:
+        abstract = True
+
     def get_tags(self):
         return {"invoice_id": self.invoice.id, "schedule_id": self.id, "app": AWS_TAGS_APP_NAME}
 
-    class Meta:
-        abstract = True
+    def set_status(self, status):
+        self.status = status
+        self.save()
 
 
 class InvoiceOnetimeSchedule(InvoiceSchedule):
@@ -430,6 +443,10 @@ class InvoiceReminder(InvoiceSchedule):
     class Meta:
         verbose_name = "Invoice Reminder"
         verbose_name_plural = "Invoice Reminders"
+
+    def __str__(self):
+        days = (str(self.days) + "d" if self.days else " ").center(8, "ㅤ")
+        return f"({self.id}) Reminder for (#{self.invoice_id}) {days} {self.reminder_type}"
 
 
 class APIKey(models.Model):

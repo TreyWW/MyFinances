@@ -6,7 +6,7 @@ from mypy_boto3_iam.type_defs import CreatePolicyResponseTypeDef, PolicyTypeDef
 from infrastructure.aws.handler import get_iam_client, DEBUG_LEVEL
 from settings.settings import AWS_TAGS_APP_NAME
 
-iam_client = get_iam_client
+iam_client = get_iam_client()
 
 
 def get_or_create_sfn_execute_role_arn() -> str:

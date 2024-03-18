@@ -3,13 +3,14 @@ from dataclasses import dataclass
 from typing import Optional, Union, Literal
 
 import pytz
+from django.urls import reverse
 from django.utils import timezone
 
 from backend.models import Invoice, InvoiceOnetimeSchedule
 from infrastructure.aws.handler import get_event_bridge_scheduler
 from infrastructure.aws.iam.sfn import get_or_create_sfn_execute_role_arn
 from infrastructure.aws.step_functions.scheduler import get_step_function
-from settings.settings import AWS_TAGS_APP_NAME
+from settings.settings import AWS_TAGS_APP_NAME, SITE_URL
 
 
 @dataclass(frozen=True)
@@ -65,9 +66,12 @@ def create_onetime_schedule(data: CreateOnetimeScheduleInputData) -> CreateOneti
 
     if not scheduler_step_function.get("stateMachineArn"):
         print("[AWS] [SFN] Step function not found", flush=True)
-        return ErrorResponse("Step function not found", flush=True)
+        return ErrorResponse("Step function not found")
 
     event_bridge_scheduler = get_event_bridge_scheduler()
+
+    URL = SITE_URL + reverse("api:invoices:schedules:receive")
+
     CREATED_SCHEDULE = event_bridge_scheduler.create_schedule(
         Name=f"{AWS_TAGS_APP_NAME}-scheduled-invoices-{data.invoice.id}-{schedule.id}",
         FlexibleTimeWindow={"Mode": "OFF"},
@@ -84,6 +88,7 @@ def create_onetime_schedule(data: CreateOnetimeScheduleInputData) -> CreateOneti
                         "email_type": "1",
                     },
                     "body": {},
+                    "receive_url": URL,
                 }
             ),
         },
