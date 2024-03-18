@@ -70,5 +70,5 @@ class ReceiptDownloadEndpointsTest(TestCase):
 
         download_receipt_url = reverse("api:receipts:download_receipt", args=[another_token.token])
         response = self.client.get(download_receipt_url)
-        self.assertEquals(response.status_code, 403)
-        self.assertEquals(response.content, b"Forbidden")
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.content, b"Forbidden")
