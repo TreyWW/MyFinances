@@ -1,4 +1,5 @@
 name: Backend Tests
+
 on:
   push:
     branches:
@@ -6,7 +7,7 @@ on:
   pull_request:
 
 jobs:
-  build:
+  test:
     strategy:
       fail-fast: true
       matrix:
@@ -21,18 +22,21 @@ jobs:
 
     steps:
       #----------------------------------------------
-      #       check-out repo and set-up python
+      #       Checkout code
       #----------------------------------------------
       - name: Checkout code
         uses: actions/checkout@v4
 
+      #----------------------------------------------
+      #       Set up Python
+      #----------------------------------------------
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
 
       #----------------------------------------------
-      #       install and configure poetry
+      #       Install Poetry
       #----------------------------------------------
       - name: Install and configure Poetry
         uses: snok/install-poetry@v1
@@ -43,45 +47,47 @@ jobs:
           installer-parallel: true
 
       #----------------------------------------------
-      #       install docker compose
-      #       setup + configure docker compose
+      #       Install Docker Compose
       #----------------------------------------------
       - name: Install Docker Compose
         run: |
           sudo apt-get update
           sudo apt-get install -y docker-compose
 
-
       #----------------------------------------------
-      #       copy docker compose file
+      #       Copy Docker Compose file
       #----------------------------------------------
-      - name: Copy docker compose file
+      - name: Copy Docker Compose file
         run: |
           cp $GITHUB_WORKSPACE/$DOCKER_COMPOSE_PATH ./docker-compose.yml
 
       #----------------------------------------------
-      #       run docker compose & tests
+      #       Build and run docker-compose.ci.yml
       #----------------------------------------------
       - name: Build and run docker-compose.ci.yml
         run: |
           export TESTING=true
           docker compose up -d --wait --wait-timeout 30
 
-      - name: Run the test scripts
+      #----------------------------------------------
+      #       Run the test scripts
+      #----------------------------------------------
+      - name: Run Django tests
         run: |
           export TESTING=true
           docker compose exec -T myfinances_django ./infrastructure/backend/scripts/tests/views.sh
 
+
   coverage:
     name: Combine & check coverage
-    needs: build
+    needs: test
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v2
         with:
-          python-version-file: .python-version-default
+          python-version: "3.12"
           cache: pip
       - run: python -Im pip install --upgrade coverage[toml]
       - uses: actions/download-artifact@v4
@@ -89,13 +95,13 @@ jobs:
           pattern: coverage-data-*
           merge-multiple: true
 
-      - name: Combine coverage & fail if it's <100%.
+      - name: Combine coverage & fail if it's <50%.
         run: |
           python -Im coverage combine
           python -Im coverage html --skip-covered --skip-empty
           # Report and write to summary.
           python -Im coverage report --format=markdown >> $GITHUB_STEP_SUMMARY
-          # Report again and fail if under 100%.
+          # Report again and fail if under 50%.
           python -Im coverage report --fail-under=50
       - name: Upload HTML report if check failed.
         uses: actions/upload-artifact@v4
