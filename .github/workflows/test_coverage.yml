@@ -23,9 +23,8 @@ jobs:
           merge-multiple: true
 
       - name: "Combine coverage & fail if it's <50"
-        run:
-          python -Im pip install --upgrade coverage[toml]|
-          
+        run: |
+          python -Im pip install --upgrade coverage[toml]
           python -Im coverage combine
           python -Im coverage html --skip-covered --skip-empty
           
