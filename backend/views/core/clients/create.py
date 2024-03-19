@@ -16,6 +16,7 @@ def create_client(request: HttpRequest):
         "phone_number": request.POST.get("client_phone"),
         "company": request.POST.get("company_name"),
         "is_representative": (True if request.POST.get("is_representative") == "on" else False),
+        "main_contact_method": request.POST.get("main_contact_method"),
     }
 
     error = validate_client_create(client_details)

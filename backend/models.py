@@ -222,6 +222,12 @@ class Client(models.Model):
     city = models.CharField(max_length=100, blank=True, null=True)
     country = models.CharField(max_length=100, blank=True, null=True)
 
+    MAIN_CONTACT_CHOICES = (
+        ("email", "Email"),
+        ("phone", "Phone"),
+    )
+    main_contact_method = models.CharField(max_length=20, choices=MAIN_CONTACT_CHOICES, blank=True, null=True)
+
     class Meta:
         constraints = [USER_OR_ORGANIZATION_CONSTRAINT()]
 
