@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 🔍 View Issues
+    url: https://github.com/TreyWW/MyFinances/issues?q=is%3Aissue
+    about: If you have found an issue (or a bug), try searching our issues tab before reporting it.
+  - name: ❓ Need some help
+    url: https://github.com/TreyWW/MyFinances/discussions/categories/q-a
+    about: If you have a question or are stuck setting up the project, open a Q&A discussion!
+  - name: 💡 Idea or Feature request
+    url: https://github.com/TreyWW/MyFinances/discussions/new?category=ideas
+    about: If you would like to suggest a new idea or would like a new feature added to MyFinances, discuss it on the Discussions tab!
