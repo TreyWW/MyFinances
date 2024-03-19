@@ -1,6 +1,7 @@
 name: 🐛 Report a bug
 description: If you have found a bug on MyFinances report it here!
 title: "bug: "
+labels: [bug]
 body:
   - type: markdown
     attributes:
@@ -32,7 +33,7 @@ body:
       options:
         - Mobile
         - Desktop
-  - type: input
+  - type: textarea
     id: description
     validations:
       required: true
