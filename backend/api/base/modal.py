@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.http import HttpRequest, HttpResponseBadRequest
 from django.shortcuts import render
 
@@ -25,9 +26,14 @@ def open_modal(request: HttpRequest, modal_name, context_type=None, context_valu
             elif context_type == "edit_invoice_to":
                 invoice = context_value
                 try:
-                    invoice = Invoice.objects.get(user=request.user, id=invoice)
-                except Invoice.DoesNotExist:
-                    return render(request, template_name, context)
+                    invoice = Invoice.objects.get(id=invoice)
+
+                    if not invoice.has_access(request.user):
+                        # give me a good error exception (not DoesNotExist)
+                        raise ValueError("No access to invoice")
+                except (Invoice.DoesNotExist, ValueError):
+                    messages.error(request, "Invalid invoice or you have a lack of permissions")
+                    return render(request, "base/toasts.html")
 
                 if invoice.client_to:
                     context["to_name"] = invoice.client_to.name
