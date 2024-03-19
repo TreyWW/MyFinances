@@ -62,3 +62,13 @@ class ReceiptDownloadEndpointsTest(TestCase):
         response = self.client.get(invalid_url)
         self.assertEqual(response.status_code, 404)
         self.client.logout()
+
+    def test_download_receipt_user_mismatch(self):
+        another_user = User.objects.create_user(username="user@example.com", password="anotherpassword", email="user@example.com")
+        another_token = ReceiptDownloadToken.objects.create(user=another_user, file=self.receipt)
+        self.client.login(username="user@example.com", password="user")
+
+        download_receipt_url = reverse("api:receipts:download_receipt", args=[another_token.token])
+        response = self.client.get(download_receipt_url)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.content, b"Forbidden")
