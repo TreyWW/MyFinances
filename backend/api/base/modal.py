@@ -44,6 +44,14 @@ def open_modal(request: HttpRequest, modal_name, context_type=None, context_valu
                     # context["to_city"] = invoice.client_city
                     # context["to_county"] = invoice.client_county
                     # context["to_country"] = invoice.client_country
+            elif context_type == "invoice_reminder":
+                try:
+                    invoice = Invoice.objects.only("id", "client_email", "client_to__email").get(user=request.user, id=context_value)
+                except Invoice.DoesNotExist:
+                    return render(request, template_name, context)
+
+                if invoice.has_access(request.user):
+                    context["invoice"] = invoice
             else:
                 context[context_type] = context_value
 

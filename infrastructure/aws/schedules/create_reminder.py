@@ -72,7 +72,7 @@ def create_reminder_schedule(data: CreateReminderInputData) -> CreateReminderRes
                             "invoice_id": str(data.invoice.id),
                             "reminder_id": str(data.reminder.id),
                             "email_type": data.email_type,
-                            "type": "reminder",
+                            "option": "invoice_reminder",
                         },
                         "body": {},
                         "receive_url": URL,

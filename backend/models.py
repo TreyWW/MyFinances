@@ -420,6 +420,10 @@ class InvoiceSchedule(models.Model):
         self.status = status
         self.save()
 
+    def set_received(self, status: bool = True):
+        self.received = status
+        self.save()
+
 
 class InvoiceOnetimeSchedule(InvoiceSchedule):
     invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE, related_name="onetime_invoice_schedules")

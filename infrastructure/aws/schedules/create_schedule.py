@@ -86,6 +86,7 @@ def create_onetime_schedule(data: CreateOnetimeScheduleInputData) -> CreateOneti
                         "schedule_id": str(schedule.id),
                         "schedule_type": "1",
                         "email_type": "1",
+                        "option": "invoice_schedule",
                     },
                     "body": {},
                     "receive_url": URL,
