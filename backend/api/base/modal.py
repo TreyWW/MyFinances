@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.http import HttpRequest, HttpResponseBadRequest
 from django.shortcuts import render
 
@@ -46,12 +47,17 @@ def open_modal(request: HttpRequest, modal_name, context_type=None, context_valu
                     # context["to_country"] = invoice.client_country
             elif context_type == "invoice_reminder":
                 try:
-                    invoice = Invoice.objects.only("id", "client_email", "client_to__email").get(user=request.user, id=context_value)
+                    invoice = (
+                        Invoice.objects.only("id", "client_email", "client_to__email").select_related("client_to").get(id=context_value)
+                    )
                 except Invoice.DoesNotExist:
                     return render(request, template_name, context)
 
                 if invoice.has_access(request.user):
                     context["invoice"] = invoice
+                else:
+                    messages.error(request, "You don't have access to this invoice.")
+                    return render(request, "base/toasts.html")
             else:
                 context[context_type] = context_value
 

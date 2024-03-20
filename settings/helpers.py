@@ -1,3 +1,4 @@
+import json
 import os
 import sys
 from dataclasses import dataclass
@@ -8,7 +9,7 @@ import boto3
 import environ
 from django_ratelimit.core import get_usage
 from mypy_boto3_sesv2.client import SESV2Client
-from mypy_boto3_sesv2.type_defs import SendEmailResponseTypeDef
+from mypy_boto3_sesv2.type_defs import SendEmailResponseTypeDef, GetEmailTemplateResponseTypeDef
 
 ### NEEDS REFACTOR
 
@@ -82,7 +83,45 @@ class SentEmailErrorResponse:
     success: Literal[False] = False
 
 
-def send_email(destination: Union[str, List[str]], subject: str, message: str) -> SentEmailSuccessResponse | SentEmailErrorResponse:
+EmailResponseType = SentEmailSuccessResponse | SentEmailErrorResponse
+
+
+def send_templated_email(destination: str | list[str], template_name: str, data: dict) -> EmailResponseType:
+    if EMAIL_SERVICE == "SES":
+        if not isinstance(destination, list):
+            destination = [destination]
+
+        response: Optional[SendEmailResponseTypeDef] = None
+
+        try:
+            template_check: GetEmailTemplateResponseTypeDef = EMAIL_CLIENT.get_email_template(TemplateName=template_name)
+        except EMAIL_CLIENT.exceptions.NotFoundException:
+            return SentEmailErrorResponse(message="Template does not exist", response=response)
+
+        try:
+            response: SendEmailResponseTypeDef = EMAIL_CLIENT.send_email(
+                FromEmailAddress=get_var("AWS_SES_FROM_ADDRESS"),
+                Destination={"ToAddresses": destination},
+                Content={"Template": {"TemplateName": template_name, "TemplateData": json.dumps(data)}},
+            )
+            return SentEmailSuccessResponse(response)
+        except EMAIL_CLIENT.exceptions.MessageRejected:
+            return SentEmailErrorResponse(message="Email rejected", response=response)
+
+        except EMAIL_CLIENT.exceptions.AccountSuspendedException:
+            return SentEmailErrorResponse(message="Email account suspended", response=response)
+
+        except EMAIL_CLIENT.exceptions.SendingPausedException:
+            return SentEmailErrorResponse(message="Email sending paused", response=response)
+
+        except Exception as error:
+            exception(f"Unexpected error occurred: {error}")
+            return SentEmailErrorResponse(message="Email service error", response=response)
+
+    return SentEmailErrorResponse(message="No email service configured")
+
+
+def send_email(destination: Union[str, List[str]], subject: str, message: str) -> EmailResponseType:
     """
     Args:
     destination (email addr or list of email addr): The email address or list of email addresses to send the

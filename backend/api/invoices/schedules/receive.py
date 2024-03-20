@@ -9,7 +9,8 @@ from django.views.decorators.http import require_POST
 
 from backend.decorators import feature_flag_check
 from backend.models import Invoice, AuditLog, APIKey, InvoiceOnetimeSchedule, InvoiceURL, InvoiceReminder
-from settings.helpers import send_email
+from settings.helpers import send_email, send_templated_email
+from settings.settings import SITE_NAME
 
 
 @require_POST
@@ -146,33 +147,32 @@ def receive_reminder(request: HttpRequest):
 
     AuditLog.objects.create(action=f"scheduled invoice: {invoice_id} send to {email_type} - {email}")
 
-    client_name = invoice.client_name or invoice.client_to.name or "there"
-    # Todo: add better email message
-    email_response = send_email(
-        destination=email,
-        subject=f"Invoice #{invoice_id} ready",
-        message=f"""
-                    Hi {client_name},
+    data = {
+        "client_name": invoice.client_name or invoice.client_to.name or "there",
+        "invoice_id": invoice_id,
+        "invoice_url": invoice_url,
+        "days": reminder.days,
+        "company": invoice.self_company or invoice.self_name
+    }
 
-                    This is an automated email to let you know that your invoice #{invoice_id} is now ready. The due date is {invoice.date_due}.
+    template_name = f"{SITE_NAME}-reminders"
 
-                    You can view the invoice here: {invoice_url}
+    if reminder.reminder_type == "before_due":
+        template_name += "before-due"
+    elif reminder.reminder_type == "after_due":
+        template_name += "after-due"
+    else:
+        template_name += "overdue"
 
-                    Best regards
-
-                    Note: This is an automated email sent out by MyFinances on behalf of '{invoice.self_company or invoice.self_name}'. If you
-                    believe this is spam or fraudulent please report it to us and DO NOT pay the invoice. Once a report has been made you will
-                    have a case opened.
-                """,
-    )
+    email_response = send_templated_email(destination=email, template_name=template_name, data=data)
 
     if not email_response.success:
-        schedule.set_status(schedule.StatusTypes.FAILED)
-        schedule.set_received(False)
+        reminder.set_status(reminder.StatusTypes.FAILED)
+        reminder.set_received(False)
         return HttpResponse(f"Failed to send email: {email_response.message}", status=500)
 
-    schedule.set_status(schedule.StatusTypes.COMPLETED)
-    schedule.set_received()
+    reminder.set_status(reminder.StatusTypes.COMPLETED)
+    reminder.set_received()
 
     return HttpResponse("Sent", status=200)
 
