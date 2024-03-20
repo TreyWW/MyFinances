@@ -152,7 +152,7 @@ def receive_reminder(request: HttpRequest):
         "invoice_id": invoice_id,
         "invoice_url": invoice_url,
         "days": reminder.days,
-        "company": invoice.self_company or invoice.self_name
+        "company": invoice.self_company or invoice.self_name,
     }
 
     template_name = f"{SITE_NAME}-reminders"
