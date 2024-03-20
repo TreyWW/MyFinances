@@ -56,7 +56,7 @@ optional = true
 psycopg2 = "2.9.9"
 
 [tool.poetry.group.dev.dependencies]
-black = "^24.1.1"
+black = "^24.3.0"
 djlint = "^1.34.1"
 coverage = "^7.4.4"
 
