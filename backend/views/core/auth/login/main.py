@@ -1,95 +1,22 @@
 from typing import NoReturn
 
 import django_ratelimit
-from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth import login, logout
 from django.contrib.auth.hashers import check_password
-from django.core.validators import validate_email
 from django.http import HttpRequest
-from django.urls import reverse, resolve
-from django.urls.exceptions import Resolver404
+from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views import View
-from django.views.decorators.http import require_GET, require_POST
 from django_ratelimit.decorators import ratelimit
 
 from backend.decorators import *
 from backend.models import LoginLog, User, VerificationCodes, AuditLog
 from backend.views.core.auth.verify import create_magic_link
-from settings.helpers import send_email, ARE_EMAILS_ENABLED
+from settings.helpers import send_email
+from .login.helpers import render_toast_message, ToastMessage
+
 
 # from backend.utils import appconfig
-from settings.settings import (
-    SOCIAL_AUTH_GITHUB_ENABLED,
-    SOCIAL_AUTH_GOOGLE_OAUTH2_ENABLED,
-)
-
-
-@require_GET
-@not_authenticated
-def login_initial_page(request: HttpRequest):
-    next = request.GET.get("next")
-
-    return render(
-        request,
-        "pages/auth/login_initial.html",
-        {"github_enabled": SOCIAL_AUTH_GITHUB_ENABLED, "next": next, "google_enabled": SOCIAL_AUTH_GOOGLE_OAUTH2_ENABLED},
-    )
-
-
-@not_authenticated
-@require_POST
-def login_manual(request: HttpRequest):  # HTMX POST
-    if not request.htmx:
-        return redirect("auth:login")
-    email = request.POST.get("email")
-    password = request.POST.get("password")
-    page = str(request.POST.get("page"))
-    next = request.POST.get("next")
-
-    if not page or page == "1":
-        return render(
-            request,
-            "pages/auth/login.html",
-            context={"email": email, "next": next, "magic_links_enabled": ARE_EMAILS_ENABLED},
-        )
-
-    if not email:
-        messages.error(request, "Please enter an email")
-        return render_toast_message(request)
-
-    try:
-        validate_email(email)
-    except:
-        messages.error(request, "Please enter a valid email")
-        return render_toast_message(request)
-
-    if not password:
-        messages.error(request, "Please enter a password")
-        return render_toast_message(request)
-
-    user = authenticate(request, username=email, password=password)
-
-    if not user:
-        messages.error(request, "Incorrect email or password")
-        return render_toast_message(request)
-
-    login(request, user)
-    messages.success(request, "Successfully logged in")
-
-    response = HttpResponse(request, status=200)
-
-    try:
-        resolve(next)
-        response["HX-Location"] = next
-    except Resolver404:
-        print(f"did not resolve: {next}")
-        ...
-
-    return response
-
-
-def render_toast_message(request: HttpRequest) -> HttpResponse:
-    return render(request, "base/toasts.html")  # htmx will handle the toast
 
 
 class MagicLinkRequestView(View):
@@ -176,17 +103,7 @@ class MagicLinkVerifyView(View):
             messages.error(request, magic_link_msg)
             return redirect("auth:login")
 
-        # user = magic_link.user
-        # magic_link.delete()
-        # user.backend = "backend.auth_backends.EmailInsteadOfUsernameBackend"
-        # login(request, magic_link.user)
-
         return render(request, "pages/auth/magic_link_verify.html", {"uuid": uuid, "token": token})
-
-        #
-        # messages.success(request, "Successfully logged in")
-        # # TODO: Add page to make sure they click an extra "verify request btn"
-        # return redirect("dashboard")
 
 
 class MagicLinkVerifyDecline(View):
@@ -198,8 +115,7 @@ class MagicLinkVerifyDecline(View):
         magic_link_valid, magic_link_msg = is_magiclink_valid(magic_link, token)
 
         if not magic_link_valid:
-            messages.error(request, magic_link_msg)
-            return render_toast_message(request)
+            return render_toast_message(request, ToastMessage(magic_link_msg))
 
         user = magic_link.user
         magic_link.delete()
@@ -243,13 +159,6 @@ def is_magiclink_valid(magic_link: VerificationCodes, token: str) -> tuple[bool,
         return False, "Invalid magic link"
 
     return True, ""
-
-
-def get_magic_link(uuid: str) -> VerificationCodes | None:
-    try:
-        return VerificationCodes.objects.get(uuid=uuid, service="login")
-    except VerificationCodes.DoesNotExist:
-        return None
 
 
 def logout_view(request):

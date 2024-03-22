@@ -1,30 +1,32 @@
 from django.urls import path
 
-from . import login, create_account, verify
+from .login import main, initial_page, manual_details
+from . import create_account, verify
 from .passwords import view as passwords_view, generate as passwords_generate, set as passwords_set
 
+
 urlpatterns = [
-    path("login/", login.login_initial_page, name="login"),
-    path("login/manual/", login.login_manual, name="login manual"),
-    path("login/magic_link/request/", login.MagicLinkRequestView.as_view(), name="login magic_link request"),
-    path("login/magic_link/request/wait/", login.MagicLinkWaitingView.as_view(), name="login magic_link request wait"),
-    path("login/magic_link/verify/<uuid:uuid>/<str:token>/", login.MagicLinkVerifyView.as_view(), name="login magic_link verify"),
+    path("login/", initial_page.login_initial_page, name="login"),
+    path("login/manual/", manual_details.login_manual, name="login manual"),
+    path("login/magic_link/request/", main.MagicLinkRequestView.as_view(), name="login magic_link request"),
+    path("login/magic_link/request/wait/", main.MagicLinkWaitingView.as_view(), name="login magic_link request wait"),
+    path("login/magic_link/verify/<uuid:uuid>/<str:token>/", main.MagicLinkVerifyView.as_view(), name="login magic_link verify"),
     path(
         "login/magic_link/verify/<uuid:uuid>/<str:token>/accept/",
-        login.MagicLinkVerifyAccept.as_view(),
+        main.MagicLinkVerifyAccept.as_view(),
         name="login magic_link verify accept",
     ),
     path(
         "login/magic_link/verify/<uuid:uuid>/<str:token>/decline/",
-        login.MagicLinkVerifyDecline.as_view(),
+        main.MagicLinkVerifyDecline.as_view(),
         name="login magic_link verify decline",
     ),
     path(
         "login/forgot_password/",
-        login.forgot_password_page,
+        main.forgot_password_page,
         name="login forgot_password",
     ),
-    path("logout/", login.logout_view, name="logout"),
+    path("logout/", main.logout_view, name="logout"),
     path(
         "create_account/",
         create_account.CreateAccountChooseView.as_view(),
