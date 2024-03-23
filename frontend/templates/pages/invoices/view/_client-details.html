@@ -7,6 +7,9 @@
             -
             {{ invoice.client_to.email|default_if_none:"" }}
             {% if invoice.client_to.phone_number %}({{ invoice.client_to.phone_number }}){% endif %}
+            {% if invoice.client_to.main_contact_method %}
+                (Main Contact Method: {{ invoice.client_to.main_contact_method }})
+            {% endif %}
         </p>
     {% endif %}
 {% elif c_type == "manual" %}

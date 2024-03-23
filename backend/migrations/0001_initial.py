@@ -146,10 +146,6 @@ class Migration(migrations.Migration):
                         to=settings.AUTH_USER_MODEL,
                     ),
                 ),
-                (
-                    "main_contact_method",
-                    models.CharField(blank=True, max_length=20, null=True, choices=[("email", "Email"), ("phone", "Phone")]),
-                ),
             ],
         ),
         migrations.CreateModel(
