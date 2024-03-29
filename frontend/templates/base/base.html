@@ -7,9 +7,6 @@
             <div class="drawer-content flex flex-col ">
                 {% include 'base/topbar/_topbar.html' %}
                 <div class="flex-1 min-h-screen overflow-y-auto pt-8 px-6 pb-4 bg-base-200">
-                    {#            <div id="messages_list">#}
-                    {#                {% component "messages_list" with_js="true" %}#}
-                    {#            </div>#}
                     {% include 'base/breadcrumbs.html' %}
                     {% include 'base/toasts.html' %}
                     <div id="modal_container">{# Leave here #}</div>
@@ -20,6 +17,7 @@
                             {% endblock content %}
                         </div>
                         {% component "base:left_drawer" %}
+                        {% endcomponent %}
                     </div>
                     <div class="fixed bottom-5 left-5 z-50">
                         <ul class="menu menu-horizontal bg-base-100 rounded-box">

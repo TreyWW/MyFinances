@@ -62,8 +62,8 @@
             </div>
         </div>
         <div class="divider my-4">STEP 3 - SERVICES</div>
-        {% component_block "pages:invoices:create:services_table" %}
-    {% endcomponent_block %}
+        {% component "pages:invoices:create:services_table" %}
+        {% endcomponent %}
     <div class="group-invalid:tooltip mt-4"
          data-tip="Fill out all required details to save the invoice.">
         <button class="btn btn-primary group-invalid:btn-disabled btn-block">Update Invoice</button>

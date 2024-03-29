@@ -1,4 +1,4 @@
-{% component_block "modal" id="modal_change_profile_picture" start_open="true" title="Change profile picture" %}
+{% component "modal" id="modal_change_profile_picture" start_open="true" title="Change profile picture" %}
 {% fill "content" %}
 <form class="py-4"
       id="modal_change_profile_picture-form"
@@ -13,7 +13,8 @@
             {#
                     <div id="modal_change_profile_picture-profile_picture"
                          class="w-full h-full flex justify-center items-center pt-12">#}
-            {% component "profile_picture" image_type="change_modal" url=users_profile_picture extra_classes="max-w-44 max-h-44 w-44 h-44 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2" %}
+            {% component "profile_picture" image_t~ype="change_modal" url=users_profile_picture extra_classes="max-w-44 max-h-44 w-44 h-44 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2" %}
+            {% endcomponent %}
             {#                    </div>#}
         </div>
     </div>
@@ -44,4 +45,4 @@
     <input type="hidden" name="section" value="profile_picture">
 </form>
 {% endfill %}
-{% endcomponent_block %}
+{% endcomponent %}

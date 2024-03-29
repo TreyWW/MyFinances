@@ -1,5 +1,6 @@
 {# This is for the INVOICE CREATION dropdown #}
 {% component "messages_list" custom_oob='afterbegin:div[data-card="services_card_body"]' %}
+{% endcomponent %}
 {% for product in products %}
     <li>
         <button hx-post="{% url 'api:invoices:services add' %}"

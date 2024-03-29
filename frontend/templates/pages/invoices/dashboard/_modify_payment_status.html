@@ -1,7 +1,12 @@
-<div id="messages_list">{% component "messages_list" with_js=True %}</div>
+<div id="messages_list">
+    {% component "messages_list" with_js=True %}
+    {% endcomponent %}
+</div>
 <div hx-swap-oob='outerHTML:span[data-invoice-id="{{ invoice_id }}"]'>
     {% component "pages:invoices:dashboard:payment_status_badge" status=status inv_id=invoice_id %}
+    {% endcomponent %}
 </div>
 <div hx-swap-oob='innerHTML:div[data-oob="status"]'>
     {% component "pages:invoices:dashboard:payment_status_badge" status=status inv_id=invoice_id design="default" %}
+    {% endcomponent %}
 </div>

@@ -1,4 +1,4 @@
-{% component_block "modal" id="modal_invoices_to_destination" start_open="true" title="Update TO info" %}
+{% component "modal" id="modal_invoices_to_destination" start_open="true" title="Update TO info" %}
 {% fill "content" %}
 <form class="py-4" id="modal_invoices_to_destination-form">
     {% csrf_token %}
@@ -111,4 +111,4 @@
             check_selected_client()
 </script>
 {% endfill %}
-{% endcomponent_block %}
+{% endcomponent %}

@@ -25,6 +25,7 @@
             <td>£{{ invoice.amount | default_if_none:0 | floatformat:2 | intcomma }}</td>
             <td>
                 {% component "pages:invoices:dashboard:payment_status_badge" status=invoice.payment_status inv_id=invoice.id %}
+                {% endcomponent %}
             </td>
             <td colspan="2">
                 {# The if statement for dropdown top goes as followes #}

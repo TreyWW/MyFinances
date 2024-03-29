@@ -95,6 +95,7 @@
         <div class="dropdown dropdown-end">
             <label tabindex="0" class="btn btn-ghost btn-circle">
                 {% component "profile_picture" image_type="small" extra_classes="max-w-12 max-h-12 w-12 h-12 avatar-img-ring" url=request.user.user_profile.profile_picture_url %}
+                {% endcomponent %}
             </label>
             <ul tabindex="0"
                 class="menu menu-sm dropdown-content border border-primary">
@@ -104,7 +105,7 @@
                              hx-trigger="click"
                              hx-target='[data-htmx-swap="organization_dropdown_list"]'
                              hx-get="{% url "api:teams:get_dropdown" %}"
-                             hx-swap="innerHTML">{% component "components:logged_in_for" %}</summary>
+                             hx-swap="innerHTML">{% component "components:logged_in_for" %}{% endcomponent %}</summary>
                     <ul class="menu menu-sm dropdown-content border border-primary"
                         data-htmx-swap="organization_dropdown_list">
                     </ul>
