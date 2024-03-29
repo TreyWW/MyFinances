@@ -297,16 +297,11 @@ LOGGING = {
             "style": "{",
         },
     },
-    "handlers": {
-        "console": {
-            "class": "logging.StreamHandler",
-            "formatter": "simple"
-        }
-    },
+    "handlers": {"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
     "root": {
         "handlers": ["console"],
         "level": get_var("DJANGO_LOG_LEVEL", default="INFO"),
-    }
+    },
 }
 
 

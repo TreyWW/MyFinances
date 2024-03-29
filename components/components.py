@@ -7,8 +7,8 @@ from settings.helpers import get_var
 import logging
 
 import logging
-logger = logging.getLogger(__name__)
 
+logger = logging.getLogger(__name__)
 
 
 # Your base component class
