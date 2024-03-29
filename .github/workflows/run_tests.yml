@@ -69,6 +69,19 @@ jobs:
           npm ci
           npm run tailwind-build
           npm run webpack-build
+
+          if [ -f frontend/static/src/output.css ]; then
+            echo "output.css is created"
+          else
+            echo "output.css is not created"
+            exit 1
+          fi
+          if [ -f frontend/static/js/bundle.js ] && [ -f frontend/static/js/bundle.js.map ]; then
+            echo "bundle.js and bundle.js.map are created"
+          else
+            echo "bundle.js and/or bundle.js.map are not created"
+            exit 1
+          fi
           cd -
 
       #----------------------------------------------

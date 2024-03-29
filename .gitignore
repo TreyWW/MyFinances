@@ -166,4 +166,5 @@ Writerside/**
 
 # Generated fronted files
 frontend/static/src/output.css
-frontend/static/src/bundle.js
+frontend/static/js/bundle.js
+frontend/static/js/bundle.js.map
