@@ -6,7 +6,8 @@
         <div class=" text-3xl w-full grid grid-cols-4">
             <div>
                 <a href="{% url "invoices:dashboard" %}"
-                   class="btn btn-sm btn-outline btn-secondary me-3 float-left">Back to list</a>
+                   class="btn btn-sm btn-outline btn-secondary me-3 float-left">Back to list
+                </a>
             </div>
             <h1 class="text-center col-span-2">Invoice #{{ invoice.id }}</h1>
             <div>
@@ -90,6 +91,15 @@
                         </li>
                     </ul>
                 </div>
+                <button class="btn btn-secondary"
+                        hx-trigger="click once"
+                        hx-swap="beforeend"
+                        hx-target="#modal_container"
+                        _="on click call modal_invoices_edit_discount.showModal()"
+                        hx-get="{% url "api:base:modal retrieve with context" context_type="invoice" context_value="{{ invoice.id }}" modal_name="invoices_edit_discount" %}">
+                    <i class="fa fa-solid fa-pound-sign mr-2"></i>
+                    Edit Discount
+                </button>
             </div>
         </div>
     </div>
