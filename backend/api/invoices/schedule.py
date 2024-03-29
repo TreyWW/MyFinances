@@ -32,7 +32,7 @@ def receive_scheduled_invoice(request: HttpRequest):
     valid, reason, status = authenticate_api_key(request)
 
     if not valid:
-        print(f"[BACKEND] ERROR recieving scheduled invoice: {reason}", flush=True)
+        print(f"[BACKEND] ERROR receiving scheduled invoice: {reason}", flush=True)
         return HttpResponse(reason, status=status)
 
     invoice_id = request.POST.get("invoice_id") or request.headers.get("invoice_id")

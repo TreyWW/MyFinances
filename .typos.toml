@@ -1,0 +1,2 @@
+[files]
+extend-exclude = ["**/bundle.js", "**/bundle.js.map"]

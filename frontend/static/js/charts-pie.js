@@ -30,6 +30,6 @@ const pieConfig = {
   },
 }
 
-// change this to the id of your chart element in HMTL
+// change this to the id of your chart element in HTML
 const pieCtx = document.getElementById('pie')
 window.myPie = new Chart(pieCtx, pieConfig)
