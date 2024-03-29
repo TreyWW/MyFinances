@@ -47,6 +47,7 @@ jobs:
       #----------------------------------------------
       - name: Check grammar with typos
         run: |
+          pip3 install typos
           typos
 
       #----------------------------------------------
