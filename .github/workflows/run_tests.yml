@@ -43,14 +43,11 @@ jobs:
           installer-parallel: true
 
       #----------------------------------------------
-      #       install docker compose
-      #       setup + configure docker compose
+      #       check grammar with typos
       #----------------------------------------------
-      - name: Install Docker Compose
+      - name: Check grammar with typos
         run: |
-          sudo apt-get update
-          sudo apt-get install -y docker-compose
-
+          typos
 
       #----------------------------------------------
       #       copy docker compose file
