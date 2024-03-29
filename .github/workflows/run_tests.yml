@@ -65,7 +65,6 @@ jobs:
 
       - name: Install dependencies and build frontend
         run: |
-          cd frontend
           npm ci
           npm run tailwind-build
           npm run webpack-build
@@ -82,7 +81,6 @@ jobs:
             echo "bundle.js and/or bundle.js.map are not created"
             exit 1
           fi
-          cd -
 
       #----------------------------------------------
       #       run docker compose & tests
