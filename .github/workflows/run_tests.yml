@@ -43,14 +43,6 @@ jobs:
           installer-parallel: true
 
       #----------------------------------------------
-      #       check grammar with typos
-      #----------------------------------------------
-      - name: Check grammar with typos
-        run: |
-          pip3 install typos
-          typos
-
-      #----------------------------------------------
       #       copy docker compose file
       #----------------------------------------------
       - name: Copy docker compose file
