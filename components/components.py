@@ -3,7 +3,12 @@ from pathlib import Path
 
 from django_components import component
 
-SHOW_PRINT_STATEMENTS = False
+from settings.helpers import get_var
+import logging
+
+import logging
+logger = logging.getLogger(__name__)
+
 
 
 # Your base component class
@@ -62,11 +67,7 @@ register_components(DIR, SimpleComponent)
 DIR = os.path.join(BASE_DIR, "frontend/templates")
 register_components(DIR, SimpleComponent)
 
-if SHOW_PRINT_STATEMENTS:
-    all_components = [f"{a}    {b}" for a, b in zip(list_of_components_registered, list_of_created_classes)]
+all_components = [f"{a}    {b}" for a, b in zip(list_of_components_registered, list_of_created_classes)]
 
-    print("[BACKEND] Registered GLOBAL Components: ", all_components)
-    print(
-        "[BACKEND] Registered GLOBAL Component usable names: ",
-        list_of_components_registered,
-    )
+logging.debug(f"[BACKEND] Registered GLOBAL components: {all_components}")
+logging.debug(f"[BACKEND] Registered component usable names: {list_of_components_registered}")

@@ -1,5 +1,6 @@
 import base64
 import json
+import logging
 import mimetypes
 import os
 import sys
@@ -283,7 +284,30 @@ class CustomPublicMediaStorage(S3Storage):
     secret_key = get_var("AWS_MEDIA_PUBLIC_ACCESS_KEY")
 
 
-LOGGING = {}
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "[levelname] {asctime} {module} {process:d} {thread:d} {message}",
+            "style": "{",
+        },
+        "simple": {
+            "format": "[{levelname}] {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "simple"
+        }
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": get_var("DJANGO_LOG_LEVEL", default="INFO"),
+    }
+}
 
 
 class CustomPrivateMediaStorage(S3Storage):
@@ -348,4 +372,5 @@ if "test" in sys.argv[1:]:
             "NAME": ":memory:",
         }
     }
+    logging.disable(logging.ERROR)
     # check if the app is running from a manage.py test command, if so then use SQLITE with memory, faster than xampp
