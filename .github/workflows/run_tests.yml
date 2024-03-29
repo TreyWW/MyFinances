@@ -58,6 +58,18 @@ jobs:
       - name: Copy docker compose file
         run: |
           cp $GITHUB_WORKSPACE/$DOCKER_COMPOSE_PATH ./docker-compose.yml
+      
+      #----------------------------------------------
+      #       build Frontend files
+      #----------------------------------------------
+
+      - name: Install dependencies and build frontend
+        run: |
+          cd frontend
+          npm ci
+          npm run tailwind-build
+          npm run webpack-build
+          cd -
 
       #----------------------------------------------
       #       run docker compose & tests
