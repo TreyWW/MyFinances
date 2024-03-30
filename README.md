@@ -190,7 +190,7 @@ Thank you for your contributions!
             <br />
             <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Aromana-la" title="Documentation">📖</a>
         </td>
-        </td><td>
+        </td></tr><tr><td>
         <td align="center">
             <a href="https://github.com/flyingdev" title="flyingdev">
                 <img title="CI" src="https://github.com/flyingdev.png" width="100px;" alt="" />
@@ -202,7 +202,7 @@ Thank you for your contributions!
             <br />
             <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Aflyingdev" title="Added Tests">🧪</a>
         </td>
-        </td></tr><tr><td>
+        </td><td>
         <td align="center">
             <a href="https://github.com/chavi362" title="chavi362">
                 <img title="Documentation" src="https://github.com/chavi362.png" width="100px;" alt="" />
@@ -250,7 +250,7 @@ Thank you for your contributions!
             <br />
             <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3ATianrui-Luo" title="Backend">🖥</a>
         </td>
-        </td><td>
+        </td></tr><tr><td>
         <td align="center">
             <a href="https://github.com/HarryHuCodes" title="HarryHuCodes">
                 <img title="Development" src="https://github.com/HarryHuCodes.png" width="100px;" alt="" />
@@ -274,7 +274,7 @@ Thank you for your contributions!
             <br />
             <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3ANuovaxu" title="Backend">🖥</a>
         </td>
-        </td></tr><tr><td>
+        </td><td>
         <td align="center">
             <a href="https://github.com/HessTaha" title="HessTaha">
                 <img title="CI-CD" src="https://github.com/HessTaha.png" width="100px;" alt="" />
@@ -310,7 +310,7 @@ Thank you for your contributions!
             <br />
             <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Amatthewjuarez1" title="Backend">🖥</a><a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Amatthewjuarez1" title="Frontend">🎨</a>
         </td>
-        </td><td>
+        </td></tr><tr><td>
         <td align="center">
             <a href="https://github.com/SBMOYO" title="SBMOYO">
                 <img title="CI" src="https://github.com/SBMOYO.png" width="100px;" alt="" />
@@ -346,7 +346,7 @@ Thank you for your contributions!
             <br />
             <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3AHappyLife2" title="Frontend">🎨</a>
         </td>
-        </td></tr><tr><td>
+        </td><td>
         <td align="center">
             <a href="https://github.com/Domejko" title="Domejko">
                 <img title="CI" src="https://github.com/Domejko.png" width="100px;" alt="" />

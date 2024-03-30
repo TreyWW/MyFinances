@@ -98,7 +98,7 @@ class Command(BaseCommand):
 
         # Generate HTML for contributors
         contributors_html = ""
-        users_per_row = 6
+        users_per_row = 5
         for index, contributor in enumerate(contributors_data, start=1):
             if (index - 1) % users_per_row == 0 and index > 1:
                 contributors_html += "</tr><tr>"
