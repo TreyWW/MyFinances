@@ -132,8 +132,8 @@ Thank you for your contributions!
 <table>
 <tr><td>
         <td align="center">
-            <a href="https://github.com/TreyWW">
-                <img src="https://github.com/TreyWW.png" width="100px;" alt="" />
+            <a href="https://github.com/TreyWW" title="TreyWW">
+                <img title="Project Lead" src="https://github.com/TreyWW.png" width="100px;" alt="" />
                 <br />
                 <sub>
                     <b>Trey</b>
@@ -144,8 +144,8 @@ Thank you for your contributions!
         </td>
         </td><td>
         <td align="center">
-            <a href="https://github.com/Z3nKrypt">
-                <img src="https://github.com/Z3nKrypt.png" width="100px;" alt="" />
+            <a href="https://github.com/Z3nKrypt" title="Z3nKrypt">
+                <img title="Documentation" src="https://github.com/Z3nKrypt.png" width="100px;" alt="" />
                 <br />
                 <sub>
                     <b>Jacob</b>
@@ -156,8 +156,8 @@ Thank you for your contributions!
         </td>
         </td><td>
         <td align="center">
-            <a href="https://github.com/tomkinane">
-                <img src="https://github.com/tomkinane.png" width="100px;" alt="" />
+            <a href="https://github.com/tomkinane" title="tomkinane">
+                <img title="Design" src="https://github.com/tomkinane.png" width="100px;" alt="" />
                 <br />
                 <sub>
                     <b>Tom</b>
@@ -168,8 +168,8 @@ Thank you for your contributions!
         </td>
         </td><td>
         <td align="center">
-            <a href="https://github.com/SharonAliyas5573">
-                <img src="https://github.com/SharonAliyas5573.png" width="100px;" alt="" />
+            <a href="https://github.com/SharonAliyas5573" title="SharonAliyas5573">
+                <img title="Development" src="https://github.com/SharonAliyas5573.png" width="100px;" alt="" />
                 <br />
                 <sub>
                     <b>SharonAliyas5573</b>
@@ -180,8 +180,8 @@ Thank you for your contributions!
         </td>
         </td><td>
         <td align="center">
-            <a href="https://github.com/romana-la">
-                <img src="https://github.com/romana-la.png" width="100px;" alt="" />
+            <a href="https://github.com/romana-la" title="romana-la">
+                <img title="Documentation" src="https://github.com/romana-la.png" width="100px;" alt="" />
                 <br />
                 <sub>
                     <b>romana-la</b>
@@ -192,8 +192,8 @@ Thank you for your contributions!
         </td>
         </td><td>
         <td align="center">
-            <a href="https://github.com/flyingdev">
-                <img src="https://github.com/flyingdev.png" width="100px;" alt="" />
+            <a href="https://github.com/flyingdev" title="flyingdev">
+                <img title="CI" src="https://github.com/flyingdev.png" width="100px;" alt="" />
                 <br />
                 <sub>
                     <b>flyingdev</b>
@@ -204,8 +204,8 @@ Thank you for your contributions!
         </td>
         </td></tr><tr><td>
         <td align="center">
-            <a href="https://github.com/chavi362">
-                <img src="https://github.com/chavi362.png" width="100px;" alt="" />
+            <a href="https://github.com/chavi362" title="chavi362">
+                <img title="Documentation" src="https://github.com/chavi362.png" width="100px;" alt="" />
                 <br />
                 <sub>
                     <b>chavi362</b>
@@ -216,8 +216,8 @@ Thank you for your contributions!
         </td>
         </td><td>
         <td align="center">
-            <a href="https://github.com/bermr">
-                <img src="https://github.com/bermr.png" width="100px;" alt="" />
+            <a href="https://github.com/bermr" title="bermr">
+                <img title="CI" src="https://github.com/bermr.png" width="100px;" alt="" />
                 <br />
                 <sub>
                     <b>bermr</b>
@@ -228,8 +228,8 @@ Thank you for your contributions!
         </td>
         </td><td>
         <td align="center">
-            <a href="https://github.com/PhilipZara">
-                <img src="https://github.com/PhilipZara.png" width="100px;" alt="" />
+            <a href="https://github.com/PhilipZara" title="PhilipZara">
+                <img title="Design" src="https://github.com/PhilipZara.png" width="100px;" alt="" />
                 <br />
                 <sub>
                     <b>PhilipZara</b>
@@ -240,8 +240,8 @@ Thank you for your contributions!
         </td>
         </td><td>
         <td align="center">
-            <a href="https://github.com/Tianrui-Luo">
-                <img src="https://github.com/Tianrui-Luo.png" width="100px;" alt="" />
+            <a href="https://github.com/Tianrui-Luo" title="Tianrui-Luo">
+                <img title="Development" src="https://github.com/Tianrui-Luo.png" width="100px;" alt="" />
                 <br />
                 <sub>
                     <b>Tianrui-Luo</b>
@@ -252,8 +252,8 @@ Thank you for your contributions!
         </td>
         </td><td>
         <td align="center">
-            <a href="https://github.com/HarryHuCodes">
-                <img src="https://github.com/HarryHuCodes.png" width="100px;" alt="" />
+            <a href="https://github.com/HarryHuCodes" title="HarryHuCodes">
+                <img title="Development" src="https://github.com/HarryHuCodes.png" width="100px;" alt="" />
                 <br />
                 <sub>
                     <b>HarryHuCodes</b>
@@ -264,8 +264,8 @@ Thank you for your contributions!
         </td>
         </td><td>
         <td align="center">
-            <a href="https://github.com/Nuovaxu">
-                <img src="https://github.com/Nuovaxu.png" width="100px;" alt="" />
+            <a href="https://github.com/Nuovaxu" title="Nuovaxu">
+                <img title="Development" src="https://github.com/Nuovaxu.png" width="100px;" alt="" />
                 <br />
                 <sub>
                     <b>Nuova</b>
@@ -276,8 +276,8 @@ Thank you for your contributions!
         </td>
         </td></tr><tr><td>
         <td align="center">
-            <a href="https://github.com/HessTaha">
-                <img src="https://github.com/HessTaha.png" width="100px;" alt="" />
+            <a href="https://github.com/HessTaha" title="HessTaha">
+                <img title="CI-CD" src="https://github.com/HessTaha.png" width="100px;" alt="" />
                 <br />
                 <sub>
                     <b>HessTaha</b>
@@ -288,8 +288,8 @@ Thank you for your contributions!
         </td>
         </td><td>
         <td align="center">
-            <a href="https://github.com/wnm210">
-                <img src="https://github.com/wnm210.png" width="100px;" alt="" />
+            <a href="https://github.com/wnm210" title="wnm210">
+                <img title="Design" src="https://github.com/wnm210.png" width="100px;" alt="" />
                 <br />
                 <sub>
                     <b>wnm210</b>
@@ -300,8 +300,8 @@ Thank you for your contributions!
         </td>
         </td><td>
         <td align="center">
-            <a href="https://github.com/matthewjuarez1">
-                <img src="https://github.com/matthewjuarez1.png" width="100px;" alt="" />
+            <a href="https://github.com/matthewjuarez1" title="matthewjuarez1">
+                <img title="Full Stack" src="https://github.com/matthewjuarez1.png" width="100px;" alt="" />
                 <br />
                 <sub>
                     <b>Matt</b>
@@ -312,8 +312,8 @@ Thank you for your contributions!
         </td>
         </td><td>
         <td align="center">
-            <a href="https://github.com/SBMOYO">
-                <img src="https://github.com/SBMOYO.png" width="100px;" alt="" />
+            <a href="https://github.com/SBMOYO" title="SBMOYO">
+                <img title="CI" src="https://github.com/SBMOYO.png" width="100px;" alt="" />
                 <br />
                 <sub>
                     <b>SBMOYO</b>
@@ -324,8 +324,8 @@ Thank you for your contributions!
         </td>
         </td><td>
         <td align="center">
-            <a href="https://github.com/kliu6151">
-                <img src="https://github.com/kliu6151.png" width="100px;" alt="" />
+            <a href="https://github.com/kliu6151" title="kliu6151">
+                <img title="Development" src="https://github.com/kliu6151.png" width="100px;" alt="" />
                 <br />
                 <sub>
                     <b>Kevin Liu</b>
@@ -336,8 +336,8 @@ Thank you for your contributions!
         </td>
         </td><td>
         <td align="center">
-            <a href="https://github.com/HappyLife2">
-                <img src="https://github.com/HappyLife2.png" width="100px;" alt="" />
+            <a href="https://github.com/HappyLife2" title="HappyLife2">
+                <img title="Design" src="https://github.com/HappyLife2.png" width="100px;" alt="" />
                 <br />
                 <sub>
                     <b>Jehad Altoutou</b>
@@ -348,8 +348,8 @@ Thank you for your contributions!
         </td>
         </td></tr><tr><td>
         <td align="center">
-            <a href="https://github.com/Domejko">
-                <img src="https://github.com/Domejko.png" width="100px;" alt="" />
+            <a href="https://github.com/Domejko" title="Domejko">
+                <img title="CI" src="https://github.com/Domejko.png" width="100px;" alt="" />
                 <br />
                 <sub>
                     <b>Slawek Bierwiaczonek</b>
@@ -357,6 +357,18 @@ Thank you for your contributions!
             </a>
             <br />
             <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3ADomejko" title="Added Tests">🧪</a>
+        </td>
+        </td><td>
+        <td align="center">
+            <a href="https://github.com/introkun" title="introkun">
+                <img title="Development & CI" src="https://github.com/introkun.png" width="100px;" alt="" />
+                <br />
+                <sub>
+                    <b>Sergey G</b>
+                </sub>
+            </a>
+            <br />
+            <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Aintrokun" title="Refactored Files">♻</a>
         </td>
         </td></tr></table>
 <!-- CONTRIBUTORS TABLE END -->

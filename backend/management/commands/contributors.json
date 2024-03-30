@@ -19,7 +19,7 @@
   {
     "name": "Tom",
     "username": "tomkinane",
-    "role": "Frontend",
+    "role": "Design",
     "tags": [
       "🎨"
     ]
@@ -27,7 +27,7 @@
   {
     "name": "SharonAliyas5573",
     "username": "SharonAliyas5573",
-    "role": "Backend",
+    "role": "Development",
     "tags": [
       "🖥"
     ]
@@ -43,7 +43,7 @@
   {
     "name": "flyingdev",
     "username": "flyingdev",
-    "role": "Added Tests",
+    "role": "CI",
     "tags": [
       "🧪"
     ]
@@ -59,7 +59,7 @@
   {
     "name": "bermr",
     "username": "bermr",
-    "role": "Added Tests",
+    "role": "CI",
     "tags": [
       "🧪"
     ]
@@ -67,7 +67,7 @@
   {
     "name": "PhilipZara",
     "username": "PhilipZara",
-    "role": "Frontend",
+    "role": "Design",
     "tags": [
       "🎨"
     ]
@@ -75,7 +75,7 @@
   {
     "name": "Tianrui-Luo",
     "username": "Tianrui-Luo",
-    "role": "Backend",
+    "role": "Development",
     "tags": [
       "🖥"
     ]
@@ -83,7 +83,7 @@
   {
     "name": "HarryHuCodes",
     "username": "HarryHuCodes",
-    "role": "Backend",
+    "role": "Development",
     "tags": [
       "🖥"
     ]
@@ -91,7 +91,7 @@
   {
     "name": "Nuova",
     "username": "Nuovaxu",
-    "role": "Backend",
+    "role": "Development",
     "tags": [
       "🖥"
     ]
@@ -99,7 +99,7 @@
   {
     "name": "HessTaha",
     "username": "HessTaha",
-    "role": "Docker",
+    "role": "CI-CD",
     "tags": [
       "🐳"
     ]
@@ -107,7 +107,7 @@
   {
     "name": "wnm210",
     "username": "wnm210",
-    "role": "Frontend",
+    "role": "Design",
     "tags": [
       "🎨"
     ]
@@ -124,7 +124,7 @@
   {
     "name": "SBMOYO",
     "username": "SBMOYO",
-    "role": "Added Tests",
+    "role": "CI",
     "tags": [
       "🧪"
     ]
@@ -132,7 +132,7 @@
   {
     "name": "Kevin Liu",
     "username": "kliu6151",
-    "role": "Backend",
+    "role": "Development",
     "tags": [
       "🖥"
     ]
@@ -140,7 +140,7 @@
   {
     "name": "Jehad Altoutou",
     "username": "HappyLife2",
-    "role": "Frontend",
+    "role": "Design",
     "tags": [
       "🎨"
     ]
@@ -148,9 +148,17 @@
   {
     "name": "Slawek Bierwiaczonek",
     "username": "Domejko",
-    "role": "Added tests",
+    "role": "CI",
     "tags": [
       "🧪"
+    ]
+  },
+  {
+    "name": "Sergey G",
+    "username": "introkun",
+    "role": "Development & CI",
+    "tags": [
+      "♻"
     ]
   }
 ]
