@@ -1,0 +1,78 @@
+{% component_block "modal" id="modal_invoices_edit_discount" start_open="true" title="Edit invoice discount" %}
+{% fill "content" %}
+<form class="py-4"
+      id="modal_invoices_edit_discount-form"
+      hx-post="{% url 'api:invoices:edit discount' invoice_id=invoice.id %}"
+      hx-swap="none">
+    {% csrf_token %}
+    <div class="form-control my-4">
+        <label class="label cursor-pointer">
+            <span class="label-text">Fixed Amount</span>
+            <input data-discount="checkbox"
+                   name="discount_type"
+                   type="checkbox"
+                   class="toggle"
+                   checked />
+            <span class="label-text">Percentage</span>
+        </label>
+    </div>
+    <script>
+                const checkbox = document.querySelector('input[data-discount="checkbox"]');
+                const amount_label = document.querySelector('label[data-discount="amount"]')
+                const percentage_label = document.querySelector('label[data-discount="percentage"]')
+
+                checkbox.addEventListener("change", function () {
+                    if (checkbox.checked) {
+                        amount_label.classList.add("hidden")
+                        percentage_label.classList.remove("hidden")
+                        amount_label.querySelector("input").required = false;
+                        percentage_label.querySelector("input").required = true;
+                        amount_label.querySelector("input").pattern = "[0-9]+";
+                        percentage_label.querySelector("input").removeAttribute("pattern");
+                    } else {
+                        percentage_label.classList.add("hidden")
+                        amount_label.classList.remove("hidden")
+                        amount_label.querySelector("input").required = true;
+                        percentage_label.querySelector("input").required = false;
+                        amount_label.querySelector("input").pattern = "[0-9]+";
+                        percentage_label.querySelector("input").removeAttribute("pattern");
+                    }
+                })
+    </script>
+    <label data-discount="percentage"
+           class="input input-bordered flex items-center gap-2">
+        <i class="fa fa-solid fa-percentage mr-2"></i>
+        <input required
+               type="text"
+               class="grow"
+               placeholder="Percentage"
+               value="{{ invoice.discount_percentage|floatformat:0 }}"
+               name="percentage_amount"
+               pattern="[0-9]+" />
+    </label>
+    <label data-discount="amount"
+           class="input input-bordered flex items-center gap-2 hidden">
+        <i class="fa fa-solid fa-pound-sign mr-2"></i>
+        <input required
+               type="text"
+               class="grow"
+               value="{{ invoice.discount_percentage|floatformat:0 }}"
+               placeholder="Amount"
+               name="discount_amount"
+               pattern="[0-9]+" />
+    </label>
+    <div class="modal-action">
+        <button type="submit"
+                id="modal_invoices_edit_discount-submit"
+                class="btn btn-primary"
+                _="on click if #modal_invoices_edit_discount-form.checkValidity() call #modal_invoices_edit_discount.close() end">
+            Save
+        </button>
+        <button type="reset" class="btn btn-error">Reset</button>
+        <button type="button"
+                _="on click call #modal_invoices_edit_discount.close()"
+                class="btn">Close</button>
+    </div>
+</form>
+{% endfill %}
+{% endcomponent_block %}

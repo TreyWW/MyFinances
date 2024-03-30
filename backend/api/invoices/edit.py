@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import NoReturn
 
 from django.contrib import messages
 from django.http import HttpRequest, JsonResponse, HttpResponse
@@ -99,12 +100,55 @@ def change_status(request: HttpRequest, invoice_id: int, status: str) -> HttpRes
     return render(request, "pages/invoices/dashboard/_modify_payment_status.html", {"status": status, "invoice_id": invoice_id})
 
 
+@require_POST
+def edit_discount(request: HttpRequest, invoice_id: str):
+    discount_type = "percentage" if request.POST.get("discount_type") == "on" else "amount"
+    discount_amount_str: str = request.POST.get("discount_amount")
+    percentage_amount_str: str = request.POST.get("percentage_amount")
+
+    if not request.htmx:
+        return redirect("invoices:dashboard")
+
+    try:
+        invoice: Invoice = Invoice.objects.get(id=invoice_id)
+    except Invoice.DoesNotExist:
+        return return_message(request, "Invoice not found", False)
+
+    if not invoice.has_access(request.user):
+        return return_message(request, "You don't have permission to make changes to this invoice.", False)
+
+    if discount_type == "percentage":
+        try:
+            percentage_amount = int(percentage_amount_str)
+            if percentage_amount < 0 or percentage_amount > 100:
+                raise ValueError
+        except ValueError:
+            return return_message(request, "Please enter a valid percentage amount (between 0 and 100)", False)
+        invoice.discount_percentage = percentage_amount
+    else:
+        try:
+            discount_amount = int(discount_amount_str)
+            if discount_amount < 0:
+                raise ValueError
+        except ValueError:
+            return return_message(request, "Please enter a valid discount amount", False)
+        invoice.discount_amount = discount_amount
+
+    invoice.save()
+
+    messages.success(request, "Discount was applied successfully")
+
+    response = render(request, "base/toasts.html")
+    response["HX-Trigger"] = "update_invoice"
+    return response
+
+
 def return_message(request: HttpRequest, message: str, success: bool = True) -> HttpResponse:
     send_message(request, message, success)
     return render(request, "base/toasts.html")
 
 
-def send_message(request: HttpRequest, message: str, success: bool = False) -> HttpResponse:
+def send_message(request: HttpRequest, message: str, success: bool = False) -> NoReturn:
     if success:
         messages.success(request, message)
     else:

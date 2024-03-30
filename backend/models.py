@@ -1,7 +1,9 @@
+from decimal import Decimal
 from uuid import uuid4
 
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth.models import UserManager, AbstractUser, AnonymousUser
+from django.core.validators import MaxValueValidator
 from django.db import models
 from django.db.models import Count
 from django.utils import timezone
@@ -303,8 +305,22 @@ class Invoice(models.Model):
     date_due = models.DateField()
     date_issued = models.DateField(blank=True, null=True)
 
+    discount_amount = models.DecimalField(max_digits=15, default=0, decimal_places=2)
+    discount_percentage = models.DecimalField(default=0, max_digits=5, decimal_places=2, validators=[MaxValueValidator(100)])
+
     class Meta:
         constraints = [USER_OR_ORGANIZATION_CONSTRAINT()]
+
+    def __str__(self):
+        invoice_id = self.invoice_id or self.id
+        if self.client_name:
+            client = self.client_name
+        elif self.client_to:
+            client = self.client_to.name
+        else:
+            client = "Unknown Client"
+
+        return f"Invoice #{invoice_id} for {client}"
 
     @property
     def dynamic_payment_status(self):
@@ -328,28 +344,49 @@ class Invoice(models.Model):
                 "company": self.client_company,
             }
 
-    def __str__(self):
-        invoice_id = self.invoice_id or self.id
-        if self.client_name:
-            client = self.client_name
-        elif self.client_to:
-            client = self.client_to.name
-        else:
-            client = "Unknown Client"
-
-        return f"Invoice #{invoice_id} for {client}"
-
     def get_subtotal(self):
         subtotal = 0
         for item in self.items.all():
             subtotal += item.get_total_price()
         return round(subtotal, 2)
 
+    def get_tax(self, amount: float = 0.00) -> float:
+        amount = amount or self.get_subtotal()
+        if self.vat_number:
+            return round(amount * 0.2, 2)
+        return 0
+
+    def get_percentage_amount(self, subtotal: float = 0.00) -> Decimal:
+        total = subtotal or self.get_subtotal()
+
+        if self.discount_percentage > 0:
+            return round(total * (self.discount_percentage / 100), 2)
+        return Decimal(0)
+
     def get_total_price(self):
-        total = 0
-        subtotal = self.get_subtotal()
-        total = subtotal * 1.2 if self.vat_number else subtotal
+        total = self.get_subtotal() or 0.00
+
+        total -= self.get_percentage_amount()
+
+        discount_amount = self.discount_amount
+
+        total -= discount_amount
+
+        if 0 > total:
+            total = 0
+        else:
+            total -= self.get_tax(total)
+
         return round(total, 2)
+
+    def has_access(self, user: User) -> bool:
+        if not user.is_authenticated:
+            return False
+
+        if user.logged_in_as_team:
+            return self.organization == user.logged_in_as_team
+        else:
+            return self.user == user
 
 
 class InvoiceURL(models.Model):

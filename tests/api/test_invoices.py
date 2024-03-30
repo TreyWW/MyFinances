@@ -1,7 +1,9 @@
 import random
 
+from django.urls import reverse, resolve
 from model_bakery import baker
 
+from backend.models import Invoice
 from tests.handler import ViewTestCase, assert_url_matches_view
 
 
@@ -111,3 +113,100 @@ class InvoicesAPIDelete(ViewTestCase):
     #
     # response_content = json.loads(response.content.decode("utf-8"))
     # self.assertEqual(response_content.get("message"), "Invoice not found")
+
+
+class InvoicesEditDiscount(ViewTestCase):
+    def setUp(self):
+        super().setUp()
+        self.url_path = "/api/invoices/edit/discount/"
+        self.url_name = "api:invoices:edit discount"
+        self.view_function_path = "backend.api.invoices.edit.edit_discount"
+        self.invoice: Invoice = baker.make("backend.Invoice", user=self.log_in_user)
+
+    def test_302_for_all_normal_get_requests(self):
+        # Ensure that non-HTMX GET requests are redirected to the login page
+
+        response = self.client.post(reverse(self.url_name, kwargs={"invoice_id": self.invoice.id}))
+        self.assertRedirects(response, f"/auth/login/?next=/api/invoices/edit/{self.invoice.id}/discount/", 302)
+
+        # Ensure that authenticated users with HTMX headers are redirected to the invoices dashboard
+        self.login_user()
+        response = self.client.post(reverse(self.url_name, kwargs={"invoice_id": self.invoice.id}))
+        self.assertRedirects(response, "/dashboard/invoices/", 302)
+
+    def test_valid_edit_percentage(self):
+        self.login_user()
+        amount = 20
+
+        response = self.client.post(
+            reverse(self.url_name, kwargs={"invoice_id": self.invoice.id}),
+            {"discount_type": "on", "percentage_amount": amount},
+            **self.htmx_headers,
+        )
+
+        self.assertTrue(response.status_code, 200)
+
+        messages = self.get_all_messages(response)
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), "Discount was applied successfully")
+        self.invoice.refresh_from_db()
+        self.assertEqual(self.invoice.discount_percentage, amount)
+
+    def test_invalid_edit_percentages(self):
+        self.login_user()
+        amounts = [-1, -100, "", 101, 10000]
+
+        for amount in amounts:
+            response = self.client.post(
+                reverse(self.url_name, kwargs={"invoice_id": self.invoice.id}),
+                {"discount_type": "on", "percentage_amount": amount},
+                **self.htmx_headers,
+            )
+
+            self.assertTrue(response.status_code, 400)
+
+            messages = self.get_all_messages(response)
+            self.assertEqual(len(messages), 1)
+            self.assertEqual(str(messages[0]), "Please enter a valid percentage amount (between 0 and 100)")
+
+    def test_valid_edit_amount(self):
+        self.login_user()
+        amount = 20
+
+        response = self.client.post(
+            reverse(self.url_name, kwargs={"invoice_id": self.invoice.id}),
+            {"discount_type": "off", "discount_amount": amount},
+            **self.htmx_headers,
+        )
+
+        self.assertTrue(response.status_code, 200)
+
+        messages = self.get_all_messages(response)
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), "Discount was applied successfully")
+        self.invoice.refresh_from_db()
+        self.assertEqual(self.invoice.discount_amount, amount)
+
+    def test_invalid_edit_amounts(self):
+        self.login_user()
+        amounts = [-1, -100, "", "abc"]
+
+        for amount in amounts:
+            response = self.client.post(
+                reverse(self.url_name, kwargs={"invoice_id": self.invoice.id}),
+                {"discount_type": "off", "discount_amount": amount},
+                **self.htmx_headers,
+            )
+
+            self.assertTrue(response.status_code, 400)
+
+            messages = self.get_all_messages(response)
+            self.assertEqual(len(messages), 1)
+            self.assertEqual(str(messages[0]), "Please enter a valid discount amount")
+
+    def test_matches_with_urls_view(self):
+        resolved_func = resolve(f"/api/invoices/edit/{self.invoice.id}/discount/").func
+        resolved_func_name = f"{resolved_func.__module__}.{resolved_func.__name__}"
+
+        self.assertEqual(reverse(self.url_name, kwargs={"invoice_id": self.invoice.id}), f"/api/invoices/edit/{self.invoice.id}/discount/")
+        self.assertEqual(resolved_func_name, self.view_function_path)
