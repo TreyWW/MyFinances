@@ -1,5 +1,4 @@
 import base64
-import json
 import logging
 import mimetypes
 import os
@@ -10,8 +9,7 @@ from django.contrib.messages import constants as messages
 from django.contrib.staticfiles.storage import FileSystemStorage
 from storages.backends.s3 import S3Storage
 
-import settings.settings
-from .helpers import get_var, ARE_EMAILS_ENABLED
+from .helpers import get_var
 
 # from backend.utils import appconfig
 
@@ -158,7 +156,6 @@ TEMPLATES = [
         },
     },
 ]
-import os
 
 WSGI_APPLICATION = "settings.wsgi.application"
 
