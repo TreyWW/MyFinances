@@ -1,7 +1,7 @@
 from django.http import HttpRequest, HttpResponseBadRequest
 from django.shortcuts import render
 
-from backend.models import UserSettings, Invoice, Team
+from backend.models import UserSettings, Invoice, Team, QuotaLimit
 
 
 # Still working on
@@ -50,6 +50,13 @@ def open_modal(request: HttpRequest, modal_name, context_type=None, context_valu
                     if invoice.has_access(request.user):
                         context["invoice"] = invoice
                 except Invoice.DoesNotExist:
+                    ...
+            elif context_type == "quota":
+                try:
+                    quota = QuotaLimit.objects.prefetch_related("quota_overrides").get(slug=context_value)
+                    context["quota"] = quota
+                    context["current_limit"] = quota.get_quota_limit(user=request.user)
+                except QuotaLimit.DoesNotExist:
                     ...
             else:
                 context[context_type] = context_value

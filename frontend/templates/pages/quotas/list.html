@@ -1,0 +1,25 @@
+{% extends 'base/base.html' %}
+{% block content %}
+    <div class="card w-full p-6 bg-base-100 shadow-xl mt-2">
+        <h2 class="text-xl">Service Quotas</h2>
+
+        <div class="flex w-full h-full overflow-x-hidden overflow-y-auto mt-8">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Quota Name</th>
+                    <th>Applied account quota value</th>
+                    <th>Default quota value</th>
+                    <th>Adjustability</th>
+                </tr>
+                </thead>
+                <tbody id="table_body"
+                       hx-swap="outerHTML"
+                       hx-trigger="load"
+                       hx-get="{% url 'api:quotas:fetch' group=group %}">
+                {% include 'components/table/skeleton_rows.html' with rows=3 cols=5 %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock content %}

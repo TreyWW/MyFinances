@@ -1,0 +1,39 @@
+{% component_block "modal" start_open="true" %}
+    {% fill "id" %}modal_view_quota_limit_info_{{ quota.id }}{% endfill %}
+    {% fill "title" %}
+        <h3 class="font-bold text-lg">
+            {{ quota.name }}
+        </h3>
+    {% endfill %}
+    {% fill "content" %}
+        <div class="p-4">
+            <h2 class="text-xl mb-2">Description</h2>
+            <p class="mb-4">{{ quota.description }}</p>
+
+            <div class="mb-4">
+                <h2>Applied account-level quota value</h2>
+                <p>{{ current_limit }}</p>
+            </div>
+
+            <div class="mb-4">
+                <h2>Default quota value</h2>
+                <p>{{ quota.value }}</p>
+            </div>
+
+            <div class="mb-4">
+                <h2>Adjustability</h2>
+                <p>{{ quota.adjustable }}</p>
+            </div>
+        </div>
+
+        <div class="modal-action">
+            <button type="button"
+                    _="on click call #modal_view_quota_limit_info_{{ quota.id }}.close()"
+                    class="btn">Close
+            </button>
+            {% if quota.adjustable %}
+                <button class="btn-disabled btn btn-primary">Request quota increase at account-level</button>
+            {% endif %}
+        </div>
+    {% endfill %}
+{% endcomponent_block %}

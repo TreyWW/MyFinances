@@ -1,6 +1,8 @@
 from django.core.cache import cache
 from django.core.cache.backends.redis import RedisCacheClient
 
+from backend.data.default_quota_limits import default_quota_limits
+
 cache: RedisCacheClient = cache
 from django.core.files.storage import default_storage
 from django.db.models.signals import pre_save, post_delete, post_save, post_migrate
@@ -8,7 +10,7 @@ from django.dispatch import receiver
 from django.urls import reverse
 
 import settings.settings
-from backend.models import UserSettings, Receipt, User, FeatureFlags, VerificationCodes
+from backend.models import UserSettings, Receipt, User, FeatureFlags, VerificationCodes, QuotaLimit
 from settings.helpers import ARE_EMAILS_ENABLED, send_email
 
 
@@ -65,7 +67,6 @@ feature_flags = [
     {"name": "isInvoiceSchedulingEnabled", "default": False, "pk": 2},
 ]
 
-
 def insert_initial_data(**kwargs):
     for feature in feature_flags:
         try:
@@ -75,6 +76,18 @@ def insert_initial_data(**kwargs):
 
             flag.value = feature.get("default")
             flag.save()
+
+    for group in default_quota_limits:
+        for item in group.items:
+            QuotaLimit.objects.get_or_create(
+                slug=f"{group.name}-{item.slug}",
+                defaults={
+                    "name": f"{item.name}",
+                    "value": item.default_value,
+                    "adjustable": item.adjustable,
+                    "description": item.description
+                }
+            )
 
 
 post_migrate.connect(insert_initial_data)
@@ -96,12 +109,12 @@ def send_welcome_email(sender, instance: User, created, **kwargs):
     if created:
         email_message = f"""
             Welcome to MyFinances{f", {instance.first_name}" if instance.first_name else ""}!
-            
+
             We're happy to have you join us. We are still in development and are still working on the core mechanics.
-            If you find any bugs with our software, create a bug report on our 
+            If you find any bugs with our software, create a bug report on our
             Github Issues (https://github.com/TreyWW/MyFinances/issues/new?assignees=&labels=bug&projects=&template=bug-report.md&title=%5BBUG%5D+)
             and we'll try to help debug the issue or squash the bug.
-            
+
             Thank you for using MyFinances.
         """
         if ARE_EMAILS_ENABLED:
@@ -114,7 +127,7 @@ def send_welcome_email(sender, instance: User, created, **kwargs):
             email_message += f"""
                 To start with, you must first **verify this email** so that we can link your account to this email.
                 Click the link below to activate your account, no details are required, once pressed you're all set!
-                
+
                 Verify Link: {magic_link_url}
             """
 

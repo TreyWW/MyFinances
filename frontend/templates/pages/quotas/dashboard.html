@@ -1,0 +1,24 @@
+{% extends 'base/base.html' %}
+{% block content %}
+    <div class="card w-full p-6 bg-base-100 shadow-xl mt-2">
+        <h2 class="text-xl">Service Quotas</h2>
+
+        <div class="grid grid-cols-3 gap-4 mt-8">
+            <a href="{% url "quotas group" group="invoices" %}" class="card p-6 bg-base-300 shadow-xl">
+                <h2 class="text-xl text-center">
+                    Invoices
+                </h2>
+            </a>
+            <a href="{% url "quotas group" group="clients" %}" class="card p-6 bg-base-300 shadow-xl">
+                <h2 class="text-xl text-center">
+                    Clients
+                </h2>
+            </a>
+            <a href="{% url "quotas group" group="teams" %}" class="card p-6 bg-base-300 shadow-xl">
+                <h2 class="text-xl text-center">
+                    Teams
+                </h2>
+            </a>
+        </div>
+    </div>
+{% endblock content %}

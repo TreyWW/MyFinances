@@ -544,9 +544,47 @@ class FeatureFlags(models.Model):
     value = models.BooleanField(default=False)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def __str__(self):
-        return self.name
-
     class Meta:
         verbose_name = "Feature Flag"
         verbose_name_plural = "Feature Flags"
+
+    def __str__(self):
+        return self.name
+
+
+class QuotaLimit(models.Model):
+    slug = models.CharField(max_length=100, unique=True, editable=False)
+    name = models.CharField(max_length=100, unique=True, editable=False)
+    description = models.TextField(max_length=500, null=True, blank=True)
+    value = models.IntegerField()
+    updated_at = models.DateTimeField(auto_now=True)
+    adjustable = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = "Quota Limit"
+        verbose_name_plural = "Quota Limits"
+
+    def __str__(self):
+        return self.name
+
+    def get_quota_limit(self, user: User):
+        try:
+            user_quota_override = self.quota_overrides.get(user=user)
+            return user_quota_override.value
+        except QuotaOverrides.DoesNotExist:
+            return self.value
+
+
+class QuotaOverrides(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    quota_limit = models.ForeignKey(QuotaLimit, on_delete=models.CASCADE, related_name="quota_overrides")
+    value = models.IntegerField()
+    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Quota Override"
+        verbose_name_plural = "Quota Overrides"
+
+    def __str__(self):
+        return f"{self.user}"

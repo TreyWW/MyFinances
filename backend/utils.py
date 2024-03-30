@@ -5,7 +5,6 @@ cache: RedisCacheClient = cache
 
 from backend.models import FeatureFlags
 
-
 def get_feature_status(feature, should_use_cache=True):
     if should_use_cache:
         key = f"myfinances:feature_flag:{feature}"
