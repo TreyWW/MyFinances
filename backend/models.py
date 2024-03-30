@@ -1,4 +1,3 @@
-import decimal
 from decimal import Decimal
 from uuid import uuid4
 
@@ -312,6 +311,17 @@ class Invoice(models.Model):
     class Meta:
         constraints = [USER_OR_ORGANIZATION_CONSTRAINT()]
 
+    def __str__(self):
+        invoice_id = self.invoice_id or self.id
+        if self.client_name:
+            client = self.client_name
+        elif self.client_to:
+            client = self.client_to.name
+        else:
+            client = "Unknown Client"
+
+        return f"Invoice #{invoice_id} for {client}"
+
     @property
     def dynamic_payment_status(self):
         if self.date_due and timezone.now().date() > self.date_due and self.payment_status == "pending":
@@ -333,17 +343,6 @@ class Invoice(models.Model):
                 "name": self.client_name,
                 "company": self.client_company,
             }
-
-    def __str__(self):
-        invoice_id = self.invoice_id or self.id
-        if self.client_name:
-            client = self.client_name
-        elif self.client_to:
-            client = self.client_to.name
-        else:
-            client = "Unknown Client"
-
-        return f"Invoice #{invoice_id} for {client}"
 
     def get_subtotal(self):
         subtotal = 0
@@ -379,6 +378,15 @@ class Invoice(models.Model):
             total -= self.get_tax(total)
 
         return round(total, 2)
+
+    def has_access(self, user: User) -> bool:
+        if not user.is_authenticated:
+            return False
+
+        if user.logged_in_as_team:
+            return self.organization == user.logged_in_as_team
+        else:
+            return self.user == user
 
 
 class InvoiceURL(models.Model):
