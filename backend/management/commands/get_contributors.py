@@ -32,8 +32,8 @@ class Command(BaseCommand):
         # HTML template for each contributor entry
         contributor_template = """
         <td align="center">
-            <a href="https://github.com/{username}">
-                <img src="https://github.com/{username}.png" width="100px;" alt="" />
+            <a href="https://github.com/{username}" title="{username}">
+                <img title="{role}" src="https://github.com/{username}.png" width="100px;" alt="" />
                 <br />
                 <sub>
                     <b>{name}</b>
@@ -80,6 +80,11 @@ class Command(BaseCommand):
                             f'https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3A{contributor["username"]}',
                             "Docker",
                         ),
+                        (
+                            "♻",
+                            f'https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3A{contributor["username"]}',
+                            "Refactored Files",
+                        ),
                     ]
                     if tag_icon in contributor.get("tags", [])
                 ]
@@ -87,12 +92,13 @@ class Command(BaseCommand):
             return contributor_template.format(
                 username=contributor["username"],
                 name=contributor["name"],
+                role=contributor.get("role"),
                 tags=tags_html,
             )
 
         # Generate HTML for contributors
         contributors_html = ""
-        users_per_row = 6
+        users_per_row = 5
         for index, contributor in enumerate(contributors_data, start=1):
             if (index - 1) % users_per_row == 0 and index > 1:
                 contributors_html += "</tr><tr>"

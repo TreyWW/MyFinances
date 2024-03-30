@@ -31,7 +31,7 @@ This is the name of your database that you created. You will have to do this man
 - First access your db
 
 ```bash
-$ mysql -h {DATABASE_HOST} -u {DATABSE_USER} -p {DATABASE_PASS} # manually fill out the values in brackets {}
+$ mysql -h {DATABASE_HOST} -u {DATABASE_USER} -p {DATABASE_PASS} # manually fill out the values in brackets {}
 ```
 
 - Then run this SQL command:

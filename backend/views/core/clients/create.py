@@ -52,7 +52,7 @@ def validate_client_create(client_details):
     if len(client_details.get("name")) < 3:
         return "Client name must be at least 3 characters"
 
-    if client_details.get("is_representiative") and not client_details.get("company"):
+    if client_details.get("is_representative") and not client_details.get("company"):
         return "Please provide a company name if you are creating a representative"
 
     return None

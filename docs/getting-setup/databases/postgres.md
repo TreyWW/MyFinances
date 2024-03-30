@@ -31,7 +31,7 @@ This is the name of your database that you created. You will have to do this man
 - First access your db
 
 ```bash
-$ psql -h {DATABASE_HOST} -U {DATABSE_USER} -p {DATABASE_PORT} # manually fill out the values in brackets {}
+$ psql -h {DATABASE_HOST} -U {DATABASE_USER} -p {DATABASE_PORT} # manually fill out the values in brackets {}
 ```
 
 - Then run this SQL command:

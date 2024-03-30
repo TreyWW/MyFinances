@@ -17,10 +17,15 @@ npm install
 ## Build Tailwind
 
 ?> You should build tailwind `every time` you want to make any change to the frontend.
-<br>Luckily, this is easy with the "watch" command, it auto-builds on any change you make.
 
 ```bash
 npm run tailwind-build
+```
+
+<br>Luckily, this is easy with the "watch" command, it auto-builds on any change you make.
+
+```bash
+npm run tailwind-watch
 ```
 
 !> Please **never** edit the `output.css` file, always edit the `input.css` file if you need to make manual CSS changes.
