@@ -188,8 +188,8 @@ class TeamInvitation(models.Model):
 
 
 class Receipt(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    organization = models.ForeignKey(Team, on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    organization = models.ForeignKey(Team, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=100)
     image = models.ImageField(upload_to="receipts", storage=settings.CustomPrivateMediaStorage())
     total_price = models.FloatField(null=True, blank=True)
@@ -210,8 +210,8 @@ class ReceiptDownloadToken(models.Model):
 
 
 class Client(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    organization = models.ForeignKey(Team, on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    organization = models.ForeignKey(Team, on_delete=models.CASCADE, null=True, blank=True)
     active = models.BooleanField(default=True)
 
     name = models.CharField(max_length=64)
@@ -263,8 +263,8 @@ class Invoice(models.Model):
         ("overdue", "Overdue"),
     )
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    organization = models.ForeignKey(Team, on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    organization = models.ForeignKey(Team, on_delete=models.CASCADE, null=True, blank=True)
     invoice_id = models.IntegerField(unique=True, blank=True, null=True)  # todo: add
 
     client_to = models.ForeignKey(Client, on_delete=models.SET_NULL, blank=True, null=True)
