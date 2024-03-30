@@ -80,11 +80,11 @@ class Command(BaseCommand):
                             f'https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3A{contributor["username"]}',
                             "Docker",
                         ),
-                    (
-                        "♻",
-                        f'https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3A{contributor["username"]}',
-                        "Refactored Files",
-                    ),
+                        (
+                            "♻",
+                            f'https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3A{contributor["username"]}',
+                            "Refactored Files",
+                        ),
                     ]
                     if tag_icon in contributor.get("tags", [])
                 ]
