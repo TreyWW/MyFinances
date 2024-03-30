@@ -66,6 +66,6 @@ const lineConfig = {
   },
 }
 
-// change this to the id of your chart element in HMTL
+// change this to the id of your chart element in HTML
 const lineCtx = document.getElementById('line')
 window.myLine = new Chart(lineCtx, lineConfig)

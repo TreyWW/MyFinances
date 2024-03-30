@@ -1,0 +1,36 @@
+name: Check Typos
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  check-typos:
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [ ubuntu-latest ]
+        python-version: [ "3.*" ]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      #----------------------------------------------
+      #       check-out repo and set-up python
+      #----------------------------------------------
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      #----------------------------------------------
+      #       check grammar with typos
+      #----------------------------------------------
+      - name: Check grammar with typos
+        run: |
+          pip3 install typos
+          typos

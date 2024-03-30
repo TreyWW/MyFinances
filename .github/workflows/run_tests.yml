@@ -43,16 +43,6 @@ jobs:
           installer-parallel: true
 
       #----------------------------------------------
-      #       install docker compose
-      #       setup + configure docker compose
-      #----------------------------------------------
-      - name: Install Docker Compose
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y docker-compose
-
-
-      #----------------------------------------------
       #       copy docker compose file
       #----------------------------------------------
       - name: Copy docker compose file
