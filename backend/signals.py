@@ -5,7 +5,7 @@ from backend.data.default_quota_limits import default_quota_limits
 
 cache: RedisCacheClient = cache
 from django.core.files.storage import default_storage
-from django.db.models.signals import pre_save, post_delete, post_save, post_migrate
+from django.db.models.signals import pre_save, post_delete, post_save, post_migrate, pre_delete
 from django.dispatch import receiver
 from django.urls import reverse
 
@@ -36,8 +36,8 @@ def set_profile_picture_to_none(sender, instance, **kwargs):
         instance.profile_picture.delete(save=False)
 
 
-@receiver(post_delete, sender=Receipt)
-def set_profile_picture_to_none(sender, instance, **kwargs):
+@receiver(pre_delete, sender=Receipt)
+def delete_old_receipts(sender, instance, **kwargs):
     # Check if the file exists in the storage
     if instance.image and default_storage.exists(instance.image.name):
         instance.image.delete(save=False)
