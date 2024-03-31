@@ -713,6 +713,7 @@ class QuotaIncreaseRequest(models.Model):
     current_value = models.IntegerField()
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=20, choices=StatusTypes.choices, default=StatusTypes.PENDING)
 
     class Meta:
         verbose_name = "Quota Increase Request"

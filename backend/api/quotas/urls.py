@@ -1,6 +1,6 @@
 from django.urls import path
 
-from . import fetch, submit_request
+from . import fetch, requests
 
 urlpatterns = [
     path(
@@ -10,8 +10,18 @@ urlpatterns = [
     ),
     path(
         "submit_request/<slug:slug>/",
-        submit_request.submit_request,
+        requests.submit_request,
         name="submit_request"
+    ),
+    path(
+        "request/<int:request_id>/approve/",
+        requests.approve_request,
+        name="approve request"
+    ),
+    path(
+        "request/<int:request_id>/decline/",
+        requests.decline_request,
+        name="decline request"
     )
 ]
 

@@ -1,3 +1,5 @@
+import logging
+
 from django.core.cache import cache
 from django.core.cache.backends.redis import RedisCacheClient
 
@@ -79,7 +81,7 @@ def insert_initial_data(**kwargs):
 
     for group in default_quota_limits:
         for item in group.items:
-            QuotaLimit.objects.get_or_create(
+            _, created = QuotaLimit.objects.get_or_create(
                 slug=f"{group.name}-{item.slug}",
                 defaults={
                     "name": f"{item.name}",
@@ -89,6 +91,8 @@ def insert_initial_data(**kwargs):
                     "limit_type": item.period
                 }
             )
+            if created:
+                logging.info(f"Added QuotaLimit {item.name}")
 
 
 post_migrate.connect(insert_initial_data)

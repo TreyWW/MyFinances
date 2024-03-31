@@ -95,9 +95,17 @@ default_quota_limits: List[QuotaGroup] = [
         QuotaItem(
             slug="request",
             name="Quota Increase Request",
-            description="Amount of increase requests allowed PER quota",
+            description="Amount of increase requests allowed per quota",
             default_value=1,
             period="per_quota",
+            adjustable=False
+        ),
+        QuotaItem(
+            slug="requests_per_month",
+            name="Quota Increase Requests per month",
+            description="Amount of increase requests allowed per month",
+            period="per_month",
+            default_value=1,
             adjustable=False
         )
     ])
