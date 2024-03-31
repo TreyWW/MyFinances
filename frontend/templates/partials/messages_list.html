@@ -1,1 +1,1 @@
-{% component "messages_list" %}
+{% if autohide != False %}{% component "messages_list" %}{% else %}{% component "messages_list" autohide=False %}{% endif %}

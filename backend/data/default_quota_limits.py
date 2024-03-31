@@ -55,7 +55,6 @@ default_quota_limits: List[QuotaGroup] = [
             adjustable=True
         )
     ]),
-
     QuotaGroup("clients", [
         QuotaItem(
             slug="count",
@@ -78,7 +77,7 @@ default_quota_limits: List[QuotaGroup] = [
         QuotaItem(
             slug="joined",
             name="Joined teams",
-            description="Amount of teams joined in total",
+            description="Amount of teams that you have joined in total",
             default_value=5,
             period="forever",
             adjustable=True

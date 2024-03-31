@@ -12,16 +12,16 @@
                 {{ quota.quota_object.name }}
             </button>
         </td>
-        <td>
+        <td class="text-right">
             {{ quota.period_usage }}
         </td>
-        <td>
+        <td class="text-right">
             {{ quota.quota_limit }}
         </td>
-        <td>
+        <td class="text-right">
             {{ quota.quota_object.value }}
         </td>
-        <td>
+        <td class="text-center">
             {% if quota.quota_object.adjustable %}
                 Account Level
             {% else %}

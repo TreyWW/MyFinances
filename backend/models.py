@@ -614,7 +614,7 @@ class QuotaLimit(models.Model):
             current_year = timezone.now().year
             current = self.quota_usage.filter(user=user, quota_limit=self, created_at__year=current_year, created_at__month=current_month,
                                               created_at__day=current_day)
-        elif self.limit_type in ["per_client", "per_invoice"]:
+        elif self.limit_type in ["per_client", "per_invoice", "per_team", "per_receipt"]:
             current = self.quota_usage.filter(user=user, quota_limit=self, extra_data__exact=extra)
         return current
 
