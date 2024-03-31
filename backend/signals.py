@@ -81,17 +81,26 @@ def insert_initial_data(**kwargs):
 
     for group in default_quota_limits:
         for item in group.items:
-            _, created = QuotaLimit.objects.get_or_create(
-                slug=f"{group.name}-{item.slug}",
-                defaults={
-                    "name": f"{item.name}",
-                    "value": item.default_value,
-                    "adjustable": item.adjustable,
-                    "description": item.description,
-                    "limit_type": item.period
-                }
-            )
-            if created:
+            existing = QuotaLimit.objects.filter(slug=f"{group.name}-{item.slug}").first()
+            if existing:
+                name, value, adjustable, description, limit_type = existing.name, existing.value, existing.adjustable, existing.description, existing.limit_type
+                existing.name = item.name
+                existing.value = item.default_value
+                existing.adjustable = item.adjustable
+                existing.description = item.description
+                existing.limit_type = item.period
+                if item.name != name or item.default_value != value or item.adjustable != adjustable or item.description != description or item.period != limit_type:
+                    logging.info(f"Updated QuotaLimit {item.name}")
+                    existing.save()
+            else:
+                QuotaLimit.objects.create(
+                    name=item.name,
+                    slug=f"{group.name}-{item.slug}",
+                    value=item.default_value,
+                    adjustable=item.adjustable,
+                    description=item.description,
+                    limit_type=item.period
+                )
                 logging.info(f"Added QuotaLimit {item.name}")
 
 
