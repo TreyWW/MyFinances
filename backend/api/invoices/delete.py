@@ -5,7 +5,7 @@ from django.urls import resolve
 from django.urls.exceptions import Resolver404
 from django.views.decorators.http import require_http_methods
 
-from backend.models import Invoice
+from backend.models import Invoice, QuotaLimit
 
 
 @require_http_methods(["DELETE"])
@@ -20,16 +20,14 @@ def delete_invoice(request: HttpRequest):
     except Invoice.DoesNotExist:
         return JsonResponse({"message": "Invoice not found"}, status=404)
 
-    if not invoice.user.logged_in_as_team and invoice.user != request.user:
+    if not invoice.has_access(request.user):
         return JsonResponse({"message": "You do not have permission to delete this invoice"}, status=404)
 
-    if invoice.user.logged_in_as_team and invoice.organization != request.user.logged_in_as_team:
-        return JsonResponse({"message": "You do not have permission to delete this invoice"}, status=404)
+    QuotaLimit.delete_quota_usage("invoices-count", request.user, invoice.id, invoice.date_created)
 
     invoice.delete()
 
     if request.htmx:
-        print("should send msg")
         if not redirect:
             messages.success(request, "Invoice deleted")
             return render(request, "base/toasts.html")
@@ -40,6 +38,6 @@ def delete_invoice(request: HttpRequest):
             response["HX-Location"] = redirect
             return response
         except Resolver404:
-            ...
+            return HttpResponseRedirect(reverse("dashboard"))
 
     return JsonResponse({"message": "Invoice successfully deleted"}, status=200)

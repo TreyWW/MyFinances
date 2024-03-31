@@ -1,6 +1,6 @@
 from datetime import datetime
 from decimal import Decimal
-from typing import Optional
+from typing import Optional, NoReturn, Union
 from uuid import uuid4
 
 from django.contrib.auth.hashers import make_password, check_password
@@ -596,21 +596,56 @@ class QuotaLimit(models.Model):
             return "Not available"
 
     def strict_goes_above_limit(self, user: User, extra: Optional[str | int] = None) -> bool:
+        current = self.strict_get_quotas(user, extra)
+        current = current.count() if current else None
+        return current >= self.get_quota_limit(user) if current else False
+
+    def strict_get_quotas(self, user: User, extra: Optional[str | int] = None):
         current = None
         if self.limit_type == "forever":
-            current = self.quota_usage.filter(user=user, quota_limit=self).count()
+            current = self.quota_usage.filter(user=user, quota_limit=self)
         elif self.limit_type == "per_month":
-            current = self.quota_usage.filter(user=user, quota_limit=self, created_at__month=datetime.now().month).count()
+            current_month = timezone.now().month
+            current_year = timezone.now().year
+            current = self.quota_usage.filter(user=user, quota_limit=self, created_at__year=current_year, created_at__month=current_month)
         elif self.limit_type == "per_day":
-            current = self.quota_usage.filter(user=user, quota_limit=self, created_at__day=datetime.now().day).count()
-        elif self.limit_type == "per_client":
-            current = self.quota_usage.filter(user=user, quota_limit=self,
-                                              extra_data__exact=extra).count()
-        elif self.limit_type == "per_invoice":
-            current = self.quota_usage.filter(user=user, quota_limit=self,
-                                              extra_data__exact=extra).count()
+            current_day = timezone.now().day
+            current_month = timezone.now().month
+            current_year = timezone.now().year
+            current = self.quota_usage.filter(user=user, quota_limit=self, created_at__year=current_year, created_at__month=current_month,
+                                              created_at__day=current_day)
+        elif self.limit_type in ["per_client", "per_invoice"]:
+            current = self.quota_usage.filter(user=user, quota_limit=self, extra_data__exact=extra)
+        return current
 
-        return current >= self.get_quota_limit(user) if current else False
+    @classmethod
+    def delete_quota_usage(cls, quota_limit: Union[str, "QuotaLimit"], user: User, extra, timestamp=None) -> NoReturn:
+        quota_limit = cls.objects.get(slug=quota_limit) if isinstance(quota_limit, str) else quota_limit
+
+        all_usages = quota_limit.strict_get_quotas(user, extra)
+
+        if all_usages.count() > 1 and timestamp:
+            earliest: QuotaUsage = all_usages.filter(created_at__gte=timestamp).order_by("created_at").first()
+            latest: QuotaUsage = all_usages.filter(created_at__lte=timestamp).order_by("created_at").last()
+
+            if earliest and latest:
+                time_until_soonest_obj = abs(earliest.created_at - timestamp)
+                time_since_most_recent_obj = abs(latest.created_at - timestamp)
+                if time_until_soonest_obj < time_since_most_recent_obj:
+                    closest_obj = earliest
+                else:
+                    closest_obj = latest
+
+            if earliest and latest and closest_obj:
+                closest_obj.delete()
+        elif all_usages.count() > 1:
+            earliest = all_usages.order_by("created_at").first()
+            if earliest:
+                earliest.delete()
+        else:
+            first = all_usages.first()
+            if first:
+                first.delete()
 
 
 class QuotaOverrides(models.Model):
