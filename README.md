@@ -2,7 +2,7 @@
 
 <img src="https://github.com/TreyWW/MyFinances/assets/73353716/685b83f4-1495-4ce6-94c7-e24c2f14a6d1" width="400">
 
-![Code Formatter](https://github.com/TreyWW/MyFinances/actions/workflows/run_black_formatter.yml/badge.svg)
+![Code Formatter](https://github.com/TreyWW/MyFinances/actions/workflows/run_black_linter.yml/badge.svg)
 ![Dependency Review](https://github.com/TreyWW/MyFinances/actions/workflows/dependancy_review.yml/badge.svg)
 ![Test](https://github.com/TreyWW/MyFinances/actions/workflows/run_tests.yml/badge.svg)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
