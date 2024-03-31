@@ -24,6 +24,7 @@ from backend.models import (
     QuotaLimit,
     QuotaOverrides,
     QuotaUsage,
+    QuotaIncreaseRequest,
     Receipt,
     ReceiptDownloadToken
 )
@@ -52,6 +53,7 @@ admin.site.register(
         InvoiceOnetimeSchedule,
         QuotaOverrides,
         QuotaUsage,
+        QuotaIncreaseRequest,
         Receipt,
         ReceiptDownloadToken
     ]

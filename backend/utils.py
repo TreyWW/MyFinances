@@ -41,7 +41,7 @@ def quota_usage_check_under(
 
     if api and htmx:
         messages.error(request, f"You have reached the quota limit for this service '{quota_limit.slug}'")
-        return render(request, "base/toast.html")
+        return render(request, "partials/messages_list.html", {"autohide": False})
     elif api:
         return HttpResponse(status=403, content=f"You have reached the quota limit for this service '{quota_limit.slug}'")
     messages.error(request, f"You have reached the quota limit for this service '{quota_limit.slug}'")

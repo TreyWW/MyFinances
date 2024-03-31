@@ -561,6 +561,7 @@ class QuotaLimit(models.Model):
         PER_CLIENT = "per_client"
         PER_INVOICE = "per_invoice"
         PER_TEAM = "per_team"
+        PER_QUOTA = "per_quota"
         FOREVER = "forever"
 
     slug = models.CharField(max_length=100, unique=True, editable=False)
@@ -614,7 +615,7 @@ class QuotaLimit(models.Model):
             current_year = timezone.now().year
             current = self.quota_usage.filter(user=user, quota_limit=self, created_at__year=current_year, created_at__month=current_month,
                                               created_at__day=current_day)
-        elif self.limit_type in ["per_client", "per_invoice", "per_team", "per_receipt"]:
+        elif self.limit_type in ["per_client", "per_invoice", "per_team", "per_receipt", "per_quota"]:
             current = self.quota_usage.filter(user=user, quota_limit=self, extra_data__exact=extra)
         return current
 
@@ -623,6 +624,7 @@ class QuotaLimit(models.Model):
         quota_limit = cls.objects.get(slug=quota_limit) if isinstance(quota_limit, str) else quota_limit
 
         all_usages = quota_limit.strict_get_quotas(user, extra)
+        closest_obj = None
 
         if all_usages.count() > 1 and timestamp:
             earliest: QuotaUsage = all_usages.filter(created_at__gte=timestamp).order_by("created_at").first()
@@ -697,3 +699,24 @@ class QuotaUsage(models.Model):
             return "Not Found"
 
         return self.objects.filter(user=user, quota_limit=ql).count()
+
+
+class QuotaIncreaseRequest(models.Model):
+    class StatusTypes(models.TextChoices):
+        PENDING = "pending"
+        APPROVED = "approved"
+        REJECTED = "rejected"
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    quota_limit = models.ForeignKey(QuotaLimit, on_delete=models.CASCADE, related_name="quota_increase_requests")
+    new_value = models.IntegerField()
+    current_value = models.IntegerField()
+    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Quota Increase Request"
+        verbose_name_plural = "Quota Increase Requests"
+
+    def __str__(self):
+        return f"{self.user}"

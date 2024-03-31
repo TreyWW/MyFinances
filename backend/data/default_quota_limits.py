@@ -9,7 +9,7 @@ class QuotaItem:
     description: str
     default_value: int
     adjustable: bool
-    period: Literal["forever", "per_month", "per_day", "per_client", "per_invoice", "per_team"]
+    period: Literal["forever", "per_month", "per_day", "per_client", "per_invoice", "per_team", "per_quota"]
 
 
 @dataclass
@@ -89,6 +89,16 @@ default_quota_limits: List[QuotaGroup] = [
             default_value=10,
             period="per_team",
             adjustable=True
+        )
+    ]),
+    QuotaGroup("quota_increase", [
+        QuotaItem(
+            slug="request",
+            name="Quota Increase Request",
+            description="Amount of increase requests allowed PER quota",
+            default_value=1,
+            period="per_quota",
+            adjustable=False
         )
     ])
 ]
