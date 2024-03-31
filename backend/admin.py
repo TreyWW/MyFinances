@@ -22,7 +22,8 @@ from backend.models import (
     APIKey,
     InvoiceOnetimeSchedule,
     QuotaLimit,
-    QuotaOverrides
+    QuotaOverrides,
+    QuotaUsage
 )
 
 # from django.contrib.auth.models imp/ort User
@@ -47,7 +48,8 @@ admin.site.register(
         VerificationCodes,
         APIKey,
         InvoiceOnetimeSchedule,
-        QuotaOverrides
+        QuotaOverrides,
+        QuotaUsage
     ]
 )
 

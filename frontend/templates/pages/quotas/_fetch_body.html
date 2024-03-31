@@ -6,20 +6,23 @@
                     hx-swap="beforeend"
                     hx-target="#modal_container"
                     class="link link-primary"
-                    title="{{ quota.0.description }}"
-                    _="on click call modal_view_quota_limit_info_{{ quota.0.id }}.showModal()"
-                    hx-get="{% url "api:base:modal retrieve with context" context_type="quota" context_value=quota.0.slug modal_name="view_quota_limit_info" %}">
-                {{ quota.0.name }}
+                    title="{{ quota.quota_object.description }}"
+                    _="on click call modal_view_quota_limit_info_{{ quota.quota_object.id }}.showModal()"
+                    hx-get="{% url "api:base:modal retrieve with context" context_type="quota" context_value=quota.quota_object.slug modal_name="view_quota_limit_info" %}">
+                {{ quota.quota_object.name }}
             </button>
         </td>
         <td>
-            {{ quota.1 }}
+            {{ quota.period_usage }}
         </td>
         <td>
-            {{ quota.0.value }}
+            {{ quota.quota_limit }}
         </td>
         <td>
-            {% if quota.0.adjustable %}
+            {{ quota.quota_object.value }}
+        </td>
+        <td>
+            {% if quota.quota_object.adjustable %}
                 Account Level
             {% else %}
                 Not adjustable

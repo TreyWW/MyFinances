@@ -1,4 +1,6 @@
+from datetime import datetime
 from decimal import Decimal
+from typing import Optional
 from uuid import uuid4
 
 from django.contrib.auth.hashers import make_password, check_password
@@ -553,12 +555,21 @@ class FeatureFlags(models.Model):
 
 
 class QuotaLimit(models.Model):
+    class LimitTypes(models.TextChoices):
+        PER_MONTH = "per_month"
+        PER_DAY = "per_day"
+        PER_CLIENT = "per_client"
+        PER_INVOICE = "per_invoice"
+        PER_TEAM = "per_team"
+        FOREVER = "forever"
+
     slug = models.CharField(max_length=100, unique=True, editable=False)
     name = models.CharField(max_length=100, unique=True, editable=False)
     description = models.TextField(max_length=500, null=True, blank=True)
     value = models.IntegerField()
     updated_at = models.DateTimeField(auto_now=True)
     adjustable = models.BooleanField(default=True)
+    limit_type = models.CharField(max_length=20, choices=LimitTypes.choices, default=LimitTypes.PER_MONTH)
 
     class Meta:
         verbose_name = "Quota Limit"
@@ -574,6 +585,33 @@ class QuotaLimit(models.Model):
         except QuotaOverrides.DoesNotExist:
             return self.value
 
+    def get_period_usage(self, user: User):
+        if self.limit_type == "forever":
+            return self.quota_usage.filter(user=user, quota_limit=self).count()
+        elif self.limit_type == "per_month":
+            return self.quota_usage.filter(user=user, quota_limit=self, created_at__month=datetime.now().month).count()
+        elif self.limit_type == "per_day":
+            return self.quota_usage.filter(user=user, quota_limit=self, created_at__day=datetime.now().day).count()
+        else:
+            return "Not available"
+
+    def strict_goes_above_limit(self, user: User, extra: Optional[str | int] = None) -> bool:
+        current = None
+        if self.limit_type == "forever":
+            current = self.quota_usage.filter(user=user, quota_limit=self).count()
+        elif self.limit_type == "per_month":
+            current = self.quota_usage.filter(user=user, quota_limit=self, created_at__month=datetime.now().month).count()
+        elif self.limit_type == "per_day":
+            current = self.quota_usage.filter(user=user, quota_limit=self, created_at__day=datetime.now().day).count()
+        elif self.limit_type == "per_client":
+            current = self.quota_usage.filter(user=user, quota_limit=self,
+                                              extra_data__exact=extra).count()
+        elif self.limit_type == "per_invoice":
+            current = self.quota_usage.filter(user=user, quota_limit=self,
+                                              extra_data__exact=extra).count()
+
+        return current >= self.get_quota_limit(user) if current else False
+
 
 class QuotaOverrides(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -588,3 +626,39 @@ class QuotaOverrides(models.Model):
 
     def __str__(self):
         return f"{self.user}"
+
+
+class QuotaUsage(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    quota_limit = models.ForeignKey(QuotaLimit, on_delete=models.CASCADE, related_name="quota_usage")
+    created_at = models.DateTimeField(auto_now_add=True)
+    extra_data = models.IntegerField(null=True, blank=True)  # id of Limit Type
+
+    class Meta:
+        verbose_name = "Quota Usage"
+        verbose_name_plural = "Quota Usage"
+
+    def __str__(self):
+        return f"{self.user} quota usage for {self.quota_limit_id}"
+
+    @classmethod
+    def create_str(cls, user: User, limit: str | QuotaLimit, extra_data: Optional[str | int] = None):
+        try:
+            quota_limit = limit if isinstance(limit, QuotaLimit) else QuotaLimit.objects.get(slug=limit)
+        except QuotaLimit.DoesNotExist:
+            return "Not Found"
+
+        return cls.objects.create(
+            user=user,
+            quota_limit=quota_limit,
+            extra_data=extra_data
+        )
+
+    @classmethod
+    def get_usage(self, user: User, limit: str | QuotaLimit):
+        try:
+            ql: QuotaLimit = QuotaLimit.objects.get(slug=limit) if isinstance(limit, str) else limit
+        except QuotaLimit.DoesNotExist:
+            return "Not Found"
+
+        return self.objects.filter(user=user, quota_limit=ql).count()

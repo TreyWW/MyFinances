@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List
+from typing import List, Literal
 
 
 @dataclass
@@ -9,6 +9,7 @@ class QuotaItem:
     description: str
     default_value: int
     adjustable: bool
+    period: Literal["forever", "per_month", "per_day", "per_client", "per_invoice", "per_team"]
 
 
 @dataclass
@@ -24,6 +25,7 @@ default_quota_limits: List[QuotaGroup] = [
             name="Creations per month",
             description="Amount of invoices created per month",
             default_value=100,
+            period="per_month",
             adjustable=True
         ),
         QuotaItem(
@@ -31,6 +33,7 @@ default_quota_limits: List[QuotaGroup] = [
             name="Schedules per month",
             description="Amount of invoice scheduled sends allowed per month",
             default_value=100,
+            period="per_month",
             adjustable=True
         ),
         QuotaItem(
@@ -38,6 +41,7 @@ default_quota_limits: List[QuotaGroup] = [
             name="Created access codes",
             description="Amount of invoice access codes allowed per invoice",
             default_value=3,
+            period="per_invoice",
             adjustable=True
         )
     ]),
@@ -47,6 +51,7 @@ default_quota_limits: List[QuotaGroup] = [
             name="Created receipts",
             description="Amount of receipts stored per month",
             default_value=100,
+            period="per_month",
             adjustable=True
         )
     ]),
@@ -57,6 +62,7 @@ default_quota_limits: List[QuotaGroup] = [
             name="Created clients",
             description="Amount of clients stored in total",
             default_value=40,
+            period="forever",
             adjustable=True
         )
     ]),
@@ -66,6 +72,7 @@ default_quota_limits: List[QuotaGroup] = [
             name="Created teams",
             description="Amount of teams created in total",
             default_value=3,
+            period="forever",
             adjustable=True
         ),
         QuotaItem(
@@ -73,6 +80,7 @@ default_quota_limits: List[QuotaGroup] = [
             name="Joined teams",
             description="Amount of teams joined in total",
             default_value=5,
+            period="forever",
             adjustable=True
         ),
         QuotaItem(
@@ -80,6 +88,7 @@ default_quota_limits: List[QuotaGroup] = [
             name="Users per team",
             description="Amount of users per team",
             default_value=10,
+            period="per_team",
             adjustable=True
         )
     ])

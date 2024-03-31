@@ -85,7 +85,8 @@ def insert_initial_data(**kwargs):
                     "name": f"{item.name}",
                     "value": item.default_value,
                     "adjustable": item.adjustable,
-                    "description": item.description
+                    "description": item.description,
+                    "limit_type": item.period
                 }
             )
 
