@@ -7,7 +7,7 @@
     {% endfill %}
     {% fill "content" %}
         <form class="py-4 group"
-              id="modal_invoices_edit_discount-form"
+              id="modal_view_quota_limit_info_{{ quota.id }}-form"
               hx-post="{% url "api:quotas:submit_request" slug=quota.slug %}"
               hx-swap="none">
             {% csrf_token %}
@@ -73,7 +73,8 @@
                     Close
                 </button>
                 {% if quota.adjustable %}
-                    <button class="group-invalid:btn-disabled btn btn-outline btn-secondary">
+                    <button class="group-invalid:btn-disabled btn btn-outline btn-secondary"
+                            _="on click if #modal_view_quota_limit_info_{{ quota.id }}-form.checkValidity() call #modal_view_quota_limit_info_{{ quota.id }}.close() end">
                         Request quota increase at account-level
                     </button>
                 {% endif %}
