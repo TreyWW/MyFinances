@@ -28,9 +28,9 @@ urlpatterns = [
     path("dashboard/", dashboard, name="dashboard"),
     path("dashboard/settings/", settings_v.view.settings_page, name="user settings"),
     path("dashboard/invoices/", include("backend.views.core.invoices.urls")),
-                  path("dashboard/quotas/", quotas_page, name="quotas"),
-                  path("dashboard/quotas/<str:group>/", quotas_list, name="quotas group"),
-                  path("dashboard/admin/quota_requests/", view_quota_increase_requests, name="admin quota increase requests"),
+    path("dashboard/quotas/", quotas_page, name="quotas"),
+    path("dashboard/quotas/<str:group>/", quotas_list, name="quotas group"),
+    path("dashboard/admin/quota_requests/", view_quota_increase_requests, name="admin quota increase requests"),
     path(
         "dashboard/invoice/<str:invoice_id>/",
         manage_invoice,
