@@ -2,6 +2,7 @@ from PIL import Image
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.sessions.models import Session
 from django.contrib import messages
+from django.shortcuts import redirect
 from django.http import HttpRequest
 from django.shortcuts import render
 
