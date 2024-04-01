@@ -5,7 +5,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.hashers import check_password
 from django.core.validators import validate_email
 from django.http import HttpRequest
-from django.urls import reverse, resolve
+from django.urls import resolve
 from django.urls.exceptions import Resolver404
 from django.utils.decorators import method_decorator
 from django.views import View
@@ -73,6 +73,10 @@ def login_manual(request: HttpRequest):  # HTMX POST
         messages.error(request, "Incorrect email or password")
         return render_toast_message(request)
 
+    if user.awaiting_email_verification and ARE_EMAILS_ENABLED:
+        messages.error(request, "You must verify your email before logging in.")
+        return render_toast_message(request)
+
     login(request, user)
     messages.success(request, "Successfully logged in")
 
@@ -83,7 +87,7 @@ def login_manual(request: HttpRequest):  # HTMX POST
         response["HX-Location"] = next
     except Resolver404:
         print(f"did not resolve: {next}")
-        ...
+        response["HX-Location"] = "/dashboard/"
 
     return response
 
@@ -140,7 +144,7 @@ class MagicLinkRequestView(View):
             message=f"""
             Hi {user.first_name if user.first_name else "User"},
 
-            A login request was made on your MyFinances account. If this was not you, please ignore 
+            A login request was made on your MyFinances account. If this was not you, please ignore
             this email.
 
             If you would like to login, please use the following link: \n {magic_link_url}
