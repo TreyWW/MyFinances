@@ -14,6 +14,7 @@ from backend.views.core import (
 from backend.views.core.currency_converter import dashboard as cc_dashboard
 from backend.views.core.invoices.overview import manage_invoice
 from backend.views.core.other.index import index, dashboard
+from backend.views.core.quotas.view import quotas_page, quotas_list, view_quota_increase_requests
 
 url(
     r"^frontend/static/(?P<path>.*)$",
@@ -27,6 +28,9 @@ urlpatterns = [
     path("dashboard/", dashboard, name="dashboard"),
     path("dashboard/settings/", settings_v.view.settings_page, name="user settings"),
     path("dashboard/invoices/", include("backend.views.core.invoices.urls")),
+    path("dashboard/quotas/", quotas_page, name="quotas"),
+    path("dashboard/quotas/<str:group>/", quotas_list, name="quotas group"),
+    path("dashboard/admin/quota_requests/", view_quota_increase_requests, name="admin quota increase requests"),
     path(
         "dashboard/invoice/<str:invoice_id>/",
         manage_invoice,

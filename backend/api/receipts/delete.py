@@ -5,7 +5,6 @@ from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
 from backend.models import Receipt
-from django.db.models import Q
 
 
 @require_http_methods(["DELETE"])
@@ -19,6 +18,9 @@ def receipt_delete(request: HttpRequest, id: int):
         return JsonResponse(status=403, data={"message": "Forbidden"})
     elif receipt.user != request.user:
         return JsonResponse(status=403, data={"message": "Forbidden"})
+
+    # QuotaLimit.delete_quota_usage("receipts-count", request.user, receipt.id, receipt.date_uploaded) # Don't want to delete receipts
+    # from records because it does cost us PER receipt. So makes sense not to allow Upload, delete, upload .. etc
 
     receipt.delete()
     messages.success(request, "Receipt deleted")

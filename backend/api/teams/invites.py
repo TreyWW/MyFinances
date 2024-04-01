@@ -1,6 +1,4 @@
-from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render
-from django.urls import reverse
+from django.http import HttpRequest
 
 from backend.decorators import *
 from backend.models import Notification, Team, TeamInvitation, User
@@ -29,6 +27,15 @@ def check_team_invitation_is_valid(request, invitation: TeamInvitation, code=Non
         valid = False
         messages.error(request, "Invitation has expired")
 
+    try:
+        quota_limit = QuotaLimit.objects.get(slug="teams-user_count")
+        if invitation.team.members.count() >= quota_limit.get_quota_limit(invitation.team.leader):
+            valid = False
+            messages.error(request, "Unfortunately this team is currently full")
+    except QuotaLimit.DoesNotExist:
+        valid = False
+        messages.error(request, "Something went wrong with fetching the quota limit")
+
     if not valid:
         delete_notification(request.user, code)
         return False
@@ -41,9 +48,10 @@ def send_user_team_invite(request: HttpRequest):
     team_id = request.POST.get("team_id")
     team = Team.objects.filter(leader=request.user, id=team_id).first()
 
-    def return_error_notif(request: HttpRequest, message: str):
+    def return_error_notif(request: HttpRequest, message: str, autohide=None):
         messages.error(request, message)
-        resp = render(request, "partials/messages_list.html", status=200)
+        context = {"autohide": False} if autohide == False else {}
+        resp = render(request, "partials/messages_list.html", context=context, status=200)
         resp["HX-Trigger-After-Swap"] = "invite_user_error"
         return resp
 
@@ -60,6 +68,18 @@ def send_user_team_invite(request: HttpRequest):
 
     if user.teams_joined.exists():
         return return_error_notif(request, "User already is in this team")
+
+    try:
+        quota_limit = QuotaLimit.objects.get(slug="teams-user_count")
+        if team.members.count() >= quota_limit.get_quota_limit(team.leader):
+            return return_error_notif(
+                request,
+                "Unfortunately your team has reached the maximum members limit. Go to the service quotas "
+                "page to request a higher number or kick some users to make space.",
+                autohide=False,
+            )
+    except QuotaLimit.DoesNotExist:
+        return return_error_notif(request, "Something went wrong with fetching the quota limit")
 
     invitation = TeamInvitation.objects.create(team=team, user=user, invited_by=request.user)
 
@@ -96,7 +116,7 @@ def send_user_team_invite(request: HttpRequest):
 
 
 def accept_team_invite(request: HttpRequest, code):
-    invitation: TeamInvitation = TeamInvitation.objects.filter(code=code).first()
+    invitation: TeamInvitation = TeamInvitation.objects.filter(code=code).prefetch_related("team").first()
 
     if not check_team_invitation_is_valid(request, invitation, code):
         messages.error(request, "Invalid invite - Maybe it has expired?")

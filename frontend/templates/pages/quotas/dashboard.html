@@ -1,0 +1,22 @@
+{% extends 'base/base.html' %}
+{% block content %}
+    <div class="card w-full p-6 bg-base-100 shadow-xl mt-2">
+        <h2 class="text-xl">Service Quotas</h2>
+        <div class="grid grid-cols-3 gap-4 mt-8">
+            {% if request.user.is_superuser %}
+                <a href="{% url "admin quota increase requests" %}"
+                   class="card p-6 bg-base-200 border border-warning text-center text-xl">View Requests</a>
+            {% endif %}
+            <a href="{% url "quotas group" group="invoices" %}"
+               class="card p-6 border bg-base-200 shadow-xl text-center text-xl">Invoices</a>
+            <a href="{% url "quotas group" group="clients" %}"
+               class="card p-6 border bg-base-200 shadow-xl text-center text-xl">Clients</a>
+            <a href="{% url "quotas group" group="teams" %}"
+               class="card p-6 border bg-base-200 shadow-xl text-center text-xl">Teams</a>
+            <a href="{% url "quotas group" group="receipts" %}"
+               class="card p-6 border bg-base-200 shadow-xl text-center text-xl">Receipts</a>
+            <a href="{% url "quotas group" group="quota" %}"
+               class="card p-6 border bg-base-200 shadow-xl text-center text-xl">Quotas</a>
+        </div>
+    </div>
+{% endblock content %}

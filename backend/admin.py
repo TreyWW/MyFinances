@@ -21,6 +21,12 @@ from backend.models import (
     VerificationCodes,
     APIKey,
     InvoiceOnetimeSchedule,
+    QuotaLimit,
+    QuotaOverrides,
+    QuotaUsage,
+    QuotaIncreaseRequest,
+    Receipt,
+    ReceiptDownloadToken,
 )
 
 # from django.contrib.auth.models imp/ort User
@@ -45,8 +51,20 @@ admin.site.register(
         VerificationCodes,
         APIKey,
         InvoiceOnetimeSchedule,
+        QuotaOverrides,
+        QuotaUsage,
+        QuotaIncreaseRequest,
+        Receipt,
+        ReceiptDownloadToken,
     ]
 )
+
+
+class QuotaLimitAdmin(admin.ModelAdmin):
+    readonly_fields = ["name", "slug"]
+
+
+admin.site.register(QuotaLimit, QuotaLimitAdmin)
 
 # admin.site.unregister(User)
 fields = list(UserAdmin.fieldsets)

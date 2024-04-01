@@ -39,5 +39,12 @@
                    {% if request.resolver_match.url_name == i_url %}class="active"{% endif %}>Currency Converter</a>
             {% endwith %}
         </li>
+        <li>
+            {% with i_url="quotas" %}
+                <a href="{% url i_url %}"
+                   {% if request.resolver_match.url_name == i_url %}class="active"{% endif %}>Service Quotas
+                </a>
+            {% endwith %}
+        </li>
     </ul>
 </div>

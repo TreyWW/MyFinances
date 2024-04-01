@@ -1,0 +1,78 @@
+{% component_block "modal" start_open="true" %}
+{% fill "id" %}modal_view_quota_limit_info_{{ quota.id }}{% endfill %}
+{% fill "title" %}
+<h3 class="font-bold text-lg">{{ quota.name }} - ({{ quota.slug }})</h3>
+{% endfill %}
+{% fill "content" %}
+<form class="py-4 group"
+      id="modal_view_quota_limit_info_{{ quota.id }}-form"
+      hx-post="{% url "api:quotas:submit_request" slug=quota.slug %}"
+      hx-swap="none">
+    {% csrf_token %}
+    <div class="p-4">
+        <h2 class="text-xl mb-4">Description</h2>
+        <p class="">{{ quota.description }}</p>
+        <table class="w-full table my-8">
+            <thead>
+                <tr>
+                    <th class="px-4 py-2">Type</th>
+                    <th class="px-4 py-2">Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Current Utilization</td>
+                    <td>{{ quota_usage }}</td>
+                </tr>
+                <tr>
+                    <td>Applied account-level quota value</td>
+                    <td>{{ current_limit }}</td>
+                </tr>
+                <tr>
+                    <td>Default quota value</td>
+                    <td>{{ quota.value }}</td>
+                </tr>
+                <tr>
+                    <td>Adjustable</td>
+                    <td>{{ quota.adjustable }}</td>
+                </tr>
+            </tbody>
+        </table>
+        {% if quota.adjustable %}
+            <div class="divider divider-info mt-4 mb-8">Submit Request</div>
+            <div class="form-control w-full">
+                <label class="label justify-start">
+                    New limit value
+                    <span class="required_star">*</span>
+                </label>
+                <input name="new_value"
+                       type="text"
+                       class="input input-block input-bordered"
+                       required>
+            </div>
+            <div class="form-control w-full">
+                <label class="label justify-start">
+                    Reason for increased limit
+                    <span class="required_star">*</span>
+                </label>
+                <textarea name="reason"
+                          minlength="25"
+                          class="textarea textarea-block textarea-bordered"
+                          required></textarea>
+            </div>
+        {% endif %}
+    </div>
+    <div class="modal-action">
+        <button type="button"
+                _="on click call #modal_view_quota_limit_info_{{ quota.id }}.close()"
+                class="btn btn-white">Close</button>
+        {% if quota.adjustable %}
+            <button class="group-invalid:btn-disabled btn btn-outline btn-secondary"
+                    _="on click if #modal_view_quota_limit_info_{{ quota.id }}-form.checkValidity() call #modal_view_quota_limit_info_{{ quota.id }}.close() end">
+                Request quota increase at account-level
+            </button>
+        {% endif %}
+    </div>
+</form>
+{% endfill %}
+{% endcomponent_block %}

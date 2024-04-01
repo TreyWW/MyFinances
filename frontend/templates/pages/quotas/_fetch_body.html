@@ -1,0 +1,30 @@
+<tbody id="table_body">
+    {% for quota in quotas %}
+        <tr>
+            <td>
+                <button hx-trigger="click once"
+                        hx-swap="beforeend"
+                        hx-target="#modal_container"
+                        class="link link-primary"
+                        title="{{ quota.quota_object.description }}"
+                        _="on click call modal_view_quota_limit_info_{{ quota.quota_object.id }}.showModal()"
+                        hx-get="{% url "api:base:modal retrieve with context" context_type="quota" context_value=quota.quota_object.slug modal_name="view_quota_limit_info" %}">
+                    {{ quota.quota_object.name }}
+                </button>
+            </td>
+            <td class="text-right">{{ quota.period_usage }}</td>
+            <td class="text-right">{{ quota.quota_limit }}</td>
+            <td class="text-right">{{ quota.quota_object.value }}</td>
+            <td class="text-center">
+                {% if quota.quota_object.adjustable %}
+                    Account Level
+                {% else %}
+                    Not adjustable
+                {% endif %}
+            </td>
+        </tr>
+    {% empty %}
+        <td colspan="100%" class="text-center">No Quotas Found</td>
+    {% endfor %}
+</tbody>
+{% component "messages_list" %}
