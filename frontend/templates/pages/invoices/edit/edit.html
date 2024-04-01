@@ -2,67 +2,67 @@
 {% load static %}
 {% load markdownify %}
 {% block content %}
-    <form method="post" class="card bg-base-100 p-6 group">
-        {% csrf_token %}
-        <div class="divider">STEP 1 - DESTINATIONS</div>
-        <div class="my-4 flex w-full flex-col">
-            <div class="mb-2 grid grid-cols-2">
-                <h3 class="text-sm text-natural font-semibold ms-3">From</h3>
-                <h3 class="text-sm text-natural font-semibold hidden lg:block text-end me-6">To</h3>
-            </div>
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full"
-                 id="to_and_from_container">
-                {% include 'pages/invoices/edit/edit_from_destination.html' %}
-                {% include 'pages/invoices/edit/edit_to_destination.html' %}
-            </div>
+<form method="post" class="card bg-base-100 p-6 group">
+    {% csrf_token %}
+    <div class="divider">STEP 1 - DESTINATIONS</div>
+    <div class="my-4 flex w-full flex-col">
+        <div class="mb-2 grid grid-cols-2">
+            <h3 class="text-sm text-natural font-semibold ms-3">From</h3>
+            <h3 class="text-sm text-natural font-semibold hidden lg:block text-end me-6">To</h3>
         </div>
-        <div class="divider my-4">STEP 2 - DATES</div>
-        <div class="my-4 flex w-full flex-col">
-            <div class="w-full gap-4 grid grid-cols-1 lg:grid-cols-2">
-                <div class="input_card">
-                    <div class="card-body">
-                        <div class="form-control w-full">
-                            <label class="label justify-start">
-                                Issue date
-                                <span class="required_star">*</span>
-                            </label>
-                            <input required
-                                   id="dateIssued"
-                                   name="date_issued"
-                                   placeholder=""
-                                   value="{{ og_issue_date | date:"Y-m-d" }}"
-                                   type="date"
-                                   class="peer input input-bordered input-block">
-                            <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden ">
-                                <span class="label-text-alt text-error">Please enter a valid date.</span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                <div class="input_card">
-                    <div class="card-body">
-                        <div class="form-control w-full">
-                            <label class="label justify-start">
-                                Due date
-                                <span class="required_star">*</span>
-                            </label>
-                            <input required
-                                   name="date_due"
-                                   id="dueDate"
-                                   placeholder=""
-                                   type="date"
-                                   class="peer input-bordered input input-block"
-                                   value="{{ og_due_date | date:"Y-m-d" }}">
-                            <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden ">
-                                <span class="label-text-alt text-error">Please enter a valid date.</span>
-                            </label>
-                        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full"
+             id="to_and_from_container">
+            {% include 'pages/invoices/edit/edit_from_destination.html' %}
+            {% include 'pages/invoices/edit/edit_to_destination.html' %}
+        </div>
+    </div>
+    <div class="divider my-4">STEP 2 - DATES</div>
+    <div class="my-4 flex w-full flex-col">
+        <div class="w-full gap-4 grid grid-cols-1 lg:grid-cols-2">
+            <div class="input_card">
+                <div class="card-body">
+                    <div class="form-control w-full">
+                        <label class="label justify-start">
+                            Issue date
+                            <span class="required_star">*</span>
+                        </label>
+                        <input required
+                               id="dateIssued"
+                               name="date_issued"
+                               placeholder=""
+                                value="{{ og_issue_date | date:"Y-m-d" }}"
+                                type="date"
+                            class="peer input input-bordered input-block">
+                        <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden ">
+                            <span class="label-text-alt text-error">Please enter a valid date.</span>
+                        </label>
                     </div>
                 </div>
             </div>
+            <div class="input_card">
+                <div class="card-body">
+                    <div class="form-control w-full">
+                        <label class="label justify-start">
+                            Due date
+                            <span class="required_star">*</span>
+                        </label>
+                        <input required
+                               name="date_due"
+                               id="dueDate"
+                               placeholder=""
+                               type="date"
+                               class="peer input-bordered input input-block"
+                               value="{{ og_due_date | date:"Y-m-d" }}">
+                        <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden ">
+                            <span class="label-text-alt text-error">Please enter a valid date.</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="divider my-4">STEP 3 - SERVICES</div>
-        {% component_block "pages:invoices:create:services_table" %}
+    </div>
+    <div class="divider my-4">STEP 3 - SERVICES</div>
+    {% component_block "pages:invoices:create:services_table" %}
     {% endcomponent_block %}
     <div class="group-invalid:tooltip mt-4"
          data-tip="Fill out all required details to save the invoice.">

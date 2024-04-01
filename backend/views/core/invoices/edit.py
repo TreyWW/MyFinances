@@ -26,6 +26,7 @@ def invoice_get_existing_data(invoice_obj):
         "og_issue_date": invoice_obj.date_issued,
         "og_due_date": invoice_obj.date_due,
         "invoice_object": invoice_obj,
+        "currency_symbol": invoice_obj.get_currency_symbol(),
         "rows": invoice_obj.items.all(),
     }
     if invoice_obj.client_to:

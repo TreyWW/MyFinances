@@ -1,11 +1,11 @@
+from pyexpat.errors import messages
 from PIL import Image
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.sessions.models import Session
 from django.http import HttpRequest
 from django.shortcuts import render
 
-from backend.decorators import *
-from backend.models import *
+from backend.models import UserSettings
 
 
 def settings_page(request: HttpRequest):
@@ -27,9 +27,9 @@ def settings_page(request: HttpRequest):
 
     if request.method == "POST" and request.htmx:
         section = request.POST.get("section")
-        profile_picture = request.FILES.get("profile_image")
 
         if section == "profile_picture":
+            profile_picture = request.FILES.get("profile_image")
             if profile_picture:
                 try:
                     # Max file size is 10MB (Change the first number to determine the size in MB)

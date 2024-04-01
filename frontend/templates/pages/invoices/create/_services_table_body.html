@@ -2,58 +2,58 @@
 {% load markdownify %}
 {% load mathfilters %}
 {% for row in rows %}
-    <tr>
-        <td>
-            {% if row.id %}
-                <input class="hidden" name="service_name[]" value="{{ row.name }}">
-                <input class="hidden"
-                       name="service_description[]"
-                       value="{{ row.description }}">
-                {{ row.name|markdownify }}
-                {{ row.description|markdownify }}
-            {% else %}
-                <input class="hidden" name="service_name[]" value="{{ row.service_name }}">
-                <input class="hidden"
-                       name="service_description[]"
-                       value="{{ row.service_description }}">
-                {{ row.service_name|markdownify }}
-                {{ row.service_description|markdownify }}
-            {% endif %}
-        </td>
-        <td>
-            <input class="hidden" name="hours[]" value="{{ row.hours }}">
-            {{ row.hours|intcomma }}
-        </td>
-        <td>
-            <input class="hidden"
-                   name="price_per_hour[]"
-                   value="{{ row.price_per_hour }}">
-            £{{ row.price_per_hour }}
-        </td>
-        <td>
-            {% if row.id %}
-                <input class="hidden"
-                       name="total_price[]"
-                       value="{{ row.hours|mul:row.price_per_hour|floatformat:2 }}">
-                £{{ row.hours|mul:row.price_per_hour|floatformat:2|intcomma }}
-            {% else %}
-                <input class="hidden" name="total_price[]" value="{{ row.total_price }}">
-                £{{ row.total_price|floatformat:2|intcomma }}
-            {% endif %}
-        </td>
-        <td>
-            <button type="button" class="btn btn-outline btn-error btn-xs" _="on click remove closest
+<tr>
+    <td>
+        {% if row.id %}
+        <input class="hidden" name="service_name[]" value="{{ row.name }}">
+        <input class="hidden"
+               name="service_description[]"
+               value="{{ row.description }}">
+        {{ row.name|markdownify }}
+        {{ row.description|markdownify }}
+        {% else %}
+        <input class="hidden" name="service_name[]" value="{{ row.service_name }}">
+        <input class="hidden"
+               name="service_description[]"
+               value="{{ row.service_description }}">
+        {{ row.service_name|markdownify }}
+        {{ row.service_description|markdownify }}
+        {% endif %}
+    </td>
+    <td>
+        <input class="hidden" name="hours[]" value="{{ row.hours }}">
+        {{ row.hours|intcomma }}
+    </td>
+    <td>
+        <input class="hidden"
+               name="price_per_hour[]"
+               value="{{ row.price_per_hour }}">
+        {{ currency_symbol }}{{ row.price_per_hour }}
+    </td>
+    <td>
+        {% if row.id %}
+        <input class="hidden"
+               name="total_price[]"
+               value="{{ row.hours|mul:row.price_per_hour|floatformat:2 }}">
+        {{ currency_symbol }}{{ row.hours|mul:row.price_per_hour|floatformat:2|intcomma }}
+        {% else %}
+            <input class="hidden" name="total_price[]" value="{{ row.total_price }}">
+            {{ currency_symbol }}{{ row.total_price|floatformat:2|intcomma }}
+        {% endif %}
+    </td>
+    <td>
+        <button type="button" class="btn btn-outline btn-error btn-xs" _="on click remove closest
                 <tr/>
                 ">
-                <i class="fa-solid fa-trash-can pe-2"></i>
-                Delete
-            </button>
-        </td>
-    </tr>
+            <i class="fa-solid fa-trash-can pe-2"></i>
+            Delete
+        </button>
+    </td>
+</tr>
 {% empty %}
-    <tr>
-        <td colspan="100%" class="text-center">No services added</td>
-    </tr>
+<tr>
+    <td colspan="100%" class="text-center">No services added</td>
+</tr>
 {% endfor %}
 {##}
 {#<script>#}
