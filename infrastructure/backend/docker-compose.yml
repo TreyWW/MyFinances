@@ -14,7 +14,7 @@ services:
     networks:
       - myfinances_network
     env_file:
-      - ../../env/MyFinances.env
+      - ../../.env
   nginx:
     restart: always
     image: nginx:latest

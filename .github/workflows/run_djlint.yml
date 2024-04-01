@@ -49,11 +49,6 @@ jobs:
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: poetry install --only dev --no-interaction --no-root
       #----------------------------------------------
-      # install your root project, if required
-      #----------------------------------------------
-      - name: Install library
-        run: poetry install --no-interaction
-      #----------------------------------------------
       #    add matrix specifics and run lints
       #----------------------------------------------
       - name: Run Lint

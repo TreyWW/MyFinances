@@ -28,17 +28,17 @@
             <input class="hidden"
                    name="price_per_hour[]"
                    value="{{ row.price_per_hour }}">
-            £{{ row.price_per_hour }}
+            {{ currency_symbol }}{{ row.price_per_hour }}
         </td>
         <td>
             {% if row.id %}
                 <input class="hidden"
                        name="total_price[]"
                        value="{{ row.hours|mul:row.price_per_hour|floatformat:2 }}">
-                £{{ row.hours|mul:row.price_per_hour|floatformat:2|intcomma }}
+                {{ currency_symbol }}{{ row.hours|mul:row.price_per_hour|floatformat:2|intcomma }}
             {% else %}
                 <input class="hidden" name="total_price[]" value="{{ row.total_price }}">
-                £{{ row.total_price|floatformat:2|intcomma }}
+                {{ currency_symbol }}{{ row.total_price|floatformat:2|intcomma }}
             {% endif %}
         </td>
         <td>

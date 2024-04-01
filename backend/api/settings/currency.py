@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
-from backend.models import UserSettings  # Replace with your actual model
+from backend.models import UserSettings
 
 
 @require_http_methods(["POST"])

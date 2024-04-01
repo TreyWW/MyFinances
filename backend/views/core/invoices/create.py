@@ -32,10 +32,12 @@ def invoice_page_post(request: HttpRequest):
             request.POST.getlist("price_per_hour[]"),
         )
     ]
+    currency = request.user.user_profile.currency
 
     invoice = Invoice(
         date_due=datetime.strptime(request.POST.get("date_due"), "%Y-%m-%d").date(),
         date_issued=request.POST.get("date_issued"),
+        currency=currency,
     )
 
     if request.user.logged_in_as_team:
