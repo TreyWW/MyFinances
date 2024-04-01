@@ -27,7 +27,7 @@
             <p class="mt-2 text-gray-600">INV #{{ invoice.invoice_id|default:invoice.id }}</p>
             <p class="text-gray-600">Invoice date: {{ invoice.date_issued|date:"d/m/Y" }}</p>
             <p class="text-gray-600">Due date: {{ invoice.date_due|date:"d/m/Y" }}</p>
-            <p class="text-gray-600">Balance Due: {{ currency_symbol }}{{ invoice.get_total_price }}</p>
+            <p class="text-gray-600">Balance Due: {{ invoice.get_currency_symbol }}{{ invoice.get_total_price }}</p>
         </div>
     </div>
     <!-- Client info -->
@@ -75,7 +75,7 @@
                             <span class="text-sm text-gray-900">{{ item.price_per_hour }}</span>
                         </td>
                         <td class="px-6 py-4 text-right whitespace-nowrap">
-                            <span class="text-sm text-gray-900">{{ currency_symbol }}{{ item.get_total_price | floatformat:2 }}</span>
+                            <span class="text-sm text-gray-900">{{ invoice.get_currency_symbol }}{{ item.get_total_price | floatformat:2 }}</span>
                         </td>
                     </tr>
                 {% endfor %}
@@ -87,7 +87,7 @@
                         Subtotal
                     </th>
                     <td class="px-6 py-3 text-right text-sm font-medium text-gray-500 uppercase tracking-wider">
-                        {{ currency_symbol }}{{ invoice.get_subtotal }}
+                        {{ invoice.get_currency_symbol }}{{ invoice.get_subtotal }}
                     </td>
                 </tr>
                 {% if tax %}
@@ -98,7 +98,7 @@
                             Tax
                         </th>
                         <td class="px-6 py-3 text-right text-sm font-medium text-gray-500 uppercase tracking-wider">
-                            {{ currency_symbol }}0.00
+                            {{ invoice.get_currency_symbol }}0.00
                         </td>
                     </tr>
                 {% endif %}
@@ -109,7 +109,7 @@
                             Discount
                         </th>
                         <td class="px-6 py-3 text-right text-sm font-medium text-error uppercase tracking-wider text-balance">
-                            {{ invoice.discount_percentage }}% off (-{{ currency_symbol }}{{ invoice.get_percentage_amount }})
+                            {{ invoice.discount_percentage }}% off (-{{ invoice.get_currency_symbol }}{{ invoice.get_percentage_amount }})
                         </td>
                     </tr>
                 {% endif %}
@@ -120,7 +120,7 @@
                             {% if not invoice.discount_percentage %}Discount{% endif %}
                         </th>
                         <td class="px-6 py-3 text-right text-sm font-medium text-error uppercase tracking-wider">
-                            -{{ currency_symbol }}{{ invoice.discount_amount }}
+                            -{{ invoice.get_currency_symbol }}{{ invoice.discount_amount }}
                         </td>
                     </tr>
                 {% endif %}
@@ -130,7 +130,7 @@
                         Total
                     </th>
                     <td class="px-6 py-3 text-right text-sm font-bold text-gray-900 uppercase tracking-wider">
-                        {{ currency_symbol }}{{ invoice.get_total_price }}
+                        {{ invoice.get_currency_symbol }}{{ invoice.get_total_price }}
                     </td>
                 </tr>
             </tfoot>
