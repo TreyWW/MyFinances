@@ -1,13 +1,13 @@
 from datetime import datetime
 from decimal import Decimal
-from typing import Optional, NoReturn, Union
+from typing import Optional, NoReturn, Union, Literal
 from uuid import uuid4
 
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth.models import UserManager, AbstractUser, AnonymousUser
 from django.core.validators import MaxValueValidator
 from django.db import models
-from django.db.models import Count
+from django.db.models import Count, QuerySet
 from django.utils import timezone
 from django.utils.crypto import get_random_string
 from shortuuid.django_fields import ShortUUIDField
@@ -573,7 +573,7 @@ class QuotaLimit(models.Model):
         FOREVER = "forever"
 
     slug = models.CharField(max_length=100, unique=True, editable=False)
-    name = models.CharField(max_length=100, unique=True, editable=False)
+    name = models.CharField(max_length=100, editable=False)
     description = models.TextField(max_length=500, null=True, blank=True)
     value = models.IntegerField()
     updated_at = models.DateTimeField(auto_now=True)
@@ -587,9 +587,12 @@ class QuotaLimit(models.Model):
     def __str__(self):
         return self.name
 
-    def get_quota_limit(self, user: User):
+    def get_quota_limit(self, user: User, quota_limit: Optional["QuotaLimit"] = None):
         try:
-            user_quota_override = self.quota_overrides.get(user=user)
+            if quota_limit:
+                user_quota_override = quota_limit
+            else:
+                user_quota_override = self.quota_overrides.get(user=user)
             return user_quota_override.value
         except QuotaOverrides.DoesNotExist:
             return self.value
@@ -606,26 +609,34 @@ class QuotaLimit(models.Model):
 
     def strict_goes_above_limit(self, user: User, extra: Optional[str | int] = None) -> bool:
         current = self.strict_get_quotas(user, extra)
-        current = current.count() if current else None
+        current = current.count() if current != "Not Available" else None
         return current >= self.get_quota_limit(user) if current else False
 
-    def strict_get_quotas(self, user: User, extra: Optional[str | int] = None):
+    def strict_get_quotas(
+        self, user: User, extra: Optional[str | int] = None, quota_limit: Optional["QuotaLimit"] = None
+    ) -> Union['QuerySet["QuotaUsage"]', Literal["Not Available"]]:
+        """
+        Gets all usages of a quota
+        :return: QuerySet of quota usages OR "Not Available" if utilisation isn't available (e.g. per invoice you can't get in total)
+        """
         current = None
+        quota_limit = quota_limit.quota_usage if quota_limit else QuotaUsage.objects.filter(user=user, quota_limit=self)
+
         if self.limit_type == "forever":
             current = self.quota_usage.filter(user=user, quota_limit=self)
         elif self.limit_type == "per_month":
             current_month = timezone.now().month
             current_year = timezone.now().year
-            current = self.quota_usage.filter(user=user, quota_limit=self, created_at__year=current_year, created_at__month=current_month)
+            current = quota_limit.filter(created_at__year=current_year, created_at__month=current_month)
         elif self.limit_type == "per_day":
             current_day = timezone.now().day
             current_month = timezone.now().month
             current_year = timezone.now().year
-            current = self.quota_usage.filter(
-                user=user, quota_limit=self, created_at__year=current_year, created_at__month=current_month, created_at__day=current_day
-            )
-        elif self.limit_type in ["per_client", "per_invoice", "per_team", "per_receipt", "per_quota"]:
-            current = self.quota_usage.filter(user=user, quota_limit=self, extra_data__exact=extra)
+            current = quota_limit.filter(created_at__year=current_year, created_at__month=current_month, created_at__day=current_day)
+        elif self.limit_type in ["per_client", "per_invoice", "per_team", "per_receipt", "per_quota"] and extra:
+            current = quota_limit.filter(extra_data=extra)
+        else:
+            return "Not Available"
         return current
 
     @classmethod
