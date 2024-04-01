@@ -613,8 +613,9 @@ class QuotaLimit(models.Model):
             current_day = timezone.now().day
             current_month = timezone.now().month
             current_year = timezone.now().year
-            current = self.quota_usage.filter(user=user, quota_limit=self, created_at__year=current_year, created_at__month=current_month,
-                                              created_at__day=current_day)
+            current = self.quota_usage.filter(
+                user=user, quota_limit=self, created_at__year=current_year, created_at__month=current_month, created_at__day=current_day
+            )
         elif self.limit_type in ["per_client", "per_invoice", "per_team", "per_receipt", "per_quota"]:
             current = self.quota_usage.filter(user=user, quota_limit=self, extra_data__exact=extra)
         return current
@@ -685,11 +686,7 @@ class QuotaUsage(models.Model):
         except QuotaLimit.DoesNotExist:
             return "Not Found"
 
-        return cls.objects.create(
-            user=user,
-            quota_limit=quota_limit,
-            extra_data=extra_data
-        )
+        return cls.objects.create(user=user, quota_limit=quota_limit, extra_data=extra_data)
 
     @classmethod
     def get_usage(self, user: User, limit: str | QuotaLimit):

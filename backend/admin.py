@@ -26,7 +26,7 @@ from backend.models import (
     QuotaUsage,
     QuotaIncreaseRequest,
     Receipt,
-    ReceiptDownloadToken
+    ReceiptDownloadToken,
 )
 
 # from django.contrib.auth.models imp/ort User
@@ -55,7 +55,7 @@ admin.site.register(
         QuotaUsage,
         QuotaIncreaseRequest,
         Receipt,
-        ReceiptDownloadToken
+        ReceiptDownloadToken,
     ]
 )
 

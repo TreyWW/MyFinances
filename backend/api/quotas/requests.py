@@ -40,10 +40,7 @@ def submit_request(request: HttpRequest, slug) -> HttpResponse:
         return error(request, validate.message)
 
     quota_increase_request = QuotaIncreaseRequest.objects.create(
-        user=request.user,
-        quota_limit=quota_limit,
-        new_value=new_value,
-        current_value=current
+        user=request.user, quota_limit=quota_limit, new_value=new_value, current_value=current
     )
 
     QuotaUsage.create_str(request.user, "quota_increase-request", quota_increase_request.id)

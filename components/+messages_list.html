@@ -13,13 +13,13 @@
                 {% endautoescape %}
             </div>
             {% if autohide != False %}
-            <script>
+                <script>
                 var scriptElement = document.currentScript;
                 var divElement = scriptElement.parentNode;
                 setTimeout(function () {
                     clicked_alert_to_close(divElement);
                 }, 7000);
-            </script>
+                </script>
             {% endif %}
         </div>
     {% endfor %}

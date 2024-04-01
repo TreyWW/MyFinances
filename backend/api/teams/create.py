@@ -19,7 +19,6 @@ def create_team(request: HttpRequest):
     QuotaUsage.create_str(request.user, "teams-count", team.id)
     QuotaUsage.create_str(request.user, "teams-joined", team.id)
 
-
     if not request.user.logged_in_as_team:
         request.user.logged_in_as_team = team
         request.user.save()

@@ -55,7 +55,6 @@ def send_user_team_invite(request: HttpRequest):
         resp["HX-Trigger-After-Swap"] = "invite_user_error"
         return resp
 
-
     if not user_email:
         return return_error_notif(request, "Please enter a valid user email")
 
@@ -73,12 +72,14 @@ def send_user_team_invite(request: HttpRequest):
     try:
         quota_limit = QuotaLimit.objects.get(slug="teams-user_count")
         if team.members.count() >= quota_limit.get_quota_limit(team.leader):
-            return return_error_notif(request, "Unfortunately your team has reached the maximum members limit. Go to the service quotas "
-                                               "page to request a higher number or kick some users to make space.", autohide=False)
+            return return_error_notif(
+                request,
+                "Unfortunately your team has reached the maximum members limit. Go to the service quotas "
+                "page to request a higher number or kick some users to make space.",
+                autohide=False,
+            )
     except QuotaLimit.DoesNotExist:
         return return_error_notif(request, "Something went wrong with fetching the quota limit")
-
-
 
     invitation = TeamInvitation.objects.create(team=team, user=user, invited_by=request.user)
 

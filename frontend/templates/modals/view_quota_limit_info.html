@@ -1,9 +1,7 @@
 {% component_block "modal" start_open="true" %}
     {% fill "id" %}modal_view_quota_limit_info_{{ quota.id }}{% endfill %}
     {% fill "title" %}
-        <h3 class="font-bold text-lg">
-            {{ quota.name }} - ({{ quota.slug }})
-        </h3>
+        <h3 class="font-bold text-lg">{{ quota.name }} - ({{ quota.slug }})</h3>
     {% endfill %}
     {% fill "content" %}
         <form class="py-4 group"
@@ -14,7 +12,6 @@
             <div class="p-4">
                 <h2 class="text-xl mb-4">Description</h2>
                 <p class="">{{ quota.description }}</p>
-
                 <table class="w-full table my-8">
                     <thead>
                     <tr>
@@ -37,8 +34,6 @@
                     </tr>
                     </tbody>
                 </table>
-
-
                 {% if quota.adjustable %}
                     <div class="divider divider-info mt-4 mb-8">Submit Request</div>
                     <div class="form-control w-full">
@@ -46,31 +41,27 @@
                             New limit value
                             <span class="required_star">*</span>
                         </label>
-                        <input
-                            name="new_value"
-                            type="text"
-                            class="input input-block input-bordered"
-                            required>
+                        <input name="new_value"
+                               type="text"
+                               class="input input-block input-bordered"
+                               required>
                     </div>
                     <div class="form-control w-full">
                         <label class="label justify-start">
                             Reason for increased limit
                             <span class="required_star">*</span>
                         </label>
-                        <textarea
-                            name="reason"
-                            minlength="25"
-                            class="textarea textarea-block textarea-bordered"
-                            required></textarea>
+                        <textarea name="reason"
+                                  minlength="25"
+                                  class="textarea textarea-block textarea-bordered"
+                                  required></textarea>
                     </div>
                 {% endif %}
             </div>
-
             <div class="modal-action">
                 <button type="button"
                         _="on click call #modal_view_quota_limit_info_{{ quota.id }}.close()"
-                        class="btn btn-white">
-                    Close
+                        class="btn btn-white">Close
                 </button>
                 {% if quota.adjustable %}
                     <button class="group-invalid:btn-disabled btn btn-outline btn-secondary"

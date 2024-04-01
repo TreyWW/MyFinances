@@ -10,8 +10,7 @@ def teams_dashboard(request: HttpRequest):
     users_team: Optional[Team] = request.user.logged_in_as_team
 
     if not users_team:
-        user_with_counts = User.objects.prefetch_related("teams_joined", "teams_leader_of").get(
-            pk=request.user.pk)
+        user_with_counts = User.objects.prefetch_related("teams_joined", "teams_leader_of").get(pk=request.user.pk)
         return render(
             request,
             "pages/settings/teams/main.html",

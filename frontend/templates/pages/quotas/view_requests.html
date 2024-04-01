@@ -2,7 +2,6 @@
 {% block content %}
     <div class="card w-full p-6 bg-base-100 shadow-xl mt-2">
         <h2 class="text-xl">View Requests</h2>
-
         <table class="mt-3 table w-full">
             <thead>
             <tr>
@@ -39,9 +38,7 @@
                 </tr>
             {% empty %}
                 <tr>
-                    <td class="text-center" colspan="100%">
-                        There are currently no submitted requests
-                    </td>
+                    <td class="text-center" colspan="100%">There are currently no submitted requests</td>
                 </tr>
             {% endfor %}
             </tbody>

@@ -43,7 +43,6 @@ def receipt_create(request: HttpRequest):
         total_price=total_price,
     )
 
-
     if request.user.logged_in_as_team:
         receipt.organization = request.user.logged_in_as_team
     else:
