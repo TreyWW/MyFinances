@@ -6,7 +6,7 @@
 
 [Install Poetry](https://python-poetry.org/docs/#installing-manually)
 ```bash
-poetry install
+poetry install --no-root
 ```
 
 4. [Setup our frontend (click to view guide)](getting-setup/other-environments/frontend)
