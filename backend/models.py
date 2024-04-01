@@ -349,11 +349,11 @@ class Invoice(models.Model):
                 "company": self.client_company,
             }
 
-    def get_subtotal(self):
+    def get_subtotal(self) -> Decimal:
         subtotal = 0
         for item in self.items.all():
             subtotal += item.get_total_price()
-        return round(subtotal, 2)
+        return Decimal(round(subtotal, 2))
 
     def get_tax(self, amount: float = 0.00) -> float:
         amount = amount or self.get_subtotal()
@@ -368,8 +368,8 @@ class Invoice(models.Model):
             return round(total * (self.discount_percentage / 100), 2)
         return Decimal(0)
 
-    def get_total_price(self):
-        total = self.get_subtotal() or 0.00
+    def get_total_price(self) -> Decimal:
+        total = self.get_subtotal() or Decimal(0)
 
         total -= self.get_percentage_amount()
 
@@ -382,7 +382,7 @@ class Invoice(models.Model):
         else:
             total -= self.get_tax(total)
 
-        return round(total, 2)
+        return Decimal(round(total, 2))
 
     def has_access(self, user: User) -> bool:
         if not user.is_authenticated:
