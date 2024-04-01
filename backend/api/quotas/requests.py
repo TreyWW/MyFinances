@@ -24,8 +24,9 @@ def submit_request(request: HttpRequest, slug) -> HttpResponse:
         return error(request, "Failed to get the quota limit type")
 
     usage_per_item = quota_usage_check_under(request, "quota_increase-request", extra_data=quota_limit.id, api=True, htmx=True)
-    usage_per_month = quota_usage_check_under(request, "quota_increase-requests_per_month_per_quota", extra_data=quota_limit.id, api=True,
-                                              htmx=True)
+    usage_per_month = quota_usage_check_under(
+        request, "quota_increase-requests_per_month_per_quota", extra_data=quota_limit.id, api=True, htmx=True
+    )
 
     if not isinstance(usage_per_item, bool):
         return usage_per_item
