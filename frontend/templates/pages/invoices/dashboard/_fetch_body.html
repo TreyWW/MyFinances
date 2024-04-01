@@ -22,7 +22,7 @@
                     </div>
                 </div>
             </td>
-            <td>£{{ invoice.amount | default_if_none:0 | floatformat:2 | intcomma }}</td>
+            <td>{{ invoice.get_currency_symbol }}{{ invoice.amount | default_if_none:0 | floatformat:2 | intcomma }}</td>
             <td>
                 {% component "pages:invoices:dashboard:payment_status_badge" status=invoice.payment_status inv_id=invoice.id %}
             </td>

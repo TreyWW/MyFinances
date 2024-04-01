@@ -300,6 +300,11 @@ class Invoice(models.Model):
 
     payment_status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="pending")
     items = models.ManyToManyField(InvoiceItem)
+    currency = models.CharField(
+        max_length=3,
+        default="GBP",
+        choices=[(code, info["name"]) for code, info in UserSettings.CURRENCIES.items()],
+    )
 
     date_created = models.DateTimeField(auto_now_add=True)
     date_due = models.DateField()
@@ -387,6 +392,9 @@ class Invoice(models.Model):
             return self.organization == user.logged_in_as_team
         else:
             return self.user == user
+
+    def get_currency_symbol(self):
+        return UserSettings.CURRENCIES.get(self.currency, {}).get("symbol", "$")
 
 
 class InvoiceURL(models.Model):
