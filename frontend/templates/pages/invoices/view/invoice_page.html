@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html :class="{ 'theme-dark': dark }" x-data="data()" lang="en" style="">
+<html class="{ 'theme-dark': dark }" x-data="data()" lang="en">
     {% include 'base/_head.html' %}
     <body style="background-color: #94c0eb;">
-        <div class="flex-1 min-h-screen overflow-y-auto pt-8 px-6 pb-4 bg-base-200">
+        <div class="flex-1 min-h-screen overflow-y-auto px-8 bg-base-200">
             <div tabindex="-1"
                  id="status_banner"
                  class="print-ignore fixed top-0 left-0 z-50 grid grid-cols-3 w-full p-4 bg-base-100 shadow text-base-content">
@@ -90,11 +90,14 @@
         .print-ignore {
             display: none;
         }
+        .print-content {
+            padding-top: 0 !important;
+            margin-top: 0 !important;
+        }
 
         body, html {
             visibility: visible;
-            margin: 0;
-            padding: 0;
+            padding: 0 !important;
         }
 
 
