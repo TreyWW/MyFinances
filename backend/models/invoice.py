@@ -8,6 +8,7 @@ from backend.models.user import Team, User, UserSettings
 from backend.models.client import Client
 from backend.models.utils import USER_OR_ORGANIZATION_CONSTRAINT
 from settings.settings import AWS_TAGS_APP_NAME
+from django.utils import timezone
 
 
 class InvoiceProduct(models.Model):

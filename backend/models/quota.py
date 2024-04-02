@@ -1,6 +1,7 @@
 from django.db import models
 from backend.models.user import User
 from typing import Optional, NoReturn, Union, Literal
+from django.utils import timezone
 
 
 class QuotaLimit(models.Model):
