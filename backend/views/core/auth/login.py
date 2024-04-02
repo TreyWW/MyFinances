@@ -13,7 +13,8 @@ from django.views.decorators.http import require_GET, require_POST
 from django_ratelimit.decorators import ratelimit
 
 from backend.decorators import *
-from backend.models import LoginLog, User, VerificationCodes, AuditLog
+from backend.models import User, VerificationCodes
+from backend.models_db.logger import LoginLog, AuditLog
 from backend.views.core.auth.verify import create_magic_link
 from settings.helpers import send_email, ARE_EMAILS_ENABLED
 

@@ -2,7 +2,8 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 from login_required import login_not_required
 
-from backend.models import Invoice, UserSettings, InvoiceURL
+from backend.models import UserSettings
+from backend.models_db.invoice import Invoice,  InvoiceURL
 
 
 def preview(request, invoice_id):

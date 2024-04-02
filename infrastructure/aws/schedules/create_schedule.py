@@ -5,7 +5,7 @@ from typing import Optional, Union, Literal
 import pytz
 from django.utils import timezone
 
-from backend.models import Invoice, InvoiceOnetimeSchedule
+from backend.models_db.invoice import Invoice, InvoiceOnetimeSchedule
 from infrastructure.aws.handler import get_event_bridge_scheduler
 from infrastructure.aws.iam.sfn import get_or_create_sfn_execute_role_arn
 from infrastructure.aws.step_functions.scheduler import get_step_function

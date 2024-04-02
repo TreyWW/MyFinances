@@ -2,7 +2,7 @@ from django.http import FileResponse, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 
-from backend.models import Receipt, ReceiptDownloadToken
+from backend.models_db.receipt import Receipt, ReceiptDownloadToken
 
 
 def download_receipt(request, token):

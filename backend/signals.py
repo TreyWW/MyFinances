@@ -12,7 +12,9 @@ from django.dispatch import receiver
 from django.urls import reverse
 
 import settings.settings
-from backend.models import UserSettings, Receipt, User, FeatureFlags, VerificationCodes, QuotaLimit
+from backend.models import UserSettings, User, FeatureFlags, VerificationCodes, QuotaLimit
+from backend.models_db.receipt import Receipt
+
 from settings.helpers import ARE_EMAILS_ENABLED, send_email
 
 

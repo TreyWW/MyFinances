@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.http import HttpRequest
 from django.shortcuts import render, redirect
 
-from backend.models import Client
+from backend.models_db.client import Client
 
 
 def create_client(request: HttpRequest):

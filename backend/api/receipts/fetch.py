@@ -2,7 +2,7 @@ from django.db.models import Q
 from django.http import HttpRequest
 from django.shortcuts import render, redirect
 
-from backend.models import Receipt
+from backend.models_db.receipt import Receipt
 
 
 def fetch_all_receipts(request: HttpRequest):

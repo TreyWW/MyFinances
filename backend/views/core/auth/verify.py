@@ -6,7 +6,8 @@ from django.utils import timezone
 from django.views.decorators.http import require_POST
 from django_ratelimit.decorators import ratelimit
 
-from backend.models import VerificationCodes, User, TracebackError
+from backend.models import VerificationCodes, User
+from backend.models_db.error import TracebackError
 from settings import settings
 from settings.helpers import send_email, ARE_EMAILS_ENABLED
 
@@ -76,10 +77,10 @@ def resend_verification_code(request):
         subject="Verify your email",
         message=f"""
         Hi {user.first_name if user.first_name else "User"},
-        
+
         Verification for your email has been requested to link this email to your MyFinances account.
         If this wasn't you, you can simply ignore this email.
-        
+
         If it was you, you can complete the verification by clicking the link below.
         Verify Link: {magic_link_url}
     """,

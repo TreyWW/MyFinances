@@ -6,7 +6,8 @@ from django.http import HttpRequest
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
 
-from backend.models import Invoice, UserSettings
+from backend.models import UserSettings
+from backend.models_db.invoice import Invoice
 
 
 class PreviewContext(TypedDict):

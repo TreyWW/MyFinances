@@ -11,7 +11,9 @@ from django.views.decorators.http import require_http_methods, require_POST, req
 from django_ratelimit.core import is_ratelimited
 
 from backend.decorators import feature_flag_check
-from backend.models import Invoice, AuditLog, APIKey, InvoiceOnetimeSchedule, InvoiceURL
+from backend.models import APIKey
+from backend.models_db.logger import AuditLog
+from backend.models_db.invoice import Invoice, InvoiceOnetimeSchedule, InvoiceURL
 from infrastructure.aws.handler import get_iam_client
 from infrastructure.aws.schedules.create_schedule import (
     create_onetime_schedule,
@@ -85,13 +87,13 @@ def receive_scheduled_invoice(request: HttpRequest):
         subject=f"Invoice #{invoice_id} ready",
         message=f"""
             Hi {client_name},
-            
+
             This is an automated email to let you know that your invoice #{invoice_id} is now ready. The due date is {invoice.date_due}.
-            
+
             You can view the invoice here: {invoice_url}
-            
+
             Best regards
-            
+
             Note: This is an automated email sent out by MyFinances on behalf of '{invoice.self_company or invoice.self_name}'. If you
             believe this is spam or fraudulent please report it to us and DO NOT pay the invoice. Once a report has been made you will
             have a case opened.

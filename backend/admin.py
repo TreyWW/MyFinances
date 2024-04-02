@@ -1,32 +1,40 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from backend.models import (
-    Client,
+from backend.models_db.client import Client
+from backend.models_db.notification import Notification
+from backend.models_db.receipt import (
+    Receipt,
+    ReceiptDownloadToken
+)
+from backend.models_db.invoice import (
     Invoice,
     InvoiceURL,
     InvoiceItem,
-    PasswordSecret,
+    InvoiceProduct,
+    InvoiceOnetimeSchedule,
+)
+from backend.models_db.logger import (
     AuditLog,
-    LoginLog,
+    LoginLog
+)
+from backend.models_db.error import (
     Error,
-    TracebackError,
+    TracebackError
+)
+from backend.models import (
+    PasswordSecret,
     UserSettings,
-    Notification,
     Team,
     TeamInvitation,
     User,
-    InvoiceProduct,
     FeatureFlags,
     VerificationCodes,
     APIKey,
-    InvoiceOnetimeSchedule,
     QuotaLimit,
     QuotaOverrides,
     QuotaUsage,
     QuotaIncreaseRequest,
-    Receipt,
-    ReceiptDownloadToken,
 )
 
 # from django.contrib.auth.models imp/ort User

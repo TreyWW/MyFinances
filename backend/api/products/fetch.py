@@ -2,7 +2,7 @@ from django.db.models import Q
 from django.http import HttpRequest
 from django.shortcuts import render
 
-from backend.models import InvoiceProduct
+from backend.models_db.invoice import InvoiceProduct
 
 
 def fetch_products(request: HttpRequest):

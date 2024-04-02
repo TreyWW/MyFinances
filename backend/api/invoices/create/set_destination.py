@@ -3,7 +3,7 @@ from django.http import HttpRequest
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
-from backend.models import Client
+from backend.models_db.client import Client
 
 to_get = ["name", "address", "city", "country", "company", "is_representative"]
 

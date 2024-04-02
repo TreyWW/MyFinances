@@ -1,7 +1,8 @@
 from django.http import HttpRequest, HttpResponseBadRequest
 from django.shortcuts import render
 
-from backend.models import UserSettings, Invoice, Team, QuotaLimit
+from backend.models import UserSettings, Team, QuotaLimit
+from backend.models_db.invoice import Invoice
 
 
 # Still working on
