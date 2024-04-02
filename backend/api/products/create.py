@@ -4,7 +4,7 @@ from django.http import HttpRequest
 from django.shortcuts import render
 
 from backend.api.products.fetch import fetch_products
-from backend.models_db.invoice import InvoiceProduct
+from backend.models.invoice import InvoiceProduct
 
 
 def create_product(request: HttpRequest):

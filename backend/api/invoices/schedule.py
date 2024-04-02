@@ -12,8 +12,8 @@ from django_ratelimit.core import is_ratelimited
 
 from backend.decorators import feature_flag_check
 from backend.models import APIKey
-from backend.models_db.logger import AuditLog
-from backend.models_db.invoice import Invoice, InvoiceOnetimeSchedule, InvoiceURL
+from backend.models.logger import AuditLog
+from backend.models.invoice import Invoice, InvoiceOnetimeSchedule, InvoiceURL
 from infrastructure.aws.handler import get_iam_client
 from infrastructure.aws.schedules.create_schedule import (
     create_onetime_schedule,

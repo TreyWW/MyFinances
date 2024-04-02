@@ -7,7 +7,7 @@ from django.views.decorators.http import require_POST
 from django_ratelimit.decorators import ratelimit
 
 from backend.models import VerificationCodes, User
-from backend.models_db.error import TracebackError
+from backend.models.error import TracebackError
 from settings import settings
 from settings.helpers import send_email, ARE_EMAILS_ENABLED
 

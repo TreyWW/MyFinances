@@ -1,6 +1,6 @@
 from django.db import models
+from backend.models.user import User
 
-from backend.models import User
 
 class Notification(models.Model):
     action_choices = [

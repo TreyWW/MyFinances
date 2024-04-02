@@ -2,8 +2,8 @@ from django.db import models
 from uuid import uuid4
 
 from settings import settings
-from backend.models import User, Team
-from backend.models_db.utils import USER_OR_ORGANIZATION_CONSTRAINT
+from backend.models.user import User, Team
+from backend.models.utils import USER_OR_ORGANIZATION_CONSTRAINT
 
 
 class Receipt(models.Model):

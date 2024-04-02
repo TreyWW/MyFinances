@@ -1,6 +1,7 @@
 from django.db import models
 
-from backend.models import Team, User
+from backend.models.user import Team, User
+
 
 class AuditLog(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)

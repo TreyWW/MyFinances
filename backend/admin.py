@@ -1,24 +1,24 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from backend.models_db.client import Client
-from backend.models_db.notification import Notification
-from backend.models_db.receipt import (
+from backend.models.client import Client
+from backend.models.notification import Notification
+from backend.models.receipt import (
     Receipt,
     ReceiptDownloadToken
 )
-from backend.models_db.invoice import (
+from backend.models.invoice import (
     Invoice,
     InvoiceURL,
     InvoiceItem,
     InvoiceProduct,
     InvoiceOnetimeSchedule,
 )
-from backend.models_db.logger import (
+from backend.models.logger import (
     AuditLog,
     LoginLog
 )
-from backend.models_db.error import (
+from backend.models.error import (
     Error,
     TracebackError
 )

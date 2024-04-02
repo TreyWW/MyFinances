@@ -6,7 +6,7 @@ from django.urls.exceptions import Resolver404
 from django.views.decorators.http import require_http_methods
 
 from backend.models import QuotaLimit
-from backend.models_db.invoice import Invoice
+from backend.models.invoice import Invoice
 
 
 @require_http_methods(["DELETE"])

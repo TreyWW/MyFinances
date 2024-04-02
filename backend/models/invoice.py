@@ -4,9 +4,9 @@ from django.core.validators import MaxValueValidator
 from shortuuid.django_fields import ShortUUIDField
 
 from settings import settings
-from backend.models import Team, User, UserSettings
-from backend.models_db.client import Client
-from backend.models_db.utils import USER_OR_ORGANIZATION_CONSTRAINT
+from backend.models.user import Team, User, UserSettings
+from backend.models.client import Client
+from backend.models.utils import USER_OR_ORGANIZATION_CONSTRAINT
 from settings.settings import AWS_TAGS_APP_NAME
 
 

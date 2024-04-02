@@ -6,7 +6,7 @@ from django.http import HttpRequest, JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods, require_POST
 
-from backend.models_db.invoice import Invoice
+from backend.models.invoice import Invoice
 
 
 @require_http_methods(["POST"])

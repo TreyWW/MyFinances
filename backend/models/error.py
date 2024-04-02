@@ -1,5 +1,5 @@
 from django.db import models
-from backend.models import User
+from backend.models.user import User
 
 class Error(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

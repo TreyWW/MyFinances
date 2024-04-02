@@ -15,7 +15,7 @@ from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods
 
-from backend.models_db.invoice import Invoice, InvoiceItem
+from backend.models.invoice import Invoice, InvoiceItem
 
 
 @require_http_methods(["GET"])

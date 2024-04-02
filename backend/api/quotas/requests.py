@@ -62,7 +62,7 @@ def error(request: HttpRequest, message: str) -> HttpResponse:
     return render(request, "partials/messages_list.html")
 
 
-def validate_request(new_value, reason, current) -> Union[True, Error]:
+def validate_request(new_value, reason, current) -> Union[bool, Error]:
     if not new_value:
         return Error("Please enter a valid increase value")
 

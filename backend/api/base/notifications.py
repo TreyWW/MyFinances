@@ -1,7 +1,7 @@
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 
-from backend.models_db.notification import Notification
+from backend.models.notification import Notification
 
 
 def get_notification_html(request: HttpRequest):

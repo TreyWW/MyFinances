@@ -1,6 +1,6 @@
 from django.db import models
-from backend.models import User, Team
-from backend.models_db.utils import USER_OR_ORGANIZATION_CONSTRAINT
+from backend.models.user import User, Team
+from backend.models.utils import USER_OR_ORGANIZATION_CONSTRAINT
 
 class Client(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)

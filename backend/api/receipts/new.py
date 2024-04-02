@@ -6,7 +6,7 @@ from django.views.decorators.http import require_http_methods
 
 from backend.decorators import quota_usage_check
 from backend.models import QuotaUsage
-from backend.models_db.receipt import Receipt
+from backend.models.receipt import Receipt
 
 @require_http_methods(["POST"])
 @quota_usage_check("receipts-count", api=True, htmx=True)

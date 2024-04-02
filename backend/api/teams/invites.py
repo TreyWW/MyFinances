@@ -2,7 +2,7 @@ from django.http import HttpRequest
 
 from backend.decorators import *
 from backend.models import Team, TeamInvitation, User
-from backend.models_db.notification import Notification
+from backend.models.notification import Notification
 
 
 def delete_notification(user: User, code: TeamInvitation.code):

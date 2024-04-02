@@ -4,7 +4,7 @@ from django.shortcuts import redirect, render
 
 from backend.decorators import quota_usage_check
 from backend.models import QuotaUsage, QuotaLimit
-from backend.models_db.invoice import Invoice, InvoiceURL
+from backend.models.invoice import Invoice, InvoiceURL
 
 
 def manage_access(request: HttpRequest, invoice_id):

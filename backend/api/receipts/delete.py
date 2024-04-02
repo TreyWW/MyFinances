@@ -4,7 +4,7 @@ from django.http import HttpRequest, JsonResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
-from backend.models_db.receipt import Receipt
+from backend.models.receipt import Receipt
 
 
 @require_http_methods(["DELETE"])

@@ -7,8 +7,8 @@ from django.views.decorators.http import require_http_methods
 
 from backend.decorators import quota_usage_check
 from backend.models import QuotaUsage
-from backend.models_db.client import Client
-from backend.models_db.invoice import Invoice, InvoiceItem, InvoiceProduct
+from backend.models.client import Client
+from backend.models.invoice import Invoice, InvoiceItem, InvoiceProduct
 from backend.utils import quota_usage_check_under
 
 
