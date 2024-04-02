@@ -1,5 +1,3 @@
-from typing import Optional
-
 from django.db.models import When, Case, BooleanField
 from django.http import HttpRequest
 from django.shortcuts import render

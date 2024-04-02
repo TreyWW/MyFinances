@@ -79,8 +79,10 @@ class CreateAccountManualView(View):
             return render(request, "pages/auth/create_account_manual.html")
 
         created_user = User.objects.create_user(email=email, username=email, password=password)
-        created_user.is_active = False
+        created_user.awaiting_email_verification = True
         created_user.save()
+        # created_user.is_active = False
+        # created_user.save()
 
         user = authenticate(request, username=email, password=password)
         if not user:

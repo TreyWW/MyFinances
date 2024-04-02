@@ -5,10 +5,15 @@ from django.http import HttpRequest
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
 
-from backend.models import Invoice, InvoiceItem, Client, InvoiceProduct
+from backend.decorators import quota_usage_check
+from backend.models import Invoice, InvoiceItem, Client, InvoiceProduct, QuotaUsage
+from backend.utils import quota_usage_check_under
 
 
 def invoice_page_get(request: HttpRequest):
+    check_usage = quota_usage_check_under(request, "invoices-count")
+    if not isinstance(check_usage, bool):
+        return check_usage
     context = {
         "clients": Client.objects.filter(user=request.user),
         "existing_products": InvoiceProduct.objects.filter(user=request.user),
@@ -16,6 +21,7 @@ def invoice_page_get(request: HttpRequest):
     return render(request, "pages/invoices/create/create.html", context)
 
 
+@quota_usage_check("invoices-count")
 def invoice_page_post(request: HttpRequest):
     invoice_items = [
         InvoiceItem.objects.create(name=row[0], description=row[1], hours=row[2], price_per_hour=row[3])
@@ -26,10 +32,12 @@ def invoice_page_post(request: HttpRequest):
             request.POST.getlist("price_per_hour[]"),
         )
     ]
+    currency = request.user.user_profile.currency
 
     invoice = Invoice(
         date_due=datetime.strptime(request.POST.get("date_due"), "%Y-%m-%d").date(),
         date_issued=request.POST.get("date_issued"),
+        currency=currency,
     )
 
     if request.user.logged_in_as_team:
@@ -77,6 +85,8 @@ def invoice_page_post(request: HttpRequest):
 
     invoice.save()
     invoice.items.set(invoice_items)
+
+    QuotaUsage.create_str(request.user, "invoices-count", invoice.id)
 
     return redirect("invoices:dashboard")
 

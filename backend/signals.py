@@ -1,14 +1,18 @@
+import logging
+
 from django.core.cache import cache
 from django.core.cache.backends.redis import RedisCacheClient
 
+from backend.data.default_quota_limits import default_quota_limits
+
 cache: RedisCacheClient = cache
 from django.core.files.storage import default_storage
-from django.db.models.signals import pre_save, post_delete, post_save, post_migrate
+from django.db.models.signals import pre_save, post_delete, post_save, post_migrate, pre_delete
 from django.dispatch import receiver
 from django.urls import reverse
 
 import settings.settings
-from backend.models import UserSettings, Receipt, User, FeatureFlags, VerificationCodes
+from backend.models import UserSettings, Receipt, User, FeatureFlags, VerificationCodes, QuotaLimit
 from settings.helpers import ARE_EMAILS_ENABLED, send_email
 
 
@@ -34,8 +38,8 @@ def set_profile_picture_to_none(sender, instance, **kwargs):
         instance.profile_picture.delete(save=False)
 
 
-@receiver(post_delete, sender=Receipt)
-def set_profile_picture_to_none(sender, instance, **kwargs):
+@receiver(pre_delete, sender=Receipt)
+def delete_old_receipts(sender, instance, **kwargs):
     # Check if the file exists in the storage
     if instance.image and default_storage.exists(instance.image.name):
         instance.image.delete(save=False)
@@ -76,6 +80,42 @@ def insert_initial_data(**kwargs):
             flag.value = feature.get("default")
             flag.save()
 
+    for group in default_quota_limits:
+        for item in group.items:
+            existing = QuotaLimit.objects.filter(slug=f"{group.name}-{item.slug}").first()
+            if existing:
+                name, value, adjustable, description, limit_type = (
+                    existing.name,
+                    existing.value,
+                    existing.adjustable,
+                    existing.description,
+                    existing.limit_type,
+                )
+                existing.name = item.name
+                existing.value = item.default_value
+                existing.adjustable = item.adjustable
+                existing.description = item.description
+                existing.limit_type = item.period
+                if (
+                    item.name != name
+                    or item.default_value != value
+                    or item.adjustable != adjustable
+                    or item.description != description
+                    or item.period != limit_type
+                ):
+                    logging.info(f"Updated QuotaLimit {item.name}")
+                    existing.save()
+            else:
+                QuotaLimit.objects.create(
+                    name=item.name,
+                    slug=f"{group.name}-{item.slug}",
+                    value=item.default_value,
+                    adjustable=item.adjustable,
+                    description=item.description,
+                    limit_type=item.period,
+                )
+                logging.info(f"Added QuotaLimit {item.name}")
+
 
 post_migrate.connect(insert_initial_data)
 
@@ -96,12 +136,12 @@ def send_welcome_email(sender, instance: User, created, **kwargs):
     if created:
         email_message = f"""
             Welcome to MyFinances{f", {instance.first_name}" if instance.first_name else ""}!
-            
+
             We're happy to have you join us. We are still in development and are still working on the core mechanics.
-            If you find any bugs with our software, create a bug report on our 
+            If you find any bugs with our software, create a bug report on our
             Github Issues (https://github.com/TreyWW/MyFinances/issues/new?assignees=&labels=bug&projects=&template=bug-report.md&title=%5BBUG%5D+)
             and we'll try to help debug the issue or squash the bug.
-            
+
             Thank you for using MyFinances.
         """
         if ARE_EMAILS_ENABLED:
@@ -114,7 +154,7 @@ def send_welcome_email(sender, instance: User, created, **kwargs):
             email_message += f"""
                 To start with, you must first **verify this email** so that we can link your account to this email.
                 Click the link below to activate your account, no details are required, once pressed you're all set!
-                
+
                 Verify Link: {magic_link_url}
             """
 

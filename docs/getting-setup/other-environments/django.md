@@ -6,7 +6,7 @@
    using `python poetry` [click here for installation guide](https://python-poetry.org/docs/#installing-manually)
 
 ```bash
-poetry install
+poetry install --no-root
 ```
 
 2. Setup your database [(click to view our guide)](getting-setup/databases/)

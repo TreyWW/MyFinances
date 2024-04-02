@@ -59,7 +59,7 @@ def preview_invoice(request: HttpRequest, invoice_id) -> SuccessResponse | Error
         if invoice.user != request.user:
             return ErrorResponse("You don't have access to this invoice")
     try:
-        currency_symbol = request.user.user_profile.get_currency_symbol
+        currency_symbol = request.user.user_profile.get_currency_symbol()
     except UserSettings.DoesNotExist:
         currency_symbol = "$"
 

@@ -41,7 +41,7 @@ completely fine! Just make sure that you put in your PR that tests are still req
 ```bash
 ### first time setup
 pip install poetry # installs poetry
-poetry install --with dev # installs djlint and black
+poetry install --no-root --with dev # installs djlint and black
 ### tests
 python manage.py test --parallel # runs our django tests
 djlint ./frontend/templates --reformat # runs our djLint formatter for HTML

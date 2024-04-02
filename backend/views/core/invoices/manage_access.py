@@ -2,7 +2,8 @@ from django.contrib import messages
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 
-from backend.models import Invoice, InvoiceURL
+from backend.decorators import quota_usage_check
+from backend.models import Invoice, InvoiceURL, QuotaUsage, QuotaLimit
 
 
 def manage_access(request: HttpRequest, invoice_id):
@@ -21,6 +22,7 @@ def manage_access(request: HttpRequest, invoice_id):
     )
 
 
+@quota_usage_check("invoices-access_codes", 1, api=True, htmx=True)
 def create_code(request: HttpRequest, invoice_id):
     if not request.htmx:
         return redirect("invoices:dashboard")
@@ -36,6 +38,9 @@ def create_code(request: HttpRequest, invoice_id):
     code = InvoiceURL.objects.create(invoice=invoice, created_by=request.user)
 
     messages.success(request, "Successfully created code")
+
+    QuotaUsage.create_str(request.user, "invoices-access_codes", invoice_id)
+
     return render(
         request,
         "pages/invoices/manage_access/_table_row.html",
@@ -49,13 +54,16 @@ def delete_code(request: HttpRequest, code):
 
     try:
         code_obj = InvoiceURL.objects.get(uuid=code)
-        invoice = Invoice.objects.get(id=code_obj.invoice.id, user=request.user)
+        invoice = Invoice.objects.get(id=code_obj.invoice.id)
+        if not invoice.has_access(request.user):
+            raise Invoice.DoesNotExist
     except (Invoice.DoesNotExist, InvoiceURL.DoesNotExist):
         return redirect("invoices:dashboard")
 
+    QuotaLimit.delete_quota_usage("invoices-access_codes", request.user, invoice.id, code_obj.created_on)
+
     code_obj.delete()
 
-    # return HttpResponse("", status=200)
     messages.success(request, "Successfully deleted code")
     return render(
         request,

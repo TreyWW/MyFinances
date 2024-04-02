@@ -22,7 +22,7 @@ def preview(request, invoice_id):
         return redirect("invoices:dashboard")
 
     try:
-        currency_symbol = request.user.user_profile.get_currency_symbol
+        currency_symbol = invoice.get_currency_symbol()
     except UserSettings.DoesNotExist:
         currency_symbol = "$"
 
@@ -49,7 +49,7 @@ def view(request, uuid):
         return redirect("index")
 
     try:
-        currency_symbol = request.user.user_profile.get_currency_symbol
+        currency_symbol = request.user.user_profile.get_currency_symbol()
     except UserSettings.DoesNotExist:
         currency_symbol = "$"
 

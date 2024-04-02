@@ -1,14 +1,15 @@
 from django.contrib import messages
-from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, HttpResponseBadRequest
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
 
-from backend.models import Receipt
+from backend.decorators import quota_usage_check
+from backend.models import Receipt, QuotaUsage
 
 
 @require_http_methods(["POST"])
+@quota_usage_check("receipts-count", api=True, htmx=True)
 @login_required
 def receipt_create(request: HttpRequest):
     if not request.htmx:
@@ -48,6 +49,7 @@ def receipt_create(request: HttpRequest):
         receipt.user = request.user
 
     receipt.save()
+    QuotaUsage.create_str(request.user, "receipts-count", receipt.id)
     # r = requests.post(
     #     "https://ocr.asprise.com/api/receipt",
     #     data={

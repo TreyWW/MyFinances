@@ -1,9 +1,12 @@
 from functools import wraps
+from typing import Optional
 
 from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
+from django.urls import reverse
 
+from backend.models import QuotaLimit
 from backend.utils import get_feature_status
 
 
@@ -54,7 +57,40 @@ def feature_flag_check(flag, status=True, api=False, htmx=False):
             elif api:
                 return HttpResponse(status=403, content="This feature is currently disabled.")
             messages.error(request, "This feature is currently disabled.")
-            return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+            referer = request.META.get("HTTP_REFERER")
+            current_url = request.build_absolute_uri()
+            if referer != current_url:
+                return HttpResponseRedirect(referer)
+            return HttpResponseRedirect(reverse("dashboard"))
+
+        return wrapper
+
+    return decorator
+
+
+def quota_usage_check(limit: str | QuotaLimit, extra_data: Optional[str | int] = None, api=False, htmx=False):
+    def decorator(view_func):
+        @wraps(view_func)
+        def wrapper(request, *args, **kwargs):
+            try:
+                quota_limit = QuotaLimit.objects.get(slug=limit) if isinstance(limit, str) else limit
+            except QuotaLimit.DoesNotExist:
+                return view_func(request, *args, **kwargs)
+
+            if not quota_limit.strict_goes_above_limit(request.user, extra=extra_data):
+                return view_func(request, *args, **kwargs)
+
+            if api and htmx:
+                messages.error(request, f"You have reached the quota limit for this service '{quota_limit.slug}'")
+                return render(request, "partials/messages_list.html", {"autohide": False})
+            elif api:
+                return HttpResponse(status=403, content=f"You have reached the quota limit for this service '{quota_limit.slug}'")
+            messages.error(request, f"You have reached the quota limit for this service '{quota_limit.slug}'")
+            referer = request.META.get("HTTP_REFERER")
+            current_url = request.build_absolute_uri()
+            if referer != current_url:
+                return HttpResponseRedirect(referer)
+            return HttpResponseRedirect(reverse("dashboard"))
 
         return wrapper
 

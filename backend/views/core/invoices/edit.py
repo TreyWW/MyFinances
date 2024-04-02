@@ -26,6 +26,7 @@ def invoice_get_existing_data(invoice_obj):
         "og_issue_date": invoice_obj.date_issued,
         "og_due_date": invoice_obj.date_due,
         "invoice_object": invoice_obj,
+        "currency_symbol": invoice_obj.get_currency_symbol(),
         "rows": invoice_obj.items.all(),
     }
     if invoice_obj.client_to:
@@ -103,7 +104,7 @@ def edit_invoice(request: HttpRequest, invoice_id):
     client_to_id = request.POST.get("selected_client")
     try:
         client_to_obj = Client.objects.get(id=client_to_id, user=request.user)
-    except Client.DoesNotExist:
+    except (Client.DoesNotExist, ValueError):
         client_to_obj = None
 
     if client_to_obj:
@@ -138,8 +139,9 @@ def edit_invoice(request: HttpRequest, invoice_id):
 
     invoice.save()
 
+    messages.success(request, "Invoice edited")
+
     if request.htmx:
-        messages.success(request, "Invoice edited")
         return render(request, "base/toasts.html")
 
     return invoice_edit_page_get(request, invoice_id)

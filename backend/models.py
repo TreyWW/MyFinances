@@ -1,11 +1,13 @@
+from datetime import datetime
 from decimal import Decimal
+from typing import Optional, NoReturn, Union, Literal
 from uuid import uuid4
 
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth.models import UserManager, AbstractUser, AnonymousUser
 from django.core.validators import MaxValueValidator
 from django.db import models
-from django.db.models import Count
+from django.db.models import Count, QuerySet
 from django.utils import timezone
 from django.utils.crypto import get_random_string
 from shortuuid.django_fields import ShortUUIDField
@@ -42,7 +44,7 @@ class CustomUserManager(UserManager):
 class User(AbstractUser):
     objects = CustomUserManager()
 
-    logged_in_as_team = models.ForeignKey("Team", on_delete=models.SET_NULL, null=True)
+    logged_in_as_team = models.ForeignKey("Team", on_delete=models.SET_NULL, null=True, blank=True)
     awaiting_email_verification = models.BooleanField(default=True)
 
     class Role(models.TextChoices):
@@ -263,8 +265,8 @@ class Invoice(models.Model):
         ("overdue", "Overdue"),
     )
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    organization = models.ForeignKey(Team, on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    organization = models.ForeignKey(Team, on_delete=models.CASCADE, null=True, blank=True)
     invoice_id = models.IntegerField(unique=True, blank=True, null=True)  # todo: add
 
     client_to = models.ForeignKey(Client, on_delete=models.SET_NULL, blank=True, null=True)
@@ -300,6 +302,11 @@ class Invoice(models.Model):
 
     payment_status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="pending")
     items = models.ManyToManyField(InvoiceItem)
+    currency = models.CharField(
+        max_length=3,
+        default="GBP",
+        choices=[(code, info["name"]) for code, info in UserSettings.CURRENCIES.items()],
+    )
 
     date_created = models.DateTimeField(auto_now_add=True)
     date_due = models.DateField()
@@ -344,11 +351,11 @@ class Invoice(models.Model):
                 "company": self.client_company,
             }
 
-    def get_subtotal(self):
+    def get_subtotal(self) -> Decimal:
         subtotal = 0
         for item in self.items.all():
             subtotal += item.get_total_price()
-        return round(subtotal, 2)
+        return Decimal(round(subtotal, 2))
 
     def get_tax(self, amount: float = 0.00) -> float:
         amount = amount or self.get_subtotal()
@@ -363,8 +370,8 @@ class Invoice(models.Model):
             return round(total * (self.discount_percentage / 100), 2)
         return Decimal(0)
 
-    def get_total_price(self):
-        total = self.get_subtotal() or 0.00
+    def get_total_price(self) -> Decimal:
+        total = self.get_subtotal() or Decimal(0)
 
         total -= self.get_percentage_amount()
 
@@ -377,7 +384,7 @@ class Invoice(models.Model):
         else:
             total -= self.get_tax(total)
 
-        return round(total, 2)
+        return Decimal(round(total, 2))
 
     def has_access(self, user: User) -> bool:
         if not user.is_authenticated:
@@ -387,6 +394,9 @@ class Invoice(models.Model):
             return self.organization == user.logged_in_as_team
         else:
             return self.user == user
+
+    def get_currency_symbol(self):
+        return UserSettings.CURRENCIES.get(self.currency, {}).get("symbol", "$")
 
 
 class InvoiceURL(models.Model):
@@ -544,9 +554,186 @@ class FeatureFlags(models.Model):
     value = models.BooleanField(default=False)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def __str__(self):
-        return self.name
-
     class Meta:
         verbose_name = "Feature Flag"
         verbose_name_plural = "Feature Flags"
+
+    def __str__(self):
+        return self.name
+
+
+class QuotaLimit(models.Model):
+    class LimitTypes(models.TextChoices):
+        PER_MONTH = "per_month"
+        PER_DAY = "per_day"
+        PER_CLIENT = "per_client"
+        PER_INVOICE = "per_invoice"
+        PER_TEAM = "per_team"
+        PER_QUOTA = "per_quota"
+        FOREVER = "forever"
+
+    slug = models.CharField(max_length=100, unique=True, editable=False)
+    name = models.CharField(max_length=100, editable=False)
+    description = models.TextField(max_length=500, null=True, blank=True)
+    value = models.IntegerField()
+    updated_at = models.DateTimeField(auto_now=True)
+    adjustable = models.BooleanField(default=True)
+    limit_type = models.CharField(max_length=20, choices=LimitTypes.choices, default=LimitTypes.PER_MONTH)
+
+    class Meta:
+        verbose_name = "Quota Limit"
+        verbose_name_plural = "Quota Limits"
+
+    def __str__(self):
+        return self.name
+
+    def get_quota_limit(self, user: User, quota_limit: Optional["QuotaLimit"] = None):
+        try:
+            if quota_limit:
+                user_quota_override = quota_limit
+            else:
+                user_quota_override = self.quota_overrides.get(user=user)
+            return user_quota_override.value
+        except QuotaOverrides.DoesNotExist:
+            return self.value
+
+    def get_period_usage(self, user: User):
+        if self.limit_type == "forever":
+            return self.quota_usage.filter(user=user, quota_limit=self).count()
+        elif self.limit_type == "per_month":
+            return self.quota_usage.filter(user=user, quota_limit=self, created_at__month=datetime.now().month).count()
+        elif self.limit_type == "per_day":
+            return self.quota_usage.filter(user=user, quota_limit=self, created_at__day=datetime.now().day).count()
+        else:
+            return "Not available"
+
+    def strict_goes_above_limit(self, user: User, extra: Optional[str | int] = None) -> bool:
+        current = self.strict_get_quotas(user, extra)
+        current = current.count() if current != "Not Available" else None
+        return current >= self.get_quota_limit(user) if current else False
+
+    def strict_get_quotas(
+        self, user: User, extra: Optional[str | int] = None, quota_limit: Optional["QuotaLimit"] = None
+    ) -> Union['QuerySet["QuotaUsage"]', Literal["Not Available"]]:
+        """
+        Gets all usages of a quota
+        :return: QuerySet of quota usages OR "Not Available" if utilisation isn't available (e.g. per invoice you can't get in total)
+        """
+        current = None
+        quota_limit = quota_limit.quota_usage if quota_limit else QuotaUsage.objects.filter(user=user, quota_limit=self)
+
+        if self.limit_type == "forever":
+            current = self.quota_usage.filter(user=user, quota_limit=self)
+        elif self.limit_type == "per_month":
+            current_month = timezone.now().month
+            current_year = timezone.now().year
+            current = quota_limit.filter(created_at__year=current_year, created_at__month=current_month)
+        elif self.limit_type == "per_day":
+            current_day = timezone.now().day
+            current_month = timezone.now().month
+            current_year = timezone.now().year
+            current = quota_limit.filter(created_at__year=current_year, created_at__month=current_month, created_at__day=current_day)
+        elif self.limit_type in ["per_client", "per_invoice", "per_team", "per_receipt", "per_quota"] and extra:
+            current = quota_limit.filter(extra_data=extra)
+        else:
+            return "Not Available"
+        return current
+
+    @classmethod
+    def delete_quota_usage(cls, quota_limit: Union[str, "QuotaLimit"], user: User, extra, timestamp=None) -> NoReturn:
+        quota_limit = cls.objects.get(slug=quota_limit) if isinstance(quota_limit, str) else quota_limit
+
+        all_usages = quota_limit.strict_get_quotas(user, extra)
+        closest_obj = None
+
+        if all_usages.count() > 1 and timestamp:
+            earliest: QuotaUsage = all_usages.filter(created_at__gte=timestamp).order_by("created_at").first()
+            latest: QuotaUsage = all_usages.filter(created_at__lte=timestamp).order_by("created_at").last()
+
+            if earliest and latest:
+                time_until_soonest_obj = abs(earliest.created_at - timestamp)
+                time_since_most_recent_obj = abs(latest.created_at - timestamp)
+                if time_until_soonest_obj < time_since_most_recent_obj:
+                    closest_obj = earliest
+                else:
+                    closest_obj = latest
+
+            if earliest and latest and closest_obj:
+                closest_obj.delete()
+        elif all_usages.count() > 1:
+            earliest = all_usages.order_by("created_at").first()
+            if earliest:
+                earliest.delete()
+        else:
+            first = all_usages.first()
+            if first:
+                first.delete()
+
+
+class QuotaOverrides(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    quota_limit = models.ForeignKey(QuotaLimit, on_delete=models.CASCADE, related_name="quota_overrides")
+    value = models.IntegerField()
+    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Quota Override"
+        verbose_name_plural = "Quota Overrides"
+
+    def __str__(self):
+        return f"{self.user}"
+
+
+class QuotaUsage(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    quota_limit = models.ForeignKey(QuotaLimit, on_delete=models.CASCADE, related_name="quota_usage")
+    created_at = models.DateTimeField(auto_now_add=True)
+    extra_data = models.IntegerField(null=True, blank=True)  # id of Limit Type
+
+    class Meta:
+        verbose_name = "Quota Usage"
+        verbose_name_plural = "Quota Usage"
+
+    def __str__(self):
+        return f"{self.user} quota usage for {self.quota_limit_id}"
+
+    @classmethod
+    def create_str(cls, user: User, limit: str | QuotaLimit, extra_data: Optional[str | int] = None):
+        try:
+            quota_limit = limit if isinstance(limit, QuotaLimit) else QuotaLimit.objects.get(slug=limit)
+        except QuotaLimit.DoesNotExist:
+            return "Not Found"
+
+        return cls.objects.create(user=user, quota_limit=quota_limit, extra_data=extra_data)
+
+    @classmethod
+    def get_usage(self, user: User, limit: str | QuotaLimit):
+        try:
+            ql: QuotaLimit = QuotaLimit.objects.get(slug=limit) if isinstance(limit, str) else limit
+        except QuotaLimit.DoesNotExist:
+            return "Not Found"
+
+        return self.objects.filter(user=user, quota_limit=ql).count()
+
+
+class QuotaIncreaseRequest(models.Model):
+    class StatusTypes(models.TextChoices):
+        PENDING = "pending"
+        APPROVED = "approved"
+        REJECTED = "rejected"
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    quota_limit = models.ForeignKey(QuotaLimit, on_delete=models.CASCADE, related_name="quota_increase_requests")
+    new_value = models.IntegerField()
+    current_value = models.IntegerField()
+    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=20, choices=StatusTypes.choices, default=StatusTypes.PENDING)
+
+    class Meta:
+        verbose_name = "Quota Increase Request"
+        verbose_name_plural = "Quota Increase Requests"
+
+    def __str__(self):
+        return f"{self.user}"
