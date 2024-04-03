@@ -45,6 +45,19 @@ def open_modal(request: HttpRequest, modal_name, context_type=None, context_valu
                     # context["to_city"] = invoice.client_city
                     # context["to_county"] = invoice.client_county
                     # context["to_country"] = invoice.client_country
+            elif context_type == "edit_invoice_from":
+                invoice = context_value
+                try:
+                    invoice = Invoice.objects.get(user=request.user, id=invoice)
+                except Invoice.DoesNotExist:
+                    return render(request, template_name, context)
+
+                context["from_name"] = invoice.self_name
+                context["from_company"] = invoice.self_company
+                context["from_address"] = invoice.self_address
+                context["from_city"] = invoice.self_city
+                context["from_county"] = invoice.self_county
+                context["from_country"] = invoice.self_country
             elif context_type == "invoice":
                 try:
                     invoice = Invoice.objects.get(id=context_value)

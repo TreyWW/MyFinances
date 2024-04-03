@@ -295,6 +295,12 @@ LOGGING = {
         },
     },
     "handlers": {"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
+    "loggers": {
+        "django.db.backends": {
+            "handlers": ["console"],
+            "level": get_var("DJANGO_LOG_LEVEL", default="INFO"),
+        },
+    },
     "root": {
         "handlers": ["console"],
         "level": get_var("DJANGO_LOG_LEVEL", default="INFO"),

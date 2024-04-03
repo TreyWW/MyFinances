@@ -1,2 +1,7 @@
 [files]
 extend-exclude = ["**/bundle.js", "**/bundle.js.map"]
+
+[default]
+extend-ignore-identifiers-re = [
+    "zUfuhFKKZCbHTY6aRR46gxiqszMk5tcHjsVFxnUo8VMus4kHGVdIYVbOYYNlKmHV",
+]
