@@ -1,6 +1,7 @@
 from django.db import models
 from backend.models.user import User
 
+
 class Error(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     error = models.CharField(max_length=250, null=True)

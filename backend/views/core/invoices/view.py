@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from login_required import login_not_required
 
 from backend.models import UserSettings
-from backend.models.invoice import Invoice,  InvoiceURL
+from backend.models.invoice import Invoice, InvoiceURL
 
 
 def preview(request, invoice_id):

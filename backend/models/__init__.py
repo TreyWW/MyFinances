@@ -9,4 +9,4 @@ from backend.models.password_secret import PasswordSecret
 from backend.models.quota import QuotaLimit, QuotaUsage, QuotaOverrides, QuotaIncreaseRequest
 from backend.models.receipt import Receipt, ReceiptDownloadToken
 from backend.models.user import User, UserSettings, CustomUserManager, CustomUserMiddleware, VerificationCodes, Team, TeamInvitation
-from backend.models.utils import RandomCode,  RandomAPICode, USER_OR_ORGANIZATION_CONSTRAINT, add_3hrs_from_now
+from backend.models.utils import RandomCode, RandomAPICode, USER_OR_ORGANIZATION_CONSTRAINT, add_3hrs_from_now

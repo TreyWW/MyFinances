@@ -3,10 +3,7 @@ from django.contrib.auth.admin import UserAdmin
 
 from backend.models.client import Client
 from backend.models.notification import Notification
-from backend.models.receipt import (
-    Receipt,
-    ReceiptDownloadToken
-)
+from backend.models.receipt import Receipt, ReceiptDownloadToken
 from backend.models.invoice import (
     Invoice,
     InvoiceURL,
@@ -14,14 +11,8 @@ from backend.models.invoice import (
     InvoiceProduct,
     InvoiceOnetimeSchedule,
 )
-from backend.models.logger import (
-    AuditLog,
-    LoginLog
-)
-from backend.models.error import (
-    Error,
-    TracebackError
-)
+from backend.models.logger import AuditLog, LoginLog
+from backend.models.error import Error, TracebackError
 from backend.models import (
     PasswordSecret,
     UserSettings,

@@ -8,6 +8,7 @@ from backend.decorators import quota_usage_check
 from backend.models import QuotaUsage
 from backend.models.receipt import Receipt
 
+
 @require_http_methods(["POST"])
 @quota_usage_check("receipts-count", api=True, htmx=True)
 @login_required
