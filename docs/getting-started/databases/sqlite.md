@@ -7,7 +7,7 @@ easy to use and backup.
 
 By default we use sqlite, but if for some reason you have changed this before you'll need to add this to `.env`
 
-```dotenv
+```dotenv title=".env"
 DATABASE_TYPE=sqlite
 ```
 

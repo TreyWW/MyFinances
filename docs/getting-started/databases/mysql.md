@@ -7,7 +7,7 @@ Mysql is another fairly popular database engine, it's fast, easy to setup and ea
 
 1. Add these to your django environment variables.
 
-```dotenv
+```dotenv title=".env"
 DATABASE_TYPE=mysql
 DATABASE_HOST=
 DATABASE_PORT=3306

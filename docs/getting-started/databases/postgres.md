@@ -7,7 +7,7 @@ development, but you can use it for either :)
 
 1. Add these to your django environment variables.
 
-```dotenv
+```dotenv title=".env"
 DATABASE_TYPE=postgres
 DATABASE_HOST=
 DATABASE_PORT=5432
