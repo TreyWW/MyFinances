@@ -72,7 +72,6 @@ site_url: https://docs.strelix.org/MyFinances/
 site_description: Documentation for MyFinances
 site_author: treyww
 
-
 nav:
   - Developer Guide:
       - getting-started/index.md
