@@ -35,7 +35,7 @@ jobs:
       - run: |
           pip install poetry
           poetry install --only docs --no-root
-      - run: mkdocs gh-deploy --force
+      - run: python -m mkdocs gh-deploy --force
         env:
           UMAMI_PAGE_URL: ${{ secrets.UMAMI_PAGE_URL }}
           UMAMI_WEBSITE_ID: ${{ secrets.UMAMI_WEBSITE_ID }}
