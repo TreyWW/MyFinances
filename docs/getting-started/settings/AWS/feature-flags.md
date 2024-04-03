@@ -3,7 +3,7 @@ status: deprecated
 ---
 
 !!! danger
-This feature has been deprecated in favour of local feature flags.
+    This feature has been deprecated in favour of local feature flags.
 
 # Feature flags with AWS
 

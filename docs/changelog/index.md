@@ -1,14 +1,16 @@
 # Changelog
 
-## [v0.2.1](https://github.com/TreyWW/MyFinances/releases/tag/v0.2.1) <small>([view diff](https://github.com/TreyWW/MyFinances/compare/v0.2.0...v0.2.1))</small>
+???+ abstract "v0.2.1 (latest)"
 
-### Overview
-
-* 🚩 Added **feature flags**
-* 🐘 Added more **postgres** support
-* 🚅 Added **cache** settings
-* 🎉 **Deployment** has been **successful** and will now undergo more testing!
-* 👋 Possible clients already interested and ready for official launches!
+    === "Overview"
+        - 🚩 Added **feature flags**
+        - 🐘 Added more **postgres** support
+        - 🚅 Added **cache** settings
+        - 🎉 **Deployment** has been **successful** and will now undergo more testing!
+        - 👋 Possible clients already interested and ready for official launches!
+    === "Links"
+        - [difference](https://github.com/TreyWW/MyFinances/compare/v0.2.0...v0.2.1)
+        - [tag](https://github.com/TreyWW/MyFinances/releases/tag/v0.2.1)
 
 ## [v0.2.0](https://github.com/TreyWW/MyFinances/releases/tag/v0.2.0) <small>([view diff](https://github.com/TreyWW/MyFinances/compare/v0.1.2...v0.2.0))</small>
 
