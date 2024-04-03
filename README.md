@@ -90,7 +90,7 @@ To contribute code:
 5. Test your changes thoroughly
     - `python manage.py test`
     - run the app (`python manage.py runserver`)
-    - view any changed pages in browser (`http://127.0.0.1:800`) and make sure the changes work as expected
+    - view any changed pages in browser (`http://127.0.0.1:8000`) and make sure the changes work as expected
 6. Submit a pull request to the main repository's `main` branch.
 
 We'll review your pull request, provide feedback, and work with you to get your changes merged.
