@@ -116,17 +116,17 @@ css = ["tinycss2 (>=1.1.0,<1.3)"]
 
 [[package]]
 name = "boto3"
-version = "1.34.75"
+version = "1.34.76"
 description = "The AWS SDK for Python"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "boto3-1.34.75-py3-none-any.whl", hash = "sha256:ba5d2104bba4370766036d64ad9021eb6289d154265852a2a821ec6a5e816faa"},
-    {file = "boto3-1.34.75.tar.gz", hash = "sha256:eaec72fda124084105a31bcd67eafa1355b34df6da70cadae0c0f262d8a4294f"},
+    {file = "boto3-1.34.76-py3-none-any.whl", hash = "sha256:530a4cea3d40a6bd2f15a368ea395beef1ea6dff4491823bc48bd20c7d4da655"},
+    {file = "boto3-1.34.76.tar.gz", hash = "sha256:8c598382e8fb61cfa8f75056197e9b509eb52039ebc291af3b1096241ba2542c"},
 ]
 
 [package.dependencies]
-botocore = ">=1.34.75,<1.35.0"
+botocore = ">=1.34.76,<1.35.0"
 jmespath = ">=0.7.1,<2.0.0"
 s3transfer = ">=0.10.0,<0.11.0"
 
@@ -135,13 +135,13 @@ crt = ["botocore[crt] (>=1.21.0,<2.0a0)"]
 
 [[package]]
 name = "boto3-stubs"
-version = "1.34.75"
-description = "Type annotations for boto3 1.34.75 generated with mypy-boto3-builder 7.23.2"
+version = "1.34.76"
+description = "Type annotations for boto3 1.34.76 generated with mypy-boto3-builder 7.23.2"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "boto3-stubs-1.34.75.tar.gz", hash = "sha256:bb55fe97f474ea800c762592d81369bb6c23a8e53a5b2d8497145f87c1d7640c"},
-    {file = "boto3_stubs-1.34.75-py3-none-any.whl", hash = "sha256:78093a0bf5a03bc66a79d6cddb9f0eb67b67ed6b008cba4cf394c0c9d11de2c1"},
+    {file = "boto3-stubs-1.34.76.tar.gz", hash = "sha256:804fe62e19f4f1295784fe2285ba028a05b2d510bceb65323d37d49ede183d07"},
+    {file = "boto3_stubs-1.34.76-py3-none-any.whl", hash = "sha256:5cbe4f05df5887062f1a7e7a973d06e19a3f169f13178a997d0ac47be13669ed"},
 ]
 
 [package.dependencies]
@@ -197,7 +197,7 @@ bedrock-agent = ["mypy-boto3-bedrock-agent (>=1.34.0,<1.35.0)"]
 bedrock-agent-runtime = ["mypy-boto3-bedrock-agent-runtime (>=1.34.0,<1.35.0)"]
 bedrock-runtime = ["mypy-boto3-bedrock-runtime (>=1.34.0,<1.35.0)"]
 billingconductor = ["mypy-boto3-billingconductor (>=1.34.0,<1.35.0)"]
-boto3 = ["boto3 (==1.34.75)", "botocore (==1.34.75)"]
+boto3 = ["boto3 (==1.34.76)", "botocore (==1.34.76)"]
 braket = ["mypy-boto3-braket (>=1.34.0,<1.35.0)"]
 budgets = ["mypy-boto3-budgets (>=1.34.0,<1.35.0)"]
 ce = ["mypy-boto3-ce (>=1.34.0,<1.35.0)"]
@@ -542,13 +542,13 @@ xray = ["mypy-boto3-xray (>=1.34.0,<1.35.0)"]
 
 [[package]]
 name = "botocore"
-version = "1.34.75"
+version = "1.34.76"
 description = "Low-level, data-driven core of boto 3."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "botocore-1.34.75-py3-none-any.whl", hash = "sha256:1d7f683d99eba65076dfb9af3b42fa967c64f11111d9699b65757420902aa002"},
-    {file = "botocore-1.34.75.tar.gz", hash = "sha256:06113ee2587e6160211a6bd797e135efa6aa21b5bde97bf455c02f7dff40203c"},
+    {file = "botocore-1.34.76-py3-none-any.whl", hash = "sha256:62e45e7374844ee39e86a96fe7f5e973eb5bf3469da028b4e3a8caba0909fb1f"},
+    {file = "botocore-1.34.76.tar.gz", hash = "sha256:68be44487a95132fccbc0b836fded4190dae30324f6bf822e1b6efd385ffdc83"},
 ]
 
 [package.dependencies]
@@ -2397,21 +2397,21 @@ files = [
 
 [[package]]
 name = "typos"
-version = "1.20.1"
+version = "1.20.3"
 description = "Source Code Spelling Correction"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "typos-1.20.1-py3-none-macosx_10_12_x86_64.whl", hash = "sha256:a286cd172a2b831ae82a44d9b8f17e10da799797254f739e6b0d9e4faabab789"},
-    {file = "typos-1.20.1-py3-none-macosx_11_0_arm64.whl", hash = "sha256:fe6f0b4eee86b008551fd02b3c8659d3940c9fd43ab007c7f21ab4955e371f44"},
-    {file = "typos-1.20.1-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:e1908c3b957909005f6622cb17d430c053f3d987bc959afde258a12a89183556"},
-    {file = "typos-1.20.1-py3-none-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:2abf63ced11368f35f12fd5abf9330569296c6a9e5d11d77dc6eecd2b1208986"},
-    {file = "typos-1.20.1-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:f5953449ab1e336355d58239d9c0bb34a55939bdf096ee3d3eb9138810751182"},
-    {file = "typos-1.20.1-py3-none-musllinux_1_2_aarch64.whl", hash = "sha256:45daba168900daf5c54c7eff3b8fe7d8aa897d4562b2858d9c016e348d9e69c1"},
-    {file = "typos-1.20.1-py3-none-musllinux_1_2_x86_64.whl", hash = "sha256:01a09014498e17bccda8e2460b07991a5f52e5aeed9b3922ef183fdfdc3f4f51"},
-    {file = "typos-1.20.1-py3-none-win32.whl", hash = "sha256:9cb774d29ef01abe49072f37d715f7ffb4edce52b64cb11dc303d885efd529f9"},
-    {file = "typos-1.20.1-py3-none-win_amd64.whl", hash = "sha256:e9dafd114c0ae74678e79e926c3fe807101b7acf9cc65fc5e0b5fde8890f5dee"},
-    {file = "typos-1.20.1.tar.gz", hash = "sha256:60b54e27caf4e1aee4eef5036415cbc1db6b59ec8faaf128e9e4cf52776e53db"},
+    {file = "typos-1.20.3-py3-none-macosx_10_12_x86_64.whl", hash = "sha256:b6b5bc7fa1db3ae573974d449535c1834044fc0c6be0f3a904813a3f2c1f42d9"},
+    {file = "typos-1.20.3-py3-none-macosx_11_0_arm64.whl", hash = "sha256:7ec2c5388da6f268646de121a7faca23b616d282fd470134c5a16ece79492fb4"},
+    {file = "typos-1.20.3-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:629f67c0a685407327c2117d3b67eab3b2ae01ff4bbde0612097182ae470b151"},
+    {file = "typos-1.20.3-py3-none-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:f01a5afdeafac8cc0637f2004b2b34ae4ba43a1c558c044e59e151a79c698fed"},
+    {file = "typos-1.20.3-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:d281d1c8b0130ffa0845b3f5e9fb9e9ca6a63e02f12d68faf04554b3304d256d"},
+    {file = "typos-1.20.3-py3-none-musllinux_1_2_aarch64.whl", hash = "sha256:425b5942a8c46ad05bb1b3726262a545645f00afa659bd3ae77a7b0b7aa1c5f7"},
+    {file = "typos-1.20.3-py3-none-musllinux_1_2_x86_64.whl", hash = "sha256:c1a0c0a37a66e4716be679906bad597eae339679c650aec9619c62b892e3f64c"},
+    {file = "typos-1.20.3-py3-none-win32.whl", hash = "sha256:9a90e62e5d8b239b4ec19fddbcc0cc741c18dfa68b5ff0eb77e30facdf36aa8e"},
+    {file = "typos-1.20.3-py3-none-win_amd64.whl", hash = "sha256:77f7b2f86534a5351fa384ac8f70ee9861a6e1b70e2743e57693411b933bb54d"},
+    {file = "typos-1.20.3.tar.gz", hash = "sha256:8a48d5401bc2a7ee9c5ab5c08faa15415b936668513495bfdbe7c268c2561d45"},
 ]
 
 [[package]]
@@ -2456,4 +2456,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<4.0"
-content-hash = "e9c03885e363c7d6d290cfc0dab7cbf0441a5fb26221d4174b8041e67abe76c0"
+content-hash = "d4f905dea2f84a073191d1a1d79f6128bc9a902cddc45cf981e119b8ea3f7980"

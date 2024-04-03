@@ -30,7 +30,7 @@
                                    id="dateIssued"
                                    name="date_issued"
                                    placeholder=""
-                                   value="{{ og_issue_date | date:"Y-m-d" }}"
+                                   value="{{ issue_date | date:"Y-m-d" }}"
                                    type="date"
                                    class="peer input input-bordered input-block">
                             <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden ">
@@ -52,7 +52,7 @@
                                    placeholder=""
                                    type="date"
                                    class="peer input-bordered input input-block"
-                                   value="{{ og_due_date | date:"Y-m-d" }}">
+                                   value="{{ due_date | date:"Y-m-d" }}">
                             <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden ">
                                 <span class="label-text-alt text-error">Please enter a valid date.</span>
                             </label>
