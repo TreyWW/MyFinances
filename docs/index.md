@@ -27,15 +27,6 @@ MyFinances is a web application that can help you as an individual or team, mana
       <a target="_blank" href="https://discord.com/invite/b5nS3dAG?utm_source=Discord%20Widget&utm_medium=Connect">
           <img src="https://discord.com/api/guilds/1139553863175778367/widget.png?style=banner2"/>
       </a>
-
-[//]: # (        <iframe src="https://discord.com/widget?id=1139553863175778367&theme=dark&style=banner2" width="100%" height="300")
-
-[//]: # (    allowtransparency="true")
-
-[//]: # (    frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts" style="padding:)
-
-[//]: # (    5%"></iframe>)
-
     </li>
 
 </div>
