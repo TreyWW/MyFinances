@@ -1,18 +1,11 @@
-name: Publish Documentation
+name: ci
 on:
   push:
     branches:
-      - main
       - feature/new_documentation
-
-# only run one build doc workflow at a time, cancel any running ones
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
+      - main
 permissions:
   contents: write
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -32,9 +25,5 @@ jobs:
           path: .cache
           restore-keys: |
             mkdocs-material-
-      - run: |
-          pip install mkdocs-material mkdocs-git-committers-plugin-2 mkdocs
+      - run: pip install mkdocs-material
       - run: mkdocs gh-deploy --force
-        env:
-          UMAMI_PAGE_URL: ${{ secrets.UMAMI_PAGE_URL }}
-          UMAMI_WEBSITE_ID: ${{ secrets.UMAMI_WEBSITE_ID }}
