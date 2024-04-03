@@ -33,8 +33,7 @@ jobs:
           restore-keys: |
             mkdocs-material-
       - run: |
-          pip install poetry
-          poetry install --only docs --no-root
+          pip install mkdocs-material mkdocs-git-committers-plugin-2 mkdocs
       - run: python -m mkdocs gh-deploy --force
         env:
           UMAMI_PAGE_URL: ${{ secrets.UMAMI_PAGE_URL }}
