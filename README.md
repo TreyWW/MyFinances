@@ -12,7 +12,7 @@ Whether you're tracking personal expenses, managing client invoices, or planning
 user-friendly platform to streamline these tasks.
 
 | PLEASE NOTE: This project is still in development, and has only just started! So none of the key features or descriptions have been fully implemented. We are beginner friendly and looking for contributors! |
-|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 
 ## Key Features
 
@@ -379,7 +379,7 @@ manually edit with the details below.
 ### How to edit the contributors table?
 
 - Updated any info in `backend/management/commands/contributors.json`
-- Run `py manage.py get_contributors`
+- Run `python manage.py get_contributors`
 - Make a PR to request these changes in
 - Done :)
 
