@@ -53,3 +53,24 @@ def quota_usage_check_under(
     except KeyError:
         pass
     return HttpResponseRedirect(reverse("dashboard"))
+
+
+def set_cache(key, value, timeout=300):
+    cache.set(key, value, timeout=timeout)
+
+
+def get_cache(key):
+    return cache.get(key)
+
+
+def render_quota_error(request, quota_limit):
+    messages.error(request, f"You have reached the quota limit for this service '{quota_limit.slug}'")
+    return render(request, "partials/messages_list.html", {"autohide": False})
+
+
+def render_quota_error_response(quota_limit):
+    return HttpResponse(status=403, content=f"You have reached the quota limit for this service '{quota_limit.slug}'")
+
+
+def redirect_to_last_visited(request, last_visited_url):
+    return HttpResponseRedirect(last_visited_url)
