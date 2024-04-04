@@ -301,7 +301,7 @@ class Invoice(models.Model):
     notes = models.TextField(blank=True, null=True)
 
     payment_status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="pending")
-    items = models.ManyToManyField(InvoiceItem)
+    items = models.ManyToManyField(InvoiceItem, blank=True)
     currency = models.CharField(
         max_length=3,
         default="GBP",

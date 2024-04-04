@@ -80,13 +80,12 @@ def login_manual(request: HttpRequest):  # HTMX POST
     login(request, user)
     messages.success(request, "Successfully logged in")
 
-    response = HttpResponse(request, status=200)
+    response = HttpResponse(status=200)
 
     try:
         resolve(next)
         response["HX-Location"] = next
     except Resolver404:
-        print(f"did not resolve: {next}")
         response["HX-Location"] = "/dashboard/"
 
     return response

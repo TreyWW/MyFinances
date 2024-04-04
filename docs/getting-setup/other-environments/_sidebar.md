@@ -1,5 +1,0 @@
-- [Back to getting started](/getting-setup/)
-- [Fork Project](getting-setup/other-environments/fork)
-- [Setup Environment Variables](getting-setup/other-environments/env-variables)
-- [Setup Django](getting-setup/other-environments/django)
-- [Setup Frontend](getting-setup/other-environments/frontend)

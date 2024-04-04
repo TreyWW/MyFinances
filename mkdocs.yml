@@ -1,0 +1,120 @@
+dev_addr: 127.0.0.1:3000
+site_name: MyFinances
+theme:
+  name: material
+  favicon: favicon.png
+  custom_dir: docs/overrides
+  features:
+    - announce.dismiss
+    - content.tabs.link
+    - content.action.edit
+    - content.action.view
+    - content.code.annotate
+    - content.code.copy
+    - content.tooltips
+    - navigation.footer
+    - navigation.indexes
+    - navigation.sections
+    - navigation.tabs
+    - navigation.top
+    - navigation.tracking
+    - search.highlight
+    - search.share
+    - search.suggest
+    - toc.follow
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/toggle-switch-off
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
+      accent: indigo
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.superfences
+  - admonition
+  - pymdownx.details
+  - pymdownx.critic
+  - pymdownx.caret
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.tilde
+  - tables
+  - attr_list
+  - def_list
+  - abbr
+  - toc:
+      permalink: true
+  - md_in_html
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+repo_name: MyFinances
+repo_url: https://github.com/TreyWW/MyFinances
+
+site_url: https://docs.strelix.org/MyFinances/
+
+site_description: Documentation for MyFinances
+site_author: treyww
+
+nav:
+  - Developer Guide:
+      - getting-started/index.md
+      - Installation: getting-started/installation.md
+      - Databases:
+          - getting-started/databases/index.md
+          - Database Types:
+              - SQLite: getting-started/databases/sqlite.md
+              - Postgres: getting-started/databases/postgres.md
+              - MySql: getting-started/databases/mysql.md
+      - Settings:
+          - getting-started/settings/index.md
+          - Social Logins:
+              - Github: getting-started/settings/social-login/github.md
+              - Google: getting-started/settings/social-login/google.md
+  #        - AWS:
+  #            - Feature Flags: getting-started/settings/AWS/feature-flags.md
+  #            - Static Files: getting-started/settings/AWS/static.md
+  #            - Public Media Files: getting-started/settings/AWS/public-media.md
+  #            - Private Media Files: getting-started/settings/AWS/private-media.md
+  #  - User Guide:
+  #      - user-guide/index.md
+  - Contributing:
+      - contributing/index.md
+      - Setup project: contributing/setup.md
+      - Style guide: contributing/style-guide.md
+      - Github Issues: contributing/gh-issues.md
+      - Ask for help: contributing/ask.md
+      - Writing Documentation: contributing/writing-documentation.md
+      - Translations: contributing/translations.md
+      - Github Project Board: contributing/gh-board.md
+      - Motivation: contributing/motivation.md
+      - Development Progression: contributing/development-progression.md
+      - Taking on a lead position: contributing/lead-position.md
+  - Changelog:
+      - changelog/index.md
+
+extra:
+  analytics:
+    provider: custom
+    property: !ENV UMAMI_PAGE_URL
+    id: !ENV UMAMI_WEBSITE_ID
+  status:
+    new: Recently added
+    deprecated: Deprecated

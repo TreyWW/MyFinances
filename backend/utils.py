@@ -45,8 +45,11 @@ def quota_usage_check_under(
     elif api:
         return HttpResponse(status=403, content=f"You have reached the quota limit for this service '{quota_limit.slug}'")
     messages.error(request, f"You have reached the quota limit for this service '{quota_limit.slug}'")
-    referer = request.META.get("HTTP_REFERER")
-    current_url = request.build_absolute_uri()
-    if referer != current_url:
-        return HttpResponseRedirect(referer)
+    try:
+        last_visited_url = request.session["last_visited"]
+        current_url = request.build_absolute_uri()
+        if last_visited_url != current_url:
+            return HttpResponseRedirect(last_visited_url)
+    except KeyError:
+        pass
     return HttpResponseRedirect(reverse("dashboard"))

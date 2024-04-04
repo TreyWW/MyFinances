@@ -1,1 +1,0 @@
-Moved to [our wiki](https://github.com/TreyWW/MyFinances/wiki)
