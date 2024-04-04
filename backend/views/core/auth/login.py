@@ -16,6 +16,7 @@ from backend.decorators import *
 from backend.models import LoginLog, User, VerificationCodes, AuditLog
 from backend.views.core.auth.verify import create_magic_link
 from settings.helpers import send_email, ARE_EMAILS_ENABLED
+
 # from backend.utils import appconfig
 from settings.settings import (
     SOCIAL_AUTH_GITHUB_ENABLED,
