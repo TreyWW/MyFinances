@@ -53,3 +53,35 @@ def quota_usage_check_under(
     except KeyError:
         pass
     return HttpResponseRedirect(reverse("dashboard"))
+
+
+def set_cache(key, value, timeout=300):
+    cache.set(key, value, timeout=timeout)
+
+
+def get_cache(key):
+    return cache.get(key)
+
+
+def render_quota_error(request, quota_limit):
+    messages.error(request, f"You have reached the quota limit for this service '{quota_limit.slug}'")
+    return render(request, "partials/messages_list.html", {"autohide": False})
+
+
+def render_quota_error_response(quota_limit):
+    return HttpResponse(status=403, content=f"You have reached the quota limit for this service '{quota_limit.slug}'")
+
+
+def redirect_to_last_visited(request, fallback_url="dashboard"):
+    """
+    Redirects user to the last visited URL stored in session.
+    If no previous URL is found, redirects to the fallback URL.
+    :param request: HttpRequest object
+    :param fallback_url: URL to redirect to if no previous URL found
+    :return: HttpResponseRedirect object
+    """
+    try:
+        last_visited_url = request.session.get("last_visited", fallback_url)
+        return HttpResponseRedirect(last_visited_url)
+    except KeyError:
+        return HttpResponseRedirect(fallback_url)
