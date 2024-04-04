@@ -3,11 +3,7 @@
     <form id="filter_list_storage">
     </form>
     <div class="card bg-base-100 p-6 mb-4 h-screen">
-        <div class="flex gap-3 mb-3">
-            <a class="btn btn-primary" href="{% url 'invoices:create' %}">
-                <i class="fa-solid fa-file-invoice"></i>
-                Create Invoice
-            </a>
+        <div class="flex gap-3 justify-between mb-3">
             <div class="dropdown dropdown-hover dropdown-right w-14">
                 <div tabindex="0"
                      role="button"
@@ -45,6 +41,10 @@
                     </li>
                 </ul>
             </div>
+            <a class="btn btn-primary" href="{% url 'invoices:create' %}">
+                <i class="fa-solid fa-file-invoice"></i>
+                Create Invoice
+            </a>
         </div>
         <div class="flex w-full h-full overflow-x-auto overflow-y-auto">
             <table class="table h-fit">
