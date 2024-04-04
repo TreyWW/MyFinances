@@ -57,10 +57,13 @@ def feature_flag_check(flag, status=True, api=False, htmx=False):
             elif api:
                 return HttpResponse(status=403, content="This feature is currently disabled.")
             messages.error(request, "This feature is currently disabled.")
-            referer = request.META.get("HTTP_REFERER")
-            current_url = request.build_absolute_uri()
-            if referer != current_url:
-                return HttpResponseRedirect(referer)
+            try:
+                last_visited_url = request.session["last_visited"]
+                current_url = request.build_absolute_uri()
+                if last_visited_url != current_url:
+                    return HttpResponseRedirect(last_visited_url)
+            except KeyError:
+                pass
             return HttpResponseRedirect(reverse("dashboard"))
 
         return wrapper
@@ -86,10 +89,13 @@ def quota_usage_check(limit: str | QuotaLimit, extra_data: Optional[str | int] =
             elif api:
                 return HttpResponse(status=403, content=f"You have reached the quota limit for this service '{quota_limit.slug}'")
             messages.error(request, f"You have reached the quota limit for this service '{quota_limit.slug}'")
-            referer = request.META.get("HTTP_REFERER")
-            current_url = request.build_absolute_uri()
-            if referer != current_url:
-                return HttpResponseRedirect(referer)
+            try:
+                last_visited_url = request.session["last_visited"]
+                current_url = request.build_absolute_uri()
+                if last_visited_url != current_url:
+                    return HttpResponseRedirect(last_visited_url)
+            except KeyError:
+                pass
             return HttpResponseRedirect(reverse("dashboard"))
 
         return wrapper
