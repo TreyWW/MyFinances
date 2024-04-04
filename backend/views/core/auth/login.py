@@ -16,7 +16,6 @@ from backend.decorators import *
 from backend.models import LoginLog, User, VerificationCodes, AuditLog
 from backend.views.core.auth.verify import create_magic_link
 from settings.helpers import send_email, ARE_EMAILS_ENABLED
-
 # from backend.utils import appconfig
 from settings.settings import (
     SOCIAL_AUTH_GITHUB_ENABLED,
@@ -80,13 +79,12 @@ def login_manual(request: HttpRequest):  # HTMX POST
     login(request, user)
     messages.success(request, "Successfully logged in")
 
-    response = HttpResponse(request, status=200)
+    response = HttpResponse(status=200)
 
     try:
         resolve(next)
         response["HX-Location"] = next
     except Resolver404:
-        print(f"did not resolve: {next}")
         response["HX-Location"] = "/dashboard/"
 
     return response

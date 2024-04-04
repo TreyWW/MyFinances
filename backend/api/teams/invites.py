@@ -110,7 +110,7 @@ def send_user_team_invite(request: HttpRequest):
     print(f"Invitation: {request.build_absolute_uri(reverse('api:teams:join accept', kwargs={'code': invitation.code}))}")
 
     messages.success(request, "Invitation successfully sent")
-    response = HttpResponse(request, status=200)
+    response = HttpResponse(status=200)
     response["HX-Refresh"] = "true"
     return response
 
@@ -156,7 +156,7 @@ def accept_team_invite(request: HttpRequest, code):
     invitation.delete()
 
     messages.success(request, f"You have successfully joined the team {invitation.team.name}")
-    response = HttpResponse(request, status=200)
+    response = HttpResponse(status=200)
     response["HX-Refresh"] = "true"
     return response
     # return render(request, "partials/messages_list.html")

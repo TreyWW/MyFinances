@@ -34,7 +34,7 @@ def delete_invoice(request: HttpRequest):
 
         try:
             resolve(redirect)
-            response = HttpResponse(request, status=200)
+            response = HttpResponse(status=200)
             response["HX-Location"] = redirect
             return response
         except Resolver404:

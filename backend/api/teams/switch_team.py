@@ -12,7 +12,7 @@ def switch_team(request: HttpRequest, team_id):
         request.user.logged_in_as_team = None
         request.user.save()
         messages.success(request, "You are now logged into your personal account")
-        response = HttpResponse(request, status=200)
+        response = HttpResponse(status=200)
         response["HX-Refresh"] = "true"
         return response
 
@@ -33,7 +33,7 @@ def switch_team(request: HttpRequest, team_id):
     messages.success(request, f"Now signing in for {team.name}")
     request.user.logged_in_as_team = team
     request.user.save()
-    response = HttpResponse(request, status=200)
+    response = HttpResponse(status=200)
     response["HX-Refresh"] = "true"
     return response
     # return render(request, "components/+logged_in_for.html")
