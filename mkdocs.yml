@@ -2,6 +2,7 @@ dev_addr: 127.0.0.1:3000
 site_name: MyFinances
 theme:
   name: material
+  favicon: favicon.png
   custom_dir: docs/overrides
   features:
     - announce.dismiss
