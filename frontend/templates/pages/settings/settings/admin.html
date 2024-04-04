@@ -9,21 +9,21 @@
               hx-indicator='button[data-indicator="generate_api_key"]'
               hx-swap="none"
               method="post"
-              class="flex items-center justify-between py-4">
+              class="flex gap-4 flex-col justify-between pt-4 md:flex-row">
             {% csrf_token %}
-            <div class="flex flex-col w-[55%]">
+            <div class="flex flex-col">
                 <p class="text-lg font-semibold text-gray-900 dark:text-white">Generate API Key</p>
                 <p class="text-base font-normal text-gray-500 dark:text-gray-400">
                     Generate an API Key to allow other services to connect to your MyFinances system.
                 </p>
             </div>
-            <div class="flex flex-1">
-                <select name="service" class="flex-1 select select-bordered me-2">
+            <div class="flex gap-2 flex-col flex-1 md:flex-row">
+                <select name="service" class="flex-1 select select-bordered">
                     <option value="aws_api_destination">AWS API Destination</option>
                 </select>
                 <button data-indicator="generate_api_key"
                         type="submit"
-                        class="w-[30%]  btn btn-outline btn-primary loading-htmx">
+                        class="btn btn-outline btn-primary loading-htmx">
                     <span class="loading-htmx-text">Generate</span>
                     <span class="loading loading-spinner loading-htmx-loader"></span>
                 </button>
