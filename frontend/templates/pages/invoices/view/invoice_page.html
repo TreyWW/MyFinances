@@ -1,20 +1,20 @@
 <!DOCTYPE html>
-<html :class="{ 'theme-dark': dark }" x-data="data()" lang="en" style="">
+<html class="{ 'theme-dark': dark }" x-data="data()" lang="en">
     {% include 'base/_head.html' %}
     <body style="background-color: #94c0eb;">
-        <div class="flex-1 min-h-screen overflow-y-auto pt-8 px-6 pb-4 bg-base-200">
+        <div class="flex-1 min-h-screen overflow-y-auto px-7 pb-4 bg-base-200 invoice-page">
             <div tabindex="-1"
                  id="status_banner"
                  class="print-ignore fixed top-0 left-0 z-50 grid grid-cols-3 w-full p-4 bg-base-100 shadow text-base-content">
-                <div>
+                <div class="return-btn">
                     {% if type == "preview" %}
                         <a href="{% url 'invoices:dashboard' %}" class="btn btn-sm btn-outline">
                             <i class="fa-solid fa-arrow-left me-2"></i>
-                            Go Back
+                            <p class="return-btn-text">Go Back</p>
                         </a>
                     {% endif %}
                 </div>
-                <div class="flex items-center mx-auto">
+                <div class="flex items-center mx-auto status-btn">
                     <p class="flex items-center text-sm font-normal">
                         {% with ps=invoice.payment_status %}
                             {% if ps == "paid" %}
@@ -42,16 +42,16 @@
                         </p>
                     {% endwith %}
                 </div>
-                <div class="flex justify-end float-right">
+                <div class="flex justify-end float-right options-btn">
                     <a class="btn btn-sm gradient-btn me-2" href="" download>
                         <i class="fa-solid fa-download me-2"></i>
-                        Download
+                        <p class="options-text">Download</p>
                     </a>
                     <button onclick="window.print()" class="btn btn-sm gradient-btn me-2">
                         <i class="fa-solid fa-print me-2"></i>
-                        Print
+                        <p class="options-text">Print</p>
                     </button>
-                    <a class="btn btn-sm gradient-btn me-8"
+                    <a class="btn btn-sm gradient-btn me-8 share-btn"
                        href="{% url "invoices:manage_access" invoice_id=invoice.id %}">Share Invoice</a>
                     <div class="flex items-center">
                         <button onclick="document.getElementById('status_banner').remove();"
@@ -84,17 +84,76 @@
     .gradient-btn:hover {
         background: linear-gradient(45deg, #6874fc, #80e1ff);
     }
+    @media (max-width: 375px) {
+        .return-btn {
+            .fa-arrow-left {
+                margin-inline-end: 0rem;
+            }
+            .return-btn-text {
+                display: none;
+            }
+        }
+    }
+
+    @media (max-width: 768px) {
+        #status_banner {
+            display: flex;
+            flex-direction: column;
+
+            .options-btn {
+                order: 2;
+                margin-top: -2rem;
+
+                    .options-text {
+                        display: none;
+                    }
+
+                    .fa-download,
+                    .fa-print {
+                        margin-inline-end: 0;
+                    }
+
+                    .share-btn {
+                        margin-inline-end: 1rem;
+                    }
+            }
+
+            .status-btn {
+                flex-direction: row;
+                flex-grow: 1;
+                order: 5;
+                align-self: center;
+                margin-top: 0.5rem;
+            }
+
+            .return-btn {
+                display: flex;
+                width: fit-content;
+                order: 1;
+            }
+        }
+      }
+
+    .invoice-container {
+        margin-top: 6rem; /* Adjust the start of the invoice */
+    }
 
     @media print {
 
+        .invoice-page {
+            padding: 0 !important;
+        }
         .print-ignore {
             display: none;
+        }
+        .invoice-container {
+            padding-top: 0 !important;
+            margin-top: 0 !important;
         }
 
         body, html {
             visibility: visible;
-            margin: 0;
-            padding: 0;
+            padding: 0 !important;
         }
 
 

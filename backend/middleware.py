@@ -17,3 +17,18 @@ class HealthCheckMiddleware:
                 return HttpResponse(status=200, content="All operations are up and running!")
             return HttpResponse(status=503, content="Service Unavailable")
         return self.get_response(request)
+
+
+class LastVisitedMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        if request.method == "GET" and "text/html" in request.headers.get("Accept", ""):
+            try:
+                request.session["last_visited"] = request.session["currently_visiting"]
+            except KeyError:
+                pass
+            current_url = request.build_absolute_uri()
+            request.session["currently_visiting"] = current_url
+        return self.get_response(request)

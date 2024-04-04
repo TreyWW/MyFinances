@@ -385,7 +385,7 @@ manually edit with the details below.
 ### How to edit the contributors table?
 
 - Updated any info in `backend/management/commands/contributors.json`
-- Run `py manage.py get_contributors`
+- Run `python manage.py get_contributors`
 - Make a PR to request these changes in
 - Done :)
 

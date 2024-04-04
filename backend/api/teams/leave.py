@@ -26,6 +26,6 @@ def leave_team_confirmed(request: HttpRequest, team_id):
 
     team.members.remove(request.user)
     messages.success(request, f"You have successfully left the team {team.name}")
-    response = HttpResponse(request, status=200)
+    response = HttpResponse(status=200)
     response["HX-Refresh"] = "true"
     return response
