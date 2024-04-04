@@ -3,7 +3,7 @@
 !!! danger "Pre-releases"
 	We are currently still in development, and our project should **NOT** be considered usable for production yet.
 
-> ???+ tip "v0.3.0 (latest)"
+???+ tip "v0.3.0 (latest)"
 	=== "Additions"
 		- 🏷 Added invoice **discounts** ([#244](https://github.com/TreyWW/MyFinances/pull/244))
 		- 🖼 Added invoice overview page ([#222](https://github.com/TreyWW/MyFinances/pull/222))
