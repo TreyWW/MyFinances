@@ -1,8 +1,8 @@
 {% load static %}
 {% load mathfilters %}
 {% load markdownify %}
-<div class="max-w-3xl mx-auto p-6 bg-white rounded-lg shadow my-6 mt-16 min-h-screen">
-    <div class="flex justify-between items-center mb-8">
+<div class="max-w-3xl mx-auto p-6 bg-white mt-8 rounded-lg shadow-sm min-h-screen flex flex-col justify-between invoice-container">
+    <div class="flex justify-between items-center mb-8 mt-4">
         <!-- Company Logo and Info -->
         <div>
             {% if invoice.logo %}
@@ -31,7 +31,7 @@
         </div>
     </div>
     <!-- Client info -->
-    <div class="grid grid-cols-2 items-center mt-7">
+    <div class="grid grid-cols-2 items-center mt-4">
         <div>
             {% with details=invoice.get_to_details %}
                 {% include 'pages/invoices/view/_client-details.html' with c_type=details.0 c_details=details.1 %}
@@ -39,7 +39,7 @@
         </div>
     </div>
     <!-- Invoice Items -->
-    <div class="-mx-4 mt-8 overflow-x-auto">
+    <div class="-mx-4 sm:mx-0 mt-4 flex-grow overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
                 <tr>
@@ -137,32 +137,34 @@
         </table>
     </div>
     <!-- Payment Details -->
-    <div class="text-sm text-gray-600 mt-16">
-        {% if invoice.account_holder_name %}
-            <p>
-                Account Holder Name: <span class="font-semibold ms-2">{{ invoice.account_holder_name }}</span>
-            </p>
-        {% endif %}
-        {% if invoice.account_number %}
-            <p>
-                Account Number: <span class="font-semibold ms-2">{{ invoice.account_number }}</span>
-            </p>
-        {% endif %}
-        {% if invoice.sort_code %}
-            <p>
-                Account Sort Code: <span class="font-semibold ms-2">{{ invoice.sort_code }}</span>
-            </p>
-        {% endif %}
-    </div>
+    {% if invoice.account_holder_name or invoice.account_number or invoice.sort_code %}
+        <div class="text-sm text-gray-600 mb-4">
+            {% if invoice.account_holder_name %}
+                <p>
+                    Account Holder Name: <span class="font-semibold ms-2">{{ invoice.account_holder_name }}</span>
+                </p>
+            {% endif %}
+            {% if invoice.account_number %}
+                <p>
+                    Account Number: <span class="font-semibold ms-2">{{ invoice.account_number }}</span>
+                </p>
+            {% endif %}
+            {% if invoice.sort_code %}
+                <p>
+                    Account Sort Code: <span class="font-semibold ms-2">{{ invoice.sort_code }}</span>
+                </p>
+            {% endif %}
+        </div>
+    {% endif %}
     <!--  Footer  -->
     {% if invoice.notes %}
-        <div class="border-t-2 pt-4 text-xs text-gray-500 text-center mt-4">
+        <div class="border-t-2 pt-4 text-xs text-gray-500 text-center">
             {#        Please pay the invoice before the due date. You can pay the invoice by logging in to your account from our client portal.#}
             {{ invoice.notes|markdownify }}
         </div>
     {% endif %}
     <!-- Credits -->
-    <div class="border-t-2 pt-4 text-xs text-gray-500 text-center mt-4 print-ignore">
+    <div class="border-t-2 mb-auto pt-3 text-xs text-gray-500 text-center print-ignore">
         {# Print ignored #}
         This invoice was generated with 💜 by
         <a class="underline" href="https://github.com/TreyWW/MyFinances">MyFinances</a>
