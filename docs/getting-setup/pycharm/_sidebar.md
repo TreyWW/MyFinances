@@ -1,5 +1,0 @@
-- [Back to getting started](/getting-setup/)
-- [Fork Project](getting-setup/pycharm/fork)
-- [Setup Environment Variables](getting-setup/pycharm/env-variables)
-- [Setup Django](getting-setup/pycharm/django)
-- [Setup Frontend](getting-setup/pycharm/frontend)

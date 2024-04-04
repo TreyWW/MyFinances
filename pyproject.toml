@@ -49,6 +49,11 @@ django-markdownify = "0.9.3"
 shortuuid = "1.0.11"
 model-bakery = "1.17.0"
 
+[tool.poetry.group.docs.dependencies]
+mkdocs = "^1.5.3"
+mkdocs-material = "^9.5.15"
+mkdocs-git-committers-plugin-2 = "^2.3.0"
+
 [tool.poetry.group.mysql]
 optional = true
 
