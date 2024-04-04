@@ -2,7 +2,7 @@
 name = "MyFinances"
 version = "0.2.1"
 description = "github.com/TreyWW/MyFinances"
-authors = []
+authors = ["TreyWW"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
@@ -72,6 +72,7 @@ black = "^24.3.0"
 djlint = "^1.34.1"
 coverage = "^7.4.4"
 pre-commit = "^3.7.0"
+bump-my-version = "^0.19.3"
 
 [tool.djlint]
 profile = "django"
@@ -83,3 +84,27 @@ line-length = 140
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.bumpversion]
+current_version = "0.2.1"
+commit = true
+commit_args = "-s"
+tag = true
+tag_name = "v{new_version}"
+sign_tags = true
+allow_dirty = true
+parse = "(?P<major>\\d+)\\.(?P<minor>\\d+)\\.(?P<patch>\\d+)(\\.(?P<dev>post)\\d+\\.dev\\d+)?"
+serialize = [
+    "{major}.{minor}.{patch}.{dev}{$PR_NUMBER}.dev{distance_to_latest_tag}",
+    "{major}.{minor}.{patch}"
+]
+
+message = "Version updated from {current_version} to {new_version}"
+
+[[tool.bumpversion.files]]
+filename = "backend/__init__.py"
+
+[[tool.bumpversion.files]]
+filename = "pyproject.toml"
+search = 'version = "{current_version}"'
+replace = 'version = "{new_version}"'
