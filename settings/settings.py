@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import base64
 import logging
 import mimetypes
@@ -7,11 +9,10 @@ from pathlib import Path
 
 from django.contrib.messages import constants as messages
 from django.contrib.staticfiles.storage import FileSystemStorage
+from django.utils.translation import gettext_lazy as _
 from storages.backends.s3 import S3Storage
 
 from .helpers import get_var
-
-# from backend.utils import appconfig
 
 DEBUG = True if get_var("DEBUG") in ["True", "true", "TRUE", True] else False
 
@@ -176,6 +177,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 MIDDLEWARE = [
     "backend.middleware.HealthCheckMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "backend.middleware.LastVisitedMiddleware",
@@ -233,9 +235,19 @@ AUTH_USER_MODEL = "backend.User"
 
 LANGUAGE_CODE = "en-us"
 
+LANGUAGES = (
+    ("en", _("English")),
+    ("ru", _("Russian")),
+)
+
+LOCALE_PATHS = [
+    BASE_DIR / "locale/",
+]
+
 TIME_ZONE = "UTC"
 
 USE_I18N = True
+USE_L10N = True
 
 USE_TZ = True
 
@@ -346,7 +358,8 @@ else:
     MEDIA_ROOT = os.path.join(BASE_DIR, "media")
     DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 
-    class CustomPublicMediaStorage(FileSystemStorage):  # This overrides the AWS version
+    # This overrides the AWS version
+    class CustomPublicMediaStorage(FileSystemStorage):
         ...
 
 
@@ -356,7 +369,8 @@ if AWS_MEDIA_PRIVATE_ENABLED:
     PRIVATE_FILE_STORAGE = "settings.settings.CustomPrivateMediaStorage"
 else:
 
-    class CustomPrivateMediaStorage(FileSystemStorage):  # This overrides the AWS version
+    # This overrides the AWS version
+    class CustomPrivateMediaStorage(FileSystemStorage):
         ...
 
     PRIVATE_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"

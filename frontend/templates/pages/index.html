@@ -1,4 +1,5 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
 <html :class="{ 'theme-dark': dark }" x-data="data()" lang="en">
     {% include 'base/_head.html' %}
@@ -12,7 +13,7 @@
                         </a>
                         <div class="grow">
                             <a class="md:text-xl text-gray-800 font-semibold dark:text-gray-200"
-                               href="/">My Finances</a>
+                               href="/">{% trans "My Finances" %}</a>
                         </div>
                     </div>
                 </div>
@@ -20,12 +21,12 @@
             <div class="navbar-end">
                 <div class="text-center sm:text-left flex sm:justify-end sm:items-center gap-x-3 md:gap-x-4">
                     {% if request.user.is_authenticated %}
-                        <a class="btn btn-primary rounded-full" href="{% url "dashboard" %}">Dashboard</a>
-                        <a class="btn btn-outline rounded-full" href="{% url 'auth:logout' %}">Logout</a>
+                        <a class="btn btn-primary rounded-full" href="{% url "dashboard" %}">{% trans "Dashboard" %}</a>
+                        <a class="btn btn-outline rounded-full" href="{% url 'auth:logout' %}">{% trans "Logout" %}</a>
                     {% else %}
                         <a class="btn btn-primary rounded-full"
-                           href="{% url 'auth:login create_account' %}">Register</a>
-                        <a class="btn btn-outline rounded-full " href="{% url 'auth:login' %}">Login</a>
+                           href="{% url 'auth:login create_account' %}">{% trans "Register" %}</a>
+                        <a class="btn btn-outline rounded-full " href="{% url 'auth:login' %}">{% trans "Login" %}</a>
                     {% endif %}
                 </div>
             </div>
@@ -35,8 +36,8 @@
             <main class="h-full w-full overflow-y-auto pb-16">
                 <div class="navbar-sticky">
                     <div class="text-4xl center text-center mt-8">
-                        <p>We're still in development!</p>
-                        <a class="btn btn-lg btn-primary mt-3" href="/dashboard/">Go to dashboard</a>
+                        <p>{% trans "We're still in development!" %}</p>
+                        <a class="btn btn-lg btn-primary mt-3" href="/dashboard/">{% trans "Go to dashboard" %}</a>
                     </div>
                 </div>
             </main>
