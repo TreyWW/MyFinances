@@ -1,8 +1,10 @@
+from __future__ import annotations
+
 import os
 import sys
 from dataclasses import dataclass
 from logging import exception
-from typing import Union, List, Literal, Optional
+from typing import Literal
 
 import boto3
 import environ
@@ -10,7 +12,7 @@ from django_ratelimit.core import get_usage
 from mypy_boto3_sesv2.client import SESV2Client
 from mypy_boto3_sesv2.type_defs import SendEmailResponseTypeDef
 
-### NEEDS REFACTOR
+# NEEDS REFACTOR
 
 env = environ.Env(DEBUG=(bool, False))
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -78,11 +80,11 @@ class SentEmailSuccessResponse:
 @dataclass(frozen=True)
 class SentEmailErrorResponse:
     message: str
-    response: Optional[SendEmailResponseTypeDef]
+    response: SendEmailResponseTypeDef | None
     success: Literal[False] = False
 
 
-def send_email(destination: Union[str, List[str]], subject: str, message: str) -> SentEmailSuccessResponse | SentEmailErrorResponse:
+def send_email(destination: str | list[str], subject: str, message: str) -> SentEmailSuccessResponse | SentEmailErrorResponse:
     """
     Args:
     destination (email addr or list of email addr): The email address or list of email addresses to send the
@@ -94,7 +96,7 @@ def send_email(destination: Union[str, List[str]], subject: str, message: str) -
         if not isinstance(destination, list):
             destination = [destination]
 
-        response: Optional[SendEmailResponseTypeDef] = None
+        response: SendEmailResponseTypeDef | None = None
 
         try:
             response: SendEmailResponseTypeDef = EMAIL_CLIENT.send_email(
@@ -119,8 +121,9 @@ def send_email(destination: Union[str, List[str]], subject: str, message: str) -
     return SentEmailErrorResponse(message="No email service configured")
 
 
-if not get_var("SITE_URL"):
-    raise ValueError("SITE_URL is required")
+if not any(arg in sys.argv[1:] for arg in ["test", "migrate", "makemigrations"]):
+    if not get_var("SITE_URL"):
+        raise ValueError("SITE_URL is required")
 
-if not get_var("SITE_NAME"):
-    raise ValueError("SITE_NAME is required")
+    if not get_var("SITE_NAME"):
+        raise ValueError("SITE_NAME is required")

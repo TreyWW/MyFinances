@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import logging
 import sys
 
@@ -17,7 +19,7 @@ config = Config(connect_timeout=5, retries={"max_attempts": 2})
 
 AWS_SCHEDULES_ENABLED = get_var("AWS_SCHEDULES_ACCESS_KEY_ID") and get_var("AWS_SCHEDULES_SECRET_ACCESS_KEY")
 
-if sys.argv[1] != "migrate":
+if not any(arg in sys.argv[1:] for arg in ["test", "migrate", "makemigrations"]):
     if not AWS_SCHEDULES_ENABLED and get_feature_status("isInvoiceSchedulingEnabled", should_use_cache=False):
         raise ValueError(
             "If using schedules, the variables MUST be set. If you are not going to use schedules, "

@@ -1,4 +1,17 @@
 repos:
+-   repo: https://github.com/psf/black
+    rev: 24.3.0
+    entry: black --check --diff
+    hooks:
+    -   id: black
+- repo: local
+  hooks:
+    - id: pre-commit-django-migrations
+      name: Check django migrations
+      entry: ./manage.py makemigrations --dry-run --check --no-input
+      language: system
+      types: [python]
+      pass_filenames: false
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.5.0
     hooks:
@@ -6,7 +19,6 @@ repos:
     -   id: end-of-file-fixer
     -   id: check-yaml
     -   id: debug-statements
-    -   id: double-quote-string-fixer
     -   id: name-tests-test
 -   repo: https://github.com/asottile/setup-cfg-fmt
     rev: v2.5.0
@@ -23,21 +35,3 @@ repos:
     hooks:
     -   id: pyupgrade
         args: [--py39-plus]
--   repo: https://github.com/hhatto/autopep8
-    rev: v2.1.0
-    hooks:
-    -   id: autopep8
--   repo: https://github.com/PyCQA/flake8
-    rev: 7.0.0
-    hooks:
-    -   id: flake8
--   repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.9.0
-    hooks:
-    -   id: mypy
-        additional_dependencies: [types-all]
-        exclude: ^testing/resources/
--   repo: https://github.com/psf/black
-    rev: 22.10.0
-    hooks:
-    -   id: black
