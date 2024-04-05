@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         os: [ ubuntu-latest ]
         python-version: [ "3.10", "3.11", "3.12" ]
@@ -48,7 +48,7 @@ jobs:
       - name: Copy docker compose file
         run: |
           cp $GITHUB_WORKSPACE/$DOCKER_COMPOSE_PATH ./docker-compose.yml
-      
+
       #----------------------------------------------
       #       build Frontend files
       #----------------------------------------------
