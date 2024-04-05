@@ -39,20 +39,24 @@ git clone [copied fork url]
    pip install poetry
    poetry install --no-root
    ```
-   2. Setup a database (we suggest using sqlite so there's no installation!)
-   3. Migrate the database
-       ```shell
-       python manage.py migrate
-       ```
-   4. Create an administrator account
-       ```shell
-       python manage.py createsuperuser
-       ```
+2. Setup a database (we suggest using sqlite so there's no installation!)
+3. Compile translations
+    ```shell
+    django-admin compilemessages --ignore=env
+    ```
+4. Migrate the database
+    ```shell
+    python manage.py migrate
+    ```
+5. Create an administrator account
+    ```shell
+    python manage.py createsuperuser
+    ```
 
-   5. Run the application
-       ```shell
-       python manage.py runserver
-       ```
+6. Run the application
+    ```shell
+    python manage.py runserver
+    ```
 
 ## Setup the frontend
 
