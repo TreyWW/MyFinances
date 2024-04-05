@@ -1,6 +1,6 @@
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: c8715b78af300618e26bac6ae923d9c01082d19d
+    rev: v4.5.0
     hooks:
     -   id: trailing-whitespace
     -   id: end-of-file-fixer
@@ -8,11 +8,11 @@ repos:
     -   id: debug-statements
     -   id: name-tests-test
 -   repo: https://github.com/asottile/setup-cfg-fmt
-    rev: a4be2e6eb27f51d16538b3221c814543e131c131
+    rev: v2.5.0
     hooks:
     -   id: setup-cfg-fmt
 -   repo: https://github.com/asottile/reorder-python-imports
-    rev: 1dc4987444996764cbdd3888c8d132d18f4b046c
+    rev: v3.12.0
     hooks:
     -   id: reorder-python-imports
         exclude: ^(pre_commit/resources/|testing/resources/python3_hooks_repo/)
@@ -29,6 +29,6 @@ repos:
         additional_dependencies: [types-all]
         exclude: ^(settings/|backend/)
 -   repo: https://github.com/psf/black
-    rev: c8f1a5542c257491e1e093b1404481ece7f7e02c
+    rev: 24.3.0
     hooks:
     -   id: black
