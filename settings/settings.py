@@ -359,8 +359,7 @@ else:
     DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 
     # This overrides the AWS version
-    class CustomPublicMediaStorage(FileSystemStorage):
-        ...
+    class CustomPublicMediaStorage(FileSystemStorage): ...
 
 
 AWS_MEDIA_PRIVATE_ENABLED = get_var("AWS_MEDIA_PRIVATE_ENABLED", default=False).lower() == "true"
@@ -370,8 +369,7 @@ if AWS_MEDIA_PRIVATE_ENABLED:
 else:
 
     # This overrides the AWS version
-    class CustomPrivateMediaStorage(FileSystemStorage):
-        ...
+    class CustomPrivateMediaStorage(FileSystemStorage): ...
 
     PRIVATE_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 
