@@ -54,10 +54,7 @@ def view(request, uuid):
         messages.error(request, "Invoice not found")
         return redirect("index")
 
-    if request.user != AnonymousUser():
-        currency_symbol = invoice.get_currency_symbol()
-    else:
-        currency_symbol = "£"
+    currency_symbol = invoice.get_currency_symbol()
 
     context.update({"invoice": invoice, "currency_symbol": currency_symbol})
 
