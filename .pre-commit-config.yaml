@@ -15,7 +15,7 @@ repos:
 - repo: local
   hooks:
     - id: pre-commit-djlint
-      name: Check django migrations
+      name: Djlint (html files)
       entry: djlint .
       language: system
       types: [python]
