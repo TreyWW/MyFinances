@@ -1,13 +1,20 @@
+from __future__ import annotations
+
 from datetime import datetime
 from decimal import Decimal
-from typing import Optional, NoReturn, Union, Literal
+from typing import Literal
+from typing import NoReturn
 from uuid import uuid4
 
-from django.contrib.auth.hashers import make_password, check_password
-from django.contrib.auth.models import UserManager, AbstractUser, AnonymousUser
+from django.contrib.auth.hashers import check_password
+from django.contrib.auth.hashers import make_password
+from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AnonymousUser
+from django.contrib.auth.models import UserManager
 from django.core.validators import MaxValueValidator
 from django.db import models
-from django.db.models import Count, QuerySet
+from django.db.models import Count
+from django.db.models import QuerySet
 from django.utils import timezone
 from django.utils.crypto import get_random_string
 from shortuuid.django_fields import ShortUUIDField
@@ -37,7 +44,7 @@ class CustomUserManager(UserManager):
             super()
             .get_queryset()
             .select_related("user_profile", "logged_in_as_team")
-            .annotate(notification_count=((Count("user_notifications"))))
+            .annotate(notification_count=(Count("user_notifications")))
         )
 
 
@@ -337,7 +344,7 @@ class Invoice(models.Model):
             return self.payment_status
 
     @property
-    def get_to_details(self) -> tuple[str, dict[str, str]]:
+    def get_to_details(self) -> tuple[str, dict[str, str]] | tuple[str, Client]:
         """
         Returns the client details for the invoice
         "client" and Client object if client_to
@@ -357,11 +364,11 @@ class Invoice(models.Model):
             subtotal += item.get_total_price()
         return Decimal(round(subtotal, 2))
 
-    def get_tax(self, amount: float = 0.00) -> float:
+    def get_tax(self, amount: Decimal = 0.00) -> Decimal:
         amount = amount or self.get_subtotal()
         if self.vat_number:
-            return round(amount * 0.2, 2)
-        return 0
+            return Decimal(round(amount * Decimal(0.2), 2))
+        return Decimal(0)
 
     def get_percentage_amount(self, subtotal: float = 0.00) -> Decimal:
         total = subtotal or self.get_subtotal()
@@ -550,7 +557,8 @@ class TracebackError(models.Model):
 
 
 class FeatureFlags(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, editable=False, unique=True)
+    description = models.TextField(max_length=500, null=True, blank=True, editable=False)
     value = models.BooleanField(default=False)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -587,7 +595,7 @@ class QuotaLimit(models.Model):
     def __str__(self):
         return self.name
 
-    def get_quota_limit(self, user: User, quota_limit: Optional["QuotaLimit"] = None):
+    def get_quota_limit(self, user: User, quota_limit: QuotaLimit | None = None):
         try:
             if quota_limit:
                 user_quota_override = quota_limit
@@ -607,14 +615,14 @@ class QuotaLimit(models.Model):
         else:
             return "Not available"
 
-    def strict_goes_above_limit(self, user: User, extra: Optional[str | int] = None) -> bool:
+    def strict_goes_above_limit(self, user: User, extra: str | int | None = None) -> bool:
         current = self.strict_get_quotas(user, extra)
         current = current.count() if current != "Not Available" else None
         return current >= self.get_quota_limit(user) if current else False
 
     def strict_get_quotas(
-        self, user: User, extra: Optional[str | int] = None, quota_limit: Optional["QuotaLimit"] = None
-    ) -> Union['QuerySet["QuotaUsage"]', Literal["Not Available"]]:
+        self, user: User, extra: str | int | None = None, quota_limit: QuotaLimit | None = None
+    ) -> QuerySet[QuotaUsage] | Literal["Not Available"]:
         """
         Gets all usages of a quota
         :return: QuerySet of quota usages OR "Not Available" if utilisation isn't available (e.g. per invoice you can't get in total)
@@ -640,7 +648,7 @@ class QuotaLimit(models.Model):
         return current
 
     @classmethod
-    def delete_quota_usage(cls, quota_limit: Union[str, "QuotaLimit"], user: User, extra, timestamp=None) -> NoReturn:
+    def delete_quota_usage(cls, quota_limit: str | QuotaLimit, user: User, extra, timestamp=None) -> NoReturn:
         quota_limit = cls.objects.get(slug=quota_limit) if isinstance(quota_limit, str) else quota_limit
 
         all_usages = quota_limit.strict_get_quotas(user, extra)
@@ -699,7 +707,7 @@ class QuotaUsage(models.Model):
         return f"{self.user} quota usage for {self.quota_limit_id}"
 
     @classmethod
-    def create_str(cls, user: User, limit: str | QuotaLimit, extra_data: Optional[str | int] = None):
+    def create_str(cls, user: User, limit: str | QuotaLimit, extra_data: str | int | None = None):
         try:
             quota_limit = limit if isinstance(limit, QuotaLimit) else QuotaLimit.objects.get(slug=limit)
         except QuotaLimit.DoesNotExist:
