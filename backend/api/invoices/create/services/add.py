@@ -11,10 +11,7 @@ def add_service(request: HttpRequest):
     existing_service = request.POST.get("existing_service")
 
     try:
-        existing_service_obj = InvoiceProduct.objects.get(
-            user=request.user,
-            id=existing_service
-        )
+        existing_service_obj = InvoiceProduct.objects.get(user=request.user, id=existing_service)
     except InvoiceProduct.DoesNotExist:
         existing_service_obj = None
 
@@ -22,15 +19,7 @@ def add_service(request: HttpRequest):
     list_service_name = request.POST.getlist("service_name[]")
     list_service_description = request.POST.getlist("service_description[]")
     list_price_per_hour = request.POST.getlist("price_per_hour[]")
-    list_of_current_rows = [
-        row
-        for row in zip(
-            list_hours, 
-            list_service_name, 
-            list_service_description, 
-            list_price_per_hour
-        )
-    ]
+    list_of_current_rows = [row for row in zip(list_hours, list_service_name, list_service_description, list_price_per_hour)]
 
     if not existing_service:
         hours = int(request.POST.get("post_hours"))
