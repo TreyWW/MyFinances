@@ -5,7 +5,7 @@ module.exports = {
         './components/**/*.html',
         './frontend/templates/base/base.html',
         './backend/**/views/*.py',
-        '/backend/views/core/**/*.py',
+        './backend/views/core/**/*.py',
     ],
     safelist: [
         'alert',

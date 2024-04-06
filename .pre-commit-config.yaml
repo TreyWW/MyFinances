@@ -8,7 +8,15 @@ repos:
   hooks:
     - id: pre-commit-django-migrations
       name: Check django migrations
-      entry: ./manage.py makemigrations --dry-run --check --no-input
+      entry: python manage.py makemigrations --dry-run --check --no-input
+      language: system
+      types: [python]
+      pass_filenames: false
+- repo: local
+  hooks:
+    - id: pre-commit-djlint
+      name: Djlint (html files)
+      entry: djlint .
       language: system
       types: [python]
       pass_filenames: false
