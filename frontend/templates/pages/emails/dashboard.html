@@ -42,27 +42,35 @@
                 </ul>
             </div>
             <div class="join">
-                <a class="btn btn-primary join-item" href="{% url 'invoices:create' %}">
+                <button class="btn btn-primary join-item"
+                        onclick="modal_send_single_email.showModal();"
+                        hx-trigger="click once"
+                        hx-swap="beforeend"
+                        hx-target="#modal_container"
+                        hx-get="{% url "api:base:modal retrieve" modal_name="send_single_email" %}">
                     <i class="fa-solid fa-paper-plane"></i>
                     Send Email
-                </a>
+                </button>
                 <div class="dropdown dropdown-end">
-                    <label tabindex="0" class="btn border-0 border-l border-base-100 btn-primary join-item">
+                    <label tabindex="0"
+                           class="btn border-0 border-l border-base-100 btn-primary join-item">
                         <i class="fa-solid fa-caret-down"></i>
                     </label>
                     <ul class="menu menu-sm dropdown-content border border-primary">
                         <li>
-                            <button><i class="fa-solid fa-user"></i> Send single email</button>
+                            <button>
+                                <i class="fa-solid fa-user"></i> Send single email
+                            </button>
                         </li>
                         <li>
-                            <button><i class="fa-solid fa-users"></i> Send bulk email</button>
+                            <button>
+                                <i class="fa-solid fa-users"></i> Send bulk email
+                            </button>
                         </li>
                     </ul>
                 </div>
             </div>
         </div>
-        <div class="flex w-full h-full overflow-x-auto overflow-y-auto">
-
-        </div>
+        <div class="flex w-full h-full overflow-x-auto overflow-y-auto"></div>
     </div>
 {% endblock content %}

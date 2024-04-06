@@ -226,6 +226,7 @@ class Client(models.Model):
     name = models.CharField(max_length=64)
     phone_number = models.CharField(max_length=100, blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
+    email_verified = models.BooleanField(default=False)
     company = models.CharField(max_length=100, blank=True, null=True)
     is_representative = models.BooleanField(default=False)
 
@@ -745,3 +746,32 @@ class QuotaIncreaseRequest(models.Model):
 
     def __str__(self):
         return f"{self.user}"
+
+
+class EmailSendStatus(models.Model):
+    STATUS_CHOICES = [
+        (status, status.title())
+        for status in [
+            "send",
+            "reject",
+            "bounce",
+            "complaint",
+            "delivery",
+            "open",
+            "click",
+            "rendering_failure",
+            "delivery_delay",
+            "subscription",
+        ]
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name="emails_created")
+    organization = models.ForeignKey(Team, on_delete=models.CASCADE, null=True, blank=True, related_name="emails_created")
+    sent_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name="emails_sent")
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    recipient = models.TextField()
+    aws_message_id = models.CharField(max_length=100, null=True, blank=True, editable=False)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES)

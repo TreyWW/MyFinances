@@ -48,9 +48,9 @@
             {% endwith %}
         </li>
         <li>
-            {% with i_url="emails:dashboard" %}
+            {% with i_url="emails:dashboard" ns="emails" uname="dashboard" %}
                 <a href="{% url i_url %}"
-                   {% if request.resolver_match.url_name == i_url %}class="active"{% endif %}>
+                   {% if request.resolver_match.url_name == uname and ns in request.resolver_match.namespaces %} class="active" {% endif %}>
                     Email Sending
                 </a>
             {% endwith %}

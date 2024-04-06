@@ -1,7 +1,13 @@
-from django.http import HttpRequest, HttpResponseBadRequest
+from __future__ import annotations
+
+from django.http import HttpRequest
+from django.http import HttpResponseBadRequest
 from django.shortcuts import render
 
-from backend.models import UserSettings, Invoice, Team, QuotaLimit
+from backend.models import Invoice
+from backend.models import QuotaLimit
+from backend.models import Team
+from backend.models import UserSettings
 
 
 # Still working on
@@ -76,6 +82,9 @@ def open_modal(request: HttpRequest, modal_name, context_type=None, context_valu
                     ...
             else:
                 context[context_type] = context_value
+
+        if modal_name == "send_single_email":
+            print(request.GET)
 
         return render(request, template_name, context)
     except ValueError as e:

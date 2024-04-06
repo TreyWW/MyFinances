@@ -1,0 +1,41 @@
+{% component_block "modal" id="modal_send_single_email" start_open="true" title="Send Email" %}
+{% fill "content" %}
+<form class="py-4"
+      id="modal_send_single_email-form"
+      hx-post="{% url 'api:teams:invite' %}"
+      hx-swap="none">
+    {% csrf_token %}
+    <div class="form-control w-full">
+        <label class="label justify-start">
+            Client Email
+            <span class="required_star">*</span>
+        </label>
+        <select id="modal_input-email"
+                name="email"
+                type="email"
+                class="select select-block select-bordered"
+                required>
+            {% for email in emails %}
+                <option value="" disabled selected>Select a client email below</option>
+                <option value="{{ email.email }}"
+                        {% if not email.verified %}disabled{% endif %}>{{ email.email }}</option>
+            {% empty %}
+                <option value="" disabled selected>There are currently no client emails stored.</option>
+            {% endfor %}
+        </select>
+    </div>
+    <input type="hidden" name="team_id" value="{{ team_id }}">
+    <div class="modal-action">
+        <button type="submit"
+                id="modal_send_single_email-submit"
+                class="btn btn-primary"
+                x-on:invite_user_error.window="document.getElementById('modal_send_single_email').close()">
+            Send Email
+        </button>
+        <button type="button"
+                _="on click call #modal_send_single_email.close()"
+                class="btn">Cancel</button>
+    </div>
+</form>
+{% endfill %}
+{% endcomponent_block %}
