@@ -8,7 +8,7 @@ repos:
   hooks:
     - id: pre-commit-django-migrations
       name: Check django migrations
-      entry: ./manage.py makemigrations --dry-run --check --no-input
+      entry: python3 ./manage.py makemigrations --dry-run --check --no-input
       language: system
       types: [python]
       pass_filenames: false
