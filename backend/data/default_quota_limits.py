@@ -1,5 +1,8 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
-from typing import List, Literal
+from typing import List
+from typing import Literal
 
 
 @dataclass
@@ -9,16 +12,16 @@ class QuotaItem:
     description: str
     default_value: int
     adjustable: bool
-    period: Literal["forever", "per_month", "per_day", "per_client", "per_invoice", "per_team", "per_quota"]
+    period: Literal["forever", "per_month", "per_day", "per_client", "per_invoice", "per_team", "per_quota", "per_bulk_send", "per_email"]
 
 
 @dataclass
 class QuotaGroup:
     name: str
-    items: List[QuotaItem]
+    items: list[QuotaItem]
 
 
-default_quota_limits: List[QuotaGroup] = [
+default_quota_limits: list[QuotaGroup] = [
     QuotaGroup(
         "invoices",
         [
@@ -121,6 +124,51 @@ default_quota_limits: List[QuotaGroup] = [
                 period="per_quota",
                 default_value=1,
                 adjustable=False,
+            ),
+        ],
+    ),
+    QuotaGroup(
+        "emails",
+        [
+            QuotaItem(
+                slug="single-count",
+                name="Single Email Sends",
+                description="Amount of single email sends allowed per month",
+                period="per_month",
+                default_value=10,
+                adjustable=True,
+            ),
+            QuotaItem(
+                slug="bulk-count",
+                name="Bulk Email Sends",
+                description="Amount of 'Bulk Emails' allowed to be sent per month",
+                period="per_month",
+                default_value=1,
+                adjustable=True,
+            ),
+            QuotaItem(
+                slug="bulk-max_sends",
+                name="Bulk Email Maximum Emails",
+                description="Maximum amount of emails allowed to be sent per 'Bulk' request",
+                period="per_bulk_send",
+                default_value=10,
+                adjustable=True,
+            ),
+            QuotaItem(
+                slug="email_character_count",
+                name="Maximum Character Count",
+                description="Maximum amount of characters allowed in an email",
+                period="per_email",
+                default_value=1000,
+                adjustable=True,
+            ),
+            QuotaItem(
+                slug="complaints",
+                name="Complaints allowed",
+                description="Maximum amount of complaints allowed before your account will be blocked from sending emails",
+                period="forever",
+                default_value=2,
+                adjustable=True,
             ),
         ],
     ),

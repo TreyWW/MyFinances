@@ -1,9 +1,13 @@
+from __future__ import annotations
+
 from functools import wraps
 from typing import Optional
 
 from django.contrib import messages
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import redirect, render
+from django.http import HttpResponse
+from django.http import HttpResponseRedirect
+from django.shortcuts import redirect
+from django.shortcuts import render
 from django.urls import reverse
 
 from backend.models import QuotaLimit
@@ -42,6 +46,19 @@ def superuser_only(view_func):
     return wrapper_func
 
 
+def htmx_only(viewname: str = "dashboard"):
+    def decorator(view_func):
+        def wrapper_func(request, *args, **kwargs):
+            if request.htmx:
+                return view_func(request, *args, **kwargs)
+            else:
+                return redirect(viewname)
+
+        return wrapper_func
+
+    return decorator
+
+
 def feature_flag_check(flag, status=True, api=False, htmx=False):
     def decorator(view_func):
         @wraps(view_func)
@@ -71,7 +88,7 @@ def feature_flag_check(flag, status=True, api=False, htmx=False):
     return decorator
 
 
-def quota_usage_check(limit: str | QuotaLimit, extra_data: Optional[str | int] = None, api=False, htmx=False):
+def quota_usage_check(limit: str | QuotaLimit, extra_data: str | int | None = None, api=False, htmx=False):
     def decorator(view_func):
         @wraps(view_func)
         def wrapper(request, *args, **kwargs):
