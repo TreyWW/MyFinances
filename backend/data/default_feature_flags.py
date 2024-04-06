@@ -1,0 +1,20 @@
+from __future__ import annotations
+
+from dataclasses import dataclass
+
+
+@dataclass
+class FeatureFlag:
+    name: str
+    description: str
+    default: bool
+
+
+default_feature_flags: list[FeatureFlag] = [
+    FeatureFlag(name="areSignupsEnabled", description="Are new account creations allowed", default=True),
+    FeatureFlag(
+        name="isInvoiceSchedulingEnabled",
+        description="Invoice Scheduling allows for clients to create invoice schedules that send and invoice at a specific date.",
+        default=False,
+    ),
+]

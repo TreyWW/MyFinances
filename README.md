@@ -376,6 +376,18 @@ Thank you for your contributions!
             <br />
             <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Aintrokun" title="Refactored Files">♻</a>
         </td>
+        </td></tr><tr><td>
+        <td align="center">
+            <a href="https://github.com/spalominor" title="spalominor">
+                <img title="Design" src="https://github.com/spalominor.png" width="100px;" alt="" />
+                <br />
+                <sub>
+                    <b>Samuel P</b>
+                </sub>
+            </a>
+            <br />
+            <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Aspalominor" title="Frontend">🎨</a>
+        </td>
         </td></tr></table>
 <!-- CONTRIBUTORS TABLE END -->
 

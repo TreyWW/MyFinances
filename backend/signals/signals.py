@@ -1,18 +1,16 @@
-import logging
+from __future__ import annotations
 
 from django.core.cache import cache
 from django.core.cache.backends.redis import RedisCacheClient
 
-from backend.data.default_quota_limits import default_quota_limits
-
 cache: RedisCacheClient = cache
 from django.core.files.storage import default_storage
-from django.db.models.signals import pre_save, post_delete, post_save, post_migrate, pre_delete
+from django.db.models.signals import pre_save, post_delete, post_save, pre_delete
 from django.dispatch import receiver
 from django.urls import reverse
 
 import settings.settings
-from backend.models import UserSettings, Receipt, User, FeatureFlags, VerificationCodes, QuotaLimit
+from backend.models import UserSettings, Receipt, User, FeatureFlags, VerificationCodes
 from settings.helpers import ARE_EMAILS_ENABLED, send_email
 
 
@@ -62,62 +60,6 @@ def user_account_create_make_usersettings(sender, instance, created, **kwargs):
 @receiver(post_delete, sender=Receipt)
 def delete_receipt_image_on_delete(sender, instance: Receipt, **kwargs):
     instance.image.delete(False)
-
-
-feature_flags = [
-    {"name": "areSignupsEnabled", "default": True, "pk": 1},
-    {"name": "isInvoiceSchedulingEnabled", "default": False, "pk": 2},
-]
-
-
-def insert_initial_data(**kwargs):
-    for feature in feature_flags:
-        try:
-            FeatureFlags.objects.get(name=feature.get("name"))
-        except FeatureFlags.DoesNotExist:
-            flag = FeatureFlags.objects.create(name=feature.get("name"))
-
-            flag.value = feature.get("default")
-            flag.save()
-
-    for group in default_quota_limits:
-        for item in group.items:
-            existing = QuotaLimit.objects.filter(slug=f"{group.name}-{item.slug}").first()
-            if existing:
-                name, value, adjustable, description, limit_type = (
-                    existing.name,
-                    existing.value,
-                    existing.adjustable,
-                    existing.description,
-                    existing.limit_type,
-                )
-                existing.name = item.name
-                existing.value = item.default_value
-                existing.adjustable = item.adjustable
-                existing.description = item.description
-                existing.limit_type = item.period
-                if (
-                    item.name != name
-                    or item.default_value != value
-                    or item.adjustable != adjustable
-                    or item.description != description
-                    or item.period != limit_type
-                ):
-                    logging.info(f"Updated QuotaLimit {item.name}")
-                    existing.save()
-            else:
-                QuotaLimit.objects.create(
-                    name=item.name,
-                    slug=f"{group.name}-{item.slug}",
-                    value=item.default_value,
-                    adjustable=item.adjustable,
-                    description=item.description,
-                    limit_type=item.period,
-                )
-                logging.info(f"Added QuotaLimit {item.name}")
-
-
-post_migrate.connect(insert_initial_data)
 
 
 @receiver(post_save, sender=FeatureFlags)

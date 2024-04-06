@@ -28,6 +28,7 @@ boto3-stubs = { extras = [
 djangorestframework = "^3.14.0"
 django-tz-detect = "^0.5.0"
 typos = "^1.20.3"
+pre-commit = "^3.7.0"
 
 [tool.poetry.group.django.dependencies]
 Django = "^5.0.2"
