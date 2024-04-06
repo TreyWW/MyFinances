@@ -55,7 +55,7 @@ def view(request, uuid):
         return redirect("index")
 
     if request.user != AnonymousUser():
-        currency_symbol = request.user.user_profile.get_currency_symbol()
+        currency_symbol = invoice.get_currency_symbol()
     else:
         currency_symbol = "£"
 
