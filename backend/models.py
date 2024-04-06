@@ -219,8 +219,8 @@ class ReceiptDownloadToken(models.Model):
 
 
 class Client(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    organization = models.ForeignKey(Team, on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    organization = models.ForeignKey(Team, on_delete=models.CASCADE, null=True, blank=True)
     active = models.BooleanField(default=True)
 
     name = models.CharField(max_length=64)
@@ -775,3 +775,6 @@ class EmailSendStatus(models.Model):
     recipient = models.TextField()
     aws_message_id = models.CharField(max_length=100, null=True, blank=True, editable=False)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES)
+
+    class Meta:
+        constraints = [USER_OR_ORGANIZATION_CONSTRAINT()]

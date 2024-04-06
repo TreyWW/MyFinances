@@ -4,6 +4,7 @@ from django.http import HttpRequest
 from django.http import HttpResponseBadRequest
 from django.shortcuts import render
 
+from backend.models import Client
 from backend.models import Invoice
 from backend.models import QuotaLimit
 from backend.models import Team
@@ -84,7 +85,14 @@ def open_modal(request: HttpRequest, modal_name, context_type=None, context_valu
                 context[context_type] = context_value
 
         if modal_name == "send_single_email":
-            print(request.GET)
+            context["content_min_length"] = 64
+            quota = QuotaLimit.objects.prefetch_related("quota_overrides").get(slug="emails-email_character_count")
+            context["content_max_length"] = quota.get_quota_limit(user=request.user, quota_limit=quota)
+            if request.user.logged_in_as_team:
+                clients = Client.objects.filter(organization=request.user.logged_in_as_team)
+            else:
+                clients = Client.objects.filter(user=request.user)
+            context["email_list"] = clients
 
         return render(request, template_name, context)
     except ValueError as e:

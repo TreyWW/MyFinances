@@ -8,7 +8,7 @@ urlpatterns = [
     path(
         "send/",
         send.send_email_view,
-        name="dashboard",
+        name="send",
     ),
 ]
 

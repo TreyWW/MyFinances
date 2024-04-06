@@ -12,7 +12,7 @@ class QuotaItem:
     description: str
     default_value: int
     adjustable: bool
-    period: Literal["forever", "per_month", "per_day", "per_client", "per_invoice", "per_team", "per_quota", "per_bulk_send"]
+    period: Literal["forever", "per_month", "per_day", "per_client", "per_invoice", "per_team", "per_quota", "per_bulk_send", "per_email"]
 
 
 @dataclass
@@ -152,6 +152,14 @@ default_quota_limits: list[QuotaGroup] = [
                 description="Maximum amount of emails allowed to be sent per 'Bulk' request",
                 period="per_bulk_send",
                 default_value=10,
+                adjustable=True,
+            ),
+            QuotaItem(
+                slug="email_character_count",
+                name="Maximum Character Count",
+                description="Maximum amount of characters allowed in an email",
+                period="per_email",
+                default_value=1000,
                 adjustable=True,
             ),
         ],

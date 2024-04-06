@@ -5,6 +5,7 @@ import sys
 from dataclasses import dataclass
 from logging import exception
 from typing import Literal
+from typing import Optional
 
 import boto3
 import environ
