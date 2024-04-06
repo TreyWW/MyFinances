@@ -1,0 +1,68 @@
+{% extends 'base/base.html' %}
+{% block content %}
+    <form id="filter_list_storage">
+    </form>
+    <div class="card bg-base-100 p-6 mb-4">
+        <div class="flex gap-3 justify-between mb-3">
+            <div class="dropdown dropdown-hover dropdown-right w-14">
+                <div tabindex="0"
+                     role="button"
+                     class="btn btn-square btn-outline loading-htmx"
+                     id="sort-indicator">
+                    <span class="loading-htmx-text"><i class="fa fa-solid fa-sort"></i></span>
+                    <span id="currency_save_loading"
+                          class="loading loading-spinner loading-htmx-loader"></span>
+                </div>
+                <ul class="dropdown-content menu z-[1] w-52 rounded-box bg-base-200 p-2 shadow"
+                    hx-swap="outerHTML"
+                    hx-target="#table_body"
+                    hx-indicator="#sort-indicator">
+                    <h2 class="menu-title">Sort by</h2>
+                    <li data-sort="id">
+                        <button class="dropdown-item"
+                                hx-get="{% url 'api:invoices:fetch' %}"
+                                name="sort"
+                                value="id">
+                            <i class="fa-solid fa-sort"></i>
+                            ID
+                        </button>
+                    </li>
+                    <li data-sort="payment_status">
+                        <button class="dropdown-item"
+                                hx-get="{% url 'api:invoices:fetch' %}"
+                                name="sort"
+                                value="payment_status">Payment Status</button>
+                    </li>
+                    <li data-sort="date_due">
+                        <button class="dropdown-item"
+                                hx-get="{% url 'api:invoices:fetch' %}"
+                                name="sort"
+                                value="date_due">Date</button>
+                    </li>
+                </ul>
+            </div>
+            <div class="join">
+                <a class="btn btn-primary join-item" href="{% url 'invoices:create' %}">
+                    <i class="fa-solid fa-paper-plane"></i>
+                    Send Email
+                </a>
+                <div class="dropdown dropdown-end">
+                    <label tabindex="0" class="btn border-0 border-l border-base-100 btn-primary join-item">
+                        <i class="fa-solid fa-caret-down"></i>
+                    </label>
+                    <ul class="menu menu-sm dropdown-content border border-primary">
+                        <li>
+                            <button><i class="fa-solid fa-user"></i> Send single email</button>
+                        </li>
+                        <li>
+                            <button><i class="fa-solid fa-users"></i> Send bulk email</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="flex w-full h-full overflow-x-auto overflow-y-auto">
+
+        </div>
+    </div>
+{% endblock content %}

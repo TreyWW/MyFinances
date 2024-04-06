@@ -42,7 +42,16 @@
         <li>
             {% with i_url="quotas" %}
                 <a href="{% url i_url %}"
-                   {% if request.resolver_match.url_name == i_url %}class="active"{% endif %}>Service Quotas
+                   {% if request.resolver_match.url_name == i_url %}class="active"{% endif %}>
+                    Service Quotas
+                </a>
+            {% endwith %}
+        </li>
+        <li>
+            {% with i_url="emails:dashboard" %}
+                <a href="{% url i_url %}"
+                   {% if request.resolver_match.url_name == i_url %}class="active"{% endif %}>
+                    Email Sending
                 </a>
             {% endwith %}
         </li>
