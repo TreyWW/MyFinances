@@ -18,6 +18,9 @@ from django.views.decorators.http import require_http_methods
 from backend.models import Invoice, InvoiceItem
 
 
+default_sort_by = {"date_due": True, "id": True, "payment_status": True}
+
+
 @require_http_methods(["GET"])
 def fetch_all_invoices(request: HttpRequest):
     # Redirect if not an HTMX request
@@ -48,12 +51,25 @@ def fetch_all_invoices(request: HttpRequest):
     # Validate and sanitize the sort_by parameter
     all_sort_options = ["date_due", "id", "payment_status"]
     context["all_sort_options"] = all_sort_options
-    if sort_by == "date_due":
+
+    if sort_by == "date_due" and default_sort_by["date_due"]:
         sort_by = "-date_due"
-    elif sort_by == "id":
+        default_sort_by["date_due"] = not default_sort_by["date_due"]
+    elif sort_by == "id" and default_sort_by["id"]:
         sort_by = "-id"
-    elif sort_by == "payment_status":
+        default_sort_by["id"] = not default_sort_by["id"]
+    elif sort_by == "payment_status" and default_sort_by["payment_status"]:
         sort_by = "-payment_status"
+        default_sort_by["payment_status"] = not default_sort_by["payment_status"]
+    elif sort_by == "date_due" and not default_sort_by["date_due"]:
+        sort_by = "date_due"
+        default_sort_by["date_due"] = not default_sort_by["date_due"]
+    elif sort_by == "id" and not default_sort_by["id"]:
+        sort_by = "id"
+        default_sort_by["id"] = not default_sort_by["id"]
+    elif sort_by == "payment_status" and not default_sort_by["payment_status"]:
+        sort_by = "payment_status"
+        default_sort_by["payment_status"] = not default_sort_by["payment_status"]
     else:
         sort_by = "id"
 
