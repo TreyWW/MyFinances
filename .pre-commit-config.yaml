@@ -31,12 +31,6 @@ repos:
     rev: v2.5.0
     hooks:
       - id: setup-cfg-fmt
-  - repo: https://github.com/asottile/reorder-python-imports
-    rev: v3.12.0
-    hooks:
-      - id: reorder-python-imports
-        exclude: ^(pre_commit/resources/|testing/resources/python3_hooks_repo/)
-        args: [ --py39-plus, --add-import, 'from __future__ import annotations' ]
   - repo: https://github.com/asottile/pyupgrade
     rev: v3.15.2
     hooks:
