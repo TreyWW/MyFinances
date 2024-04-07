@@ -762,6 +762,8 @@ class EmailSendStatus(models.Model):
             "rendering_failure",
             "delivery_delay",
             "subscription",
+            "failed_to_send",
+            "pending",
         ]
     ]
 

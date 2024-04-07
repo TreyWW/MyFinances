@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import os
 import sys
 from dataclasses import dataclass
@@ -85,7 +86,22 @@ class SentEmailErrorResponse:
     success: Literal[False] = False
 
 
-def send_email(destination: str | list[str], subject: str, message: str) -> SentEmailSuccessResponse | SentEmailErrorResponse:
+@dataclass(frozen=True)
+class EmailInputTemplatedEmail:
+    template_name: str
+    template_data: dict | str
+
+
+@dataclass
+class EmailInput:
+    destination: str | list[str]
+    subject: str
+    content: str | EmailInputTemplatedEmail
+    ConfigurationSetName: str | None = None
+    from_address: str | None = None
+
+
+def send_email(data: EmailInput) -> SentEmailSuccessResponse | SentEmailErrorResponse:
     """
     Args:
     destination (email addr or list of email addr): The email address or list of email addresses to send the
@@ -94,17 +110,29 @@ def send_email(destination: str | list[str], subject: str, message: str) -> Sent
     message (str): The content of the email.
     """
     if EMAIL_SERVICE == "SES":
-        if not isinstance(destination, list):
-            destination = [destination]
+        if not isinstance(data.destination, list):
+            data.destination = [data.destination]
 
         response: SendEmailResponseTypeDef | None = None
 
         try:
-            response: SendEmailResponseTypeDef = EMAIL_CLIENT.send_email(
-                FromEmailAddress=get_var("AWS_SES_FROM_ADDRESS"),
-                Destination={"ToAddresses": destination},
-                Content={"Simple": {"Subject": {"Data": subject}, "Body": {"Text": {"Data": message}}}},
-            )
+            if isinstance(data.content, EmailInputTemplatedEmail):
+                data_str = (
+                    data.content.template_data if isinstance(data.content.template_data, str) else json.dumps(data.content.template_data)
+                )
+                response: SendEmailResponseTypeDef = EMAIL_CLIENT.send_email(
+                    FromEmailAddress=data.from_address or get_var("AWS_SES_FROM_ADDRESS"),
+                    Destination={"ToAddresses": data.destination},
+                    Content={"Template": {"TemplateName": data.content.template_name, "TemplateData": data_str}},
+                    ConfigurationSetName=data.ConfigurationSetName or "",
+                )
+            else:
+                response: SendEmailResponseTypeDef = EMAIL_CLIENT.send_email(
+                    FromEmailAddress=data.from_address or get_var("AWS_SES_FROM_ADDRESS"),
+                    Destination={"ToAddresses": data.destination},
+                    Content={"Simple": {"Subject": {"Data": data.subject}, "Body": {"Text": {"Data": data.content}}}},
+                    ConfigurationSetName=data.ConfigurationSetName,
+                )
             return SentEmailSuccessResponse(response)
         except EMAIL_CLIENT.exceptions.MessageRejected:
             return SentEmailErrorResponse(message="Email rejected", response=response)
@@ -118,8 +146,7 @@ def send_email(destination: str | list[str], subject: str, message: str) -> Sent
         except Exception as error:
             exception(f"Unexpected error occurred: {error}")
             return SentEmailErrorResponse(message="Email service error", response=response)
-
-    return SentEmailErrorResponse(message="No email service configured")
+    return SentEmailErrorResponse(message="No email service configured", response=None)
 
 
 if not any(arg in sys.argv[1:] for arg in ["test", "migrate", "makemigrations"]):

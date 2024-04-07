@@ -1,9 +1,12 @@
+from __future__ import annotations
+
 from typing import Optional
 
 from django.contrib import messages
 from django.core.cache import cache
 from django.core.cache.backends.redis import RedisCacheClient
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
@@ -29,7 +32,7 @@ def get_feature_status(feature, should_use_cache=True):
 
 
 def quota_usage_check_under(
-    request, limit: str | QuotaLimit, extra_data: Optional[str | int] = None, api=False, htmx=False
+    request, limit: str | QuotaLimit, extra_data: str | int | None = None, api=False, htmx=False
 ) -> bool | HttpResponse | HttpResponseRedirect:
     try:
         quota_limit = QuotaLimit.objects.get(slug=limit) if isinstance(limit, str) else limit
@@ -40,11 +43,11 @@ def quota_usage_check_under(
         return True
 
     if api and htmx:
-        messages.error(request, f"You have reached the quota limit for this service '{quota_limit.slug}'")
+        messages.error(request, f"You have reached the quota limit for this service '{quota_limit.name}'")
         return render(request, "partials/messages_list.html", {"autohide": False})
     elif api:
-        return HttpResponse(status=403, content=f"You have reached the quota limit for this service '{quota_limit.slug}'")
-    messages.error(request, f"You have reached the quota limit for this service '{quota_limit.slug}'")
+        return HttpResponse(status=403, content=f"You have reached the quota limit for this service '{quota_limit.name}'")
+    messages.error(request, f"You have reached the quota limit for this service '{quota_limit.name}'")
     try:
         last_visited_url = request.session["last_visited"]
         current_url = request.build_absolute_uri()

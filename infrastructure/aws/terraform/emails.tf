@@ -1,3 +1,8 @@
+resource "aws_iam_user" "ses_user" {
+  name = "${var.SITE_NAME}-ses"
+}
+
+
 resource "aws_ses_template" "reminder-overdue" {
   name    = "${var.SITE_NAME}-reminders-overdue"
   subject = "REMINDER | Invoice #{{invoice_id}} is shortly overdue"
@@ -15,7 +20,6 @@ resource "aws_ses_template" "reminder-after-due" {
   subject = "REMINDER | Invoice #{{invoice_id}} is past due by {{days}} days"
   text    = local.aws_ses_reminder_template_AFTER_DUE
 }
-
 
 locals {
   aws_ses_reminder_template_OVERDUE    = <<EMAIL

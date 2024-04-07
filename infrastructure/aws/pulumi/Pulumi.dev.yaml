@@ -1,0 +1,7 @@
+config:
+  MyFinances:private_subnet_cidr: 172.31.64.0/22
+  MyFinances:public_subnet_cidr: 172.31.16.0/20
+  MyFinances:site_name: myfinances
+  MyFinances:stage: dev
+  MyFinances:vpc_cidr: 172.31.0.0/16
+  aws:region: eu-west-2
