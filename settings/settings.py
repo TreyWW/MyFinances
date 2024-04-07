@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import base64
 import logging
 import mimetypes
@@ -90,7 +92,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 EMAIL_WHITELIST = []
 AUTHENTICATION_BACKENDS = [
-    # "django.contrib.auth.backends.ModelBackend",
     "backend.auth_backends.EmailInsteadOfUsernameBackend",
     "social_core.backends.github.GithubOAuth2",
     "social_core.backends.google.GoogleOAuth2",
