@@ -72,7 +72,7 @@
                             <span class="text-sm text-gray-900">{{ item.hours }}</span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="text-sm text-gray-900">{{ item.price_per_hour }}</span>
+                            <span class="text-sm text-gray-900">{{ invoice.get_currency_symbol }}{{ item.price_per_hour }}</span>
                         </td>
                         <td class="px-6 py-4 text-right whitespace-nowrap">
                             <span class="text-sm text-gray-900">{{ invoice.get_currency_symbol }}{{ item.get_total_price | floatformat:2 }}</span>
