@@ -3,7 +3,11 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'frontend/templates/**'
   pull_request:
+    paths:
+      - 'frontend/templates/**'
 
 jobs:
   lint:
