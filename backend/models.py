@@ -616,10 +616,10 @@ class QuotaLimit(models.Model):
         else:
             return "Not available"
 
-    def strict_goes_above_limit(self, user: User, extra: str | int | None = None) -> bool:
+    def strict_goes_above_limit(self, user: User, extra: str | int | None = None, add: int = 0) -> bool:
         current = self.strict_get_quotas(user, extra)
         current = current.count() if current != "Not Available" else None
-        return current >= self.get_quota_limit(user) if current else False
+        return current + add >= self.get_quota_limit(user) if current else False
 
     def strict_get_quotas(
         self, user: User, extra: str | int | None = None, quota_limit: QuotaLimit | None = None

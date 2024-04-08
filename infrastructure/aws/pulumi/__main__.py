@@ -53,7 +53,13 @@ ses_user = iam.User("ses_user", name=f'{config.require("site_name")}-ses-user', 
 ses_user_access_key = iam.AccessKey("ses_user_access_key", user=ses_user.name)
 
 send_emails_policy = iam.get_policy_document(
-    statements=[iam.GetPolicyDocumentStatementArgs(effect="Allow", actions=["ses:SendRawEmail", "ses:SendTemplatedEmail"], resources=["*"])]
+    statements=[
+        iam.GetPolicyDocumentStatementArgs(
+            effect="Allow",
+            actions=["ses:SendRawEmail", "ses:SendTemplatedEmail", "ses:SendBulkEmail", "ses:SendBulkTemplatedEmail"],
+            resources=["*"],
+        )
+    ]
 )
 
 ses_user_policy = iam.UserPolicy("ses_user_policy", name="ses-send_emails", policy=send_emails_policy.json, user=ses_user.name)

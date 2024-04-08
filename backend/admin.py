@@ -27,6 +27,7 @@ from backend.models import (
     QuotaIncreaseRequest,
     Receipt,
     ReceiptDownloadToken,
+    EmailSendStatus,
 )
 
 # from django.contrib.auth.models imp/ort User
@@ -64,7 +65,12 @@ class QuotaLimitAdmin(admin.ModelAdmin):
     readonly_fields = ["name", "slug"]
 
 
+class EmailSendStatusAdmin(admin.ModelAdmin):
+    readonly_fields = ["aws_message_id"]
+
+
 admin.site.register(QuotaLimit, QuotaLimitAdmin)
+admin.site.register(EmailSendStatus, EmailSendStatusAdmin)
 
 # admin.site.unregister(User)
 fields = list(UserAdmin.fieldsets)

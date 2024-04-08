@@ -2,18 +2,19 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
-from typing import Union
+from typing import List, Tuple
+
+from collections.abc import Iterator
 
 from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.core.handlers.wsgi import WSGIRequest
 from django.core.validators import validate_email
-from django.http import HttpRequest
+from django.db.models import QuerySet
 from django.http import HttpResponse
 from django.shortcuts import render
-from django.urls import reverse
 from django.views.decorators.http import require_POST
-from mypy_boto3_sesv2.type_defs import GetMessageInsightsResponseTypeDef
+from mypy_boto3_sesv2.type_defs import BulkEmailEntryResultTypeDef
 
 from backend.decorators import feature_flag_check
 from backend.decorators import htmx_only
@@ -21,11 +22,15 @@ from backend.models import Client
 from backend.models import EmailSendStatus
 from backend.models import QuotaLimit
 from backend.models import QuotaUsage
+from backend.types.emails import (
+    SingleEmailInput,
+    BulkEmailEmailItem,
+    BulkEmailSuccessResponse,
+    BulkEmailErrorResponse,
+    BulkTemplatedEmailInput,
+)
 from backend.utils import quota_usage_check_under
-from settings.helpers import EMAIL_CLIENT
-from settings.helpers import EmailInput
-from settings.helpers import EmailInputTemplatedEmail
-from settings.helpers import send_email
+from settings.helpers import send_email, send_templated_bulk_email
 
 
 @dataclass
@@ -40,20 +45,138 @@ class Invalid:
 @require_POST
 @htmx_only("emails:dashboard")
 @feature_flag_check("areUserEmailsAllowed", status=True, api=True, htmx=True)
-def send_email_view(request: WSGIRequest) -> HttpResponse:
-    bulk: bool = True if request.POST.get("is_bulk") else False
-
+def send_single_email_view(request: WSGIRequest) -> HttpResponse:
     check_usage = quota_usage_check_under(request, "emails-single-count", api=True, htmx=True)
     if not isinstance(check_usage, bool):
         return check_usage
 
-    if bulk:
-        return _send_bulk_email_view(request)
     return _send_single_email_view(request)
 
 
+@require_POST
+@htmx_only("emails:dashboard")
+@feature_flag_check("areUserEmailsAllowed", status=True, api=True, htmx=True)
+def send_bulk_email_view(request: WSGIRequest) -> HttpResponse:
+    email_count = len(request.POST.getlist("emails"))
+
+    check_usage = quota_usage_check_under(request, "emails-single-count", add=email_count, api=True, htmx=True)
+    if not isinstance(check_usage, bool):
+        return check_usage
+    return _send_bulk_email_view(request)
+
+
 def _send_bulk_email_view(request: WSGIRequest) -> HttpResponse:
-    return
+    emails: list[str] = request.POST.getlist("emails")
+    subject: str = request.POST.get("subject")
+    message: str = request.POST.get("content")
+
+    if request.user.logged_in_as_team:
+        clients = Client.objects.filter(organization=request.user.logged_in_as_team, email__in=emails)
+    else:
+        clients = Client.objects.filter(user=request.user, email__in=emails)
+
+    emaillist_validation = validator.email_list(emails=emails)
+    if isinstance(emaillist_validation, Invalid):
+        messages.error(request, emaillist_validation.message)
+        return render(request, "base/toast.html")
+
+    client_list_validation = validator.client_list(clients=clients, emails=emails)
+    if isinstance(client_list_validation, Invalid):
+        messages.error(request, client_list_validation.message)
+        return render(request, "base/toast.html")
+
+    content_validation = validator.email_content(message=message, request=request)
+    if isinstance(content_validation, Invalid):
+        messages.error(request, content_validation.message)
+        return render(request, "base/toast.html")
+
+    subject_validation = validator.email_subject(subject=subject)
+    if isinstance(subject_validation, Invalid):
+        messages.error(request, subject_validation.message)
+        return render(request, "base/toast.html")
+
+    message_single_line_html = message.replace("\r\n", "<br>").replace("\n", "<br>")
+
+    email_list: list[BulkEmailEmailItem] = []
+
+    for email in emails:
+        client = clients.get(email=email)
+        email_list.append(
+            BulkEmailEmailItem(
+                destination=email,
+                template_data={
+                    # "subject": subject,
+                    # "sender_name": request.user.first_name or request.user.email,
+                    # "sender_id": request.user.id,
+                    # "content_text": message,
+                    # "content_html": message_single_line_html,
+                    "users_name": client.name.split()[0],
+                    "content_text": message.format(users_name=client.name.split()[0]),
+                    "content_html": message_single_line_html.format(users_name=client.name.split()[0]),
+                },
+            )
+        )
+
+    EMAIL_DATA = BulkTemplatedEmailInput(
+        email_list=email_list,
+        template_name="user_send_client_email",
+        default_template_data={
+            "sender_name": request.user.first_name or request.user.email,
+            "sender_id": request.user.id,
+            "subject": subject,
+        },
+    )
+
+    EMAIL_SENT: BulkEmailSuccessResponse | BulkEmailErrorResponse = send_templated_bulk_email(data=EMAIL_DATA)
+
+    if isinstance(EMAIL_SENT, BulkEmailErrorResponse):
+        messages.error(request, EMAIL_SENT.message)
+        return render(request, "base/toast.html")
+
+    EMAIL_RESPONSES: Iterator[tuple[BulkEmailEmailItem, BulkEmailEntryResultTypeDef]] = zip(
+        EMAIL_DATA.email_list, EMAIL_SENT.response.get("BulkEmailEntryResults")
+    )
+
+    print(list(EMAIL_RESPONSES))
+
+    if request.user.logged_in_as_team:
+        SEND_STATUS_OBJECTS: QuerySet[EmailSendStatus] = EmailSendStatus.objects.bulk_create(
+            [
+                EmailSendStatus(
+                    organization=request.user.logged_in_as_team,
+                    sent_by=request.user,
+                    recipient=response[0].destination,
+                    aws_message_id=response[1],
+                    status="pending",
+                )
+                for response in EMAIL_RESPONSES
+            ]
+        )
+    else:
+        SEND_STATUS_OBJECTS: QuerySet[EmailSendStatus] = EmailSendStatus.objects.bulk_create(
+            [
+                EmailSendStatus(
+                    user=request.user,
+                    sent_by=request.user,
+                    recipient=response[0].destination,
+                    aws_message_id=response[1].get("MessageId"),
+                    status="pending",
+                )
+                for response in EMAIL_RESPONSES
+            ]
+        )
+
+    messages.success(request, f"Successfully emailed {len(email_list)} people.")
+
+    try:
+        quota_limit = QuotaLimit.objects.get(slug="emails-single-count")
+        QuotaUsage.objects.bulk_create(
+            [QuotaUsage(user=request.user, quota_limit=quota_limit, extra_data=status.id) for status in SEND_STATUS_OBJECTS]
+        )
+    except QuotaLimit.DoesNotExist:
+        ...
+
+    return render(request, "base/toast.html")
 
 
 def _send_single_email_view(request: WSGIRequest) -> HttpResponse:
@@ -88,19 +211,19 @@ def _send_single_email_view(request: WSGIRequest) -> HttpResponse:
 
     message_single_line_html = message.replace("\r\n", "<br>").replace("\n", "<br>")
 
-    EMAIL_DATA = EmailInput(
+    EMAIL_DATA = SingleEmailInput(
         destination=email,
         subject=subject,
-        content=EmailInputTemplatedEmail(
-            template_name="user_send_client_email",
-            template_data={
+        content={
+            "template_name": "user_send_client_email",
+            "template_data": {
                 "subject": subject,
                 "sender_name": request.user.first_name or request.user.email,
                 "sender_id": request.user.id,
                 "content_text": message,
                 "content_html": message_single_line_html,
             },
-        ),
+        },
     )
 
     EMAIL_SENT = send_email(data=EMAIL_DATA)
@@ -126,9 +249,6 @@ def _send_single_email_view(request: WSGIRequest) -> HttpResponse:
     return render(request, "base/toast.html")
 
 
-def validate_bulk_email_request(request) -> Ok | Invalid: ...
-
-
 class Validator:
     def email(self, email, client) -> Ok | Invalid:
         if not email:
@@ -150,6 +270,27 @@ class Validator:
 
         if not client.email_verified:
             return Invalid("The clients email has not yet been verified")
+        return Ok()
+
+    def email_list(self, emails: list[str]) -> Ok | Invalid:
+        if not emails:
+            return Invalid("There was no emails provided")
+
+        for email in emails:
+            try:
+                validate_email(email)
+            except ValidationError:
+                return Invalid(f"The email {email} is invalid.")
+        return Ok()
+
+    def client_list(self, clients: QuerySet[Client], emails: list[str]) -> Ok | Invalid:
+        for email in emails:
+            try:
+                client = clients.get(email=email)
+                if not client.email_verified:
+                    return Invalid(f"Client {email} isn't yet verified so we can't send them an email yet!")
+            except Client.DoesNotExist:
+                return Invalid(f"Could not find client object for {email}")
         return Ok()
 
     def email_subject(self, subject: str):

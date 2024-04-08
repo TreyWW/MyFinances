@@ -6,9 +6,14 @@ from . import send
 
 urlpatterns = [
     path(
-        "send/",
-        send.send_email_view,
-        name="send",
+        "send/single/",
+        send.send_single_email_view,
+        name="send single",
+    ),
+    path(
+        "send/bulk/",
+        send.send_bulk_email_view,
+        name="send bulk",
     ),
 ]
 

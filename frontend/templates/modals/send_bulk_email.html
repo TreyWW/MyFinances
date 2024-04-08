@@ -1,8 +1,8 @@
-{% component_block "modal" id="modal_send_single_email" start_open="true" title="Send Email" %}
+{% component_block "modal" id="modal_send_bulk_email" start_open="true" title="Send Bulk Email" %}
 {% fill "content" %}
 <form class="py-4"
-      id="modal_send_single_email-form"
-      hx-post="{% url 'api:emails:send single' %}"
+      id="modal_send_bulk_email-form"
+      hx-post="{% url 'api:emails:send bulk' %}"
       hx-swap="none">
     {% csrf_token %}
     <div class="form-control w-full">
@@ -11,10 +11,11 @@
             <span class="required_star">*</span>
         </label>
         <select id="modal_input-email"
-                name="email"
+                name="emails"
                 type="email"
                 class="peer select select-block select-bordered invalid:[&:not(:placeholder-shown):not(:focus)]:select-error"
-                required>
+                required
+                multiple>
             {% if email_list %}<option value="" disabled selected>Select a client email below</option>{% endif %}
             {% for email in email_list %}
                 <option value="{{ email.email }}">{{ email.email }}</option>
@@ -53,16 +54,24 @@
         <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden">
             <span class="label-text-alt text-error">Please enter a message between {{ content_min_length }} and {{ content_max_length }} characters.</span>
         </label>
+        <label class="label">
+            <span class="label-text-alt select-text">
+                Note: You can use placeholders to individually fill in details PER user. For example you can use
+                <strong>{users_name}</strong> to fill in the users name.
+                <br>
+                Available placeholders: {users_name}
+            </span>
+        </label>
     </div>
     <div class="modal-action">
         <button type="submit"
-                id="modal_send_single_email-submit"
+                id="modal_send_bulk_email-submit"
                 class="btn btn-primary"
-                _="on click if #modal_send_single_email-form.checkValidity() call #modal_send_single_email.close() end">
+                _="on click if #modal_send_bulk_email-form.checkValidity() call #modal_send_bulk_email.close() end">
             Send Email
         </button>
         <button type="button"
-                _="on click call #modal_send_single_email.close()"
+                _="on click call #modal_send_bulk_email.close()"
                 class="btn">Cancel</button>
     </div>
 </form>

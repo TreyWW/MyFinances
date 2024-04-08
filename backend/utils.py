@@ -32,14 +32,14 @@ def get_feature_status(feature, should_use_cache=True):
 
 
 def quota_usage_check_under(
-    request, limit: str | QuotaLimit, extra_data: str | int | None = None, api=False, htmx=False
+    request, limit: str | QuotaLimit, extra_data: str | int | None = None, api=False, htmx=False, add: int = 0
 ) -> bool | HttpResponse | HttpResponseRedirect:
     try:
         quota_limit = QuotaLimit.objects.get(slug=limit) if isinstance(limit, str) else limit
     except QuotaLimit.DoesNotExist:
         return True
 
-    if not quota_limit.strict_goes_above_limit(request.user, extra=extra_data):
+    if not quota_limit.strict_goes_above_limit(request.user, extra=extra_data, add=add):
         return True
 
     if api and htmx:

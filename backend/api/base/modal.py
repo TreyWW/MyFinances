@@ -84,7 +84,7 @@ def open_modal(request: HttpRequest, modal_name, context_type=None, context_valu
             else:
                 context[context_type] = context_value
 
-        if modal_name == "send_single_email":
+        if modal_name == "send_single_email" or modal_name == "send_bulk_email":
             context["content_min_length"] = 64
             quota = QuotaLimit.objects.prefetch_related("quota_overrides").get(slug="emails-email_character_count")
             context["content_max_length"] = quota.get_quota_limit(user=request.user, quota_limit=quota)
