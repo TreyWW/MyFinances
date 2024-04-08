@@ -2,6 +2,8 @@
 {% block content %}
     <form id="filter_list_storage">
     </form>
+    <form id="sort_direction_storage">
+    </form>
     <div class="card bg-base-100 p-6 mb-4 h-screen">
         <div class="flex gap-3 justify-between mb-3">
             <div class="dropdown dropdown-hover dropdown-right w-14">
@@ -16,6 +18,7 @@
                 <ul class="dropdown-content menu z-[1] w-52 rounded-box bg-base-200 p-2 shadow"
                     hx-swap="outerHTML"
                     hx-target="#table_body"
+                    hx-include="#sort_direction_storage"
                     hx-indicator="#sort-indicator">
                     <h2 class="menu-title">Sort by</h2>
                     <li data-sort="id">

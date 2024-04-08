@@ -159,3 +159,6 @@
            name="amount_100+"
            value="{% if '100+' in selected_filters %}true{% endif %}">
 </div>
+<div hx-swap-oob="innerHTML:#sort_direction_storage">
+    <input type="hidden" name="sort_direction" value="{{ sort_direction }}">
+</div>
