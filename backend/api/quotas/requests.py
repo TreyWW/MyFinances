@@ -89,18 +89,28 @@ def approve_request(request: HttpRequest, request_id) -> HttpResponse:
     except QuotaIncreaseRequest.DoesNotExist:
         return error(request, "Failed to get the quota increase request")
 
-    QuotaOverrides.objects.filter(user=quota_request.user).delete()
-
-    QuotaOverrides.objects.create(
-        user=quota_request.user,
-        value=quota_request.new_value,
-        quota_limit=quota_request.quota_limit,
-    )
+    try:
+        quota_override_existing = QuotaOverrides.objects.get(user=quota_request.user, quota_limit=quota_request.quota_limit)
+        quota_override_existing.value = quota_request.new_value
+        quota_override_existing.save()
+    except QuotaOverrides.DoesNotExist:
+        QuotaOverrides.objects.create(
+            user=quota_request.user,
+            value=quota_request.new_value,
+            quota_limit=quota_request.quota_limit,
+        )
 
     quota_limit_for_increase = QuotaLimit.objects.get(slug="quota_increase-request")
     QuotaUsage.objects.filter(user=quota_request.user, quota_limit=quota_limit_for_increase, extra_data=quota_request.id).delete()
     quota_request.status = "approved"
     quota_request.save()
+
+    try:
+        QuotaUsage.objects.get(
+            quota_limit=QuotaLimit.objects.get(slug="quota_increase-requests_per_month_per_quota"), extra_data=quota_request.quota_limit_id
+        ).delete()
+    except QuotaUsage.DoesNotExist:
+        ...
 
     return HttpResponse(status=200)
 
