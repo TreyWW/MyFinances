@@ -287,8 +287,8 @@ def validate_client(client: Client) -> str | None:
     if not client:
         return "Could not find client object"
 
-    if not client.email_verified:
-        return "The clients email has not yet been verified"
+    # if not client.email_verified:
+    #     return "The clients email has not yet been verified"
     return None
 
 
@@ -306,11 +306,9 @@ def validate_email_list(emails: list[str]) -> str | None:
 
 def validate_client_list(clients: QuerySet[Client], emails: list[str]) -> str | None:
     for email in emails:
-        try:
-            client = clients.get(email=email)
-            if not client.email_verified:
-                return f"Client {email} isn't yet verified so we can't send them an email yet!"
-        except Client.DoesNotExist:
+        if not clients.filter(email=email).exists():
+            # if not client.email_verified:
+            #     return f"Client {email} isn't yet verified so we can't send them an email yet!"
             return f"Could not find client object for {email}"
     return None
 
