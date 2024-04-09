@@ -110,15 +110,22 @@ def send_email(data: SingleEmailInput) -> SingleEmailSuccessResponse | SingleEma
                     if isinstance(data.content.get("template_data"), str)
                     else json.dumps(data.content.get("template_data"))
                 )
+
+                from_email_address: str = str(data.from_address_name_prefix) if data.from_address_name_prefix else ""
+                from_email_address += str(data.from_address or get_var("AWS_SES_FROM_ADDRESS"))
+
                 response: SendEmailResponseTypeDef = EMAIL_CLIENT.send_email(
-                    FromEmailAddress=data.from_address or get_var("AWS_SES_FROM_ADDRESS"),
+                    FromEmailAddress=from_email_address,
                     Destination={"ToAddresses": data.destination},
                     Content={"Template": {"TemplateName": data.content.get("template_name"), "TemplateData": data_str}},
                     ConfigurationSetName=data.ConfigurationSetName or "",
                 )
             else:
+                from_email_address: str = str(data.from_address_name_prefix) if data.from_address_name_prefix else ""
+                from_email_address += str(data.from_address or get_var("AWS_SES_FROM_ADDRESS"))
+
                 response: SendEmailResponseTypeDef = EMAIL_CLIENT.send_email(
-                    FromEmailAddress=data.from_address or get_var("AWS_SES_FROM_ADDRESS"),
+                    FromEmailAddress=from_email_address,
                     Destination={"ToAddresses": data.destination},
                     Content={"Simple": {"Subject": {"Data": data.subject}, "Body": {"Text": {"Data": data.content}}}},
                     ConfigurationSetName=data.ConfigurationSetName,
@@ -158,8 +165,11 @@ def send_templated_bulk_email(data: BulkTemplatedEmailInput) -> BulkEmailSuccess
         data_str: str = (
             data.default_template_data if isinstance(data.default_template_data, str) else json.dumps(data.default_template_data)
         )
+        from_email_address: str = str(data.from_address_name_prefix) if data.from_address_name_prefix else ""
+        from_email_address += str(data.from_address or get_var("AWS_SES_FROM_ADDRESS"))
+
         response: SendBulkEmailResponseTypeDef = EMAIL_CLIENT.send_bulk_email(
-            FromEmailAddress=data.from_address or get_var("AWS_SES_FROM_ADDRESS"),
+            FromEmailAddress=from_email_address,
             BulkEmailEntries=entries,
             ConfigurationSetName=data.ConfigurationSetName or "",
             DefaultContent={"Template": {"TemplateName": data.template_name, "TemplateData": data_str}},

@@ -16,6 +16,7 @@ class SingleEmailInput:
     content: str | SingleTemplatedEmailContent
     ConfigurationSetName: str | None = None
     from_address: str | None = None
+    from_address_name_prefix: str | None = None
 
 
 @dataclass(frozen=True)
@@ -44,6 +45,7 @@ class BulkTemplatedEmailInput:
     default_template_data: dict | str
     ConfigurationSetName: str | None = None
     from_address: str | None = None
+    from_address_name_prefix: str | None = None
 
 
 @dataclass(frozen=True)
