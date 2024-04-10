@@ -1,0 +1,70 @@
+{% component_block "modal" id="modal_send_single_email" start_open="true" title="Send Email" %}
+{% fill "content" %}
+<form class="py-4"
+      id="modal_send_single_email-form"
+      hx-post="{% url 'api:emails:send single' %}"
+      hx-swap="none">
+    {% csrf_token %}
+    <div class="form-control w-full">
+        <label class="label justify-start">
+            Client Email
+            <span class="required_star">*</span>
+        </label>
+        <select id="modal_input-email"
+                name="email"
+                type="email"
+                class="peer select select-block select-bordered invalid:[&:not(:placeholder-shown):not(:focus)]:select-error"
+                required>
+            {% if email_list %}<option value="" disabled selected>Select a client email below</option>{% endif %}
+            {% for email in email_list %}
+                <option value="{{ email.email }}">{{ email.email }}</option>
+            {% empty %}
+                <option value="" disabled selected>There are currently no client emails stored.</option>
+            {% endfor %}
+        </select>
+        <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden">
+            <span class="label-text-alt text-error">Please enter a valid email.</span>
+        </label>
+    </div>
+    <div class="form-control">
+        <label class="label justify-start">
+            Subject
+            <span class="required_star">*</span>
+        </label>
+        <input class="peer input input-bordered"
+               name="subject"
+               minlength="8"
+               maxlength="64"
+               required>
+        <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden">
+            <span class="label-text-alt text-error">Please enter a valid subject between 8 and 64 characters.</span>
+        </label>
+    </div>
+    <div class="form-control">
+        <label class="label justify-start">
+            Content
+            <span class="required_star">*</span>
+        </label>
+        <textarea class="peer textarea textarea-bordered invalid:[&:not(:placeholder-shown):not(:focus)]:textarea-error"
+                  minlength="{{ content_min_length }}"
+                  maxlength="{{ content_max_length }}"
+                  name="content"
+                  required></textarea>
+        <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden">
+            <span class="label-text-alt text-error">Please enter a message between {{ content_min_length }} and {{ content_max_length }} characters.</span>
+        </label>
+    </div>
+    <div class="modal-action">
+        <button type="submit"
+                id="modal_send_single_email-submit"
+                class="btn btn-primary"
+                _="on click if #modal_send_single_email-form.checkValidity() call #modal_send_single_email.close() end">
+            Send Email
+        </button>
+        <button type="button"
+                _="on click call #modal_send_single_email.close()"
+                class="btn">Cancel</button>
+    </div>
+</form>
+{% endfill %}
+{% endcomponent_block %}

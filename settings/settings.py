@@ -18,6 +18,7 @@ DEBUG = True if get_var("DEBUG") in ["True", "true", "TRUE", True] else False
 SITE_URL = get_var("SITE_URL", default="http://127.0.0.1:8000")
 SITE_NAME = get_var("SITE_NAME", default="myfinances")
 SITE_NAME_FRIENDLY = get_var("SITE_NAME_FRIENDLY", default="MyFinances")
+SITE_ABUSE_EMAIL = get_var("SITE_ABUSE_EMAIL", default="abuse@strelix.org")
 
 if not SITE_URL.startswith("http"):
     exit("[BACKEND] SITE_URL must start with http:// or https://")

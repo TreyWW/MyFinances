@@ -1,20 +1,25 @@
+from __future__ import annotations
+
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import re_path as url, path, include
+from django.urls import include
+from django.urls import path
+from django.urls import re_path as url
 from django.views.generic import RedirectView
 from django.views.static import serve
 
-from backend.views.core import (
-    settings as settings_v,
-    invoices,
-    clients,
-    receipts,
-)
+from backend.views.core import clients
+from backend.views.core import invoices
+from backend.views.core import receipts
+from backend.views.core import settings as settings_v
 from backend.views.core.currency_converter import dashboard as cc_dashboard
 from backend.views.core.invoices.overview import manage_invoice
-from backend.views.core.other.index import index, dashboard
-from backend.views.core.quotas.view import quotas_page, quotas_list, view_quota_increase_requests
+from backend.views.core.other.index import dashboard
+from backend.views.core.other.index import index
+from backend.views.core.quotas.view import quotas_list
+from backend.views.core.quotas.view import quotas_page
+from backend.views.core.quotas.view import view_quota_increase_requests
 
 url(
     r"^frontend/static/(?P<path>.*)$",
@@ -30,6 +35,7 @@ urlpatterns = [
     path("dashboard/invoices/", include("backend.views.core.invoices.urls")),
     path("dashboard/quotas/", quotas_page, name="quotas"),
     path("dashboard/quotas/<str:group>/", quotas_list, name="quotas group"),
+    path("dashboard/emails/", include("backend.views.core.emails.urls")),
     path("dashboard/admin/quota_requests/", view_quota_increase_requests, name="admin quota increase requests"),
     path(
         "dashboard/invoice/<str:invoice_id>/",

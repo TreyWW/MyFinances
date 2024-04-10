@@ -88,7 +88,8 @@ nav:
           - Social Logins:
               - Github: getting-started/settings/social-login/github.md
               - Google: getting-started/settings/social-login/google.md
-  #        - AWS:
+          - AWS:
+              - Setting up: getting-started/settings/AWS/setup.md
   #            - Feature Flags: getting-started/settings/AWS/feature-flags.md
   #            - Static Files: getting-started/settings/AWS/static.md
   #            - Public Media Files: getting-started/settings/AWS/public-media.md
