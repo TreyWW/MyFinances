@@ -96,6 +96,17 @@
             </table>
         </div>
         <div class="w-full p-6 shadow-xl card bg-base-100">
+            {% if quota_breached %}
+                <div class="alert border border-error mt-2 mb-6">
+                    <i class="fa-solid fa-warning"></i>
+                    <p>
+                        You have reached the quota limit for schedules this month! You can apply for a higher quota
+                        <a class="link link-primary"
+                           href="{% url 'quotas group' group="invoices" %}">here</a>
+                        !
+                    </p>
+                </div>
+            {% endif %}
             <h2 class="text-center text-xl font-medium">Create onetime scheduled send</h2>
             <div class="divider"></div>
             <form method="post"
@@ -133,9 +144,16 @@
                         {% endif %}
                     </select>
                 </div>
-                <button class="mt-3 w-full btn btn-primary group-invalid:btn-outline group-invalid:btn-error  group-invalid:btn-disabled group-invalid:pointer-events-none group-invalid:disabled group-invalid:opacity-30">
-                    Create
-                </button>
+                {% if not quota_breached %}
+                    <button class="mt-3 w-full btn btn-primary group-invalid:btn-outline group-invalid:btn-error group-invalid:btn-disabled group-invalid:pointer-events-none group-invalid:disabled group-invalid:opacity-30">
+                        Create
+                    </button>
+                {% else %}
+                    <span data-tip="You have reached the quota limit for schedules this month!"
+                          class="tooltip tooltip-open tooltip-error mt-3 w-full border border-error rounded">
+                        <button class="btn btn-error" disabled>Create</button>
+                    </span>
+                {% endif %}
             </form>
         </div>
     </div>

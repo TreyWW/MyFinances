@@ -5,9 +5,9 @@ from typing import Optional, Union, Literal
 import pytz
 from django.utils import timezone
 
-from backend.models import Invoice, InvoiceOnetimeSchedule
+from backend.models import Invoice, InvoiceOnetimeSchedule, AuditLog
 from infrastructure.aws.handler import get_event_bridge_scheduler
-from infrastructure.aws.iam.sfn import get_or_create_sfn_execute_role_arn
+from infrastructure.aws.iam.sfn import get_sfn_execute_role_arn
 from infrastructure.aws.step_functions.scheduler import get_step_function
 from settings.settings import AWS_TAGS_APP_NAME
 
@@ -65,7 +65,14 @@ def create_onetime_schedule(data: CreateOnetimeScheduleInputData) -> CreateOneti
 
     if not scheduler_step_function.get("stateMachineArn"):
         print("[AWS] [SFN] Step function not found", flush=True)
-        return ErrorResponse("Step function not found", flush=True)
+        AuditLog.objects.create(action="Failed to get STEP FUNCTION arn. Maybe you need to run `pulumi up`?")
+        return ErrorResponse("Step function not found")
+
+    execution_role_arn = get_sfn_execute_role_arn()
+
+    if not execution_role_arn:
+        AuditLog.objects.create(action="Failed to get STEP FUNCTION EXECUTION ROLE arn. Maybe you need to run `pulumi up`?")
+        return ErrorResponse("Something went wrong on our end. Please contact support.")
 
     event_bridge_scheduler = get_event_bridge_scheduler()
     CREATED_SCHEDULE = event_bridge_scheduler.create_schedule(
@@ -74,7 +81,7 @@ def create_onetime_schedule(data: CreateOnetimeScheduleInputData) -> CreateOneti
         ScheduleExpression=f"at({date_time})",
         Target={
             "Arn": scheduler_step_function["stateMachineArn"],
-            "RoleArn": get_or_create_sfn_execute_role_arn(),
+            "RoleArn": get_sfn_execute_role_arn(),
             "Input": json.dumps(
                 {
                     "headers": {
