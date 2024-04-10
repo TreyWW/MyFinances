@@ -77,7 +77,9 @@ LOGIN_REQUIRED_IGNORE_VIEW_NAMES = [
 # @login_required()
 
 LOGIN_REQUIRED_IGNORE_PATHS = [
-    "/auth/login/manual/",
+    r"^/favicon\.ico$",
+    r"^/static/(.*)/",
+    r"/auth/login/manual/",
     r"^/auth/login/$",
     r"^/__debug__/(.*)/",
     r"^/auth/login/(.*)/",
