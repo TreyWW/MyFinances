@@ -11,9 +11,9 @@
                     data-tip="Refresh the status of all emails. This will show you the most recent email event"
                     hx-swap="none"
                     id="sort-indicator">
-                    <span class="loading-htmx-text">
-                        <i class="fa fa-solid fa-refresh"></i>
-                    </span>
+                <span class="loading-htmx-text">
+                    <i class="fa fa-solid fa-refresh"></i>
+                </span>
                 <span id="currency_save_loading"
                       class="loading loading-spinner loading-htmx-loader"></span>
             </button>
@@ -60,18 +60,18 @@
         <div class="flex w-full h-full overflow-x-hidden overflow-y-auto mt-8">
             <table class="table">
                 <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Sent Date</th>
-                    <th>Recipient</th>
-                    <th>Status</th>
-                </tr>
+                    <tr>
+                        <th>ID</th>
+                        <th>Sent Date</th>
+                        <th>Recipient</th>
+                        <th>Status</th>
+                    </tr>
                 </thead>
                 <tbody id="table_body"
                        hx-swap="outerHTML"
                        hx-trigger="load, retry"
                        hx-get="{% url 'api:emails:fetch' %}">
-                {% include 'components/table/skeleton_rows.html' with rows=3 cols=5 %}
+                    {% include 'components/table/skeleton_rows.html' with rows=3 cols=5 %}
                 </tbody>
                 <script>
                     function htmx_resend(event) {

@@ -50,14 +50,14 @@
             {% endwith %}
         </li>
         {% if are_user_emails_allowed %}
-        <li>
-            {% with i_url="emails:dashboard" ns="emails" uname="dashboard" %}
-                <a href="{% url i_url %}"
-                   {% if request.resolver_match.url_name == uname and ns in request.resolver_match.namespaces %} class="active" {% endif %}>
-                    Email Sending
-                </a>
-            {% endwith %}
-        </li>
+            <li>
+                {% with i_url="emails:dashboard" ns="emails" uname="dashboard" %}
+                    <a href="{% url i_url %}"
+                       {% if request.resolver_match.url_name == uname and ns in request.resolver_match.namespaces %} class="active" {% endif %}>
+                        Email Sending
+                    </a>
+                {% endwith %}
+            </li>
         {% endif %}
     </ul>
 </div>
