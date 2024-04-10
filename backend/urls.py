@@ -36,7 +36,7 @@ urlpatterns = [
         manage_invoice,
         name="invoice overview",
     ),
-    path("favicon.ico", RedirectView.as_view(url="favicon.ico")),
+    path("favicon.ico", RedirectView.as_view(url=settings.STATIC_URL + "favicon.ico")),
     path(
         "dashboard/settings/teams",
         settings_v.teams.teams_dashboard,
