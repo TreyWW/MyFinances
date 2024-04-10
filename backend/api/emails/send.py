@@ -125,7 +125,7 @@ def _send_bulk_email_view(request: WSGIRequest) -> HttpResponse:
                     organization=request.user.logged_in_as_team,
                     sent_by=request.user,
                     recipient=response[0].destination,
-                    aws_message_id=response[1],
+                    aws_message_id=response[1].get("MessageId"),
                     status="pending",
                 )
                 for response in EMAIL_RESPONSES

@@ -54,15 +54,18 @@ ses_user_access_key = iam.AccessKey("ses_user_access_key", user=ses_user.name)
 
 send_emails_policy = iam.get_policy_document(
     statements=[
-        iam.GetPolicyDocumentStatementArgs(
-            effect="Allow",
-            actions=["ses:SendRawEmail", "ses:SendTemplatedEmail", "ses:SendBulkEmail", "ses:SendBulkTemplatedEmail"],
-            resources=["*"],
-        )
-    ]
+        {
+            "effect": "Allow",
+            "actions": ["ses:SendRawEmail", "ses:SendTemplatedEmail", "ses:SendBulkEmail", "ses:SendBulkTemplatedEmail"],
+            "resources": ["*"],
+        }
+    ],
 )
 
-ses_user_policy = iam.UserPolicy("ses_user_policy", name="ses-send_emails", policy=send_emails_policy.json, user=ses_user.name)
+get_messages_policy = iam.get_policy_document(statements=[{"effect": "Allow", "actions": ["ses:GetMessageInsights"], "resources": ["*"]}])
+
+ses_user_send_policy = iam.UserPolicy("ses_user_send_policy", policy=send_emails_policy.json, user=ses_user.name)
+ses_user_get_messages_policy = iam.UserPolicy("ses_user_get_messages_policy", policy=get_messages_policy.json, user=ses_user.name)
 
 # Email Templates
 

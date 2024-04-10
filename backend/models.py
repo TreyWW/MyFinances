@@ -773,6 +773,7 @@ class EmailSendStatus(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    updated_status_at = models.DateTimeField(auto_now_add=True)
 
     recipient = models.TextField()
     aws_message_id = models.CharField(max_length=100, null=True, blank=True, editable=False)

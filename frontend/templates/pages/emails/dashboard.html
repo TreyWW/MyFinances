@@ -4,42 +4,57 @@
     </form>
     <div class="card bg-base-100 p-6 mb-4">
         <div class="flex gap-3 justify-between mb-3">
-            <div class="dropdown dropdown-hover dropdown-right w-14">
-                <div tabindex="0"
-                     role="button"
-                     class="btn btn-square btn-outline loading-htmx"
-                     id="sort-indicator">
-                    <span class="loading-htmx-text"><i class="fa fa-solid fa-sort"></i></span>
+            <div>
+                <div class="dropdown dropdown-hover dropdown-right w-14">
+                    <div tabindex="0"
+                         role="button"
+                         class="btn btn-square btn-outline loading-htmx"
+                         id="sort-indicator">
+                        <span class="loading-htmx-text"><i class="fa fa-solid fa-sort"></i></span>
+                        <span id="currency_save_loading"
+                              class="loading loading-spinner loading-htmx-loader"></span>
+                    </div>
+                    <ul class="dropdown-content menu z-[1] w-52 rounded-box bg-base-200 p-2 shadow"
+                        hx-swap="outerHTML"
+                        hx-target="#table_body"
+                        hx-indicator="#sort-indicator">
+                        <h2 class="menu-title">Sort by</h2>
+                        <li data-sort="id">
+                            <button class="dropdown-item"
+                                    hx-get="{% url 'api:invoices:fetch' %}"
+                                    name="sort"
+                                    value="id">
+                                <i class="fa-solid fa-sort"></i>
+                                ID
+                            </button>
+                        </li>
+                        <li data-sort="payment_status">
+                            <button class="dropdown-item"
+                                    hx-get="{% url 'api:invoices:fetch' %}"
+                                    name="sort"
+                                    value="payment_status">Payment Status</button>
+                        </li>
+                        <li data-sort="date_due">
+                            <button class="dropdown-item"
+                                    hx-get="{% url 'api:invoices:fetch' %}"
+                                    name="sort"
+                                    value="date_due">Date</button>
+                        </li>
+                    </ul>
+                </div>
+                <button tabindex="0"
+                        role="button"
+                        class="tooltip tooltip-right btn btn-square btn-outline loading-htmx"
+                        hx-post="{% url 'api:emails:refresh statuses' %}"
+                        data-tip="Refresh the status of all emails. This will show you the most recent email event"
+                        hx-swap="none"
+                        id="sort-indicator">
+                    <span class="loading-htmx-text">
+                        <i class="fa fa-solid fa-refresh"></i>
+                    </span>
                     <span id="currency_save_loading"
                           class="loading loading-spinner loading-htmx-loader"></span>
-                </div>
-                <ul class="dropdown-content menu z-[1] w-52 rounded-box bg-base-200 p-2 shadow"
-                    hx-swap="outerHTML"
-                    hx-target="#table_body"
-                    hx-indicator="#sort-indicator">
-                    <h2 class="menu-title">Sort by</h2>
-                    <li data-sort="id">
-                        <button class="dropdown-item"
-                                hx-get="{% url 'api:invoices:fetch' %}"
-                                name="sort"
-                                value="id">
-                            <i class="fa-solid fa-sort"></i>
-                            ID
-                        </button>
-                    </li>
-                    <li data-sort="payment_status">
-                        <button class="dropdown-item"
-                                hx-get="{% url 'api:invoices:fetch' %}"
-                                name="sort"
-                                value="payment_status">Payment Status</button>
-                    </li>
-                    <li data-sort="date_due">
-                        <button class="dropdown-item"
-                                hx-get="{% url 'api:invoices:fetch' %}"
-                                name="sort"
-                                value="date_due">Date</button>
-                    </li>
-                </ul>
+                </button>
             </div>
             <div class="join">
                 <button class="btn btn-primary join-item"
@@ -80,6 +95,52 @@
                 </div>
             </div>
         </div>
-        <div class="flex w-full h-full overflow-x-auto overflow-y-auto"></div>
+        {#        <div class="flex w-full h-full overflow-x-auto overflow-y-auto"></div>#}
+        <div class="flex w-full h-full overflow-x-hidden overflow-y-auto mt-8">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Sent Date</th>
+                        <th>Recipient</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="table_body"
+                       hx-swap="outerHTML"
+                       hx-trigger="load, retry"
+                       hx-get="{% url 'api:emails:fetch' %}">
+                    {% include 'components/table/skeleton_rows.html' with rows=3 cols=5 %}
+                </tbody>
+                <script>
+                    function htmx_resend(event) {
+                        console.log("Starting htmx_resend")
+                        let eventType;
+
+                        if (event.detail.requestConfig.triggeringEvent) {
+                            eventType = event.detail.requestConfig.triggeringEvent.type
+                        } else {
+                            eventType = "retry"
+                        }
+
+                        let timeout; // Declare timeout variable here
+
+                        if (event.detail.error.startsWith("Response Status Error Code 429")) {
+                            timeout = 4000; // Assign value here
+                        } else {
+                            timeout = 2000; // Assign value here
+                        }
+
+                        setTimeout(function () {
+                            console.log("Sending HTMX retry event")
+                            htmx.trigger(event.detail.elt, eventType);
+                        }, timeout); // Use timeout variable here
+                    }
+
+                    document.body.addEventListener("htmx:sendError", htmx_resend);
+                    document.body.addEventListener("htmx:responseError", htmx_resend);
+                </script>
+            </table>
+        </div>
     </div>
 {% endblock content %}

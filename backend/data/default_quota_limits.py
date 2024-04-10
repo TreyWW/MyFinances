@@ -162,6 +162,14 @@ default_quota_limits: list[QuotaGroup] = [
                 default_value=1000,
                 adjustable=True,
             ),
+            QuotaItem(
+                slug="complaints",
+                name="Complaints allowed",
+                description="Maximum amount of complaints allowed before your account will be blocked from sending emails",
+                period="forever",
+                default_value=2,
+                adjustable=True,
+            ),
         ],
     ),
 ]
