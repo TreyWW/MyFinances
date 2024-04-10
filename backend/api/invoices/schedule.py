@@ -2,16 +2,20 @@ import json
 
 from django.contrib import messages
 from django.db.models import Q
-from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
+from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods, require_POST, require_GET
 from django_ratelimit.core import is_ratelimited
+from mypy_boto3_iam.type_defs import GetRoleResponseTypeDef
 
-from backend.decorators import feature_flag_check
-from backend.models import Invoice, AuditLog, APIKey, InvoiceOnetimeSchedule, InvoiceURL
+from backend.decorators import feature_flag_check, quota_usage_check
+from backend.models import Invoice, AuditLog, APIKey, InvoiceOnetimeSchedule, InvoiceURL, QuotaUsage
+from backend.types.emails import SingleEmailInput
+from backend.types.htmx import HtmxHttpRequest
+from backend.utils import quota_usage_check_under
 from infrastructure.aws.handler import get_iam_client
 from infrastructure.aws.schedules.create_schedule import (
     create_onetime_schedule,
@@ -27,7 +31,7 @@ from settings.settings import AWS_TAGS_APP_NAME
 @require_POST
 @csrf_exempt
 @feature_flag_check("isInvoiceSchedulingEnabled", True, api=True)
-def receive_scheduled_invoice(request: HttpRequest):
+def receive_scheduled_invoice(request: HtmxHttpRequest):
     print("Received Scheduled Invoice", flush=True)
     valid, reason, status = authenticate_api_key(request)
 
@@ -81,21 +85,23 @@ def receive_scheduled_invoice(request: HttpRequest):
     client_name = invoice.client_name or invoice.client_to.name or "there"
     # Todo: add better email message
     email_response = send_email(
-        destination=email,
-        subject=f"Invoice #{invoice_id} ready",
-        message=f"""
-            Hi {client_name},
-            
-            This is an automated email to let you know that your invoice #{invoice_id} is now ready. The due date is {invoice.date_due}.
-            
-            You can view the invoice here: {invoice_url}
-            
-            Best regards
-            
-            Note: This is an automated email sent out by MyFinances on behalf of '{invoice.self_company or invoice.self_name}'. If you
-            believe this is spam or fraudulent please report it to us and DO NOT pay the invoice. Once a report has been made you will
-            have a case opened.
-        """,
+        SingleEmailInput(
+            destination=email,
+            subject=f"Invoice #{invoice_id} ready",
+            content=f"""
+                Hi {client_name},
+
+                This is an automated email to let you know that your invoice #{invoice_id} is now ready. The due date is {invoice.date_due}.
+
+                You can view the invoice here: {invoice_url}
+
+                Best regards
+
+                Note: This is an automated email sent out by MyFinances on behalf of '{invoice.self_company or invoice.self_name}'. If you
+                believe this is spam or fraudulent please report it to us and DO NOT pay the invoice. Once a report has been made you will
+                have a case opened.
+            """,
+        )
     )
 
     if not email_response.success:
@@ -113,11 +119,11 @@ def receive_scheduled_invoice(request: HttpRequest):
 
 @csrf_exempt
 @feature_flag_check("isInvoiceSchedulingEnabled", True, api=True)
-def create_schedule(request: HttpRequest):
+def create_schedule(request: HtmxHttpRequest):
     option = request.POST.get("option")  # 1=one time 2=recurring
 
     if option in ["1", "one-time", "onetime", "one"]:
-        ratelimited = (
+        ratelimited: bool = (
             is_ratelimited(request, group="create_schedule", key="user", rate="2/30s", increment=True)
             or is_ratelimited(request, group="create_schedule", key="user", rate="5/m", increment=True)
             or is_ratelimited(request, group="create_schedule", key="ip", rate="5/m", increment=True)
@@ -127,13 +133,18 @@ def create_schedule(request: HttpRequest):
         if ratelimited:
             messages.error(request, "Woah, slow down!")
             return render(request, "base/toasts.html")
+
+        check_usage = quota_usage_check_under(request, "invoices-schedules")
+        if not isinstance(check_usage, bool):
+            return check_usage
+
         return create_ots(request)
 
     messages.error(request, "Invalid option. Something went wrong.")
     return render(request, "base/toasts.html")
 
 
-def create_ots(request: HttpRequest) -> HttpResponse:
+def create_ots(request: HtmxHttpRequest) -> HttpResponse:
     invoice_id = request.POST.get("invoice_id") or request.POST.get("invoice")
 
     try:
@@ -149,6 +160,7 @@ def create_ots(request: HttpRequest) -> HttpResponse:
         return render(request, "base/toasts.html")
 
     print("[BACKEND] About to create ots", flush=True)
+
     schedule = create_onetime_schedule(
         CreateOnetimeScheduleInputData(
             invoice=invoice, option=1, datetime=request.POST.get("date_time"), email_type=request.POST.get("email_type")
@@ -158,6 +170,7 @@ def create_ots(request: HttpRequest) -> HttpResponse:
     print(schedule, flush=True)
 
     if isinstance(schedule, CreateOnetimeScheduleSuccessResponse):
+        QuotaUsage.create_str(request.user, "invoices-schedules", schedule.schedule.id)
         messages.success(request, "Schedule created!")
         return render(request, "pages/invoices/schedules/_table_row.html", {"schedule": schedule.schedule})
 
@@ -165,28 +178,26 @@ def create_ots(request: HttpRequest) -> HttpResponse:
     return render(request, "base/toasts.html")
 
 
-def get_or_create_role_arn():
+def get_execution_role() -> str | None:
+    """
+    :return: Role ARN if a role exists else None
+    """
+
     iam_client = get_iam_client()
     response = iam_client.list_roles(PathPrefix=f"/{AWS_TAGS_APP_NAME}-scheduled-invoices/", MaxItems=1)
 
-    if response.get("Roles"):
-        return response.get("Roles")[0].get("Arn")
+    try:
+        response: GetRoleResponseTypeDef = iam_client.get_role(RoleName=f"{AWS_TAGS_APP_NAME}-invoicing-scheduler")
+    except (iam_client.exceptions.NoSuchEntityException, iam_client.exceptions.ServiceFailureException):
+        return None
 
-    response = iam_client.create_role(
-        RoleName=f"{AWS_TAGS_APP_NAME}-scheduled-invoices",
-        Path=f"/{AWS_TAGS_APP_NAME}-scheduled-invoices/",
-        AssumeRolePolicyDocument=json.dumps(
-            {
-                "Version": "2012-10-17",
-                "Statement": [{"Effect": "Allow", "Principal": {"Service": "scheduler.amazonaws.com"}, "Action": "sts:AssumeRole"}],
-            }
-        ),
-    )
+    if response.get("Role", {}).get("Arn"):
+        return response["Role"]["Arn"]
 
-    return response.get("Role").get("Arn")
+    return None
 
 
-def authenticate_api_key(request: HttpRequest):
+def authenticate_api_key(request: HtmxHttpRequest):
     token = request.META.get("HTTP_AUTHORIZATION", "").split()
     print(token)
 
@@ -224,7 +235,7 @@ def authenticate_api_key(request: HttpRequest):
 
 @require_http_methods(["DELETE", "POST"])
 @feature_flag_check("isInvoiceSchedulingEnabled", True, api=True)
-def cancel_onetime_schedule(request: HttpRequest, schedule_id: str):
+def cancel_onetime_schedule(request: HtmxHttpRequest, schedule_id: str):
     if not request.htmx:
         return HttpResponseForbidden()
     try:
@@ -261,24 +272,24 @@ def cancel_onetime_schedule(request: HttpRequest, schedule_id: str):
 
 @require_GET
 @feature_flag_check("isInvoiceSchedulingEnabled", True, api=True, htmx=True)
-def fetch_onetime_schedules(request: HttpRequest, invoice_id: str):
-    # ratelimit = is_ratelimited(request, group="fetch_onetime_schedules", key="user", rate="5/30s", increment=True)
-    # if ratelimit:
-    #     messages.error(request, "Too many requests")
-    #     return render(request, "base/toasts.html")
+def fetch_onetime_schedules(request: HtmxHttpRequest, invoice_id: str):
+    ratelimit = is_ratelimited(request, group="fetch_onetime_schedules", key="user", rate="5/30s", increment=True)
+    if ratelimit:
+        messages.error(request, "Woah slow down there!")
+        return render(request, "base/toasts.html")
 
     try:
         invoice = Invoice.objects.prefetch_related("onetime_invoice_schedules").get(id=invoice_id)
     except Invoice.DoesNotExist:
-        messages.error("Invoice not found")
+        messages.error(request, "Invoice not found")
         return render(request, "base/toasts.html")
 
     if not invoice.user.logged_in_as_team and invoice.user != request.user:
-        messages.error("You do not have permission to view this invoice")
+        messages.error(request, "You do not have permission to view this invoice")
         return render(request, "base/toasts.html")
 
     if invoice.user.logged_in_as_team and invoice.organization != request.user.logged_in_as_team:
-        messages.error("You do not have permission to view this invoice")
+        messages.error(request, "You do not have permission to view this invoice")
         return render(request, "base/toasts.html")
 
     context = {}

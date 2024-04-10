@@ -519,7 +519,7 @@ class Notification(models.Model):
 
 class AuditLog(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
-    organization = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True)
+    organization = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True, blank=True)
     action = models.CharField(max_length=100)
     date = models.DateTimeField(auto_now_add=True)
 
