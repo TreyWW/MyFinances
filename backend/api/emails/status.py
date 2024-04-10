@@ -13,6 +13,9 @@ from backend.models import EmailSendStatus
 from settings.helpers import EMAIL_CLIENT
 
 
+@require_POST
+@htmx_only("emails:dashboard")
+@feature_flag_check("areUserEmailsAllowed", status=True, api=True, htmx=True)
 def get_status_view(request: HttpRequest, status_id: str) -> HttpResponse:
     try:
         if request.user.logged_in_as_team:
