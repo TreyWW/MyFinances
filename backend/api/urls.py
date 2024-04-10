@@ -1,4 +1,7 @@
-from django.urls import path, include
+from __future__ import annotations
+
+from django.urls import include
+from django.urls import path
 
 urlpatterns = [
     path("base/", include("backend.api.base.urls")),
@@ -11,6 +14,7 @@ urlpatterns = [
     path("products/", include("backend.api.products.urls")),
     path("currency_converter/", include("backend.api.currency_converter.urls")),
     path("quotas/", include("backend.api.quotas.urls")),
+    path("emails/", include("backend.api.emails.urls")),
     path("hc/", include("backend.api.healthcheck.urls")),
 ]
 

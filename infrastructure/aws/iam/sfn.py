@@ -6,10 +6,14 @@ from mypy_boto3_iam.type_defs import CreatePolicyResponseTypeDef, PolicyTypeDef
 from infrastructure.aws.handler import get_iam_client, DEBUG_LEVEL
 from settings.settings import AWS_TAGS_APP_NAME
 
-iam_client = get_iam_client
+iam_client = get_iam_client()
+
+import logging
+
+logger = logging.getLogger(__name__)
 
 
-def get_or_create_sfn_execute_role_arn() -> str:
+def get_sfn_execute_role_arn() -> str | None:
     """
     :returns: RoleArn
     """
@@ -17,55 +21,17 @@ def get_or_create_sfn_execute_role_arn() -> str:
         print("[AWS] Fetching scheduler role by name...", flush=True)
 
     try:
-        response = iam_client.get_role(RoleName=f"{AWS_TAGS_APP_NAME}-invoicing-scheduler-fn")
-
-    except iam_client.exceptions.NoSuchEntityException:
+        response = iam_client.get_role(RoleName=f"{AWS_TAGS_APP_NAME}-invoicing-scheduler")
+    except (iam_client.exceptions.NoSuchEntityException, iam_client.exceptions.ServiceFailureException):
         response = {}
 
     if response.get("Role"):
         if DEBUG_LEVEL == "debug":
             print(f"[AWS] Found role!")
-
-        assign_policy(check=True)
-
         return response.get("Role").get("Arn")
 
-    if DEBUG_LEVEL:
-        print("[AWS] Creating scheduler role...", flush=True)
-    response = iam_client.create_role(
-        RoleName=f"{AWS_TAGS_APP_NAME}-invoicing-scheduler-fn",
-        Path=f"/{AWS_TAGS_APP_NAME}-scheduled-invoices/",
-        AssumeRolePolicyDocument=json.dumps(
-            {
-                "Version": "2012-10-17",
-                "Statement": [{"Effect": "Allow", "Principal": {"Service": "scheduler.amazonaws.com"}, "Action": "sts:AssumeRole"}],
-            }
-        ),
-    )  #
-
-    assign_policy()
-
-    return response.get("Role").get("Arn")
-
-
-def assign_policy(check=False) -> NoReturn:
-    policy = get_or_create_policy()
-    print(policy)
-    print(f"{AWS_TAGS_APP_NAME}-invoicing-scheduler-fn")
-    if check:
-        try:
-            iam_client.get_role_policy(RoleName=f"{AWS_TAGS_APP_NAME}-invoicing-scheduler-fn", PolicyName=policy.get("PolicyName"))
-            print("[AWS] Policy already attached to scheduler role!", flush=True)
-            return
-        except iam_client.exceptions.NoSuchEntityException:
-            print("[AWS] Policy not attached to scheduler role, attaching now...", flush=True)
-
-    if DEBUG_LEVEL:
-        print("[AWS] Attaching policy to scheduler role...", flush=True)
-
-    iam_client.attach_role_policy(RoleName=f"{AWS_TAGS_APP_NAME}-invoicing-scheduler-fn", PolicyArn=policy.get("Arn"))
-
-    print("[AWS] Attached policy to scheduler role!", flush=True)
+    logging.error("Failed to get STEP FUNCTION arn. Maybe you need to run `pulumi up`?")
+    return None
 
 
 def get_or_create_policy() -> CreatePolicyResponseTypeDef | PolicyTypeDef:
