@@ -168,3 +168,6 @@ Writerside/**
 frontend/static/src/output.css
 frontend/static/js/bundle.js
 frontend/static/js/bundle.js.map
+
+# Pulumi
+infrastructure/aws/pulumi/Pulumi.dev.yaml
