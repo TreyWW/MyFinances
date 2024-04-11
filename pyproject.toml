@@ -30,6 +30,8 @@ django-tz-detect = "^0.5.0"
 typos = "^1.20.3"
 pre-commit = "^3.7.0"
 pulumi-aws = "^6.29.0"
+mypy = "1.7.1"
+djangorestframework-stubs = {extras = ["compatible-mypy"], version = "^3.14.5"}
 
 [tool.poetry.group.django.dependencies]
 Django = "^5.0.2"
@@ -110,3 +112,28 @@ filename = "backend/__init__.py"
 filename = "pyproject.toml"
 search = 'version = "{current_version}"'
 replace = 'version = "{new_version}"'
+
+[tool.mypy]
+plugins = [
+    "mypy_django_plugin.main",
+    "mypy_drf_plugin.main"
+]
+
+[tool.django-stubs]
+django_settings_module = "settings.settings"
+
+[[tool.mypy.overrides]]
+module = [
+    "debug_toolbar",
+    "django.core.cache.backends.redis",
+    "django_ratelimit.core",
+    "django_ratelimit.decorators",
+    "django_ratelimit.exceptions",
+    "django_ratelimit",
+    "environ",
+    "forex_python.converter",
+    "login_required",
+    "storages.backends.s3",
+    "social_django.models"
+]
+ignore_missing_imports = true
