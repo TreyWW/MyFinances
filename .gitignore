@@ -171,3 +171,5 @@ frontend/static/js/bundle.js.map
 
 # Pulumi
 infrastructure/aws/pulumi/Pulumi.dev.yaml
+infrastructure/aws/pulumi/Pulumi.production.yaml
+infrastructure/aws/pulumi/Pulumi.staging.yaml

@@ -280,6 +280,7 @@ class Invoice(models.Model):
     client_to = models.ForeignKey(Client, on_delete=models.SET_NULL, blank=True, null=True)
 
     client_name = models.CharField(max_length=100, blank=True, null=True)
+    client_email = models.EmailField(blank=True, null=True)
     client_company = models.CharField(max_length=100, blank=True, null=True)
     client_address = models.CharField(max_length=100, blank=True, null=True)
     client_city = models.CharField(max_length=100, blank=True, null=True)
@@ -462,6 +463,14 @@ class InvoiceSchedule(models.Model):
     class Meta:
         abstract = True
 
+    def set_status(self, status):
+        self.status = status
+        self.save()
+
+    def set_received(self, status: bool = True):
+        self.received = status
+        self.save()
+
 
 class InvoiceOnetimeSchedule(InvoiceSchedule):
     invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE, related_name="onetime_invoice_schedules")
@@ -470,6 +479,25 @@ class InvoiceOnetimeSchedule(InvoiceSchedule):
     class Meta:
         verbose_name = "One-Time Invoice Schedule"
         verbose_name_plural = "One-Time Invoice Schedules"
+
+
+class InvoiceReminder(InvoiceSchedule):
+    class ReminderTypes(models.TextChoices):
+        BEFORE_DUE = "before_due", "Before Due"
+        AFTER_DUE = "after_due", "After Due"
+        ON_OVERDUE = "on_overdue", "On Overdue"
+
+    invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE, related_name="invoice_reminders")
+    days = models.PositiveIntegerField(blank=True, null=True)
+    reminder_type = models.CharField(max_length=100, choices=ReminderTypes.choices, default=ReminderTypes.BEFORE_DUE)
+
+    class Meta:
+        verbose_name = "Invoice Reminder"
+        verbose_name_plural = "Invoice Reminders"
+
+    def __str__(self):
+        days = (str(self.days) + "d" if self.days else " ").center(8, "ㅤ")
+        return f"({self.id}) Reminder for (#{self.invoice_id}) {days} {self.reminder_type}"
 
 
 class APIKey(models.Model):
@@ -569,6 +597,14 @@ class FeatureFlags(models.Model):
 
     def __str__(self):
         return self.name
+
+    def enable(self):
+        self.value = True
+        self.save()
+
+    def disable(self):
+        self.value = False
+        self.save()
 
 
 class QuotaLimit(models.Model):

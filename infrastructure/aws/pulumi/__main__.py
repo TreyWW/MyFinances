@@ -6,7 +6,8 @@ import json
 from contextlib import closing
 
 import pulumi
-from emails import default_email_templates
+
+from emails import default_email_templates, default_reminders
 from pulumi_aws import ec2
 from pulumi_aws import iam
 from pulumi_aws import ses
@@ -20,6 +21,14 @@ config = pulumi.Config()
 tags = {"app": "myfinances", "stage": config.require("stage")}
 
 site_name = config.require("site_name")
+
+if not config.get("api_destination-api_key"):
+    print(
+        """
+        You have not set api_destinations api_key. To do this please use \"python manage.py generate_aws_scheduler_apikey\" and paste the
+        output of the api_key in \"pulumi config set api_destination-api_key [YOUR KEY]\"
+    """
+    )
 
 # VPC
 
@@ -59,8 +68,6 @@ vpc_private_subnet = ec2.Subnet(
 
 ses_user = iam.User("ses_user", name=f'{config.require("site_name")}-ses-user', path=f"/myfinances/{config.require('stage')}/", tags=tags)
 
-ses_user_access_key = iam.AccessKey("ses_user_access_key", user=ses_user.name)
-
 send_emails_policy = iam.get_policy_document(
     statements=[
         {
@@ -86,9 +93,34 @@ ses_template_user_send_client_email = ses.Template(
     text=config.get("ses_template_user_send_client_email-content_text", default_email_templates["user_send_email"]["content_text"]),
 )
 
+ses_template_reminders_overdue = ses.Template(
+    "ses_template_reminder_overdue",
+    name=f"{site_name}-reminders-overdue",
+    subject=config.get("ses_template_reminders_overdue-subject", default_reminders["subject"]),
+    html=config.get("ses_template_reminders_overdue-content_html", default_reminders["overdue"]["html"]),
+    text=config.get("ses_template_reminders_overdue-content_text", default_reminders["overdue"]["text"]),
+)
+
+ses_template_reminders_before_due = ses.Template(
+    "ses_template_reminder_before_due",
+    name=f"{site_name}-reminders-before_due",
+    subject=config.get("ses_template_reminders_before_due-subject", default_reminders["subject"]),
+    html=config.get("ses_template_reminders_before_due-content_html", default_reminders["before_due"]["html"]),
+    text=config.get("ses_template_reminders_before_due-content_text", default_reminders["before_due"]["text"]),
+)
+
+ses_template_reminders_after_due = ses.Template(
+    "ses_template_reminder_after_due",
+    name=f"{site_name}-reminders-after_due",
+    subject=config.get("ses_template_reminders_after_due-subject", default_reminders["subject"]),
+    html=config.get("ses_template_reminders_after_due-content_html", default_reminders["after_due"]["html"]),
+    text=config.get("ses_template_reminders_after_due-content_text", default_reminders["after_due"]["text"]),
+)
+
 # Invoice Schedules
 
 invoice_schedules_group = scheduler.ScheduleGroup("invoice_schedules_group", name=f"{site_name}-invoice-schedules")
+invoice_reminders_group = scheduler.ScheduleGroup("invoice_reminders_group", name=f"{site_name}-invoice-reminders")
 
 
 # API Destination
@@ -188,5 +220,3 @@ scheduled_invoices_state_machine = get_state_machine(site_name, scheduled_invoic
 
 
 pulumi.export("ses_user", ses_user.id)
-pulumi.export("ses_user_access_key_id", ses_user_access_key.id)
-pulumi.export("ses_user_access_key_secret", ses_user_access_key.ses_smtp_password_v4)

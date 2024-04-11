@@ -18,4 +18,9 @@ default_feature_flags: list[FeatureFlag] = [
         default=False,
     ),
     FeatureFlag(name="areUserEmailsAllowed", description="Are users allowed to send emails from YOUR DOMAIN to customers", default=False),
+    FeatureFlag(
+        name="areInvoiceRemindersEnabled",
+        description="Invoice Reminders allow for clients to be reminded to pay an invoice.",
+        default=False,
+    ),
 ]

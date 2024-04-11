@@ -77,6 +77,7 @@ def create_onetime_schedule(data: CreateOnetimeScheduleInputData) -> CreateOneti
     event_bridge_scheduler = get_event_bridge_scheduler()
     CREATED_SCHEDULE = event_bridge_scheduler.create_schedule(
         Name=f"{AWS_TAGS_APP_NAME}-scheduled-invoices-{data.invoice.id}-{schedule.id}",
+        GroupName=f"{AWS_TAGS_APP_NAME}-invoice-schedules",
         FlexibleTimeWindow={"Mode": "OFF"},
         ScheduleExpression=f"at({date_time})",
         Target={

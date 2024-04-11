@@ -22,7 +22,7 @@ from infrastructure.aws.schedules.create_schedule import (
     CreateOnetimeScheduleInputData,
     SuccessResponse as CreateOnetimeScheduleSuccessResponse,
 )
-from infrastructure.aws.schedules.delete_schedule import delete_schedule
+from infrastructure.aws.schedules.delete_schedule import delete_schedule, DeleteScheduleResponse, ErrorResponse
 from infrastructure.aws.schedules.list_schedules import list_schedules, ScheduleListResponse, ErrorResponse as ListSchedulesErrorResponse
 from settings.helpers import send_email
 from settings.settings import AWS_TAGS_APP_NAME
@@ -172,7 +172,7 @@ def create_ots(request: HtmxHttpRequest) -> HttpResponse:
     if isinstance(schedule, CreateOnetimeScheduleSuccessResponse):
         QuotaUsage.create_str(request.user, "invoices-schedules", schedule.schedule.id)
         messages.success(request, "Schedule created!")
-        return render(request, "pages/invoices/schedules/_table_row.html", {"schedule": schedule.schedule})
+        return render(request, "pages/invoices/schedules/schedules/_table_row.html", {"schedule": schedule.schedule})
 
     messages.error(request, schedule.message)
     return render(request, "base/toasts.html")
@@ -248,26 +248,26 @@ def cancel_onetime_schedule(request: HtmxHttpRequest, schedule_id: str):
     schedule.status = InvoiceOnetimeSchedule.StatusTypes.DELETING
     schedule.save()
 
-    delete_status: dict = delete_schedule(schedule.invoice.id, schedule.id)
+    delete_status: DeleteScheduleResponse = delete_schedule(schedule.invoice.id, schedule.id)
 
-    if not delete_status["success"]:
-        if delete_status["error"] == "Schedule not found":
+    if isinstance(delete_status, ErrorResponse):
+        if delete_status.message == "Schedule not found":
             schedule.status = InvoiceOnetimeSchedule.StatusTypes.CANCELLED
             schedule.save()
 
             messages.success(request, "Schedule cancelled.")
-            return render(request, "pages/invoices/schedules/_table_row.html", {"schedule": schedule})
+            return render(request, "pages/invoices/schedules/schedules/_table_row.html", {"schedule": schedule})
         else:
             schedule.status = original_status
             schedule.save()
-            messages.error(request, f"Failed to delete schedule: {delete_status['error']}")
+            messages.error(request, f"Failed to delete schedule: {delete_status.message}")
             return render(request, "base/toasts.html")
 
     schedule.status = InvoiceOnetimeSchedule.StatusTypes.CANCELLED
     schedule.save()
 
     messages.success(request, "Schedule cancelled.")
-    return render(request, "pages/invoices/schedules/_table_row.html", {"schedule": schedule})
+    return render(request, "pages/invoices/schedules/schedules/_table_row.html", {"schedule": schedule})
 
 
 @require_GET
@@ -378,4 +378,4 @@ def fetch_onetime_schedules(request: HtmxHttpRequest, invoice_id: str):
 
     context["schedules"] = schedules.filter(or_conditions)
 
-    return render(request, "pages/invoices/schedules/_table_body.html", context)
+    return render(request, "pages/invoices/schedules/schedules/_table_body.html", context)

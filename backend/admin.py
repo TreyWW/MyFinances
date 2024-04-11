@@ -28,6 +28,7 @@ from backend.models import (
     Receipt,
     ReceiptDownloadToken,
     EmailSendStatus,
+    InvoiceReminder,
 )
 
 # from django.contrib.auth.models imp/ort User
@@ -57,6 +58,7 @@ admin.site.register(
         QuotaIncreaseRequest,
         Receipt,
         ReceiptDownloadToken,
+        InvoiceReminder,
     ]
 )
 

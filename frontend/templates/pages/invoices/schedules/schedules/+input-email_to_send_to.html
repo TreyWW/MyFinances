@@ -1,0 +1,17 @@
+<div class="form-control my-2">
+    <label class="label justify-start">
+        Email address to send to
+        <span class="required_star">*</span>
+    </label>
+    <select name="email_type"
+            class="select select-bordered invalid:[&:not(:placeholder-shown):not(:focus) ]:input-error"
+            required>
+        {% if invoice.client_to and invoice.client_to.email %}
+            <option selected value="client_to_email">{{ invoice.client_to.email }}</option>
+        {% endif %}
+        {% if invoice.client_email %}<option value="client_email">{{ invoice.client_email }}</option>{% endif %}
+        {% if not invoice.client_to and not invoice.client_email %}
+            <option value="" selected disabled>No client email address stored.</option>
+        {% endif %}
+    </select>
+</div>
