@@ -4,10 +4,10 @@ on:
     branches:
       - main
     paths:
-      - 'frontend/templates/**'
+      - 'frontend/templates/**.html'
   pull_request:
     paths:
-      - 'frontend/templates/**'
+      - 'frontend/templates/**.html'
 
 jobs:
   lint:

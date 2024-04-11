@@ -5,20 +5,10 @@ on:
     branches:
       - main
     paths:
-      - 'backend/**'
-      - 'components/**'
-      - 'infrastructure/**'
-      - 'settings/**'
-      - 'tests/**'
-      - 'manage.py'
+      - '**.py'
   pull_request:
     paths:
-      - 'backend/**'
-      - 'components/**'
-      - 'infrastructure/**'
-      - 'settings/**'
-      - 'tests/**'
-      - 'manage.py'
+      - '**.py'
 
 jobs:
   lint:
