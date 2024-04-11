@@ -20,7 +20,7 @@ config = pulumi.Config()
 
 tags = {"app": "myfinances", "stage": config.require("stage")}
 
-site_name = config.require("site_name")
+site_name: str = pulumi.get_project()
 
 if not config.get("api_destination-api_key"):
     print(
