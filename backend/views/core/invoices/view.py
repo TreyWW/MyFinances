@@ -1,8 +1,14 @@
+from __future__ import annotations
+
 from django.contrib import messages
-from django.shortcuts import render, redirect
+from django.contrib.auth.models import AnonymousUser
+from django.shortcuts import redirect
+from django.shortcuts import render
 from login_required import login_not_required
 
-from backend.models import Invoice, UserSettings, InvoiceURL
+from backend.models import Invoice
+from backend.models import InvoiceURL
+from backend.models import UserSettings
 
 
 def preview(request, invoice_id):
@@ -48,10 +54,7 @@ def view(request, uuid):
         messages.error(request, "Invoice not found")
         return redirect("index")
 
-    try:
-        currency_symbol = request.user.user_profile.get_currency_symbol()
-    except UserSettings.DoesNotExist:
-        currency_symbol = "$"
+    currency_symbol = invoice.get_currency_symbol()
 
     context.update({"invoice": invoice, "currency_symbol": currency_symbol})
 

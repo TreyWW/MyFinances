@@ -1,0 +1,36 @@
+{% for email in emails %}
+    <tr {% if forloop.last and emails.has_next %} hx-swap="afterend" hx-trigger="revealed" hx-get="{% url 'api:emails:fetch' %}?page={{ emails.next_page_number }}"{% endif %}>
+        <td>{{ email.id }}</td>
+        <td>{{ email.created_at }}</td>
+        <td>{{ email.recipient }}</td>
+        <td>
+            {% if email.status == "pending" %}
+                <span data-tip="This email is pending lookup. Refresh the status list!"
+                      class="tooltip badge badge-neutral">PENDING</span>
+            {% elif email.status == "send" %}
+                <span data-tip="This email was opened sent but not yet received"
+                      class="tooltip badge badge-success">SENT</span>
+            {% elif email.status == "open" %}
+                <span data-tip="This email was opened by the recipient"
+                      class="tooltip badge badge-success">OPENED</span>
+            {% elif email.status == "delivery" %}
+                <span data-tip="This email was received by the recipient"
+                      class="tooltip badge badge-neutral">DELIVERED</span>
+            {% elif email.status == "click" %}
+                <span data-tip="This email was clicked by the recipient"
+                      class="tooltip badge badge-success">CLICKED</span>
+            {% elif email.status == "bounce" %}
+                <span data-tip="This email was 'Bounced' which means that the users email provider rejected the email"
+                      class="tooltip badge badge-warning drop-shadow-glow_red">BOUNCED</span>
+            {% elif email.status == "complaint" %}
+                <span data-tip="This email received a complaint"
+                      class="tooltip tooltip-error badge badge-error drop-shadow-glow_red">COMPLAINT</span>
+            {% else %}
+                <span class="badge badge-neutral">{{ email.status }}</span>
+            {% endif %}
+        </td>
+    </tr>
+{% empty %}
+    <td colspan="100%" class="text-center">No emails found</td>
+{% endfor %}
+{% component "messages_list" %}

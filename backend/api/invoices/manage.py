@@ -1,12 +1,17 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
-from typing import Literal, TypedDict
+from typing import Literal
+from typing import TypedDict
 
 from django.contrib import messages
 from django.http import HttpRequest
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
+from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
-from backend.models import Invoice, UserSettings
+from backend.models import Invoice
+from backend.models import UserSettings
 
 
 class PreviewContext(TypedDict):
@@ -58,10 +63,8 @@ def preview_invoice(request: HttpRequest, invoice_id) -> SuccessResponse | Error
     else:
         if invoice.user != request.user:
             return ErrorResponse("You don't have access to this invoice")
-    try:
-        currency_symbol = request.user.user_profile.get_currency_symbol()
-    except UserSettings.DoesNotExist:
-        currency_symbol = "$"
+
+    currency_symbol = invoice.get_currency_symbol()
 
     context.update({"invoice": invoice, "currency_symbol": currency_symbol})
 

@@ -1,0 +1,10 @@
+name: MyFinances
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: MyFinances infrastructure
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: aws-python

@@ -219,13 +219,14 @@ class ReceiptDownloadToken(models.Model):
 
 
 class Client(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    organization = models.ForeignKey(Team, on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    organization = models.ForeignKey(Team, on_delete=models.CASCADE, null=True, blank=True)
     active = models.BooleanField(default=True)
 
     name = models.CharField(max_length=64)
     phone_number = models.CharField(max_length=100, blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
+    email_verified = models.BooleanField(default=False)
     company = models.CharField(max_length=100, blank=True, null=True)
     is_representative = models.BooleanField(default=False)
 
@@ -518,7 +519,7 @@ class Notification(models.Model):
 
 class AuditLog(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
-    organization = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True)
+    organization = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True, blank=True)
     action = models.CharField(max_length=100)
     date = models.DateTimeField(auto_now_add=True)
 
@@ -615,10 +616,10 @@ class QuotaLimit(models.Model):
         else:
             return "Not available"
 
-    def strict_goes_above_limit(self, user: User, extra: str | int | None = None) -> bool:
+    def strict_goes_above_limit(self, user: User, extra: str | int | None = None, add: int = 0) -> bool:
         current = self.strict_get_quotas(user, extra)
         current = current.count() if current != "Not Available" else None
-        return current >= self.get_quota_limit(user) if current else False
+        return current + add >= self.get_quota_limit(user) if current else False
 
     def strict_get_quotas(
         self, user: User, extra: str | int | None = None, quota_limit: QuotaLimit | None = None
@@ -745,3 +746,38 @@ class QuotaIncreaseRequest(models.Model):
 
     def __str__(self):
         return f"{self.user}"
+
+
+class EmailSendStatus(models.Model):
+    STATUS_CHOICES = [
+        (status, status.title())
+        for status in [
+            "send",
+            "reject",
+            "bounce",
+            "complaint",
+            "delivery",
+            "open",
+            "click",
+            "rendering_failure",
+            "delivery_delay",
+            "subscription",
+            "failed_to_send",
+            "pending",
+        ]
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name="emails_created")
+    organization = models.ForeignKey(Team, on_delete=models.CASCADE, null=True, blank=True, related_name="emails_created")
+    sent_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name="emails_sent")
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    updated_status_at = models.DateTimeField(auto_now_add=True)
+
+    recipient = models.TextField()
+    aws_message_id = models.CharField(max_length=100, null=True, blank=True, editable=False)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES)
+
+    class Meta:
+        constraints = [USER_OR_ORGANIZATION_CONSTRAINT()]

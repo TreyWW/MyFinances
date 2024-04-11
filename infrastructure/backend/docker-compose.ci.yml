@@ -19,3 +19,5 @@ services:
       DATABASE_TYPE: "sqlite3"
       SITE_URL: "http://myfinances.example.com"
       SITE_NAME: "myfinances"
+      AWS_SCHEDULES_ACCESS_KEY_ID: "test"
+      AWS_SCHEDULES_SECRET_ACCESS_KEY: "test"
