@@ -18,12 +18,14 @@ from step_functions import get_state_machine
 
 config = pulumi.Config()
 
-tags = {"app": "myfinances", "stage": config.require("stage")}
-
 site_name: str = pulumi.get_project()
+stage: str = config.require("stage")
+env_name: str = site_name + "-" + stage
+
+tags = {"app": site_name, "stage": stage}
 
 if not config.get("api_destination-api_key"):
-    print(
+    pulumi.log.warn(
         """
         You have not set api_destinations api_key. To do this please use \"python manage.py generate_aws_scheduler_apikey\" and paste the
         output of the api_key in \"pulumi config set api_destination-api_key [YOUR KEY]\"
@@ -66,7 +68,7 @@ vpc_private_subnet = ec2.Subnet(
 
 # Email Users
 
-ses_user = iam.User("ses_user", name=f'{config.require("site_name")}-ses-user', path=f"/myfinances/{config.require('stage')}/", tags=tags)
+ses_user = iam.User("ses_user", name=f"{env_name}-ses-user", path=f"/{site_name}/{stage}/", tags=tags)
 
 send_emails_policy = iam.get_policy_document(
     statements=[
@@ -95,7 +97,7 @@ ses_template_user_send_client_email = ses.Template(
 
 ses_template_reminders_overdue = ses.Template(
     "ses_template_reminder_overdue",
-    name=f"{site_name}-reminders-overdue",
+    name=f"{env_name}-reminders-overdue",
     subject=config.get("ses_template_reminders_overdue-subject", default_reminders["subject"]),
     html=config.get("ses_template_reminders_overdue-content_html", default_reminders["overdue"]["html"]),
     text=config.get("ses_template_reminders_overdue-content_text", default_reminders["overdue"]["text"]),
@@ -103,7 +105,7 @@ ses_template_reminders_overdue = ses.Template(
 
 ses_template_reminders_before_due = ses.Template(
     "ses_template_reminder_before_due",
-    name=f"{site_name}-reminders-before_due",
+    name=f"{env_name}-reminders-before_due",
     subject=config.get("ses_template_reminders_before_due-subject", default_reminders["subject"]),
     html=config.get("ses_template_reminders_before_due-content_html", default_reminders["before_due"]["html"]),
     text=config.get("ses_template_reminders_before_due-content_text", default_reminders["before_due"]["text"]),
@@ -111,7 +113,7 @@ ses_template_reminders_before_due = ses.Template(
 
 ses_template_reminders_after_due = ses.Template(
     "ses_template_reminder_after_due",
-    name=f"{site_name}-reminders-after_due",
+    name=f"{env_name}-reminders-after_due",
     subject=config.get("ses_template_reminders_after_due-subject", default_reminders["subject"]),
     html=config.get("ses_template_reminders_after_due-content_html", default_reminders["after_due"]["html"]),
     text=config.get("ses_template_reminders_after_due-content_text", default_reminders["after_due"]["text"]),
@@ -119,8 +121,8 @@ ses_template_reminders_after_due = ses.Template(
 
 # Invoice Schedules
 
-invoice_schedules_group = scheduler.ScheduleGroup("invoice_schedules_group", name=f"{site_name}-invoice-schedules")
-invoice_reminders_group = scheduler.ScheduleGroup("invoice_reminders_group", name=f"{site_name}-invoice-reminders")
+invoice_schedules_group = scheduler.ScheduleGroup("invoice_schedules_group", name=f"{env_name}-invoice-schedules")
+invoice_reminders_group = scheduler.ScheduleGroup("invoice_reminders_group", name=f"{env_name}-invoice-reminders")
 
 
 # API Destination
@@ -128,7 +130,7 @@ invoice_reminders_group = scheduler.ScheduleGroup("invoice_reminders_group", nam
 
 scheduled_invoices_api_connection = cloudwatch.EventConnection(
     "invoice_schedules_api_connection",
-    name=f"{site_name}-scheduled-invoices-connection",
+    name=f"{env_name}-scheduled-invoices-connection",
     description="Main connection to Django API",
     authorization_type="API_KEY",
     auth_parameters=cloudwatch.EventConnectionAuthParametersArgs(
@@ -141,7 +143,7 @@ scheduled_invoices_api_connection = cloudwatch.EventConnection(
 
 scheduled_invoices_api_destination = cloudwatch.EventApiDestination(
     "invoice_schedules_api_destination",
-    name=f"{site_name}-scheduled-invoices",
+    name=f"{env_name}-scheduled-invoices",
     description="MyFinances Scheduled Invoices",
     invocation_endpoint=f"{config.require('site_url')}/api/invoices/schedules/receive/",
     http_method="POST",
@@ -153,8 +155,8 @@ scheduled_invoices_api_destination = cloudwatch.EventApiDestination(
 
 scheduler_execution_role = iam.Role(
     "scheduler-execution-role",
-    name=f"{site_name}-invoicing-scheduler",
-    path=f"/{site_name}-scheduled-invoices/",
+    name=f"{env_name}-invoicing-scheduler",
+    path=f"/{env_name}-scheduled-invoices/",
     assume_role_policy=json.dumps(
         {
             "Version": "2012-10-17",
@@ -167,8 +169,8 @@ scheduler_execution_role = iam.Role(
 )
 scheduler_execution_policy = iam.Policy(
     "scheduler-execution-policy",
-    name=f"{site_name}-invoicing-scheduler",
-    path=f"/{site_name}-scheduled-invoices/",
+    name=f"{env_name}-invoicing-scheduler",
+    path=f"/{env_name}-scheduled-invoices/",
     policy=json.dumps(
         {
             "Version": "2012-10-17",
@@ -216,7 +218,7 @@ scheduler_execution_policy_attachment = iam.RolePolicyAttachment(
     opts=pulumi.ResourceOptions(depends_on=[scheduler_execution_policy, scheduler_execution_role]),
 )
 
-scheduled_invoices_state_machine = get_state_machine(site_name, scheduled_invoices_api_connection, scheduler_execution_role)
+scheduled_invoices_state_machine = get_state_machine(env_name, scheduled_invoices_api_connection, scheduler_execution_role)
 
 
 pulumi.export("ses_user", ses_user.id)
