@@ -11,8 +11,6 @@ from storages.backends.s3 import S3Storage
 
 from .helpers import get_var
 
-# from backend.utils import appconfig
-
 DEBUG = True if get_var("DEBUG") in ["True", "true", "TRUE", True] else False
 
 SITE_URL = get_var("SITE_URL", default="http://127.0.0.1:8000")
