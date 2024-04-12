@@ -1,14 +1,11 @@
 import json
-from typing import NoReturn
+import logging
 
 from mypy_boto3_iam.type_defs import CreatePolicyResponseTypeDef, PolicyTypeDef
 
 from infrastructure.aws.handler import get_iam_client, DEBUG_LEVEL
 from settings.settings import AWS_TAGS_APP_NAME
 
-iam_client = get_iam_client()
-
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -19,6 +16,8 @@ def get_sfn_execute_role_arn() -> str | None:
     """
     if DEBUG_LEVEL == "debug":
         print("[AWS] Fetching scheduler role by name...", flush=True)
+
+    iam_client = get_iam_client()
 
     try:
         response = iam_client.get_role(RoleName=f"{AWS_TAGS_APP_NAME}-invoicing-scheduler")
@@ -37,6 +36,8 @@ def get_sfn_execute_role_arn() -> str | None:
 def get_or_create_policy() -> CreatePolicyResponseTypeDef | PolicyTypeDef:
     if DEBUG_LEVEL == "debug":
         print("[AWS] Fetching all policies by prefix...", flush=True)
+
+    iam_client = get_iam_client()
 
     response = iam_client.list_policies(Scope="Local", PathPrefix=f"/{AWS_TAGS_APP_NAME}-scheduled-invoices/")
 
