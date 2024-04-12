@@ -1,3 +1,5 @@
+from typing import Iterable, Any
+
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
@@ -73,7 +75,7 @@ admin.site.register(QuotaLimit, QuotaLimitAdmin)
 admin.site.register(EmailSendStatus, EmailSendStatusAdmin)
 
 # admin.site.unregister(User)
-fields = list(UserAdmin.fieldsets)
+fields = list(UserAdmin.fieldsets)  # type: ignore[arg-type]
 fields[0] = (None, {"fields": ("username", "password", "logged_in_as_team", "awaiting_email_verification")})
 UserAdmin.fieldsets = tuple(fields)
 admin.site.register(User, UserAdmin)

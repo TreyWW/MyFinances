@@ -1,3 +1,5 @@
+from typing import Optional
+
 from django.db.models import When, Case, BooleanField
 from django.http import HttpRequest
 from django.shortcuts import render
@@ -6,8 +8,8 @@ from backend.models import *
 
 
 def teams_dashboard(request: HttpRequest):
-    request.user: User = request.user
-    users_team: Optional[Team] = request.user.logged_in_as_team
+    request.user: User = request.user  # type: ignore[misc]
+    users_team: Optional[Team] = request.user.logged_in_as_team  # type: ignore[union-attr, assignment]
 
     if not users_team:
         user_with_counts = User.objects.prefetch_related("teams_joined", "teams_leader_of").get(pk=request.user.pk)

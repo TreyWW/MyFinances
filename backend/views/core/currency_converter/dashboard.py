@@ -1,5 +1,3 @@
-import datetime
-
 from django.http import HttpRequest
 from django.shortcuts import render
 from forex_python.converter import CurrencyRates

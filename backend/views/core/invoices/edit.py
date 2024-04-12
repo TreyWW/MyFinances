@@ -71,7 +71,7 @@ def edit_invoice(request: HttpRequest, invoice_id):
     except Invoice.DoesNotExist:
         return JsonResponse({"message": "Invoice not found"}, status=404)
 
-    if request.user.logged_in_as_team and request.user.logged_in_as_team != invoice.organization:
+    if request.user.logged_in_as_team and request.user.logged_in_as_team != invoice.organization:  # type: ignore[union-attr]
         return JsonResponse(
             {"message": "You do not have permission to edit this invoice"},
             status=403,
@@ -83,7 +83,7 @@ def edit_invoice(request: HttpRequest, invoice_id):
         )
 
     attributes_to_updates = {
-        "date_due": datetime.strptime(request.POST.get("date_due"), "%Y-%m-%d").date(),
+        "date_due": datetime.strptime(request.POST.get("date_due"), "%Y-%m-%d").date(),  # type: ignore[arg-type]
         "date_issued": request.POST.get("date_issued"),
         "self_name": request.POST.get("from_name"),
         "self_company": request.POST.get("from_company"),
@@ -102,7 +102,7 @@ def edit_invoice(request: HttpRequest, invoice_id):
 
     client_to_id = request.POST.get("selected_client")
     try:
-        client_to_obj = Client.objects.get(id=client_to_id, user=request.user)
+        client_to_obj = Client.objects.get(id=client_to_id, user=request.user)  # type: ignore[misc]
     except (Client.DoesNotExist, ValueError):
         client_to_obj = None
 
@@ -140,7 +140,7 @@ def edit_invoice(request: HttpRequest, invoice_id):
 
     messages.success(request, "Invoice edited")
 
-    if request.htmx:
+    if request.headers.get("Hx-Request", None):
         return render(request, "base/toasts.html")
 
     return invoice_edit_page_get(request, invoice_id)
