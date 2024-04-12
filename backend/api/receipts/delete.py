@@ -10,7 +10,11 @@ from backend.models import Receipt
 @require_http_methods(["DELETE"])
 @login_required
 def receipt_delete(request: HttpRequest, id: int):
-    receipt = Receipt.objects.get(id=id)
+    try:
+        receipt = Receipt.objects.get(id=id)
+    except Receipt.DoesNotExist:
+        return JsonResponse({"message": "Receipt not found"}, status=404)
+    
     if not receipt:
         return JsonResponse(status=404, data={"message": "Receipt not found"})
 
