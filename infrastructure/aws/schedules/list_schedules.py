@@ -3,8 +3,10 @@ from typing import List
 
 from mypy_boto3_scheduler.type_defs import ScheduleSummaryTypeDef
 
-from infrastructure.aws.handler import get_event_bridge_scheduler as event_bridge_scheduler
+from infrastructure.aws.handler import get_event_bridge_scheduler
 from settings.settings import AWS_TAGS_APP_NAME
+
+event_bridge_scheduler = get_event_bridge_scheduler()
 
 
 @dataclass(frozen=True)
@@ -22,7 +24,7 @@ ScheduleListResponse = ErrorResponse | SuccessResponse
 
 def list_schedules() -> ScheduleListResponse:
     try:
-        schedules = event_bridge_scheduler().list_schedules(
+        schedules = event_bridge_scheduler.list_schedules(
             NamePrefix=f"{AWS_TAGS_APP_NAME}-scheduled-invoices",
             State="ENABLED",
         )  # possibly add groups in the future

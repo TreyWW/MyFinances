@@ -1,9 +1,14 @@
 import json
-import logging
+from typing import NoReturn
+
 from mypy_boto3_iam.type_defs import CreatePolicyResponseTypeDef, PolicyTypeDef
-from infrastructure.aws.handler import get_iam_client as iam_client, DEBUG_LEVEL
+
+from infrastructure.aws.handler import get_iam_client, DEBUG_LEVEL
 from settings.settings import AWS_TAGS_APP_NAME
 
+iam_client = get_iam_client()
+
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -16,8 +21,8 @@ def get_sfn_execute_role_arn() -> str | None:
         print("[AWS] Fetching scheduler role by name...", flush=True)
 
     try:
-        response = iam_client().get_role(RoleName=f"{AWS_TAGS_APP_NAME}-invoicing-scheduler")
-    except (iam_client().exceptions.NoSuchEntityException, iam_client().exceptions.ServiceFailureException):
+        response = iam_client.get_role(RoleName=f"{AWS_TAGS_APP_NAME}-invoicing-scheduler")
+    except (iam_client.exceptions.NoSuchEntityException, iam_client.exceptions.ServiceFailureException):
         response = {}
 
     if response.get("Role"):
@@ -33,7 +38,7 @@ def get_or_create_policy() -> CreatePolicyResponseTypeDef | PolicyTypeDef:
     if DEBUG_LEVEL == "debug":
         print("[AWS] Fetching all policies by prefix...", flush=True)
 
-    response = iam_client().list_policies(Scope="Local", PathPrefix=f"/{AWS_TAGS_APP_NAME}-scheduled-invoices/")
+    response = iam_client.list_policies(Scope="Local", PathPrefix=f"/{AWS_TAGS_APP_NAME}-scheduled-invoices/")
 
     policies = [
         policy for policy in response.get("Policies", []) if policy.get("PolicyName") == f"{AWS_TAGS_APP_NAME}-invoicing-scheduler-fn"
@@ -52,7 +57,7 @@ def get_or_create_policy() -> CreatePolicyResponseTypeDef | PolicyTypeDef:
     if DEBUG_LEVEL:
         print("[AWS] Creating new policy for scheduler step function to access API Destination...", flush=True)
 
-    return iam_client().create_policy(
+    return iam_client.create_policy(
         PolicyName=f"{AWS_TAGS_APP_NAME}-invoicing-scheduler-fn",
         Path=f"/{AWS_TAGS_APP_NAME}-scheduled-invoices/",
         PolicyDocument=json.dumps(
