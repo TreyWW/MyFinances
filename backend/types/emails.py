@@ -14,7 +14,7 @@ class SingleEmailInput:
     destination: str | list[str]
     subject: str
     content: str | SingleTemplatedEmailContent
-    ConfigurationSetName: str | None = None
+    ConfigurationSetName: str
     from_address: str | None = None
     from_address_name_prefix: str | None = None
 

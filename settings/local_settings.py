@@ -1,3 +1,5 @@
+from typing import Any
+
 import environ
 import os
 from pathlib import Path
@@ -15,7 +17,7 @@ DB_TYPE = DB_TYPE.lower() if DB_TYPE else "sqlite3"
 DB_TYPE = "mysql" if DB_TYPE in ["mysql", "mariadb"] else DB_TYPE
 
 if DB_TYPE == "mysql" or DB_TYPE == "postgres":
-    DATABASES = {
+    DATABASES: Any = {
         "default": {
             "ENGINE": (
                 "django.db.backends.postgresql_psycopg2"
@@ -46,7 +48,7 @@ else:
     print("[BACKEND] Using sqlite3 database", flush=True)
 
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+ALLOWED_HOSTS: list[str | None] = ["localhost", "127.0.0.1"]
 
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = (
     "1"  # THIS WILL ALLOW HTTP - NOT RECOMMENDED

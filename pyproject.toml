@@ -134,6 +134,9 @@ module = [
     "forex_python.converter",
     "login_required",
     "storages.backends.s3",
-    "social_django.models"
+    "social_django.models",
+    "emails",
+    "step_functions",
+    "django_components"
 ]
 ignore_missing_imports = true

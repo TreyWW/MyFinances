@@ -5,7 +5,7 @@ import os
 import sys
 from dataclasses import dataclass
 from logging import exception
-from typing import Literal, List
+from typing import Literal, List, Any
 
 from collections.abc import Sequence
 from typing import Optional
@@ -105,7 +105,7 @@ def send_email(data: SingleEmailInput) -> SingleEmailSuccessResponse | SingleEma
 
         try:
             if isinstance(data.content, dict):
-                data_str: str = (
+                data_str: str | Any = (
                     data.content.get("template_data")
                     if isinstance(data.content.get("template_data"), str)
                     else json.dumps(data.content.get("template_data"))
@@ -114,17 +114,17 @@ def send_email(data: SingleEmailInput) -> SingleEmailSuccessResponse | SingleEma
                 from_email_address: str = str(data.from_address_name_prefix) if data.from_address_name_prefix else ""
                 from_email_address += str(data.from_address or get_var("AWS_SES_FROM_ADDRESS"))
 
-                response: SendEmailResponseTypeDef = EMAIL_CLIENT.send_email(
+                response = EMAIL_CLIENT.send_email(
                     FromEmailAddress=from_email_address,
                     Destination={"ToAddresses": data.destination},
-                    Content={"Template": {"TemplateName": data.content.get("template_name"), "TemplateData": data_str}},
+                    Content={"Template": {"TemplateName": data.content.get("template_name"), "TemplateData": data_str}},  # type: ignore
                     ConfigurationSetName=data.ConfigurationSetName or "",
                 )
             else:
-                from_email_address: str = str(data.from_address_name_prefix) if data.from_address_name_prefix else ""
+                from_email_address = str(data.from_address_name_prefix) if data.from_address_name_prefix else ""
                 from_email_address += str(data.from_address or get_var("AWS_SES_FROM_ADDRESS"))
 
-                response: SendEmailResponseTypeDef = EMAIL_CLIENT.send_email(
+                response = EMAIL_CLIENT.send_email(
                     FromEmailAddress=from_email_address,
                     Destination={"ToAddresses": data.destination},
                     Content={"Simple": {"Subject": {"Data": data.subject}, "Body": {"Text": {"Data": data.content}}}},
@@ -152,7 +152,7 @@ def send_templated_bulk_email(data: BulkTemplatedEmailInput) -> BulkEmailSuccess
     for entry in data.email_list:
         destination: list[str] = [entry.destination] if not isinstance(entry.destination, list) else entry.destination
 
-        data_str = entry.template_data if isinstance(entry.template_data, str) else json.dumps(entry.template_data)
+        data_str: str = entry.template_data if isinstance(entry.template_data, str) else json.dumps(entry.template_data)
 
         entries.append(
             {
@@ -162,9 +162,7 @@ def send_templated_bulk_email(data: BulkTemplatedEmailInput) -> BulkEmailSuccess
         )
 
     try:
-        data_str: str = (
-            data.default_template_data if isinstance(data.default_template_data, str) else json.dumps(data.default_template_data)
-        )
+        data_str = data.default_template_data if isinstance(data.default_template_data, str) else json.dumps(data.default_template_data)
         from_email_address: str = str(data.from_address_name_prefix) if data.from_address_name_prefix else ""
         from_email_address += str(data.from_address or get_var("AWS_SES_FROM_ADDRESS"))
 
