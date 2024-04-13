@@ -211,6 +211,18 @@ class Receipt(models.Model):
     class Meta:
         constraints = [USER_OR_ORGANIZATION_CONSTRAINT()]
 
+    def __str__(self):
+        return f"{self.name} - {self.date} ({self.total_price})"
+
+    def has_access(self, user: User) -> bool:
+        if not user.is_authenticated:
+            return False
+
+        if user.logged_in_as_team:
+            return self.organization == user.logged_in_as_team
+        else:
+            return self.user == user
+
 
 class ReceiptDownloadToken(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
