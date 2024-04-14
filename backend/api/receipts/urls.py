@@ -1,11 +1,16 @@
 from django.urls import path
-from . import delete, new, fetch, download
+from . import delete, new, fetch, download, edit
 
 urlpatterns = [
     path(
         "delete/<int:id>/",
         delete.receipt_delete,
         name="delete",
+    ),
+    path(
+        "edit/<int:receipt_id>/",
+        edit.edit_receipt,
+        name="edit",
     ),
     path(
         "new/",

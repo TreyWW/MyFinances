@@ -64,7 +64,12 @@
                                     onclick="modal_receipt_{{ row.id }}.showModal();"
                                     class="btn btn-outline btn-success btn-sm">Preview</button>
                             <button type="button"
-                                    class="btn btn-outline btn-primary btn-sm "
+                                    class="btn btn-outline btn-primary btn-sm"
+                                    hx-post="{% url 'api:receipts:edit' receipt_id=row.id %}"
+                                    hx-target="#items"
+                                    hx-swap="outerHTML">Edit</button>
+                            <button type="button"
+                                    class="btn btn-outline btn-primary btn-sm"
                                     onclick="Download_file('{% url 'api:receipts:generate_download_link' receipt_id=row.id %}')">
                                 Download
                             </button>
