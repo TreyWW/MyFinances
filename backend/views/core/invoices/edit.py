@@ -140,7 +140,7 @@ def edit_invoice(request: HttpRequest, invoice_id):
 
     messages.success(request, "Invoice edited")
 
-    if request.headers.get("Hx-Request", None):
+    if request.htmx:  # type: ignore[attr-defined]
         return render(request, "base/toasts.html")
 
     return invoice_edit_page_get(request, invoice_id)

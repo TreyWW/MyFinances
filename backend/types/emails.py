@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Literal, Optional, List, TypedDict, Dict
+from typing import Literal, TypedDict
 
 from mypy_boto3_sesv2.type_defs import SendEmailResponseTypeDef, SendBulkEmailResponseTypeDef, BulkEmailEntryResultTypeDef
 
@@ -14,7 +14,7 @@ class SingleEmailInput:
     destination: str | list[str]
     subject: str
     content: str | SingleTemplatedEmailContent
-    ConfigurationSetName: str
+    ConfigurationSetName: str | None = None
     from_address: str | None = None
     from_address_name_prefix: str | None = None
 

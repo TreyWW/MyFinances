@@ -3,12 +3,7 @@ from __future__ import annotations
 import json
 import os
 import sys
-from dataclasses import dataclass
 from logging import exception
-from typing import Literal, List, Any
-
-from collections.abc import Sequence
-from typing import Optional
 
 import boto3
 import environ
@@ -105,7 +100,7 @@ def send_email(data: SingleEmailInput) -> SingleEmailSuccessResponse | SingleEma
 
         try:
             if isinstance(data.content, dict):
-                data_str: str | Any = (
+                data_str = (
                     data.content.get("template_data")
                     if isinstance(data.content.get("template_data"), str)
                     else json.dumps(data.content.get("template_data"))
@@ -128,7 +123,7 @@ def send_email(data: SingleEmailInput) -> SingleEmailSuccessResponse | SingleEma
                     FromEmailAddress=from_email_address,
                     Destination={"ToAddresses": data.destination},
                     Content={"Simple": {"Subject": {"Data": data.subject}, "Body": {"Text": {"Data": data.content}}}},
-                    ConfigurationSetName=data.ConfigurationSetName,
+                    ConfigurationSetName=data.ConfigurationSetName or "",
                 )
             return SingleEmailSuccessResponse(response)
         except EMAIL_CLIENT.exceptions.MessageRejected:
