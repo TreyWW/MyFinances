@@ -4,7 +4,7 @@ from django.http import HttpRequest
 from django.http import HttpResponseBadRequest
 from django.shortcuts import render
 
-from backend.models import Client
+from backend.models import Client, Receipt
 from backend.models import Invoice
 from backend.models import QuotaLimit
 from backend.models import Team
@@ -98,3 +98,19 @@ def open_modal(request: HttpRequest, modal_name, context_type=None, context_valu
     except ValueError as e:
         print(f"Something went wrong with loading modal {modal_name}. Error: {e}")
         return HttpResponseBadRequest("Something went wrong")
+
+
+def edit_modal_receipts(request: HttpRequest, modal_name, receipt_id):
+    receipt = Receipt.objects.get(pk=receipt_id)
+    template_name = f"modals/{modal_name}.html"
+    context = {
+        "receipt_id": receipt_id,
+        "receipt_name": receipt.name,
+        "receipt_date": receipt.date.strftime("%Y-%m-%d"),
+        "merchant_store_name": receipt.merchant_store,
+        "purchase_category": receipt.purchase_category,
+        "total_price": receipt.total_price,
+        "receipt_image": receipt.image,
+        "edit_flag": True,
+    }
+    return render(request, template_name, context)

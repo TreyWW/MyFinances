@@ -2,7 +2,7 @@
 {% fill "content" %}
 <form class="py-4"
       id="modal_receipts_upload-form"
-      hx-post="{% url 'api:receipts:new' %}"
+      hx-post="{% if edit_flag %}{% url 'api:receipts:edit' receipt_id=receipt_id %}{% else %}{% url 'api:receipts:new' %}{% endif %}"
       hx-swap="innerHTML"
       enctype="multipart/form-data"
       hx-encoding="multipart/form-data"
@@ -14,7 +14,11 @@
             Receipt Name
             <span class="required_star">*</span>
         </label>
-        <input required type="text" name="receipt_name" class="input input-bordered">
+        <input required
+               type="text"
+               name="receipt_name"
+               class="input input-bordered"
+               value="{{ receipt_name }}">
     </div>
     <div class="form-control">
         <label class="label justify-start">
@@ -25,19 +29,29 @@
                type="file"
                name="receipt_image"
                class="file-input file-input-bordered max-w-full"
-               accept="image/jpeg,image/png,image/jpg,application/pdf">
+               accept="image/jpeg,image/png,image/jpg,application/pdf"
+               value="{{ receipt_image }}">
     </div>
     <div class="form-control">
         <label class="label">Receipt Date</label>
-        <input type="date" name="receipt_date" class="input input-bordered">
+        <input type="date"
+               name="receipt_date"
+               class="input input-bordered"
+               value="{{ receipt_date }}">
     </div>
     <div class="form-control">
         <label class="label">Merchant/Store</label>
-        <input type="text" name="merchant_store" class="input input-bordered">
+        <input type="text"
+               name="merchant_store"
+               class="input input-bordered"
+               value="{{ merchant_store_name }}">
     </div>
     <div class="form-control">
         <label class="label">Purchase Category</label>
-        <input type="text" name="purchase_category" class="input input-bordered">
+        <input type="text"
+               name="purchase_category"
+               class="input input-bordered"
+               value="{{ purchase_category }}">
     </div>
     <div class="form-control">
         <label class="label justify-start">
@@ -47,7 +61,9 @@
         <input required
                type="number"
                name="total_price"
-               class="input input-bordered">
+               class="input input-bordered"
+               value="{{ total_price }}"
+               step="0.01">
     </div>
     <div class="modal-action">
         <button type="submit"

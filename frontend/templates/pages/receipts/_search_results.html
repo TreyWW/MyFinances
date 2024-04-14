@@ -63,11 +63,16 @@
                             <button type="button"
                                     onclick="modal_receipt_{{ row.id }}.showModal();"
                                     class="btn btn-outline btn-success btn-sm">Preview</button>
-                            <button type="button"
-                                    class="btn btn-outline btn-primary btn-sm"
-                                    hx-post="{% url 'api:receipts:edit' receipt_id=row.id %}"
-                                    hx-target="#items"
-                                    hx-swap="outerHTML">Edit</button>
+                            <button onclick="modal_receipts_upload.showModal();"
+                                    id="edit_receipt_button"
+                                    class="btn btn-outline btn-success btn-sm"
+                                    for="edit_receipt"
+                                    hx-trigger="click once"
+                                    hx-swap="beforeend"
+                                    hx-target="#modal_container"
+                                    hx-get="{% url "api:base:modal edit context" modal_name="receipts_upload" receipt_id=row.id %}">
+                                <i class="fa-solid fa-receipt pe-1"></i> Edit Receipt
+                            </button>
                             <button type="button"
                                     class="btn btn-outline btn-primary btn-sm"
                                     onclick="Download_file('{% url 'api:receipts:generate_download_link' receipt_id=row.id %}')">

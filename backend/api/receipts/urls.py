@@ -8,14 +8,14 @@ urlpatterns = [
         name="delete",
     ),
     path(
-        "edit/<int:receipt_id>/",
-        edit.edit_receipt,
-        name="edit",
-    ),
-    path(
         "new/",
         new.receipt_create,
         name="new",
+    ),
+    path(
+        "edit/<int:receipt_id>/",
+        edit.edit_receipt,
+        name="edit",
     ),
     path(
         "fetch/",
