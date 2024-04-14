@@ -29,6 +29,19 @@ def open_modal(request: HttpRequest, modal_name, context_type=None, context_valu
             elif context_type == "leave_team":
                 if request.user.teams_joined.filter(id=context_value).exists():
                     context["team"] = Team.objects.filter(id=context_value).first()
+            elif context_type == "edit_receipt":
+                receipt = Receipt.objects.get(pk=context_value)
+                template_name = f"modals/{modal_name}.html"
+                context = {
+                    "receipt_id": context_value,
+                    "receipt_name": receipt.name,
+                    "receipt_date": receipt.date.strftime("%Y-%m-%d"),
+                    "merchant_store_name": receipt.merchant_store,
+                    "purchase_category": receipt.purchase_category,
+                    "total_price": receipt.total_price,
+                    "receipt_image": receipt.image,
+                    "edit_flag": True,
+                }
             elif context_type == "edit_invoice_to":
                 invoice = context_value
                 try:
@@ -98,19 +111,3 @@ def open_modal(request: HttpRequest, modal_name, context_type=None, context_valu
     except ValueError as e:
         print(f"Something went wrong with loading modal {modal_name}. Error: {e}")
         return HttpResponseBadRequest("Something went wrong")
-
-
-def edit_modal_receipts(request: HttpRequest, modal_name, receipt_id):
-    receipt = Receipt.objects.get(pk=receipt_id)
-    template_name = f"modals/{modal_name}.html"
-    context = {
-        "receipt_id": receipt_id,
-        "receipt_name": receipt.name,
-        "receipt_date": receipt.date.strftime("%Y-%m-%d"),
-        "merchant_store_name": receipt.merchant_store,
-        "purchase_category": receipt.purchase_category,
-        "total_price": receipt.total_price,
-        "receipt_image": receipt.image,
-        "edit_flag": True,
-    }
-    return render(request, template_name, context)

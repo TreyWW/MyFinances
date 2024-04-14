@@ -13,11 +13,6 @@ urlpatterns = [
         name="modal retrieve with context",
     ),
     path(
-        "modals/<str:modal_name>/<int:receipt_id>/",
-        modal.edit_modal_receipts,
-        name="modal edit context",
-    ),
-    path(
         "notifications/get",
         notifications.get_notification_html,
         name="notifications get",
