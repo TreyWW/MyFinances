@@ -30,8 +30,10 @@ def open_modal(request: HttpRequest, modal_name, context_type=None, context_valu
                 if request.user.teams_joined.filter(id=context_value).exists():
                     context["team"] = Team.objects.filter(id=context_value).first()
             elif context_type == "edit_receipt":
-                receipt = Receipt.objects.get(pk=context_value)
-                template_name = f"modals/{modal_name}.html"
+                try:
+                    receipt = Receipt.objects.get(pk=context_value)
+                except Receipt.DoesNotExist:
+                    return render(request, template_name, context)
                 context = {
                     "receipt_id": context_value,
                     "receipt_name": receipt.name,
