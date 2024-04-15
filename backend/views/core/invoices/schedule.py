@@ -4,7 +4,6 @@ from django.shortcuts import render, redirect
 
 from backend.decorators import feature_flag_check
 from backend.models import Invoice, QuotaLimit
-from backend.utils import quota_usage_check_under
 
 
 @feature_flag_check("isInvoiceSchedulingEnabled", True)

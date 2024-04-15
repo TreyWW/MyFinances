@@ -2,18 +2,18 @@ from django.db.models import Q
 from django.http import HttpRequest
 from django.shortcuts import render, redirect
 
-from backend.models import Receipt
+from backend.models import Receipt, User
 
 
 def fetch_all_receipts(request: HttpRequest):
     context = {}
-    if not request.htmx:
+    if not request.htmx:  # type: ignore[attr-defined]
         return redirect("receipts dashboard")
 
     search_text = request.GET.get("search")
 
     results = Receipt.objects.order_by("-date")
-    if request.user.logged_in_as_team:
+    if isinstance(request.user, User) and request.user.logged_in_as_team:
         results = results.filter(organization=request.user.logged_in_as_team)
     else:
         results = results.filter(user=request.user)

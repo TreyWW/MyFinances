@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from functools import wraps
-from typing import Optional
 
 from django.contrib import messages
 from django.http import HttpResponse
@@ -11,7 +10,7 @@ from django.shortcuts import render
 from django.urls import reverse
 
 from backend.models import QuotaLimit
-from backend.utils import get_feature_status
+from backend.utils.feature_flags import get_feature_status
 
 
 def not_authenticated(view_func):

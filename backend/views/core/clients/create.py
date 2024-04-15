@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.models import AnonymousUser
 from django.http import HttpRequest
 from django.shortcuts import render, redirect
 
@@ -24,14 +25,15 @@ def create_client(request: HttpRequest):
         messages.error(request, error)
         return redirect("clients create")
 
-    if request.user.logged_in_as_team:
-        client = Client.objects.create(
-            organization=request.user.logged_in_as_team,
-        )
-    else:
-        client = Client.objects.create(
-            user=request.user,
-        )
+    if not isinstance(request.user, AnonymousUser):
+        if request.user.logged_in_as_team:
+            client = Client.objects.create(
+                organization=request.user.logged_in_as_team,
+            )
+        else:
+            client = Client.objects.create(
+                user=request.user,
+            )
 
     for model_field, new_value in client_details.items():
         setattr(client, model_field, new_value)

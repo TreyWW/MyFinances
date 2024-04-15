@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.models import AnonymousUser
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
@@ -6,7 +7,7 @@ from django.views.decorators.http import require_http_methods
 
 @require_http_methods(["POST"])
 def change_account_name(request: HttpRequest):
-    if not request.htmx:
+    if not request.htmx:  # type: ignore[attr-defined]
         return HttpResponse("Invalid Request", status=405)
 
     htmx_return = "base/toasts.html"
@@ -16,6 +17,10 @@ def change_account_name(request: HttpRequest):
 
     if not first_name and not last_name:
         messages.error(request, "Please enter a valid firstname or lastname.")
+        return render(request, htmx_return)
+
+    if isinstance(request.user, AnonymousUser):
+        messages.error(request, "Please log in to change your account name.")
         return render(request, htmx_return)
 
     if request.user.first_name == first_name and request.user.last_name == last_name:

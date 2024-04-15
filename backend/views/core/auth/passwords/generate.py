@@ -1,11 +1,12 @@
 from datetime import datetime, timedelta, date
 
+from django.contrib import messages
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from django.http import HttpRequest
 from django.shortcuts import redirect
-from django.urls import reverse, resolve
+from django.urls import reverse, resolve, NoReverseMatch
 from django.utils import timezone
 
 from backend.models import *
@@ -25,20 +26,24 @@ def set_password_generate(request: HttpRequest):
     USER = request.GET.get("id")
     NEXT = request.GET.get("next") or "index"
 
+    if USER is None:
+        messages.error(request, "User ID is missing")
+        return redirect("dashboard")
+
     if not USER.isnumeric():
         messages.error(request, "User ID must be a valid integer")
         return redirect("dashboard")
 
-    USER = User.objects.filter(id=USER).first()
+    USER_OBJ = User.objects.filter(id=USER).first()
 
-    if not USER:
+    if not USER_OBJ:
         messages.error(request, f"User not found")
         return redirect("dashboard")
     CODE = RandomCode(40)
     HASHED_CODE = make_password(CODE, salt=settings.SECRET_KEY)
 
     PWD_SECRET, created = PasswordSecret.objects.update_or_create(
-        user=USER,
+        user=USER_OBJ,
         defaults={"expires": date.today() + timedelta(days=3), "secret": HASHED_CODE},
     )
     PWD_SECRET.save()
@@ -50,7 +55,7 @@ def set_password_generate(request: HttpRequest):
     try:
         resolve(NEXT)
         return redirect(NEXT)
-    except resolve.NoReverseMatch:
+    except NoReverseMatch:
         return redirect("dashboard")
 
 

@@ -4,12 +4,14 @@ from django.http import HttpRequest, JsonResponse, HttpResponse, HttpResponseRed
 from django.shortcuts import render, redirect
 from django.urls import resolve, Resolver404, reverse
 from django.views.decorators.http import require_http_methods
+
 from backend.models import Receipt
+from backend.utils.http_utils import AuthenticatedHttpRequest
 
 
 @require_http_methods(["DELETE"])
 @login_required
-def receipt_delete(request: HttpRequest, id: int):
+def receipt_delete(request: AuthenticatedHttpRequest, id: int):
     try:
         receipt = Receipt.objects.get(id=id)
     except Receipt.DoesNotExist:

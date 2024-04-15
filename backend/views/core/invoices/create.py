@@ -7,7 +7,7 @@ from django.views.decorators.http import require_http_methods
 
 from backend.decorators import quota_usage_check
 from backend.models import Invoice, InvoiceItem, Client, InvoiceProduct, QuotaUsage
-from backend.utils import quota_usage_check_under
+from backend.utils.quota_limit_ops import quota_usage_check_under
 
 
 def invoice_page_get(request: HttpRequest):
