@@ -4,12 +4,13 @@ from typing import Optional, Union, Literal
 
 import pytz
 from django.utils import timezone
+from rest_framework.reverse import reverse
 
 from backend.models import Invoice, InvoiceOnetimeSchedule, AuditLog
 from infrastructure.aws.handler import get_event_bridge_scheduler
 from infrastructure.aws.iam.sfn import get_sfn_execute_role_arn
 from infrastructure.aws.step_functions.scheduler import get_step_function
-from settings.settings import AWS_TAGS_APP_NAME
+from settings.settings import AWS_TAGS_APP_NAME, SITE_URL
 
 
 @dataclass(frozen=True)
@@ -74,6 +75,8 @@ def create_onetime_schedule(data: CreateOnetimeScheduleInputData) -> CreateOneti
         AuditLog.objects.create(action="Failed to get STEP FUNCTION EXECUTION ROLE arn. Maybe you need to run `pulumi up`?")
         return ErrorResponse("Something went wrong on our end. Please contact support.")
 
+    URL = SITE_URL + reverse("webhooks:receive_scheduled_invoice")
+
     event_bridge_scheduler = get_event_bridge_scheduler()
     CREATED_SCHEDULE = event_bridge_scheduler.create_schedule(
         Name=f"{AWS_TAGS_APP_NAME}-scheduled-invoices-{data.invoice.id}-{schedule.id}",
@@ -92,6 +95,7 @@ def create_onetime_schedule(data: CreateOnetimeScheduleInputData) -> CreateOneti
                         "email_type": "1",
                     },
                     "body": {},
+                    "receive_url": URL,
                 }
             ),
         },

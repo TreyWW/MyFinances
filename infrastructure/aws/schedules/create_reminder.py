@@ -55,7 +55,7 @@ def create_reminder_schedule(data: CreateReminderInputData) -> CreateReminderRes
 
     data.reminder.save()
 
-    URL = SITE_URL + reverse("api:invoices:receive_scheduled_invoice")
+    URL = SITE_URL + reverse("webhooks:receive_scheduled_invoice")
 
     execute_role_arn = get_sfn_execute_role_arn()
 

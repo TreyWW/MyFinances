@@ -71,7 +71,7 @@ LOGIN_REQUIRED_IGNORE_VIEW_NAMES = [
     "social:begin",
     "social:complete",
     "social:disconnect",
-    "api:invoices:create_schedule",
+    "webhook:create_schedule",
 ]
 
 # @login_required()
@@ -85,7 +85,7 @@ LOGIN_REQUIRED_IGNORE_PATHS = [
     r"^/auth/login/(.*)/",
     r"^/auth/create_account(/.*)?$",
     r"^/accounts/github/login/callback/$",
-    r"^/api/invoices/schedules/receive/$",
+    r"^/webhooks/schedules/receive/$",
 ]
 # for some reason only allows "login" and not "login create account" or anything
 
@@ -99,7 +99,7 @@ AUTHENTICATION_BACKENDS = [
     "social_core.backends.google.GoogleOAuth2",
 ]
 
-SECRET_KEY = get_var("SECRET_KEY", required=True)
+SECRET_KEY = get_var("SECRET_KEY", default="secret_key")
 
 LOGIN_URL = "/auth/login/"
 LOGIN_REDIRECT_URL = "/dashboard"
@@ -265,26 +265,6 @@ AWS_TAGS_APP_NAME = get_var("AWS_TAGS_APP_NAME", default="myfinances")
 # APP_CONFIG = appconfig
 
 
-# MEDIA
-class CustomStaticStorage(S3Storage):
-    location = get_var("AWS_STATIC_LOCATION", default="static")
-    default_acl = None
-    bucket_name = get_var("AWS_STATIC_BUCKET_NAME")
-    custom_domain = get_var("AWS_STATIC_CUSTOM_DOMAIN")
-    region_name = get_var("AWS_STATIC_REGION_NAME")
-
-
-class CustomPublicMediaStorage(S3Storage):
-    location = get_var("AWS_MEDIA_PUBLIC_LOCATION", default="media/public")
-    bucket_name = get_var("AWS_MEDIA_PUBLIC_BUCKET_NAME")
-    file_overwrite = get_var("AWS_MEDIA_PUBLIC_FILE_OVERWRITE", default=False)
-    custom_domain = get_var("AWS_MEDIA_PUBLIC_CUSTOM_DOMAIN")
-    querystring_auth = False  # Removes auth from URL in case of shared media
-
-    access_key = get_var("AWS_MEDIA_PUBLIC_ACCESS_KEY_ID")
-    secret_key = get_var("AWS_MEDIA_PUBLIC_ACCESS_KEY")
-
-
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -312,8 +292,28 @@ LOGGING = {
 }
 
 
+# MEDIA
+class CustomStaticStorage(S3Storage):
+    location = get_var("AWS_STATIC_LOCATION", default="static")
+    default_acl = None
+    bucket_name = get_var("AWS_STATIC_BUCKET_NAME")
+    custom_domain = get_var("AWS_STATIC_CUSTOM_DOMAIN")
+    region_name = get_var("AWS_STATIC_REGION_NAME")
+
+
+class CustomPublicMediaStorage(S3Storage):
+    location = get_var("AWS_MEDIA_PUBLIC_LOCATION", default="public/")
+    bucket_name = get_var("AWS_MEDIA_PUBLIC_BUCKET_NAME")
+    file_overwrite = get_var("AWS_MEDIA_PUBLIC_FILE_OVERWRITE", default=False)
+    custom_domain = get_var("AWS_MEDIA_PUBLIC_CUSTOM_DOMAIN")
+    querystring_auth = False  # Removes auth from URL in case of shared media
+
+    access_key = get_var("AWS_MEDIA_PUBLIC_ACCESS_KEY_ID")
+    secret_key = get_var("AWS_MEDIA_PUBLIC_ACCESS_KEY")
+
+
 class CustomPrivateMediaStorage(S3Storage):
-    location = get_var("AWS_MEDIA_PRIVATE_LOCATION", default="media/private")
+    location = get_var("AWS_MEDIA_PRIVATE_LOCATION", default="private/")
     bucket_name = get_var("AWS_MEDIA_PRIVATE_BUCKET_NAME")
     custom_domain = get_var("AWS_MEDIA_PRIVATE_CUSTOM_DOMAIN")
     file_overwrite = get_var("AWS_MEDIA_PRIVATE_FILE_OVERWRITE", default=False)
