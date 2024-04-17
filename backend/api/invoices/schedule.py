@@ -2,7 +2,7 @@ import json
 
 from django.contrib import messages
 from django.db.models import Q
-from django.http import HttpResponse, HttpResponseForbidden
+from django.http import HttpResponse, HttpResponseForbidden, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils import timezone
@@ -28,16 +28,29 @@ from settings.helpers import send_email
 from settings.settings import AWS_TAGS_APP_NAME
 
 
+import logging
+
+logger = logging.getLogger(__name__)
+
+
 @require_POST
 @csrf_exempt
 @feature_flag_check("isInvoiceSchedulingEnabled", True, api=True)
 def receive_scheduled_invoice(request: HtmxHttpRequest):
-    print("Received Scheduled Invoice", flush=True)
+    """
+
+    Should return {"success": False, "message": "...", "status": ...} if an error occurred.
+
+    Otherwise, return {
+        "success": True
+    }
+
+    """
+    logger.debug("Received Scheduled Invoice. Now authenticating...")
     valid, reason, status = authenticate_api_key(request)
 
     if not valid:
-        print(f"[BACKEND] ERROR receiving scheduled invoice: {reason}", flush=True)
-        return HttpResponse(reason, status=status)
+        return JsonResponse({"message": reason, "success": False}, status=status)
 
     invoice_id = request.POST.get("invoice_id") or request.headers.get("invoice_id")
     schedule_id = request.POST.get("schedule_id") or request.headers.get("schedule_id")
@@ -45,22 +58,30 @@ def receive_scheduled_invoice(request: HtmxHttpRequest):
     email_type = request.POST.get("email_type") or request.headers.get("email_type")
 
     if not invoice_id or not schedule_id or not schedule_type:
-        return HttpResponse("Missing invoice_id or schedule_id or schedule_type", status=400)
+        return JsonResponse({"success": False, "message": "Missing invoice_id or schedule_id or schedule_type"}, status=400)
 
     try:
-        invoice = Invoice.objects.get(id=invoice_id)
+        invoice = (
+            Invoice.objects.select_related("client_to", "organization", "user")
+            .prefetch_related("onetime_invoice_schedules")
+            .get(id=invoice_id)
+        )
     except Invoice.DoesNotExist:
-        return HttpResponse("Invoice not found", status=404)
+        return JsonResponse({"success": False, "message": "Invoice not found"}, status=404)
+
+    logger.debug(f"Invoice found: {invoice}")
 
     try:
         schedule_type = int(schedule_type)
+        if schedule_type not in [1, 2]:
+            raise ValueError
     except ValueError:
-        return HttpResponse("Invalid schedule_type. Must be an integer; 1=one-time, 2=recurring", status=400)
+        return JsonResponse({"success": False, "message": "Invalid schedule_type. Must be an integer; 1=one-time, 2=recurring"}, status=400)
 
     if schedule_type == 1:
-        schedule = InvoiceOnetimeSchedule.objects.get(id=schedule_id)
+        schedule = invoice.onetime_invoice_schedules.get(id=schedule_id)
     else:
-        return HttpResponse("Invalid schedule_type. Must be an integer; 1=one-time, 2=recurring", status=400)
+        return JsonResponse({"success": False, "message": "Invalid schedule_type. Must be an integer; 1=one-time, 2=recurring"}, status=400)
 
     if email_type == "client_email":
         email = invoice.client_email
@@ -70,7 +91,7 @@ def receive_scheduled_invoice(request: HtmxHttpRequest):
         email = None
 
     if not email:
-        return HttpResponse("No client email address stored", status=400)
+        return JsonResponse({"success": False, "message": "No client email address stored", "status": 400})
 
     invoice_url_object = InvoiceURL.objects.create(
         invoice=invoice,
@@ -108,13 +129,13 @@ def receive_scheduled_invoice(request: HtmxHttpRequest):
         schedule.status = schedule.StatusTypes.FAILED
         schedule.received = False
         schedule.save()
-        return HttpResponse(f"Failed to send email: {email_response.message}", status=500)
+        return JsonResponse({"success": False, "message": f"Failed to send email: {email_response.message}"}, status=500)
 
     schedule.status = schedule.StatusTypes.COMPLETED
     schedule.received = True
     schedule.save()
 
-    return HttpResponse("Sent", status=200)
+    return JsonResponse({"success": True})
 
 
 @csrf_exempt
