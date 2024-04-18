@@ -463,13 +463,17 @@ class InvoiceSchedule(models.Model):
     class Meta:
         abstract = True
 
-    def set_status(self, status):
+    def set_status(self, status, save=True):
         self.status = status
-        self.save()
+        if save:
+            self.save()
+        return self
 
-    def set_received(self, status: bool = True):
+    def set_received(self, status: bool = True, save=True):
         self.received = status
-        self.save()
+        if save:
+            self.save()
+        return self
 
 
 class InvoiceOnetimeSchedule(InvoiceSchedule):

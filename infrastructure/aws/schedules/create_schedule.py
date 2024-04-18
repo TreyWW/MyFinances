@@ -75,7 +75,7 @@ def create_onetime_schedule(data: CreateOnetimeScheduleInputData) -> CreateOneti
         AuditLog.objects.create(action="Failed to get STEP FUNCTION EXECUTION ROLE arn. Maybe you need to run `pulumi up`?")
         return ErrorResponse("Something went wrong on our end. Please contact support.")
 
-    URL = SITE_URL + reverse("webhooks:receive_scheduled_invoice")
+    URL = SITE_URL + reverse("webhooks:receive_scheduled_invoice schedule")
 
     event_bridge_scheduler = get_event_bridge_scheduler()
     CREATED_SCHEDULE = event_bridge_scheduler.create_schedule(
@@ -91,7 +91,7 @@ def create_onetime_schedule(data: CreateOnetimeScheduleInputData) -> CreateOneti
                     "headers": {
                         "invoice_id": str(data.invoice.id),
                         "schedule_id": str(schedule.id),
-                        "schedule_type": "1",
+                        "schedule_occurrence": "once",
                         "email_type": "1",
                     },
                     "body": {},

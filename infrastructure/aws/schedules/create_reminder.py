@@ -47,7 +47,7 @@ def create_reminder_schedule(data: CreateReminderInputData) -> CreateReminderRes
 
     scheduler_step_function = get_step_function()
 
-    if not scheduler_step_function.get("stateMachineArn"):
+    if not scheduler_step_function or not scheduler_step_function.get("stateMachineArn"):
         print("[AWS] [SFN] Step function not found", flush=True)
         return ErrorResponse("Step function not found")
 
@@ -55,7 +55,7 @@ def create_reminder_schedule(data: CreateReminderInputData) -> CreateReminderRes
 
     data.reminder.save()
 
-    URL = SITE_URL + reverse("webhooks:receive_scheduled_invoice")
+    URL = SITE_URL + reverse("webhooks:receive_scheduled_invoice reminder")
 
     execute_role_arn = get_sfn_execute_role_arn()
 

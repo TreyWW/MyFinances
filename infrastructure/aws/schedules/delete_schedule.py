@@ -22,7 +22,9 @@ DeleteScheduleResponse = SuccessResponse | ErrorResponse
 def delete_schedule(invoice_id, schedule_id) -> DeleteScheduleResponse:
     try:
         print(f"[AWS] [SCHEDULE] Deleting schedule: {invoice_id}-{schedule_id}")
-        event_bridge_scheduler.delete_schedule(Name=f"{AWS_TAGS_APP_NAME}-scheduled-invoices-{invoice_id}-{schedule_id}")
+        event_bridge_scheduler.delete_schedule(
+            Name=f"{AWS_TAGS_APP_NAME}-scheduled-invoices-{invoice_id}-{schedule_id}", GroupName=f"{AWS_TAGS_APP_NAME}-invoice-schedules"
+        )
 
         return SuccessResponse("Schedule deleted")
 
