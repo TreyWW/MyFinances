@@ -754,6 +754,13 @@ class QuotaUsage(models.Model):
         except QuotaLimit.DoesNotExist:
             return "Not Found"
 
+        Notification.objects.create(
+            user=user,
+            action="redirect",
+            action_value=f"/dashboard/quotas/{quota_limit.slug.split('-')[0]}/",
+            message=f"You have reached the limit for {quota_limit.name}",
+        )
+
         return cls.objects.create(user=user, quota_limit=quota_limit, extra_data=extra_data)
 
     @classmethod
@@ -774,6 +781,7 @@ class QuotaIncreaseRequest(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     quota_limit = models.ForeignKey(QuotaLimit, on_delete=models.CASCADE, related_name="quota_increase_requests")
+    reason = models.CharField(max_length=1000)
     new_value = models.IntegerField()
     current_value = models.IntegerField()
     updated_at = models.DateTimeField(auto_now=True)

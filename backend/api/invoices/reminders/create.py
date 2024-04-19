@@ -4,7 +4,8 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.utils import timezone
 
-from backend.models import Invoice, InvoiceReminder
+from backend.models import Invoice, InvoiceReminder, QuotaUsage
+from backend.utils import quota_usage_check_under
 from infrastructure.aws.schedules.create_reminder import CreateReminderInputData, create_reminder_schedule
 
 from backend.types.htmx import HtmxHttpRequest
@@ -26,6 +27,11 @@ def get_datetime_from_reminder(reminder: InvoiceReminder) -> str:
 def create_reminder_view(request: HtmxHttpRequest) -> HttpResponse:
     if not request.htmx:
         return redirect("invoices:dashboard")
+
+    check_usage = quota_usage_check_under(request, "invoices-schedules", api=True, htmx=True)
+
+    if not isinstance(check_usage, bool):
+        return check_usage
 
     # Extract POST data
     invoice_id = request.POST.get("invoice_id") or request.POST.get("invoice")
@@ -81,6 +87,7 @@ def create_reminder_view(request: HtmxHttpRequest) -> HttpResponse:
     # Handle result of creating reminder schedule
     if REMINDER.success:
         reminder.save()
+        QuotaUsage.create_str(request.user, "invoices-schedules", REMINDER.reminder.id)
         messages.success(request, "Schedule created!")
         return render(request, "pages/invoices/schedules/reminders/_table_row.html", {"reminder": REMINDER.reminder})
     else:

@@ -50,7 +50,8 @@ def create_schedule(request: HtmxHttpRequest):
             messages.error(request, "Woah, slow down!")
             return render(request, "base/toasts.html")
 
-        check_usage = quota_usage_check_under(request, "invoices-schedules")
+        check_usage = quota_usage_check_under(request, "invoices-schedules", api=True, htmx=True)
+
         if not isinstance(check_usage, bool):
             return check_usage
 

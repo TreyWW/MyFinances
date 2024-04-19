@@ -7,6 +7,14 @@
       hx-target='tbody[data-hx-swap="reminders"]'
       hx-swap="beforeend">
     {% csrf_token %}
+    {% if above_quota_usage %}
+        <div class="alert border border-error mt-2 mb-6">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <p>
+                You have exceeded your quota. You can either wait until the end of the month, or apply for a higher quota.
+            </p>
+        </div>
+    {% endif %}
     <div class="form-control w-full">
         <label class="label justify-start">
             Reminder Type
@@ -37,12 +45,18 @@
     </div>
     {% component "pages:invoices:schedules:schedules:input-email_to_send_to" %}
     <div class="modal-action">
-        <button type="submit"
-                id="modal_create_reminder-submit"
-                class="btn btn-primary"
-                _="on click if #modal_create_reminder-form.checkValidity() call #modal_create_reminder.close() end">
-            Create
-        </button>
+        {% if above_quota_usage %}
+            <button type="button"
+                    data-tip="You have exceeded your quota. You can either wait until the end of the month, or apply for a higher quota."
+                    class="btn btn-outline tooltip tooltip-warning tooltip-open btn-error">Create</button>
+        {% else %}
+            <button type="submit"
+                    id="modal_create_reminder-submit"
+                    class="btn btn-primary"
+                    _="on click if #modal_create_reminder-form.checkValidity() call #modal_create_reminder.close() end">
+                Create
+            </button>
+        {% endif %}
         <button type="reset" class="btn btn-error">Reset</button>
         <button type="button"
                 _="on click call #modal_create_reminder.close()"
