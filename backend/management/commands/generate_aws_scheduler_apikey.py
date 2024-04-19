@@ -16,11 +16,17 @@ class Command(BaseCommand):
         self.stdout.write(
             f"""
         NOTE: Keep this key secret. It is used to authenticate your API requests with the AWS EventBridge API.
-        
+
         Your API Key: {key}
-        
-        You should put this key under "/infrastructure/aws/terraform/terraform.tfvars" and then add this line: 
-        
-        api_destination-api_key = "{key}"
+
+        To use this API Key for development you can use:
+
+        pulumi config set api_destination-api_key {key}
+        pulumi up
+
+        If you would like to use it for production use:
+        pulumi stack select production
+        pulumi config set api_destination-api_key {key}
+        pulumi up
         """
         )

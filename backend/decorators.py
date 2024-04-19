@@ -1,7 +1,8 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from functools import wraps
-from typing import Optional
+from typing import Optional, TypedDict, List
 
 from django.contrib import messages
 from django.http import HttpResponse
@@ -82,6 +83,35 @@ def feature_flag_check(flag, status=True, api=False, htmx=False):
             except KeyError:
                 pass
             return HttpResponseRedirect(reverse("dashboard"))
+
+        return wrapper
+
+    return decorator
+
+
+class FlagItem(TypedDict):
+    name: str
+    desired: bool
+
+
+def feature_flag_check_multi(flag_list: list[FlagItem], api=False, htmx=False):
+    """
+    Checks if at least one of the flags in the list is the desired status
+    """
+
+    def decorator(view_func):
+        @wraps(view_func)
+        def wrapper(request, *args, **kwargs):
+            if not any(get_feature_status(flag["name"]) == flag["desired"] for flag in flag_list):
+                if api and htmx:
+                    messages.error(request, "This feature is currently disabled.")
+                    return render(request, "base/toasts.html")
+                elif api:
+                    return HttpResponse(status=403, content="This feature is currently disabled.")
+                messages.error(request, "This feature is currently disabled.")
+                return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+
+            return view_func(request, *args, **kwargs)
 
         return wrapper
 

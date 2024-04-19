@@ -1,5 +1,9 @@
 # Setting up AWS
 
+!!! danger
+	We are currently not publishing a stable updated copy of the infrastructure deployment. We may update this time to time
+	but it will likely not be production ready.
+
 First you'll need to setup an AWS Account and login to the AWS CLI on your device.
 
 You will also need [`pulumi`](https://www.pulumi.com/docs/install/) to be installed. In their installation guide you can also
@@ -19,6 +23,10 @@ cd infrastructure/aws/pulumi/
 
 pulumi up
 ```
+
+!!! warning
+	You may incur a bill which is not our responsibility. You can use the aws [calculator](https://calculator.aws/#/) to
+	calculate what your usage may be.
 
 Now you should see a list of things, use the arrow keys to go down to "details" to see exactly what will be created.
 

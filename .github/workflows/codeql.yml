@@ -14,8 +14,22 @@ name: "CodeQL"
 on:
   push:
     branches: [ "main" ]
+    paths:
+      - 'backend/**'
+      - 'components/**'
+      - 'infrastructure/**'
+      - 'settings/**'
+      - 'tests/**'
+      - 'manage.py'
   pull_request:
     branches: [ "main" ]
+    paths:
+      - 'backend/**'
+      - 'components/**'
+      - 'infrastructure/**'
+      - 'settings/**'
+      - 'tests/**'
+      - 'manage.py'
 
 jobs:
   analyze:

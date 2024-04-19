@@ -1,0 +1,27 @@
+<div class="w-full p-6 shadow-xl card bg-base-100">
+    <h2 class="text-center text-xl font-medium">Create onetime scheduled send</h2>
+    <div class="divider"></div>
+    <form method="post"
+          hx-post="{% url "api:invoices:create_schedule" %}"
+          hx-swap="beforeend"
+          hx-target='tbody[data-hx-swap="onetime_schedules"]'
+          class="group"
+          hx-disabled-elt=":first-child button.btn-primary">
+        <input type="hidden" name="option" value="one-time">
+        <input type="hidden" name="invoice" value="{{ invoice.id }}">
+        <div class="form-control">
+            <label class="label justify-start">
+                Datetime of send
+                <span class="required_star">*</span>
+            </label>
+            <input type="datetime-local"
+                   name="date_time"
+                   class="flex-grow input input-bordered invalid:[&:not(:placeholder-shown):not(:focus)]:input-error"
+                   required />
+        </div>
+        {% component "pages:invoices:schedules:schedules:input-email_to_send_to" client_to=invoice.client_to client_email=invoice.client_email %}
+        <button class="mt-3 w-full btn btn-primary group-invalid:btn-outline group-invalid:btn-error group-invalid:btn-disabled group-invalid:pointer-events-none group-invalid:disabled group-invalid:opacity-30">
+            Create
+        </button>
+    </form>
+</div>
