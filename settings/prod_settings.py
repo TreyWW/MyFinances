@@ -8,10 +8,11 @@ environ.Env.read_env()
 
 DEBUG = False
 
-CSRF_TRUSTED_ORIGINS = [
-    f'https://{os.environ.get("URL")}',
-    f'https://{os.environ.get("PROXY_IP")}',
-]
+# add a check for https://
+URL_LIST = [url for url in os.environ.get("URL", "").split(",")]
+URL_LIST_HTTPS = [URL if URL.startswith("https://") else f"https://{URL}" for URL in URL_LIST]
+
+CSRF_TRUSTED_ORIGINS = [f'https://{os.environ.get("PROXY_IP")}', f'https://{os.environ.get("URL")}'] + URL_LIST_HTTPS
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 DB_TYPE = os.environ.get("DATABASE_TYPE")
@@ -40,6 +41,6 @@ DATABASES = {
 print(f"[BACKEND] Using {DB_TYPE} database: {os.environ.get('DATABASE_NAME')}")
 
 
-ALLOWED_HOSTS = [os.environ.get("URL")]
+ALLOWED_HOSTS = [os.environ.get("URL")] + URL_LIST
 
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "0"  # THIS WILL ALLOW HTTP IF IT'S SET TO 1 - NOT RECOMMENDED

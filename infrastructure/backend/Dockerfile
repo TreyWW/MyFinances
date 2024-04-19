@@ -9,8 +9,6 @@ ENV POETRY_NO_INTERACTION=1 \
 
 WORKDIR /MyFinances
 
-COPY . .
-
 #RUN #apk --no-cache --update add \
 #    mariadb-connector-c-dev \
 #    py-pip \
@@ -22,6 +20,8 @@ COPY . .
 
 # Install build dependencies
 RUN apk add --virtual .build-deps py-pip musl-dev gcc
+
+COPY pyproject.toml poetry.lock ./
 
 # Install MySQL dependencies and packages if DATABASE_TYPE is mysql
 RUN if [ "${DATABASE_TYPE}" = "mysql" ]; then \
@@ -39,6 +39,8 @@ RUN if [ "${TESTING}" != "true" ] || [ "${DATABASE_TYPE}" = "postgres" ]; then \
 RUN apk del .build-deps
 
 RUN poetry install --without dev,mysql,postgres --no-root && rm -rf $POETRY_CACHE_DIR
+
+COPY . .
 
 RUN chmod +x infrastructure/backend/scripts/*
 RUN chmod +x infrastructure/backend/scripts/tests/*

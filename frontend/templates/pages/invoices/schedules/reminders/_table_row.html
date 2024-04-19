@@ -1,0 +1,55 @@
+<tr data-onetime-id="{{ reminder.id }}">
+    <td class="text-secondary">{{ reminder.id }}</td>
+    <td>
+        {% if reminder.status == "completed" %}
+            <div class="tooltip" data-tip="Sent invoice">
+                <i class="fa-solid fa-check text-success"></i>
+            </div>
+        {% elif reminder.status == "pending" %}
+            <div class="tooltip" data-tip="Pending">
+                <i class="fa-solid fa-clock text-neutral-content"></i>
+            </div>
+        {% elif reminder.status == "deleting" %}
+            <div class="tooltip" data-tip="Currently being deleted">
+                <i class="fa-solid fa-warning text-primary"></i>
+            </div>
+        {% elif reminder.status == "cancelled" %}
+            <div class="tooltip"
+                 data-tip="Schedule was cancelled, didn't send invoice.">
+                <i class="fa-solid fa-cancel text-error"></i>
+            </div>
+        {% elif reminder.status == "creating" %}
+            <div class="tooltip" data-tip="Schedule is currently being created.">
+                <i class="fa-solid fa-hourglass-half text-primary"></i>
+            </div>
+        {% elif reminder.status == "failed" %}
+            <div class="tooltip drop-shadow drop-shadow-glow_red"
+                 data-tip="Schedule failed.">
+                <i class="fa-solid fa-exclamation-triangle text-warning"></i>
+            </div>
+        {% endif %}
+    </td>
+    <td>
+        {% if reminder.reminder_type == "before_due" %}
+            <strong>{{ reminder.days }}</strong> days before due
+        {% elif reminder.reminder_type == "after_due" %}
+            <strong>{{ reminder.days }}</strong> days after due
+        {% elif reminder.reminder_type == "on_overdue" %}
+            <strong>On due date</strong>
+        {% endif %}
+    </td>
+    <td>
+        <div class="tooltip tooltip-top" data-tip="Cancel reminder">
+            {% if reminder.status == schedule.StatusTypes.DELETING or reminder.status == reminder.StatusTypes.PENDING %}
+                <button class="btn btn-error btn-outline btn-sm"
+                        {% if reminder.status == reminder.StatusTypes.DELETING %}disabled{% endif %}
+                        hx-post="{% url "api:invoices:reminders:cancel" reminder_id=reminder.id %}"
+                        hx-target="closest tr"
+                        hx-swap="outerHTML">
+                    <i class="fa-solid fa-cancel"></i>
+                </button>
+            {% endif %}
+        </div>
+    </td>
+</tr>
+{% component "messages_list" %}

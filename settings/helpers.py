@@ -128,7 +128,7 @@ def send_email(data: SingleEmailInput) -> SingleEmailSuccessResponse | SingleEma
                     FromEmailAddress=from_email_address,
                     Destination={"ToAddresses": data.destination},
                     Content={"Simple": {"Subject": {"Data": data.subject}, "Body": {"Text": {"Data": data.content}}}},
-                    ConfigurationSetName=data.ConfigurationSetName,
+                    ConfigurationSetName=data.ConfigurationSetName or "",
                 )
             return SingleEmailSuccessResponse(response)
         except EMAIL_CLIENT.exceptions.MessageRejected:

@@ -27,4 +27,4 @@ def get_step_function() -> None | StateMachineListItemTypeDef:
             print("[AWS] [SFN] Found more than one scheduler step function! Not yet implemented a way to filter.", flush=True)
         raise Exception("More than one invoice scheduler function found. Not yet implemented a way to filter.")
 
-    raise Exception("No invoice scheduler function found. Run terraform apply and try again.")
+    raise Exception("No invoice scheduler function found. Run `pulumi up` and try again.")
