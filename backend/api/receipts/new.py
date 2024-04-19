@@ -34,22 +34,25 @@ def receipt_create(request: HttpRequest):
     if not date:
         date = None
 
-    receipt = Receipt(
-        name=name,
-        image=file,
-        date=date,
-        merchant_store=merchant_store,
-        purchase_category=purchase_category,
-        total_price=total_price,
-    )
+    receipt_data = {
+        "name": name,
+        "image": file,
+        "date": date,
+        "merchant_store": merchant_store,
+        "purchase_category": purchase_category,
+        "total_price": total_price,
+    }
 
     if request.user.logged_in_as_team:
-        receipt.organization = request.user.logged_in_as_team
+        receipt_data["organization"] = request.user.logged_in_as_team
+        receipts = Receipt.objects.filter(organization=request.user.logged_in_as_team).order_by("-date")
     else:
-        receipt.user = request.user
+        receipt_data["user"] = request.user
+        receipts = Receipt.objects.filter(user=request.user).order_by("-date")
 
-    receipt.save()
+    receipt = Receipt(**receipt_data)
     QuotaUsage.create_str(request.user, "receipts-count", receipt.id)
+    receipt.save()
     # r = requests.post(
     #     "https://ocr.asprise.com/api/receipt",
     #     data={
@@ -74,5 +77,5 @@ def receipt_create(request: HttpRequest):
     return render(
         request,
         "pages/receipts/_search_results.html",
-        {"receipts": Receipt.objects.filter(user=request.user).order_by("-date")},
+        {"receipts": receipts},
     )
