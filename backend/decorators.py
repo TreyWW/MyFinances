@@ -12,7 +12,7 @@ from django.shortcuts import render
 from django.urls import reverse
 
 from backend.models import QuotaLimit
-from backend.utils import get_feature_status
+from backend.utils.feature_flags import get_feature_status
 
 
 def not_authenticated(view_func):

@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from django.utils import timezone
 
 from backend.models import Invoice, InvoiceReminder, QuotaUsage
-from backend.utils import quota_usage_check_under
+from backend.utils.quota_limit_ops import quota_usage_check_under
 from infrastructure.aws.schedules.create_reminder import CreateReminderInputData, create_reminder_schedule
 
 from backend.types.htmx import HtmxHttpRequest
