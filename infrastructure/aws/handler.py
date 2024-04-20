@@ -26,9 +26,16 @@ if not any(arg in sys.argv[1:] for arg in ["test", "migrate", "makemigrations"])
             "set the isInvoiceSchedulingEnabled feature flag to False"
         )
 
+    if not AWS_SCHEDULES_ENABLED and get_feature_status("areInvoiceRemindersEnabled", should_use_cache=False):
+        raise ValueError(
+            "If using schedules, the variables MUST be set. If you are not going to use schedules, "
+            "set the areInvoiceRemindersEnabled feature flag to False"
+        )
+
     if not AWS_SCHEDULES_ENABLED:
         try:
-            FeatureFlags.objects.get(name="isInvoiceSchedulingEnabled").value = False
+            FeatureFlags.objects.get(name="isInvoiceSchedulingEnabled").enable()
+            FeatureFlags.objects.get(name="areInvoiceRemindersEnabled").enable()
         except FeatureFlags.DoesNotExist:
             ...
 

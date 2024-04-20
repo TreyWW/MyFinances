@@ -1,0 +1,67 @@
+{% component_block "modal" id="modal_create_reminder" start_open="true" title="Create Reminder" %}
+{% fill "content" %}
+<form class="py-4"
+      id="modal_create_reminder-form"
+      hx-post="{% url 'api:invoices:reminders:create' %}"
+      hx-include='input[name="invoice_id"]'
+      hx-target='tbody[data-hx-swap="reminders"]'
+      hx-swap="beforeend">
+    {% csrf_token %}
+    {% if above_quota_usage %}
+        <div class="alert border border-error mt-2 mb-6">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <p>
+                You have exceeded your quota. You can either wait until the end of the month, or apply for a higher quota.
+            </p>
+        </div>
+    {% endif %}
+    <div class="form-control w-full">
+        <label class="label justify-start">
+            Reminder Type
+            <span class="required_star">*</span>
+        </label>
+        <select required
+                class="select select-bordered"
+                name="reminder_type"
+                id="modal_input-reminder_type"
+                _="on change if my.value == 'on_overdue' set #modal_input-days.disabled to true set #modal_input-days.required to false add .hidden to #modal_input-days.parentElement else set #modal_input-days.disabled to false set #modal_input-days.required to true remove .hidden from #modal_input-days.parentElement ">
+            <option value="before_due" selected>Before Due</option>
+            <option value="after_due">After Due</option>
+            <option value="on_overdue">On Overdue Day</option>
+        </select>
+    </div>
+    <div class="form-control mt-2">
+        <label class="label justify-start">
+            Days
+            <span class="required_star">*</span>
+        </label>
+        <input id="modal_input-days"
+               type="number"
+               min="0"
+               max="31"
+               name="days"
+               class="input input-bordered input-block"
+               required>
+    </div>
+    {% component "pages:invoices:schedules:schedules:input-email_to_send_to" %}
+    <div class="modal-action">
+        {% if above_quota_usage %}
+            <button type="button"
+                    data-tip="You have exceeded your quota. You can either wait until the end of the month, or apply for a higher quota."
+                    class="btn btn-outline tooltip tooltip-warning tooltip-open btn-error">Create</button>
+        {% else %}
+            <button type="submit"
+                    id="modal_create_reminder-submit"
+                    class="btn btn-primary"
+                    _="on click if #modal_create_reminder-form.checkValidity() call #modal_create_reminder.close() end">
+                Create
+            </button>
+        {% endif %}
+        <button type="reset" class="btn btn-error">Reset</button>
+        <button type="button"
+                _="on click call #modal_create_reminder.close()"
+                class="btn">Close</button>
+    </div>
+</form>
+{% endfill %}
+{% endcomponent_block %}
