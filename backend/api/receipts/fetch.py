@@ -1,13 +1,13 @@
 from django.db.models import Q
-from django.http import HttpRequest
 from django.shortcuts import render, redirect
 
 from backend.models import Receipt, User
+from backend.types.htmx import HtmxHttpRequest
 
 
-def fetch_all_receipts(request: HttpRequest):
+def fetch_all_receipts(request: HtmxHttpRequest):
     context = {}
-    if not request.htmx:  # type: ignore[attr-defined]
+    if not request.htmx:
         return redirect("receipts dashboard")
 
     search_text = request.GET.get("search")
@@ -23,7 +23,7 @@ def fetch_all_receipts(request: HttpRequest):
     }
 
     results = Receipt.objects.order_by("-date")
-    if isinstance(request.user, User) and request.user.logged_in_as_team:
+    if request.user.logged_in_as_team:
         results = results.filter(organization=request.user.logged_in_as_team)
     else:
         results = results.filter(user=request.user)

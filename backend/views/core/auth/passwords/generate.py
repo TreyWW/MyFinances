@@ -4,12 +4,12 @@ from django.contrib import messages
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
-from django.http import HttpRequest
 from django.shortcuts import redirect
 from django.urls import reverse, resolve, NoReverseMatch
 from django.utils import timezone
 
 from backend.models import *
+from backend.types.htmx import HtmxHttpRequest
 
 
 def msg_if_valid_email_then_sent(request):
@@ -19,16 +19,12 @@ def msg_if_valid_email_then_sent(request):
     )
 
 
-def set_password_generate(request: HttpRequest):
+def set_password_generate(request: HtmxHttpRequest):
     if not request.user.is_superuser or not request.user.is_staff:
         return redirect("dashboard")
 
     USER = request.GET.get("id")
     NEXT = request.GET.get("next") or "index"
-
-    if USER is None:
-        messages.error(request, "User ID is missing")
-        return redirect("dashboard")
 
     if not USER.isnumeric():
         messages.error(request, "User ID must be a valid integer")
@@ -59,7 +55,7 @@ def set_password_generate(request: HttpRequest):
         return redirect("dashboard")
 
 
-def password_reset(request: HttpRequest):
+def password_reset(request: HtmxHttpRequest):
     EMAIL = request.POST.get("email")
 
     # if not EMAIL_SERVER_ENABLED:

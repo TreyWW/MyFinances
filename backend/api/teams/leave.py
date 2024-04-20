@@ -1,18 +1,19 @@
 from django.contrib import messages
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpResponse
 from django.shortcuts import render
 
 from backend.models import *
+from backend.types.htmx import HtmxHttpRequest
 
 
-def return_error_notif(request: HttpRequest, message: str):
+def return_error_notif(request: HtmxHttpRequest, message: str):
     messages.error(request, message)
     resp = render(request, "partials/messages_list.html", status=200)
     resp["HX-Trigger-After-Swap"] = "leave_team_error"
     return resp
 
 
-def leave_team_confirmed(request: HttpRequest, team_id):
+def leave_team_confirmed(request: HtmxHttpRequest, team_id):
     team: Team | None = Team.objects.filter(id=team_id).first()
 
     if not team:
@@ -21,7 +22,7 @@ def leave_team_confirmed(request: HttpRequest, team_id):
     if team.leader == request.user:  # may be changed in the future. If no members allow delete
         return return_error_notif(request, "You cannot leave your own team")
 
-    if isinstance(request.user, User) and request.user.teams_joined.filter(id=team_id).exists():
+    if request.user.teams_joined.filter(id=team_id).exists():
         team.members.remove(request.user)
         messages.success(request, f"You have successfully left the team {team.name}")
         response = HttpResponse(status=200)
