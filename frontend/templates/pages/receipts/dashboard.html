@@ -1,7 +1,9 @@
 {% extends 'base/base.html' %}
 {% csrf_token %}
 {% block content %}
-    <div class="card w-full p-6 bg-base-100 shadow-xl mt-2">
+    <form id="filter_list_storage">
+    </form>
+    <div class="card bg-base-100 p-6 mb-4 h-screen">
         <h2 class="text-xl">Receipts</h2>
         <button onclick="modal_receipts_upload.showModal();"
                 id="upload_receipt_button"

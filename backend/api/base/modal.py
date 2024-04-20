@@ -5,7 +5,7 @@ from django.http import HttpRequest
 from django.http import HttpResponseBadRequest
 from django.shortcuts import render
 
-from backend.models import Client
+from backend.models import Client, Receipt
 from backend.models import Invoice
 from backend.models import QuotaLimit
 from backend.models import Team
@@ -31,6 +31,23 @@ def open_modal(request: HttpRequest, modal_name, context_type=None, context_valu
             elif context_type == "leave_team":
                 if request.user.teams_joined.filter(id=context_value).exists():
                     context["team"] = Team.objects.filter(id=context_value).first()
+            elif context_type == "edit_receipt":
+                try:
+                    receipt = Receipt.objects.get(pk=context_value)
+                except Receipt.DoesNotExist:
+                    return render(request, template_name, context)
+                receipt_date = receipt.date.strftime("%Y-%m-%d") if receipt.date else ""
+                context = {
+                    "modal_id": f"modal_{receipt.id}_receipts_upload",
+                    "receipt_id": context_value,
+                    "receipt_name": receipt.name,
+                    "receipt_date": receipt_date,
+                    "merchant_store_name": receipt.merchant_store,
+                    "purchase_category": receipt.purchase_category,
+                    "total_price": receipt.total_price,
+                    "has_receipt_image": True if receipt.image else False,
+                    "edit_flag": True,
+                }
             elif context_type == "edit_invoice_to":
                 invoice = context_value
                 try:
