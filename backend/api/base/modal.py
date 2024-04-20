@@ -48,6 +48,8 @@ def open_modal(request: HttpRequest, modal_name, context_type=None, context_valu
                     "has_receipt_image": True if receipt.image else False,
                     "edit_flag": True,
                 }
+            elif context_type == "upload_receipt":
+                context["modal_id"] = f"modal_receipts_upload"
             elif context_type == "edit_invoice_to":
                 invoice = context_value
                 try:
