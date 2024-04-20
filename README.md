@@ -410,7 +410,7 @@ Thank you for your contributions!
                         </sub>
                     </a>
                     <br />
-                    <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Aatulanand25" title="Backend">🖥</a><a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Aatulanand25" title="Frontend">🎨</a>
+                    <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Aatulanand25" title="Backend">🖥</a><a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Aatulanand25" title="Frontend">🎨</a><a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Aatulanand25" title="Bug Fixes">🐞</a>
                 </td>
                 </td><td>
                 <td align="center">
