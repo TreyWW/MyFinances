@@ -28,6 +28,7 @@ def fetch_all_invoices(request: HttpRequest):
 
     # Get filter and sort parameters from the request
     sort_by = request.GET.get("sort")
+    sort_direction = request.GET.get("sort_direction")
     action_filter_type = request.GET.get("filter_type")
     action_filter_by = request.GET.get("filter")
 
@@ -44,18 +45,6 @@ def fetch_all_invoices(request: HttpRequest):
             "100+": True if request.GET.get("amount_100+") else False,
         },
     }
-
-    # Validate and sanitize the sort_by parameter
-    all_sort_options = ["date_due", "id", "payment_status"]
-    context["all_sort_options"] = all_sort_options
-    if sort_by == "date_due":
-        sort_by = "-date_due"
-    elif sort_by == "id":
-        sort_by = "-id"
-    elif sort_by == "payment_status":
-        sort_by = "-payment_status"
-    else:
-        sort_by = "id"
 
     # Fetch invoices for the user, prefetch related items, and select specific fields
     if request.user.logged_in_as_team:
@@ -139,13 +128,27 @@ def fetch_all_invoices(request: HttpRequest):
     # Apply OR conditions to the invoices queryset
     invoices = invoices.filter(or_conditions)
 
+    # Validate and sanitize the sort_by parameter
+    all_sort_options = ["date_due", "id", "payment_status"]
+    context["all_sort_options"] = all_sort_options
+
     # Apply sorting to the invoices queryset
-    if sort_by:
-        invoices = invoices.order_by(sort_by)
-        context["sort"] = sort_by
+    if sort_by not in all_sort_options:
+        sort_by = "id"
+    elif sort_by in all_sort_options:
+        # True is for reverse order
+        # first time set direction is none
+        if sort_direction.lower() == "true" or sort_direction == "":
+            context["sort"] = f"-{sort_by}"
+            context["sort_direction"] = False
+            invoices = invoices.order_by(f"-{sort_by}")
+        else:
+            # sort_direction is False
+            context["sort"] = sort_by
+            context["sort_direction"] = True
+            invoices = invoices.order_by(sort_by)
 
     # Add invoices to the context
-
     context["invoices"] = invoices
 
     # Render the HTMX response
