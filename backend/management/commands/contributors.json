@@ -158,7 +158,10 @@
     "username": "introkun",
     "role": "Development & CI",
     "tags": [
-      "♻"
+      "♻",
+      "🧪",
+      "🖥",
+      "🎨"
     ]
   },
   {
@@ -167,6 +170,31 @@
     "role": "Design",
     "tags": [
       "🎨"
+    ]
+  },
+  {
+    "name": "Sabari Ragavendra CK",
+    "username": "CKsabari2001",
+    "role": "Layout",
+    "tags": [
+      "🎨"
+    ]
+  },
+  {
+    "name": "atulanand25",
+    "username": "atulanand25",
+    "role": "Full Stack",
+    "tags": [
+      "🎨",
+      "🖥"
+    ]
+  },
+  {
+    "name": "ryansurf",
+    "username": "ryansurf",
+    "role": "Bug Fixes",
+    "tags": [
+      "🐞"
     ]
   }
 ]
