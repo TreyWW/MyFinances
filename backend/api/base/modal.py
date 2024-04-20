@@ -36,14 +36,16 @@ def open_modal(request: HttpRequest, modal_name, context_type=None, context_valu
                     receipt = Receipt.objects.get(pk=context_value)
                 except Receipt.DoesNotExist:
                     return render(request, template_name, context)
+                receipt_date = receipt.date.strftime("%Y-%m-%d") if receipt.date else ""
                 context = {
+                    "modal_id": f"modal_{receipt.id}_receipts_upload",
                     "receipt_id": context_value,
                     "receipt_name": receipt.name,
-                    "receipt_date": receipt.date.strftime("%Y-%m-%d"),
+                    "receipt_date": receipt_date,
                     "merchant_store_name": receipt.merchant_store,
                     "purchase_category": receipt.purchase_category,
                     "total_price": receipt.total_price,
-                    "receipt_image": receipt.image,
+                    "has_receipt_image": True if receipt.image else False,
                     "edit_flag": True,
                 }
             elif context_type == "edit_invoice_to":

@@ -1,82 +1,84 @@
-{% component_block "modal" id="modal_receipts_upload" start_open="true" title="Upload Receipt" %}
-{% fill "content" %}
-<form class="py-4"
-      id="modal_receipts_upload-form"
-      hx-post="{% if edit_flag %}{% url 'api:receipts:edit' receipt_id=receipt_id %}{% else %}{% url 'api:receipts:new' %}{% endif %}"
-      hx-swap="innerHTML"
-      enctype="multipart/form-data"
-      hx-encoding="multipart/form-data"
-      hx-target="#items"
-      hx-indicator="#upload_receipt_button">
-    {% csrf_token %}
-    <div class="form-control">
-        <label class="label justify-start">
-            Receipt Name
-            <span class="required_star">*</span>
-        </label>
-        <input required
-               type="text"
-               name="receipt_name"
-               class="input input-bordered"
-               value="{{ receipt_name }}">
-    </div>
-    <div class="form-control">
-        <label class="label justify-start">
-            Receipt Image
-            <span class="required_star">*</span>
-        </label>
-        <input required
-               type="file"
-               name="receipt_image"
-               class="file-input file-input-bordered max-w-full"
-               accept="image/jpeg,image/png,image/jpg,application/pdf"
-               value="{{ receipt_image }}">
-    </div>
-    <div class="form-control">
-        <label class="label">Receipt Date</label>
-        <input type="date"
-               name="receipt_date"
-               class="input input-bordered"
-               value="{{ receipt_date }}">
-    </div>
-    <div class="form-control">
-        <label class="label">Merchant/Store</label>
-        <input type="text"
-               name="merchant_store"
-               class="input input-bordered"
-               value="{{ merchant_store_name }}">
-    </div>
-    <div class="form-control">
-        <label class="label">Purchase Category</label>
-        <input type="text"
-               name="purchase_category"
-               class="input input-bordered"
-               value="{{ purchase_category }}">
-    </div>
-    <div class="form-control">
-        <label class="label justify-start">
-            Total Price
-            <span class="required_star">*</span>
-        </label>
-        <input required
-               type="number"
-               step=".01"
-               name="total_price"
-               class="input input-bordered"
-               value="{{ total_price }}">
-    </div>
-    <div class="modal-action">
-        <button type="submit"
-                id="modal_receipts_upload-action-btn"
-                class="btn btn-primary"
-                _="on click if #modal_receipts_upload-form.checkValidity() call #modal_receipts_upload.close() end">
-            Save
-        </button>
-        <button type="reset" class="btn btn-error">Reset</button>
-        <button type="button"
-                _="on click call #modal_receipts_upload.close()"
-                class="btn btn-neutral">Close</button>
-    </div>
-</form>
-{% endfill %}
+{% component_block "modal" id=modal_id start_open="true" title="Upload Receipt" %}
+    {% fill "content" %}
+        <form class="py-4"
+              id="{{ modal_id }}-form"
+              hx-post="
+
+                  {% if edit_flag %}{% url 'api:receipts:edit' receipt_id=receipt_id %}{% else %}{% url 'api:receipts:new' %}{% endif %}"
+              hx-swap="innerHTML"
+              enctype="multipart/form-data"
+              hx-encoding="multipart/form-data"
+              hx-target="#items"
+              hx-indicator="#upload_receipt_button">
+            {% csrf_token %}
+            <div class="form-control">
+                <label class="label justify-start">
+                    Receipt Name
+                    <span class="required_star">*</span>
+                </label>
+                <input required
+                       type="text"
+                       name="receipt_name"
+                       class="input input-bordered"
+                       value="{{ receipt_name }}">
+            </div>
+            <div class="form-control">
+                <label class="label justify-start">
+                    Receipt Image
+                    {% if not has_receipt_image %}<span class="required_star">*</span>{% endif %}
+                </label>
+                <input {% if not has_receipt_image %}required{% endif %}
+                       type="file"
+                       name="receipt_image"
+                       class="file-input file-input-bordered max-w-full"
+                       accept="image/jpeg,image/png,image/jpg,application/pdf">
+            </div>
+            <div class="form-control">
+                <label class="label">Receipt Date</label>
+                <input type="date"
+                       name="receipt_date"
+                       class="input input-bordered"
+                       value="{{ receipt_date }}">
+            </div>
+            <div class="form-control">
+                <label class="label">Merchant/Store</label>
+                <input type="text"
+                       name="merchant_store"
+                       class="input input-bordered"
+                       value="{{ merchant_store_name | default:"" }}">
+            </div>
+            <div class="form-control">
+                <label class="label">Purchase Category</label>
+                <input type="text"
+                       name="purchase_category"
+                       class="input input-bordered"
+                       value="{{ purchase_category | default:"" }}">
+            </div>
+            <div class="form-control">
+                <label class="label justify-start">
+                    Total Price
+                    <span class="required_star">*</span>
+                </label>
+                <input required
+                       type="number"
+                       step=".01"
+                       name="total_price"
+                       class="input input-bordered"
+                       value="{{ total_price | default:"0.00" }}">
+            </div>
+            <div class="modal-action">
+                <button type="submit"
+                        id="{{ modal_id }}-action-btn"
+                        class="btn btn-primary"
+                        _="on click if #{{ modal_id }}-form.checkValidity() call #{{ modal_id }}.close() end">
+                    Save
+                </button>
+                <button type="reset" class="btn btn-error">Reset</button>
+                <button type="button"
+                        _="on click call #{{ modal_id }}.close()"
+                        class="btn btn-neutral">Close
+                </button>
+            </div>
+        </form>
+    {% endfill %}
 {% endcomponent_block %}

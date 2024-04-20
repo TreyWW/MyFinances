@@ -2,6 +2,7 @@ from datetime import datetime
 from typing import NoReturn
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.http import HttpRequest, JsonResponse, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods, require_POST
@@ -12,15 +13,23 @@ from backend.models import Receipt
 @login_required
 def edit_receipt(request, receipt_id):
     # Fetch the receipt object from the database
-    receipt = Receipt.objects.get(pk=receipt_id)
-    file = request.FILES.get("receipt_image")  # InMemoryUploadedFile
+    try:
+        receipt = Receipt.objects.get(pk=receipt_id)
+
+        if not receipt.has_access(request.user):
+            raise Receipt.DoesNotExist
+    except Receipt.DoesNotExist:
+        messages.error(request, "Receipt not found")
+        return render(request, "base/toast.html")
+
+    file: InMemoryUploadedFile | None = request.FILES.get("receipt_image")
     date = request.POST.get("receipt_date")
     name = request.POST.get("receipt_name")
     merchant_store = request.POST.get("merchant_store")
     purchase_category = request.POST.get("purchase_category")
     total_price = request.POST.get("total_price")
 
-    if not file:
+    if not file and not receipt.image:
         messages.error(request, "No image found")
         return HttpResponseBadRequest("No image found", status=400)
 
@@ -44,16 +53,22 @@ def edit_receipt(request, receipt_id):
     ):
 
         # Update the receipt object
-        receipt.name = name
-        receipt.image = file
-        receipt.date = date
-        receipt.merchant_store = merchant_store
-        receipt.purchase_category = purchase_category
-        receipt.total_price = total_price
+        if name:
+            receipt.name = name
+        if file:
+            receipt.image = file
+        if date:
+            receipt.date = date
+        if merchant_store:
+            receipt.merchant_store = merchant_store
+        if purchase_category:
+            receipt.purchase_category = purchase_category
+        if total_price:
+            receipt.total_price = total_price
 
         receipt.save()
 
-        messages.success(request, f"Receipt Name - {receipt.name} updated successfully.")
+        messages.success(request, f"Receipt {receipt.name} (#{receipt.id}) updated successfully.")
     else:
         messages.info(request, "No changes were made.")
 
