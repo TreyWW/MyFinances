@@ -9,7 +9,7 @@ from backend.types.htmx import HtmxHttpRequest
 
 def switch_team(request: HtmxHttpRequest, team_id):
     if not team_id:
-        if not hasattr(request.user, "logged_in_as_team"):
+        if not request.user.logged_in_as_team:
             messages.error(request, "You are not logged into an organization")
 
         request.user.logged_in_as_team = None
