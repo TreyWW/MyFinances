@@ -1,11 +1,4 @@
 from django.http import HttpResponseRedirect
-from django.http import HttpRequest
-
-from backend.models import User
-
-
-class AuthenticatedHttpRequest(HttpRequest):
-    user: User
 
 
 def redirect_to_last_visited(request, fallback_url="dashboard"):
