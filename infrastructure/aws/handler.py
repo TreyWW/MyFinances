@@ -11,7 +11,7 @@ from mypy_boto3_scheduler.client import EventBridgeSchedulerClient
 from mypy_boto3_stepfunctions.client import SFNClient
 
 from backend.models import FeatureFlags
-from backend.utils import get_feature_status
+from backend.utils.feature_flags import get_feature_status
 from settings.helpers import get_var
 from settings.settings import AWS_TAGS_APP_NAME
 

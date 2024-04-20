@@ -1,16 +1,16 @@
 from datetime import datetime
 
 from django.contrib import messages
-from django.http import HttpRequest
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
 
 from backend.decorators import quota_usage_check
 from backend.models import Invoice, InvoiceItem, Client, InvoiceProduct, QuotaUsage
-from backend.utils import quota_usage_check_under
+from backend.utils.quota_limit_ops import quota_usage_check_under
+from backend.types.htmx import HtmxHttpRequest
 
 
-def invoice_page_get(request: HttpRequest):
+def invoice_page_get(request: HtmxHttpRequest):
     check_usage = quota_usage_check_under(request, "invoices-count")
     if not isinstance(check_usage, bool):
         return check_usage
@@ -22,7 +22,7 @@ def invoice_page_get(request: HttpRequest):
 
 
 @quota_usage_check("invoices-count")
-def invoice_page_post(request: HttpRequest):
+def invoice_page_post(request: HtmxHttpRequest):
     invoice_items = [
         InvoiceItem.objects.create(name=row[0], description=row[1], hours=row[2], price_per_hour=row[3])
         for row in zip(
@@ -92,7 +92,7 @@ def invoice_page_post(request: HttpRequest):
 
 
 @require_http_methods(["GET", "POST"])
-def create_invoice_page(request: HttpRequest):
+def create_invoice_page(request: HtmxHttpRequest):
     if request.method == "POST":
         return invoice_page_post(request)
     return invoice_page_get(request)

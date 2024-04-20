@@ -1,11 +1,14 @@
 from django.contrib import messages
-from django.http import HttpRequest, HttpResponse
+from django.contrib.auth.models import AnonymousUser
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
+from backend.types.htmx import HtmxHttpRequest
+
 
 @require_http_methods(["POST"])
-def change_account_name(request: HttpRequest):
+def change_account_name(request: HtmxHttpRequest):
     if not request.htmx:
         return HttpResponse("Invalid Request", status=405)
 

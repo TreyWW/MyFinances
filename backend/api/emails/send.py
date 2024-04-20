@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
-from typing import List, Tuple
 
 from collections.abc import Iterator
 
@@ -29,7 +28,7 @@ from backend.types.emails import (
     BulkEmailErrorResponse,
     BulkTemplatedEmailInput,
 )
-from backend.utils import quota_usage_check_under
+from backend.utils.quota_limit_ops import quota_usage_check_under
 from settings.helpers import send_email, send_templated_bulk_email
 
 

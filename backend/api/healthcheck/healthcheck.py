@@ -11,10 +11,7 @@ def ping(request: HttpRequest) -> HttpResponse:
 @login_not_required
 def healthcheck(request: HttpRequest) -> HttpResponse:
     try:
-        status = connection.ensure_connection()
-    except OperationalError:
-        status = "error"
-
-    if not status:  # good
+        connection.ensure_connection()
         return HttpResponse(status=200, content="All operations are up and running!")
-    return HttpResponse(status=503, content="Service Unavailable")
+    except OperationalError:
+        return HttpResponse(status=503, content="Service Unavailable")

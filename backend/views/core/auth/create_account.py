@@ -7,7 +7,7 @@ from django.shortcuts import redirect, render
 from django.views import View
 
 from backend.models import User
-from backend.utils import get_feature_status
+from backend.utils.feature_flags import get_feature_status
 from settings.settings import (
     SOCIAL_AUTH_GITHUB_ENABLED,
     SOCIAL_AUTH_GOOGLE_OAUTH2_ENABLED,

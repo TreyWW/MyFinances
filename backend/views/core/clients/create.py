@@ -1,11 +1,12 @@
 from django.contrib import messages
-from django.http import HttpRequest
+from django.contrib.auth.models import AnonymousUser
 from django.shortcuts import render, redirect
 
 from backend.models import Client
+from backend.types.htmx import HtmxHttpRequest
 
 
-def create_client(request: HttpRequest):
+def create_client(request: HtmxHttpRequest):
     if request.method == "GET":
         return render(request, "pages/clients/create/create.html")
 

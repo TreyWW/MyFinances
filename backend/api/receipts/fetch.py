@@ -1,11 +1,11 @@
 from django.db.models import Q
-from django.http import HttpRequest
 from django.shortcuts import render, redirect
 
-from backend.models import Receipt
+from backend.models import Receipt, User
+from backend.types.htmx import HtmxHttpRequest
 
 
-def fetch_all_receipts(request: HttpRequest):
+def fetch_all_receipts(request: HtmxHttpRequest):
     context = {}
     if not request.htmx:
         return redirect("receipts dashboard")

@@ -10,7 +10,7 @@ from backend.models import Invoice
 from backend.models import QuotaLimit
 from backend.models import Team
 from backend.models import UserSettings
-from backend.utils import quota_usage_check_under
+from backend.utils.quota_limit_ops import quota_usage_check_under
 
 
 # Still working on

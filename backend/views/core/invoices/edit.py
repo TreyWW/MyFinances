@@ -1,11 +1,12 @@
 from datetime import datetime
 
 from django.contrib import messages
-from django.http import HttpRequest, JsonResponse
+from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
 from backend.models import Invoice, Client, InvoiceItem
+from backend.types.htmx import HtmxHttpRequest
 
 
 # RELATED PATH FILES : \frontend\templates\pages\invoices\dashboard\_fetch_body.html, \backend\urls.py
@@ -65,7 +66,7 @@ def invoice_edit_page_get(request, invoice_id):
 
 # when user changes/modifies any of the fields with new information (during edit invoice)
 @require_http_methods(["POST"])
-def edit_invoice(request: HttpRequest, invoice_id):
+def edit_invoice(request: HtmxHttpRequest, invoice_id):
     try:
         invoice = Invoice.objects.get(id=invoice_id)
     except Invoice.DoesNotExist:
@@ -83,7 +84,7 @@ def edit_invoice(request: HttpRequest, invoice_id):
         )
 
     attributes_to_updates = {
-        "date_due": datetime.strptime(request.POST.get("date_due"), "%Y-%m-%d").date(),
+        "date_due": datetime.strptime(request.POST.get("date_due"), "%Y-%m-%d").date(),  # type: ignore[arg-type]
         "date_issued": request.POST.get("date_issued"),
         "self_name": request.POST.get("from_name"),
         "self_company": request.POST.get("from_company"),
@@ -102,7 +103,7 @@ def edit_invoice(request: HttpRequest, invoice_id):
 
     client_to_id = request.POST.get("selected_client")
     try:
-        client_to_obj = Client.objects.get(id=client_to_id, user=request.user)
+        client_to_obj = Client.objects.get(id=client_to_id, user=request.user)  # type: ignore[misc]
     except (Client.DoesNotExist, ValueError):
         client_to_obj = None
 
@@ -148,7 +149,7 @@ def edit_invoice(request: HttpRequest, invoice_id):
 
 # decorator & view function for rendering page and updating invoice items in the backend
 @require_http_methods(["GET", "POST"])
-def edit_invoice_page(request: HttpRequest, invoice_id):
+def edit_invoice_page(request: HtmxHttpRequest, invoice_id):
     if request.method == "POST":
         return edit_invoice(request, invoice_id)
     return invoice_edit_page_get(request, invoice_id)
