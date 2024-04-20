@@ -4,8 +4,6 @@ from typing import Literal
 from infrastructure.aws.handler import get_event_bridge_scheduler
 from settings.settings import AWS_TAGS_APP_NAME
 
-event_bridge_scheduler = get_event_bridge_scheduler()
-
 
 @dataclass(frozen=True)
 class SuccessResponse:
@@ -23,6 +21,7 @@ DeleteScheduleResponse = SuccessResponse | ErrorResponse
 
 
 def delete_reminder(invoice_id, reminder_id) -> DeleteScheduleResponse:
+    event_bridge_scheduler = get_event_bridge_scheduler()
     try:
         print(f"[AWS] [SCHEDULE] Deleting schedule: {invoice_id}-{reminder_id}")
         event_bridge_scheduler.delete_schedule(

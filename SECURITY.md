@@ -5,7 +5,8 @@ If you have found a security vulnerability in MyFinances please __**DO NOT**__ s
 
 ## Supported Versions
 
+We are currently still in development and have not reached a public V1 release. We only support the most recent update for feature upgrades, bug reports and security patches.
+
 | Version | Supported          |
 | ------- | ------------------ |
 | 0.x.x   | :white_check_mark: |
-| < 0.2.1   | :x:                |
