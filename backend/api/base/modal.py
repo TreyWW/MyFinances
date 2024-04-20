@@ -10,6 +10,7 @@ from backend.models import Invoice
 from backend.models import QuotaLimit
 from backend.models import Team
 from backend.models import UserSettings
+from backend.utils.feature_flags import get_feature_status
 from backend.utils.quota_limit_ops import quota_usage_check_under
 
 
@@ -125,6 +126,9 @@ def open_modal(request: HttpRequest, modal_name, context_type=None, context_valu
                 context[context_type] = context_value
 
         if modal_name == "send_single_email" or modal_name == "send_bulk_email":
+            if not get_feature_status("areUserEmailsAllowed"):
+                messages.error(request, "Emails are disabled")
+                return render(request, "base/toast.html")
             context["content_min_length"] = 64
             quota = QuotaLimit.objects.prefetch_related("quota_overrides").get(slug="emails-email_character_count")
             context["content_max_length"] = quota.get_quota_limit(user=request.user, quota_limit=quota)
