@@ -29,6 +29,7 @@ url(
 urlpatterns = [
     path("tz_detect/", include("tz_detect.urls")),
     path("api/", include("backend.api.urls")),
+    path("webhooks/", include("backend.webhooks.urls")),
     path("", index, name="index"),
     path("dashboard/", dashboard, name="dashboard"),
     path("dashboard/settings/", settings_v.view.settings_page, name="user settings"),

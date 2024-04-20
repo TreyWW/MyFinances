@@ -1,4 +1,6 @@
-name: MyFinances
+name: myfinances
+main: /infrastructure/aws/pulumi/
+stackConfigDir: /infrastructure/aws/pulumi/
 runtime:
   name: python
   options:

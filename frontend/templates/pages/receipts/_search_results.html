@@ -1,14 +1,48 @@
 {% csrf_token %}
-<div class="flex w-full overflow-x-auto" id="items">
-    <table class="table">
+<div class="flex w-full h-full overflow-x-auto overflow-y-auto" id="items">
+    <table class="table h-fit">
         <thead>
-            <tr>
+            <tr hx-swap="outerHTML"
+                hx-target="#items"
+                hx-indicator=""
+                hx-include="#filter_list_storage">
                 <th>ID</th>
                 <th>Date</th>
                 <th>Name</th>
                 <th>Merchant/Store</th>
                 <th>Category</th>
-                <th>Amount</th>
+                <th>
+                    <div class="dropdown"
+                         data-filter-type="amount"
+                         hx-vals='{"filter_type": "amount"}'>
+                        <label tabindex="0" class="border-none">
+                            Amount
+                            <i class="fa-solid fa-caret-down border-none pt-1 pl-1/2"></i>
+                        </label>
+                        <ul class="dropdown-content">
+                            <h2 class="menu-title">Amount</h2>
+                            <div class="divider -mt-2 -mb-1"></div>
+                            <li data-filter-by="20+">
+                                <button class="dropdown-item text-sm border-none"
+                                        hx-get="{% url "api:receipts:fetch" %}"
+                                        name="filter"
+                                        value="20">20+</button>
+                            </li>
+                            <li data-filter-by="50+">
+                                <button class="dropdown-item text-sm border-none"
+                                        hx-get="{% url "api:receipts:fetch" %}"
+                                        name="filter"
+                                        value="50">50+</button>
+                            </li>
+                            <li data-filter-by="100+">
+                                <button class="dropdown-item text-sm border-none"
+                                        hx-get="{% url "api:receipts:fetch" %}"
+                                        name="filter"
+                                        value="100">100+</button>
+                            </li>
+                        </ul>
+                    </div>
+                </th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -29,8 +63,19 @@
                             <button type="button"
                                     onclick="modal_receipt_{{ row.id }}.showModal();"
                                     class="btn btn-outline btn-success btn-sm">Preview</button>
+                            <button onclick="modal_{{ row.id }}_receipts_upload.showModal();"
+                                    id="edit_receipt_button"
+                                    class="btn btn-outline btn-success btn-sm"
+                                    for="edit_receipt"
+                                    hx-trigger="click once"
+                                    hx-swap="beforeend"
+                                    hx-target="#modal_container"
+                                    hx-get="{% url "api:base:modal retrieve with context" modal_name="receipts_upload" context_type="edit_receipt" context_value=row.id %}">
+                                <i class="fa-solid fa-receipt pe-1"></i>
+                                Edit Receipt
+                            </button>
                             <button type="button"
-                                    class="btn btn-outline btn-primary btn-sm "
+                                    class="btn btn-outline btn-primary btn-sm"
                                     onclick="Download_file('{% url 'api:receipts:generate_download_link' receipt_id=row.id %}')">
                                 Download
                             </button>
@@ -80,6 +125,25 @@
             {% endfor %}
         </tbody>
     </table>
+    {% for filter_type, inner_filters in all_filters.items %}
+        {% for filter in inner_filters %}
+            <div hx-swap-oob="innerHTML:div[data-filter-type='{{ filter_type }}'] ul li[data-filter-by='{{ filter }}'] button">
+                {% if filter in selected_filters %}<i class="fa fa-solid fa-check text-success"></i>{% endif %}
+                {{ filter | title }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+</div>
+<div hx-swap-oob="innerHTML:#filter_list_storage">
+    <input type="hidden"
+           name="amount_20+"
+           value="{% if '20' in selected_filters %}true{% endif %}">
+    <input type="hidden"
+           name="amount_50+"
+           value="{% if '50' in selected_filters %}true{% endif %}">
+    <input type="hidden"
+           name="amount_100+"
+           value="{% if '100' in selected_filters %}true{% endif %}">
 </div>
 <script>
     document.body.addEventListener('htmx:configRequest', (event) => {

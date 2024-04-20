@@ -1,14 +1,16 @@
 from __future__ import annotations
 
+from django.contrib import messages
 from django.http import HttpRequest
 from django.http import HttpResponseBadRequest
 from django.shortcuts import render
 
-from backend.models import Client
+from backend.models import Client, Receipt
 from backend.models import Invoice
 from backend.models import QuotaLimit
 from backend.models import Team
 from backend.models import UserSettings
+from backend.utils import quota_usage_check_under
 
 
 # Still working on
@@ -29,6 +31,23 @@ def open_modal(request: HttpRequest, modal_name, context_type=None, context_valu
             elif context_type == "leave_team":
                 if request.user.teams_joined.filter(id=context_value).exists():
                     context["team"] = Team.objects.filter(id=context_value).first()
+            elif context_type == "edit_receipt":
+                try:
+                    receipt = Receipt.objects.get(pk=context_value)
+                except Receipt.DoesNotExist:
+                    return render(request, template_name, context)
+                receipt_date = receipt.date.strftime("%Y-%m-%d") if receipt.date else ""
+                context = {
+                    "modal_id": f"modal_{receipt.id}_receipts_upload",
+                    "receipt_id": context_value,
+                    "receipt_name": receipt.name,
+                    "receipt_date": receipt_date,
+                    "merchant_store_name": receipt.merchant_store,
+                    "purchase_category": receipt.purchase_category,
+                    "total_price": receipt.total_price,
+                    "has_receipt_image": True if receipt.image else False,
+                    "edit_flag": True,
+                }
             elif context_type == "edit_invoice_to":
                 invoice = context_value
                 try:
@@ -81,6 +100,25 @@ def open_modal(request: HttpRequest, modal_name, context_type=None, context_valu
                     print(context["quota_usage"])
                 except QuotaLimit.DoesNotExist:
                     ...
+            elif context_type == "invoice_reminder":
+                try:
+                    invoice = (
+                        Invoice.objects.only("id", "client_email", "client_to__email").select_related("client_to").get(id=context_value)
+                    )
+                except Invoice.DoesNotExist:
+                    return render(request, template_name, context)
+
+                if invoice.has_access(request.user):
+                    context["invoice"] = invoice
+                else:
+                    messages.error(request, "You don't have access to this invoice")
+                    return render(request, "base/toasts.html")
+
+                above_quota_usage = quota_usage_check_under(request, "invoices-schedules", api=True, htmx=True)
+
+                if not isinstance(above_quota_usage, bool):
+                    context["above_quota_usage"] = True
+
             else:
                 context[context_type] = context_value
 

@@ -211,6 +211,18 @@ class Receipt(models.Model):
     class Meta:
         constraints = [USER_OR_ORGANIZATION_CONSTRAINT()]
 
+    def __str__(self):
+        return f"{self.name} - {self.date} ({self.total_price})"
+
+    def has_access(self, user: User) -> bool:
+        if not user.is_authenticated:
+            return False
+
+        if user.logged_in_as_team:
+            return self.organization == user.logged_in_as_team
+        else:
+            return self.user == user
+
 
 class ReceiptDownloadToken(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -280,6 +292,7 @@ class Invoice(models.Model):
     client_to = models.ForeignKey(Client, on_delete=models.SET_NULL, blank=True, null=True)
 
     client_name = models.CharField(max_length=100, blank=True, null=True)
+    client_email = models.EmailField(blank=True, null=True)
     client_company = models.CharField(max_length=100, blank=True, null=True)
     client_address = models.CharField(max_length=100, blank=True, null=True)
     client_city = models.CharField(max_length=100, blank=True, null=True)
@@ -462,6 +475,18 @@ class InvoiceSchedule(models.Model):
     class Meta:
         abstract = True
 
+    def set_status(self, status, save=True):
+        self.status = status
+        if save:
+            self.save()
+        return self
+
+    def set_received(self, status: bool = True, save=True):
+        self.received = status
+        if save:
+            self.save()
+        return self
+
 
 class InvoiceOnetimeSchedule(InvoiceSchedule):
     invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE, related_name="onetime_invoice_schedules")
@@ -470,6 +495,25 @@ class InvoiceOnetimeSchedule(InvoiceSchedule):
     class Meta:
         verbose_name = "One-Time Invoice Schedule"
         verbose_name_plural = "One-Time Invoice Schedules"
+
+
+class InvoiceReminder(InvoiceSchedule):
+    class ReminderTypes(models.TextChoices):
+        BEFORE_DUE = "before_due", "Before Due"
+        AFTER_DUE = "after_due", "After Due"
+        ON_OVERDUE = "on_overdue", "On Overdue"
+
+    invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE, related_name="invoice_reminders")
+    days = models.PositiveIntegerField(blank=True, null=True)
+    reminder_type = models.CharField(max_length=100, choices=ReminderTypes.choices, default=ReminderTypes.BEFORE_DUE)
+
+    class Meta:
+        verbose_name = "Invoice Reminder"
+        verbose_name_plural = "Invoice Reminders"
+
+    def __str__(self):
+        days = (str(self.days) + "d" if self.days else " ").center(8, "ㅤ")
+        return f"({self.id}) Reminder for (#{self.invoice_id}) {days} {self.reminder_type}"
 
 
 class APIKey(models.Model):
@@ -569,6 +613,14 @@ class FeatureFlags(models.Model):
 
     def __str__(self):
         return self.name
+
+    def enable(self):
+        self.value = True
+        self.save()
+
+    def disable(self):
+        self.value = False
+        self.save()
 
 
 class QuotaLimit(models.Model):
@@ -714,6 +766,13 @@ class QuotaUsage(models.Model):
         except QuotaLimit.DoesNotExist:
             return "Not Found"
 
+        Notification.objects.create(
+            user=user,
+            action="redirect",
+            action_value=f"/dashboard/quotas/{quota_limit.slug.split('-')[0]}/",
+            message=f"You have reached the limit for {quota_limit.name}",
+        )
+
         return cls.objects.create(user=user, quota_limit=quota_limit, extra_data=extra_data)
 
     @classmethod
@@ -734,6 +793,7 @@ class QuotaIncreaseRequest(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     quota_limit = models.ForeignKey(QuotaLimit, on_delete=models.CASCADE, related_name="quota_increase_requests")
+    reason = models.CharField(max_length=1000)
     new_value = models.IntegerField()
     current_value = models.IntegerField()
     updated_at = models.DateTimeField(auto_now=True)

@@ -12,7 +12,7 @@ class SingleTemplatedEmailContent(TypedDict):
 @dataclass(frozen=False)
 class SingleEmailInput:
     destination: str | list[str]
-    subject: str
+    subject: str | None
     content: str | SingleTemplatedEmailContent
     ConfigurationSetName: str | None = None
     from_address: str | None = None
