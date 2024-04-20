@@ -1,16 +1,15 @@
-from django.http import HttpRequest
-
 from backend.decorators import *
 from backend.models import *
+from backend.types.htmx import HtmxHttpRequest
 
 
-def invoices_dashboard(request: HttpRequest):
+def invoices_dashboard(request: HtmxHttpRequest):
     context = {}
 
     return render(request, "pages/invoices/dashboard/dashboard.html", context)
 
 
-def manage_invoice(request: HttpRequest, invoice_id: str):
+def manage_invoice(request: HtmxHttpRequest, invoice_id: str):
     if not invoice_id.isnumeric():
         messages.error(request, "Invalid invoice ID")
         return redirect("invoices:dashboard")

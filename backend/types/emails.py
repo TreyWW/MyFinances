@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Literal, Optional, List, TypedDict, Dict
+from typing import Literal, TypedDict
 
 from mypy_boto3_sesv2.type_defs import SendEmailResponseTypeDef, SendBulkEmailResponseTypeDef, BulkEmailEntryResultTypeDef
 

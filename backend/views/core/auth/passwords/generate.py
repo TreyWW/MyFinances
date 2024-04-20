@@ -1,14 +1,15 @@
 from datetime import datetime, timedelta, date
 
+from django.contrib import messages
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
-from django.http import HttpRequest
 from django.shortcuts import redirect
-from django.urls import reverse, resolve
+from django.urls import reverse, resolve, NoReverseMatch
 from django.utils import timezone
 
 from backend.models import *
+from backend.types.htmx import HtmxHttpRequest
 
 
 def msg_if_valid_email_then_sent(request):
@@ -18,7 +19,7 @@ def msg_if_valid_email_then_sent(request):
     )
 
 
-def set_password_generate(request: HttpRequest):
+def set_password_generate(request: HtmxHttpRequest):
     if not request.user.is_superuser or not request.user.is_staff:
         return redirect("dashboard")
 
@@ -29,16 +30,16 @@ def set_password_generate(request: HttpRequest):
         messages.error(request, "User ID must be a valid integer")
         return redirect("dashboard")
 
-    USER = User.objects.filter(id=USER).first()
+    USER_OBJ = User.objects.filter(id=USER).first()
 
-    if not USER:
+    if not USER_OBJ:
         messages.error(request, f"User not found")
         return redirect("dashboard")
     CODE = RandomCode(40)
     HASHED_CODE = make_password(CODE, salt=settings.SECRET_KEY)
 
     PWD_SECRET, created = PasswordSecret.objects.update_or_create(
-        user=USER,
+        user=USER_OBJ,
         defaults={"expires": date.today() + timedelta(days=3), "secret": HASHED_CODE},
     )
     PWD_SECRET.save()
@@ -50,11 +51,11 @@ def set_password_generate(request: HttpRequest):
     try:
         resolve(NEXT)
         return redirect(NEXT)
-    except resolve.NoReverseMatch:
+    except NoReverseMatch:
         return redirect("dashboard")
 
 
-def password_reset(request: HttpRequest):
+def password_reset(request: HtmxHttpRequest):
     EMAIL = request.POST.get("email")
 
     # if not EMAIL_SERVER_ENABLED:

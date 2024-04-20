@@ -1,12 +1,14 @@
+from typing import Optional
+
 from django.db.models import When, Case, BooleanField
 from django.http import HttpRequest
 from django.shortcuts import render
 
 from backend.models import *
+from backend.types.htmx import HtmxHttpRequest
 
 
-def teams_dashboard(request: HttpRequest):
-    request.user: User = request.user
+def teams_dashboard(request: HtmxHttpRequest):
     users_team: Optional[Team] = request.user.logged_in_as_team
 
     if not users_team:

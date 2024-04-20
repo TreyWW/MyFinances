@@ -6,7 +6,7 @@ from backend.models import User, Team
 
 
 def kick_user(request: HttpRequest, user_id):
-    user: User = User.objects.filter(id=user_id).first()
+    user: User | None = User.objects.filter(id=user_id).first()
     confirmation_text = request.POST.get("confirmation_text")
     if not user:
         messages.error(request, "User not found")
@@ -16,7 +16,7 @@ def kick_user(request: HttpRequest, user_id):
         messages.error(request, "Invalid confirmation")
         return redirect("user settings teams")
 
-    team: Team = user.teams_joined.first()
+    team: Team | None = user.teams_joined.first()
     if not team:
         messages.error(request, "User is not apart of your team")
         return redirect("user settings teams")

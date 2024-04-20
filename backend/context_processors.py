@@ -52,7 +52,7 @@ def breadcrumbs(request: HttpRequest):
             "icon": icon,
         }
 
-    def generate_breadcrumbs(*breadcrumb_list: str) -> List[Dict[str, Any]]:
+    def generate_breadcrumbs(*breadcrumb_list: str) -> List[dict[Any, Any] | None]:
         """
         Generate a list of breadcrumb items based on the provided list of breadcrumb names.
 
@@ -64,7 +64,7 @@ def breadcrumbs(request: HttpRequest):
         """
         return [all_items.get(breadcrumb) for breadcrumb in breadcrumb_list]
 
-    current_url_name: str = request.resolver_match.url_name
+    current_url_name: str | Any = request.resolver_match.url_name  # type: ignore[union-attr]
 
     all_items: Dict[str, dict] = {
         "dashboard": get_item("Dashboard", "dashboard", "house"),
@@ -78,7 +78,7 @@ def breadcrumbs(request: HttpRequest):
         "clients create": get_item("Create", "clients create"),
     }
 
-    all_breadcrumbs: Dict[str, list] = {
+    all_breadcrumbs: Dict[str | None, list] = {
         "dashboard": generate_breadcrumbs("dashboard"),
         "user settings teams": generate_breadcrumbs("dashboard", "user settings teams"),
         "receipts dashboard": generate_breadcrumbs("dashboard", "receipts dashboard"),

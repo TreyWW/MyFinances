@@ -1,6 +1,6 @@
 from django import template
 
-from backend.utils import get_feature_status
+from backend.utils.feature_flags import get_feature_status
 
 register = template.Library()
 

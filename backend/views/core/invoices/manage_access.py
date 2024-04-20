@@ -1,12 +1,13 @@
 from django.contrib import messages
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 
 from backend.decorators import quota_usage_check
 from backend.models import Invoice, InvoiceURL, QuotaUsage, QuotaLimit
+from backend.types.htmx import HtmxHttpRequest
 
 
-def manage_access(request: HttpRequest, invoice_id):
+def manage_access(request: HtmxHttpRequest, invoice_id):
     try:
         invoice = Invoice.objects.prefetch_related("invoice_urls").get(id=invoice_id, user=request.user)
     except Invoice.DoesNotExist:
@@ -23,7 +24,7 @@ def manage_access(request: HttpRequest, invoice_id):
 
 
 @quota_usage_check("invoices-access_codes", 1, api=True, htmx=True)
-def create_code(request: HttpRequest, invoice_id):
+def create_code(request: HtmxHttpRequest, invoice_id):
     if not request.htmx:
         return redirect("invoices:dashboard")
 
@@ -48,7 +49,7 @@ def create_code(request: HttpRequest, invoice_id):
     )
 
 
-def delete_code(request: HttpRequest, code):
+def delete_code(request: HtmxHttpRequest, code):
     if request.method != "DELETE" or not request.htmx:
         return HttpResponse("Request invalid", status=400)
 

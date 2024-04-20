@@ -6,7 +6,7 @@ import sys
 from pathlib import Path
 
 from django.contrib.messages import constants as messages
-from django.contrib.staticfiles.storage import FileSystemStorage
+from django.contrib.staticfiles.storage import FileSystemStorage  # type: ignore
 from storages.backends.s3 import S3Storage
 
 from .helpers import get_var
@@ -91,7 +91,7 @@ LOGIN_REQUIRED_IGNORE_PATHS = [
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-EMAIL_WHITELIST = []
+EMAIL_WHITELIST: list[str] = []
 AUTHENTICATION_BACKENDS = [
     # "django.contrib.auth.backends.ModelBackend",
     "backend.auth_backends.EmailInsteadOfUsernameBackend",
@@ -349,7 +349,7 @@ else:
     MEDIA_ROOT = os.path.join(BASE_DIR, "media")
     DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 
-    class CustomPublicMediaStorage(FileSystemStorage):  # This overrides the AWS version
+    class CustomPublicMediaStorage(FileSystemStorage):  # type: ignore # This overrides the AWS version
         ...
 
 
@@ -359,7 +359,7 @@ if AWS_MEDIA_PRIVATE_ENABLED:
     PRIVATE_FILE_STORAGE = "settings.settings.CustomPrivateMediaStorage"
 else:
 
-    class CustomPrivateMediaStorage(FileSystemStorage):  # This overrides the AWS version
+    class CustomPrivateMediaStorage(FileSystemStorage):  # type: ignore # This overrides the AWS version
         ...
 
     PRIVATE_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
