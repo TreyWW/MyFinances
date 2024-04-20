@@ -5,11 +5,11 @@ from django.http import HttpRequest
 from django.shortcuts import render
 
 from backend.models import *
+from backend.types.htmx import HtmxHttpRequest
 
 
-def teams_dashboard(request: HttpRequest):
-    request.user: User = request.user  # type: ignore[misc]
-    users_team: Optional[Team] = request.user.logged_in_as_team  # type: ignore[union-attr, assignment]
+def teams_dashboard(request: HtmxHttpRequest):
+    users_team: Optional[Team] = request.user.logged_in_as_team
 
     if not users_team:
         user_with_counts = User.objects.prefetch_related("teams_joined", "teams_leader_of").get(pk=request.user.pk)

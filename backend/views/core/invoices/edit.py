@@ -1,11 +1,12 @@
 from datetime import datetime
 
 from django.contrib import messages
-from django.http import HttpRequest, JsonResponse
+from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
 from backend.models import Invoice, Client, InvoiceItem
+from backend.types.htmx import HtmxHttpRequest
 
 
 # RELATED PATH FILES : \frontend\templates\pages\invoices\dashboard\_fetch_body.html, \backend\urls.py
@@ -65,13 +66,13 @@ def invoice_edit_page_get(request, invoice_id):
 
 # when user changes/modifies any of the fields with new information (during edit invoice)
 @require_http_methods(["POST"])
-def edit_invoice(request: HttpRequest, invoice_id):
+def edit_invoice(request: HtmxHttpRequest, invoice_id):
     try:
         invoice = Invoice.objects.get(id=invoice_id)
     except Invoice.DoesNotExist:
         return JsonResponse({"message": "Invoice not found"}, status=404)
 
-    if request.user.logged_in_as_team and request.user.logged_in_as_team != invoice.organization:  # type: ignore[union-attr]
+    if request.user.logged_in_as_team and request.user.logged_in_as_team != invoice.organization:
         return JsonResponse(
             {"message": "You do not have permission to edit this invoice"},
             status=403,
@@ -140,7 +141,7 @@ def edit_invoice(request: HttpRequest, invoice_id):
 
     messages.success(request, "Invoice edited")
 
-    if request.htmx:  # type: ignore[attr-defined]
+    if request.htmx:
         return render(request, "base/toasts.html")
 
     return invoice_edit_page_get(request, invoice_id)
@@ -148,7 +149,7 @@ def edit_invoice(request: HttpRequest, invoice_id):
 
 # decorator & view function for rendering page and updating invoice items in the backend
 @require_http_methods(["GET", "POST"])
-def edit_invoice_page(request: HttpRequest, invoice_id):
+def edit_invoice_page(request: HtmxHttpRequest, invoice_id):
     if request.method == "POST":
         return edit_invoice(request, invoice_id)
     return invoice_edit_page_get(request, invoice_id)

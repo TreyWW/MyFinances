@@ -1,13 +1,14 @@
 from django.contrib import messages
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 from backend.decorators import feature_flag_check
 from backend.models import Invoice, QuotaLimit
+from backend.types.htmx import HtmxHttpRequest
 
 
 @feature_flag_check("isInvoiceSchedulingEnabled", True)
-def view_schedules(request: HttpRequest, invoice_id) -> HttpResponse:
+def view_schedules(request: HtmxHttpRequest, invoice_id) -> HttpResponse:
     context = {}
     try:
         invoice = Invoice.objects.prefetch_related("onetime_invoice_schedules").get(id=invoice_id, user=request.user)

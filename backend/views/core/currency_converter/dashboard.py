@@ -3,9 +3,10 @@ from django.shortcuts import render
 from forex_python.converter import CurrencyRates
 
 from backend.models import *
+from backend.types.htmx import HtmxHttpRequest
 
 
-def currency_convert_view(request: HttpRequest):
+def currency_convert_view(request: HtmxHttpRequest):
     context = {}
 
     usersettings, created = UserSettings.objects.get_or_create(user=request.user)

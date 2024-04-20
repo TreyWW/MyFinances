@@ -3,15 +3,16 @@ from django.shortcuts import render
 
 from backend.decorators import *
 from backend.models import *
+from backend.types.htmx import HtmxHttpRequest
 
 
-def invoices_dashboard(request: HttpRequest):
+def invoices_dashboard(request: HtmxHttpRequest):
     context = {}
 
     return render(request, "pages/invoices/dashboard/dashboard.html", context)
 
 
-def invoices_dashboard_id(request: HttpRequest, invoice_id):
+def invoices_dashboard_id(request: HtmxHttpRequest, invoice_id):
     if invoice_id == "create":
         return redirect("invoices:create")
     elif type(invoice_id) != "int":
