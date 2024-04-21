@@ -40,6 +40,11 @@ git clone [copied fork url]
    poetry install --no-root
    ```
    2. Setup a database (we suggest using sqlite so there's no installation!)
+      To do this you can use one of our database guides, we currently only support 3 databases:
+      - [SQlite3 (recommended for dev)](./databases/sqlite.md)
+      - [Postgres3 (recommended for prod)](./databases/postgres.md)
+      - [Mysql](./databases/mysql.md)
+
    3. Migrate the database
        ```shell
        python manage.py migrate
