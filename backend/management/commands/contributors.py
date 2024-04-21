@@ -246,10 +246,10 @@ class Command(BaseCommand):
                 return json.loads(contributors_json)
         except FileNotFoundError:
             self.stderr.write(self.style.ERROR("contributors.json file not found. Please make sure the file exists."))
-            return
+            return None
         except json.JSONDecodeError:
             self.stderr.write(self.style.ERROR("Error decoding JSON data from contributors.json file. Please check the file contents."))
-            return
+            return None
 
     def _read_readme_file(self) -> str | None:
         try:

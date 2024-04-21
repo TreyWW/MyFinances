@@ -207,7 +207,7 @@ def fetch_onetime_schedules(request: HtmxHttpRequest, invoice_id: str):
         messages.error(request, "You do not have permission to view this invoice")
         return render(request, "base/toasts.html")
 
-    context = {}
+    context: dict[str, list[str] | dict] = {}
 
     schedules = invoice.onetime_invoice_schedules.order_by("due").only("id", "due", "status")
 
@@ -227,7 +227,7 @@ def fetch_onetime_schedules(request: HtmxHttpRequest, invoice_id: str):
 
     # Initialize context variables
     context["selected_filters"] = []
-    context["all_filters"] = {item: [i for i, _ in dictio.items()] for item, dictio in previous_filters.items()}
+    context["all_filters"] = {item: list(dictio.keys()) for item, dictio in previous_filters.items()}
 
     # Initialize OR conditions for filters using Q objects
     or_conditions = Q()
