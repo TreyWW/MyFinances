@@ -19,7 +19,6 @@ def quotas_page(request: HtmxHttpRequest) -> HttpResponse:
     )
 
 
-@cache_page(3600)
 def quotas_list(request: HtmxHttpRequest, group: str) -> HttpResponse:
     return render(request, "pages/quotas/list.html", {"group": group})
 

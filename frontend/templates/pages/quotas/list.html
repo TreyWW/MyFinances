@@ -4,7 +4,8 @@
         <div class=" text-3xl w-full grid grid-cols-4">
             <div hx-boost="true">
                 <a href="{% url "quotas" %}"
-                   class="btn btn-sm btn-outline btn-secondary me-3 float-left">Back to list</a>
+                   class="btn btn-sm btn-outline btn-secondary me-3 float-left">Back to list
+                </a>
             </div>
             <h1 class="text-center col-span-2">Service Quotas</h1>
             <div></div>
@@ -12,19 +13,19 @@
         <div class="flex w-full h-full overflow-x-hidden overflow-y-auto mt-8">
             <table class="table">
                 <thead>
-                    <tr>
-                        <th>Quota Name</th>
-                        <th class="text-right">Current usage</th>
-                        <th class="text-right">Applied account quota value</th>
-                        <th class="text-right">Default quota value</th>
-                        <th>Adjustability</th>
-                    </tr>
+                <tr>
+                    <th>Quota Name</th>
+                    <th class="text-right">Current usage</th>
+                    <th class="text-right">Applied account quota value</th>
+                    <th class="text-right">Default quota value</th>
+                    <th class="text-center">Adjustability</th>
+                </tr>
                 </thead>
                 <tbody id="table_body"
                        hx-swap="outerHTML"
                        hx-trigger="load"
                        hx-get="{% url 'api:quotas:fetch' group=group %}">
-                    {% include 'components/table/skeleton_rows.html' with rows=3 cols=5 %}
+                {% include 'components/table/skeleton_rows.html' with rows=3 cols=5 %}
                 </tbody>
             </table>
         </div>
