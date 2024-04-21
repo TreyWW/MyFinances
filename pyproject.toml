@@ -1,5 +1,6 @@
 [tool.poetry]
 name = "MyFinances"
+package-mode = false
 version = "0.3.0"
 description = "github.com/TreyWW/MyFinances"
 authors = ["TreyWW"]
