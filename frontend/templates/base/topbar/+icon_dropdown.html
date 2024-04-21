@@ -1,0 +1,28 @@
+<div data-layout="icon_dropdown_items">
+    <li hx-boost="true">
+        <a {% if request.resolver_match.url_name == "user settings" %}class="active btn-disabled"{% endif %}
+           href="{% url 'user settings' %}">
+            <i class="fa fa-solid fa-cog"></i>
+            Account Settings
+        </a>
+    </li>
+    <li hx-boost="true">
+        <a {% if request.resolver_match.url_name == "user settings teams" %}class="active btn-disabled"{% endif %}
+           href="{% url "user settings teams" %}">
+            <i class="fa fa-solid fa-users"></i>
+            Manage Team
+            <span class="badge">New</span>
+        </a>
+    </li>
+    <li>
+        <label for="logout_modal">
+            <i class="fa fa-solid fa-right-from-bracket"></i>
+            Logout
+        </label>
+    </li>
+    {% if request.user.is_superuser and request.user.is_staff %}
+        <li>
+            <a tabindex="-1" class="dropdown-item text text-sm mt-1" href="/admin/">Go to admin dashboard</a>
+        </li>
+    {% endif %}
+</div>

@@ -1,10 +1,13 @@
 {% load feature_enabled %}
 {% feature_enabled "areUserEmailsAllowed" as are_user_emails_allowed %}
-<div class="drawer-side">
+<div class="drawer-side"
+     data-layout="left_sliding_sidebar"
+     {% if swap %}hx-swap-oob='innerHTML:div[data-layout="left_sliding_sidebar"]'{% endif %}>
     <label for="service_list_drawer"
            aria-label="close sidebar"
            class="drawer-overlay"></label>
-    <ul class="menu p-4 w-80 min-h-full bg-base-200 text-base-content z-10 gap-y-1">
+    <ul class="menu p-4 w-80 min-h-full bg-base-200 text-base-content z-10 gap-y-1"
+        hx-boost="true">
         <label class="btn btn-square btn-outline btn-block top-5 right-5 mb-3"
                for="service_list_drawer">
             <i class="fa fa-solid fa-x"></i>

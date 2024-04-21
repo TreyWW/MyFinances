@@ -1,4 +1,4 @@
-{% extends 'base/base.html' %}
+{% extends base|default:"base/base.html" %}
 {% block content %}
     <input type="hidden" name="invoice_id" value="{{ invoice.id }}" />
     <form id="filter_schedules_list_storage">

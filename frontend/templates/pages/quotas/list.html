@@ -1,8 +1,8 @@
-{% extends 'base/base.html' %}
+{% extends base|default:"base/base.html" %}
 {% block content %}
     <div class="card w-full p-6 bg-base-100 shadow-xl mt-2">
         <div class=" text-3xl w-full grid grid-cols-4">
-            <div>
+            <div hx-boost="true">
                 <a href="{% url "quotas" %}"
                    class="btn btn-sm btn-outline btn-secondary me-3 float-left">Back to list</a>
             </div>

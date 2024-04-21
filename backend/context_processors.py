@@ -30,6 +30,9 @@ def extras(request: HttpRequest):
     data["import_method"] = get_var("IMPORT_METHOD", default="webpack")
     data["analytics"] = get_var("ANALYTICS_STRING")
 
+    if hasattr(request, "htmx") and request.htmx.boosted:
+        data["base"] = "base/htmx.html"
+
     return data
 
 
@@ -52,7 +55,7 @@ def breadcrumbs(request: HttpRequest):
             "icon": icon,
         }
 
-    def generate_breadcrumbs(*breadcrumb_list: str) -> List[dict[Any, Any] | None]:
+    def generate_breadcrumbs(*breadcrumb_list: str) -> list[dict[Any, Any] | None]:
         """
         Generate a list of breadcrumb items based on the provided list of breadcrumb names.
 
@@ -66,7 +69,7 @@ def breadcrumbs(request: HttpRequest):
 
     current_url_name: str | Any = request.resolver_match.url_name  # type: ignore[union-attr]
 
-    all_items: Dict[str, dict] = {
+    all_items: dict[str, dict] = {
         "dashboard": get_item("Dashboard", "dashboard", "house"),
         "invoices:dashboard": get_item("Invoices", "invoices:dashboard", "file-invoice"),
         "invoices:create": get_item("Create", "invoices:create"),
@@ -78,7 +81,7 @@ def breadcrumbs(request: HttpRequest):
         "clients create": get_item("Create", "clients create"),
     }
 
-    all_breadcrumbs: Dict[str | None, list] = {
+    all_breadcrumbs: dict[str | None, list] = {
         "dashboard": generate_breadcrumbs("dashboard"),
         "user settings teams": generate_breadcrumbs("dashboard", "user settings teams"),
         "receipts dashboard": generate_breadcrumbs("dashboard", "receipts dashboard"),
