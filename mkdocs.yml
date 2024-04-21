@@ -67,6 +67,7 @@ markdown_extensions:
 
 repo_name: MyFinances
 repo_url: https://github.com/TreyWW/MyFinances
+edit_uri: ./edit/main/docs
 
 site_url: https://docs.strelix.org/MyFinances/
 
