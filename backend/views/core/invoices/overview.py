@@ -4,12 +4,12 @@ from backend.types.htmx import HtmxHttpRequest
 
 
 def invoices_dashboard(request: HtmxHttpRequest):
-    context = {}
-
-    return render(request, "pages/invoices/dashboard/dashboard.html", context)
+    return render(request, "pages/invoices/dashboard/dashboard.html")
 
 
 def manage_invoice(request: HtmxHttpRequest, invoice_id: str):
+    context = {}
+
     if not invoice_id.isnumeric():
         messages.error(request, "Invalid invoice ID")
         return redirect("invoices:dashboard")
@@ -18,4 +18,6 @@ def manage_invoice(request: HtmxHttpRequest, invoice_id: str):
 
     if not invoice:
         return redirect("invoices:dashboard")
-    return render(request, "pages/invoices/dashboard/manage.html", {"invoice": invoice})
+
+    print(context | {"invoice": invoice})
+    return render(request, "pages/invoices/dashboard/manage.html", context | {"invoice": invoice})

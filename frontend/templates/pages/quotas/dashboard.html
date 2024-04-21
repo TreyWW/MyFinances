@@ -1,9 +1,10 @@
-{% extends 'base/base.html' %}
+{% extends base|default:"base/base.html" %}
 {% load strfilters %}
 {% block content %}
     <div class="card w-full p-6 bg-base-100 shadow-xl mt-2">
         <h2 class="text-xl">Service Quotas</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8"
+             hx-boost="true">
             {% if request.user.is_superuser %}
                 <a href="{% url "admin quota increase requests" %}"
                    class="card p-6 bg-base-200 border border-warning text-center text-xl">View Requests</a>

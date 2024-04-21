@@ -1,5 +1,8 @@
 {% if breadcrumb %}
-    <div class="breadcrumbs text-sm mb-4 -mt-4">
+    <div class="breadcrumbs text-sm mb-4 -mt-4"
+         data-layout="breadcrumps"
+         hx-boost="true"
+         {% if swap %}hx-swap-oob='innerHTML:div[data-layout="breadcrumps"]'{% endif %}>
         <ul>
             {% for item in breadcrumb %}
                 <li>

@@ -1,10 +1,10 @@
-{% extends 'base/base.html' %}
+{% extends base|default:"base/base.html" %}
 {% block content %}
     {% load feature_enabled %}
     {% feature_enabled "isInvoiceSchedulingEnabled" as schedule_invoices_enabled %}
     <div class="card p-6 shadow-xl bg-base-100 mb-4">
         <div class=" text-3xl w-full grid grid-cols-4">
-            <div>
+            <div hx-boost="true">
                 <a href="{% url "invoices:dashboard" %}"
                    class="btn btn-sm btn-outline btn-secondary me-3 float-left">Back to list</a>
             </div>

@@ -1,5 +1,4 @@
-{% extends 'base/base.html' %}
-{#{% load ripple_ui_modal %}#}
+{% extends base|default:"base/base.html" %}
 {% block content %}
     <div class="card bg-base-100 p-6 mb-4">
         {% include 'pages/settings/settings/sessions.html' %}

@@ -1,4 +1,4 @@
-{% extends 'base/base.html' %}
+{% extends base|default:"base/base.html" %}
 {% load static %}
 {% block content %}
     <div class="card bg-base-100 p-6">
@@ -122,6 +122,7 @@
     <script>
         is_rep_inp = document.querySelector('input[name="is_representative"]');
         is_rep_div = document.querySelector('div[data-selection="representative"]');
+
         function check_is_rep() {
             if (is_rep_inp.checked) {
                 is_rep_div.style.display = "block";

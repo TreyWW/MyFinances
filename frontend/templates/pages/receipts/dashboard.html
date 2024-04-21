@@ -1,4 +1,4 @@
-{% extends 'base/base.html' %}
+{% extends base|default:"base/base.html" %}
 {% csrf_token %}
 {% block content %}
     <form id="filter_list_storage">

@@ -13,7 +13,8 @@
             </label>
             <!-- Topbar Dropdown (MOBILE ONLY) -->
             <ul tabindex="0"
-                class="menu menu-sm dropdown-content mt-3 z-[1] shadow p-2 bg-base-100 rounded-box w-52">
+                class="menu menu-sm dropdown-content mt-3 z-[1] shadow p-2 bg-base-100 rounded-box w-52"
+                hx-boost="true">
                 <li>
                     <a href="/dashboard/">My Dashboard</a>
                 </li>
@@ -21,7 +22,7 @@
                     <a href="{% url "receipts dashboard" %}">My Receipts</a>
                 </li>
                 <li>
-                    <a href="{% url "invoices:dashboard" %}">My Invoices</a>
+                    <a href="{% url "invoices:dashboard" %}" hx-boost="true">My Invoices</a>
                 </li>
                 <li>
                     <a href="{% url "clients dashboard" %}">My Clients</a>
@@ -45,7 +46,7 @@
     </div>
     <div class="navbar-center hidden lg:flex z-50">
         <!-- Topbar Dropdown (LARGE ONLY) -->
-        <ul class="menu menu-horizontal px-1">
+        <ul class="menu menu-horizontal px-1" hx-boost="true">
             <li>
                 <a href="/dashboard/">My Dashboard</a>
             </li>
@@ -66,10 +67,10 @@
                 <a href="{% url "receipts dashboard" %}">My Receipts</a>
             </li>
             <li>
-                <a href="{% url "invoices:dashboard" %}">My Invoices</a>
+                <a href="{% url "invoices:dashboard" %}" hx-boost="true">My Invoices</a>
             </li>
             <li>
-                <a href="{% url "clients dashboard" %}">My Clients</a>
+                <a href="{% url "clients dashboard" %}" hx-boost="true">My Clients</a>
             </li>
         </ul>
     </div>
@@ -110,32 +111,7 @@
                     </ul>
                 </details>
                 <div class="divider mt-0 mb-0"></div>
-                <li>
-                    <a {% if request.resolver_match.url_name == "user settings" %}class="active"{% endif %}
-                       href="{% url 'user settings' %}">
-                        <i class="fa fa-solid fa-cog"></i>
-                        Account Settings
-                    </a>
-                </li>
-                <li>
-                    <a class="{% if request.resolver_match.url_name == "user settings teams" %}active{% endif %}"
-                       href="{% url "user settings teams" %}">
-                        <i class="fa fa-solid fa-users"></i>
-                        Manage Team
-                        <span class="badge">New</span>
-                    </a>
-                </li>
-                <li>
-                    <label for="logout_modal">
-                        <i class="fa fa-solid fa-right-from-bracket"></i>
-                        Logout
-                    </label>
-                </li>
-                {% if request.user.is_superuser and request.user.is_staff %}
-                    <li>
-                        <a tabindex="-1" class="dropdown-item text text-sm mt-1" href="/admin/">Go to admin dashboard</a>
-                    </li>
-                {% endif %}
+                {% component "base:topbar:icon_dropdown" %}
             </ul>
         </div>
         {# End of Profile Picture #}

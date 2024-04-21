@@ -60,6 +60,23 @@ def htmx_only(viewname: str = "dashboard"):
     return decorator
 
 
+def hx_boost(view):
+    """
+    Decorator for HTMX requests.
+
+    used by wrapping FBV in @hx_boost and adding **kwargs to param
+    then you can use context = kwargs.get("context", {}) to continue and then it will handle HTMX boosts
+    """
+
+    @wraps(view)
+    def wrapper(request, *args, **kwargs):
+        if request.htmx.boosted:
+            kwargs["context"] = kwargs.get("context", {}) | {"base": "base/htmx.html"}
+        return view(request, *args, **kwargs)
+
+    return wrapper
+
+
 def feature_flag_check(flag, status=True, api=False, htmx=False):
     def decorator(view_func):
         @wraps(view_func)

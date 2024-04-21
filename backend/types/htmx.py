@@ -12,3 +12,9 @@ class HtmxHttpRequest(HttpRequest):
 
 class UnauthorizedHttpRequest(HttpRequest):
     user: AnonymousUser
+    htmx: HtmxDetails
+
+
+class HtmxAnyHttpRequest(HttpRequest):
+    user: User | AnonymousUser
+    htmx: HtmxDetails
