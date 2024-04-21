@@ -424,6 +424,18 @@ Thank you for your contributions!
                     <br />
                     <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Aryansurf" title="Bug Fixes">🐞</a>
                 </td>
+                </td><td>
+                <td align="center">
+                    <a href="https://github.com/blocage" title="blocage">
+                        <img title="Refactoring" src="https://github.com/blocage.png" width="100px;" alt="" />
+                        <br />
+                        <sub>
+                            <b>David</b>
+                        </sub>
+                    </a>
+                    <br />
+                    <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Ablocage" title="Refactored Files">♻</a>
+                </td>
                 </td></tr></table>
 <!-- CONTRIBUTORS TABLE END -->
 
