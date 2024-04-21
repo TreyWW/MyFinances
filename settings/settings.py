@@ -193,6 +193,7 @@ MIDDLEWARE = [
     "social_django.middleware.SocialAuthExceptionMiddleware",
     "backend.models.CustomUserMiddleware",
     "tz_detect.middleware.TimezoneMiddleware",
+    "backend.middleware.HTMXPartialLoadMiddleware",
 ]
 INTERNAL_IPS = [
     # ...

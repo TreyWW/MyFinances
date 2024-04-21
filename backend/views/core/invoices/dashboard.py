@@ -1,27 +1,26 @@
+from django.contrib import messages
 from django.http import HttpRequest
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
-from backend.decorators import *
-from backend.models import *
+from backend.models import Invoice
 from backend.types.htmx import HtmxHttpRequest
 
 
 def invoices_dashboard(request: HtmxHttpRequest):
-    context = {}
-
-    return render(request, "pages/invoices/dashboard/dashboard.html", context)
+    return render(request, "pages/invoices/dashboard/dashboard.html")
 
 
 def invoices_dashboard_id(request: HtmxHttpRequest, invoice_id):
+    context = {}
+
     if invoice_id == "create":
         return redirect("invoices:create")
-    elif type(invoice_id) != "int":
+    elif not isinstance(invoice_id, int):
         messages.error(request, "Invalid invoice ID")
         return redirect("invoices:dashboard")
-    invoices = Invoice.objects.get(id=invoice_id)
-    if not invoices:
+
+    try:
+        Invoice.objects.get(id=invoice_id)
+    except Invoice.DoesNotExist:
         return redirect("invoices:dashboard")
-    return render(
-        request,
-        "pages/invoices/dashboard/dashboard.html",
-    )
+    return render(request, "pages/invoices/dashboard/dashboard.html", context)

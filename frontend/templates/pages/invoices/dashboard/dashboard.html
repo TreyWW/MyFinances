@@ -1,4 +1,4 @@
-{% extends 'base/base.html' %}
+{% extends base|default:"base/base.html" %}
 {% block content %}
     <form id="filter_list_storage">
     </form>
@@ -44,7 +44,9 @@
                     </li>
                 </ul>
             </div>
-            <a class="btn btn-primary" href="{% url 'invoices:create' %}">
+            <a class="btn btn-primary"
+               href="{% url 'invoices:create' %}"
+               hx-boost="true">
                 <i class="fa-solid fa-file-invoice"></i>
                 Create Invoice
             </a>

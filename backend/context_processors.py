@@ -30,6 +30,9 @@ def extras(request: HttpRequest):
     data["import_method"] = get_var("IMPORT_METHOD", default="webpack")
     data["analytics"] = get_var("ANALYTICS_STRING")
 
+    if hasattr(request, "htmx") and request.htmx.boosted:
+        data["base"] = "base/htmx.html"
+
     return data
 
 

@@ -7,11 +7,10 @@ from backend.models import QuotaIncreaseRequest, QuotaLimit
 from backend.types.htmx import HtmxHttpRequest
 
 
-@cache_page(3600)
 def quotas_page(request: HtmxHttpRequest) -> HttpResponse:
     groups = list(QuotaLimit.objects.values_list("slug", flat=True).distinct())
 
-    quotas = set(q.split("-")[0] for q in groups if q.split("-"))
+    quotas = {q.split("-")[0] for q in groups if q.split("-")}
 
     return render(
         request,
