@@ -1,6 +1,5 @@
 [tool.poetry]
 name = "MyFinances"
-package-mode = false
 version = "0.3.0"
 description = "github.com/TreyWW/MyFinances"
 authors = ["TreyWW"]
@@ -20,12 +19,6 @@ django-mathfilters = "^1.0.0"
 sample-helper-aws-appconfig = "^2.1.0"
 redis = { extras = ["hiredis"], version = "^5.0.1" }
 
-djangorestframework = "^3.14.0"
-django-tz-detect = "^0.5.0"
-typos = "^1.20.3"
-pre-commit = "^3.7.0"
-pulumi-aws = "^6.29.0"
-
 [tool.poetry.group.mypy.dependencies]
 mypy = "1.7.1"
 djangorestframework-stubs = { extras = ["compatible-mypy"], version = "^3.14.5" }
@@ -36,6 +29,12 @@ boto3-stubs = { extras = [
     "iam",
     "stepfunctions",
 ], version = "^1.34.76" }
+
+djangorestframework = "^3.14.0"
+django-tz-detect = "^0.5.0"
+typos = "^1.20.3"
+pre-commit = "^3.7.0"
+pulumi-aws = "^6.29.0"
 
 [tool.poetry.group.django.dependencies]
 Django = "^5.0.2"

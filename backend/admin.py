@@ -85,6 +85,10 @@ class EmailSendStatusAdmin(admin.ModelAdmin):
     readonly_fields = ["aws_message_id"]
 
 
+class InvoiceURLAdmin(admin.ModelAdmin):
+    readonly_fields = ["expires"]
+
+
 admin.site.register(QuotaLimit, QuotaLimitAdmin)
 admin.site.register(QuotaUsage, QuotaUsageAdmin)
 admin.site.register(QuotaOverrides, QuotaOverridesAdmin)
