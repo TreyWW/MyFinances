@@ -1,0 +1,101 @@
+<div class="navbar fixed bg-base-100 shadow text-base-content">
+    <div class="navbar-start">
+        <div class="dropdown">
+            <label tabindex="0" class="btn btn-ghost lg:hidden">
+                <i class="fa-solid fa-bars"></i>
+            </label>
+            <!-- Buttons Dropdown (MOBILE ONLY) -->
+            <ul tabindex="0"
+                class="menu menu-sm dropdown-content mt-3 z-[1] shadow p-2 bg-base-100 rounded-box w-52">
+                {% include "pages/invoices/view/_banner/_button_options_dropdown.html" %}
+            </ul>
+        </div>
+        {% if type == "preview" %}
+            <a href="{% url 'invoices:dashboard' %}" class="btn btn-sm btn-outline">
+                <i class="fa-solid fa-arrow-left me-2"></i>
+                <p class="hidden sm:hidden md:block lg:block">Go Back</p>
+            </a>
+        {% endif %}
+    </div>
+    <div class="navbar-center hidden lg:flex z-50">
+        {% include "pages/invoices/view/_banner/_invoice_status.html" %}
+    </div>
+    <div class="navbar-end">
+        <!-- Topbar Dropdown (LARGE ONLY) -->
+        {#        <ul class="menu menu-horizontal px-1 mr-3">#}
+        <div class="flex mr-3">
+            <ul class="menu menu-horizontal px-1 md:flex lg:flex hidden">
+                {% include "pages/invoices/view/_banner/_button_options_top.html" %}
+            </ul>
+            <div class="flex items-center mx-4 tooltip tooltip-bottom"
+                 data-tip="Hide Banner">
+                <button onclick="document.getElementById('status_banner').remove();"
+                        type="button"
+                        class="flex-shrink-0 inline-flex justify-center w-7 h-7 items-center rounded-lg text-sm p-1.5 hover:bg-gray-600 hover:text-white">
+                    <i class="fa-solid fa-xmark"></i>
+                    <span class="sr-only">Hide Banner</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{#<div tabindex="-1" id="status_banner"#}
+{#     class="mt-20 print-ignore fixed top-0 left-0 z-50 grid grid-cols-3 w-full p-4 bg-base-100 shadow text-base-content">#}
+{#    <div class="">#}
+{#        {% if type == "preview" %}#}
+{#            <a href="{% url 'invoices:dashboard' %}" class="btn btn-sm btn-outline">#}
+{#                <i class="fa-solid fa-arrow-left me-2"></i>#}
+{#                <p class="hidden sm:hidden md:block lg:block">Go Back</p>#}
+{#            </a>#}
+{#        {% endif %}#}
+{#    </div>#}
+{#    <div class="flex items-center mx-auto status-btn">#}
+{#        <p class="flex items-center text-sm font-normal text-content">#}
+{#            {% with ps=invoice.payment_status %}#}
+{#                {% if ps == "paid" %}#}
+{#                    <span class="circle-tick bg-success text-neutral">#}
+{#                                    <i class="fa-solid fa-check"></i>#}
+{#                                </span>#}
+{#                {% elif ps == "pending" %}#}
+{#                    <span class="circle-tick bg-gray-500 text-black">#}
+{#                                    <i class="fa-solid fa-question"></i>#}
+{#                                </span>#}
+{#                {% elif ps == "overdue" %}#}
+{#                    <span class="circle-tick bg-error text-neutral drop-shadow drop-shadow-glow_red">#}
+{#                                    <i class="fa-solid fa-x"></i>#}
+{#                                </span>#}
+{#                {% endif %}#}
+{#                <span>#}
+{#                    {% if ps == "paid" %}#}
+{#                        This invoice has been <strong>paid</strong>#}
+{#                    {% elif ps == "pending" %}#}
+{#                        This invoice is <strong>pending</strong>#}
+{#                    {% elif ps == "overdue" %}#}
+{#                        This invoice is <strong>overdue</strong>#}
+{#                    {% endif %}#}
+{#                </span>#}
+{#                </p>#}
+{#            {% endwith %}#}
+{#    </div>#}
+{#    <div class="flex justify-end float-right options-btn">#}
+{#        <a class="btn btn-sm gradient-btn me-2" href="" download>#}
+{#            <i class="fa-solid fa-download me-2"></i>#}
+{#            <p class="options-text">Download</p>#}
+{#        </a>#}
+{#        <button onclick="window.print()" class="btn btn-sm gradient-btn me-2">#}
+{#            <i class="fa-solid fa-print me-2"></i>#}
+{#            <p class="options-text">Print</p>#}
+{#        </button>#}
+{#        <a class="btn btn-sm gradient-btn me-8 share-btn"#}
+{#           href="{% url "invoices:manage_access" invoice_id=invoice.id %}">Share Invoice#}
+{#        </a>#}
+{#        <div class="flex items-center">#}
+{#            <button onclick="document.getElementById('status_banner').remove();"#}
+{#                    type="button"#}
+{#                    class="flex-shrink-0 inline-flex justify-center w-7 h-7 items-center rounded-lg text-sm p-1.5 hover:bg-gray-600 hover:text-white">#}
+{#                <i class="fa-solid fa-xmark"></i>#}
+{#                <span class="sr-only">Close Popup</span>#}
+{#            </button>#}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
