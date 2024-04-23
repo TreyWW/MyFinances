@@ -51,8 +51,10 @@
                         <i class="fa-solid fa-print me-2"></i>
                         <p class="options-text">Print</p>
                     </button>
-                    <a class="btn btn-sm gradient-btn me-8 share-btn"
-                       href="{% url "invoices:manage_access" invoice_id=invoice.id %}">Share Invoice</a>
+                    {% if request.user.is_authenticated %}
+                        <a class="btn btn-sm gradient-btn me-8 share-btn"
+                           href="{% url "invoices:manage_access" invoice_id=invoice.id %}">Share Invoice</a>
+                    {% endif %}
                     <div class="flex items-center">
                         <button onclick="document.getElementById('status_banner').remove();"
                                 type="button"
