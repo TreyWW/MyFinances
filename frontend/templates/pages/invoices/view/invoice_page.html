@@ -42,7 +42,6 @@
                         </p>
                     {% endwith %}
                 </div>
-
                 <div class="flex justify-end float-right options-btn">
                     <a class="btn btn-sm gradient-btn me-2" href="" download>
                         <i class="fa-solid fa-download me-2"></i>
@@ -53,8 +52,8 @@
                         <p class="options-text">Print</p>
                     </button>
                     {% if request.user.is_authenticated %}
-                    <a class="btn btn-sm gradient-btn me-8 share-btn"
-                       href="{% url "invoices:manage_access" invoice_id=invoice.id %}">Share Invoice</a>
+                        <a class="btn btn-sm gradient-btn me-8 share-btn"
+                           href="{% url "invoices:manage_access" invoice_id=invoice.id %}">Share Invoice</a>
                     {% endif %}
                     <div class="flex items-center">
                         <button onclick="document.getElementById('status_banner').remove();"
