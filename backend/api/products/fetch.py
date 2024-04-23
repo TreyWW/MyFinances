@@ -1,11 +1,11 @@
 from django.db.models import Q
-from django.http import HttpRequest
 from django.shortcuts import render
 
 from backend.models import InvoiceProduct
+from backend.types.htmx import HtmxHttpRequest
 
 
-def fetch_products(request: HttpRequest):
+def fetch_products(request: HtmxHttpRequest):
     results = []
     search_text = request.GET.get("search_existing_service")
     if search_text:

@@ -1,11 +1,12 @@
 import datetime
 
 from django.contrib import messages
-from django.http import HttpResponse, HttpRequest
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from forex_python.converter import CurrencyRates
 
 from backend.models import *
+from backend.types.htmx import HtmxHttpRequest
 
 
 def convert_currency(init_currency, target_currency, amount, date=None):
@@ -64,7 +65,7 @@ def convert_currency(init_currency, target_currency, amount, date=None):
             raise ValueError(f"Error in currency conversion: {e}")
 
 
-def currency_conversion(request: HttpRequest):
+def currency_conversion(request: HtmxHttpRequest):
     context = {}
 
     if not request.htmx:

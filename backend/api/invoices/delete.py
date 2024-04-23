@@ -1,14 +1,16 @@
 from django.contrib import messages
-from django.http import HttpRequest, JsonResponse, QueryDict, HttpResponse, HttpResponseRedirect
+from django.http import JsonResponse, QueryDict, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import resolve, reverse
 from django.urls.exceptions import Resolver404
 from django.views.decorators.http import require_http_methods
+
 from backend.models import Invoice, QuotaLimit
+from backend.types.htmx import HtmxHttpRequest
 
 
 @require_http_methods(["DELETE"])
-def delete_invoice(request: HttpRequest):
+def delete_invoice(request: HtmxHttpRequest):
     delete_items = QueryDict(request.body)
 
     invoice = delete_items.get("invoice")
@@ -39,4 +41,6 @@ def delete_invoice(request: HttpRequest):
         except Resolver404:
             return HttpResponseRedirect(reverse("dashboard"))
 
-    return JsonResponse({"message": "Invoice successfully deleted"}, status=200)
+    return JsonResponse({"message": "Invoice successfully deleted"}, status=200), QuotaLimit.delete_quota_usage(
+        "invoices-count", request.user, invoice.id, invoice.date_created
+    )

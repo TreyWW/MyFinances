@@ -1,15 +1,16 @@
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Q
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django_ratelimit.core import is_ratelimited
 from django_ratelimit.decorators import ratelimit
 
 from backend.models import EmailSendStatus
+from backend.types.htmx import HtmxHttpRequest
 
 
-def fetch_all_emails(request: HttpRequest):
+def fetch_all_emails(request: HtmxHttpRequest):
     if is_ratelimited(request, group="fetch_all_emails", key="user", rate="2/4s", increment=True) or is_ratelimited(
         request,
         group="fetch_all_emails",

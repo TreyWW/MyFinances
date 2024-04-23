@@ -7,10 +7,11 @@ from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods, require_POST
 
 from backend.models import Invoice
+from backend.types.htmx import HtmxHttpRequest
 
 
 @require_http_methods(["POST"])
-def edit_invoice(request: HttpRequest):
+def edit_invoice(request: HtmxHttpRequest):
     try:
         invoice = Invoice.objects.get(id=request.POST.get("invoice_id"))
     except Invoice.DoesNotExist:
@@ -64,7 +65,7 @@ def edit_invoice(request: HttpRequest):
 
 
 @require_POST
-def change_status(request: HttpRequest, invoice_id: int, status: str) -> HttpResponse:
+def change_status(request: HtmxHttpRequest, invoice_id: int, status: str) -> HttpResponse:
     status = status.lower() if status else ""
 
     if not request.htmx:
@@ -101,7 +102,7 @@ def change_status(request: HttpRequest, invoice_id: int, status: str) -> HttpRes
 
 
 @require_POST
-def edit_discount(request: HttpRequest, invoice_id: str):
+def edit_discount(request: HtmxHttpRequest, invoice_id: str):
     discount_type = "percentage" if request.POST.get("discount_type") == "on" else "amount"
     discount_amount_str: str = request.POST.get("discount_amount")
     percentage_amount_str: str = request.POST.get("percentage_amount")

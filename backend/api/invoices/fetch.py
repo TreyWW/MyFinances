@@ -10,16 +10,16 @@ from django.db.models import (
     Sum,
     Prefetch,
 )
-from django.http import HttpRequest
 from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods
 
 from backend.models import Invoice, InvoiceItem
+from backend.types.htmx import HtmxHttpRequest
 
 
 @require_http_methods(["GET"])
-def fetch_all_invoices(request: HttpRequest):
+def fetch_all_invoices(request: HtmxHttpRequest):
     # Redirect if not an HTMX request
     if not request.htmx:
         return redirect("invoices:dashboard")

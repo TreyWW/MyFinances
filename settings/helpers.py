@@ -122,7 +122,9 @@ def send_email(data: SingleEmailInput) -> SingleEmailSuccessResponse | SingleEma
                 response = EMAIL_CLIENT.send_email(
                     FromEmailAddress=from_email_address,
                     Destination={"ToAddresses": data.destination},
-                    Content={"Simple": {"Subject": {"Data": data.subject}, "Body": {"Text": {"Data": data.content}}}},
+                    Content={
+                        "Simple": {"Subject": {"Data": data.subject if data.subject else ""}, "Body": {"Text": {"Data": data.content}}}
+                    },
                     ConfigurationSetName=data.ConfigurationSetName or "",
                 )
             return SingleEmailSuccessResponse(response)

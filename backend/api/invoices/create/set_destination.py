@@ -1,15 +1,15 @@
 from django.contrib import messages
-from django.http import HttpRequest
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
 from backend.models import Client
+from backend.types.htmx import HtmxHttpRequest
 
 to_get = ["name", "address", "city", "country", "company", "is_representative"]
 
 
 @require_http_methods(["POST"])
-def set_destination_to(request: HttpRequest):
+def set_destination_to(request: HtmxHttpRequest):
     context = {"swapping": True}
 
     context.update({key: request.POST.get(key) for key in to_get})
@@ -28,7 +28,7 @@ def set_destination_to(request: HttpRequest):
 
 
 @require_http_methods(["POST"])
-def set_destination_from(request: HttpRequest):
+def set_destination_from(request: HtmxHttpRequest):
     context = {"swapping": True}
 
     context.update({key: request.POST.get(key) for key in to_get})

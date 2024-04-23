@@ -1,13 +1,14 @@
-from django.http import HttpRequest, JsonResponse
+from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
 from backend.models import InvoiceProduct
+from backend.types.htmx import HtmxHttpRequest
 
 
 @require_http_methods(["POST"])
-def add_service(request: HttpRequest):
-    context = {}
+def add_service(request: HtmxHttpRequest):
+    context: dict = {}
     existing_service = request.POST.get("existing_service")
 
     try:
