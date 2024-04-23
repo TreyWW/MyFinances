@@ -3,6 +3,7 @@
     {% include 'base/_head.html' %}
     <body style="background-color: #94c0eb;">
         <div class="flex-1 min-h-screen overflow-y-auto px-7 pb-4 bg-base-200 invoice-page">
+            {% if request.user.is_authenticated %}
             <div tabindex="-1"
                  id="status_banner"
                  class="print-ignore fixed top-0 left-0 z-50 grid grid-cols-3 w-full p-4 bg-base-100 shadow text-base-content">
@@ -42,6 +43,7 @@
                         </p>
                     {% endwith %}
                 </div>
+
                 <div class="flex justify-end float-right options-btn">
                     <a class="btn btn-sm gradient-btn me-2" href="" download>
                         <i class="fa-solid fa-download me-2"></i>
@@ -63,6 +65,7 @@
                     </div>
                 </div>
             </div>
+            {% endif %}
             <!-- Start of Invoice -->
             {% include "pages/invoices/view/invoice.html" %}
         </div>
