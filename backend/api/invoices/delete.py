@@ -41,6 +41,4 @@ def delete_invoice(request: HtmxHttpRequest):
         except Resolver404:
             return HttpResponseRedirect(reverse("dashboard"))
 
-    return JsonResponse({"message": "Invoice successfully deleted"}, status=200), QuotaLimit.delete_quota_usage(
-        "invoices-count", request.user, invoice.id, invoice.date_created
-    )
+    return JsonResponse({"message": "Invoice successfully deleted"}, status=200)
