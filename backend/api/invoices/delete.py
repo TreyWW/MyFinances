@@ -13,11 +13,10 @@ from backend.types.htmx import HtmxHttpRequest
 def delete_invoice(request: HtmxHttpRequest):
     delete_items = QueryDict(request.body)
 
-    invoice = delete_items.get("invoice")
     redirect = delete_items.get("redirect", None)
 
     try:
-        invoice = Invoice.objects.get(id=invoice)
+        invoice = Invoice.objects.get(id=delete_items.get("invoice", ""))
     except Invoice.DoesNotExist:
         return JsonResponse({"message": "Invoice not found"}, status=404)
 

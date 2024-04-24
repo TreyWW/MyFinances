@@ -1,29 +1,26 @@
-from django.http import HttpRequest
-
 from backend.decorators import *
 from backend.models import Notification, Team, TeamInvitation, User
+from backend.types.htmx import HtmxHttpRequest
 
 
-def delete_notification(user: User, code: TeamInvitation.code):
-    Notification.objects.filter(
+def delete_notification(user: User, code: TeamInvitation):
+    notification = Notification.objects.filter(
         user=user,
         message="New Team Invite",
         action="modal",
         action_value="accept_invite",
         extra_type="accept_invite_with_code",
         extra_value=code,
-    ).first().delete()
+    ).first()
+
+    if notification:
+        notification.delete()
 
 
 def check_team_invitation_is_valid(request, invitation: TeamInvitation, code=None):
     valid: bool = True
-    if not invitation:
-        messages.error(request, "Invalid Invite Code")
-        # Force break early to avoid "no invitation" on invitation.code
-        delete_notification(request.user, code)
-        return False
 
-    if not invitation.is_active:
+    if not invitation.is_active():
         valid = False
         messages.error(request, "Invitation has expired")
 
@@ -43,14 +40,14 @@ def check_team_invitation_is_valid(request, invitation: TeamInvitation, code=Non
     return True
 
 
-def send_user_team_invite(request: HttpRequest):
+def send_user_team_invite(request: HtmxHttpRequest):
     user_email = request.POST.get("email")
-    team_id = request.POST.get("team_id")
+    team_id = request.POST.get("team_id", "")
     team = Team.objects.filter(leader=request.user, id=team_id).first()
 
-    def return_error_notif(request: HttpRequest, message: str, autohide=None):
+    def return_error_notif(request: HtmxHttpRequest, message: str, autohide=None):
         messages.error(request, message)
-        context = {"autohide": False} if autohide == False else {}
+        context = {"autohide": False} if autohide is False else {}
         resp = render(request, "partials/messages_list.html", context=context, status=200)
         resp["HX-Trigger-After-Swap"] = "invite_user_error"
         return resp
@@ -61,7 +58,7 @@ def send_user_team_invite(request: HttpRequest):
     if not team:
         return return_error_notif(request, "You are not the leader of this team")
 
-    user: User = User.objects.filter(email=user_email).first()
+    user: User | None = User.objects.filter(email=user_email).first()
 
     if not user:
         return return_error_notif(request, "User not found")
@@ -115,8 +112,14 @@ def send_user_team_invite(request: HttpRequest):
     return response
 
 
-def accept_team_invite(request: HttpRequest, code):
-    invitation: TeamInvitation = TeamInvitation.objects.filter(code=code).prefetch_related("team").first()
+def accept_team_invite(request: HtmxHttpRequest, code):
+    invitation: TeamInvitation | None = TeamInvitation.objects.filter(code=code).prefetch_related("team").first()
+
+    if not invitation:
+        messages.error(request, "Invalid Invite Code")
+        # Force break early to avoid "no invitation" on invitation.code
+        delete_notification(request.user, code)
+        return render(request, "partials/messages_list.html")
 
     if not check_team_invitation_is_valid(request, invitation, code):
         messages.error(request, "Invalid invite - Maybe it has expired?")
@@ -162,9 +165,15 @@ def accept_team_invite(request: HttpRequest, code):
     # return render(request, "partials/messages_list.html")
 
 
-def decline_team_invite(request: HttpRequest, code):
-    invitation: TeamInvitation = TeamInvitation.objects.filter(code=code).first()
+def decline_team_invite(request: HtmxHttpRequest, code):
+    invitation: TeamInvitation | None = TeamInvitation.objects.filter(code=code).first()
     confirmation_text = request.POST.get("confirmation_text")
+
+    if not invitation:
+        messages.error(request, "Invalid Invite Code")
+        # Force break early to avoid "no invitation" on invitation.code
+        delete_notification(request.user, code)
+        return render(request, "partials/messages_list.html")
 
     if not check_team_invitation_is_valid(request, invitation, code):
         return render(request, "partials/messages_list.html")

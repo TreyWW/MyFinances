@@ -2,21 +2,22 @@ from dataclasses import dataclass
 from typing import Union
 
 from django.contrib import messages
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_http_methods
 
 from backend.decorators import superuser_only
 from backend.models import QuotaIncreaseRequest, QuotaLimit, QuotaUsage, QuotaOverrides
+from backend.types.htmx import HtmxHttpRequest
 from backend.utils.quota_limit_ops import quota_usage_check_under
 
 
-def submit_request(request: HttpRequest, slug) -> HttpResponse:
+def submit_request(request: HtmxHttpRequest, slug) -> HttpResponse:
     if not request.htmx:
         return redirect("quotas")
 
-    new_value = request.POST.get("new_value")
-    reason = request.POST.get("reason")
+    new_value = request.POST.get("new_value", "")
+    reason = request.POST.get("reason", "")
 
     try:
         quota_limit = QuotaLimit.objects.get(slug=slug)
@@ -57,7 +58,7 @@ class Error:
     message: str
 
 
-def error(request: HttpRequest, message: str) -> HttpResponse:
+def error(request: HtmxHttpRequest, message: str) -> HttpResponse:
     messages.error(request, message)
     return render(request, "partials/messages_list.html")
 
@@ -81,7 +82,7 @@ def validate_request(new_value, reason, current) -> Union[bool, Error]:
 
 @superuser_only
 @require_http_methods(["DELETE", "POST"])
-def approve_request(request: HttpRequest, request_id) -> HttpResponse:
+def approve_request(request: HtmxHttpRequest, request_id) -> HttpResponse:
     if not request.htmx:
         return redirect("quotas")
     try:
@@ -117,7 +118,7 @@ def approve_request(request: HttpRequest, request_id) -> HttpResponse:
 
 @superuser_only
 @require_http_methods(["DELETE", "POST"])
-def decline_request(request: HttpRequest, request_id) -> HttpResponse:
+def decline_request(request: HtmxHttpRequest, request_id) -> HttpResponse:
     if not request.htmx:
         return redirect("quotas")
     try:

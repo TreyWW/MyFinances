@@ -13,7 +13,7 @@ from backend.types.htmx import HtmxHttpRequest
 @require_http_methods(["POST"])
 def edit_invoice(request: HtmxHttpRequest):
     try:
-        invoice = Invoice.objects.get(id=request.POST.get("invoice_id"))
+        invoice = Invoice.objects.get(id=request.POST.get("invoice_id", ""))
     except Invoice.DoesNotExist:
         return JsonResponse({"message": "Invoice not found"}, status=404)
 
@@ -29,7 +29,7 @@ def edit_invoice(request: HtmxHttpRequest):
         )
 
     attributes_to_updates = {
-        "date_due": datetime.strptime(request.POST.get("date_due"), "%Y-%m-%d").date(),
+        "date_due": datetime.strptime(request.POST.get("date_due", ""), "%Y-%m-%d").date(),
         "date_issued": request.POST.get("date_issued"),
         "client_name": request.POST.get("to_name"),
         "client_company": request.POST.get("to_company"),
@@ -104,8 +104,8 @@ def change_status(request: HtmxHttpRequest, invoice_id: int, status: str) -> Htt
 @require_POST
 def edit_discount(request: HtmxHttpRequest, invoice_id: str):
     discount_type = "percentage" if request.POST.get("discount_type") == "on" else "amount"
-    discount_amount_str: str = request.POST.get("discount_amount")
-    percentage_amount_str: str = request.POST.get("percentage_amount")
+    discount_amount_str: str = request.POST.get("discount_amount", "")
+    percentage_amount_str: str = request.POST.get("percentage_amount", "")
 
     if not request.htmx:
         return redirect("invoices:dashboard")
@@ -149,7 +149,7 @@ def return_message(request: HttpRequest, message: str, success: bool = True) -> 
     return render(request, "base/toasts.html")
 
 
-def send_message(request: HttpRequest, message: str, success: bool = False) -> NoReturn:
+def send_message(request: HttpRequest, message: str, success: bool = False) -> None:
     if success:
         messages.success(request, message)
     else:

@@ -1,4 +1,4 @@
-from django.db.models import Q
+from django.db.models import Q, QuerySet
 from django.shortcuts import render
 
 from backend.models import InvoiceProduct
@@ -6,7 +6,7 @@ from backend.types.htmx import HtmxHttpRequest
 
 
 def fetch_products(request: HtmxHttpRequest):
-    results = []
+    results: QuerySet
     search_text = request.GET.get("search_existing_service")
     if search_text:
         results = (

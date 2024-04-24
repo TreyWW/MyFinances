@@ -1,4 +1,5 @@
 from django.contrib.auth.models import AnonymousUser
+from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpRequest
 from django_htmx.middleware import HtmxDetails
 
@@ -18,3 +19,7 @@ class UnauthorizedHttpRequest(HttpRequest):
 class HtmxAnyHttpRequest(HttpRequest):
     user: User | AnonymousUser
     htmx: HtmxDetails
+
+
+class AuthWSGIRequest(WSGIRequest):
+    user: User

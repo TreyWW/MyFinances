@@ -1,18 +1,16 @@
 from django.contrib import messages
-from django.db.models import Q
-from django.http import HttpRequest
-from django.shortcuts import render
 
 from backend.api.products.fetch import fetch_products
 from backend.models import InvoiceProduct
+from backend.types.htmx import HtmxHttpRequest
 
 
-def create_product(request: HttpRequest):
+def create_product(request: HtmxHttpRequest):
     try:
-        quantity = int(request.POST.get("post_quantity"))
-        service_name = request.POST.get("post_service_name")
-        service_description = request.POST.get("post_service_description")
-        rate = int(request.POST.get("post_rate"))
+        quantity = int(request.POST.get("post_quantity", ""))
+        service_name = request.POST.get("post_service_name", "")
+        service_description = request.POST.get("post_service_description", "")
+        rate = int(request.POST.get("post_rate", ""))
 
         product = InvoiceProduct.objects.create(
             user=request.user,

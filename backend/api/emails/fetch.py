@@ -1,6 +1,6 @@
 from django.contrib import messages
-from django.core.paginator import Paginator
-from django.db.models import Q
+from django.core.paginator import Paginator, Page
+from django.db.models import Q, QuerySet
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django_ratelimit.core import is_ratelimited
@@ -27,17 +27,17 @@ def fetch_all_emails(request: HtmxHttpRequest):
     page_num = request.GET.get("page")
 
     if request.user.logged_in_as_team:
-        results = EmailSendStatus.objects.filter(organization=request.user.logged_in_as_team)
+        results: QuerySet[EmailSendStatus] = EmailSendStatus.objects.filter(organization=request.user.logged_in_as_team)
     else:
         results = EmailSendStatus.objects.filter(user=request.user)
 
     if search_text:
         results = results.filter(Q(recipient__icontains=search_text))
 
-    results = results.order_by("-id")
+    result: Page | QuerySet = results.order_by("-id")
 
-    paginator = Paginator(results, 8)
-    results = paginator.get_page(page_num)
+    paginator = Paginator(result, 8)
+    result = paginator.get_page(page_num)
 
-    context.update({"emails": results})
+    context.update({"emails": result})
     return render(request, "pages/emails/_fetch_body.html", context)

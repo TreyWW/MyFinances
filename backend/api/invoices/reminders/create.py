@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.contrib import messages
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse
@@ -15,12 +17,12 @@ def get_datetime_from_reminder(reminder: InvoiceReminder) -> str:
     if reminder.reminder_type == "on_overdue":
         return reminder.invoice.date_due.strftime("%Y-%m-%dT%H:%M")
 
-    if reminder.reminder_type == "before_due":
+    if reminder.reminder_type == "before_due" and reminder.days:
         days = 0 - reminder.days
     else:
-        days = reminder.days
+        days = 0
 
-    date = (timezone.now() + timezone.timedelta(days=days)).replace(hour=12, minute=0, second=0, microsecond=0).strftime("%Y-%m-%dT%H:%M")
+    date = (timezone.now() + timedelta(days=days)).replace(hour=12, minute=0, second=0, microsecond=0).strftime("%Y-%m-%dT%H:%M")
     return date
 
 
@@ -34,9 +36,9 @@ def create_reminder_view(request: HtmxHttpRequest) -> HttpResponse:
         return check_usage
 
     # Extract POST data
-    invoice_id = request.POST.get("invoice_id") or request.POST.get("invoice")
+    invoice_id = request.POST.get("invoice_id", "") or request.POST.get("invoice", "")
     reminder_type = request.POST.get("reminder_type")
-    days = request.POST.get("days", "none")
+    days: str | int = request.POST.get("days", "none")
 
     # Check if invoice exists
     try:

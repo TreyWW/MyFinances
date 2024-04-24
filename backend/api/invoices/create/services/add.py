@@ -9,7 +9,7 @@ from backend.types.htmx import HtmxHttpRequest
 @require_http_methods(["POST"])
 def add_service(request: HtmxHttpRequest):
     context: dict = {}
-    existing_service = request.POST.get("existing_service")
+    existing_service = request.POST.get("existing_service", "")
 
     try:
         existing_service_obj = InvoiceProduct.objects.get(user=request.user, id=existing_service)
@@ -23,10 +23,10 @@ def add_service(request: HtmxHttpRequest):
     list_of_current_rows = [row for row in zip(list_hours, list_service_name, list_service_description, list_price_per_hour)]
 
     if not existing_service:
-        hours = int(request.POST.get("post_hours"))
+        hours = int(request.POST.get("post_hours", ""))
         service_name = request.POST.get("post_service_name")
         service_description = request.POST.get("post_service_description")
-        price_per_hour = int(request.POST.get("post_rate"))
+        price_per_hour = int(request.POST.get("post_rate", ""))
 
         if not hours:
             return JsonResponse(
@@ -56,7 +56,7 @@ def add_service(request: HtmxHttpRequest):
             }
         )
 
-    if existing_service and existing_service_obj:
+    if existing_service and existing_service_obj and existing_service_obj.rate is not None:
         context["rows"].append(
             {
                 "hours": existing_service_obj.quantity,

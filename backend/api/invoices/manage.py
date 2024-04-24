@@ -49,7 +49,7 @@ def tab_preview_invoice(request: HtmxHttpRequest, invoice_id):
 
 
 def preview_invoice(request: HtmxHttpRequest, invoice_id) -> SuccessResponse | ErrorResponse:
-    context = {"type": "preview"}
+    context: dict[str, str | Invoice] = {"type": "preview"}
 
     try:
         invoice = Invoice.objects.prefetch_related("items").get(id=invoice_id)

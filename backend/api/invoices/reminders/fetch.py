@@ -1,17 +1,17 @@
 from django.contrib import messages
 from django.db.models import Q
-from django.http import HttpRequest
 from django.shortcuts import render
 from django.views.decorators.http import require_GET
 from django_ratelimit.core import is_ratelimited
 
 from backend.decorators import feature_flag_check
 from backend.models import Invoice
+from backend.types.htmx import HtmxHttpRequest
 
 
 @require_GET
 @feature_flag_check("areInvoiceRemindersEnabled", True, api=True, htmx=True)
-def fetch_reminders(request: HttpRequest, invoice_id: str):
+def fetch_reminders(request: HtmxHttpRequest, invoice_id: str):
     ratelimit = is_ratelimited(request, group="fetch_reminders", key="user", rate="20/30s", increment=True)
     if ratelimit:
         messages.error(request, "Too many requests")
@@ -27,7 +27,7 @@ def fetch_reminders(request: HttpRequest, invoice_id: str):
         messages.error(request, "You do not have permission to view this invoice")
         return render(request, "base/toasts.html")
 
-    context = {}
+    context: dict = {}
 
     reminders = invoice.invoice_reminders.order_by("reminder_type").only("id", "days", "reminder_type")
 

@@ -2,7 +2,7 @@ from logging import exception
 from typing import TypedDict
 
 from django.contrib import messages
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_POST
 from django_ratelimit.core import is_ratelimited
@@ -10,13 +10,14 @@ from mypy_boto3_sesv2.type_defs import GetMessageInsightsResponseTypeDef, Insigh
 
 from backend.decorators import htmx_only, feature_flag_check
 from backend.models import EmailSendStatus
+from backend.types.htmx import HtmxHttpRequest
 from settings.helpers import EMAIL_CLIENT
 
 
 @require_POST
 @htmx_only("emails:dashboard")
 @feature_flag_check("areUserEmailsAllowed", status=True, api=True, htmx=True)
-def get_status_view(request: HttpRequest, status_id: str) -> HttpResponse:
+def get_status_view(request: HtmxHttpRequest, status_id: str) -> HttpResponse:
     try:
         if request.user.logged_in_as_team:
             EMAIL_STATUS = EmailSendStatus.objects.get(organization=request.user.logged_in_as_team, id=status_id)
@@ -26,7 +27,7 @@ def get_status_view(request: HttpRequest, status_id: str) -> HttpResponse:
         messages.error(request, "Status not found")
         return render(request, "base/toast.html")
 
-    message_insight = get_message_insights(message_id=EMAIL_STATUS.aws_message_id)
+    message_insight = get_message_insights(message_id=EMAIL_STATUS.aws_message_id)  # type: ignore[arg-type]
 
     if isinstance(message_insight, str):
         messages.error(request, message_insight)
@@ -45,7 +46,7 @@ def get_status_view(request: HttpRequest, status_id: str) -> HttpResponse:
 @require_POST
 @htmx_only("emails:dashboard")
 @feature_flag_check("areUserEmailsAllowed", status=True, api=True, htmx=True)
-def refresh_all_statuses_view(request: HttpRequest) -> HttpResponse:
+def refresh_all_statuses_view(request: HtmxHttpRequest) -> HttpResponse:
     if is_ratelimited(request, group="email-refresh_all_statuses", key="user", rate="5/10m", increment=True) or is_ratelimited(
         request, group="email-refresh_all_statuses", key="user", rate="1/m", increment=True
     ):
@@ -57,7 +58,7 @@ def refresh_all_statuses_view(request: HttpRequest) -> HttpResponse:
         ALL_STATUSES = EmailSendStatus.objects.filter(user=request.user)
 
     for status in ALL_STATUSES:
-        response = get_message_insights(message_id=status.aws_message_id)
+        response = get_message_insights(message_id=status.aws_message_id)  # type: ignore[arg-type]
         important_info = get_important_info_from_response(response)
 
         status.status = important_info["status"]

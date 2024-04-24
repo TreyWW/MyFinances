@@ -24,11 +24,11 @@ def fetch_all_invoices(request: HtmxHttpRequest):
     if not request.htmx:
         return redirect("invoices:dashboard")
 
-    context = {}
+    context: dict = {}
 
     # Get filter and sort parameters from the request
     sort_by = request.GET.get("sort")
-    sort_direction = request.GET.get("sort_direction")
+    sort_direction = request.GET.get("sort_direction") if request.GET.get("sort_direction") else ""
     action_filter_type = request.GET.get("filter_type")
     action_filter_by = request.GET.get("filter")
 
@@ -98,7 +98,7 @@ def fetch_all_invoices(request: HtmxHttpRequest):
                 # Construct filter condition dynamically based on filter_type
                 if "+" in filter_by:
                     numeric_part = float(filter_by.split("+")[0])
-                    filter_condition = {f"{filter_type}__gte": numeric_part}
+                    filter_condition: dict[str, str | float] = {f"{filter_type}__gte": numeric_part}
                 else:
                     filter_condition = {f"{filter_type}": filter_by}
                 or_conditions_filter |= Q(**filter_condition)
@@ -138,7 +138,7 @@ def fetch_all_invoices(request: HtmxHttpRequest):
     elif sort_by in all_sort_options:
         # True is for reverse order
         # first time set direction is none
-        if sort_direction.lower() == "true" or sort_direction == "":
+        if sort_direction is not None and sort_direction.lower() == "true" or sort_direction == "":
             context["sort"] = f"-{sort_by}"
             context["sort_direction"] = False
             invoices = invoices.order_by(f"-{sort_by}")
