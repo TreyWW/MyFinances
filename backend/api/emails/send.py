@@ -115,7 +115,7 @@ def _send_bulk_email_view(request: AuthWSGIRequest) -> HttpResponse:
         return render(request, "base/toast.html")
 
     EMAIL_RESPONSES: Iterator[tuple[BulkEmailEmailItem, BulkEmailEntryResultTypeDef]] = zip(
-        EMAIL_DATA.email_list, EMAIL_SENT.response.get("BulkEmailEntryResults")
+        EMAIL_DATA.email_list, EMAIL_SENT.response.get("BulkEmailEntryResults")  # type: ignore[arg-type]
     )
 
     if request.user.logged_in_as_team:
@@ -198,7 +198,11 @@ def _send_single_email_view(request: AuthWSGIRequest) -> HttpResponse:
 
     EMAIL_SENT = send_email(data=EMAIL_DATA)
 
-    status_object = EmailSendStatus(sent_by=request.user, recipient=email, aws_message_id=EMAIL_SENT.response.get("MessageId"))
+    aws_message_id = None
+    if EMAIL_SENT.response is not None:
+        aws_message_id = EMAIL_SENT.response.get("MessageId")
+
+    status_object = EmailSendStatus(sent_by=request.user, recipient=email, aws_message_id=aws_message_id)
 
     if EMAIL_SENT.success:
         messages.success(request, f"Successfully emailed {email}.")
@@ -332,7 +336,7 @@ def validate_email_subject(subject: str) -> str | None:
     return None
 
 
-def validate_email_content(message: str, request: WSGIRequest) -> str | None:
+def validate_email_content(message: str, request: AuthWSGIRequest) -> str | None:
     min_count = 64
     max_count = QuotaLimit.objects.get(slug="emails-email_character_count").get_quota_limit(user=request.user)
 
