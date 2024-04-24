@@ -832,7 +832,6 @@ class EmailSendStatus(models.Model):
     sent_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name="emails_sent")
 
     created_at = models.DateTimeField(auto_now_add=True)
-    
     updated_at = models.DateTimeField(auto_now=True)
     updated_status_at = models.DateTimeField(auto_now_add=True)
 
