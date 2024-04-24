@@ -59,6 +59,11 @@ def refresh_all_statuses_view(request: HtmxHttpRequest) -> HttpResponse:
 
     for status in ALL_STATUSES:
         response = get_message_insights(message_id=status.aws_message_id)  # type: ignore[arg-type]
+
+        if isinstance(response, str):
+            messages.error(request, response)
+            return render(request, "base/toast.html")
+
         important_info = get_important_info_from_response(response)
 
         status.status = important_info["status"]
@@ -67,9 +72,9 @@ def refresh_all_statuses_view(request: HtmxHttpRequest) -> HttpResponse:
     ALL_STATUSES.bulk_update(ALL_STATUSES, fields=["status", "updated_status_at", "updated_at"])
 
     messages.success(request, "All statuses have been refreshed")
-    response = HttpResponse(status=200)
-    response["HX-Refresh"] = "true"
-    return response
+    http_response = HttpResponse(status=200)
+    http_response["HX-Refresh"] = "true"
+    return http_response
 
 
 class ImportantInfo(TypedDict):

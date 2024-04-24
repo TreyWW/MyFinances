@@ -19,7 +19,3 @@ class UnauthorizedHttpRequest(HttpRequest):
 class HtmxAnyHttpRequest(HttpRequest):
     user: User | AnonymousUser
     htmx: HtmxDetails
-
-
-class AuthWSGIRequest(WSGIRequest):
-    user: User
