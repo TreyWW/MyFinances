@@ -28,7 +28,7 @@ def fetch_all_invoices(request: HtmxHttpRequest):
 
     # Get filter and sort parameters from the request
     sort_by = request.GET.get("sort")
-    sort_direction = request.GET.get("sort_direction") if request.GET.get("sort_direction") else ""
+    sort_direction = request.GET.get("sort_direction", "")
     action_filter_type = request.GET.get("filter_type")
     action_filter_by = request.GET.get("filter")
 
