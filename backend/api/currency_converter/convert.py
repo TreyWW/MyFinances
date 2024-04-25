@@ -1,11 +1,12 @@
 import datetime
 
 from django.contrib import messages
-from django.http import HttpResponse, HttpRequest
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from forex_python.converter import CurrencyRates
 
-from backend.models import *
+from backend.models import UserSettings
+from backend.types.htmx import HtmxHttpRequest
 
 
 def convert_currency(init_currency, target_currency, amount, date=None):
@@ -64,7 +65,7 @@ def convert_currency(init_currency, target_currency, amount, date=None):
             raise ValueError(f"Error in currency conversion: {e}")
 
 
-def currency_conversion(request: HttpRequest):
+def currency_conversion(request: HtmxHttpRequest):
     context = {}
 
     if not request.htmx:
@@ -73,14 +74,14 @@ def currency_conversion(request: HttpRequest):
     if request.method != "POST":
         return HttpResponse("Method not allowed", status=405)
 
-    amount = request.POST.get("currency_amount")
+    amount_str: str = request.POST.get("currency_amount", "")
 
-    if not amount or len(amount) > 10:
+    if not amount_str or len(amount_str) > 10:
         messages.error(request, "Please enter a valid currency amount")
         return render(request, "partials/messages_list.html")
 
     try:
-        amount = float(amount)
+        amount: float = float(amount_str)
         converted_amt = convert_currency(
             request.POST["from_currency"],
             request.POST["to_currency"],
@@ -100,6 +101,6 @@ def currency_conversion(request: HttpRequest):
             }
         )
         return render(request, "pages/currency_converter/result.html", context)
-    except Exception as e:
+    except (KeyError, ValueError, TypeError, AttributeError):
         messages.error(request, f"Failed to convert currency. Make sure the amount is valid.")
         return render(request, "partials/messages_list.html")

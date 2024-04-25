@@ -1,21 +1,22 @@
 from django.contrib import messages
-from django.http import HttpRequest, JsonResponse, QueryDict, HttpResponse, HttpResponseRedirect
+from django.http import JsonResponse, QueryDict, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import resolve, reverse
 from django.urls.exceptions import Resolver404
 from django.views.decorators.http import require_http_methods
+
 from backend.models import Invoice, QuotaLimit
+from backend.types.htmx import HtmxHttpRequest
 
 
 @require_http_methods(["DELETE"])
-def delete_invoice(request: HttpRequest):
+def delete_invoice(request: HtmxHttpRequest):
     delete_items = QueryDict(request.body)
 
-    invoice = delete_items.get("invoice")
     redirect = delete_items.get("redirect", None)
 
     try:
-        invoice = Invoice.objects.get(id=invoice)
+        invoice = Invoice.objects.get(id=delete_items.get("invoice", ""))
     except Invoice.DoesNotExist:
         return JsonResponse({"message": "Invoice not found"}, status=404)
 

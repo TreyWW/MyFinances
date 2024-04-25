@@ -8,6 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods, require_POST, require_GET
 from django_ratelimit.core import is_ratelimited
 from mypy_boto3_iam.type_defs import GetRoleResponseTypeDef
+from mypy_boto3_scheduler.type_defs import ScheduleSummaryTypeDef
 
 from backend.decorators import feature_flag_check
 from backend.models import Invoice, AuditLog, APIKey, InvoiceOnetimeSchedule, InvoiceURL, QuotaUsage
@@ -60,7 +61,7 @@ def create_schedule(request: HtmxHttpRequest):
 
 
 def create_ots(request: HtmxHttpRequest) -> HttpResponse:
-    invoice_id = request.POST.get("invoice_id") or request.POST.get("invoice")
+    invoice_id = request.POST.get("invoice_id", "") or request.POST.get("invoice", "")
 
     try:
         invoice = Invoice.objects.get(id=invoice_id)
@@ -78,7 +79,7 @@ def create_ots(request: HtmxHttpRequest) -> HttpResponse:
 
     schedule = create_onetime_schedule(
         CreateOnetimeScheduleInputData(
-            invoice=invoice, option=1, datetime=request.POST.get("date_time"), email_type=request.POST.get("email_type")
+            invoice=invoice, option=1, datetime=request.POST.get("date_time"), email_type=request.POST.get("email_type")  # type: ignore[arg-type]
         )
     )
 
@@ -99,10 +100,10 @@ def get_execution_role() -> str | None:
     """
 
     iam_client = get_iam_client()
-    response = iam_client.list_roles(PathPrefix=f"/{AWS_TAGS_APP_NAME}-scheduled-invoices/", MaxItems=1)
+    response: GetRoleResponseTypeDef = iam_client.list_roles(PathPrefix=f"/{AWS_TAGS_APP_NAME}-scheduled-invoices/", MaxItems=1)
 
     try:
-        response: GetRoleResponseTypeDef = iam_client.get_role(RoleName=f"{AWS_TAGS_APP_NAME}-invoicing-scheduler")
+        response = iam_client.get_role(RoleName=f"{AWS_TAGS_APP_NAME}-invoicing-scheduler")
     except (iam_client.exceptions.NoSuchEntityException, iam_client.exceptions.ServiceFailureException):
         return None
 
@@ -199,15 +200,15 @@ def fetch_onetime_schedules(request: HtmxHttpRequest, invoice_id: str):
         messages.error(request, "Invoice not found")
         return render(request, "base/toasts.html")
 
-    if not invoice.user.logged_in_as_team and invoice.user != request.user:
+    if invoice.user and not invoice.user.logged_in_as_team and invoice.user != request.user:
         messages.error(request, "You do not have permission to view this invoice")
         return render(request, "base/toasts.html")
 
-    if invoice.user.logged_in_as_team and invoice.organization != request.user.logged_in_as_team:
+    if invoice.user and invoice.user.logged_in_as_team and invoice.organization != request.user.logged_in_as_team:
         messages.error(request, "You do not have permission to view this invoice")
         return render(request, "base/toasts.html")
 
-    context: dict[str, list[str] | dict] = {}
+    context: dict = {}
 
     schedules = invoice.onetime_invoice_schedules.order_by("due").only("id", "due", "status")
 
@@ -268,7 +269,7 @@ def fetch_onetime_schedules(request: HtmxHttpRequest, invoice_id: str):
             messages.error(request, aws_schedules.message)
         else:
             # convert list of dictionaries to dictionary with key of ARN
-            aws_schedules = {schedule["Arn"]: schedule for schedule in aws_schedules.schedules}
+            aws_schedules_dict = {schedule["Arn"]: schedule for schedule in aws_schedules.schedules}
 
             for schedule in schedules:
                 arn = schedule.stored_schedule_arn
@@ -279,7 +280,7 @@ def fetch_onetime_schedules(request: HtmxHttpRequest, invoice_id: str):
                     schedule.save()
                     continue
 
-                if arn in aws_schedules:
+                if arn in aws_schedules_dict:
                     if schedule.status != "pending" and schedule.status != "cancelled":
                         schedule.status = "pending"
                         schedule.save()

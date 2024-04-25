@@ -1,17 +1,18 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import HttpRequest, HttpResponseBadRequest
+from django.http import HttpResponseBadRequest
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
 
 from backend.decorators import quota_usage_check
 from backend.models import Receipt, QuotaUsage
+from backend.types.htmx import HtmxHttpRequest
 
 
 @require_http_methods(["POST"])
 @quota_usage_check("receipts-count", api=True, htmx=True)
 @login_required
-def receipt_create(request: HttpRequest):
+def receipt_create(request: HtmxHttpRequest):
     if not request.htmx:
         return redirect("receipts dashboard")
     file = request.FILES.get("receipt_image")  # InMemoryUploadedFile
@@ -25,7 +26,7 @@ def receipt_create(request: HttpRequest):
         messages.error(request, "No image found")
         return HttpResponseBadRequest("No image found", status=400)
 
-    name = file.name.split(".")[0] if not name else name
+    name = file.name.split(".")[0] if not name and file.name else name
 
     if not name:
         messages.error(request, "No name provided, or image doesn't contain a valid name.")
@@ -34,7 +35,7 @@ def receipt_create(request: HttpRequest):
     if not date:
         date = None
 
-    receipt_data = {
+    receipt_data: dict = {
         "name": name,
         "image": file,
         "date": date,

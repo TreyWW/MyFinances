@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from django.contrib import messages
-from django.http import HttpRequest
 from django.http import HttpResponseBadRequest
 from django.shortcuts import render
 
@@ -10,6 +9,7 @@ from backend.models import Invoice
 from backend.models import QuotaLimit
 from backend.models import Team
 from backend.models import UserSettings
+from backend.types.htmx import HtmxHttpRequest
 from backend.utils.feature_flags import get_feature_status
 from backend.utils.quota_limit_ops import quota_usage_check_under
 
@@ -17,7 +17,7 @@ from backend.utils.quota_limit_ops import quota_usage_check_under
 # Still working on
 
 
-def open_modal(request: HttpRequest, modal_name, context_type=None, context_value=None):
+def open_modal(request: HtmxHttpRequest, modal_name, context_type=None, context_value=None):
     try:
         context = {}
         template_name = f"modals/{modal_name}.html"

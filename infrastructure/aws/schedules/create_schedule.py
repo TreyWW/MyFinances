@@ -5,6 +5,7 @@ from typing import Optional, Union, Literal
 import pytz
 from django.utils import timezone
 from rest_framework.reverse import reverse
+from datetime import datetime
 
 from backend.models import Invoice, InvoiceOnetimeSchedule, AuditLog
 from infrastructure.aws.handler import get_event_bridge_scheduler
@@ -51,7 +52,7 @@ def create_onetime_schedule(data: CreateOnetimeScheduleInputData) -> CreateOneti
 
         date_time = data.date + "T" + data.time
 
-    date_time_to_obj: timezone.datetime = timezone.datetime.strptime(date_time, "%Y-%m-%dT%H:%M")
+    date_time_to_obj: datetime = datetime.strptime(date_time, "%Y-%m-%dT%H:%M")
     date_time_to_obj = date_time_to_obj.astimezone(pytz.timezone("UTC"))
     if date_time_to_obj < timezone.now():
         return ErrorResponse("Date time cannot be in the past")

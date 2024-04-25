@@ -30,6 +30,7 @@ from backend.types.emails import (
 )
 from backend.utils.quota_limit_ops import quota_usage_check_under
 from settings.helpers import send_email, send_templated_bulk_email
+from backend.types.htmx import HtmxHttpRequest
 
 
 @dataclass
@@ -44,7 +45,7 @@ class Invalid:
 @require_POST
 @htmx_only("emails:dashboard")
 @feature_flag_check("areUserEmailsAllowed", status=True, api=True, htmx=True)
-def send_single_email_view(request: WSGIRequest) -> HttpResponse:
+def send_single_email_view(request: HtmxHttpRequest) -> HttpResponse:
     check_usage = quota_usage_check_under(request, "emails-single-count", api=True, htmx=True)
     if not isinstance(check_usage, bool):
         return check_usage
@@ -55,7 +56,7 @@ def send_single_email_view(request: WSGIRequest) -> HttpResponse:
 @require_POST
 @htmx_only("emails:dashboard")
 @feature_flag_check("areUserEmailsAllowed", status=True, api=True, htmx=True)
-def send_bulk_email_view(request: WSGIRequest) -> HttpResponse:
+def send_bulk_email_view(request: HtmxHttpRequest) -> HttpResponse:
     email_count = len(request.POST.getlist("emails")) - 1
 
     check_usage = quota_usage_check_under(request, "emails-single-count", add=email_count, api=True, htmx=True)
@@ -64,10 +65,10 @@ def send_bulk_email_view(request: WSGIRequest) -> HttpResponse:
     return _send_bulk_email_view(request)
 
 
-def _send_bulk_email_view(request: WSGIRequest) -> HttpResponse:
+def _send_bulk_email_view(request: HtmxHttpRequest) -> HttpResponse:
     emails: list[str] = request.POST.getlist("emails")
-    subject: str = request.POST.get("subject")
-    message: str = request.POST.get("content")
+    subject: str = request.POST.get("subject", "")
+    message: str = request.POST.get("content", "")
 
     if request.user.logged_in_as_team:
         clients = Client.objects.filter(organization=request.user.logged_in_as_team, email__in=emails)
@@ -114,11 +115,11 @@ def _send_bulk_email_view(request: WSGIRequest) -> HttpResponse:
         return render(request, "base/toast.html")
 
     EMAIL_RESPONSES: Iterator[tuple[BulkEmailEmailItem, BulkEmailEntryResultTypeDef]] = zip(
-        EMAIL_DATA.email_list, EMAIL_SENT.response.get("BulkEmailEntryResults")
+        EMAIL_DATA.email_list, EMAIL_SENT.response.get("BulkEmailEntryResults")  # type: ignore[arg-type]
     )
 
     if request.user.logged_in_as_team:
-        SEND_STATUS_OBJECTS: QuerySet[EmailSendStatus] = EmailSendStatus.objects.bulk_create(
+        SEND_STATUS_OBJECTS: list[EmailSendStatus] = EmailSendStatus.objects.bulk_create(
             [
                 EmailSendStatus(
                     organization=request.user.logged_in_as_team,
@@ -131,7 +132,7 @@ def _send_bulk_email_view(request: WSGIRequest) -> HttpResponse:
             ]
         )
     else:
-        SEND_STATUS_OBJECTS: QuerySet[EmailSendStatus] = EmailSendStatus.objects.bulk_create(
+        SEND_STATUS_OBJECTS = EmailSendStatus.objects.bulk_create(
             [
                 EmailSendStatus(
                     user=request.user,
@@ -162,10 +163,10 @@ def _send_bulk_email_view(request: WSGIRequest) -> HttpResponse:
     return render(request, "base/toast.html")
 
 
-def _send_single_email_view(request: WSGIRequest) -> HttpResponse:
+def _send_single_email_view(request: HtmxHttpRequest) -> HttpResponse:
     email: str = str(request.POST.get("email", "")).strip()
-    subject: str = request.POST.get("subject")
-    message: str = request.POST.get("content")
+    subject: str = request.POST.get("subject", "")
+    message: str = request.POST.get("content", "")
 
     if request.user.logged_in_as_team:
         client = Client.objects.filter(organization=request.user.logged_in_as_team, email=email).first()
@@ -197,7 +198,11 @@ def _send_single_email_view(request: WSGIRequest) -> HttpResponse:
 
     EMAIL_SENT = send_email(data=EMAIL_DATA)
 
-    status_object = EmailSendStatus(sent_by=request.user, recipient=email, aws_message_id=EMAIL_SENT.response.get("MessageId"))
+    aws_message_id = None
+    if EMAIL_SENT.response is not None:
+        aws_message_id = EMAIL_SENT.response.get("MessageId")
+
+    status_object = EmailSendStatus(sent_by=request.user, recipient=email, aws_message_id=aws_message_id)
 
     if EMAIL_SENT.success:
         messages.success(request, f"Successfully emailed {email}.")
@@ -247,7 +252,7 @@ def validate_single_inputs(*, request, email, client, message, subject) -> str |
     return None
 
 
-def validate_bulk_quotas(*, request: WSGIRequest, emails: list) -> str | None:
+def validate_bulk_quotas(*, request: HtmxHttpRequest, emails: list) -> str | None:
     email_count = len(emails)
 
     slugs = ["emails-bulk-count", "emails-bulk-max_sends"]
@@ -331,7 +336,7 @@ def validate_email_subject(subject: str) -> str | None:
     return None
 
 
-def validate_email_content(message: str, request: WSGIRequest) -> str | None:
+def validate_email_content(message: str, request: HtmxHttpRequest) -> str | None:
     min_count = 64
     max_count = QuotaLimit.objects.get(slug="emails-email_character_count").get_quota_limit(user=request.user)
 

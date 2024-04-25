@@ -11,7 +11,7 @@ from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
 from backend.models import Invoice
-from backend.models import UserSettings
+from backend.types.htmx import HtmxHttpRequest
 
 
 class PreviewContext(TypedDict):
@@ -33,7 +33,7 @@ class ErrorResponse:
 
 
 @require_http_methods(["GET"])
-def tab_preview_invoice(request: HttpRequest, invoice_id):
+def tab_preview_invoice(request: HtmxHttpRequest, invoice_id):
     # Redirect if not an HTMX request
     if not request.htmx:
         return redirect("invoices dashboard")  # Maybe should be 404?
@@ -48,8 +48,8 @@ def tab_preview_invoice(request: HttpRequest, invoice_id):
     return render(request, "base/toasts.html")
 
 
-def preview_invoice(request: HttpRequest, invoice_id) -> SuccessResponse | ErrorResponse:
-    context = {"type": "preview"}
+def preview_invoice(request: HtmxHttpRequest, invoice_id) -> SuccessResponse | ErrorResponse:
+    context: dict[str, str | Invoice] = {"type": "preview"}
 
     try:
         invoice = Invoice.objects.prefetch_related("items").get(id=invoice_id)
