@@ -1,4 +1,5 @@
-from django.urls import path
+from django.urls import path, reverse_lazy
+from django.views.generic import RedirectView
 
 from . import schedule, edit, dashboard, create, manage_access, view
 
@@ -43,10 +44,22 @@ urlpatterns = invoice_urls + [
         name="dashboard",
     ),
     path(
-        "create/",
-        create.create_invoice_page,
-        name="create",
+        "create/choose/",
+        create.create_invoice_choose_page,
+        name="create choose",
     ),
+    path(
+        "create/new/",
+        create.create_invoice_page,
+        {"option": "new"},
+        name="create new",
+    ),
+    path(
+        "create/templated/",
+        create.create_invoice_page,
+        {"option": "templated"},
+        name="create templated",
+    )
 ]
 
 app_name = "invoices"

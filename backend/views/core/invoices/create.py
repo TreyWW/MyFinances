@@ -21,6 +21,12 @@ def invoice_page_get(request: HtmxHttpRequest):
     return render(request, "pages/invoices/create/create.html", context)
 
 
+def create_invoice_choose_page(request: HtmxHttpRequest):
+    templates = []
+    return render(request, "pages/invoices/create/choose_template.html", {"templates": templates})
+
+
+
 @quota_usage_check("invoices-count")
 def invoice_page_post(request: HtmxHttpRequest):
     invoice_items = [
@@ -92,7 +98,9 @@ def invoice_page_post(request: HtmxHttpRequest):
 
 
 @require_http_methods(["GET", "POST"])
-def create_invoice_page(request: HtmxHttpRequest):
+def create_invoice_page(request: HtmxHttpRequest, option: str= "new"):
+    if option == "templated":
+        print(f"OPTION TEMPLATED: {request.GET.get('template')}")
     if request.method == "POST":
         return invoice_page_post(request)
     return invoice_page_get(request)

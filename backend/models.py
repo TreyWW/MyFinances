@@ -454,6 +454,8 @@ class InvoiceURL(models.Model):
         verbose_name = "Invoice URL"
         verbose_name_plural = "Invoice URLs"
 
+class InvoiceTemplate(models.Model):
+    ...
 
 class InvoiceSchedule(models.Model):
     class StatusTypes(models.TextChoices):
