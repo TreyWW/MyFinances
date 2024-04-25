@@ -58,7 +58,7 @@ Please provide valid action.
 - list --sort <name|username|role> --limit <int>
 - add <name> <username> <role> <tags>
     to use multi-word usernames or names, surround with quotes
-    tags can be space seperated
+    tags can be space separated
     to change the order use --, e.g. --name bob
             """,
                     fg="red",
