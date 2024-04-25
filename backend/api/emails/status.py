@@ -62,7 +62,7 @@ def refresh_all_statuses_view(request: HtmxHttpRequest) -> HttpResponse:
 
         if isinstance(response, str):
             messages.error(request, response)
-            return render(request, "base/toast.html")
+            continue
 
         important_info = get_important_info_from_response(response)
 
