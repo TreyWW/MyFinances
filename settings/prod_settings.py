@@ -41,6 +41,6 @@ DATABASES = {
 print(f"[BACKEND] Using {DB_TYPE} database: {os.environ.get('DATABASE_NAME')}")
 
 
-ALLOWED_HOSTS: list[str | None] = [os.environ.get("URL")] + URL_LIST
+ALLOWED_HOSTS: list[str | None] = [os.environ.get("URL")] + URL_LIST  # type: ignore
 
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "0"  # THIS WILL ALLOW HTTP IF IT'S SET TO 1 - NOT RECOMMENDED

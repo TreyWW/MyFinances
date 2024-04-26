@@ -436,6 +436,18 @@ Thank you for your contributions!
                     <br />
                     <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Ablocage" title="Refactored Files">♻</a>
                 </td>
+                </td></tr><tr><td>
+                <td align="center">
+                    <a href="https://github.com/glizondo" title="glizondo">
+                        <img title="Bug Fixes" src="https://github.com/glizondo.png" width="100px;" alt="" />
+                        <br />
+                        <sub>
+                            <b>Guillermo</b>
+                        </sub>
+                    </a>
+                    <br />
+                    <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Aglizondo" title="Bug Fixes">🐞</a>
+                </td>
                 </td></tr></table>
 <!-- CONTRIBUTORS TABLE END -->
 

@@ -4,7 +4,7 @@ from typing import TypeVar
 T = TypeVar("T")
 
 
-def extract_to_dataclass(request, class_type: [T], request_types: list[str], *args, **kwargs) -> [T]:
+def extract_to_dataclass(request, class_type: T, request_types: list[str], *args, **kwargs) -> T:
     """
 
     Turn kwargs from Key:Value and get request.POST.get(value) and set class.key = request.POST.get(value)
@@ -27,7 +27,7 @@ def extract_to_dataclass(request, class_type: [T], request_types: list[str], *ar
         except pydantic.ValidationError:
             pass
     """
-    data = {}
+    data: dict = {}
     if "get" in request_types:
         if args:
             data |= {key: request.GET.get(key) for key in args}
@@ -48,4 +48,8 @@ def extract_to_dataclass(request, class_type: [T], request_types: list[str], *ar
 
         if kwargs:
             data |= {key: request.headers.get(value) for key, value in kwargs.items()}
-    return class_type(**data)
+
+    if isinstance(class_type, type):
+        return class_type(**data)
+    else:
+        raise TypeError("class_type must be a class")

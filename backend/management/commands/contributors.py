@@ -49,6 +49,24 @@ class Command(BaseCommand):
             self.list_contributors(*args, **kwargs)
         elif action == "add":
             self.add_contributor(*args, **kwargs)
+        elif action == "help":
+            self.stdout.write(
+                colorize(
+                    """
+Please provide valid action.
+- sync
+- list --sort <name|username|role> --limit <int>
+- add <name> <username> <role> <tags>
+    to use multi-word usernames or names, surround with quotes
+    tags can be space separated
+    to change the order use --, e.g. --name bob
+            """,
+                    fg="red",
+                    opts=("bold",),
+                )
+            )
+        else:
+            self.stdout.write(colorize("Please provide valid action. \n - sync \n - list \n - add \n - help", fg="red", opts=("bold",)))
 
     def add_contributor(self, *args, **kwargs):
         name: str = kwargs.get("name")

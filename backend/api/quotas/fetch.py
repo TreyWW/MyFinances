@@ -1,11 +1,11 @@
 from django.db.models import Q
-from django.http import HttpRequest
 from django.shortcuts import render, redirect
 
 from backend.models import QuotaLimit
+from backend.types.htmx import HtmxHttpRequest
 
 
-def fetch_all_quotas(request: HttpRequest, group: str):
+def fetch_all_quotas(request: HtmxHttpRequest, group: str):
     context = {}
     if not request.htmx:
         return redirect("quotas")

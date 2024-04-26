@@ -1,14 +1,15 @@
 from django.contrib import messages
-from django.http import HttpRequest, HttpResponseBadRequest, HttpResponse
+from django.http import HttpResponseBadRequest, HttpResponse
 from django.shortcuts import render, redirect
 
 from backend.models import APIKey
+from backend.types.htmx import HtmxHttpRequest
 
 
 # Still working on
 
 
-def generate_api_key(request: HttpRequest) -> HttpResponse():
+def generate_api_key(request: HtmxHttpRequest) -> HttpResponse:
     if not request.htmx:
         return redirect("user settings")
     if not request.user.is_staff or not request.user.is_superuser:

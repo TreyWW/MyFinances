@@ -1,4 +1,4 @@
-from django.db.models import Q
+from django.db.models import Q, QuerySet
 from django.shortcuts import render, redirect
 
 from backend.models import Receipt, User
@@ -6,7 +6,7 @@ from backend.types.htmx import HtmxHttpRequest
 
 
 def fetch_all_receipts(request: HtmxHttpRequest):
-    context = {}
+    context: dict[str, QuerySet | list[str] | dict[str, list[str]]] = {}
     if not request.htmx:
         return redirect("receipts dashboard")
 
