@@ -44,12 +44,13 @@ class CustomUserManager(UserManager):
 
 
 class User(AbstractUser):
-    objects = CustomUserManager()
+    objects = CustomUserManager()  # type: ignore
 
     logged_in_as_team = models.ForeignKey("Team", on_delete=models.SET_NULL, null=True, blank=True)
     awaiting_email_verification = models.BooleanField(default=True)
 
     class Role(models.TextChoices):
+        #        NAME     DJANGO ADMIN NAME
         DEV = "DEV", "Developer"
         STAFF = "STAFF", "Staff"
         USER = "USER", "User"
@@ -63,9 +64,11 @@ class CustomUserMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
+        # Replace request.user with CustomUser instance if authenticated
         if request.user.is_authenticated:
             request.user = User.objects.get(pk=request.user.pk)
         else:
+            # If user is not authenticated, set request.user to AnonymousUser
             request.user = AnonymousUser()
         return self.get_response(request)
 
@@ -79,8 +82,8 @@ class VerificationCodes(models.Model):
         CREATE_ACCOUNT = "create_account", "Create Account"
         RESET_PASSWORD = "reset_password", "Reset Password"
 
-    uuid = models.UUIDField(default=uuid4, editable=False, unique=True)
-    token = models.TextField(default=random_code, editable=False)
+    uuid = models.UUIDField(default=uuid4, editable=False, unique=True)  # This is the public identifier
+    token = models.TextField(default=random_code, editable=False)  # This is the private token (should be hashed)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     expiry = models.DateTimeField(default=add_3hrs_from_now)
