@@ -1,6 +1,7 @@
 {% load static %}
 {% load mathfilters %}
 {% load markdownify %}
+{% load strfilters %}
 <div class="max-w-3xl mx-auto p-6 bg-white mt-8 rounded-lg shadow-sm min-h-screen flex flex-col justify-between invoice-container">
     <div class="flex justify-between items-center mb-8 mt-4">
         <!-- Company Logo and Info -->
@@ -135,7 +136,8 @@
     </div>
     <!-- Payment Details -->
     {% if invoice.account_holder_name or invoice.account_number or invoice.sort_code %}
-        <div class="text-sm text-gray-600 mb-4">
+        <div class="divider divider-secondary"></div>
+        <div class="text-sm text-gray-600 my-4">
             {% if invoice.account_holder_name %}
                 <p>
                     Account Holder Name: <span class="font-semibold ms-2">{{ invoice.account_holder_name }}</span>
@@ -148,23 +150,23 @@
             {% endif %}
             {% if invoice.sort_code %}
                 <p>
-                    Account Sort Code: <span class="font-semibold ms-2">{{ invoice.sort_code }}</span>
+                    Account Sort Code: <span class="font-semibold ms-2">{{ invoice.sort_code|dashify }}</span>
                 </p>
             {% endif %}
         </div>
     {% endif %}
     <!--  Footer  -->
     {% if invoice.notes %}
+        <div class="divider divider-secondary"></div>
         <div class="border-t-2 pt-4 text-xs text-gray-500 text-center">
             {#        Please pay the invoice before the due date. You can pay the invoice by logging in to your account from our client portal.#}
             {{ invoice.notes|markdownify }}
         </div>
     {% endif %}
     <!-- Credits -->
-    <div class="border-t-2 mb-auto pt-3 text-xs text-gray-500 text-center print:hidden">
+    <div class="divider rounded-lg divider-secondary mb-auto pt-3 text-xs text-gray-500 text-center print:hidden">
         {# Print ignored #}
         This invoice was generated with 💜 by
         <a class="underline" href="https://github.com/TreyWW/MyFinances">MyFinances</a>
-        .
     </div>
 </div>
