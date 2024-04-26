@@ -4,7 +4,7 @@
     <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
         <div class="drawer drawer-mobile min-h-full">
             <input id="left-sidebar-drawer" type="checkbox" class="drawer-toggle">
-            <div class="drawer-content flex flex-col ">
+            <div class="drawer-content flex flex-col">
                 {% include 'base/topbar/_topbar.html' %}
                 <div class="flex-1 min-h-screen overflow-y-auto pt-8 px-6 pb-4 bg-base-200">
                     {% include 'base/breadcrumbs.html' %}
@@ -18,8 +18,8 @@
                         </div>
                         {% component "base:left_drawer" %}
                     </div>
-                    <div class="fixed bottom-5 left-5 z-50">
-                        <ul class="menu menu-horizontal bg-base-100 rounded-box">
+                    <div class="fixed bottom-5 left-5 z-55 hidden md:block">
+                        <ul class="menu menu-horizontal bg-base-100 rounded-box shadow-lg">
                             <li>
                                 <label for="service_list_drawer"
                                        id="service_list_button"
@@ -36,12 +36,20 @@
                 <script>
             document.addEventListener("DOMContentLoaded", function () {
                 const drawer = document.getElementById("service_list_drawer");
+                var togglers = document.querySelectorAll("#service_list_togglers");
+
                 drawer.addEventListener("change", function () {
                     if (drawer.checked) {
                         document.getElementById("service_list_toggler").checked = true;
+                        for (let i = 0; i < togglers.length; i++) {
+                            togglers[i].checked = true
+                        }
                         document.getElementById("logo_single_service_list_toggler").checked = true;
                     } else {
                         document.getElementById("service_list_toggler").checked = false;
+                        for (let i = 0; i < togglers.length; i++) {
+                            togglers[i].checked = false
+                        }
                         document.getElementById("logo_single_service_list_toggler").checked = false;
                     }
                     ;
