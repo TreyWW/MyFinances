@@ -1,0 +1,41 @@
+<div class="navbar fixed bg-base-100 shadow text-base-content print:hidden">
+    <div class="navbar-start">
+        <div class="dropdown">
+            <label tabindex="0" class="btn btn-ghost lg:hidden">
+                <i class="fa-solid fa-bars"></i>
+            </label>
+            <!-- Buttons Dropdown (MOBILE ONLY) -->
+            <ul tabindex="0"
+                class="menu menu-sm dropdown-content mt-3 z-[1] shadow p-2 bg-base-100 rounded-box w-52">
+                {% include "pages/invoices/view/_banner/_button_options_dropdown.html" %}
+            </ul>
+        </div>
+        {% if type == "preview" %}
+            <a href="{% url 'invoices:dashboard' %}" class="btn btn-sm btn-outline">
+                <i class="fa-solid fa-arrow-left me-2"></i>
+                <p class="hidden sm:hidden md:block lg:block">Go Back</p>
+            </a>
+        {% endif %}
+    </div>
+    <div class="navbar-center hidden lg:flex z-50">
+        {% include "pages/invoices/view/_banner/_invoice_status.html" %}
+    </div>
+    <div class="navbar-end">
+        <!-- Topbar Dropdown (LARGE ONLY) -->
+        {#        <ul class="menu menu-horizontal px-1 mr-3">#}
+        <div class="flex mr-3">
+            <ul class="menu menu-horizontal px-1 md:flex lg:flex hidden">
+                {% include "pages/invoices/view/_banner/_button_options_top.html" %}
+            </ul>
+            <div class="flex items-center mx-4 tooltip tooltip-bottom"
+                 data-tip="Hide Banner">
+                <button onclick="document.getElementById('status_banner').remove();"
+                        type="button"
+                        class="flex-shrink-0 inline-flex justify-center w-7 h-7 items-center rounded-lg text-sm p-1.5 hover:bg-gray-600 hover:text-white">
+                    <i class="fa-solid fa-xmark"></i>
+                    <span class="sr-only">Hide Banner</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
