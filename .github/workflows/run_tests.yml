@@ -71,6 +71,12 @@ jobs:
             echo "frontend/static/js/c/ was not created from webpack build"
             exit 1
           fi
+          if [ -f webpack-stats.json ]; then
+            echo "webpack has built webpack-stats to work with chunks"
+          else
+            echo "webpack-stats was not built so cannot work with chunks"
+            exit 1
+          fi
 
       #----------------------------------------------
       #       run docker compose & tests
