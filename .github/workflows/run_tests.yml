@@ -65,7 +65,7 @@ jobs:
             echo "output.css is not created"
             exit 1
           fi
-          if [ -f frontend/static/js/c/ ]; then
+          if [ -d frontend/static/js/c/ ]; then
             echo "webpack has been built"
           else
             echo "frontend/static/js/c/ was not created from webpack build"
