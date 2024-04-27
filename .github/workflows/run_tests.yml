@@ -65,10 +65,10 @@ jobs:
             echo "output.css is not created"
             exit 1
           fi
-          if [ -f frontend/static/js/bundle.js ] && [ -f frontend/static/js/bundle.js.map ]; then
-            echo "bundle.js and bundle.js.map are created"
+          if [ -f frontend/static/js/c/ ]; then
+            echo "webpack has been built"
           else
-            echo "bundle.js and/or bundle.js.map are not created"
+            echo "frontend/static/js/c/ was not created from webpack build"
             exit 1
           fi
 
