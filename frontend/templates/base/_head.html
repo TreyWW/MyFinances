@@ -1,4 +1,6 @@
 {% load static %}
+{% load render_bundle from webpack_loader %}
+{% load tz_detect %}
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -29,7 +31,7 @@
         <!-- AlpineJS -->
         <script defer
                 src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-        {#    <script src="{% static 'js/init-alpine.js' %}"></script>#}
+        {#    <script src="{% static 'js/c/init-alpine.js' %}"></script>#}
         <!-- SimpleMDE -->
         {#        <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>#}
         {#
@@ -46,18 +48,17 @@
         <script src="https://unpkg.com/htmx.org/dist/ext/response-targets.js"></script>
         <script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
     {% else %}
-        <script src="{% static "js/bundle.js" %}"></script>
+        {#        <script defer type="text/javascript" src="{% static "js/c/init.js" %}"></script>#}
+        {#        <script defer type="text/javascript" src="{% static "js/c/htmx.js" %}"></script>#}
+        {#        <script defer type="text/javascript" src="{% static "js/c/font_awesome.js" %}"></script>#}
+        {#        {% render_bundle 'all' 'js' %}#}
+        {% render_bundle 'init' 'js' %}
+        {% render_bundle 'htmx' 'js' %}
+        {% render_bundle 'font_awesome' 'js' %}
         <!-- Tailwind & DaisyUI -->
         <link rel="stylesheet" href="{% static 'src/output.css' %}">
     {% endif %}
-    <script src="{% static 'js/receipt_download.js' %}"></script>
-    <script>
-        // https://htmx.org/docs/#config
-        htmx.config.globalViewTransitions = true
-        htmx.config.useTemplateFragments = true // for swapping of table items
-        Alpine.start()
-    </script>
+    <script type=text/javascript" src="{% static 'js/c/receipt_downloads.js' %}"></script>
     {{ analytics|safe }}
-    {% load tz_detect %}
     {% tz_detect %}
 </head>

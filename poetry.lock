@@ -1290,6 +1290,17 @@ django = ">=2.2"
 pytz = "*"
 
 [[package]]
+name = "django-webpack-loader"
+version = "3.1.0"
+description = "Transparently use webpack with django"
+optional = false
+python-versions = "*"
+files = [
+    {file = "django-webpack-loader-3.1.0.tar.gz", hash = "sha256:b06b83ca819ed4bbb858ab57b8d8cb67a25c4a57ed822dedd4e9fee4c097afd5"},
+    {file = "django_webpack_loader-3.1.0-py2.py3-none-any.whl", hash = "sha256:5c35f8ad9ce0d0360b120abd9a6da6f043a6ff97a4ae7d0fa246d64af012983f"},
+]
+
+[[package]]
 name = "djangorestframework"
 version = "3.15.1"
 description = "Web APIs for Django, made easy."
@@ -3582,4 +3593,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<4.0"
-content-hash = "5b1ebc8f4e86cd51bdcfe791c82cbb24b8e64752e3473554f687493985edab49"
+content-hash = "306d8a31b743fdfaf13153d853935bd4e694d855f3eb452ef2c2c466d5b51fe1"

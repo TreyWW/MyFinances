@@ -33,56 +33,6 @@
                         </ul>
                     </div>
                 </div>
-                <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                const drawer = document.getElementById("service_list_drawer");
-                var togglers = document.querySelectorAll("#service_list_togglers");
-
-                drawer.addEventListener("change", function () {
-                    if (drawer.checked) {
-                        document.getElementById("service_list_toggler").checked = true;
-                        for (let i = 0; i < togglers.length; i++) {
-                            togglers[i].checked = true
-                        }
-                        document.getElementById("logo_single_service_list_toggler").checked = true;
-                    } else {
-                        document.getElementById("service_list_toggler").checked = false;
-                        for (let i = 0; i < togglers.length; i++) {
-                            togglers[i].checked = false
-                        }
-                        document.getElementById("logo_single_service_list_toggler").checked = false;
-                    }
-                    ;
-                });
-            });
-                </script>
-                <script>
-            function htmx_resend(event) {
-                let eventType;
-                if (event.detail.requestConfig.triggeringEvent) {
-                    eventType = event.detail.requestConfig.triggeringEvent.type
-                } else {
-                    eventType = "retry"
-                }
-
-                let timeout;
-
-                if (event.detail.error.startsWith("Response Status Error Code 429")) {
-                    timeout = 4000;
-                } else {
-                    timeout = 2000;
-                }
-
-                setTimeout(function () {
-                    console.log("Sending HTMX retry event")
-                    htmx.trigger(event.detail.elt, eventType);
-                }, timeout);
-            }
-
-            document.body.addEventListener("htmx:sendError", htmx_resend);
-            document.body.addEventListener("htmx:responseError", htmx_resend);
-            document.body.addEventListener("htmx:loadError", htmx_resend);
-                </script>
                 <input type="checkbox" id="logout_modal" class="modal-toggle" />
                 <div class="modal modal-responsive">
                     <div class="modal-box">

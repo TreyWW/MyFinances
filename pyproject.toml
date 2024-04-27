@@ -18,6 +18,7 @@ django = "^5.0.2"
 django-mathfilters = "^1.0.0"
 sample-helper-aws-appconfig = "^2.1.0"
 redis = { extras = ["hiredis"], version = "^5.0.1" }
+django-webpack-loader = "^3.1.0"
 
 [tool.poetry.group.mypy.dependencies]
 mypy = "1.7.1"

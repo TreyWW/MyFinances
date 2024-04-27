@@ -2,7 +2,7 @@
     <button onclick="modal_invoices_from_destination.showModal();"
             id="from_destination"
             class="input_card text-left"
-            hx-trigger="click once"
+            hx-trigger="click"
             hx-swap="beforeend"
             hx-target="#modal_container"
             hx-get="{% url 'api:base:modal retrieve with context' modal_name='invoices_from_destination' context_type='edit_invoice_from' context_value=invoice_object.id %}">
