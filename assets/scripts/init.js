@@ -3,6 +3,9 @@ import $ from 'jquery'
 
 
 window.Alpine = Alpine
+
+Alpine.start()
+
 window.jQuery = $;
 window.$ = $;
 
