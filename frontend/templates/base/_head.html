@@ -58,7 +58,7 @@
         <!-- Tailwind & DaisyUI -->
         <link rel="stylesheet" href="{% static 'src/output.css' %}">
     {% endif %}
-    <script type=text/javascript" src="{% static 'js/c/receipt_downloads.js' %}"></script>
+    {% render_bundle 'receipt_downloads' 'js' %}
     {{ analytics|safe }}
     {% tz_detect %}
 </head>
