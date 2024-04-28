@@ -34,30 +34,40 @@ git clone [copied fork url]
 
 !!! warning "Make sure you have done the previous steps first!"
 
-1. Install our dependencies using [python poetry](https://python-poetry.org/docs/#installing-manually)
+
+1. Create a virtual environment and activate it
+
+	```shell
+	python -m venv ./venv/
+
+ 	./venv/Scripts/activate
+	```
+
+2. Install our dependencies using [python poetry](https://python-poetry.org/docs/#installing-manually)
    ```shell
    pip install poetry
-   poetry install --no-root
+
+   poetry install --no-root --with mypy,django,dev
    ```
-   2. Setup a database (we suggest using sqlite so there's no installation!)
-      To do this you can use one of our database guides, we currently only support 3 databases:
-      - [SQlite3 (recommended for dev)](./databases/sqlite.md)
-      - [Postgres3 (recommended for prod)](./databases/postgres.md)
-      - [Mysql](./databases/mysql.md)
+3. Setup a database (we suggest using sqlite so there's no installation!)
+   To do this you can use one of our database guides, we currently only support 3 databases:
+   	- [SQlite3 (recommended for dev)](./databases/sqlite.md)
+   	- [Postgres3 (recommended for prod)](./databases/postgres.md)
+   	- [Mysql](./databases/mysql.md)
 
-   3. Migrate the database
-       ```shell
-       python manage.py migrate
-       ```
-   4. Create an administrator account
-       ```shell
-       python manage.py createsuperuser
-       ```
+4. Migrate the database
+    ```shell
+    python manage.py migrate
+    ```
+5.  Create an administrator account
+    ```shell
+    python manage.py createsuperuser
+    ```
 
-   5. Run the application
-       ```shell
-       python manage.py runserver
-       ```
+6. Run the application
+    ```shell
+    python manage.py runserver
+    ```
 
 ## Setup the frontend
 
@@ -82,12 +92,26 @@ npm run tailwind-watch
 
 !!! note "Keep in mind, if you don't run tailwind watch you WILL NOT be able to use tailwind classes and may break new changes."
 
-### Webpack for JS
+#### Tailwind Build
 
-Webpack is used to bundle our javascript into one file to make development easier and speed up builds.
-
-1. Run webpack dev
+To be honest, tailwind watch is nice, but especially on my windows PC it is VERY CPU and Memory intesive, every single change,
+even 1 character causes a re-watch, and this is a lot... Instead of that, you can use `tailwind-build` to only do a one-time
+build. You need to remember to run the command after a major update though, incase you add new classes.
 
 ```shell
-npm run webpack-dev
+npm run tailwind-build
+```
+
+### Webpack for JS
+
+Webpack is used to bundle our javascript into one file to make development easier and speed up builds. The project now uses
+chunks to load javascript, so you should see a few files with ids such as `937`. Django will automatically pick these up.
+
+
+#### Run webpack dev
+
+```shell
+npm run webpack-dev # this only runs it once
+
+npm run webpack-watch # this does the same as above, but listens for updates
 ```

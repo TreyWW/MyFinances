@@ -4,8 +4,9 @@
     "tailwind-build": "tailwindcss -i ./frontend/static/src/input.css -o ./frontend/static/src/output.css",
     "tailwind-watch": "tailwindcss -i ./frontend/static/src/input.css -o ./frontend/static/src/output.css -w",
     "tailwind-minify": "tailwindcss -i ./frontend/static/src/input.css -o ./frontend/static/src/output.css --minify",
-    "preview-docs": "docsify serve docs",
-    "webpack-dev": "webpack --watch --config webpack.dev.js",
+    "preview-docs": "mkdocs serve",
+    "webpack-watch": "webpack --watch --config webpack.dev.js",
+    "webpack-dev": "webpack --config webpack.dev.js",
     "webpack-build": "webpack --config webpack.prod.js"
   },
   "devDependencies": {

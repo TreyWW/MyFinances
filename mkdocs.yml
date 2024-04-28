@@ -91,10 +91,12 @@ nav:
               - Google: getting-started/settings/social-login/google.md
           - AWS:
               - Setting up: getting-started/settings/AWS/setup.md
-  #            - Feature Flags: getting-started/settings/AWS/feature-flags.md
-  #            - Static Files: getting-started/settings/AWS/static.md
-  #            - Public Media Files: getting-started/settings/AWS/public-media.md
-  #            - Private Media Files: getting-started/settings/AWS/private-media.md
+      #            - Feature Flags: getting-started/settings/AWS/feature-flags.md
+      #            - Static Files: getting-started/settings/AWS/static.md
+      #            - Public Media Files: getting-started/settings/AWS/public-media.md
+      #            - Private Media Files: getting-started/settings/AWS/private-media.md
+      - Common issues / debugging:
+          - Poetry: debugging/python/poetry.md
   #  - User Guide:
   #      - user-guide/index.md
   - Contributing:
