@@ -1,4 +1,6 @@
-<div class="my-4 max-w-screen-xl card border border-gray-700 dark:border-gray-700">
+<form method="post"
+      class="my-4 max-w-screen-xl card border border-gray-700 dark:border-gray-700">
+    {% csrf_token %}
     <div class="card-body flex flex-col h-full">
         <div class="card-title flex-grow">Profile Settings</div>
         <div class="flex flex-col flex-grow">
@@ -54,4 +56,4 @@
         </div>
         <button disabled class="btn btn-primary mt-auto">Save All</button>
     </div>
-</div>
+</form>

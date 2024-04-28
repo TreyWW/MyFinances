@@ -61,4 +61,9 @@
     {% render_bundle 'receipt_downloads' 'js' %}
     {{ analytics|safe }}
     {% tz_detect %}
+    {#    <script>#}
+    {#        document.body.addEventListener('htmx:configRequest', (event) => {#}
+    {#            event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';#}
+    {#        })#}
+    {#    </script>#}
 </head>

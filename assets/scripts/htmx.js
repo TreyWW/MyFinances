@@ -7,6 +7,11 @@ window._hyperscript.browserInit();
 
 function htmx_resend(event) {
   let eventType;
+
+  if (event.detail.statusCode() === 403) {
+    return // forbidden
+  }
+
   if (event.detail.requestConfig.triggeringEvent) {
     eventType = event.detail.requestConfig.triggeringEvent.type
   } else {
