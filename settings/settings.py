@@ -313,6 +313,9 @@ class CustomStaticStorage(S3Storage):
     custom_domain = get_var("AWS_STATIC_CUSTOM_DOMAIN")
     region_name = get_var("AWS_STATIC_REGION_NAME")
 
+    access_key = get_var("AWS_STATIC_ACCESS_KEY_ID")
+    secret_key = get_var("AWS_STATIC_ACCESS_KEY")
+
 
 class CustomPublicMediaStorage(S3Storage):
     location = get_var("AWS_MEDIA_PUBLIC_LOCATION", default="public/")
