@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "MyFinances"
-version = "0.3.0"
+version = "0.4.0"
 description = "github.com/TreyWW/MyFinances"
 authors = ["TreyWW"]
 readme = "README.md"
@@ -94,7 +94,7 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.bumpversion]
-current_version = "0.3.0"
+current_version = "0.4.0"
 commit = true
 commit_args = "-s"
 tag = true
