@@ -8,7 +8,7 @@ window._hyperscript.browserInit();
 function htmx_resend(event) {
   let eventType;
 
-  if (event.detail.statusCode() === 403) {
+  if (event.detail.statusCode === 403) {
     return // forbidden
   }
 
@@ -41,11 +41,10 @@ window.addEventListener("DOMContentLoaded", (event) => {
   document.body.addEventListener("htmx:sendError", htmx_resend);
   document.body.addEventListener("htmx:responseError", htmx_resend);
   document.body.addEventListener("htmx:loadError", htmx_resend);
-  document.body.addEventListener("htmx:afterRequest", () => {
+  document.body.addEventListener("htmx:afterRequest", (event) => {
     const drawer = document.getElementById("service_list_drawer");
-
     if (drawer) {
-      drawer.checked = false;
+      toggleDrawer(false, true);
     }
   });
 });
