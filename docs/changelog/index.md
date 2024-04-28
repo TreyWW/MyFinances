@@ -32,7 +32,7 @@
 		- [difference](https://github.com/TreyWW/MyFinances/compare/v0.3.0...v0.4.0)
 		- [tag](https://github.com/TreyWW/MyFinances/releases/tag/v0.4.0)
 
-??? abstract "v0.3.0 (latest)"
+??? abstract "v0.3.0"
 	=== "Additions"
 		- 🏷 Added invoice **discounts** ([#244](https://github.com/TreyWW/MyFinances/pull/244))
 		- 🖼 Added invoice overview page ([#222](https://github.com/TreyWW/MyFinances/pull/222))
