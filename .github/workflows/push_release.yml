@@ -3,9 +3,13 @@ on:
   #  release:
   push:
     tags:
-      - '*'
-  workflow_dispatch: # Allow manual invocation of the workflow
-
+      - 'v*'
+  workflow_dispatch: # Allows me to manually call
+    inputs:
+      version:
+        type: string
+        description: Version
+        required: true
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -20,9 +24,14 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Get the tag version
-        id: get_version
-        run: echo ::set-output name=TAG_NAME::${GITHUB_REF/refs\/tags\//}
+      - name: Set version
+        id: set_version
+        run: |
+          if [ "${{ github.event_name }}" == "push" ]; then
+            echo "::set-output name=version::${GITHUB_REF#refs/tags/}"
+          elif [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "::set-output name=version::${{ github.event.inputs.version }}"
+          fi
 
       #----------------------------------------------
       #       build Frontend files
@@ -39,10 +48,16 @@ jobs:
             echo "output.css is not created"
             exit 1
           fi
-          if [ -f frontend/static/js/bundle.js ] && [ -f frontend/static/js/bundle.js.map ]; then
-            echo "bundle.js and bundle.js.map are created"
+          if [ -d frontend/static/js/c/ ]; then
+            echo "webpack has been built"
           else
-            echo "bundle.js and/or bundle.js.map are not created"
+            echo "frontend/static/js/c/ was not created from webpack build"
+            exit 1
+          fi
+          if [ -f webpack-stats.json ]; then
+            echo "webpack has built webpack-stats to work with chunks"
+          else
+            echo "webpack-stats was not built so cannot work with chunks"
             exit 1
           fi
 
@@ -66,9 +81,10 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
-          IMAGE_TAG: ${{ steps.get_version.outputs.TAG_NAME }} #${{ github.sha }}
+          IMAGE_TAG: ${{ steps.set_version.outputs.version }} #${{ github.sha }}
         run: |
           cp infrastructure/backend/Dockerfile ./Dockerfile
+          echo "VERSION IS: ${{ steps.set_version.outputs.version }} or $IMAGE_TAG"
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
