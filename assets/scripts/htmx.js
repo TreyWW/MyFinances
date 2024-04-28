@@ -43,7 +43,4 @@ window.addEventListener("DOMContentLoaded", (event) => {
       drawer.checked = false;
     }
   });
-  document.body.addEventListener('htmx:configRequest', (event) => {
-    event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
-  })
 });
