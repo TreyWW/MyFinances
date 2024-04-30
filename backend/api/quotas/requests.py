@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from typing import Union
 
 from django.contrib import messages
+from django.core.cache import cache
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_http_methods
@@ -10,6 +11,10 @@ from backend.decorators import superuser_only
 from backend.models import QuotaIncreaseRequest, QuotaLimit, QuotaUsage, QuotaOverrides
 from backend.types.htmx import HtmxHttpRequest
 from backend.utils.quota_limit_ops import quota_usage_check_under
+
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def submit_request(request: HtmxHttpRequest, slug) -> HttpResponse:
@@ -86,7 +91,7 @@ def approve_request(request: HtmxHttpRequest, request_id) -> HttpResponse:
     if not request.htmx:
         return redirect("quotas")
     try:
-        quota_request = QuotaIncreaseRequest.objects.get(id=request_id)
+        quota_request = QuotaIncreaseRequest.objects.select_related("quota_limit", "user").get(id=request_id)
     except QuotaIncreaseRequest.DoesNotExist:
         return error(request, "Failed to get the quota increase request")
 
@@ -100,6 +105,9 @@ def approve_request(request: HtmxHttpRequest, request_id) -> HttpResponse:
             value=quota_request.new_value,
             quota_limit=quota_request.quota_limit,
         )
+
+    logger.debug(f"deleting quota overrides cache for {quota_request.user.id}")
+    cache.delete(f"myfinances:user:{quota_request.user.id}:quota_overrides:{quota_request.quota_limit.slug}")
 
     quota_limit_for_increase = QuotaLimit.objects.get(slug="quota_increase-request")
     QuotaUsage.objects.filter(user=quota_request.user, quota_limit=quota_limit_for_increase, extra_data=quota_request.id).delete()

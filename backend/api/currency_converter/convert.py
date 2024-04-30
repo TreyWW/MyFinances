@@ -12,8 +12,7 @@ from backend.types.htmx import HtmxHttpRequest
 
 
 def get_ratelimit(user, period: Literal["hour", "minute"]):
-    quota = QuotaLimit.objects.prefetch_related("quota_overrides").get(slug=f"currency_conversion-ratelimit_{period}")
-    return quota.get_quota_limit(user=user, quota_limit=quota)
+    return user.get_quota_limit(f"currency_conversion-ratelimit_{period}")
 
 
 def check_ratelimited(request, increment: bool = False):
@@ -82,6 +81,8 @@ def convert_currency(init_currency, target_currency, amount, date=None):
 
 def currency_conversion(request: HtmxHttpRequest):
     context = {}
+
+    # print(get_ratelimit(request.user, "minute"))
 
     if check_ratelimited(request, increment=False):
         messages.error(

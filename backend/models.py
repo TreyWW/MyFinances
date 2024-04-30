@@ -11,9 +11,10 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.auth.models import UserManager
+from django.core.cache import cache
 from django.core.validators import MaxValueValidator
 from django.db import models
-from django.db.models import Count
+from django.db.models import Count, Subquery, Value, IntegerField, OuterRef
 from django.db.models import QuerySet
 from django.utils import timezone
 from django.utils.crypto import get_random_string
@@ -21,6 +22,10 @@ from shortuuid.django_fields import ShortUUIDField
 
 from settings import settings
 from settings.settings import AWS_TAGS_APP_NAME
+
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def RandomCode(length=6):
@@ -62,6 +67,28 @@ class User(AbstractUser):
         TESTER = "TESTER", "Tester"
 
     role = models.CharField(max_length=10, choices=Role.choices, default=Role.USER)
+
+    def get_quota_limit(self, slug: str, *, use_cache: bool = True, set_cache: bool = True, quota_limit: QuotaLimit = None) -> int:
+        if use_cache and (cache_val := cache.get(f"myfinances:user:{self.id}:quota_overrides:{slug}")):
+            logger.debug(f"quota_overrides cache hit for {self.id}:{slug}")
+            return cache_val
+        else:
+            try:
+                quota_limit = quota_limit or QuotaLimit.objects.get(slug=slug)
+                try:
+                    overrides = quota_limit.quota_overrides.get(user=self)
+                except QuotaOverrides.DoesNotExist:
+                    overrides = None
+
+                value = overrides.value if overrides else quota_limit.value
+
+                if set_cache:
+                    logger.debug(f"quota_overrides cache set for {self.id}:{slug} (30m)")
+                    cache.set(f"myfinances:user:{self.id}:quota_overrides:{slug}", value, timeout=1800)
+                return value
+            except QuotaLimit.DoesNotExist:
+                logger.error(f"Quota Limit {slug} does not exist. Returning limit of 0")
+                return 0
 
 
 class CustomUserMiddleware:
@@ -654,7 +681,7 @@ class QuotaLimit(models.Model):
                 user_quota_override = quota_limit
             else:
                 user_quota_override = self.quota_overrides.get(user=user)
-            return user_quota_override.value
+            return user_quota_override.value if user_quota_override and user_quota_override.value else self.value
         except QuotaOverrides.DoesNotExist:
             return self.value
 
@@ -743,7 +770,7 @@ class QuotaOverrides(models.Model):
         verbose_name_plural = "Quota Overrides"
 
     def __str__(self):
-        return f"{self.user}"
+        return f"{self.user} override for QL {self.quota_limit_id}"
 
 
 class QuotaUsage(models.Model):

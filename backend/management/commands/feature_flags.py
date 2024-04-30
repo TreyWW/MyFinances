@@ -1,3 +1,4 @@
+from django.core.cache import cache
 from django.core.management.base import BaseCommand
 from django.db.models.functions import Length
 from django.utils.termcolors import colorize
@@ -35,7 +36,7 @@ class Command(BaseCommand):
                 self.stdout.write(row)
             return
 
-        if not kwargs["flag"]:
+        if (flag := kwargs["flag"]) is None:
             self.stdout.write(
                 colorize("Please provide a feature flag name with `feature_flags enable|disable <name>`", fg="red", opts=("bold",))
             )
@@ -46,10 +47,12 @@ class Command(BaseCommand):
 
             if kwargs["action"] == "enable":
                 flag.enable()
-                self.stdout.write(f"[👍] Feature flag {kwargs['flag']} has been enabled")
+                self.stdout.write(f"[👍] Feature flag {flag} has been enabled")
+                cache.delete(f"myfinances:feature_flag:{flag}")
             elif kwargs["action"] == "disable":
                 flag.disable()
-                self.stdout.write(f"[👍] Feature flag {kwargs['flag']} has been disabled")
+                self.stdout.write(f"[👍] Feature flag {flag} has been disabled")
+                cache.delete(f"myfinances:feature_flag:{flag}")
         except FeatureFlags.DoesNotExist:
-            self.stdout.write(colorize("Feature flag  with the name of `{kwargs['flag']}` does not exist", fg="red", opts=("bold",)))
+            self.stdout.write(colorize(f"Feature flag  with the name of `{flag}` does not exist", fg="red", opts=("bold",)))
             return

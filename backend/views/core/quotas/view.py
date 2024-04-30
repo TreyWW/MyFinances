@@ -8,14 +8,12 @@ from backend.types.htmx import HtmxHttpRequest
 
 
 def quotas_page(request: HtmxHttpRequest) -> HttpResponse:
-    groups = list(QuotaLimit.objects.values_list("slug", flat=True).distinct())
-
-    quotas = {q.split("-")[0] for q in groups if q.split("-")}
+    groups = sorted({g.split("-")[0] for g in QuotaLimit.objects.order_by("slug").values_list("slug", flat=True).distinct()})
 
     return render(
         request,
         "pages/quotas/dashboard.html",
-        {"quotas": quotas},
+        {"quotas": groups},
     )
 
 
