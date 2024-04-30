@@ -4,10 +4,9 @@ from backend.models import APIKey
 from settings.settings import AWS_TAGS_APP_NAME, SITE_URL
 from ..handler import get_event_bridge_client
 
-event_bridge_client = get_event_bridge_client
-
 
 def get_or_create_api_destination() -> CreateApiDestinationResponseTypeDef | DescribeApiDestinationResponseTypeDef:
+    event_bridge_client = get_event_bridge_client()
     try:
         print("[AWS] [API_D] Describing API Destination...", flush=True)
         response = event_bridge_client.describe_api_destination(Name=f"{AWS_TAGS_APP_NAME}-scheduled-invoices")
@@ -30,6 +29,7 @@ def get_or_create_api_destination() -> CreateApiDestinationResponseTypeDef | Des
 
 
 def get_or_create_api_connection_arn() -> str:
+    event_bridge_client = get_event_bridge_client()
     try:
         response = event_bridge_client.describe_connection(Name=f"{AWS_TAGS_APP_NAME}-scheduled-invoices").get("ConnectionArn")
         return response

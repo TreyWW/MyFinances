@@ -3,13 +3,13 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.sessions.models import Session
 from django.contrib import messages
 from django.shortcuts import redirect
-from django.http import HttpRequest
 from django.shortcuts import render
 
 from backend.models import UserSettings
+from backend.types.htmx import HtmxHttpRequest
 
 
-def settings_page(request: HttpRequest):
+def settings_page(request: HtmxHttpRequest):
     context = {}
 
     try:
@@ -36,11 +36,11 @@ def settings_page(request: HttpRequest):
                     # Max file size is 10MB (Change the first number to determine the size in MB)
                     max_file_size = 10 * 1024 * 1024
 
-                    if profile_picture.size <= max_file_size:
+                    if profile_picture.size is not None and profile_picture.size <= max_file_size:
                         img = Image.open(profile_picture)
                         img.verify()
 
-                        if img.format.lower() in ["jpeg", "png", "jpg"]:
+                        if img.format is not None and img.format.lower() in ["jpeg", "png", "jpg"]:
                             usersettings.profile_picture = profile_picture
                             usersettings.save()
                             messages.success(request, "Successfully updated profile picture")
@@ -75,7 +75,7 @@ def settings_page(request: HttpRequest):
     return render(request, "pages/settings/main.html", context)
 
 
-def change_password(request: HttpRequest):
+def change_password(request: HtmxHttpRequest):
     if request.method == "POST":
         current_password = request.POST.get("current_password")
         password = request.POST.get("password")

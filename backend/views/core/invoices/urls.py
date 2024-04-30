@@ -1,6 +1,6 @@
 from django.urls import path
 
-from . import schedule, edit, dashboard, create, manage_access, view
+from . import schedule, edit, dashboard, create_invoice, manage_access, view
 
 invoice_urls = [
     path(
@@ -44,7 +44,7 @@ urlpatterns = invoice_urls + [
     ),
     path(
         "create/",
-        create.create_invoice_page,
+        create_invoice.create_invoice_page,
         name="create",
     ),
 ]
