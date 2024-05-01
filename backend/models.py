@@ -334,7 +334,7 @@ class Invoice(models.Model):
     discount_percentage = models.DecimalField(default=0, max_digits=5, decimal_places=2, validators=[MaxValueValidator(100)])
 
     class Meta:
-        constraints = [USER_OR_ORGANIZATION_CONSTRAINT()]
+        constraints = [user_or_organization_constraint()]
 
     def __str__(self):
         invoice_id = self.invoice_id or self.id
@@ -760,7 +760,7 @@ class QuotaIncreaseRequest(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     quota_limit = models.ForeignKey(QuotaLimit, on_delete=models.CASCADE, related_name="quota_increase_requests")
-    reason = models.TextField(max_length=1000)
+    reason = models.CharField(max_length=1000)
     new_value = models.IntegerField()
     current_value = models.IntegerField()
     status = models.CharField(max_length=20, choices=StatusTypes.choices, default=StatusTypes.PENDING)
