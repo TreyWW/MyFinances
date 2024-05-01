@@ -478,7 +478,7 @@ class APIKey(models.Model):
         AWS_API_DESTINATION = "aws_api_destination", "AWS API Destination"
 
     service = models.CharField(max_length=20, choices=ServiceTypes.choices, null=True)
-    key = models.CharField(max_length=100, default=random_api_code)
+    key = models.CharField(max_length=100, default=generate_random_api_key)
     last_used = models.DateTimeField(auto_now_add=True)
 
     def verify(self, key):
