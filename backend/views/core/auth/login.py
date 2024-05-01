@@ -75,10 +75,9 @@ def login_manual(request: HtmxAnyHttpRequest):  # HTMX POST
         messages.error(request, "Incorrect email or password")
         return render_toast_message(request)
 
-    if request.user.is_authenticated:
-        if request.user.awaiting_email_verification and ARE_EMAILS_ENABLED:
-            messages.error(request, "You must verify your email before logging in.")
-            return render_toast_message(request)
+    if request.user.awaiting_email_verification and ARE_EMAILS_ENABLED:  # type: ignore[union-attr]
+        messages.error(request, "You must verify your email before logging in.")
+        return render_toast_message(request)
 
     login(request, user)
     messages.success(request, "Successfully logged in")
@@ -225,7 +224,7 @@ class MagicLinkVerifyAccept(View):
             user = magic_link.user
             magic_link.delete()
 
-            user.backend = "backend.auth_backends.EmailInsteadOfUsernameBackend"
+            user.backend = "backend.auth_backends.EmailInsteadOfUsernameBackend"  # type: ignore[attr-defined]
             LoginLog.objects.create(user=user, service=LoginLog.ServiceTypes.MAGIC_LINK)
             AuditLog.objects.create(user=user, action="magic link accepted")
             login(request, magic_link.user)
