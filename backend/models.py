@@ -83,7 +83,7 @@ class VerificationCodes(models.Model):
         RESET_PASSWORD = "reset_password", "Reset Password"
 
     uuid = models.UUIDField(default=uuid4, editable=False, unique=True)  # This is the public identifier
-    token = models.TextField(default=random_code, editable=False)  # This is the private token (should be hashed)
+    token = models.TextField(default=generate_random_token, editable=False)  # This is the private token (should be hashed)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     expiry = models.DateTimeField(default=add_3hrs_from_now)
@@ -186,7 +186,7 @@ class TeamInvitation(models.Model):
         if not self.expires:
             self.set_expires()
         if not self.code:
-            self.code = random_code(10)
+            self.code = generate_random_token(10)
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -215,7 +215,7 @@ class Receipt(models.Model):
     def __str__(self):
         return f"{self.name} - {self.date} ({self.total_price})"
 
-    def has_access(self, user: User):
+    def has_access(self, user: User) -> bool:
         if not user.is_authenticated:
             return False
         return self.organization == user.logged_in_as_team if user.logged_in_as_team else self.user == user
