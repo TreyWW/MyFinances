@@ -9,7 +9,7 @@ from backend.types.htmx import HtmxHttpRequest
 
 
 def teams_dashboard(request: HtmxHttpRequest):
-    context = {}
+    context: dict[str, str | int] = {}
 
     users_team: Optional[Team] = request.user.logged_in_as_team
 
