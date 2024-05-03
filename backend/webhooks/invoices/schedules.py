@@ -5,7 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
 from backend.decorators import feature_flag_check, quota_usage_check
-from backend.models import Invoice, AuditLog, APIKey, InvoiceURL, InvoiceReminder
+from backend.models import Invoice, AuditLog, APIKey, InvoiceURL, InvoiceReminder, InvoiceOnetimeSchedule
 from backend.types.emails import SingleEmailInput, SingleTemplatedEmailContent
 from backend.types.htmx import HtmxHttpRequest
 from settings.helpers import send_email
@@ -60,8 +60,7 @@ def receive_scheduled_invoice_schedule(request: HtmxHttpRequest):
     logger.debug(f"Invoice found: {invoice}")
 
     try:
-        schedule_type = int(schedule_type)
-        if schedule_type not in [1, 2]:
+        if schedule_type is None or int(schedule_type) not in [1, 2]:
             raise ValueError
     except ValueError:
         return JsonResponse({"success": False, "message": "Invalid schedule_type. Must be an integer; 1=one-time, 2=recurring"}, status=400)
@@ -91,7 +90,12 @@ def receive_scheduled_invoice_schedule(request: HtmxHttpRequest):
 
     AuditLog.objects.create(action=f"scheduled invoice: {invoice_id} send to {email_type} - {email}")
 
-    client_name = invoice.client_name or invoice.client_to.name or "there"
+    client_name: str = "there"
+    if invoice is not None and invoice.client_name:
+        client_name = invoice.client_name
+    elif invoice is not None and invoice.client_to:
+        client_name = invoice.client_to.name
+
     # Todo: add better email message
     email_response = send_email(
         SingleEmailInput(
@@ -171,7 +175,7 @@ def receive_scheduled_invoice_reminder(request: HtmxHttpRequest):
         return JsonResponse({"success": False, "message": "Invalid schedule_type. Must be either 'once' or 'recurring'"}, status=400)
 
     if schedule_type == "once":
-        schedule: InvoiceReminder = invoice.onetime_invoice_schedules.get(id=schedule_id)
+        schedule: InvoiceOnetimeSchedule = invoice.onetime_invoice_schedules.get(id=schedule_id)
     else:
         return JsonResponse({"success": False, "message": "Recurring reminders is not yet implemented"}, status=400)
 
@@ -195,7 +199,11 @@ def receive_scheduled_invoice_reminder(request: HtmxHttpRequest):
 
     AuditLog.objects.create(action=f"scheduled invoice: {invoice_id} send to {email_type} - {email}")
 
-    client_name = invoice.client_name or invoice.client_to.name or "there"
+    client_name: str = "there"
+    if invoice is not None and invoice.client_name:
+        client_name = invoice.client_name
+    elif invoice is not None and invoice.client_to:
+        client_name = invoice.client_to.name
     # Todo: add better email message
 
     # if schedule.status
@@ -206,11 +214,14 @@ def receive_scheduled_invoice_reminder(request: HtmxHttpRequest):
         "invoice_id": invoice_id,
         "invoice_url": invoice_url,
         "client_name": client_name,
-        "company": invoice.self_company or invoice.self_name or invoice.user.get_full_name(),
+        "company": invoice.self_company or invoice.self_name or invoice.user.get_full_name() if invoice.user else False,
     }
 
     email_template = AWS_TAGS_APP_NAME + "-reminders-"
-    days_until_due: int = get_days_until_invoice_due(invoice)
+    days_until_due: int | bool = get_days_until_invoice_due(invoice)
+
+    if not days_until_due:
+        return JsonResponse({"success": False, "message": "Date not found, try again later", "status": 400})
 
     if invoice_status == "paid":
         return JsonResponse({"success": True})
@@ -244,7 +255,10 @@ def receive_scheduled_invoice_reminder(request: HtmxHttpRequest):
 
 
 def get_days_until_invoice_due(invoice: Invoice) -> int:
-    return (invoice.date_due - timezone.now()).days
+    if timezone.now() is not None:
+        return (invoice.date_due - timezone.now()).days  # type: ignore[attr-defined]
+    else:
+        return False
 
 
 def authenticate_api_key(request: HtmxHttpRequest):

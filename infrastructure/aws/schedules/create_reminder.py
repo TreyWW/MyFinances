@@ -1,6 +1,7 @@
 import json
 from dataclasses import dataclass
 from typing import Union, Literal
+from datetime import datetime
 
 import pytz
 from django.urls import reverse
@@ -39,9 +40,9 @@ class CreateReminderInputData:
 def create_reminder_schedule(data: CreateReminderInputData) -> CreateReminderResponse:
     print(f"Creating reminder for {data.invoice}", flush=True)
 
-    date_time_to_obj: timezone.datetime = timezone.datetime.strptime(data.datetime, "%Y-%m-%dT%H:%M")
+    date_time_to_obj: datetime = datetime.strptime(data.datetime, "%Y-%m-%dT%H:%M")
     date_time_to_obj = date_time_to_obj.astimezone(pytz.timezone("UTC"))
-    date_time_to_obj = date_time_to_obj.strftime("%Y-%m-%dT%H:%M")
+    date_time_to_obj = date_time_to_obj.strftime("%Y-%m-%dT%H:%M")  # type: ignore[assignment]
 
     # TODO: Add a signal to delete AWS Rule on OntimeSchedule model object delete
 
