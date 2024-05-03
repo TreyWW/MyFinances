@@ -88,8 +88,8 @@ To contribute code:
 3. Create a new branch for your changes.
 4. Make your changes, following the coding style guidelines.
 5. Test your changes thoroughly
-    - `python manage.py test`
-    - run the app (`python manage.py runserver`)
+    - `python3 manage.py test`
+    - run the app (`python3 manage.py runserver`)
     - view any changed pages in browser (`http://127.0.0.1:8000`) and make sure the changes work as expected
 6. Submit a pull request to the main repository's `main` branch.
 
@@ -456,8 +456,8 @@ manually edit with the details below.
 
 ### How to edit the contributors table?
 
-- Updated any info using `python manage.py contriubtors`
-- Run `python manage.py contributors sync`
+- Updated any info using `python3 manage.py contriubtors`
+- Run `python3 manage.py contributors sync`
 - Make a PR to request these changes in
 - Done :)
 
