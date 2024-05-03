@@ -2,13 +2,10 @@ from __future__ import annotations
 
 from django.contrib import messages
 from django.contrib.auth.models import AnonymousUser
-from django.shortcuts import redirect
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from login_required import login_not_required
 
-from backend.models import Invoice
-from backend.models import InvoiceURL
-from backend.models import UserSettings
+from backend.models import Invoice, InvoiceURL, UserSettings
 
 
 def preview(request, invoice_id):

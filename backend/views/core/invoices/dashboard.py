@@ -15,7 +15,7 @@ def invoices_dashboard_id(request: HtmxHttpRequest, invoice_id):
 
     if invoice_id == "create":
         return redirect("invoices:create")
-    elif not isinstance(invoice_id, int):
+    elif not invoice_id.isdigit():
         messages.error(request, "Invalid invoice ID")
         return redirect("invoices:dashboard")
 
@@ -23,4 +23,5 @@ def invoices_dashboard_id(request: HtmxHttpRequest, invoice_id):
         Invoice.objects.get(id=invoice_id)
     except Invoice.DoesNotExist:
         return redirect("invoices:dashboard")
+
     return render(request, "pages/invoices/dashboard/dashboard.html", context)

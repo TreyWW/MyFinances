@@ -7,6 +7,7 @@ from backend.models import Invoice, InvoiceURL, QuotaUsage, QuotaLimit
 from backend.types.htmx import HtmxHttpRequest
 
 
+# Function to manage access codes for an invoice
 def manage_access(request: HtmxHttpRequest, invoice_id):
     try:
         invoice = Invoice.objects.prefetch_related("invoice_urls").get(id=invoice_id, user=request.user)
@@ -23,6 +24,7 @@ def manage_access(request: HtmxHttpRequest, invoice_id):
     )
 
 
+# Function to create a new access code for an invoice
 @quota_usage_check("invoices-access_codes", 1, api=True, htmx=True)
 def create_code(request: HtmxHttpRequest, invoice_id):
     if not request.htmx:
@@ -49,6 +51,7 @@ def create_code(request: HtmxHttpRequest, invoice_id):
     )
 
 
+# Function to delete an access code for an invoice
 def delete_code(request: HtmxHttpRequest, code):
     if request.method != "DELETE" or not request.htmx:
         return HttpResponse("Request invalid", status=400)

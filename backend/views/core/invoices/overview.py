@@ -14,9 +14,10 @@ def manage_invoice(request: HtmxHttpRequest, invoice_id: str):
         messages.error(request, "Invalid invoice ID")
         return redirect("invoices:dashboard")
 
-    invoice = Invoice.objects.get(id=invoice_id)
-
-    if not invoice:
+    try:
+        invoice = Invoice.objects.get(id=invoice_id)
+    except Invoice.DoesNotExist:
+        messages.error(request, "Invoice not found")
         return redirect("invoices:dashboard")
 
     print(context | {"invoice": invoice})

@@ -29,26 +29,33 @@ def invoice_get_existing_data(invoice_obj):
         "currency_symbol": invoice_obj.get_currency_symbol(),
         "rows": invoice_obj.items.all(),
     }
-    if invoice_obj.client_to:
-        stored_data["to_name"] = invoice_obj.client_to.name
-        stored_data["to_company"] = invoice_obj.client_to.company
-        stored_data["is_representative"] = invoice_obj.client_to.is_representative
-        # stored_data["to_address"] = invoice_obj.client_to.address
-        # stored_data["to_city"] = invoice_obj.client_to.city
-        # stored_data["to_county"] = invoice_obj.client_to.county
-        # stored_data["to_country"] = invoice_obj.client_to.country
+
+    client_to = invoice_obj.client_to
+    if client_to:
+        stored_data.update(
+            {
+                "to_name": client_to.name,
+                "to_company": client_to.company,
+                "is_representative": client_to.representative,
+                # "to_address": client_to.address,
+                # "to_city": client_to.city,
+                # "to_county": client_to.county,
+                # "to_country": client_to.country
+                "existing_client": client_to,
+            }
+        )
     else:
-        stored_data["to_name"] = invoice_obj.client_name
-        stored_data["to_company"] = invoice_obj.client_company
-        stored_data["to_address"] = invoice_obj.client_address
-        stored_data["to_city"] = invoice_obj.client_city
-        stored_data["to_county"] = invoice_obj.client_county
-        stored_data["to_country"] = invoice_obj.client_country
-        stored_data["is_representative"] = invoice_obj.client_is_representative
-
-    if invoice_obj.client_to:
-        stored_data["existing_client"] = invoice_obj.client_to
-
+        stored_data.update(
+            {
+                "to_name": invoice_obj.client_name,
+                "to_company": invoice_obj.client_company,
+                "to_address": invoice_obj.client_address,
+                "to_city": invoice_obj.client_city,
+                "to_county": invoice_obj.client_county,
+                "to_country": invoice_obj.client_country,
+                "is_representative": invoice_obj.client_is_representative,
+            }
+        )
     return stored_data
 
 

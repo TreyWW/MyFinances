@@ -16,7 +16,7 @@ def create_client(request: HtmxHttpRequest):
         "address": request.POST.get("client_address"),
         "phone_number": request.POST.get("client_phone"),
         "company": request.POST.get("company_name"),
-        "is_representative": (True if request.POST.get("is_representative") == "on" else False),
+        "is_representative": request.POST.get("is_representative") == "on",
     }
 
     error = validate_client_create(client_details)
@@ -25,35 +25,38 @@ def create_client(request: HtmxHttpRequest):
         messages.error(request, error)
         return redirect("clients create")
 
-    if request.user.logged_in_as_team:
-        client = Client.objects.create(
-            organization=request.user.logged_in_as_team,
-        )
-    else:
-        client = Client.objects.create(
-            user=request.user,
-        )
+    client = create_client_instance(request.user, client_details)
 
-    for model_field, new_value in client_details.items():
-        setattr(client, model_field, new_value)
-
-    client.save()
-
-    if client:
-        messages.success(request, f"Client created successfully (#{client.id})")
-    else:
+    if not client:
         messages.error(request, "Failed to create client - an unknown error occurred")
+    else:
+        messages.success(request, f"Client created successfully (#{client.id})")
+
     return redirect("clients dashboard")
 
 
+def create_client_instance(user, client_details):
+    organization = user.logged_in_as_team if user.logged_in_as_team else None
+    try:
+        client = Client.objects.create(organization=organization, **client_details)
+        return client
+    except Exception as e:
+        print(f"Failed to create client: {e}")
+        return None
+
+
 def validate_client_create(client_details):
-    if not client_details.get("name"):
+    name = client_details.get("name")
+    company = client_details.get("company")
+    is_representative = client_details.get("is_representative")
+
+    if not name:
         return "Please provide at least a client name"
 
-    if len(client_details.get("name")) < 3:
+    if len(name) < 3:
         return "Client name must be at least 3 characters"
 
-    if client_details.get("is_representative") and not client_details.get("company"):
+    if is_representative and not company:
         return "Please provide a company name if you are creating a representative"
 
     return None
