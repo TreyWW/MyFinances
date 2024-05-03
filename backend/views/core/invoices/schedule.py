@@ -24,8 +24,4 @@ def view_schedules(request: HtmxHttpRequest, invoice_id) -> HttpResponse:
     if quota_limit.strict_goes_above_limit(request.user):
         context["quota_breached"] = True
 
-    return render(
-        request,
-        "pages/invoices/schedules/view.html",
-        context,
-    )
+    return render(request, "pages/invoices/schedules/view.html", context)
