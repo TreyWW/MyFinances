@@ -68,5 +68,6 @@ jobs:
       - name: Run tests
         run: |
           source .venv/bin/activate
+          python3 manage.py collectstatic --no-input
           python3 manage.py test --parallel
 
