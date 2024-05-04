@@ -66,16 +66,17 @@ jobs:
             exit 1
           fi
       - name: Run tests
+        env:
+            SECRET_KEY: "some!random!secret!key!use!online!generator!to!get"
+            URL: "127.0.0.1"
+            PROXY_IP: "localhost"
+            BRANCH: "debug"
+            DEBUG: "true"
+            DATABASE_TYPE: "sqlite3"
+            SITE_URL: "http://myfinances.example.com"
+            SITE_NAME: "myfinances"
         run: |
           source .venv/bin/activate
-          SECRET_KEY="some!random!secret!key!use!online!generator!to!get"
-          URL="127.0.0.1"
-          PROXY_IP="localhost"
-          BRANCH="debug"
-          DEBUG="true"
-          DATABASE_TYPE="sqlite3"
-          SITE_URL="http://myfinances.example.com"
-          SITE_NAME="myfinances"
           python3 manage.py collectstatic --no-input
           python3 manage.py test --parallel
 
