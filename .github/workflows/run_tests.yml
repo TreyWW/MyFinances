@@ -68,5 +68,5 @@ jobs:
       - name: Run tests
         run: |
           source .venv/bin/activate
-          python3 manage.py test --parallel --debug-mode
+          python3 manage.py test --parallel
 
