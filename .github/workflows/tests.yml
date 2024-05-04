@@ -1,0 +1,82 @@
+name: Backend Tests
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+jobs:
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+        django-version: ["4", "5"]
+    steps:
+      - name: Clone repo
+        uses: actions/checkout@v4.1.4
+      - name: Set up python
+        uses: actions/setup-python@v5.1.0
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install and configure Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: 1.8.0
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+          installer-parallel: true
+      - name: Load cached venv
+        id: cached-poetry-dependencies
+        uses: actions/cache@v4.0.2
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
+      - name: Install dependencies
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        run: poetry install --no-interaction --no-root
+      - name: Install django ${{ matrix.django-version }}
+        run: |
+          source .venv/bin/activate
+          pip install "Django==${{ matrix.django-version }}"
+      - name: Install dependencies and build frontend
+        run: |
+          npm ci
+          npm run tailwind-build
+          npm run webpack-build
+
+          if [ -f frontend/static/src/output.css ]; then
+            echo "output.css is created"
+          else
+            echo "output.css is not created"
+            exit 1
+          fi
+          if [ -d frontend/static/js/c/ ]; then
+            echo "webpack has been built"
+          else
+            echo "frontend/static/js/c/ was not created from webpack build"
+            exit 1
+          fi
+          if [ -f webpack-stats.json ]; then
+            echo "webpack has built webpack-stats to work with chunks"
+          else
+            echo "webpack-stats was not built so cannot work with chunks"
+            exit 1
+          fi
+      - name: Run tests
+        env:
+            SECRET_KEY: "some!random!secret!key!use!online!generator!to!get"
+            URL: "127.0.0.1"
+            PROXY_IP: "localhost"
+            BRANCH: "debug"
+            DEBUG: "true"
+            DATABASE_TYPE: "sqlite3"
+            SITE_URL: "http://myfinances.example.com"
+            SITE_NAME: "myfinances"
+        run: |
+          source .venv/bin/activate
+          python3 manage.py collectstatic --no-input
+          python3 manage.py test --parallel
+
