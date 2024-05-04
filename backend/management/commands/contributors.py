@@ -276,7 +276,7 @@ Please provide valid action.
                 return readme_file.read()
         except FileNotFoundError:
             self.stderr.write(self.style.ERROR("README.md file not found. Please make sure the file exists."))
-            return
+            return None
 
     def _save_contributors_file(self, contributors_data: list[ContributorsItem]):
         try:
