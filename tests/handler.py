@@ -39,7 +39,7 @@ def create_mock_image():
     return SimpleUploadedFile("mock_image.jpg", image_io.getvalue(), content_type="image/jpeg")
 
 
-@override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
+@override_settings(STATICFILES_STORAGE="django.contrib.staticfiles.storage.StaticFilesStorage")
 class ViewTestCase(TestCase):
     def setUp(self):
         self.log_in_user = User.objects.create_user(username="user@example.com", password="user", email="user@example.com")
