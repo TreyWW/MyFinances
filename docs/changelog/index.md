@@ -3,7 +3,36 @@
 !!! danger "Pre-releases"
 	We are currently still in development, and our project should **NOT** be considered usable for production yet.
 
-???+ tip "v0.3.0 (latest)"
+???+ tip "v0.4.0 (latest)"
+	=== "Additions"
+		- 💼 Invoice column rename by @Domejko in [(313)](https://github.com/TreyWW/MyFinances/pull/313)
+		- 📧 Users allowed to send emails by @TreyWW in [(314)](https://github.com/TreyWW/MyFinances/pull/314)
+		- 💵 Receipt accepts up to two decimal points by @ryansurf in [(330)](https://github.com/TreyWW/MyFinances/pull/330)
+		- ⚙️ Feature/conditional checks by @introkun in [(306)](https://github.com/TreyWW/MyFinances/pull/306)
+		- ⏰ Invoice reminders by @TreyWW in [(339)](https://github.com/TreyWW/MyFinances/pull/339)
+		- 💰 [revamp] Implement price filter receipt by @TreyWW in [(341)](https://github.com/TreyWW/MyFinances/pull/341)
+		- 🔀 Make the switcher in sort invoices by @spalominor in [(307)](https://github.com/TreyWW/MyFinances/pull/307)
+		- 🚀 Added HTMX Boosting to improve site performance by @TreyWW in [(345)](https://github.com/TreyWW/MyFinances/pull/345)
+		- 🎨 Enhanced invoice banner by @TreyWW in [(354)](https://github.com/TreyWW/MyFinances/pull/354)
+	=== "Bug Fixes"
+		- Correct deployment menu in Invoices->Add Services in the mobile devices by @spalominor in [(301)](https://github.com/TreyWW/MyFinances/pull/301)
+		- fixed when creating receipt and deleting the receipts  by @atulanand25 in [(326)](https://github.com/TreyWW/MyFinances/pull/326)
+		- Login page broken on mobile - #333 by @CKsabari2001 in [(338)](https://github.com/TreyWW/MyFinances/pull/338)
+		- Mypy import errors fix by @Domejko in [(318)](https://github.com/TreyWW/MyFinances/pull/318)
+		- 311: Favicon infinite redirect by @introkun in [(312)](https://github.com/TreyWW/MyFinances/pull/312)
+		- bug 342 by @atulanand25 in [(343)](https://github.com/TreyWW/MyFinances/pull/343)
+		- Mypy type errors fix by @Domejko in [(324)](https://github.com/TreyWW/MyFinances/pull/324)
+		- Mypy fixes by @blocage in [(344)](https://github.com/TreyWW/MyFinances/pull/344)
+		- 321: Failed to launch app by @introkun in [(322)](https://github.com/TreyWW/MyFinances/pull/322)
+		- Anonymous invoice view by link is broken by the currency symbol … by @introkun in [(300)](https://github.com/TreyWW/MyFinances/pull/300)
+		- Mypy type errors fix by @Domejko in [(348)](https://github.com/TreyWW/MyFinances/pull/348)
+		- Price in the invoice is missing currency symbol by @introkun in [(310)](https://github.com/TreyWW/MyFinances/pull/310)
+		- fixed top banner for invoice preview for users that are not logged in by @glizondo in [(349)](https://github.com/TreyWW/MyFinances/pull/349)
+	=== "Links"
+		- [difference](https://github.com/TreyWW/MyFinances/compare/v0.3.0...v0.4.0)
+		- [tag](https://github.com/TreyWW/MyFinances/releases/tag/v0.4.0)
+
+??? abstract "v0.3.0"
 	=== "Additions"
 		- 🏷 Added invoice **discounts** ([#244](https://github.com/TreyWW/MyFinances/pull/244))
 		- 🖼 Added invoice overview page ([#222](https://github.com/TreyWW/MyFinances/pull/222))
@@ -79,4 +108,3 @@
 		* 🧔 Account Management
 	=== "Links"
 		- [tag](https://github.com/TreyWW/MyFinances/releases/tag/v0.1.0)
-

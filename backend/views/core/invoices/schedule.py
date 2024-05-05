@@ -9,7 +9,7 @@ from backend.types.htmx import HtmxHttpRequest
 
 @feature_flag_check("isInvoiceSchedulingEnabled", True)
 def view_schedules(request: HtmxHttpRequest, invoice_id) -> HttpResponse:
-    context = {}
+    context: dict = {}
     try:
         invoice = Invoice.objects.prefetch_related("onetime_invoice_schedules").get(id=invoice_id, user=request.user)
         context["invoice"] = invoice

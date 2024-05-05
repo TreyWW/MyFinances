@@ -1,12 +1,27 @@
 import datetime
+from typing import Literal
 
 from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django_ratelimit.core import is_ratelimited
 from forex_python.converter import CurrencyRates
 
-from backend.models import UserSettings
+from backend.models import UserSettings, QuotaLimit
 from backend.types.htmx import HtmxHttpRequest
+
+
+def get_ratelimit(user, period: Literal["hour", "minute"]):
+    quota = QuotaLimit.objects.prefetch_related("quota_overrides").get(slug=f"currency_conversion-ratelimit_{period}")
+    return quota.get_quota_limit(user=user, quota_limit=quota)
+
+
+def check_ratelimited(request, increment: bool = False):
+    return is_ratelimited(
+        request, group="currency_conversion", key="user", rate=f"{get_ratelimit(request.user, 'minute')}/m", increment=increment
+    ) or is_ratelimited(
+        request, group="currency_conversion", key="user", rate=f"{get_ratelimit(request.user, 'hour')}/h", increment=increment
+    )
 
 
 def convert_currency(init_currency, target_currency, amount, date=None):
@@ -68,6 +83,12 @@ def convert_currency(init_currency, target_currency, amount, date=None):
 def currency_conversion(request: HtmxHttpRequest):
     context = {}
 
+    if check_ratelimited(request, increment=False):
+        messages.error(
+            request, 'Too many requests, please try again later. You can apply for more quota at any time on the "service quotas" page'
+        )
+        return render(request, "base/toast.html")
+
     if not request.htmx:
         return redirect("currency converter")
 
@@ -100,6 +121,9 @@ def currency_conversion(request: HtmxHttpRequest):
                 "target_currency_sign": target_currency_sign,
             }
         )
+
+        check_ratelimited(request, increment=True)
+
         return render(request, "pages/currency_converter/result.html", context)
     except (KeyError, ValueError, TypeError, AttributeError):
         messages.error(request, f"Failed to convert currency. Make sure the amount is valid.")

@@ -3,6 +3,8 @@ from __future__ import annotations
 from django.core.cache import cache
 from django.core.cache.backends.redis import RedisCacheClient
 
+from backend.types.emails import SingleEmailInput
+
 cache: RedisCacheClient = cache
 from django.core.files.storage import default_storage
 from django.db.models.signals import pre_save, post_delete, post_save, pre_delete
@@ -100,6 +102,8 @@ def send_welcome_email(sender, instance: User, created, **kwargs):
                 Verify Link: {magic_link_url}
             """
 
-            email = send_email(destination=instance.email, subject="Welcome to MyFinances", message=email_message)
+            email_input = SingleEmailInput(destination=instance.email, subject="Welcome to MyFinances", content=email_message)
+
+            email = send_email(email_input)
 
         #     User.send_welcome_email(instance)

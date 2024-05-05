@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "tz_detect",
+    "webpack_loader",
 ]
 
 REST_FRAMEWORK = {
@@ -115,6 +116,17 @@ X_FRAME_OPTIONS = "SAMEORIGIN"
 STATICFILES_DIRS = [
     BASE_DIR / "frontend/static",
 ]
+
+WEBPACK_LOADER = {
+    "DEFAULT": {
+        "BUNDLE_DIR_NAME": "js/c/",
+        "CACHE": not DEBUG,
+        "STATS_FILE": os.path.join(BASE_DIR, "webpack-stats.json"),
+        "POLL_INTERVAL": 1,
+        "IGNORE": [r".+\.hot-update.js", r".+\.map"],
+    }
+}
+
 mimetypes.add_type("text/javascript", ".js", True)
 
 MESSAGE_STORAGE = "django.contrib.messages.storage.cookie.CookieStorage"
@@ -301,6 +313,9 @@ class CustomStaticStorage(S3Storage):
     custom_domain = get_var("AWS_STATIC_CUSTOM_DOMAIN")
     region_name = get_var("AWS_STATIC_REGION_NAME")
 
+    access_key = get_var("AWS_STATIC_ACCESS_KEY_ID")
+    secret_key = get_var("AWS_STATIC_ACCESS_KEY")
+
 
 class CustomPublicMediaStorage(S3Storage):
     location = get_var("AWS_MEDIA_PUBLIC_LOCATION", default="public/")
@@ -339,7 +354,7 @@ if AWS_STATIC_ENABLED or AWS_STATIC_CDN_TYPE.lower() == "aws":
 else:
     STATIC_URL = f"/static/"
     STATIC_ROOT = os.path.join(BASE_DIR, "static")
-    STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
+    STATICFILES_STORAGE = "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
 
 AWS_MEDIA_PUBLIC_ENABLED = get_var("AWS_MEDIA_PUBLIC_ENABLED", default=False).lower() == "true"
 

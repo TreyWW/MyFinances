@@ -12,7 +12,19 @@ class QuotaItem:
     description: str
     default_value: int
     adjustable: bool
-    period: Literal["forever", "per_month", "per_day", "per_client", "per_invoice", "per_team", "per_quota", "per_bulk_send", "per_email"]
+    period: Literal[
+        "forever",
+        "per_month",
+        "per_minute",
+        "per_hour",
+        "per_day",
+        "per_client",
+        "per_invoice",
+        "per_team",
+        "per_quota",
+        "per_bulk_send",
+        "per_email",
+    ]
 
 
 @dataclass
@@ -168,6 +180,27 @@ default_quota_limits: list[QuotaGroup] = [
                 description="Maximum amount of complaints allowed before your account will be blocked from sending emails",
                 period="forever",
                 default_value=2,
+                adjustable=True,
+            ),
+        ],
+    ),
+    QuotaGroup(
+        "currency_conversion",
+        [
+            QuotaItem(
+                slug="ratelimit_minute",
+                name="Ratelimit/minute",
+                description="Maximum amount of requests allowed per minute",
+                period="per_minute",
+                default_value=10,
+                adjustable=True,
+            ),
+            QuotaItem(
+                slug="ratelimit_hour",
+                name="Ratelimit/hour",
+                description="Maximum amount of requests allowed per hour",
+                period="per_hour",
+                default_value=500,
                 adjustable=True,
             ),
         ],

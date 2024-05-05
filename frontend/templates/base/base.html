@@ -4,7 +4,7 @@
     <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
         <div class="drawer drawer-mobile min-h-full">
             <input id="left-sidebar-drawer" type="checkbox" class="drawer-toggle">
-            <div class="drawer-content flex flex-col ">
+            <div class="drawer-content flex flex-col">
                 {% include 'base/topbar/_topbar.html' %}
                 <div class="flex-1 min-h-screen overflow-y-auto pt-8 px-6 pb-4 bg-base-200">
                     {% include 'base/breadcrumbs.html' %}
@@ -18,8 +18,8 @@
                         </div>
                         {% component "base:left_drawer" %}
                     </div>
-                    <div class="fixed bottom-5 left-5 z-50">
-                        <ul class="menu menu-horizontal bg-base-100 rounded-box">
+                    <div class="fixed bottom-5 left-5 z-55 hidden md:block">
+                        <ul class="menu menu-horizontal bg-base-100 rounded-box shadow-lg">
                             <li>
                                 <label for="service_list_drawer"
                                        id="service_list_button"
@@ -33,48 +33,6 @@
                         </ul>
                     </div>
                 </div>
-                <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                const drawer = document.getElementById("service_list_drawer");
-                drawer.addEventListener("change", function () {
-                    if (drawer.checked) {
-                        document.getElementById("service_list_toggler").checked = true;
-                        document.getElementById("logo_single_service_list_toggler").checked = true;
-                    } else {
-                        document.getElementById("service_list_toggler").checked = false;
-                        document.getElementById("logo_single_service_list_toggler").checked = false;
-                    }
-                    ;
-                });
-            });
-                </script>
-                <script>
-            function htmx_resend(event) {
-                let eventType;
-                if (event.detail.requestConfig.triggeringEvent) {
-                    eventType = event.detail.requestConfig.triggeringEvent.type
-                } else {
-                    eventType = "retry"
-                }
-
-                let timeout;
-
-                if (event.detail.error.startsWith("Response Status Error Code 429")) {
-                    timeout = 4000;
-                } else {
-                    timeout = 2000;
-                }
-
-                setTimeout(function () {
-                    console.log("Sending HTMX retry event")
-                    htmx.trigger(event.detail.elt, eventType);
-                }, timeout);
-            }
-
-            document.body.addEventListener("htmx:sendError", htmx_resend);
-            document.body.addEventListener("htmx:responseError", htmx_resend);
-            document.body.addEventListener("htmx:loadError", htmx_resend);
-                </script>
                 <input type="checkbox" id="logout_modal" class="modal-toggle" />
                 <div class="modal modal-responsive">
                     <div class="modal-box">

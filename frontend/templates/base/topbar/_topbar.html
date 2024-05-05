@@ -2,35 +2,15 @@
 <div class="navbar bg-base-100">
     <div class="navbar-start">
         <div class="dropdown">
-            <label tabindex="0" class="btn btn-ghost lg:hidden">
-                <svg xmlns="http://www.w3.org/2000/svg"
-                     class="h-5 w-5"
-                     fill="none"
-                     viewBox="0 0 24 24"
-                     stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" />
-                </svg>
+            <label tabindex="0"
+                   for="service_list_drawer"
+                   id="service_list_togglers"
+                   class="btn btn-ghost lg:hidden">
+                <i class="fa-solid fa-bars"></i>
             </label>
-            <!-- Topbar Dropdown (MOBILE ONLY) -->
-            <ul tabindex="0"
-                class="menu menu-sm dropdown-content mt-3 z-[1] shadow p-2 bg-base-100 rounded-box w-52"
-                hx-boost="true">
-                <li>
-                    <a href="/dashboard/">My Dashboard</a>
-                </li>
-                <li>
-                    <a href="{% url "receipts dashboard" %}">My Receipts</a>
-                </li>
-                <li>
-                    <a href="{% url "invoices:dashboard" %}" hx-boost="true">My Invoices</a>
-                </li>
-                <li>
-                    <a href="{% url "clients dashboard" %}">My Clients</a>
-                </li>
-            </ul>
         </div>
         <div class="flex items-center gap-x-3 gap-x-0 md:gap-x-5 ms-4">
-            <a href="/" class="hidden md:block">
+            <a href="/" class="hidden lg:block">
                 <label for="service_list_drawer"
                        id="service_list_button"
                        aria-label="close sidebar"
@@ -108,6 +88,10 @@
                              hx-swap="innerHTML">{% component "components:logged_in_for" %}</summary>
                     <ul class="menu menu-sm dropdown-content border border-primary"
                         data-htmx-swap="organization_dropdown_list">
+                        <div class="flex justify-center items-center gap-2">
+                            <i class="loading"></i>
+                            Loading
+                        </div>
                     </ul>
                 </details>
                 <div class="divider mt-0 mb-0"></div>

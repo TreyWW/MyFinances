@@ -8,7 +8,7 @@ def invoices_dashboard(request: HtmxHttpRequest):
 
 
 def manage_invoice(request: HtmxHttpRequest, invoice_id: str):
-    context = {}
+    context: dict = {}
 
     if not invoice_id.isnumeric():
         messages.error(request, "Invalid invoice ID")

@@ -1,0 +1,16 @@
+<li>
+    <a class="btn btn-sm me-2 gradient_button" download>
+        <i class="fa-solid fa-download me-2"></i>
+        <p class="options-text">Download</p>
+    </a>
+</li>
+<li>
+    <button onclick="window.print()" class="btn btn-sm gradient-btn me-2">
+        <i class="fa-solid fa-print me-2"></i>
+        <p class="options-text">Print</p>
+    </button>
+</li>
+<li>
+    <a class="btn btn-sm gradient-btn me-8 share-btn"
+       href="{% url "invoices:manage_access" invoice_id=invoice.id %}">Share Invoice</a>
+</li>

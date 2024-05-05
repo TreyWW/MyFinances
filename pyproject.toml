@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "MyFinances"
-version = "0.3.0"
+version = "0.4.5"
 description = "github.com/TreyWW/MyFinances"
 authors = ["TreyWW"]
 readme = "README.md"
@@ -18,6 +18,7 @@ django = "^5.0.2"
 django-mathfilters = "^1.0.0"
 sample-helper-aws-appconfig = "^2.1.0"
 redis = { extras = ["hiredis"], version = "^5.0.1" }
+django-webpack-loader = "^3.1.0"
 
 [tool.poetry.group.mypy.dependencies]
 mypy = "1.7.1"
@@ -93,7 +94,7 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.bumpversion]
-current_version = "0.3.0"
+current_version = "0.4.5"
 commit = true
 commit_args = "-s"
 tag = true

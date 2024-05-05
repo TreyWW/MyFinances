@@ -14,7 +14,9 @@ from django_ratelimit.decorators import ratelimit
 
 from backend.decorators import *
 from backend.models import LoginLog, User, VerificationCodes, AuditLog
+from backend.types.emails import SingleEmailInput
 from backend.views.core.auth.verify import create_magic_link
+from backend.types.htmx import HtmxAnyHttpRequest
 from settings.helpers import send_email, ARE_EMAILS_ENABLED
 
 # from backend.utils import appconfig
@@ -38,13 +40,13 @@ def login_initial_page(request: HttpRequest):
 
 @not_authenticated
 @require_POST
-def login_manual(request: HttpRequest):  # HTMX POST
+def login_manual(request: HtmxAnyHttpRequest):  # HTMX POST
     if not request.htmx:
         return redirect("auth:login")
     email = request.POST.get("email")
     password = request.POST.get("password")
     page = str(request.POST.get("page"))
-    next = request.POST.get("next")
+    next = request.POST.get("next", "")
 
     if not page or page == "1":
         return render(
@@ -73,7 +75,7 @@ def login_manual(request: HttpRequest):  # HTMX POST
         messages.error(request, "Incorrect email or password")
         return render_toast_message(request)
 
-    if user.awaiting_email_verification and ARE_EMAILS_ENABLED:
+    if user.awaiting_email_verification and ARE_EMAILS_ENABLED:  # type: ignore[union-attr]
         messages.error(request, "You must verify your email before logging in.")
         return render_toast_message(request)
 
@@ -101,7 +103,7 @@ class MagicLinkRequestView(View):
     @method_decorator(ratelimit(key="ip", method=django_ratelimit.UNSAFE, rate="2/m"))
     @method_decorator(ratelimit(key="ip", method=django_ratelimit.UNSAFE, rate="3/10m"))
     @method_decorator(ratelimit(key="ip", method=django_ratelimit.UNSAFE, rate="6/1h"))
-    def post(self, request: HttpRequest) -> HttpResponse:
+    def post(self, request: HtmxAnyHttpRequest) -> HttpResponse | bool:
         if request.user.is_authenticated:
             return redirect("dashboard")
         if not request.htmx:
@@ -117,7 +119,7 @@ class MagicLinkRequestView(View):
             return self.send_message(request, "This account is not currently active.", False)
 
         magic_link, plain_token = create_magic_link(user, service="login")
-        self.send_magic_link_email(request, user, magic_link.uuid, plain_token)
+        self.send_magic_link_email(request, user, str(magic_link.uuid), plain_token)
         self.send_message(request, should_redirect=False)
         return render(request, "pages/auth/magic_link_waiting.html", {"email": request.POST.get("email")})
 
@@ -135,12 +137,13 @@ class MagicLinkRequestView(View):
         else:
             return True
 
-    def send_magic_link_email(self, request: HttpRequest, user: User, uuid: str, plain_token: str) -> NoReturn:
+    def send_magic_link_email(self, request: HttpRequest, user: User, uuid: str, plain_token: str) -> None:
         magic_link_url = request.build_absolute_uri(reverse("auth:login magic_link verify", kwargs={"uuid": uuid, "token": plain_token}))
-        send_email(
+
+        email: SingleEmailInput = SingleEmailInput(
             destination=user.email,
             subject="Login Request",
-            message=f"""
+            content=f"""
             Hi {user.first_name if user.first_name else "User"},
 
             A login request was made on your MyFinances account. If this was not you, please ignore
@@ -149,17 +152,11 @@ class MagicLinkRequestView(View):
             If you would like to login, please use the following link: \n {magic_link_url}
         """,
         )
-
-
-def get_magic_link(uuid: str) -> VerificationCodes | None:
-    try:
-        return VerificationCodes.objects.get(uuid=uuid, service="login")
-    except VerificationCodes.DoesNotExist:
-        return None
+        send_email(email)
 
 
 class MagicLinkWaitingView(View):
-    def post(self, request: HttpRequest) -> HttpResponse:
+    def post(self, request: HtmxAnyHttpRequest) -> HttpResponse:
         if request.user.is_authenticated:
             return redirect("dashboard")
         if not request.htmx:
@@ -193,49 +190,50 @@ class MagicLinkVerifyView(View):
 
 
 class MagicLinkVerifyDecline(View):
-    def post(self, request: HttpRequest, uuid: str, token: str) -> HttpResponse:
+    def post(self, request: HtmxAnyHttpRequest, uuid: str, token: str) -> HttpResponse:
         if request.user.is_authenticated or not request.htmx:
             return redirect("dashboard")
 
         magic_link = get_magic_link(uuid)
         magic_link_valid, magic_link_msg = is_magiclink_valid(magic_link, token)
 
-        if not magic_link_valid:
+        if not magic_link_valid or magic_link is None:
             messages.error(request, magic_link_msg)
             return render_toast_message(request)
+        else:
+            user = magic_link.user
+            magic_link.delete()
 
-        user = magic_link.user
-        magic_link.delete()
-        AuditLog.objects.create(user=user, action="magic link declined")
-        messages.success(request, "Successfully declined the magic link verification request.")
-        return render(request, "pages/auth/_magic_link_partial.html", {"declined": True})
+            AuditLog.objects.create(user=user, action="magic link declined")
+            messages.success(request, "Successfully declined the magic link verification request.")
+            return render(request, "pages/auth/_magic_link_partial.html", {"declined": True})
 
 
 class MagicLinkVerifyAccept(View):
-    def post(self, request: HttpRequest, uuid: str, token: str) -> HttpResponse:
+    def post(self, request: HtmxAnyHttpRequest, uuid: str, token: str) -> HttpResponse:
         if request.user.is_authenticated or not request.htmx:
             return redirect("dashboard")
 
         magic_link = get_magic_link(uuid)
         magic_link_valid, magic_link_msg = is_magiclink_valid(magic_link, token)
 
-        if not magic_link_valid:
+        if not magic_link_valid or magic_link is None:
             messages.error(request, magic_link_msg)
             return render_toast_message(request)
+        else:
+            user = magic_link.user
+            magic_link.delete()
 
-        user = magic_link.user
-        magic_link.delete()
+            user.backend = "backend.auth_backends.EmailInsteadOfUsernameBackend"  # type: ignore[attr-defined]
+            LoginLog.objects.create(user=user, service=LoginLog.ServiceTypes.MAGIC_LINK)
+            AuditLog.objects.create(user=user, action="magic link accepted")
+            login(request, magic_link.user)
 
-        user.backend = "backend.auth_backends.EmailInsteadOfUsernameBackend"
-        LoginLog.objects.create(user=user, service=LoginLog.ServiceTypes.MAGIC_LINK)
-        AuditLog.objects.create(user=user, action="magic link accepted")
-        login(request, magic_link.user)
-
-        messages.success(request, "Successfully accepted the magic link verification request.")
-        return render(request, "pages/auth/_magic_link_partial.html", {"accepted": True})
+            messages.success(request, "Successfully accepted the magic link verification request.")
+            return render(request, "pages/auth/_magic_link_partial.html", {"accepted": True})
 
 
-def is_magiclink_valid(magic_link: VerificationCodes, token: str) -> tuple[bool, str]:
+def is_magiclink_valid(magic_link: VerificationCodes | None, token: str) -> tuple[bool, str]:
     if not magic_link:
         return False, "Invalid magic link"
 

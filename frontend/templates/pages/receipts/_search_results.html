@@ -76,7 +76,7 @@
                             </button>
                             <button type="button"
                                     class="btn btn-outline btn-primary btn-sm"
-                                    onclick="Download_file('{% url 'api:receipts:generate_download_link' receipt_id=row.id %}')">
+                                    onclick="download_file('{% url 'api:receipts:generate_download_link' receipt_id=row.id %}')">
                                 Download
                             </button>
                             <button class="btn btn-outline btn-error btn-sm"
@@ -110,7 +110,7 @@
                         <div class="flex gap-3">
                             <button type="button"
                                     class="btn btn-primary"
-                                    onclick="Download_file('{% url 'api:receipts:generate_download_link' receipt_id=row.id %}')">
+                                    onclick="download_file('{% url 'api:receipts:generate_download_link' receipt_id=row.id %}')">
                                 Download
                             </button>
                             <button class="btn" onclick="modal_receipt_{{ row.id }}.close();">Cancel</button>
@@ -145,9 +145,4 @@
            name="amount_100+"
            value="{% if '100' in selected_filters %}true{% endif %}">
 </div>
-<script>
-    document.body.addEventListener('htmx:configRequest', (event) => {
-        event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
-    })
-</script>
 {% component "messages_list" %}
