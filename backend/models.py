@@ -51,6 +51,11 @@ class CustomUserManager(UserManager):
 class User(AbstractUser):
     objects = CustomUserManager()  # type: ignore
 
+    email = models.EmailField(max_length=150, unique=True)
+
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["username"]
+
     logged_in_as_team = models.ForeignKey("Team", on_delete=models.SET_NULL, null=True, blank=True)
     awaiting_email_verification = models.BooleanField(default=True)
 
