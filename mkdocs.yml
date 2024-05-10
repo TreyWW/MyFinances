@@ -119,6 +119,8 @@ extra:
     provider: custom
     property: !ENV UMAMI_PAGE_URL
     id: !ENV UMAMI_WEBSITE_ID
+  chatbot:
+    script: !ENV CHATBOT_SCRIPT
   status:
     new: Recently added
     deprecated: Deprecated
