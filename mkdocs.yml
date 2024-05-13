@@ -118,7 +118,7 @@ extra:
   analytics:
     provider: custom
     property: !ENV UMAMI_SCRIPTS
-    id: "none"
+    id: none
   status:
     new: Recently added
     deprecated: Deprecated
