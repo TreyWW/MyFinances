@@ -117,8 +117,7 @@ nav:
 extra:
   analytics:
     provider: custom
-    property: !ENV UMAMI_PAGE_URL
-    id: !ENV UMAMI_WEBSITE_ID
+    property: !ENV UMAMI_SCRIPTS
   status:
     new: Recently added
     deprecated: Deprecated
