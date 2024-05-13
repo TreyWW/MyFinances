@@ -1,3 +1,7 @@
 {% if config.extra.analytics.property %}
     {{ config.extra.analytics.property | safe }}
+{% else %}
+    <script>
+        console.log("failed to load analytics")
+    </script>
 {% endif %}
