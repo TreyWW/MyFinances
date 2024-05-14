@@ -65,7 +65,7 @@ def create_onetime_schedule(data: CreateOnetimeScheduleInputData) -> CreateOneti
 
     scheduler_step_function = get_step_function()
 
-    if not scheduler_step_function.get("stateMachineArn"):
+    if scheduler_step_function is None or not scheduler_step_function.get("stateMachineArn"):
         print("[AWS] [SFN] Step function not found", flush=True)
         AuditLog.objects.create(action="Failed to get STEP FUNCTION arn. Maybe you need to run `pulumi up`?")
         return ErrorResponse("Step function not found")

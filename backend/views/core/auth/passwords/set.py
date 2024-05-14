@@ -11,12 +11,12 @@ from backend.models import *
 @not_authenticated
 @require_POST
 def set_password_set(request: HttpRequest, secret):
-    password = request.POST.get("password")
+    password = request.POST.get("password", "")
     if len(password) > 7:
         SECRET_RETURNED = PasswordSecret.objects.all()
 
         for SECRET in SECRET_RETURNED:
-            if SECRET.expires < timezone.now():
+            if SECRET.expires is not None and SECRET.expires < timezone.now():
                 SECRET.delete()
                 continue
             elif check_password(secret, SECRET.secret):

@@ -35,7 +35,7 @@ def invoice_page_post(request: HtmxHttpRequest):
     currency = request.user.user_profile.currency
 
     invoice = Invoice(
-        date_due=datetime.strptime(request.POST.get("date_due"), "%Y-%m-%d").date(),
+        date_due=datetime.strptime(request.POST.get("date_due"), "%Y-%m-%d").date(),  # type: ignore[arg-type]
         date_issued=request.POST.get("date_issued"),
         currency=currency,
     )
@@ -49,7 +49,7 @@ def invoice_page_post(request: HtmxHttpRequest):
 
     if is_existing_client:
         try:
-            client = Client.objects.get(user=request.user, id=request.POST.get("selected_client"))
+            client = Client.objects.get(user=request.user, id=request.POST.get("selected_client", ""))
         except Client.DoesNotExist:
             messages.error(request, "Client not found")
             invoice.delete()

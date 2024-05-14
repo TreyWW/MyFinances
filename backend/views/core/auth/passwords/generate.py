@@ -26,7 +26,7 @@ def set_password_generate(request: HtmxHttpRequest):
     USER = request.GET.get("id")
     NEXT = request.GET.get("next") or "index"
 
-    if not USER.isnumeric():
+    if USER is None or not USER.isnumeric():
         messages.error(request, "User ID must be a valid integer")
         return redirect("dashboard")
 
