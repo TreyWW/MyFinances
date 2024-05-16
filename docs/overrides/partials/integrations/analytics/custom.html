@@ -1,8 +1,12 @@
 {% if config.extra.analytics.property and config.extra.analytics.id %}
     <script defer src="{{ config.extra.analytics.property }}" data-website-id="{{ config.extra.analytics.id }}">
     </script>
+{% elif config.extra.analytics.property %}
+    <script>
+        console.log("failed to load analytics... no id")
+    </script>
 {% else %}
     <script>
-        console.log("failed to load analytics")
+        console.log("failed to load analytics... no id or property")
     </script>
 {% endif %}
