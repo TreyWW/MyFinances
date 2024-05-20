@@ -669,7 +669,7 @@ class QuotaLimit(models.Model):
             return "Not available"
 
     def strict_goes_above_limit(self, user: User, extra: str | int | None = None, add: int = 0) -> bool:
-        current: Union[int, None, QuerySet[QuotaUsage], Literal['Not Available']]
+        current: Union[int, None, QuerySet[QuotaUsage], Literal["Not Available"]]
 
         current = self.strict_get_quotas(user, extra)
         current = current.count() if current != "Not Available" else None
