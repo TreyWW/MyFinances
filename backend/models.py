@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import typing
 from datetime import datetime
 from decimal import Decimal
 from typing import Literal, Union
@@ -706,6 +707,7 @@ class QuotaLimit(models.Model):
         return current
 
     @classmethod
+    @typing.no_type_check
     def delete_quota_usage(cls, quota_limit: str | QuotaLimit, user: User, extra, timestamp=None):
         quota_limit = cls.objects.get(slug=quota_limit) if isinstance(quota_limit, str) else quota_limit
 
