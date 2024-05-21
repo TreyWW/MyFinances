@@ -378,7 +378,7 @@ class Invoice(models.Model):
         return Decimal(round(subtotal, 2))
 
     def get_tax(self, amount: Decimal = Decimal(0.00)) -> Decimal:
-        amount = amount or Decimal(self.get_subtotal())
+        amount = amount or self.get_subtotal()
         if self.vat_number:
             return Decimal(round(amount * Decimal(0.2), 2))
         return Decimal(0)
