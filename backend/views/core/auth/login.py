@@ -75,7 +75,7 @@ def login_manual(request: HtmxAnyHttpRequest):  # HTMX POST
         messages.error(request, "Incorrect email or password")
         return render_toast_message(request)
 
-    if user.awaiting_email_verification and ARE_EMAILS_ENABLED:  # type: ignore[union-attr]
+    if user.awaiting_email_verification and ARE_EMAILS_ENABLED:  # type: ignore[attr-defined]
         messages.error(request, "You must verify your email before logging in.")
         return render_toast_message(request)
 

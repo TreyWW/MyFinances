@@ -1,9 +1,9 @@
 from __future__ import annotations
 
+import typing
 from datetime import datetime
 from decimal import Decimal
-from typing import Literal
-from typing import NoReturn
+from typing import Literal, Union
 from uuid import uuid4
 
 from django.contrib.auth.hashers import check_password
@@ -358,7 +358,7 @@ class Invoice(models.Model):
             return self.payment_status
 
     @property
-    def get_to_details(self) -> tuple[str, dict[str, str]] | tuple[str, Client]:
+    def get_to_details(self) -> tuple[str, dict[str, str | None]] | tuple[str, Client]:
         """
         Returns the client details for the invoice
         "client" and Client object if client_to
@@ -378,13 +378,13 @@ class Invoice(models.Model):
             subtotal += item.get_total_price()
         return Decimal(round(subtotal, 2))
 
-    def get_tax(self, amount: Decimal = 0.00) -> Decimal:
+    def get_tax(self, amount: Decimal = Decimal(0.00)) -> Decimal:
         amount = amount or self.get_subtotal()
         if self.vat_number:
             return Decimal(round(amount * Decimal(0.2), 2))
         return Decimal(0)
 
-    def get_percentage_amount(self, subtotal: float = 0.00) -> Decimal:
+    def get_percentage_amount(self, subtotal: Decimal = Decimal(0.00)) -> Decimal:
         total = subtotal or self.get_subtotal()
 
         if self.discount_percentage > 0:
@@ -401,7 +401,7 @@ class Invoice(models.Model):
         total -= discount_amount
 
         if 0 > total:
-            total = 0
+            total = Decimal(0)
         else:
             total -= self.get_tax(total)
 
@@ -649,6 +649,7 @@ class QuotaLimit(models.Model):
         return self.name
 
     def get_quota_limit(self, user: User, quota_limit: QuotaLimit | None = None):
+        user_quota_override: QuotaOverrides | QuotaLimit
         try:
             if quota_limit:
                 user_quota_override = quota_limit
@@ -669,6 +670,8 @@ class QuotaLimit(models.Model):
             return "Not available"
 
     def strict_goes_above_limit(self, user: User, extra: str | int | None = None, add: int = 0) -> bool:
+        current: Union[int, None, QuerySet[QuotaUsage], Literal["Not Available"]]
+
         current = self.strict_get_quotas(user, extra)
         current = current.count() if current != "Not Available" else None
         return current + add >= self.get_quota_limit(user) if current else False
@@ -681,35 +684,39 @@ class QuotaLimit(models.Model):
         :return: QuerySet of quota usages OR "Not Available" if utilisation isn't available (e.g. per invoice you can't get in total)
         """
         current = None
-        quota_limit = quota_limit.quota_usage if quota_limit else QuotaUsage.objects.filter(user=user, quota_limit=self)
+        if quota_limit is not None:
+            quota_lim = quota_limit.quota_usage
+        else:
+            quota_lim = QuotaUsage.objects.filter(user=user, quota_limit=self)  # type: ignore[assignment]
 
         if self.limit_type == "forever":
             current = self.quota_usage.filter(user=user, quota_limit=self)
         elif self.limit_type == "per_month":
             current_month = timezone.now().month
             current_year = timezone.now().year
-            current = quota_limit.filter(created_at__year=current_year, created_at__month=current_month)
+            current = quota_lim.filter(created_at__year=current_year, created_at__month=current_month)
         elif self.limit_type == "per_day":
             current_day = timezone.now().day
             current_month = timezone.now().month
             current_year = timezone.now().year
-            current = quota_limit.filter(created_at__year=current_year, created_at__month=current_month, created_at__day=current_day)
+            current = quota_lim.filter(created_at__year=current_year, created_at__month=current_month, created_at__day=current_day)
         elif self.limit_type in ["per_client", "per_invoice", "per_team", "per_receipt", "per_quota"] and extra:
-            current = quota_limit.filter(extra_data=extra)
+            current = quota_lim.filter(extra_data=extra)
         else:
             return "Not Available"
         return current
 
     @classmethod
-    def delete_quota_usage(cls, quota_limit: str | QuotaLimit, user: User, extra, timestamp=None) -> NoReturn:
+    @typing.no_type_check
+    def delete_quota_usage(cls, quota_limit: str | QuotaLimit, user: User, extra, timestamp=None):
         quota_limit = cls.objects.get(slug=quota_limit) if isinstance(quota_limit, str) else quota_limit
 
         all_usages = quota_limit.strict_get_quotas(user, extra)
         closest_obj = None
 
         if all_usages.count() > 1 and timestamp:
-            earliest: QuotaUsage = all_usages.filter(created_at__gte=timestamp).order_by("created_at").first()
-            latest: QuotaUsage = all_usages.filter(created_at__lte=timestamp).order_by("created_at").last()
+            earliest: QuotaUsage | None = all_usages.filter(created_at__gte=timestamp).order_by("created_at").first()
+            latest: QuotaUsage | None = all_usages.filter(created_at__lte=timestamp).order_by("created_at").last()
 
             if earliest and latest:
                 time_until_soonest_obj = abs(earliest.created_at - timestamp)
