@@ -61,3 +61,51 @@ class ClientsAPIFetch(ViewTestCase):
         # Check that all created clients are in the response
         for client in clients:
             self.assertIn(client, response.context.get("clients"))
+
+    def test_search_functionality(self):
+        # Log in the user
+        self.login_user()
+
+        # Create some clients with different names, emails, and IDs
+        client1 = baker.make("backend.Client", name="John Doe", email="john@example.com", id=1, user=self.log_in_user)
+        client2 = baker.make("backend.Client", name="Trey", email="trey@example.com", id=2, user=self.log_in_user)
+        client3 = baker.make("backend.Client", name="Jacob Johnson", email="jacob@example.com", id=3, user=self.log_in_user)
+
+        # Define the URL with the search query parameter
+        url = reverse(self.url_name)
+        headers = {"HTTP_HX-Request": "true"}
+
+        # Test searching by name
+        response = self.client.get(url, {"search": "John"}, **headers)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(client1, response.context["clients"])
+        self.assertNotIn(client2, response.context["clients"])
+        self.assertIn(client3, response.context["clients"])  # Jacob Johnson contains "John"
+
+        # Test searching by email
+        response = self.client.get(url, {"search": "trey@example.com"}, **headers)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(client2, response.context["clients"])
+        self.assertNotIn(client1, response.context["clients"])
+        self.assertNotIn(client3, response.context["clients"])
+
+        # Test searching by ID
+        response = self.client.get(url, {"search": "3"}, **headers)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(client3, response.context["clients"])
+        self.assertNotIn(client1, response.context["clients"])
+        self.assertNotIn(client2, response.context["clients"])
+
+        # Test searching with a substring
+        response = self.client.get(url, {"search": "Tr"}, **headers)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(client2, response.context["clients"])
+        self.assertNotIn(client1, response.context["clients"])
+        self.assertNotIn(client3, response.context["clients"])
+
+        # Test searching with an empty query
+        response = self.client.get(url, {"search": ""}, **headers)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(client1, response.context["clients"])
+        self.assertIn(client2, response.context["clients"])
+        self.assertIn(client3, response.context["clients"])

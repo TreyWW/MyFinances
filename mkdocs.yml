@@ -69,7 +69,7 @@ repo_name: MyFinances
 repo_url: https://github.com/TreyWW/MyFinances
 edit_uri: ./edit/main/docs
 
-site_url: https://docs.strelix.org/MyFinances/
+site_url: https://docs.myfinances.cloud/
 
 site_description: Documentation for MyFinances
 site_author: treyww

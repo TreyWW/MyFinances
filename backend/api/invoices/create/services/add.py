@@ -9,7 +9,7 @@ from backend.types.htmx import HtmxHttpRequest
 @require_http_methods(["POST"])
 def add_service(request: HtmxHttpRequest):
     context: dict = {}
-    existing_service = request.POST.get("existing_service", "")
+    existing_service = request.POST.get("existing_service", 0)
 
     try:
         existing_service_obj = InvoiceProduct.objects.get(user=request.user, id=existing_service)
