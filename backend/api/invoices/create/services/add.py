@@ -23,10 +23,10 @@ def add_service(request: HtmxHttpRequest):
     list_of_current_rows = [row for row in zip(list_hours, list_service_name, list_service_description, list_price_per_hour)]
 
     if not existing_service:
-        hours = int(request.POST.get("post_hours", ""))
+        hours = int(request.POST.get("post_hours", "0"))
         service_name = request.POST.get("post_service_name")
         service_description = request.POST.get("post_service_description")
-        price_per_hour = int(request.POST.get("post_rate", ""))
+        price_per_hour = int(request.POST.get("post_rate", "0"))
 
         if not hours:
             return JsonResponse(
