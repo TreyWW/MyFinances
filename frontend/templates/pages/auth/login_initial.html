@@ -51,7 +51,8 @@
     <form method="post"
           class="slide-transition"
           hx-swap="none"
-          hx-post="{% url 'auth:login manual' %}">
+          hx-post="{% url 'auth:login manual' %}"
+          action="{% url 'auth:login manual' %}">
         {% csrf_token %}
         <div data-swap="form_fields">
             <div class="form-control w-full mt-4">
