@@ -1,5 +1,6 @@
 {% load humanize %}
 {% for client in clients %}
+{% csrf_token %}
     <tr>
         <td>{{ client.id }}</td>
         <td colspan="2">{{ client.name }}</td>
@@ -11,7 +12,10 @@
                     </button>
                 </div>
                 <div class="tooltip" data-tip="Delete">
-                    <button class="btn btn-outline btn-error btn-sm btn-disabled">
+                    <button class="btn btn-outline btn-error btn-sm"
+                            hx-delete="{% url 'api:clients:delete' id=client.id %}"
+                            hx-target="#items"
+                            hx-confirm="Are you sure you would like to delete this client?">
                         <i class="fa fa-solid fa-trash"></i>
                     </button>
                 </div>
