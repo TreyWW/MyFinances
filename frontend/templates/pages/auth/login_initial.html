@@ -47,6 +47,52 @@
         .slide-transition {
             view-transition-name: slide-it;
         }
+
+        .overlay {
+
+        }
+
+        .overlay:target {
+            display: block;
+        }
+
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .popup h2 {
+            margin-top: 0;
+            color: #333;
+            font-family: Tahoma, Arial, sans-serif;
+        }
+
+        .popup .close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            transition: all 200ms;
+            font-size: 30px;
+            font-weight: bold;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .popup .content {
+            margin-top: 20px;
+        }
+
+        .popup a {
+            color: blue;
+            text-decoration: underline;
+        }
+
     </style>
     <form method="post"
           class="slide-transition"
@@ -54,6 +100,24 @@
           hx-post="{% url 'auth:login manual' %}"
           action="{% url 'auth:login manual' %}">
         {% csrf_token %}
+        <noscript>
+            <div id="popup" class="overlay">
+                <div class="popup">
+                    <br>
+                    <h2 style="text-align: center; font-size: 24px; color: red;">
+                        JavaScript is disabled in your browser. Please enable JavaScript.
+                    </h2>
+                    <br>
+                    <p style="text-align: center; color: black;">
+                        Need to know how to enable JavaScript ?
+                        <a href="http://enable-javascript.com/">
+                            Go here.
+                        </a>
+                    </p>
+                    <br>
+                </div>
+            </div>
+        </noscript>
         <div data-swap="form_fields">
             <div class="form-control w-full mt-4">
                 <label class="label">
