@@ -48,50 +48,15 @@
             view-transition-name: slide-it;
         }
 
-        .overlay {
-
-        }
-
-        .overlay:target {
-            display: block;
-        }
-
         .popup {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: #4D5270;
-            border-radius: 5px;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background: inherit;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
         }
 
-        .popup h2 {
-            margin-top: 0;
-            color: #333;
-            font-family: Tahoma, Arial, sans-serif;
-        }
-
-        .popup .close {
-            position: absolute;
-            top: 20px;
-            right: 30px;
-            transition: all 200ms;
-            font-size: 30px;
-            font-weight: bold;
-            text-decoration: none;
-            color: #333;
-        }
-
-        .popup .content {
-            margin-top: 20px;
-        }
-
-        .popup a {
-            color: blue;
-            text-decoration: underline;
-        }
 
     </style>
     <form method="post"
@@ -101,16 +66,16 @@
           action="{% url 'auth:login manual' %}">
         {% csrf_token %}
         <noscript>
-            <div id="popup" class="overlay">
-                <div class="popup">
+            <div data-theme="dim" class="overlay fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center">
+                <div class="popup bg-gray-700 rounded-lg p-8 w-96">
                     <br>
-                    <h2 style="text-align: center; font-size: 24px; color: white; font-weight: bold;">
+                    <h2 class="text-2xl font-bold text-white text-center">
                         JavaScript is disabled in your browser. Please enable JavaScript.
                     </h2>
                     <br>
-                    <p style="text-align: center; color: white;">
+                    <p class="text-white text-center mt-4">
                         Need to know how to enable JavaScript ?
-                        <a href="http://enable-javascript.com/">
+                        <a href="http://enable-javascript.com/" class="text-blue-500 underline">
                             Go here.
                         </a>
                     </p>
