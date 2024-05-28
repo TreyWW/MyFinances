@@ -83,26 +83,20 @@ the feature, its potential benefits, and any relevant use cases.
 To contribute code:
 
 1. Fork the repository.
-2. Install pre-commit hooks (do it once, whenever you clone the repository)
-   - `pre-commit install`
-3. Create a new branch for your changes.
-4. Make your changes, following the coding style guidelines.
-5. Test your changes thoroughly
+2. Create a new branch for your changes.
+3. Make your changes, following the coding style guidelines.
+4. Test your changes thoroughly
     - `python manage.py test`
     - run the app (`python manage.py runserver`)
     - view any changed pages in browser (`http://127.0.0.1:8000`) and make sure the changes work as expected
-6. Submit a pull request to the main repository's `main` branch.
+5.. Submit a pull request to the main repository's `main` branch.
 
 We'll review your pull request, provide feedback, and work with you to get your changes merged.
 
 ### Code Style and Quality
 
 Adhere to the coding style guidelines of the Django project. Find the Django coding style
-guide [here](https://docs.djangoproject.com/en/4.2/internals/contributing/writing-code/coding-style/). Please install our pre-commit hooks using following command:
-
-```
-pre-commit install
-```
+guide [here](https://docs.djangoproject.com/en/4.2/internals/contributing/writing-code/coding-style/).
 
 We now also use the [python black formatter](https://black.readthedocs.io/). Code tests will be run before PRs can be merged, they
 will fail if you haven't ran the command below:
