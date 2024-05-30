@@ -30,23 +30,39 @@ repos:
     rev: v4.5.0
     hooks:
       - id: trailing-whitespace
+        types: [ text ]
+        language: python
       - id: end-of-file-fixer
-      - id: debug-statements
-#      - id: name-tests-test   # (blocking)
-#  - repo: https://github.com/asottile/setup-cfg-fmt
-#    rev: v2.5.0
-#    hooks:
-#      - id: setup-cfg-fmt
-#  - repo: https://github.com/asottile/pyupgrade
-#    rev: v3.15.2
-#    hooks:
-#      - id: pyupgrade # (blocking)
-#        args: [ --py39-plus ]
-#  - repo: https://github.com/pre-commit/mirrors-mypy
-#    rev: v1.7.0
-#    hooks:
-#      - id: mypy # (blocking)
-#        args:
-#          - --explicit-package-bases
-#          - --no-incremental
-#    additional_dependencies: ['mypy >=1.7.0, <1.8.0']
+        types: [ python ]
+        language: python
+      - id: detect-aws-credentials
+      - id: detect-private-key
+        exclude: "docs/getting-started/settings/AWS/static.md"
+      - id: check-added-large-files
+      - id: check-ast
+        types: [ python3 ]
+        language: python
+        files: ".*\\.py$" # may not be needed due to type of python3
+      - id: check-json
+        types: [ json ]
+        files: ".*\\.json$"
+        exclude: "backend/management/commands/contributors.json"
+        #      - id: debug-statements  # (unknown use)
+        #      - id: name-tests-test   # (blocking)
+        #  - repo: https://github.com/asottile/setup-cfg-fmt
+        #    rev: v2.5.0
+        #    hooks:
+        #      - id: setup-cfg-fmt
+        #  - repo: https://github.com/asottile/pyupgrade
+        #    rev: v3.15.2
+        #    hooks:
+        #      - id: pyupgrade # (blocking)
+        #        args: [ --py39-plus ]
+        #  - repo: https://github.com/pre-commit/mirrors-mypy
+        #    rev: v1.7.0
+        #    hooks:
+        #      - id: mypy # (blocking)
+        #        args:
+        #          - --explicit-package-bases
+        #          - --no-incremental
+      #    additional_dependencies: ['mypy >=1.7.0, <1.8.0']
