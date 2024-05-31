@@ -1,4 +1,4 @@
-name: Build and Upload Python Package
+name: Lambda Zip for Management Bot
 
 on: [ push, workflow_dispatch ]
 
@@ -18,7 +18,7 @@ jobs:
       - name: Install dependencies and create .zip
         run: |
           mkdir -p build/python
-          pip install --platform manylinux2014_x86_64 --implementation cp --only-binary=:all: --upgrade --target=build/python cryptography pygithub
+          pip install --platform manylinux2014_x86_64 --implementation cp --only-binary=:all: --upgrade --target=python cryptography pygithub
           zip -r build/python.zip build/python
 
       - name: Upload artifact
