@@ -1,6 +1,6 @@
-name: Lambda Zip for Management Bot
+name: Build and Upload Python Package
 
-on: [ push, workflow_dispatch ]
+on: [ push ]
 
 jobs:
   build:
@@ -13,16 +13,18 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.12'
+          python-version: '3.x'  # Specify the version of Python you want to use
 
       - name: Install dependencies and create .zip
         run: |
           mkdir -p build/python
-          pip install --platform manylinux2014_x86_64 --implementation cp --only-binary=:all: --upgrade --target=python cryptography pygithub
-          zip -r build/python.zip build/python
+          pip install --platform manylinux2014_x86_64 --implementation cp --only-binary=:all: --upgrade --target=build/python cryptography pygithub
+          cd build
+          zip -r python.zip python
+          mv python.zip ../
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
           name: python-package
-          path: build/python.zip
+          path: python.zip
