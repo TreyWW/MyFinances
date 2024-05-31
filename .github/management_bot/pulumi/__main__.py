@@ -1,10 +1,6 @@
-"""An AWS Python Pulumi program"""
-
 from __future__ import annotations
 
 import json
-from contextlib import closing
-
 import pulumi
 
 from pulumi_aws import apigateway, iam
@@ -80,7 +76,21 @@ rest_api_lambda_integration = apigateway.Integration(
 )
 
 api_gw_200_resp = apigateway.MethodResponse(
-    "200_resp", rest_api=rest_api.id, resource_id=rest_api.root_resource_id, http_method="POST", status_code="200"
+    "200_resp",
+    rest_api=rest_api.id,
+    resource_id=rest_api.root_resource_id,
+    http_method="POST",
+    status_code="200",
+    response_models={"application/json": "Empty"},
+)
+
+api_gw_integration_resp = apigateway.IntegrationResponse(
+    "integ_resp",
+    rest_api=rest_api.id,
+    resource_id=rest_api.root_resource_id,
+    http_method="POST",
+    status_code="200",
+    response_templates={"application/json": json.dumps({})},
 )
 
 api_gw_lambda = lambda_.Permission(

@@ -34,7 +34,7 @@ def send_error(issue, *, body, sender, msg_len, required, example_cmd):
     )
 
 
-def lambda_handler(event, context):
+def lambda_handler(event: dict, _):
     auth = Auth.AppAuth(APP_ID, PRIVATE_KEY).get_installation_auth(event.get("installation", {}).get("id"))
     g = Github(auth=auth)
 
@@ -98,4 +98,4 @@ Hi @{SENDER["login"]},
 """
                 )
 
-    return {"statusCode": 200, "body": json.dumps("Success")}
+    return {"statusCode": 200, "body": {}}
