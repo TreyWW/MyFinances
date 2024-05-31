@@ -7,7 +7,7 @@
             <i class="fa-solid fa-plus pe-1"></i>
             Create Client
         </a>
-        <form method="post">
+        <form method="post" onsubmit="return false">
             {% csrf_token %}
             <input type="text"
                    placeholder="Search"
