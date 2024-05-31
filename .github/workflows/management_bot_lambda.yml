@@ -1,0 +1,28 @@
+name: Build and Upload Python Package
+
+on: [ push, workflow_dispatch ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies and create .zip
+        run: |
+          mkdir -p build/python
+          pip install --platform manylinux2014_x86_64 --implementation cp --only-binary=:all: --upgrade --target=build/python cryptography pygithub
+          zip -r build/python.zip build/python
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: python-package
+          path: build/python.zip
