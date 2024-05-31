@@ -34,68 +34,102 @@ def send_error(issue, *, body, sender, msg_len, required, example_cmd):
     )
 
 
+def is_owner(issue, sender):
+    return sender["id"] == issue["user"]["id"]
+
+
+def is_trey(sender):
+    return str(sender["id"]) == "171095439"
+
+
 def lambda_handler(event: dict, _):
     auth = Auth.AppAuth(APP_ID, PRIVATE_KEY).get_installation_auth(event.get("installation", {}).get("id"))
     g = Github(auth=auth)
 
     ACTION = event.get("action", {})
     ISSUE = event.get("issue", {})
+    PR = event.get("pull_request", {})
     COMMENT = event.get("comment", {})
     SENDER = event.get("sender", {})
     REPOSITORY = event.get("repository", {})
 
-    repo = g.get_repo(event.get("repository", {}).get("full_name"))
+    repo = g.get_repo(event.get("repository", {}).get("full_name")) if REPOSITORY else {}
 
-    if ISSUE and COMMENT and str(SENDER.get("id")) != "171095439":
-        if ACTION == "created":  # sent comment
-            issue = repo.get_issue(number=ISSUE.get("number"))
-            msg = COMMENT.get("body", "")
-            msg_stripped = msg.strip().split(" ")
-            msg_len = len(msg_stripped)
+    if ISSUE or PR:
+        selected_json: dict = ISSUE or PR
 
-            if msg_stripped[0] == "/add_label":
-                if not msg_len == 2:
-                    send_error(
-                        issue, sender=SENDER["login"], body=COMMENT["body"], msg_len=msg_len, required=2, example_cmd="add_label bug"
-                    )
+        selected_obj = repo.get_issue(number=ISSUE["id"]) if repo and ISSUE else repo.get_pull(number=PR["id"]) if repo and PR else {}
 
-                    return g.close()
+        LABELS = selected_json.get("labels")
+        label_names = {label["name"] for label in LABELS}
 
-                issue.add_to_labels(msg_stripped[1])
-                issue.create_comment(f"Okay @{SENDER['login']}, I have added the label '{msg_stripped[1]}'")
-            elif msg_stripped[0] == "/add_labels":
-                issue.add_to_labels(*msg_stripped[1:])
-                issue.create_comment(f"Okay @{SENDER['login']}, I have added the labels \"{', '.join(msg_stripped[1:])}\"")
-            elif msg_stripped[0] == "/remove_label":
-                if not msg_len == 2:
-                    send_error(
-                        issue, sender=SENDER["login"], body=COMMENT["body"], msg_len=msg_len, required=2, example_cmd="remove_label bug"
-                    )
+        if "awaiting-response" in label_names and is_owner(selected_json, SENDER) and COMMENT:
+            selected_obj.remove_from_labels("awaiting-response")
 
-                    return g.close()
+        if COMMENT and (is_trey(SENDER) or is_owner(selected_json, SENDER)):
+            if ACTION == "created":  # sent comment
+                msg = COMMENT.get("body", "")
+                msg_stripped = msg.strip().split(" ")
+                msg_len = len(msg_stripped)
 
-                issue.remove_from_labels(msg_stripped[1])
-                issue.create_comment(f"Okay @{SENDER['login']}, I have removed the label \"{msg_stripped[1]}\"")
-            elif msg_stripped[0] == "/remove_labels":
-                issue.remove_from_labels(*msg_stripped[1:])
-                issue.create_comment(f"Okay @{SENDER['login']}, I have removed the labels \"{', '.join(msg_stripped[1:])}\"")
-            elif msg_stripped[0] == "/help":
-                issue.create_comment(
-                    f"""
-Hi @{SENDER["login"]},
+                match msg_stripped[0]:
+                    case "/add_label":
+                        if not msg_len == 2:
+                            send_error(
+                                selected_obj,
+                                sender=SENDER["login"],
+                                body=COMMENT["body"],
+                                msg_len=msg_len,
+                                required=2,
+                                example_cmd="add_label bug",
+                            )
 
-<details><summary>My available commands:</summary>
-<p>
+                            return g.close()
 
-| Command | Description | Arg Types | Example |
-|---------|-------------|--------|--------|
-| /add_label | Adds one label | string | /add_label bug |
-| /add_labels | Adds multiple labels | list[string] | /add_label bug enhancement |
-| /remove_label | Removes one label | string | /remove_label bug |
-| /remove_labels | Removes multiple labels | list[string] | /remove_labels bug enhancement |
-</p>
-</details>
-"""
-                )
+                        selected_obj.add_to_labels(msg_stripped[1])
+                        selected_obj.create_comment(f"Okay @{SENDER['login']}, I have added the label '{msg_stripped[1]}'")
+                    case "/add_labels":
+                        selected_obj.add_to_labels(*msg_stripped[1:])
+                        selected_obj.create_comment(f"Okay @{SENDER['login']}, I have added the labels \"{', '.join(msg_stripped[1:])}\"")
+                    case "/remove_label":
+                        if not msg_len == 2:
+                            send_error(
+                                selected_obj,
+                                sender=SENDER["login"],
+                                body=COMMENT["body"],
+                                msg_len=msg_len,
+                                required=2,
+                                example_cmd="remove_label bug",
+                            )
+
+                            return g.close()
+
+                        selected_obj.remove_from_labels(msg_stripped[1])
+                        selected_obj.create_comment(f"Okay @{SENDER['login']}, I have removed the label \"{msg_stripped[1]}\"")
+                    case "/remove_labels":
+                        selected_obj.remove_from_labels(*msg_stripped[1:])
+                        selected_obj.create_comment(f"Okay @{SENDER['login']}, I have removed the labels \"{', '.join(msg_stripped[1:])}\"")
+                    case "/help":
+                        selected_obj.create_comment(
+                            f"""
+        Hi @{SENDER["login"]},
+
+        <details><summary>My available commands:</summary>
+        <p>
+
+        | Command | Description | Arg Types | Example |
+        |---------|-------------|--------|--------|
+        | /add_label | Adds one label | string | /add_label bug |
+        | /add_labels | Adds multiple labels | list[string] | /add_label bug enhancement |
+        | /remove_label | Removes one label | string | /remove_label bug |
+        | /remove_labels | Removes multiple labels | list[string] | /remove_labels bug enhancement |
+        </p>
+        </details>
+        """
+                        )
+    # elif PR:
+    #     match ACTION:
+    #         case "labeled":
+    #
 
     return {"statusCode": 200, "body": {}}
