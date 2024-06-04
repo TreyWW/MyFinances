@@ -4,6 +4,7 @@ from django.urls import reverse, resolve
 
 from backend.models import Receipt
 from tests.handler import ViewTestCase
+from model_bakery import baker
 
 
 class ReceiptsViewTestCase(ViewTestCase):
@@ -30,6 +31,72 @@ class ReceiptsViewTestCase(ViewTestCase):
         func_name = f"{func.__module__}.{func.__name__}"
         self.assertEqual("/dashboard/receipts/", self._receipts_dashboard_url)
         self.assertEqual("backend.views.core.receipts.dashboard.receipts_dashboard", func_name)
+
+    def test_search_functionality(self):
+        self.login_user()
+
+        # Create some receipts with different names, dates, merchant stores, purchase categories, and IDs
+        receipt_attributes = [
+            {"name": "Groceries", "date": "2024-02-01", "merchant_store": "Walmart", "purchase_category": "Food", "id": 1},
+            {"name": "Electronics", "date": "2023-08-02", "merchant_store": "Best Buy", "purchase_category": "Gadgets", "id": 2},
+            {"name": "Clothing", "date": "2021-01-05", "merchant_store": "Gap", "purchase_category": "Apparel", "id": 3},
+            {"name": "Groceries Deluxe", "date": "2020-09-04", "merchant_store": "Whole Foods", "purchase_category": "Food", "id": 4},
+            {"name": "Gadgets Plus", "date": "2022-12-05", "merchant_store": "Apple Store", "purchase_category": "Gadgets", "id": 5},
+            {"name": "Special Groceries", "date": "2023-07-07", "merchant_store": "Trader Joe's", "purchase_category": "Food", "id": 6},
+        ]
+        receipts = [baker.make("backend.Receipt", user=self.log_in_user, **attrs) for attrs in receipt_attributes]
+
+        # Define the URL with the search query parameter
+        url = reverse("api:receipts:fetch")
+        headers = {"HTTP_HX-Request": "true"}
+
+        # Define search queries to cover various edge cases
+        search_queries = [
+            # Exact matches
+            {"query": "Groceries", "expected_receipts": [receipts[0], receipts[3], receipts[5]]},
+            {"query": "2022-12-05", "expected_receipts": [receipts[4]]},
+            {"query": "Best Buy", "expected_receipts": [receipts[1]]},
+            {"query": "Apparel", "expected_receipts": [receipts[2]]},
+            {"query": "6", "expected_receipts": [receipts[5]]},
+            # Substring matches
+            {"query": "Electroni", "expected_receipts": [receipts[1]]},
+            {"query": "Who", "expected_receipts": [receipts[3]]},
+            {"query": "Gadge", "expected_receipts": [receipts[1], receipts[4]]},
+            {"query": "Fo", "expected_receipts": [receipts[0], receipts[3], receipts[5]]},
+            {"query": "2023", "expected_receipts": [receipts[1], receipts[5]]},
+            # Case insensitivity
+            {"query": "gadgets plus", "expected_receipts": [receipts[4]]},
+            {"query": "CLOTHING", "expected_receipts": [receipts[2]]},
+            {"query": "groCEries deLuXe", "expected_receipts": [receipts[3]]},
+            {"query": "WaLmArT", "expected_receipts": [receipts[0]]},
+            {"query": "TradeR Joe'S", "expected_receipts": [receipts[5]]},
+            # Empty query
+            {"query": "", "expected_receipts": receipts},
+            # Nonexistent query
+            {"query": "NonExistentReceiptName", "expected_receipts": []},
+            {"query": "Walmartt", "expected_receipts": []},
+            {"query": "nonexistentstore", "expected_receipts": []},
+            {"query": "10", "expected_receipts": []},
+        ]
+
+        for search in search_queries:
+            response = self.client.get(url, {"search": search["query"]}, **headers)
+            self.assertEqual(response.status_code, 200)
+
+            # Verify that the "receipts" context variable is set
+            returned_receipts = response.context.get("receipts")
+            self.assertIsNotNone(returned_receipts, f"Context variable 'receipts' should not be None for query: {search['query']}")
+
+            # Convert QuerySet to list for easy comparison
+            returned_receipts_list = list(returned_receipts)
+
+            # Verify that the returned receipts match the expected receipts
+            expected_receipts = search["expected_receipts"]
+            self.assertEqual(
+                len(returned_receipts_list), len(expected_receipts), f"Mismatch in number of receipts for query: {search['query']}"
+            )
+            for receipt in expected_receipts:
+                self.assertIn(receipt, returned_receipts_list, f"Receipt {receipt} should be in the response for query: {search['query']}")
 
 
 class ReceiptsAPITestCase(ViewTestCase):
