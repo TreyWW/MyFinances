@@ -23,17 +23,17 @@ def client_delete(request: HtmxHttpRequest, id: int):
         return JsonResponse({"message": "You do not have permission to delete this invoice"}, status=404)
 
     client.delete()
-    messages.success(request, f"Client {client.name} deleted successfully")
+    messages.success(request, f'Client "{client.name}" deleted successfully')
 
     if request.user.logged_in_as_team:
         return render(
             request,
             "pages/clients/dashboard/_table.html",
-            {"clients": Client.objects.filter(organization=request.user.logged_in_as_team).order_by("-name")},
+            {"clients": Client.objects.filter(organization=request.user.logged_in_as_team).order_by("-name"), "delete": True},
         )
     else:
         return render(
             request,
             "pages/clients/dashboard/_table.html",
-            {"clients": Client.objects.filter(user=request.user).order_by("-name")},
+            {"clients": Client.objects.filter(user=request.user).order_by("-name"), "delete": True},
         )
