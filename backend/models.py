@@ -240,6 +240,7 @@ class Client(models.Model):
     email = models.EmailField(blank=True, null=True)
     email_verified = models.BooleanField(default=False)
     company = models.CharField(max_length=100, blank=True, null=True)
+    contact_method = models.CharField(max_length=100, blank=True, null=True)
     is_representative = models.BooleanField(default=False)
 
     address = models.CharField(max_length=100, blank=True, null=True)
