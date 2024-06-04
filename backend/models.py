@@ -34,8 +34,7 @@ def RandomAPICode(length=89):
 def USER_OR_ORGANIZATION_CONSTRAINT():
     return models.CheckConstraint(
         name=f"%(app_label)s_%(class)s_check_user_or_organization",
-        check=(models.Q(user__isnull=True, organization__isnull=False) | models.Q(user__isnull=False,
-                                                                                  organization__isnull=True)),
+        check=(models.Q(user__isnull=True, organization__isnull=False) | models.Q(user__isnull=False, organization__isnull=True)),
     )
 
 
@@ -336,8 +335,7 @@ class Invoice(models.Model):
     date_issued = models.DateField(blank=True, null=True)
 
     discount_amount = models.DecimalField(max_digits=15, default=0, decimal_places=2)
-    discount_percentage = models.DecimalField(default=0, max_digits=5, decimal_places=2,
-                                              validators=[MaxValueValidator(100)])
+    discount_percentage = models.DecimalField(default=0, max_digits=5, decimal_places=2, validators=[MaxValueValidator(100)])
 
     class Meta:
         constraints = [USER_OR_ORGANIZATION_CONSTRAINT()]
@@ -702,8 +700,7 @@ class QuotaLimit(models.Model):
             current_day = timezone.now().day
             current_month = timezone.now().month
             current_year = timezone.now().year
-            current = quota_lim.filter(created_at__year=current_year, created_at__month=current_month,
-                                       created_at__day=current_day)
+            current = quota_lim.filter(created_at__year=current_year, created_at__month=current_month, created_at__day=current_day)
         elif self.limit_type in ["per_client", "per_invoice", "per_team", "per_receipt", "per_quota"] and extra:
             current = quota_lim.filter(extra_data=extra)
         else:
@@ -839,8 +836,7 @@ class EmailSendStatus(models.Model):
     ]
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name="emails_created")
-    organization = models.ForeignKey(Team, on_delete=models.CASCADE, null=True, blank=True,
-                                     related_name="emails_created")
+    organization = models.ForeignKey(Team, on_delete=models.CASCADE, null=True, blank=True, related_name="emails_created")
     sent_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name="emails_sent")
 
     created_at = models.DateTimeField(auto_now_add=True)
