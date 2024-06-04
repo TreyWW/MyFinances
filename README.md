@@ -112,6 +112,12 @@ pip install black
 black ./
 ```
 
+For static type checking we are using [mypy](https://mypy-lang.org/). Code tests will be run before PRs can be merged, they will fail if types in you code will be incorrect. You can run check with this command:
+
+```
+mypy .
+```
+
 ### Version Control
 
 We use Git. Make sure your commits are clear, concise, and well-documented. Follow conventional commit message style.
