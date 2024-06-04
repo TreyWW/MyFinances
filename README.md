@@ -466,6 +466,18 @@ Thank you for your contributions!
                     <br />
                     <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Amarvinl803" title="Backend">🖥</a><a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Amarvinl803" title="Frontend">🎨</a>
                 </td>
+                </td><td>
+                <td align="center">
+                    <a href="https://github.com/artkolpakov" title="artkolpakov">
+                        <img title="Bug Fixes" src="https://github.com/artkolpakov.png" width="100px;" alt="" />
+                        <br />
+                        <sub>
+                            <b>Artem Kolpakov</b>
+                        </sub>
+                    </a>
+                    <br />
+                    <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Aartkolpakov" title="Bug Fixes">🐞</a>
+                </td>
                 </td></tr></table>
 <!-- CONTRIBUTORS TABLE END -->
 
