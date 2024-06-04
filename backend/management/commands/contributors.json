@@ -220,5 +220,13 @@
             "🎨",
             "🖥"
         ]
+    },
+    {
+        "name": "Artem Kolpakov",
+        "username": "artkolpakov",
+        "role": "Bug Fixes",
+        "tags": [
+            "🐞"
+        ]
     }
 ]
