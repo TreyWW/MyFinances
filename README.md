@@ -454,6 +454,18 @@ Thank you for your contributions!
                     <br />
                     <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Aglizondo" title="Bug Fixes">🐞</a>
                 </td>
+                </td><td>
+                <td align="center">
+                    <a href="https://github.com/marvinl803" title="marvinl803">
+                        <img title="Full Stack" src="https://github.com/marvinl803.png" width="100px;" alt="" />
+                        <br />
+                        <sub>
+                            <b>Marvin Lopez</b>
+                        </sub>
+                    </a>
+                    <br />
+                    <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Amarvinl803" title="Backend">🖥</a><a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Amarvinl803" title="Frontend">🎨</a>
+                </td>
                 </td></tr></table>
 <!-- CONTRIBUTORS TABLE END -->
 
