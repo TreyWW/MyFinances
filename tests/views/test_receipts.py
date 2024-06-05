@@ -62,7 +62,7 @@ class ReceiptsViewTestCase(ViewTestCase):
             {"query": "Electroni", "expected_receipts": [receipts[1]]},
             {"query": "Who", "expected_receipts": [receipts[3]]},
             {"query": "Gadge", "expected_receipts": [receipts[1], receipts[4]]},
-            {"query": "Fo", "expected_receipts": [receipts[0], receipts[3], receipts[5]]},
+            {"query": "Foo", "expected_receipts": [receipts[0], receipts[3], receipts[5]]},
             {"query": "2023", "expected_receipts": [receipts[1], receipts[5]]},
             # Case insensitivity
             {"query": "gadgets plus", "expected_receipts": [receipts[4]]},
