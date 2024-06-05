@@ -1,6 +1,5 @@
 from django.contrib import messages
-from django.http import JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
 
@@ -14,13 +13,16 @@ def client_delete(request: HtmxHttpRequest, id: int):
     try:
         client = Client.objects.get(id=id)
     except Client.DoesNotExist:
-        return JsonResponse({"message": "Client not found"}, status=404)
+        messages.error(request, 'Client not found')
+        return render(request, "pages/clients/dashboard/_table.html", {"delete": True})
 
     if not client:
-        return JsonResponse({"message": "Client not found"}, status=404)
+        messages.error(request, 'Client not found')
+        return render(request, "pages/clients/dashboard/_table.html", {"delete": True})
 
     if not request.user.is_authenticated:
-        return JsonResponse({"message": "You do not have permission to delete this invoice"}, status=404)
+        messages.error(request, 'You do not have permission to delete this invoice')
+        return render(request, "pages/clients/dashboard/_table.html", {"delete": True})
 
     client.delete()
     messages.success(request, f'Client "{client.name}" deleted successfully')
