@@ -13,15 +13,15 @@ def client_delete(request: HtmxHttpRequest, id: int):
     try:
         client = Client.objects.get(id=id)
     except Client.DoesNotExist:
-        messages.error(request, 'Client not found')
+        messages.error(request, "Client not found")
         return render(request, "pages/clients/dashboard/_table.html", {"delete": True})
 
     if not client:
-        messages.error(request, 'Client not found')
+        messages.error(request, "Client not found")
         return render(request, "pages/clients/dashboard/_table.html", {"delete": True})
 
     if not request.user.is_authenticated:
-        messages.error(request, 'You do not have permission to delete this invoice')
+        messages.error(request, "You do not have permission to delete this invoice")
         return render(request, "pages/clients/dashboard/_table.html", {"delete": True})
 
     client.delete()
