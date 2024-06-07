@@ -1,5 +1,7 @@
-import json, os, base64
+import os, base64
+from textwrap import dedent
 
+import github.GithubException
 from github import Github, Issue
 from github import Auth
 
@@ -58,13 +60,16 @@ def lambda_handler(event: dict, _):
     if ISSUE or PR:
         selected_json: dict = ISSUE or PR
 
-        selected_obj = repo.get_issue(number=ISSUE["id"]) if repo and ISSUE else repo.get_pull(number=PR["id"]) if repo and PR else {}
+        selected_obj = repo.get_issue(number=ISSUE["number"]) if repo and ISSUE else repo.get_pull(number=PR["id"]) if repo and PR else {}
 
         LABELS = selected_json.get("labels")
         label_names = {label["name"] for label in LABELS}
 
         if "awaiting-response" in label_names and is_owner(selected_json, SENDER) and COMMENT:
-            selected_obj.remove_from_labels("awaiting-response")
+            try:
+                selected_obj.remove_from_labels("awaiting-response")
+            except github.GithubException:
+                ...
 
         if COMMENT and (is_trey(SENDER) or is_owner(selected_json, SENDER)):
             if ACTION == "created":  # sent comment
@@ -109,23 +114,25 @@ def lambda_handler(event: dict, _):
                     case "/remove_labels":
                         selected_obj.remove_from_labels(*msg_stripped[1:])
                         selected_obj.create_comment(f"Okay @{SENDER['login']}, I have removed the labels \"{', '.join(msg_stripped[1:])}\"")
-                    case "/help":
+                    case _:
                         selected_obj.create_comment(
-                            f"""
-        Hi @{SENDER["login"]},
+                            dedent(
+                                f"""
+                                Hi @{SENDER["login"]},
 
-        <details><summary>My available commands:</summary>
-        <p>
+                                <details><summary>My available commands:</summary>
+                                <p>
 
-        | Command | Description | Arg Types | Example |
-        |---------|-------------|--------|--------|
-        | /add_label | Adds one label | string | /add_label bug |
-        | /add_labels | Adds multiple labels | list[string] | /add_label bug enhancement |
-        | /remove_label | Removes one label | string | /remove_label bug |
-        | /remove_labels | Removes multiple labels | list[string] | /remove_labels bug enhancement |
-        </p>
-        </details>
-        """
+                                | Command | Description | Arg Types | Example |
+                                |---------|-------------|--------|--------|
+                                | /add_label | Adds one label | string | /add_label bug |
+                                | /add_labels | Adds multiple labels | list[string] | /add_label bug enhancement |
+                                | /remove_label | Removes one label | string | /remove_label bug |
+                                | /remove_labels | Removes multiple labels | list[string] | /remove_labels bug enhancement |
+                                </p>
+                                </details>
+                            """
+                            )
                         )
     # elif PR:
     #     match ACTION:
