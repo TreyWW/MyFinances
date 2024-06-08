@@ -70,8 +70,7 @@ class ClientsAPIFetch(ViewTestCase):
         # Create some clients with different names, emails, and IDs
         client1 = baker.make("backend.Client", name="John Doe", email="john@example.com", id=1, user=self.log_in_user)
         client2 = baker.make("backend.Client", name="Trey", email="trey@example.com", id=2, user=self.log_in_user)
-        client3 = baker.make("backend.Client", name="Jacob Johnson", email="jacob@example.com", id=3,
-                             user=self.log_in_user)
+        client3 = baker.make("backend.Client", name="Jacob Johnson", email="jacob@example.com", id=3, user=self.log_in_user)
 
         # Define the URL with the search query parameter
         url = reverse(self.url_name)

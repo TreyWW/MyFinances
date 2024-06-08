@@ -1,6 +1,6 @@
 {% load humanize %}
 {% for client in clients %}
-{% csrf_token %}
+    {% csrf_token %}
     <tr>
         <td>{{ client.id }}</td>
         <td colspan="2">{{ client.name }}</td>
