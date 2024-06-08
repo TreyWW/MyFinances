@@ -5,6 +5,7 @@ from django.shortcuts import redirect, render
 from backend.decorators import quota_usage_check
 from backend.models import Invoice, InvoiceURL, QuotaUsage, QuotaLimit
 from backend.types.htmx import HtmxHttpRequest
+from backend.utils.quota_limit_ops import quota_usage_check_under
 
 
 def manage_access(request: HtmxHttpRequest, invoice_id):
@@ -23,7 +24,6 @@ def manage_access(request: HtmxHttpRequest, invoice_id):
     )
 
 
-@quota_usage_check("invoices-access_codes", 1, api=True, htmx=True)
 def create_code(request: HtmxHttpRequest, invoice_id):
     if not request.htmx:
         return redirect("invoices:dashboard")
@@ -36,11 +36,19 @@ def create_code(request: HtmxHttpRequest, invoice_id):
     except Invoice.DoesNotExist:
         return HttpResponse("Invoice not found", status=400)
 
+    limit = QuotaLimit.objects.get(slug="invoices-access_codes").get_quota_limit(user=request.user)
+
+    current_amount = InvoiceURL.objects.filter(invoice_id=invoice_id).count()
+
+    if current_amount >= limit:
+        messages.error(request, f"You have reached the quota limit for this service 'access_codes'")
+        return render(request, "partials/messages_list.html", {"autohide": False})
+
     code = InvoiceURL.objects.create(invoice=invoice, created_by=request.user)
 
     messages.success(request, "Successfully created code")
 
-    QuotaUsage.create_str(request.user, "invoices-access_codes", invoice_id)
+    # QuotaUsage.create_str(request.user, "invoices-access_codes", invoice_id)
 
     return render(
         request,
@@ -61,7 +69,7 @@ def delete_code(request: HtmxHttpRequest, code):
     except (Invoice.DoesNotExist, InvoiceURL.DoesNotExist):
         return redirect("invoices:dashboard")
 
-    QuotaLimit.delete_quota_usage("invoices-access_codes", request.user, invoice.id, code_obj.created_on)
+    # QuotaLimit.delete_quota_usage("invoices-access_codes", request.user, invoice.id, code_obj.created_on)
 
     code_obj.delete()
 
