@@ -67,7 +67,8 @@ def delete_code(request: HtmxHttpRequest, code):
         if not invoice.has_access(request.user):
             raise Invoice.DoesNotExist
     except (Invoice.DoesNotExist, InvoiceURL.DoesNotExist):
-        return redirect("invoices:dashboard")
+        messages.error(request, "Invalid URL")
+        return render(request, "base/toasts.html")
 
     # QuotaLimit.delete_quota_usage("invoices-access_codes", request.user, invoice.id, code_obj.created_on)
 
