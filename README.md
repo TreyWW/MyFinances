@@ -112,6 +112,12 @@ pip install black
 black ./
 ```
 
+For static type checking we are using [mypy](https://mypy-lang.org/). Code tests will be run before PRs can be merged, they will fail if types in you code will be incorrect. You can run check with this command:
+
+```
+mypy .
+```
+
 ### Version Control
 
 We use Git. Make sure your commits are clear, concise, and well-documented. Follow conventional commit message style.
@@ -447,6 +453,30 @@ Thank you for your contributions!
                     </a>
                     <br />
                     <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Aglizondo" title="Bug Fixes">🐞</a>
+                </td>
+                </td><td>
+                <td align="center">
+                    <a href="https://github.com/marvinl803" title="marvinl803">
+                        <img title="Full Stack" src="https://github.com/marvinl803.png" width="100px;" alt="" />
+                        <br />
+                        <sub>
+                            <b>Marvin Lopez</b>
+                        </sub>
+                    </a>
+                    <br />
+                    <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Amarvinl803" title="Backend">🖥</a><a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Amarvinl803" title="Frontend">🎨</a>
+                </td>
+                </td><td>
+                <td align="center">
+                    <a href="https://github.com/artkolpakov" title="artkolpakov">
+                        <img title="Bug Fixes" src="https://github.com/artkolpakov.png" width="100px;" alt="" />
+                        <br />
+                        <sub>
+                            <b>Artem Kolpakov</b>
+                        </sub>
+                    </a>
+                    <br />
+                    <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Aartkolpakov" title="Bug Fixes">🐞</a>
                 </td>
                 </td></tr></table>
 <!-- CONTRIBUTORS TABLE END -->

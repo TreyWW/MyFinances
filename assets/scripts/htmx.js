@@ -33,8 +33,9 @@ function htmx_resend(event) {
 }
 
 // https://htmx.org/docs/#config
-htmx.config.globalViewTransitions = true
-htmx.config.useTemplateFragments = true // for swapping of table items
+htmx.config.globalViewTransitions = true;
+htmx.config.useTemplateFragments = true; // for swapping of table items
+htmx.config.scrollIntoViewOnBoost = false; // to stop hx-boost scrolling down automatically
 
 
 window.addEventListener("DOMContentLoaded", (event) => {

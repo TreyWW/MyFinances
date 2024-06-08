@@ -15,6 +15,7 @@ def create_client(request: HtmxHttpRequest):
         "email": request.POST.get("client_email"),
         "address": request.POST.get("client_address"),
         "phone_number": request.POST.get("client_phone"),
+        "contact_method": request.POST.get("client_contact_method"),
         "company": request.POST.get("company_name"),
         "is_representative": (True if request.POST.get("is_representative") == "on" else False),
     }

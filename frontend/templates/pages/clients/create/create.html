@@ -115,6 +115,23 @@
                         </div>
                     </div>
                 </div>
+                {# Client Main Contact Method #}
+                <div class="card me-3 w-full bg-base-200 border border-base-200 hover:border-gray-400">
+                    <div class="card-body w-full">
+                        <div class="form-control w-full">
+                            <label class="label">
+                                <span class="label-text">Client Main Contact Method</span>
+                            </label>
+                            <input name="client_contact_method"
+                                   type="text"
+                                   class="peer input input-bordered w-full"
+                                   placeholder="Enter email, phone number, etc." />
+                            <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden">
+                                <span class="label-text-alt text-error">Please enter a valid main contact method</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
             </div>
             <button type="submit" class="btn float-right w-[150px] btn-primary">Create</button>
         </form>

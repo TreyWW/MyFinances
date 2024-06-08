@@ -76,10 +76,10 @@ def resend_verification_code(request):
         subject="Verify your email",
         message=f"""
         Hi {user.first_name if user.first_name else "User"},
-        
+
         Verification for your email has been requested to link this email to your MyFinances account.
         If this wasn't you, you can simply ignore this email.
-        
+
         If it was you, you can complete the verification by clicking the link below.
         Verify Link: {magic_link_url}
     """,
