@@ -22,4 +22,4 @@ And this time they should all be correctly installed!
 
 For other poetry issues, or if this doesn't fix the issue try the following: 
    <p >- Delete all files in your directory associate with poetry.</p>
-   <p > - Follow these directions to use the installer on [poetry's website]( https://python-poetry.org/docs/#installing-with-the-official-installer).</p>
+   - Follow these directions to use the installer on [poetry's website]( https://python-poetry.org/docs/#installing-with-the-official-installer).
