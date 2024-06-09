@@ -1,4 +1,4 @@
-Here are some set-up hiccups that have occured for some and the solutions that we have come up with so far:
+Common error messages and their solutions:
 
 1. ImportError: cannot import name 'login_not_required' from 'login_required
 
