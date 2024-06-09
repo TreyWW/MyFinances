@@ -56,8 +56,8 @@ git clone [copied fork url]
    poetry install --no-root --with mypy,django,dev
    ```
    If the installation of poetry gives error messages check out our [debugging section on poetry](../debugging/poetry).  If this doesn't fix the issue try the following: <br  />
-    a. Delete all files in your directory associate with poetry. <br  />
-    b. Follow these directions to use the installer on [poetry's website]( https://python-poetry.org/docs/#installing-with-the-official-installer).
+    - Delete all files in your directory associate with poetry. <br  />
+    - Follow these directions to use the installer on [poetry's website]( https://python-poetry.org/docs/#installing-with-the-official-installer).
 
 
 3. Setup a database (we suggest using sqlite so there's no installation!)
