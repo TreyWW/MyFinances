@@ -47,7 +47,7 @@ git clone [copied fork url]
     ```shell
     ./venv/bin/activate
     ```
-    More information [here:](https://docs.python.org/3/library/venv.html)  
+    More information [here](https://docs.python.org/3/library/venv.html)  
 
 2. Install our dependencies using [python poetry](https://python-poetry.org/docs/#installing-manually)
    ```shell
