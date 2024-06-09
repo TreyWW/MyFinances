@@ -1,22 +1,22 @@
 ## **Common error messages and their solutions:**
 
-1. ImportError: cannot import name 'login_not_required' from 'login_required
+1. If you receive this error: <br  /> ImportError: cannot import name 'login_not_required' from 'login_required <br /> You may be missing some django middlware.
 
 To fix this:
 ```shell
 pip install django-login-required-middleware
 ```
 
-2. No module named 'forex_python'
+2. If you receive this error: <br /> No module named 'forex_python' 
 
-To fix this:
+Do this:
 ```shell
 pip install forex_python
 ```
 
-3. Several boto3 extensions not found errors 
+3. To fix several boto3 extensions not found errors 
 
-To fix these:
+Do the following:
 ```shell
 pip install mypy_boto3_iam
 
