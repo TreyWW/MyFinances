@@ -55,7 +55,7 @@ git clone [copied fork url]
 
    poetry install --no-root --with mypy,django,dev
    ```
-   If the installation of poetry gives error messages check out our [debugging section on poetry](../debugging/poetry.md).  
+   If the installation of poetry gives error messages check out our [debugging section on poetry](../debugging/python/poetry.md).  
 
 3. Setup a database (we suggest using sqlite so there's no installation!)
    To do this you can use one of our database guides, we currently only support 3 databases:
