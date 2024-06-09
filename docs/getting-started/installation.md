@@ -128,4 +128,4 @@ npm run webpack-watch # this does the same as above, but listens for updates
 ```
 
 #### Problem Solving Errors
-If you are having trouble with the installation process, we have some possible fixes. Check out our debugging section here: [Debugging](../debugging/)
+If you are having trouble with the installation process, we have some possible fixes. Check out our [debugging](../debugging/) section.
