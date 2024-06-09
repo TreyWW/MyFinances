@@ -14,7 +14,7 @@ Do this:
 pip install forex_python
 ```
 
-3. To fix several **boto3** extension name **not found errors** 
+3. To fix several **boto3** <extension name> **not found errors** 
 
 Do the following:
 ```shell
