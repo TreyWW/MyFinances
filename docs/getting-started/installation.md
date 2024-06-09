@@ -57,7 +57,7 @@ git clone [copied fork url]
    ```
    If the installation of poetry gives error messages check out our [debugging section on poetry](../debugging/poetry).  If this doesn't fix the issue try the following: <br  />
     **a.** Delete all files in your directory associate with poetry. <br  />
-    **b.** Follow the directions on [poetry's website]( https://python-poetry.org/docs/#installing-with-the-official-installer) 
+    **b.** Follow these directions to use the official installer on [poetry's website]( https://python-poetry.org/docs/#installing-with-the-official-installer) 
 
 
 3. Setup a database (we suggest using sqlite so there's no installation!)
