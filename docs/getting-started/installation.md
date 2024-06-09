@@ -128,4 +128,4 @@ npm run webpack-watch # this does the same as above, but listens for updates
 ```
 
 #### Problem Solving Errors
-There have been a few issues reported during set-up.  For a list of possible error messages you are encountering and their fixes check out [Problem Solving](./problem-solving.md)
+There have been a few issues reported during set-up.  For a list of possible error messages you are encountering and their fixes check out [Problem Solving](../debugging/problem-solving.md)
