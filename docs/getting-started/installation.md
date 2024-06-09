@@ -124,5 +124,5 @@ npm run webpack-dev # this only runs it once
 npm run webpack-watch # this does the same as above, but listens for updates
 ```
 
-#### Problem Solving Errors
+### Problem Solving Errors
 If you are having trouble with the installation process, we have some possible fixes. Check out our [debugging](../debugging/) section.
