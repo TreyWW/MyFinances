@@ -1,6 +1,6 @@
 ## **Common error messages and their solutions:**
 
-1. If you receive this error: **ImportError: cannot import name 'login_not_required' from 'login_required** <br /> You may be missing some django middlware.
+1. If you receive this error: **ImportError: cannot import name 'login_not_required' from 'login_required** <br /> You may be missing some django middleware.
 
 To fix this:
 ```shell
