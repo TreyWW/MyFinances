@@ -1,4 +1,4 @@
-Common error messages and their solutions:
+## **Common error messages and their solutions:**
 
 1. ImportError: cannot import name 'login_not_required' from 'login_required
 
