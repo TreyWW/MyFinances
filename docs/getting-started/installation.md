@@ -42,6 +42,12 @@ git clone [copied fork url]
 
  	./venv/Scripts/activate
 	```
+    OR if you are running in a POSIX system such as: bash/zsh, fish, csh/tcsh, or PowerShell, the command to activate the virtual environment is:
+
+    ```shell
+    ./venv/bin/activate
+    ```
+    More information [here](https://docs.python.org/3/library/venv.html)  
 
 2. Install our dependencies using [python poetry](https://python-poetry.org/docs/#installing-manually)
    ```shell
@@ -49,6 +55,8 @@ git clone [copied fork url]
 
    poetry install --no-root --with mypy,django,dev
    ```
+   If the installation of poetry gives error messages check out our [debugging section on poetry](../debugging/python/poetry.md).  
+
 3. Setup a database (we suggest using sqlite so there's no installation!)
    To do this you can use one of our database guides, we currently only support 3 databases:
    	- [SQlite3 (recommended for dev)](./databases/sqlite.md)
@@ -115,3 +123,6 @@ npm run webpack-dev # this only runs it once
 
 npm run webpack-watch # this does the same as above, but listens for updates
 ```
+
+### Problem Solving Errors
+If you are having trouble with the installation process, we have some possible fixes. Check out our [debugging](../debugging/) section.
