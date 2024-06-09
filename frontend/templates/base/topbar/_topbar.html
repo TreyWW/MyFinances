@@ -66,17 +66,16 @@
         {# Profile Picture  #}
         <details class="dropdown dropdown-end mr-3">
             <summary class="btn btn-ghost"
-                     data-notifications="bell"
                      hx-get="{% url "api:base:notifications get" %}"
                      hx-target='[data-notifications="container"]'
                      hx-swap="innerHTML"
-                     hx-trigger="click">
+                     hx-trigger="click ">
                 <i class="fa-solid fa-bell"></i>
-                {{ request.user.notification_count }}
+                {% include "base/topbar/_notification_count.html" %}
             </summary>
             <ul class="menu menu-sm dropdown-content border border-primary"
                 data-notifications="container">
-                {% include "base/topbar/_notification_dropdown_items.html" %}
+                {% include "base/topbar/_notification_dropdown_items.html" with initial_load=True %}
             </ul>
         </details>
         <div class="dropdown dropdown-end">

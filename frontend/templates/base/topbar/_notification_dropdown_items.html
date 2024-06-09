@@ -41,9 +41,21 @@
         </li>
     {% elif notification.action == "redirect" %}
         <li>
-            <a tabindex="-1"
-               class="dropdown-item text-sm {% if not forloop.first %}mt-1{% endif %}"
-               href="{{ notification.action_value }}">{{ notification.message }}</a>
+            <div class="flex flex-col">
+                {{ notification.message }}
+                <a tabindex="-1"
+                   class="dropdown-item btn btn-sm btn-square btn-outline mt-1"
+                   hx-boost="true"
+                   href="{{ notification.action_value }}">
+                    <i class="fa fa-eye"></i>
+                </a>
+                <button class="btn btn-outline btn-square btn-sm btn-error mt-1"
+                        hx-delete="/api/base/notifications/delete/{{ notification.id }}"
+                        hx-target="closest li"
+                        hx-swap="outerHTML">
+                    <i class="fa fa-trash"></i>
+                </button>
+            </div>
         </li>
     {% elif notification.action == "modal" %}
         <li>
@@ -63,7 +75,7 @@
         <div class="dropdown-item text-sm mt-1 hover-none pointer-events-none">No notifications</div>
     </li>
 {% endfor %}
-{% if notifications_above_max %}
+{% if notif_count > 5 %}
     <li>
         <strong>
             You have older notifications.
@@ -72,4 +84,6 @@
         </strong>
     </li>
 {% endif %}
-{% include "base/topbar/_notification_bell.html" %}
+{% if not initial_load %}
+    {% include "base/topbar/_notification_count.html" %}
+{% endif %}
