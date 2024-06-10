@@ -29,7 +29,13 @@ def fetch_all_receipts(request: HtmxHttpRequest):
         results = results.filter(user=request.user)
 
     if search_text:
-        results = results.filter(Q(name__icontains=search_text) | Q(date__icontains=search_text)).order_by("-date")
+        results = results.filter(
+            Q(name__icontains=search_text)
+            | Q(date__icontains=search_text)
+            | Q(merchant_store__icontains=search_text)
+            | Q(purchase_category__icontains=search_text)
+            | Q(id__icontains=search_text)
+        ).order_by("-date")
     elif selected_filters:
         context.update({"selected_filters": [selected_filters]})
         results = results.filter(total_price__gte=selected_filters).order_by("-date")

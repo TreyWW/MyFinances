@@ -3,6 +3,8 @@
 !!! danger "Pre-releases"
 	We are currently still in development, and our project should **NOT** be considered usable for production yet.
 
+We may not add a changelog entry for every version, it depends how severe the changes are. You can look at the Git Tags page on github to see all of the changes.
+
 ???+ tip "v0.4.0 (latest)"
 	=== "Additions"
 		- 💼 Invoice column rename by @Domejko in [(313)](https://github.com/TreyWW/MyFinances/pull/313)

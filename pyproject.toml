@@ -122,6 +122,19 @@ plugins = [
     "mypy_django_plugin.main",
     "mypy_drf_plugin.main"
 ]
+disable_error_code = ["annotation-unchecked"]
+explicit_package_bases = true
+incremental = false
+exclude = [
+    "venv",
+    ".venv",
+    "env",
+    "ENV",
+    "ENV_DIR",
+    "env.bak",
+    "venv.bak",
+    "media"
+]
 
 [tool.django-stubs]
 django_settings_module = "settings.settings"

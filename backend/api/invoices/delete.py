@@ -18,10 +18,12 @@ def delete_invoice(request: HtmxHttpRequest):
     try:
         invoice = Invoice.objects.get(id=delete_items.get("invoice", ""))
     except Invoice.DoesNotExist:
-        return JsonResponse({"message": "Invoice not found"}, status=404)
+        messages.error(request, "Invoice Not Found")
+        return render(request, "base/toasts.html")
 
     if not invoice.has_access(request.user):
-        return JsonResponse({"message": "You do not have permission to delete this invoice"}, status=404)
+        messages.error(request, "You do not have permission to delete this invoice")
+        return render(request, "base/toasts.html")
 
     QuotaLimit.delete_quota_usage("invoices-count", request.user, invoice.id, invoice.date_created)
 

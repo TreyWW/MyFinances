@@ -67,7 +67,7 @@ def breadcrumbs(request: HttpRequest):
         """
         return [all_items.get(breadcrumb) for breadcrumb in breadcrumb_list]
 
-    current_url_name: str | Any = request.resolver_match.url_name  # type: ignore[union-attr]
+    current_url_name: str | Any = request.resolver_match.view_name  # type: ignore[union-attr]
 
     all_items: dict[str, dict] = {
         "dashboard": get_item("Dashboard", "dashboard", "house"),

@@ -14,6 +14,7 @@ poetry install --no-root --with dev # installs djlint and black
 python manage.py test --parallel # runs our django tests
 djlint ./frontend/templates --reformat # runs our djLint formatter for HTML
 black ./ # runs our black formatter for python files
+mypy . # runs mypy static type check for python files
 ```
 
 ## Pull in your changes
