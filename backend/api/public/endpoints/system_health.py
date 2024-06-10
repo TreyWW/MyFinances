@@ -2,8 +2,9 @@ from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 import requests
 from django.db import connection, OperationalError
+from django.core.cache import cache
+
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.request import Request
 from rest_framework.response import Response
 from backend.api.public.permissions import IsSuperuser
 
@@ -54,6 +55,11 @@ def system_health_endpoint(request):
         connection.ensure_connection()
     except OperationalError:
         problems.append({"id": "database", "message": "database failed to connect"})
+
+    try:
+        cache._cache.get_client().ping()
+    except ConnectionError:
+        problems.append({"id": "redis", "message": "redis failed to connect"})
 
     try:
         forex_api_response = requests.get("https://theforexapi.com/", timeout=2)
