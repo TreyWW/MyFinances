@@ -9,6 +9,7 @@ from django.urls import re_path as url
 from django.views.generic import RedirectView
 from django.views.static import serve
 
+from backend.api.public.swagger_ui import get_swagger_ui, get_swagger_endpoints
 from backend.views.core import clients
 from backend.views.core import invoices
 from backend.views.core import receipts
@@ -99,6 +100,9 @@ if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     # may not need to be in debug
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
+
+schema_view = get_swagger_ui()
+urlpatterns += get_swagger_endpoints()
 
 handler500 = "backend.views.core.other.errors.universal"
 handler404 = "backend.views.core.other.errors.universal"

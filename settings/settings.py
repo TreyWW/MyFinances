@@ -51,15 +51,24 @@ INSTALLED_APPS = [
     "social_django",
     "rest_framework",
     "rest_framework.authtoken",
+    "drf_yasg",
     "tz_detect",
     "webpack_loader",
 ]
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        "rest_framework.authentication.BasicAuthentication",
-        "rest_framework.authentication.TokenAuthentication",
-    ]
+        # "rest_framework.authentication.TokenAuthentication",
+        "backend.api.public.authentication.BearerAuthentication"  # also adds custom model
+    ],
+    "DEFAULT_RENDERER_CLASSES": (["rest_framework.renderers.JSONRenderer"]),
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 10,
+}
+
+SWAGGER_SETTINGS = {
+    "USE_SESSION_AUTH": False,
+    "SECURITY_DEFINITIONS": {"Bearer": {"type": "apiKey", "name": "Authorization", "in": "header"}},
 }
 
 LOGIN_REQUIRED_IGNORE_VIEW_NAMES = [

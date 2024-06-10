@@ -1,0 +1,16 @@
+from __future__ import annotations
+
+from django.conf.urls import include
+from django.urls import path, re_path
+from rest_framework.authentication import TokenAuthentication
+
+from .endpoints.currency_conversion import convert_currency_endpoint
+from .endpoints.system_health import system_health_endpoint
+
+INTERNAL_URLS = [path("health/", system_health_endpoint, name="public-system-health")]
+
+CURRENCY_CONVERSION = [path("convert/", convert_currency_endpoint, name="currency-convert")]
+
+urlpatterns = [path("internal/", include(INTERNAL_URLS)), path("currency/", include(CURRENCY_CONVERSION))]
+
+app_name = "public"
