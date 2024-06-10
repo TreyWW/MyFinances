@@ -8,6 +8,8 @@ from django.db import connection, OperationalError
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.request import Request
 from rest_framework.response import Response
+
+from backend.api.public.helpers.deprecate import deprecated
 from backend.api.public.permissions import IsSuperuser
 
 from rest_framework import serializers
@@ -52,8 +54,10 @@ class CurrencyConversionSerializer(serializers.Serializer):
         ),
     },
     query_serializer=CurrencyConversionSerializer,
+    deprecated=True,
 )
 @api_view(["GET"])
+@deprecated
 def convert_currency_endpoint(request):
     if request.method == "GET":
         serializer = CurrencyConversionSerializer(data=request.query_params)
