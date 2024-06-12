@@ -4,7 +4,7 @@
     <div class="card bg-base-100 p-6">
         <form method="post">
             {% csrf_token %}
-            <div class="divider mb-6">REQUIRED DETAILS</div>
+            <div class="divider mb-6">IDENTIFICATION DETAILS [REQUIRED]</div>
             <div class="w-full md:w-1/3 lg:1/4">
                 <label class="label">
                     Single
@@ -19,8 +19,9 @@
                 <div class="card me-3 w-full bg-base-200 border border-base-200 hover:border-gray-400">
                     <div class="card-body w-full">
                         <div class="form-control w-full">
-                            <label class="label">
-                                <span class="label-text">Client Name</span>
+                            <label class="label label-text justify-start">
+                                Client Name
+                                <span class="required_star">*</span>
                             </label>
                             <input required
                                    id="clientName"
@@ -39,8 +40,8 @@
                 <div class="card me-3 w-full bg-base-200 border border-base-200 hover:border-gray-400">
                     <div class="card-body w-full">
                         <div class="form-control w-full">
-                            <label class="label">
-                                <span class="label-text">Client Email</span>
+                            <label class="label justify-start label-text">
+                                Client Email <span class="required_star">*</span>
                             </label>
                             <input required
                                    id="clientEmail"
@@ -61,22 +62,26 @@
                  class="card me-3 w-full bg-base-200 border border-base-200 hover:border-gray-400">
                 <div class="card-body w-full">
                     <div class="form-control w-full">
-                        <label class="label">
-                            <span class="label-text">Client Company</span>
+                        <label class="label label-text justify-start">
+                            Client Company
+                            <span class="required_star">*</span>
                         </label>
                         <input id="companyName"
                                name="company_name"
                                minlength="3"
                                type="text"
                                class="peer input input-bordered w-full"
-                               placeholder="Bob Smith" />
+                               placeholder="Google" />
                         <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden">
                             <span class="label-text-alt text-error">Please enter a valid company name</span>
                         </label>
                     </div>
                 </div>
             </div>
-            <div class="divider my-6">OPTIONAL DETAILS</div>
+            <div class="divider my-6">
+                INFORMATION STORAGE
+                <i class="text-neutral-content">[OPTIONAL]</i>
+            </div>
             {# Client Address Card #}
             <div class="my-4 w-full grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div class="card me-3 w-full bg-base-200 border border-base-200 hover:border-gray-400">
@@ -139,14 +144,18 @@
     <script>
         is_rep_inp = document.querySelector('input[name="is_representative"]');
         is_rep_div = document.querySelector('div[data-selection="representative"]');
+        company_input = document.querySelector('#companyName')
 
         function check_is_rep() {
             if (is_rep_inp.checked) {
                 is_rep_div.style.display = "block";
                 is_rep_inp.required = true;
+                company_input.required = true;
+
             } else {
                 is_rep_div.style.display = "none";
                 is_rep_inp.required = false;
+                company_input.required = false;
             }
         }
 

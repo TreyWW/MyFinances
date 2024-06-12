@@ -1,6 +1,7 @@
 {% extends base|default:"base/base.html" %}
 {% block content %}
     <div class="card w-full p-6 bg-base-100 shadow-xl mt-2">
+        <h2 class="text-xl">Clients</h2>
         <a class="btn btn-primary mb-4"
            href="{% url "clients create" %}"
            hx-boost="true">
