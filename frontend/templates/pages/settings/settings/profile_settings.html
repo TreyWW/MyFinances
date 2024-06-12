@@ -9,6 +9,7 @@
                       hx-swap="none"
                       hx-indicator="#save_account_name"
                       class="flex gap-2 flex-col justify-between py-4 md:flex-row">
+                    {% csrf_token %}
                     <div class="flex flex-col flex-grow">
                         <p class="text-lg font-semibold text-gray-900 dark:text-white">Account Name</p>
                         <p class="text-base font-normal text-gray-500 dark:text-gray-400">This will be displayed on your account</p>
