@@ -1,8 +1,7 @@
-from typing import NoReturn
-
 import django_ratelimit
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.hashers import check_password
+from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from django.http import HttpRequest
 from django.urls import resolve
@@ -19,7 +18,6 @@ from backend.views.core.auth.verify import create_magic_link
 from backend.types.htmx import HtmxAnyHttpRequest
 from settings.helpers import send_email, ARE_EMAILS_ENABLED
 
-# from backend.utils import appconfig
 from settings.settings import (
     SOCIAL_AUTH_GITHUB_ENABLED,
     SOCIAL_AUTH_GOOGLE_OAUTH2_ENABLED,
@@ -29,12 +27,12 @@ from settings.settings import (
 @require_GET
 @not_authenticated
 def login_initial_page(request: HttpRequest):
-    next = request.GET.get("next")
+    redirect_url = request.GET.get("next")
 
     return render(
         request,
         "pages/auth/login_initial.html",
-        {"github_enabled": SOCIAL_AUTH_GITHUB_ENABLED, "next": next, "google_enabled": SOCIAL_AUTH_GOOGLE_OAUTH2_ENABLED},
+        {"github_enabled": SOCIAL_AUTH_GITHUB_ENABLED, "next": redirect_url, "google_enabled": SOCIAL_AUTH_GOOGLE_OAUTH2_ENABLED},
     )
 
 
@@ -46,51 +44,50 @@ def login_manual(request: HtmxAnyHttpRequest):  # HTMX POST
     email = request.POST.get("email")
     password = request.POST.get("password")
     page = str(request.POST.get("page"))
-    next = request.POST.get("next", "")
+    redirect_url = request.POST.get("next", "")
 
     if not page or page == "1":
         return render(
             request,
             "pages/auth/login.html",
-            context={"email": email, "next": next, "magic_links_enabled": ARE_EMAILS_ENABLED},
+            context={"email": email, "next": redirect_url, "magic_links_enabled": ARE_EMAILS_ENABLED},
         )
 
     if not email:
-        messages.error(request, "Please enter an email")
-        return render_toast_message(request)
+        return render_error_toast_message(request, "Please enter an email")
 
     try:
         validate_email(email)
-    except:
-        messages.error(request, "Please enter a valid email")
-        return render_toast_message(request)
+    except ValidationError:
+        return render_error_toast_message(request, "Please enter a valid email")
 
     if not password:
-        messages.error(request, "Please enter a password")
-        return render_toast_message(request)
+        return render_error_toast_message(request, "Please enter a password")
 
     user = authenticate(request, username=email, password=password)
 
     if not user:
-        messages.error(request, "Incorrect email or password")
-        return render_toast_message(request)
+        return render_error_toast_message(request, "Incorrect email or password")
 
     if user.awaiting_email_verification and ARE_EMAILS_ENABLED:  # type: ignore[attr-defined]
-        messages.error(request, "You must verify your email before logging in.")
-        return render_toast_message(request)
+        return render_error_toast_message(request, "You must verify your email before logging in.")
 
     login(request, user)
-    messages.success(request, "Successfully logged in")
 
     response = HttpResponse(status=200)
 
     try:
-        resolve(next)
-        response["HX-Redirect"] = next
+        resolve(redirect_url)
+        response["HX-Redirect"] = redirect_url
     except Resolver404:
         response["HX-Redirect"] = "/dashboard/"
 
     return response
+
+
+def render_error_toast_message(request: HttpRequest, message: str) -> HttpResponse:
+    messages.error(request, message)
+    return render_toast_message(request)
 
 
 def render_toast_message(request: HttpRequest) -> HttpResponse:
