@@ -1,6 +1,10 @@
+from django.contrib.auth.models import AnonymousUser
+from django.contrib.auth.middleware import MiddlewareMixin
+from django.contrib.auth import get_user
 from django.db import connection, OperationalError
 from django.http import HttpResponse
 
+from backend.models import User
 from backend.types.htmx import HtmxAnyHttpRequest
 
 
@@ -45,3 +49,15 @@ class LastVisitedMiddleware:
             current_url = request.build_absolute_uri()
             request.session["currently_visiting"] = current_url
         return self.get_response(request)
+
+
+class CustomUserMiddleware(MiddlewareMixin):
+    def process_request(self, request):
+        user = get_user(request)
+
+        # Replace request.user with CustomUser instance if authenticated
+        if user.is_authenticated:
+            request.user = User.objects.get(pk=user.pk)
+        else:
+            # If user is not authenticated, set request.user to AnonymousUser
+            request.user = AnonymousUser()
