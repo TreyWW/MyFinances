@@ -86,9 +86,9 @@ def login_manual(request: HtmxAnyHttpRequest):  # HTMX POST
 
     try:
         resolve(next)
-        response["HX-Location"] = next
+        response["HX-Redirect"] = next
     except Resolver404:
-        response["HX-Location"] = "/dashboard/"
+        response["HX-Redirect"] = "/dashboard/"
 
     return response
 
