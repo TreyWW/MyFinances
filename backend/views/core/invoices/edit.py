@@ -2,7 +2,8 @@ from datetime import datetime
 
 from django.contrib import messages
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.http.response import HttpResponse
+from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
 
 from backend.models import Invoice, Client, InvoiceItem
@@ -56,8 +57,13 @@ def invoice_get_existing_data(invoice_obj):
 def invoice_edit_page_get(request, invoice_id):
     try:
         invoice = Invoice.objects.get(id=invoice_id)
+
+        if not invoice.has_access(request.user):
+            messages.error(request, "You are not permitted to edit this invoice")
+            return redirect("invoices:dashboard")
     except Invoice.DoesNotExist:
-        return JsonResponse({"message": "Invoice not found"}, status=404)
+        messages.error(request, "Invoice not found")
+        return redirect("invoices:dashboard")
 
     # use to populate fields with existing data in edit_from_destination.html AND edit_to_destination.html
     data_to_populate = invoice_get_existing_data(invoice)
@@ -72,12 +78,7 @@ def edit_invoice(request: HtmxHttpRequest, invoice_id):
     except Invoice.DoesNotExist:
         return JsonResponse({"message": "Invoice not found"}, status=404)
 
-    if request.user.logged_in_as_team and request.user.logged_in_as_team != invoice.organization:
-        return JsonResponse(
-            {"message": "You do not have permission to edit this invoice"},
-            status=403,
-        )
-    elif request.user != invoice.user:
+    if not invoice.has_access(request.user):
         return JsonResponse(
             {"message": "You do not have permission to edit this invoice"},
             status=403,
