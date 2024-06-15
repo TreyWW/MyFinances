@@ -1,13 +1,17 @@
 from datetime import datetime
 
 from django.contrib import messages
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
 
 from backend.decorators import quota_usage_check
 from backend.models import Invoice, InvoiceItem, Client, InvoiceProduct, QuotaUsage
+from backend.service.clients.validate import validate_client
 from backend.utils.quota_limit_ops import quota_usage_check_under
 from backend.types.htmx import HtmxHttpRequest
+
+from datetime import date
 
 
 def invoice_page_get(request: HtmxHttpRequest):
@@ -18,6 +22,40 @@ def invoice_page_get(request: HtmxHttpRequest):
         "clients": Client.objects.filter(user=request.user),
         "existing_products": InvoiceProduct.objects.filter(user=request.user),
     }
+
+    # request.GET
+
+    if client_id := request.GET.get("client"):
+        try:
+            client = validate_client(request, client_id)
+            context["existing_client"] = client
+        except (Client.DoesNotExist, PermissionDenied, ValidationError):
+            ...
+
+    if issue_date := request.GET.get("issue_date"):
+        try:
+            date.fromisoformat(issue_date)
+            context["issue_date"] = issue_date
+        except ValueError:
+            ...
+
+    if due_date := request.GET.get("due_date"):
+        try:
+            date.fromisoformat(due_date)
+            context["due_date"] = due_date
+        except ValueError:
+            ...
+
+    if sort_code := (request.GET.get("sort_code") or "").replace("-", ""):
+        if len(sort_code) == 6:
+            if len(sort_code) >= 2:
+                sort_code = sort_code[0:2] + "-" + sort_code[2:]
+
+            if len(sort_code) >= 5:
+                sort_code = sort_code[0:5] + "-" + sort_code[5:]
+
+            context["sort_code"] = sort_code
+
     return render(request, "pages/invoices/create/create.html", context)
 
 
