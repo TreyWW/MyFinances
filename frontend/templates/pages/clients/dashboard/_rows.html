@@ -22,8 +22,8 @@
                 </div>
                 <div class="tooltip" data-tip="Delete Client">
                     <button class="btn btn-outline btn-error btn-sm"
-                            hx-delete="{% url 'api:clients:delete' id=client.id %}"
-                            hx-target="#items"
+                            hx-delete="{% url 'api:clients:delete' id=10 %}"
+                            hx-target="closest tr"
                             hx-confirm="Are you sure you would like to delete this client?">
                         <i class="fa fa-solid fa-trash"></i>
                     </button>
@@ -32,5 +32,12 @@
         </td>
     </tr>
 {% empty %}
-    <td colspan="100%" class="text-center">No clients found.</td>
+    <td colspan="100%" class="text-center">
+        No clients found.
+        <br>
+        <a class="btn btn-sm btn-primary mt-3" href="{% url 'clients:create' %}">
+            <i class="fa fa-plus"></i>
+            Create one
+        </a>
+    </td>
 {% endfor %}
