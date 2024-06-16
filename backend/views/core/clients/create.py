@@ -6,7 +6,7 @@ from backend.models import Client
 from backend.types.htmx import HtmxHttpRequest
 
 
-def create_client(request: HtmxHttpRequest):
+def create_client_endpoint(request: HtmxHttpRequest):
     if request.method == "GET":
         return render(request, "pages/clients/create/create.html")
 
@@ -24,7 +24,7 @@ def create_client(request: HtmxHttpRequest):
 
     if error:
         messages.error(request, error)
-        return redirect("clients create")
+        return redirect("clients:create")
 
     if request.user.logged_in_as_team:
         client = Client.objects.create(
@@ -44,7 +44,7 @@ def create_client(request: HtmxHttpRequest):
         messages.success(request, f"Client created successfully (#{client.id})")
     else:
         messages.error(request, "Failed to create client - an unknown error occurred")
-    return redirect("clients dashboard")
+    return redirect("clients:dashboard")
 
 
 def validate_client_create(client_details):

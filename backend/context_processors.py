@@ -77,8 +77,8 @@ def breadcrumbs(request: HttpRequest):
         "receipts dashboard": get_item("Receipts", "receipts dashboard", "file-invoice"),
         "user settings teams": get_item("Teams", "user settings teams", "users"),
         "user settings": get_item("Settings", "user settings", "gear"),
-        "clients dashboard": get_item("Clients", "clients dashboard", "users"),
-        "clients create": get_item("Create", "clients create"),
+        "clients:dashboard": get_item("Clients", "clients:dashboard", "users"),
+        "clients:create": get_item("Create", "clients:create"),
     }
 
     all_breadcrumbs: dict[str | None, list] = {
@@ -88,8 +88,8 @@ def breadcrumbs(request: HttpRequest):
         "invoices:dashboard": generate_breadcrumbs("dashboard", "invoices:dashboard"),
         "invoices:create": generate_breadcrumbs("dashboard", "invoices:dashboard", "invoices:create"),
         "invoices:edit": generate_breadcrumbs("dashboard", "invoices:dashboard", "invoices:edit"),
-        "clients dashboard": generate_breadcrumbs("dashboard", "clients dashboard"),
-        "clients create": generate_breadcrumbs("dashboard", "clients dashboard", "clients create"),
+        "clients:dashboard": generate_breadcrumbs("dashboard", "clients:dashboard"),
+        "clients:create": generate_breadcrumbs("dashboard", "clients:dashboard", "clients:create"),
         "user settings": generate_breadcrumbs("dashboard", "user settings"),
     }
 
