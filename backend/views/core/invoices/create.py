@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Any
 
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied, ValidationError
@@ -18,7 +19,7 @@ def invoice_page_get(request: HtmxHttpRequest):
     check_usage = quota_usage_check_under(request, "invoices-count")
     if not isinstance(check_usage, bool):
         return check_usage
-    context = {
+    context: dict[str, Any] = {
         "clients": Client.objects.filter(user=request.user),
         "existing_products": InvoiceProduct.objects.filter(user=request.user),
     }
@@ -27,7 +28,7 @@ def invoice_page_get(request: HtmxHttpRequest):
 
     if client_id := request.GET.get("client"):
         try:
-            client = validate_client(request, client_id)
+            client: Client = validate_client(request, client_id)
             context["existing_client"] = client
         except (Client.DoesNotExist, PermissionDenied, ValidationError):
             ...

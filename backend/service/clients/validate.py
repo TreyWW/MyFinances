@@ -13,7 +13,7 @@ def validate_client(request, client_id: str | int) -> Client:
     try:
         int(client_id)
     except ValueError:
-        raise ValidationError
+        raise ValidationError("Invalid client ID")
 
     client = Client.objects.get(id=client_id)  # may raise DoesNotExist
 
