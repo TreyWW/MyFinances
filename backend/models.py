@@ -9,7 +9,6 @@ from uuid import uuid4
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import AbstractUser
-from django.contrib.auth.models import AnonymousUser
 from django.contrib.auth.models import UserManager
 from django.core.validators import MaxValueValidator
 from django.db import models
@@ -62,22 +61,6 @@ class User(AbstractUser):
         TESTER = "TESTER", "Tester"
 
     role = models.CharField(max_length=10, choices=Role.choices, default=Role.USER)
-
-
-class CustomUserMiddleware:
-    def __init__(self, get_response):
-        self.get_response = get_response
-
-    def __call__(self, request):
-        # Replace request.user with CustomUser instance if authenticated
-        if request.user.is_authenticated:
-            request.user = User.objects.get(pk=request.user.pk)
-        else:
-            # If user is not authenticated, set request.user to AnonymousUser
-            request.user = AnonymousUser()
-
-        response = self.get_response(request)
-        return response
 
 
 def add_3hrs_from_now():
