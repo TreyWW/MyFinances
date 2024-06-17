@@ -87,15 +87,15 @@
                 <div class="card me-3 w-full bg-base-200 border border-base-200 hover:border-gray-400">
                     <div class="card-body w-full">
                         <div class="form-control w-full">
-                            <label class="label">
+                            <label class="label" for="clientAddress">
                                 <span class="label-text">Client Address</span>
                             </label>
-                            <input id="clientName"
-                                   name="client_address"
-                                   minlength="3"
-                                   type="text"
-                                   class="peer input input-bordered w-full"
-                                   placeholder="1234 Main St" />
+                            <textarea id="clientAddress"
+                                      name="client_address"
+                                      minlength="3"
+                                      maxlength="84"
+                                      class="peer textarea textarea-bordered w-full"
+                                      placeholder="123 London Road"></textarea>
                             <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden">
                                 <span class="label-text-alt text-error">Please enter a valid client address or no
                                 address</span>

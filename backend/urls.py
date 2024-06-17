@@ -9,7 +9,6 @@ from django.urls import re_path as url
 from django.views.generic import RedirectView
 from django.views.static import serve
 
-from backend.views.core import clients
 from backend.views.core import invoices
 from backend.views.core import receipts
 from backend.views.core import settings as settings_v

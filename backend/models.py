@@ -245,7 +245,7 @@ class Client(models.Model):
     contact_method = models.CharField(max_length=100, blank=True, null=True)
     is_representative = models.BooleanField(default=False)
 
-    address = models.CharField(max_length=100, blank=True, null=True)
+    address = models.TextField(max_length=100, blank=True, null=True)
     city = models.CharField(max_length=100, blank=True, null=True)
     country = models.CharField(max_length=100, blank=True, null=True)
 
