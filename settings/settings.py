@@ -55,7 +55,7 @@ INSTALLED_APPS = [
 ]
 
 if DEBUG:
-    INSTALLED_APPS.append(["silk"])
+    INSTALLED_APPS.append("silk")
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
@@ -210,7 +210,7 @@ MIDDLEWARE = [
 ]
 
 if DEBUG:
-    MIDDLEWARE.append(["silk.middleware.SilkyMiddleware"])
+    MIDDLEWARE.append("silk.middleware.SilkyMiddleware")
 
 INTERNAL_IPS = [
     # ...
