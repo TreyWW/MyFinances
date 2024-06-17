@@ -1,5 +1,5 @@
 from django.contrib.auth.models import AnonymousUser
-from django.contrib.auth.middleware import MiddlewareMixin
+from django.utils.deprecation import MiddlewareMixin
 from django.contrib.auth import get_user
 from django.db import connection, OperationalError
 from django.http import HttpResponse
