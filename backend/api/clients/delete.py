@@ -1,46 +1,24 @@
+from typing import Literal
+
 from django.contrib import messages
+from django.http.response import HttpResponse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
 
 from backend.models import Client
+from backend.service.clients.delete import delete_client
 from backend.types.htmx import HtmxHttpRequest
 
 
 @require_http_methods(["DELETE"])
 @login_required
 def client_delete(request: HtmxHttpRequest, id: int):
-    try:
-        client = Client.objects.get(id=id)
-    except Client.DoesNotExist:
-        messages.error(request, "Client not found")
-        return render(request, "pages/clients/dashboard/_table.html", {"delete": True})
+    response: str | Literal[True] = delete_client(request, id)
 
-    if not client:
-        messages.error(request, "Client not found")
-        return render(request, "pages/clients/dashboard/_table.html", {"delete": True})
-
-    if (
-        not request.user.is_authenticated
-        or request.user != client.user
-        or request.user.logged_in_as_team
-        and request.user.logged_in_as_team != client.organization
-    ):
-        messages.error(request, "You do not have permission to delete this client")
-        return render(request, "pages/clients/dashboard/_table.html", {"delete": True})
-
-    client.delete()
-    messages.success(request, f'Client "{client.name}" deleted successfully')
-
-    if request.user.logged_in_as_team:
-        return render(
-            request,
-            "pages/clients/dashboard/_table.html",
-            {"clients": Client.objects.filter(organization=request.user.logged_in_as_team).order_by("-name"), "delete": True},
-        )
+    if isinstance(response, str):
+        messages.error(request, response)
     else:
-        return render(
-            request,
-            "pages/clients/dashboard/_table.html",
-            {"clients": Client.objects.filter(user=request.user).order_by("-name"), "delete": True},
-        )
+        messages.success(request, f"Successfully deleted client #{id}")
+
+    return render(request, "base/toast.html")

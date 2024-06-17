@@ -9,7 +9,7 @@ from backend.types.htmx import HtmxHttpRequest
 @require_http_methods(["GET"])
 def fetch_all_clients(request: HtmxHttpRequest):
     if not request.htmx:
-        return redirect("clients dashboard")
+        return redirect("clients:dashboard")
 
     search_text = request.GET.get("search")
 
@@ -27,7 +27,7 @@ def fetch_all_clients(request: HtmxHttpRequest):
 @require_http_methods(["GET"])
 def fetch_clients_dropdown(request: HtmxHttpRequest):
     if not request.htmx:
-        return redirect("clients dashboard")
+        return redirect("clients:dashboard")
 
     selected_client = request.GET.get("existing_client_id") or None
     clients = Client.objects.filter(user=request.user, active=True)

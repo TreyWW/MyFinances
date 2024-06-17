@@ -137,6 +137,9 @@ def open_modal(request: HtmxHttpRequest, modal_name, context_type=None, context_
             else:
                 clients = Client.objects.filter(user=request.user)
             context["email_list"] = clients
+        elif modal_name == "invoices_to_destination":
+            if existing_client := request.GET.get("client"):
+                context["existing_client_id"] = existing_client
 
         return render(request, template_name, context)
     except ValueError as e:

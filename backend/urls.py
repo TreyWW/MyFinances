@@ -71,16 +71,7 @@ urlpatterns = [
     ),
     path("login/external/", include("social_django.urls", namespace="social")),
     path("auth/", include("backend.views.core.auth.urls")),
-    path(
-        "dashboard/clients/",
-        clients.dashboard.clients_dashboard,
-        name="clients dashboard",
-    ),
-    path(
-        "dashboard/clients/create/",
-        clients.create.create_client,
-        name="clients create",
-    ),
+    path("dashboard/clients/", include("backend.views.core.clients.urls")),
     path(
         "dashboard/currency_converter/",
         cc_dashboard.currency_convert_view,
