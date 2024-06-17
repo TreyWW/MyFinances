@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     "mathfilters",
     "django.contrib.humanize",
     "django_htmx",
-    "debug_toolbar",
     "markdownify.apps.MarkdownifyConfig",
     "django_components",
     "django_components.safer_staticfiles",
@@ -54,6 +53,9 @@ INSTALLED_APPS = [
     "tz_detect",
     "webpack_loader",
 ]
+
+if DEBUG:
+    INSTALLED_APPS.append(["silk"])
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
@@ -200,13 +202,16 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django_htmx.middleware.HtmxMiddleware",
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "login_required.middleware.LoginRequiredMiddleware",
     "social_django.middleware.SocialAuthExceptionMiddleware",
     "backend.models.CustomUserMiddleware",
     "tz_detect.middleware.TimezoneMiddleware",
     "backend.middleware.HTMXPartialLoadMiddleware",
 ]
+
+if DEBUG:
+    MIDDLEWARE.append(["silk.middleware.SilkyMiddleware"])
+
 INTERNAL_IPS = [
     # ...
     "127.0.0.1",
@@ -273,7 +278,6 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_ENABLED = True if SOCIAL_AUTH_GOOGLE_OAUTH2_KEY and SO
 SOCIAL_AUTH_USER_MODEL = "backend.User"
 
 AWS_TAGS_APP_NAME = get_var("AWS_TAGS_APP_NAME", default="myfinances")
-
 
 # APP_CONFIG = appconfig
 
