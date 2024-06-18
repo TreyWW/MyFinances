@@ -247,6 +247,7 @@ class Client(models.Model):
         else:
             return self.user == user
 
+
 class ClientDefaults(models.Model):
     class InvoiceDueDateType(models.TextChoices):
         days_after = "days_after"
@@ -270,6 +271,7 @@ class ClientDefaults(models.Model):
 
     invoice_date_value = models.PositiveSmallIntegerField(default=15, null=False, blank=False)
     invoice_date_type = models.CharField(max_length=20, choices=InvoiceDateType.choices, default=InvoiceDateType.day_of_month)
+
 
 class InvoiceProduct(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

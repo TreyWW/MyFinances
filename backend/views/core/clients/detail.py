@@ -33,6 +33,7 @@ def client_detail_endpoint(request: HtmxHttpRequest, id):
 
     return render(request, "pages/clients/detail/dashboard.html", {"client": client})
 
+
 @require_http_methods(["GET"])
 def get_client_defaults_endpoint(request: HtmxHttpRequest, id):
     try:
@@ -66,6 +67,7 @@ def change_client_defaults_endpoint(request: HtmxHttpRequest, id):
 
     messages.success(request, "Successfully updated client defaults")
     return render(request, "base/toast.html")
+
 
 @require_http_methods(["DELETE"])
 def delete_client_endpoint(request: HtmxHttpRequest, id) -> HttpResponse:
