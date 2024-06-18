@@ -4,19 +4,21 @@ from backend.models import Client, ClientDefaults
 from backend.types.htmx import HtmxHttpRequest
 
 
-def change_client_defaults(request: HttpRequest | HtmxHttpRequest, client: Client, defaults: ClientDefaults) -> str | None:
+def change_client_defaults(request: HttpRequest, client: Client, defaults: ClientDefaults) -> str | None:
     put = QueryDict(request.body)
 
-    invoice_due_date_option = put.get("invoice_due_date_option")
-    invoice_due_date_value = put.get("invoice_due_date_value")
+    invoice_due_date_option = put.get("invoice_due_date_option", "")
+    invoice_due_date_value = put.get("invoice_due_date_value", "")
 
-    invoice_date_option = put.get("invoice_date_option")
-    invoice_date_value = put.get("invoice_date_value")
+    invoice_date_option = put.get("invoice_date_option", "")
+    invoice_date_value = put.get("invoice_date_value", "")
 
-    if due_date_error := validate_invoice_due_date(invoice_due_date_option, invoice_due_date_value):
+    due_date_error = validate_invoice_due_date(invoice_due_date_option, invoice_due_date_value)
+    if due_date_error:
         return due_date_error
 
-    if invoice_date_error := validate_invoice_date(invoice_date_option, invoice_date_value):
+    invoice_date_error = validate_invoice_date(invoice_date_option, invoice_date_value)
+    if invoice_date_error:
         return invoice_date_error
 
     defaults.invoice_due_date_type = invoice_due_date_option

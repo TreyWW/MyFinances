@@ -1,27 +1,32 @@
 from django.core.exceptions import ValidationError, PermissionDenied
 from django.db.models import QuerySet, Manager
+from django.shortcuts import get_object_or_404
 
 from backend.models import Client
 
 
 def validate_client(request, client_id: str | int, *, get_defaults: bool = False) -> Client:
     """
-    :raises ValidationError:
-    :raises PermissionDenied:
-    :raises Client.DoesNotExist:
-    :return: Client
+    Validates the client based on the client_id and user access.
+
+    :param request: HttpRequest object
+    :param client_id: str or int - ID of the client to validate
+    :param get_defaults: bool - whether to fetch related client_defaults
+    :raises ValidationError: if client_id is not a valid integer
+    :raises PermissionDenied: if the user does not have access to the client
+    :return: Client instance
     """
     try:
-        int(client_id)
+        client_id = int(client_id)
     except ValueError:
         raise ValidationError("Invalid client ID")
 
-    client_query = Client.objects
+    client_query = Client.objects.all()
 
     if get_defaults:
         client_query = client_query.select_related("client_defaults")
 
-    client = client_query.get(id=client_id)  # may raise Client.DoesNotExist
+    client = get_object_or_404(client_query, id=client_id)
 
     if not client.has_access(request.user):
         raise PermissionDenied
