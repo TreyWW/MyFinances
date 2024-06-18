@@ -28,7 +28,6 @@ def validate_client(request, client_id: str | int, *, get_defaults: bool = False
 
     return client
 
-
 def validate_client_create(client_details) -> str | None:
     if not client_details.get("name"):
         return "Please provide at least a client name"
