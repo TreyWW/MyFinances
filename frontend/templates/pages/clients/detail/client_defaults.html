@@ -1,0 +1,88 @@
+<form class="py-4"
+      method="POST"
+      hx-put="{% url 'clients:detail defaults' id=client.id %}"
+      hx-target="this"
+      hx-indicator='button[data-hx-loading="save"]'
+      hx-swap="none">
+    {% csrf_token %}
+    <div class="form-control mb-4">
+        <label class="label justify-start" for="due_date_value">
+            Invoice send date
+            <div class="tooltip tooltip-primary cursor-help ml-2"
+                 data-tip="The calculated date of the next invoice">
+                <i class="fa fa-info-circle"></i>
+            </div>
+        </label>
+        <div class="join">
+            <input name="invoice_date_value"
+                   type="text"
+                   value="{{ defaults.invoice_date_value | default:7 }}"
+                   pattern="^(?:[1-9]|[1-8][0-9]|90)$"
+                   class="input input-block input-bordered join-item"
+                   required>
+            <select name="invoice_date_option"
+                    class="select select-bordered select-block join-item"
+                    required>
+                {% with type="day_of_month" %}
+                    <option value="{{ type }}"
+                            {% if defaults.invoice_date_type == type %}selected{% endif %}>
+                        day of month
+                    </option>
+                {% endwith %}
+                {% with type="days_after" %}
+                    <option value="{{ type }}"
+                            {% if defaults.invoice_date_type == type %}selected{% endif %}>
+                        days after last invoice
+                    </option>
+                {% endwith %}
+            </select>
+        </div>
+    </div>
+    <div class="form-control mb-4">
+        <label class="label justify-start" for="due_date_value">
+            Invoice due date
+            <div class="tooltip tooltip-primary cursor-help ml-2"
+                 data-tip="How long the client has to pay an invoice by default">
+                <i class="fa fa-info-circle"></i>
+            </div>
+        </label>
+        <div class="join">
+            <input name="invoice_due_date_value"
+                   type="text"
+                   value="{{ defaults.invoice_due_date_value | default:7 }}"
+                   pattern="^(?:[1-9]|[1-8][0-9]|90)$"
+                   class="input input-block input-bordered join-item"
+                   required>
+            <select name="invoice_due_date_option"
+                    class="select select-bordered select-block join-item"
+                    required>
+                {% with type="days_after" %}
+                    <option value="{{ type }}"
+                            {% if defaults.invoice_due_date_type == type %}selected{% endif %}>
+                        days after send
+                    </option>
+                {% endwith %}
+                {% with type="date_following" %}
+                    <option value="{{ type }}"
+                            {% if defaults.invoice_due_date_type == type %}selected{% endif %}>
+                        date following the invoice month
+                    </option>
+                {% endwith %}
+                {% with type="date_current" %}
+                    <option value="{{ type }}"
+                            {% if defaults.invoice_due_date_type == type %}selected{% endif %}>
+                        date of the current
+                        month
+                    </option>
+                {% endwith %}
+            </select>
+        </div>
+    </div>
+    <button class="btn btn-primary loading-htmx"
+            data-hx-loading="save"
+            type="submit">
+        <span class="loading-htmx-text">Save</span>
+        <span id="currency_save_loading"
+              class="loading loading-spinner loading-htmx-loader"></span>
+    </button>
+</form>
