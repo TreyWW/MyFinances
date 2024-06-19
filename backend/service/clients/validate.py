@@ -26,7 +26,7 @@ def validate_client(request, client_id: str | int, *, get_defaults: bool = False
     if get_defaults:
         client_query = client_query.select_related("client_defaults")
 
-    client = get_object_or_404(client_query, id=client_id)
+    client = client_query.get(id=client_id)
 
     if not client.has_access(request.user):
         raise PermissionDenied
