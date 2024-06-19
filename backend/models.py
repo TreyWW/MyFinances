@@ -9,7 +9,6 @@ from uuid import uuid4
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import AbstractUser
-from django.contrib.auth.models import AnonymousUser
 from django.contrib.auth.models import UserManager
 from django.core.validators import MaxValueValidator
 from django.db import models
@@ -49,7 +48,7 @@ class CustomUserManager(UserManager):
 
 
 class User(AbstractUser):
-    objects = CustomUserManager()  # type: ignore
+    objects: CustomUserManager = CustomUserManager()  # type: ignore
 
     logged_in_as_team = models.ForeignKey("Team", on_delete=models.SET_NULL, null=True, blank=True)
     awaiting_email_verification = models.BooleanField(default=True)
@@ -62,22 +61,6 @@ class User(AbstractUser):
         TESTER = "TESTER", "Tester"
 
     role = models.CharField(max_length=10, choices=Role.choices, default=Role.USER)
-
-
-class CustomUserMiddleware:
-    def __init__(self, get_response):
-        self.get_response = get_response
-
-    def __call__(self, request):
-        # Replace request.user with CustomUser instance if authenticated
-        if request.user.is_authenticated:
-            request.user = User.objects.get(pk=request.user.pk)
-        else:
-            # If user is not authenticated, set request.user to AnonymousUser
-            request.user = AnonymousUser()
-
-        response = self.get_response(request)
-        return response
 
 
 def add_3hrs_from_now():
@@ -231,6 +214,8 @@ class ReceiptDownloadToken(models.Model):
 
 
 class Client(models.Model):
+    objects: models.Manager
+
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     organization = models.ForeignKey(Team, on_delete=models.CASCADE, null=True, blank=True)
     active = models.BooleanField(default=True)
@@ -243,7 +228,7 @@ class Client(models.Model):
     contact_method = models.CharField(max_length=100, blank=True, null=True)
     is_representative = models.BooleanField(default=False)
 
-    address = models.CharField(max_length=100, blank=True, null=True)
+    address = models.TextField(max_length=100, blank=True, null=True)
     city = models.CharField(max_length=100, blank=True, null=True)
     country = models.CharField(max_length=100, blank=True, null=True)
 
@@ -252,6 +237,40 @@ class Client(models.Model):
 
     def __str__(self):
         return self.name
+
+    def has_access(self, user: User) -> bool:
+        if not user.is_authenticated:
+            return False
+
+        if user.logged_in_as_team:
+            return self.organization == user.logged_in_as_team
+        else:
+            return self.user == user
+
+
+class ClientDefaults(models.Model):
+    class InvoiceDueDateType(models.TextChoices):
+        days_after = "days_after"
+        date_following = "date_following"
+        date_current = "date_current"
+
+    class InvoiceDateType(models.TextChoices):
+        day_of_month = "day_of_month"
+        days_after = "days_after"
+
+    client = models.OneToOneField(Client, on_delete=models.CASCADE, related_name="client_defaults")
+
+    currency = models.CharField(
+        max_length=3,
+        default="GBP",
+        choices=[(code, info["name"]) for code, info in UserSettings.CURRENCIES.items()],
+    )
+
+    invoice_due_date_value = models.PositiveSmallIntegerField(default=7, null=False, blank=False)
+    invoice_due_date_type = models.CharField(max_length=20, choices=InvoiceDueDateType.choices, default=InvoiceDueDateType.days_after)
+
+    invoice_date_value = models.PositiveSmallIntegerField(default=15, null=False, blank=False)
+    invoice_date_type = models.CharField(max_length=20, choices=InvoiceDateType.choices, default=InvoiceDateType.day_of_month)
 
 
 class InvoiceProduct(models.Model):

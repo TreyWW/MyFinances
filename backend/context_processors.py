@@ -5,6 +5,8 @@ from django.urls import reverse
 
 from settings.helpers import get_var
 
+from backend import __version__
+
 
 ## Context processors need to be put in SETTINGS TEMPLATES to be recognized
 def navbar(request):
@@ -25,6 +27,7 @@ def extras(request: HttpRequest):
     # import_method can be one of: "webpack", "public_cdn", "custom_cdn"
     data = {}
 
+    data["version"] = __version__
     data["git_branch"] = get_var("BRANCH")
     data["git_version"] = get_var("VERSION")
     data["import_method"] = get_var("IMPORT_METHOD", default="webpack")
@@ -77,8 +80,8 @@ def breadcrumbs(request: HttpRequest):
         "receipts dashboard": get_item("Receipts", "receipts dashboard", "file-invoice"),
         "user settings teams": get_item("Teams", "user settings teams", "users"),
         "user settings": get_item("Settings", "user settings", "gear"),
-        "clients dashboard": get_item("Clients", "clients dashboard", "users"),
-        "clients create": get_item("Create", "clients create"),
+        "clients:dashboard": get_item("Clients", "clients:dashboard", "users"),
+        "clients:create": get_item("Create", "clients:create"),
     }
 
     all_breadcrumbs: dict[str | None, list] = {
@@ -88,8 +91,8 @@ def breadcrumbs(request: HttpRequest):
         "invoices:dashboard": generate_breadcrumbs("dashboard", "invoices:dashboard"),
         "invoices:create": generate_breadcrumbs("dashboard", "invoices:dashboard", "invoices:create"),
         "invoices:edit": generate_breadcrumbs("dashboard", "invoices:dashboard", "invoices:edit"),
-        "clients dashboard": generate_breadcrumbs("dashboard", "clients dashboard"),
-        "clients create": generate_breadcrumbs("dashboard", "clients dashboard", "clients create"),
+        "clients:dashboard": generate_breadcrumbs("dashboard", "clients:dashboard"),
+        "clients:create": generate_breadcrumbs("dashboard", "clients:dashboard", "clients:create"),
         "user settings": generate_breadcrumbs("dashboard", "user settings"),
     }
 

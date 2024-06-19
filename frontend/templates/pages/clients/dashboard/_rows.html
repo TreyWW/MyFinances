@@ -2,7 +2,10 @@
 {% for client in clients %}
     {% csrf_token %}
     <tr>
-        <td>{{ client.id }}</td>
+        <td>
+            <a class="link link-primary no-underline"
+               href="{% url 'clients:detail' id=client.id %}">{{ client.id }}</a>
+        </td>
         <td colspan="2">{{ client.name }}</td>
         <td colspan="2">
             <div class="flex flex-wrap gap-2">
@@ -11,10 +14,16 @@
                         <i class="fa fa-solid fa-pencil"></i>
                     </button>
                 </div>
-                <div class="tooltip" data-tip="Delete">
+                <div class="tooltip" data-tip="View Client">
+                    <a href="{% url 'clients:detail' id=client.id %}"
+                       class="btn btn-outline btn-sm">
+                        <i class="fa fa-solid fa-eye"></i>
+                    </a>
+                </div>
+                <div class="tooltip" data-tip="Delete Client">
                     <button class="btn btn-outline btn-error btn-sm"
-                            hx-delete="{% url 'api:clients:delete' id=client.id %}"
-                            hx-target="#items"
+                            hx-delete="{% url 'api:clients:delete' id=10 %}"
+                            hx-target="closest tr"
                             hx-confirm="Are you sure you would like to delete this client?">
                         <i class="fa fa-solid fa-trash"></i>
                     </button>
@@ -23,5 +32,12 @@
         </td>
     </tr>
 {% empty %}
-    <td colspan="100%" class="text-center">No clients found.</td>
+    <td colspan="100%" class="text-center">
+        No clients found.
+        <br>
+        <a class="btn btn-sm btn-primary mt-3" href="{% url 'clients:create' %}">
+            <i class="fa fa-plus"></i>
+            Create one
+        </a>
+    </td>
 {% endfor %}

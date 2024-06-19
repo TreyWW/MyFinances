@@ -2,25 +2,28 @@
 {% block content %}
     <div class="card w-full p-6 bg-base-100 shadow-xl mt-2">
         <h2 class="text-xl">Clients</h2>
-        <a class="btn btn-primary mb-4"
-           href="{% url "clients create" %}"
-           hx-boost="true">
-            <i class="fa-solid fa-plus pe-1"></i>
-            Create Client
-        </a>
-        <form method="post" onsubmit="return false">
-            {% csrf_token %}
-            <input type="text"
-                   placeholder="Search"
-                   class="input input-bordered input-block my-3 loading-htmx"
-                   hx-get="/api/clients/fetch"
-                   hx-target="#items"
-                   hx-trigger="keyup changed delay:500ms"
-                   name="search"
-                   hx-indicator="#search_loading">
-            <span id="search_loading"
-                  class="loading loading-spinner loading-htmx-loader-individual"></span>
-        </form>
+        <div class="divider"></div>
+        <div class="mb-4">
+            <a class="btn btn-primary mb-4 float-right"
+               href="{% url "clients:create" %}"
+               hx-boost="true">
+                <i class="fa-solid fa-plus pe-1"></i>
+                Create Client
+            </a>
+            <form method="post" onsubmit="return false">
+                {% csrf_token %}
+                <input class="input input-bordered input-block my-3 loading-htmx"
+                       type="text"
+                       name="search"
+                       placeholder="🔎 Search"
+                       hx-target="#items"
+                       hx-get="/api/clients/fetch"
+                       hx-trigger="keyup changed delay:500ms"
+                       hx-indicator="#search_loading">
+                <span id="search_loading"
+                      class="loading loading-spinner loading-htmx-loader-individual"></span>
+            </form>
+        </div>
         <div hx-swap="outerHTML"
              hx-trigger="load"
              id="items"

@@ -144,4 +144,10 @@ class ClientAPIDelete(ViewTestCase):
         self.login_user()
         response = self.client.delete(reverse(self.url_name, args=[999]))
         self.assertEqual(response.status_code, 200)  # in future should be 404
-        self.assertIn("Client not found", str(response.content))
+        self.assertIn("This client does not exist", str(response.content))
+        messages = self.get_all_messages(response)
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(
+            str(messages[0]),
+            "This client does not exist",
+        )

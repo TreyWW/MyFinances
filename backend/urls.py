@@ -72,16 +72,7 @@ urlpatterns = [
     ),
     path("login/external/", include("social_django.urls", namespace="social")),
     path("auth/", include("backend.views.core.auth.urls")),
-    path(
-        "dashboard/clients/",
-        clients.dashboard.clients_dashboard,
-        name="clients dashboard",
-    ),
-    path(
-        "dashboard/clients/create/",
-        clients.create.create_client,
-        name="clients create",
-    ),
+    path("dashboard/clients/", include("backend.views.core.clients.urls")),
     path(
         "dashboard/currency_converter/",
         cc_dashboard.currency_convert_view,
@@ -91,11 +82,7 @@ urlpatterns = [
 ] + static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
 
 if settings.DEBUG:
-    import debug_toolbar
-
-    urlpatterns += [
-        url(r"^__debug__/", include(debug_toolbar.urls)),
-    ]
+    urlpatterns += [path("silk/", include("silk.urls", namespace="silk"))]
 
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     # may not need to be in debug

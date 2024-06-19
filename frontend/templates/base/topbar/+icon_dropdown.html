@@ -20,9 +20,13 @@
             Logout
         </label>
     </li>
+    <div class="divider"></div>
     {% if request.user.is_superuser and request.user.is_staff %}
         <li>
             <a tabindex="-1" class="dropdown-item text text-sm mt-1" href="/admin/">Go to admin dashboard</a>
         </li>
     {% endif %}
+    <li>
+        <span>Current Version: {{ version }}</span>
+    </li>
 </div>
