@@ -11,6 +11,10 @@ INTERNAL_URLS = [path("health/", system_health_endpoint, name="public-system-hea
 
 CURRENCY_CONVERSION = [path("convert/", convert_currency_endpoint, name="currency-convert")]
 
-urlpatterns = [path("internal/", include(INTERNAL_URLS)), path("currency/", include(CURRENCY_CONVERSION))]
+urlpatterns = [
+    path("internal/", include(INTERNAL_URLS)),
+    path("currency/", include(CURRENCY_CONVERSION)),
+    path("clients/", include("backend.api.public.endpoints.clients.urls")),
+]
 
 app_name = "public"
