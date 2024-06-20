@@ -86,8 +86,6 @@ LOGIN_REQUIRED_IGNORE_VIEW_NAMES = [
     "webhook:create_schedule",
 ]
 
-# @login_required()
-
 LOGIN_REQUIRED_IGNORE_PATHS = [
     r"^/favicon\.ico$",
     r"^/static/(.*)/",
