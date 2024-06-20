@@ -15,6 +15,7 @@ urlpatterns = [
     path("internal/", include(INTERNAL_URLS)),
     path("currency/", include(CURRENCY_CONVERSION)),
     path("clients/", include("backend.api.public.endpoints.clients.urls")),
+    path("invoices/", include("backend.api.public.endpoints.Invoices.urls")),
 ]
 
 app_name = "public"

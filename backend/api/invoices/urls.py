@@ -2,12 +2,12 @@ from django.urls import path, include
 
 from . import fetch, delete, edit, schedule, manage
 from .create import set_destination
-from .create.services import add
+from .create.services import add_service
 
 urlpatterns = [
     path(
         "add_service/",
-        add.add_service,
+        add_service.add_service_endpoint,
         name="services add",
     ),
     path(
