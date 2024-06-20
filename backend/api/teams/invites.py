@@ -180,7 +180,7 @@ def decline_team_invite(request: HtmxHttpRequest, code):
 
     # if confirmation_text != "i confirm i want to decline " + invitation.team.name:
     #     messages.error(request, "Invalid confirmation text")
-    # return redirect("user settings teams join", code=code)  # kwargs={"code": code})
+    # return redirect("teams:dashboard join", code=code)  # kwargs={"code": code})
 
     invitation.team.members.remove(request.user)
 

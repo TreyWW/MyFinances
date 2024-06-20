@@ -1,3 +1,4 @@
+from django.views.decorators.http import require_http_methods
 from PIL import Image
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.sessions.models import Session
@@ -6,73 +7,36 @@ from django.shortcuts import redirect
 from django.shortcuts import render
 
 from backend.models import UserSettings
+from backend.service.settings.view import validate_page, get_user_profile
 from backend.types.htmx import HtmxHttpRequest
 
 
-def settings_page(request: HtmxHttpRequest):
-    context = {}
+@require_http_methods(["GET"])
+def view_settings_page_endpoint(request: HtmxHttpRequest, page: str):
+    if not validate_page(page):
+        messages.error(request, "Invalid settings page")
+        if request.htmx:
+            return render(request, "base/toast.html")
+        return redirect("settings:dashboard")
 
-    try:
-        usersettings = request.user.user_profile
-    except UserSettings.DoesNotExist:
-        # Create a new UserSettings object
-        usersettings = UserSettings.objects.create(user=request.user)
+    context: dict = {}
 
-    context.update(
-        {
-            "sessions": Session.objects.filter(),
-            "currency_signs": usersettings.CURRENCIES,
-            "currency": usersettings.currency,
-        }
-    )
+    match page:
+        case "account":
+            user_profile = get_user_profile(request)
+            context.update({"currency_signs": user_profile.CURRENCIES, "currency": user_profile.currency})
 
-    if request.method == "POST" and request.htmx:
-        section = request.POST.get("section")
+    template = f"pages/settings/pages/{page}.html"
 
-        if section == "profile_picture":
-            profile_picture = request.FILES.get("profile_image")
-            if profile_picture:
-                try:
-                    # Max file size is 10MB (Change the first number to determine the size in MB)
-                    max_file_size = 10 * 1024 * 1024
+    if not request.htmx:
+        context["page"] = page
+        context["page_template"] = template
+        return render(request, "pages/settings/main.html", context)
 
-                    if profile_picture.size is not None and profile_picture.size <= max_file_size:
-                        img = Image.open(profile_picture)
-                        img.verify()
+    response = render(request, template, context)
 
-                        if img.format is not None and img.format.lower() in ["jpeg", "png", "jpg"]:
-                            usersettings.profile_picture = profile_picture
-                            usersettings.save()
-                            messages.success(request, "Successfully updated profile picture")
-                        else:
-                            messages.error(
-                                request,
-                                "Unsupported image format. We support only JPEG, JPG, PNG.",
-                            )
-                    else:
-                        messages.error(request, "File size should be up to 10MB.")
-
-                except (FileNotFoundError, Image.UnidentifiedImageError):
-                    messages.error(request, "Invalid or unsupported image file")
-            else:
-                messages.error(request, "Invalid or unsupported image file")
-
-            return render(
-                request,
-                "pages/settings/settings/_post_profile_pic.html",
-                {"users_profile_picture": usersettings.profile_picture_url},
-            )
-
-        return render(request, "pages/settings/settings/preferences.html", context)
-
-    context.update(
-        {
-            "sessions": [],  # Session.objects.filter(),
-            "currency": usersettings.currency,
-        }
-    )
-
-    return render(request, "pages/settings/main.html", context)
+    response.no_retarget = True
+    return response
 
 
 def change_password(request: HtmxHttpRequest):
@@ -85,14 +49,14 @@ def change_password(request: HtmxHttpRequest):
 
         if error:
             messages.error(request, error)
-            return redirect("user settings change_password")
+            return redirect("settings:change_password")
 
         # If no errors, update the password
         request.user.set_password(password)
         request.user.save()
         update_session_auth_hash(request, request.user)
         messages.success(request, "Successfully changed your password.")
-        return redirect("user settings")
+        return redirect("settings:dashboard")
 
     return render(request, "pages/reset_password.html", {"type": "change"})
 
@@ -111,3 +75,7 @@ def validate_password_change(user, current_password, new_password, confirm_passw
         return "Password must be between 8 and 128 characters."
 
     return None
+
+
+def default_settings_page_redirect_endpoint(request: HtmxHttpRequest):
+    return redirect("settings:dashboard with page", page="profile")

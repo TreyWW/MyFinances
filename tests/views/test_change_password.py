@@ -7,22 +7,22 @@ from tests.handler import ViewTestCase
 
 class ChangePasswordViewTestCase(ViewTestCase):
     def test_change_password_view_302_for_non_authenticated_users_GET(self):
-        response = self.client.get(reverse("user settings change_password"))
+        response = self.client.get(reverse("settings:change_password"))
         self.assertEqual(response.status_code, 302)
 
     def test_change_password_view_200_for_authenticated_users_GET(self):
         self.login_user()
-        response = self.client.get(reverse("user settings change_password"))
+        response = self.client.get(reverse("settings:change_password"))
         self.assertEqual(response.status_code, 200)
 
     def test_change_password_view_302_for_non_authenticated_users_POST(self):
-        response = self.client.get(reverse("user settings change_password"))
+        response = self.client.get(reverse("settings:change_password"))
         self.assertEqual(response.status_code, 302)
 
     def test_change_password_view_200_for_authenticated_users_POST_valid_password(self):
         self.login_user()
         response = self.client.post(
-            reverse("user settings change_password"),
+            reverse("settings:change_password"),
             {
                 "current_password": "user",
                 "password": "changed_password",
@@ -42,7 +42,7 @@ class ChangePasswordViewTestCase(ViewTestCase):
         self,
     ):
         self.login_user()
-        response = self.client.post(reverse("user settings change_password"), {"current_password": "user"})
+        response = self.client.post(reverse("settings:change_password"), {"current_password": "user"})
 
         self.assertTrue(check_password("user", response.wsgi_request.user.password))
 
@@ -56,7 +56,7 @@ class ChangePasswordViewTestCase(ViewTestCase):
         self,
     ):
         self.login_user()
-        response = self.client.post(reverse("user settings change_password"), {})
+        response = self.client.post(reverse("settings:change_password"), {})
 
         self.assertTrue(check_password("user", response.wsgi_request.user.password))
 
@@ -71,7 +71,7 @@ class ChangePasswordViewTestCase(ViewTestCase):
     ):
         self.login_user()
         response = self.client.post(
-            reverse("user settings change_password"),
+            reverse("settings:change_password"),
             {
                 "current_password": "user",
                 "password": "pass",
@@ -95,7 +95,7 @@ class ChangePasswordViewTestCase(ViewTestCase):
     ):
         self.login_user()
         response = self.client.post(
-            reverse("user settings change_password"),
+            reverse("settings:change_password"),
             {
                 "current_password": "user",
                 "password": "password23",
@@ -119,7 +119,7 @@ class ChangePasswordViewTestCase(ViewTestCase):
     ):
         self.login_user()
         response = self.client.post(
-            reverse("user settings change_password"),
+            reverse("settings:change_password"),
             {
                 "current_password": "user",
                 "password": "p" * 129,
@@ -143,6 +143,6 @@ class ChangePasswordViewTestCase(ViewTestCase):
         func_name = f"{func.__module__}.{func.__name__}"
         self.assertEqual(
             "/dashboard/profile/change_password/",
-            reverse("user settings change_password"),
+            reverse("settings:change_password"),
         )
         self.assertEqual("backend.views.core.settings.view.change_password", func_name)

@@ -13,7 +13,7 @@ class UserSettingsProfileSettingsViewTestCase(ViewTestCase):
         self.login_user()
 
         # Check default user settings
-        response = self.client.get(reverse("user settings"))
+        response = self.client.get(reverse("settings:dashboard"))
         usr_settings = UserSettings.objects.first()
         self.assertIsNotNone(usr_settings)
         self.assertEqual(response.status_code, 200)
@@ -23,7 +23,7 @@ class UserSettingsProfileSettingsViewTestCase(ViewTestCase):
         headers = {"HTTP_HX-Request": "true"}
         mock_image = create_mock_image()
         response = self.client.post(
-            reverse("user settings"),
+            reverse("settings:dashboard"),
             {
                 "profile_image": mock_image,
                 "section": "profile_picture",
@@ -52,7 +52,7 @@ class UserSettingsProfileSettingsViewTestCase(ViewTestCase):
         # Provide htmx in request
         headers = {"HTTP_HX-Request": "true"}
         response = self.client.post(
-            reverse("user settings"),
+            reverse("settings:dashboard"),
             {"profile_image": "invalid", "section": "profile_picture"},
             **headers,
         )

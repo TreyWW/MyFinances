@@ -31,7 +31,7 @@ class HTMXPartialLoadMiddleware:
 
     def __call__(self, request: HtmxAnyHttpRequest):
         response = self.get_response(request)
-        if request.htmx.boosted:
+        if request.htmx.boosted and not response.headers.get("HX-Retarget") and not hasattr(response, "no_retarget"):
             response.headers["HX-Retarget"] = "#main_content"
         return response
 
