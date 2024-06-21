@@ -15,34 +15,7 @@ class InvoiceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Invoice
-        fields = [
-            "date_due",
-            "date_issued",
-            "currency",
-            "client_id",
-            "client_name",
-            "client_company",
-            "client_address",
-            "client_city",
-            "client_county",
-            "client_country",
-            "client_is_representative",
-            "self_name",
-            "self_company",
-            "self_address",
-            "self_city",
-            "self_county",
-            "self_country",
-            "notes",
-            "invoice_number",
-            "vat_number",
-            "logo",
-            "reference",
-            "sort_code",
-            "account_number",
-            "account_holder_name",
-            "items",
-        ]
+        fields = "__all__"
 
     # def create(self, validated_data):
     #     items_data = validated_data.pop('items')

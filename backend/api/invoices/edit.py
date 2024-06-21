@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import NoReturn
 
 from django.contrib import messages
 from django.http import HttpRequest, JsonResponse, HttpResponse
@@ -29,7 +28,7 @@ def edit_invoice(request: HtmxHttpRequest):
         )
 
     attributes_to_updates = {
-        "date_due": datetime.strptime(request.POST.get("date_due", ""), "%Y-%m-%d").date(),
+        "date_due": request.POST.get("date_due"),
         "date_issued": request.POST.get("date_issued"),
         "client_name": request.POST.get("to_name"),
         "client_company": request.POST.get("to_company"),
@@ -53,7 +52,14 @@ def edit_invoice(request: HtmxHttpRequest):
     }
 
     for column_name, new_value in attributes_to_updates.items():
-        setattr(invoice, column_name, new_value)
+        if new_value is not None:
+            if column_name == "date_due":
+                try:
+                    new_value = datetime.strptime(new_value, "%Y-%m-%d").date()
+                except ValueError:
+                    messages.error(request, "Invalid date format for date_due")
+                    return render(request, "base/toasts.html")
+            setattr(invoice, column_name, new_value)
 
     invoice.save()
 
