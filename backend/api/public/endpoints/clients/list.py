@@ -41,7 +41,7 @@ def list_clients_endpoint(request):
     # paginator = PageNumberPagination()
     # paginator.page_size = 5
 
-    search_text = request.GET.get("search")
+    search_text = request.data.get("search")
 
     clients: QuerySet[Client] = fetch_clients(request, search_text=search_text)
 
