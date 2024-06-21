@@ -7,12 +7,12 @@ from django.shortcuts import redirect
 from django.shortcuts import render
 
 from backend.models import UserSettings
-from backend.service.settings.view import validate_page, get_user_profile
+from backend.service.settings.view import validate_page, get_user_profile, get_api_keys
 from backend.types.htmx import HtmxHttpRequest
 
 
 @require_http_methods(["GET"])
-def view_settings_page_endpoint(request: HtmxHttpRequest, page: str):
+def view_settings_page_endpoint(request: HtmxHttpRequest, page: str = None):
     if not validate_page(page):
         messages.error(request, "Invalid settings page")
         if request.htmx:
@@ -25,11 +25,13 @@ def view_settings_page_endpoint(request: HtmxHttpRequest, page: str):
         case "account":
             user_profile = get_user_profile(request)
             context.update({"currency_signs": user_profile.CURRENCIES, "currency": user_profile.currency})
+        case "api_keys":
+            api_keys = get_api_keys(request)
+            context.update({"api_keys": api_keys})
 
-    template = f"pages/settings/pages/{page}.html"
+    template = f"pages/settings/pages/{page or 'profile'}.html"
 
-    if not request.htmx:
-        context["page"] = page
+    if not page or not request.GET.get("on_main"):
         context["page_template"] = template
         return render(request, "pages/settings/main.html", context)
 
@@ -75,7 +77,3 @@ def validate_password_change(user, current_password, new_password, confirm_passw
         return "Password must be between 8 and 128 characters."
 
     return None
-
-
-def default_settings_page_redirect_endpoint(request: HtmxHttpRequest):
-    return redirect("settings:dashboard with page", page="profile")

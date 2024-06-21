@@ -1,4 +1,5 @@
-<div class="my-4 card border border-gray-700 dark:border-gray-70 w-full">
+<div class="my-4 card border border-gray-700 dark:border-gray-70 w-full"
+     data-hx-container="api_keys">
     <div class="card-body">
         <div class="flex justify-between">
             <div class="text-xl mb-2">
@@ -6,7 +7,14 @@
                 Account API Keys
                 <span class="ml-2 badge badge-success badge-outline">NEW</span>
             </div>
-            <button class="btn btn-primary btn-sm">Generate new token</button>
+            <button onclick="modal_generate_api_key.showModal();"
+                    class="btn btn-primary btn-sm"
+                    hx-trigger="click once"
+                    hx-swap="beforeend"
+                    hx-target="#modal_container"
+                    hx-get="{% url "api:base:modal retrieve" modal_name="generate_api_key" %}">
+                Generate new token
+            </button>
         </div>
         <div class="divider"></div>
         <table class="table table-zebra max-w-full">
@@ -17,14 +25,10 @@
                     <th>Actions</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td>...</td>
-                    <td>Never used</td>
-                    <td>
-                        <button class="btn btn-error btn-sm">Delete</button>
-                    </td>
-                </tr>
+            <tbody data-hx-swap="tbody_api_keys">
+                {% for key in api_keys %}
+                    {% include "pages/settings/settings/api_key_row.html" with key=key %}
+                {% endfor %}
             </tbody>
         </table>
     </div>
