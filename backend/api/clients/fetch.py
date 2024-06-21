@@ -14,7 +14,7 @@ def fetch_all_clients(request: HtmxHttpRequest):
 
     search_text = request.GET.get("search")
 
-    clients = fetch_clients(request, search_text=search_text)
+    clients = fetch_clients(request, search_text=search_text, team=request.user.logged_in_as_team)
 
     return render(request, "pages/clients/dashboard/_table.html", {"clients": clients})
 

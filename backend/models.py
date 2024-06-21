@@ -145,6 +145,18 @@ class Team(models.Model):
     leader = models.ForeignKey(User, on_delete=models.CASCADE, related_name="teams_leader_of")
     members = models.ManyToManyField(User, related_name="teams_joined")
 
+    def is_owner(self, user: User):
+        return self.leader == user
+
+
+class TeamMemberPermission(models.Model):
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="permissions")
+    user = models.ForeignKey("backend.User", on_delete=models.CASCADE, related_name="team_permissions")
+    scopes = models.JSONField("Scopes", default=list, help_text="List of permitted scopes")
+
+    class Meta:
+        unique_together = ("team", "user")
+
 
 class TeamInvitation(models.Model):
     code = models.CharField(max_length=10)

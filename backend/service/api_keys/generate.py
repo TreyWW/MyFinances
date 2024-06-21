@@ -1,9 +1,11 @@
 from django.utils import timezone
 from backend.api.public.models import APIAuthToken
+from backend.api.public.permissions import SCOPE_DESCRIPTIONS
 from backend.models import User
+from backend.types.htmx import HtmxHttpRequest
 
 
-def generate_public_api_key(user: User, api_key_name, *, expires=None, description=None) -> APIAuthToken | str:
+def generate_public_api_key(user: User, api_key_name: str, permissions: list, *, expires=None, description=None) -> APIAuthToken | str:
     if not validate_name(user, api_key_name):
         return "Invalid key name"
 
@@ -16,7 +18,55 @@ def generate_public_api_key(user: User, api_key_name, *, expires=None, descripti
     if api_key_exists_under_name(user, api_key_name):
         return "A key with this name already exists in your account"
 
-    return APIAuthToken.objects.create(user=user, name=api_key_name, description=description, expires=expires)
+    if not validate_scopes(permissions):
+        return "Invalid permissions"
+
+    return APIAuthToken.objects.create(user=user, name=api_key_name, description=description, expires=expires, scopes=permissions)
+
+
+def get_permissions_from_request(request: HtmxHttpRequest) -> list:
+    scopes: list = []
+
+    for group, items in SCOPE_DESCRIPTIONS.items():
+        group_perm = request.POST.get(f"permission_{group}")
+        options: list[str] = items.get("options", {}.keys())
+
+        if group_perm not in options:
+            continue
+
+        if group_perm == "write":
+            scopes.append(f"{group}:read")
+        scopes.append(f"{group}:{group_perm}")
+
+    return scopes
+
+
+def validate_scopes(permissions: list[str]) -> bool:
+    """
+    Validate permissions are valid
+    """
+    if not permissions:
+        return False
+
+    for permission in permissions:
+        perm_split = permission.split(":")
+
+        if not len(perm_split) == 2:
+            return False
+
+        group = perm_split[0]
+        option = perm_split[1]
+
+        scope_group = SCOPE_DESCRIPTIONS.get(group)
+
+        if not scope_group:
+            return False
+
+        scope_group_options = scope_group.get("options")
+
+        if not option in scope_group_options.keys():
+            return False
+    return True
 
 
 def validate_name(user: User, name: str) -> bool:

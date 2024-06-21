@@ -3,7 +3,6 @@ from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 
-
 schema_view = get_schema_view(
     openapi.Info(
         title="MyFinances Public API",
@@ -28,3 +27,8 @@ def get_swagger_endpoints():
         path("swagger/", schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),
         path("redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
     ]
+
+
+TEAM_PARAMETER = openapi.Parameter(
+    "team_id", openapi.IN_QUERY, description="id of the team you want to do this action under", type=openapi.TYPE_STRING, required=False
+)

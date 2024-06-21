@@ -2,11 +2,11 @@ from typing import Literal
 
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from backend.api.public.authentication import BearerAuthentication
+from backend.api.public.decorators import handle_team_context, require_scopes
+from backend.api.public.swagger_ui import TEAM_PARAMETER
 from backend.service.clients.delete import delete_client
 
 
@@ -14,6 +14,9 @@ from backend.service.clients.delete import delete_client
     method="delete",
     operation_description="Delete a client",
     operation_id="clients_delete",
+    manual_parameters=[
+        TEAM_PARAMETER,
+    ],
     responses={
         200: openapi.Response(
             description="Client deleted successfully",
@@ -54,11 +57,11 @@ from backend.service.clients.delete import delete_client
     },
 )
 @api_view(["DELETE"])
-@authentication_classes([BearerAuthentication])
-@permission_classes([IsAuthenticated])
-def client_delete_endpoint(request, client_id: int):
-    response: str | Literal[True] = delete_client(request, client_id)
+@handle_team_context
+@require_scopes(["clients:write"])
+def client_delete_endpoint(request, id: str, team=None):
+    response: str | Literal[True] = delete_client(request, id)
 
     if isinstance(response, str):
         return Response({"success": False, "message": response}, status=403 if "do not have permission" in response else 404)
-    return Response({"success": True, "client_id": client_id}, status=200)
+    return Response({"success": True, "client_id": id}, status=200)

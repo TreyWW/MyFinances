@@ -17,6 +17,7 @@ from backend.models import (
     Notification,
     Team,
     TeamInvitation,
+    TeamMemberPermission,
     User,
     InvoiceProduct,
     FeatureFlags,
@@ -32,6 +33,8 @@ from backend.models import (
     EmailSendStatus,
     InvoiceReminder,
 )
+
+from backend.api.public.models import APIAuthToken
 
 # from django.contrib.auth.models imp/ort User
 # admin.register(Invoice)
@@ -50,6 +53,7 @@ admin.site.register(
         Notification,
         Team,
         TeamInvitation,
+        TeamMemberPermission,
         InvoiceProduct,
         FeatureFlags,
         VerificationCodes,
@@ -58,6 +62,7 @@ admin.site.register(
         Receipt,
         ReceiptDownloadToken,
         InvoiceReminder,
+        APIAuthToken,
     ]
 )
 
