@@ -11,8 +11,6 @@ from backend.models import Invoice, QuotaLimit
 def delete_invoice_endpoint(request):
     delete_items = QueryDict(request.body)
 
-    redirect_url = delete_items.get("redirect", None)
-
     try:
         invoice = Invoice.objects.get(id=delete_items.get("invoice", ""))
     except Invoice.DoesNotExist:
@@ -24,14 +22,5 @@ def delete_invoice_endpoint(request):
     QuotaLimit.delete_quota_usage("invoices-count", request.user, invoice.id, invoice.date_created)
 
     invoice.delete()
-
-    if redirect_url:
-        try:
-            resolve(redirect_url)
-            response = Response({"message": "Invoice deleted"}, status=status.HTTP_200_OK)
-            response["HX-Location"] = redirect_url
-            return response
-        except Resolver404:
-            return Response({"error": "Invalid redirect URL"}, status=status.HTTP_400_BAD_REQUEST)
 
     return Response({"message": "Invoice successfully deleted"}, status=status.HTTP_200_OK)
