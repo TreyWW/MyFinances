@@ -3,25 +3,29 @@
     <div class="grid grid-cols-8 gap-4">
         <div class="card p-4 col-span-2">
             <ul class="menu w-full min-h-full gap-y-1"
-                hx-boost="true" hx-target='div[data-hx-swap="content"]' hx-swap="innerHTML">
+                hx-boost="true"
+                hx-target='div[data-hx-swap="content"]'
+                hx-swap="innerHTML"
+                hx-vals='{"on_main": "True"}'>
                 <li>
-                    <a href="{% url 'settings:dashboard with page' page='profile' %}">
+                    <a href="{% url 'settings:dashboard with page' page='profile' %}"
+                       hx-replace-url="/dashboard/settings/profile/">
                         <i class="fa fa-solid fa-user"></i>
                         Public Profile
                     </a>
                 </li>
                 <li>
-                    <a href="{% url 'settings:dashboard with page' page='account' %}">
+                    <a href="{% url 'settings:dashboard with page' page='account' %}"
+                       hx-replace-url="/dashboard/settings/account/">
                         <i class="fa fa-solid fa-gear"></i>
                         Account
                     </a>
                 </li>
                 <div class="divider"></div>
-                <h2 class="pl-3 text-neutral-content">
-                    Access
-                </h2>
+                <h2 class="pl-3 text-neutral-content">Access</h2>
                 <li>
-                    <a>
+                    <a href="{% url 'settings:dashboard with page' page='api_keys' %}"
+                       hx-replace-url="/dashboard/settings/api_keys/">
                         <i class="fa fa-solid fa-code"></i>
                         API Keys
                     </a>
@@ -29,7 +33,7 @@
             </ul>
         </div>
         <div class="col-span-6" data-hx-swap="content">
-            {% if page and page_template %}
+            {% if page_template %}
                 {% include page_template %}
             {% endif %}
         </div>

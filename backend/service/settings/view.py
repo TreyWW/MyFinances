@@ -1,8 +1,11 @@
+from django.db.models import QuerySet
+
 from backend.models import UserSettings
+from backend.api.public.models import APIAuthToken
 
 
 def validate_page(page: str) -> bool:
-    return page in ["profile", "account", "api_keys"]
+    return not page or page in ["profile", "account", "api_keys"]
 
 
 def get_user_profile(request) -> UserSettings:
@@ -12,3 +15,7 @@ def get_user_profile(request) -> UserSettings:
         # Create a new UserSettings object
         usersettings = UserSettings.objects.create(user=request.user)
     return usersettings
+
+
+def get_api_keys(request) -> QuerySet[APIAuthToken]:
+    return APIAuthToken.objects.filter(user=request.user, active=True).only("created", "name", "last_used", "description", "expires")
