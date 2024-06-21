@@ -1,11 +1,11 @@
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from backend.api.public.authentication import BearerAuthentication
+from backend.api.public.decorators import require_scopes, handle_team_context
 from backend.api.public.serializers.invoices import InvoiceSerializer
 from backend.models import Invoice
 from backend.service.invoices.fetch import get_context
@@ -58,9 +58,9 @@ from backend.service.invoices.fetch import get_context
     },
 )
 @api_view(["GET"])
-# @authentication_classes([BearerAuthentication])
-# @permission_classes([IsAuthenticated])
-def fetch_all_invoices_endpoint(request):
+@handle_team_context
+@require_scopes(["invoices:read"])
+def fetch_all_invoices_endpoint(request, team=None):
     if request.user.is_authenticated:
         if hasattr(request.user, "logged_in_as_team"):
             invoices = Invoice.objects.filter(organization=request.user.logged_in_as_team)

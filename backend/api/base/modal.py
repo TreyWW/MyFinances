@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.http import HttpResponseBadRequest
 from django.shortcuts import render
 
+from backend.api.public.permissions import SCOPE_DESCRIPTIONS
 from backend.models import Client, Receipt
 from backend.models import Invoice
 from backend.models import QuotaLimit
@@ -140,6 +141,17 @@ def open_modal(request: HtmxHttpRequest, modal_name, context_type=None, context_
         elif modal_name == "invoices_to_destination":
             if existing_client := request.GET.get("client"):
                 context["existing_client_id"] = existing_client
+        elif modal_name == "generate_api_key":
+            permissions = SCOPE_DESCRIPTIONS
+            # example
+            # "clients": {
+            #     "description": "Access customer details",
+            #     "options": ["read", "write"]
+            # },
+            context["permissions"] = [
+                {"name": group, "description": perms["description"], "options": perms["options"]}
+                for group, perms in SCOPE_DESCRIPTIONS.items()
+            ]
 
         return render(request, template_name, context)
     except ValueError as e:

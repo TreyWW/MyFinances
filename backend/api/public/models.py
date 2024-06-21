@@ -1,25 +1,23 @@
-from django.utils import timezone
+from django.db import models
+from django.contrib.auth.hashers import check_password, make_password
 import binascii
 import os
-
-from django.contrib.auth.hashers import make_password, check_password
-from django.db import models
-from django.utils.translation import gettext_lazy as _
+from django.utils import timezone
 
 
 class APIAuthToken(models.Model):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(_("Key Name"), max_length=64)
-    description = models.TextField(_("Description"), blank=True, null=True)
+    name = models.CharField("Key Name", max_length=64)
+    description = models.TextField("Description", blank=True, null=True)
     user = models.ForeignKey("backend.User", on_delete=models.CASCADE)
-    key = models.CharField(_("Key"), max_length=40, unique=True)
-    created = models.DateTimeField(_("Created"), auto_now_add=True)
-    last_used = models.DateTimeField(_("Last Used"), null=True, blank=True)
-    expires = models.DateTimeField(_("Expires"), null=True, blank=True, help_text=_("Leave blank for no expiry"))
-
-    expired = models.BooleanField(_("Expired"), default=False, help_text=_("If the key has expired"))
-
-    active = models.BooleanField(_("Active"), default=True, help_text=_("If the key is active"))
+    key = models.CharField("Key", max_length=40, unique=True)
+    created = models.DateTimeField("Created", auto_now_add=True)
+    last_used = models.DateTimeField("Last Used", null=True, blank=True)
+    expires = models.DateTimeField("Expires", null=True, blank=True, help_text="Leave blank for no expiry")
+    expired = models.BooleanField("Expired", default=False, help_text="If the key has expired")
+    active = models.BooleanField("Active", default=True, help_text="If the key is active")
+    scopes = models.JSONField("Scopes", default=list, help_text="List of permitted scopes")
+    team = models.ForeignKey("backend.Team", on_delete=models.CASCADE, null=True, blank=True, related_name="tokens")
 
     class Meta:
         verbose_name = "API Key"
@@ -62,3 +60,6 @@ class APIAuthToken(models.Model):
         self.active = False
         self.save()
         return self
+
+    def has_scope(self, scope):
+        return scope in self.scopes

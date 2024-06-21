@@ -1,11 +1,11 @@
 from django.contrib import messages
-from django.http import HttpResponse, QueryDict
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
 from backend.service.api_keys.delete import delete_api_key
-from backend.service.api_keys.generate import generate_public_api_key
-from backend.service.api_keys.get import get_api_key_by_name, get_api_key_by_id
+from backend.service.api_keys.generate import generate_public_api_key, get_permissions_from_request
+from backend.service.api_keys.get import get_api_key_by_id
 from backend.types.htmx import HtmxHttpRequest
 from backend.api.public.models import APIAuthToken
 
@@ -16,7 +16,11 @@ def generate_api_key_endpoint(request: HtmxHttpRequest) -> HttpResponse:
     expiry = request.POST.get("expiry")
     description = request.POST.get("description")
 
-    key_create_response: str | APIAuthToken = generate_public_api_key(request.user, name, expires=expiry, description=description)
+    permissions = get_permissions_from_request(request)
+
+    key_create_response: str | APIAuthToken = generate_public_api_key(
+        request.user, name, permissions, expires=expiry, description=description
+    )
 
     if isinstance(key_create_response, str):
         messages.error(request, key_create_response)

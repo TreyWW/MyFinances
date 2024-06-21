@@ -3,11 +3,14 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
+from backend.api.public.decorators import require_scopes, handle_team_context
 from backend.models import Invoice
 
 
 @api_view(["POST"])
-def edit_invoice_endpoint(request):
+@handle_team_context
+@require_scopes(["invoices:write"])
+def edit_invoice_endpoint(request, team=None):
     invoice_id = request.data.get("invoice_id", "")
     if not invoice_id:
         return Response({"error": "Invoice ID is required"}, status=status.HTTP_400_BAD_REQUEST)

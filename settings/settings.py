@@ -61,7 +61,10 @@ if DEBUG:
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         # "rest_framework.authentication.TokenAuthentication",
-        "backend.api.public.authentication.BearerAuthentication"  # also adds custom model
+        "backend.api.public.authentication.CustomBearerAuthentication"  # also adds custom model
+    ],
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
     ],
     "DEFAULT_RENDERER_CLASSES": (["rest_framework.renderers.JSONRenderer"]),
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
@@ -213,6 +216,7 @@ MIDDLEWARE = [
     "social_django.middleware.SocialAuthExceptionMiddleware",
     "tz_detect.middleware.TimezoneMiddleware",
     "backend.middleware.HTMXPartialLoadMiddleware",
+    "backend.api.public.middleware.AttachTokenMiddleware",
 ]
 
 if DEBUG:

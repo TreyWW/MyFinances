@@ -1,3 +1,4 @@
+{% load strfilters %}
 {% component_block "modal" id="modal_generate_api_key" start_open="true" title="Generate API Key" %}
 {% fill "content" %}
 <form class="py-4"
@@ -48,6 +49,30 @@
             <span class="label-text-alt text-error">Please enter a message between 3 and 255 characters.</span>
         </label>
     </div>
+    <div class="collapse collapse-arrow border select-bordered mt-4">
+        <input type="checkbox" />
+        <div class="collapse-title text-xl font-medium">Permissions</div>
+        <div class="collapse-content">
+            <ul class="block">
+                {% for group in permissions %}
+                    <li class="border-t-2 mt-2 p-2 flex items-center">
+                        <div class="flex-auto">
+                            <strong>{{ group.name | title | split:"_" | join:" " }}</strong>
+                            <div class="text text-sm">{{ group.description }}</div>
+                        </div>
+                        <select class="select select-bordered inline-block position-relative"
+                                name="permission_{{ group.name }}">
+                            <option value="none" selected>No Access</option>
+                            {% for item, readable in group.options.items %}
+                                <option value="{{ item }}">{{ readable }}</option>
+                            {% endfor %}
+                        </select>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="form-control"></div>
     <div class="modal-action">
         <button type="submit"
                 id="modal_generate_api_key-submit"
