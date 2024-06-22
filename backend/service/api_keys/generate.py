@@ -6,7 +6,6 @@ from backend.types.htmx import HtmxHttpRequest
 
 def generate_public_api_key(user: User, api_key_name: str, permissions: list, *, expires=None,
                             description=None) -> APIAuthToken | str:
-
     if not validate_name(api_key_name):
         return "Invalid key name"
 
