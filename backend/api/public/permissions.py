@@ -3,6 +3,8 @@ from typing import Sequence, TypedDict
 from rest_framework.permissions import BasePermission
 from rest_framework.request import Request
 
+from backend.api.public import APIAuthToken
+
 SCOPES = {
     "clients:read",
     "clients:write",
