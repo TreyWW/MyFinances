@@ -217,6 +217,7 @@ MIDDLEWARE = [
     "tz_detect.middleware.TimezoneMiddleware",
     "backend.middleware.HTMXPartialLoadMiddleware",
     "backend.api.public.middleware.AttachTokenMiddleware",
+    "backend.api.public.middleware.HandleTeamContextMiddleware",
 ]
 
 if DEBUG:

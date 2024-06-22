@@ -34,16 +34,16 @@ from backend.service.clients.get import fetch_clients
     },
 )
 @api_view(["GET"])
-@handle_team_context
+# @handle_team_context
 @require_scopes(["clients:read"])
-def list_clients_endpoint(request, team=None):
+def list_clients_endpoint(request):
 
     # paginator = PageNumberPagination()
     # paginator.page_size = 5
 
     search_text = request.data.get("search")
 
-    clients: QuerySet[Client] = fetch_clients(request, search_text=search_text, team=team)
+    clients: QuerySet[Client] = fetch_clients(request, search_text=search_text, team=request.team)
 
     # queryset = paginator.paginate_queryset(clients, request)
 

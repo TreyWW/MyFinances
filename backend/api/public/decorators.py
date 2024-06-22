@@ -16,15 +16,13 @@ def require_scopes(scopes):
             if not token:
                 return Response({"detail": "Authentication credentials were not provided."}, status=status.HTTP_401_UNAUTHORIZED)
 
-            team_id = request.query_params.get("team_id")
-            if team_id:
-                team = Team.objects.filter(id=team_id).first()
-                if not team:
-                    return Response({"detail": "Team not found."}, status=status.HTTP_404_NOT_FOUND)
-                # Check for team permissions based on team_id and scopes
+            if request.team_id and not request.team:
+                return Response({"detail": "Team not found."}, status=status.HTTP_404_NOT_FOUND)
 
-                if not team.is_owner(token.user):
-                    team_permissions = TeamMemberPermission.objects.filter(team_id=team_id, user=token.user).first()
+            if request.team:
+                # Check for team permissions based on team_id and scopes
+                if not request.team.is_owner(token.user):
+                    team_permissions = TeamMemberPermission.objects.filter(team=request.team, user=token.user).first()
                     if not team_permissions or not all(scope in team_permissions.scopes for scope in scopes):
                         return Response({"detail": "Permission denied."}, status=status.HTTP_403_FORBIDDEN)
 

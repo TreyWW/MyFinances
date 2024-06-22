@@ -4,8 +4,7 @@ from backend.models import User
 from backend.types.htmx import HtmxHttpRequest
 
 
-def generate_public_api_key(user: User, api_key_name: str, permissions: list, *, expires=None,
-                            description=None) -> APIAuthToken | str:
+def generate_public_api_key(user: User, api_key_name: str, permissions: list, *, expires=None, description=None) -> APIAuthToken | str:
     if not validate_name(api_key_name):
         return "Invalid key name"
 
@@ -21,8 +20,7 @@ def generate_public_api_key(user: User, api_key_name: str, permissions: list, *,
     if not validate_scopes(permissions):
         return "Invalid permissions"
 
-    return APIAuthToken.objects.create(user=user, name=api_key_name, description=description, expires=expires,
-                                       scopes=permissions)
+    return APIAuthToken.objects.create(user=user, name=api_key_name, description=description, expires=expires, scopes=permissions)
 
 
 def get_permissions_from_request(request: HtmxHttpRequest) -> list:
@@ -32,10 +30,7 @@ def get_permissions_from_request(request: HtmxHttpRequest) -> list:
         if (perm := request.POST.get(f"permission_{group}")) in items["options"]
     ]
 
-    scopes.extend(
-        f"{group}:read" for group, items in SCOPE_DESCRIPTIONS.items() if
-        request.POST.get(f"permission_{group}") == "write"
-    )
+    scopes.extend(f"{group}:read" for group, items in SCOPE_DESCRIPTIONS.items() if request.POST.get(f"permission_{group}") == "write")
 
     return scopes
 
