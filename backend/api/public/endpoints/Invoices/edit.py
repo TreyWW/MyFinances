@@ -7,7 +7,7 @@ from backend.api.public.decorators import require_scopes, handle_team_context
 from backend.models import Invoice
 
 
-@api_view(["POST"])
+@api_view(["PUT"])
 @handle_team_context
 @require_scopes(["invoices:write"])
 def edit_invoice_endpoint(request, team=None):

@@ -1,14 +1,9 @@
 from django.urls import path
 
-from . import add_service, create, set_destination, delete, edit, fetch
+from . import create, set_destination, delete, edit, fetch
 
 
 urlpatterns = [
-    path(
-        "add_service",
-        add_service.add_service_endpoint,
-        name="services add",
-    ),
     path(
         "create",
         create.create_invoice_endpoint,

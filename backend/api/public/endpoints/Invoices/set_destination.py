@@ -9,7 +9,7 @@ from backend.api.public.serializers.clients import ClientSerializer
 to_get = ["name", "address", "city", "country", "company", "is_representative"]
 
 
-@api_view(["POST"])
+@api_view(["PUT"])
 @handle_team_context
 @require_scopes(["invoices:write"])
 def set_destination_from_endpoint(request, team=None):
