@@ -1,12 +1,10 @@
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework import status, serializers
 from rest_framework.decorators import api_view
-from rest_framework.response import Response
 
 from backend.api.public.decorators import require_scopes, handle_team_context
-from backend.models import Client, InvoiceProduct
-from backend.api.public.serializers.invoices import InvoiceSerializer
+from backend.api.public.swagger_ui import TEAM_PARAMETER
+from backend.service.invoices.create.create import invoice_save
 
 
 @swagger_auto_schema(
@@ -142,6 +140,13 @@ from backend.api.public.serializers.invoices import InvoiceSerializer
             format=openapi.FORMAT_DATE,
         ),
         openapi.Parameter(
+            "date_created",
+            openapi.IN_QUERY,
+            description="Creation date of the invoice (YYYY-MM-DD format)",
+            type=openapi.TYPE_STRING,
+            format=openapi.FORMAT_DATE,
+        ),
+        openapi.Parameter(
             "product_id",
             openapi.IN_QUERY,
             description="Id of a product",
@@ -153,11 +158,13 @@ from backend.api.public.serializers.invoices import InvoiceSerializer
             description="Id of a client",
             type=openapi.TYPE_STRING,
         ),
+        TEAM_PARAMETER,
     ],
     request_body=openapi.Schema(
         type=openapi.TYPE_OBJECT,
         properties={
             "items": openapi.Schema(
+                description="The service to which the invoice relates. If product_id is used and there is no other service to add then the field can remain as '{}'.",
                 type=openapi.TYPE_ARRAY,
                 items=openapi.Schema(
                     type=openapi.TYPE_OBJECT,
@@ -200,32 +207,4 @@ from backend.api.public.serializers.invoices import InvoiceSerializer
 @handle_team_context
 @require_scopes(["invoices:write"])
 def create_invoice_endpoint(request, team=None):
-
-    for key, value in request.query_params.items():
-        request.data[key] = value
-
-    product_id = request.query_params.get("product_id")
-    serializer_context = {
-        "request": request,
-        "product_id": product_id,
-    }
-
-    serializer = InvoiceSerializer(data=request.data, context=serializer_context)
-    if serializer.is_valid():
-        user = request.user
-        if "client_to" in request.data and request.data["client_to"]:
-            try:
-                client = Client.objects.get(user=user, id=request.data["client_to"])
-                serializer.validated_data["client_to"] = client
-            except Client.DoesNotExist:
-                return Response({"error": "Client not found"}, status=status.HTTP_400_BAD_REQUEST)
-        if "product_id" in request.data and request.data["product_id"]:
-            try:
-                product = InvoiceProduct.objects.get(user=user, id=request.data["product_id"])
-                serializer.validated_data["items"] = product
-            except InvoiceProduct.DoesNotExist:
-                return Response({"error": "InvoiceProduct not found"}, status=status.HTTP_400_BAD_REQUEST)
-
-        invoice = serializer.save(user=user)
-        return Response({"invoice_id": invoice.id}, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    return invoice_save(request)
