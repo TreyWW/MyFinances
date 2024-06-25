@@ -122,11 +122,7 @@ def invoice_save(request):
     for key, value in request.query_params.items():
         request.data[key] = value
 
-    serializer_context = {
-        "request": request,
-    }
-
-    serializer = InvoiceSerializer(data=request.data, context=serializer_context)
+    serializer = InvoiceSerializer(data=request.data)
     if serializer.is_valid():
         if request.team:
             team = request.team
