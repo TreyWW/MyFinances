@@ -4,14 +4,14 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from backend.api.public.decorators import require_scopes, handle_team_context
+from backend.api.public.decorators import require_scopes
+from backend.api.public.types import APIRequest
 from backend.models import Invoice, QuotaLimit
 
 
 @api_view(["DELETE"])
-@handle_team_context
 @require_scopes(["invoices:write"])
-def delete_invoice_endpoint(request, team=None):
+def delete_invoice_endpoint(request: APIRequest):
     delete_items = QueryDict(request.body)
 
     try:

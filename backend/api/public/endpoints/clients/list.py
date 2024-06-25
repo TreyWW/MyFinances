@@ -4,9 +4,10 @@ from django.db.models import QuerySet
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from backend.api.public.decorators import require_scopes, handle_team_context
+from backend.api.public.decorators import require_scopes
 from backend.api.public.serializers.clients import ClientSerializer
 from backend.api.public.swagger_ui import TEAM_PARAMETER
+from backend.api.public.types import APIRequest
 from backend.models import Client
 from backend.service.clients.get import fetch_clients
 
@@ -34,10 +35,8 @@ from backend.service.clients.get import fetch_clients
     },
 )
 @api_view(["GET"])
-# @handle_team_context
 @require_scopes(["clients:read"])
-def list_clients_endpoint(request):
-
+def list_clients_endpoint(request: APIRequest):
     # paginator = PageNumberPagination()
     # paginator.page_size = 5
 

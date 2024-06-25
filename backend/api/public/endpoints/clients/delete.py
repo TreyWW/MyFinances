@@ -5,8 +5,9 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from backend.api.public.decorators import handle_team_context, require_scopes
+from backend.api.public.decorators import require_scopes
 from backend.api.public.swagger_ui import TEAM_PARAMETER
+from backend.api.public.types import APIRequest
 from backend.service.clients.delete import delete_client
 
 
@@ -57,9 +58,8 @@ from backend.service.clients.delete import delete_client
     },
 )
 @api_view(["DELETE"])
-@handle_team_context
 @require_scopes(["clients:write"])
-def client_delete_endpoint(request, id: str, team=None):
+def client_delete_endpoint(request: APIRequest, id: str):
     response: str | Literal[True] = delete_client(request, id)
 
     if isinstance(response, str):

@@ -2,7 +2,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 
-from backend.api.public.decorators import require_scopes, handle_team_context
+from backend.api.public.decorators import require_scopes
+from backend.api.public.types import APIRequest
 from backend.models import Client
 from backend.api.public.serializers.clients import ClientSerializer
 
@@ -10,9 +11,8 @@ to_get = ["name", "address", "city", "country", "company", "is_representative"]
 
 
 @api_view(["POST"])
-@handle_team_context
 @require_scopes(["invoices:write"])
-def set_destination_from_endpoint(request, team=None):
+def set_destination_from_endpoint(request: APIRequest):
     context: dict = {"swapping": True}
 
     data = request.data

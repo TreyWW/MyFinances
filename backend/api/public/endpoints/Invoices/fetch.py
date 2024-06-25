@@ -5,8 +5,10 @@ from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from backend.api.public.decorators import require_scopes, handle_team_context
+from backend.api.public.decorators import require_scopes
 from backend.api.public.serializers.invoices import InvoiceSerializer
+from backend.api.public.swagger_ui import TEAM_PARAMETER
+from backend.api.public.types import APIRequest
 from backend.models import Invoice
 from backend.service.invoices.fetch import get_context
 
@@ -16,6 +18,7 @@ from backend.service.invoices.fetch import get_context
     operation_description="Fetch all invoices",
     operation_id="invoices_list",
     manual_parameters=[
+        TEAM_PARAMETER,
         openapi.Parameter(
             "sort",
             openapi.IN_QUERY,
@@ -58,9 +61,8 @@ from backend.service.invoices.fetch import get_context
     },
 )
 @api_view(["GET"])
-@handle_team_context
 @require_scopes(["invoices:read"])
-def fetch_all_invoices_endpoint(request, team=None):
+def fetch_all_invoices_endpoint(request: APIRequest):
     if request.user.is_authenticated:
         if hasattr(request.user, "logged_in_as_team"):
             invoices = Invoice.objects.filter(organization=request.user.logged_in_as_team)
