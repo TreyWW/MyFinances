@@ -32,7 +32,7 @@ boto3-stubs = { extras = [
     "stepfunctions",
 ], version = "^1.34.76" }
 
-djangorestframework = "^3.14.0"
+djangorestframework = "^3.15.2"
 django-tz-detect = "^0.5.0"
 typos = "^1.20.3"
 pre-commit = "^3.7.0"
