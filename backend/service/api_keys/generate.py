@@ -1,10 +1,12 @@
 from backend.api.public.models import APIAuthToken
 from backend.api.public.permissions import SCOPE_DESCRIPTIONS, SCOPES
-from backend.models import User
+from backend.models import User, Team
 from backend.types.htmx import HtmxHttpRequest
 
 
-def generate_public_api_key(user: User, api_key_name: str, permissions: list, *, expires=None, description=None) -> APIAuthToken | str:
+def generate_public_api_key(
+    owner: User | Team, api_key_name: str, permissions: list, *, expires=None, description=None
+) -> APIAuthToken | str:
     if not validate_name(api_key_name):
         return "Invalid key name"
 
@@ -14,13 +16,22 @@ def generate_public_api_key(user: User, api_key_name: str, permissions: list, *,
     if not validate_expiry(expires):
         return "Invalid expiry"
 
-    if api_key_exists_under_name(user, api_key_name):
+    if api_key_exists_under_name(owner, api_key_name):
         return "A key with this name already exists in your account"
 
     if not validate_scopes(permissions):
         return "Invalid permissions"
 
-    return APIAuthToken.objects.create(user=user, name=api_key_name, description=description, expires=expires, scopes=permissions)
+    token = APIAuthToken(name=api_key_name, description=description, expires=expires, scopes=permissions)
+
+    if isinstance(owner, Team):
+        token.team = owner
+    else:
+        token.user = owner
+
+    token.save()
+
+    return token
 
 
 def get_permissions_from_request(request: HtmxHttpRequest) -> list:
@@ -85,8 +96,10 @@ def validate_expiry(expires: str | int) -> bool:
     return True
 
 
-def api_key_exists_under_name(user: User, name: str) -> bool:
+def api_key_exists_under_name(owner: User | Team, name: str) -> bool:
     """
     Check if API key exists under a given name
     """
-    return APIAuthToken.objects.filter(user=user, name=name, active=True).exists()
+    if isinstance(owner, Team):
+        return APIAuthToken.objects.filter(team=owner, name=name, active=True).exists()
+    return APIAuthToken.objects.filter(user=owner, name=name, active=True).exists()

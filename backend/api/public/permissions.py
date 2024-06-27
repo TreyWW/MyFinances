@@ -3,8 +3,6 @@ from typing import Sequence, TypedDict
 from rest_framework.permissions import BasePermission
 from rest_framework.request import Request
 
-from backend.api.public import APIAuthToken
-
 SCOPES = {
     "clients:read",
     "clients:write",
@@ -38,17 +36,3 @@ SCOPE_DESCRIPTIONS = {
 class IsSuperuser(BasePermission):
     def has_permission(self, request: Request, view: object) -> bool:
         return bool(request.user and request.user.is_superuser)
-
-
-class HasScopePermission(BasePermission):
-    def has_permission(self, request, view):
-        required_scopes = getattr(view, "required_scopes", [])
-
-        if not required_scopes:
-            return True
-
-        token = request.auth
-        if not token or not isinstance(token, APIAuthToken):
-            return False
-        user_scopes = token.scopes  # assuming token has a `scopes` attribute
-        return all(scope in user_scopes for scope in required_scopes)
