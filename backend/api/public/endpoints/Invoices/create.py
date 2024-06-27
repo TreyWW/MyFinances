@@ -1,10 +1,13 @@
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework import status
 from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 from backend.api.public.decorators import require_scopes, handle_team_context
+from backend.api.public.serializers.invoices import InvoiceSerializer
 from backend.api.public.swagger_ui import TEAM_PARAMETER
-from backend.service.invoices.create.create import invoice_save
+from backend.models import Client, InvoiceProduct
 
 
 @swagger_auto_schema(
@@ -207,4 +210,44 @@ from backend.service.invoices.create.create import invoice_save
 @handle_team_context
 @require_scopes(["invoices:write"])
 def create_invoice_endpoint(request, team=None):
-    return invoice_save(request)
+    for key, value in request.query_params.items():
+        request.data[key] = value
+
+    serializer = InvoiceSerializer(data=request.data)
+    if serializer.is_valid():
+        if request.team:
+            team = request.team
+            if "client_to" in request.data and request.data["client_to"]:
+                try:
+                    client = Client.objects.get(organization=team, id=request.data["client_to"])
+                    serializer.validated_data["client_to"] = client
+                except Client.DoesNotExist:
+                    return Response({"success": False, "message": "Client not found"}, status=status.HTTP_400_BAD_REQUEST)
+
+            if "product_id" in request.data and request.data["product_id"]:
+                try:
+                    product = InvoiceProduct.objects.get(organization=team, id=request.data["product_id"])
+                    serializer.validated_data["items"] = product
+                except InvoiceProduct.DoesNotExist:
+                    return Response({"success": False, "message": "InvoiceProduct not found"}, status=status.HTTP_400_BAD_REQUEST)
+
+            invoice = serializer.save(organization=team)
+        else:
+            user = request.user
+            if "client_to" in request.data and request.data["client_to"]:
+                try:
+                    client = Client.objects.get(user=user, id=request.data["client_to"])
+                    serializer.validated_data["client_to"] = client
+                except Client.DoesNotExist:
+                    return Response({"success": False, "message": "Client not found"}, status=status.HTTP_400_BAD_REQUEST)
+
+            if "product_id" in request.data and request.data["product_id"]:
+                try:
+                    product = InvoiceProduct.objects.get(user=user, id=request.data["product_id"])
+                    serializer.validated_data["items"] = product
+                except InvoiceProduct.DoesNotExist:
+                    return Response({"success": False, "message": "InvoiceProduct not found"}, status=status.HTTP_400_BAD_REQUEST)
+
+            invoice = serializer.save(user=user)
+        return Response({"success": True, "invoice_id": invoice.id}, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

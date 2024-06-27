@@ -9,12 +9,6 @@ class InvoiceItemSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class InvoiceProductSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = InvoiceProduct
-        fields = "__all__"
-
-
 class InvoiceItemField(serializers.ListField):
     child = InvoiceItemSerializer()
 
@@ -41,6 +35,23 @@ class InvoiceSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def create(self, validated_data):
-        from backend.service.invoices.create.create import serializer_create
+        items_data = validated_data.pop("items", [])
 
-        return serializer_create(validated_data)
+        invoice = Invoice.objects.create(**validated_data)
+
+        if not isinstance(items_data, InvoiceProduct):
+            for item_data in items_data:
+                item = InvoiceItem.objects.create(invoice=invoice, **item_data)
+                invoice.items.add(item)
+
+        else:
+            items_data = InvoiceItem.objects.create(
+                name=items_data.name,
+                description=items_data.description,
+                hours=items_data.quantity,
+                price_per_hour=items_data.rate,
+                price=items_data.rate * items_data.quantity,
+            )
+            invoice.items.add(items_data)
+
+        return invoice
