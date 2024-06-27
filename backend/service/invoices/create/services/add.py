@@ -1,10 +1,11 @@
 from django.http import JsonResponse
 
+from backend.api.public.types import APIRequest
 from backend.models import InvoiceProduct
 from backend.types.htmx import HtmxHttpRequest
 
 
-def add(request: HtmxHttpRequest):
+def add(request: APIRequest | HtmxHttpRequest):
     context: dict = {}
     existing_service = request.POST.get("existing_service", 0)
 

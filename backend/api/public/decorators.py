@@ -36,28 +36,3 @@ def require_scopes(scopes):
         return _wrapped_view
 
     return decorator
-
-
-def handle_team_context(view_func):
-    @wraps(view_func)
-    def wrapped_view(request, *args, **kwargs):
-        team_id = request.query_params.get("team_id")
-
-        if not team_id:
-            # No team_id provided, proceed with user context
-            return view_func(request, *args, **kwargs)
-
-        team = Team.objects.filter(id=team_id).first()
-
-        if not team:
-            return Response({"success": False, "error": "Team not found"}, status=404)
-
-        # Check if the user is a member of the team
-        if request.user.is_authenticated and (
-            request.user.teams_joined.filter(id=team_id).exists() or request.user.teams_leader_of.filter(id=team_id).exists()
-        ):
-            return view_func(request, team=team, *args, **kwargs)
-        else:
-            raise PermissionDenied("You are not a member of this team")
-
-    return wrapped_view

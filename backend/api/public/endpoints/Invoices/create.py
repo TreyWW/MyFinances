@@ -4,7 +4,8 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from backend.api.public.decorators import require_scopes, handle_team_context
+from backend.api.public.decorators import require_scopes
+from backend.api.public.types import APIRequest
 from backend.api.public.serializers.invoices import InvoiceSerializer
 from backend.api.public.swagger_ui import TEAM_PARAMETER
 from backend.models import Client, InvoiceProduct
@@ -207,9 +208,8 @@ from backend.models import Client, InvoiceProduct
     },
 )
 @api_view(["POST"])
-@handle_team_context
 @require_scopes(["invoices:write"])
-def create_invoice_endpoint(request, team=None):
+def create_invoice_endpoint(request: APIRequest):
     for key, value in request.query_params.items():
         request.data[key] = value
 
@@ -250,4 +250,4 @@ def create_invoice_endpoint(request, team=None):
 
             invoice = serializer.save(user=user)
         return Response({"success": True, "invoice_id": invoice.id}, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    return Response({"success": False, "message": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
