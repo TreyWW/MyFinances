@@ -12,7 +12,7 @@ from backend.types.htmx import HtmxHttpRequest
 
 
 @require_http_methods(["GET"])
-def view_settings_page_endpoint(request: HtmxHttpRequest, page: str = None):
+def view_settings_page_endpoint(request: HtmxHttpRequest, page: str | None = None):
     if not validate_page(page):
         messages.error(request, "Invalid settings page")
         if request.htmx:

@@ -9,13 +9,16 @@ from backend.models import User, Team
 class HtmxHttpRequest(HttpRequest):
     htmx: HtmxDetails
     user: User
+    no_retarget: bool | None
 
 
 class UnauthorizedHttpRequest(HttpRequest):
     user: AnonymousUser
     htmx: HtmxDetails
+    no_retarget: bool | None
 
 
 class HtmxAnyHttpRequest(HttpRequest):
     user: User | AnonymousUser
     htmx: HtmxDetails
+    no_retarget: bool | None
