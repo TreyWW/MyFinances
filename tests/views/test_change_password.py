@@ -139,10 +139,10 @@ class ChangePasswordViewTestCase(ViewTestCase):
         self.assertEqual(response.status_code, 302)
 
     def test_change_password_view_matches_with_urls_view(self):
-        func = resolve("/dashboard/profile/change_password/").func
+        func = resolve("/dashboard/settings/profile/change_password/").func
         func_name = f"{func.__module__}.{func.__name__}"
         self.assertEqual(
-            "/dashboard/profile/change_password/",
+            "/dashboard/settings/profile/change_password/",
             reverse("settings:change_password"),
         )
         self.assertEqual("backend.views.core.settings.view.change_password", func_name)

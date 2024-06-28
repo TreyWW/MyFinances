@@ -14,7 +14,7 @@ class UserSettingsTeamsDashboardViewTestCase(ViewTestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_teams_view_matches_with_urls_view(self):
-        path = "/dashboard/settings/teams"
+        path = "/dashboard/teams/"
         func = resolve(path).func
         func_name = f"{func.__module__}.{func.__name__}"
         self.assertEqual("backend.views.core.settings.teams.teams_dashboard", func_name)

@@ -89,7 +89,7 @@ class InvoicesCreateTestCase(ViewTestCase):
         func = resolve("/dashboard/invoices/create/").func
         func_name = f"{func.__module__}.{func.__name__}"
         self.assertEqual("/dashboard/invoices/create/", self._invoices_create_url)
-        self.assertEqual("backend.views.core.invoices.create.create_invoice_page", func_name)
+        self.assertEqual("backend.views.core.invoices.create.create_invoice_endpoint", func_name)
 
     def test_invoices_create_invoice_from_post_data(self):
         self.login_user()
