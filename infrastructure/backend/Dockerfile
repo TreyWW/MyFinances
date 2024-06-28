@@ -44,7 +44,14 @@ COPY . .
 
 RUN chmod +x infrastructure/backend/scripts/*
 RUN chmod +x infrastructure/backend/scripts/tests/*
-ENTRYPOINT ["sh", "infrastructure/backend/scripts/entrypoint.sh"]
+
+RUN python3 manage.py migrate backend --fake backend 0036_alter_client_address_clientdefaults
+RUN python3 manage.py migrate --no-input
+RUN python3 manage.py collectstatic --no-input
+
+CMD gunicorn settings.wsgi:application --bind 0.0.0.0:9012 --workers 2
+
+#ENTRYPOINT ["sh", "infrastructure/backend/scripts/entrypoint.sh"]
 
 EXPOSE 10012
 EXPOSE 9012
