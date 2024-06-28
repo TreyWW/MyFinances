@@ -73,7 +73,7 @@ if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
 
 schema_view = get_swagger_ui()
-urlpatterns += get_swagger_endpoints()
+urlpatterns += get_swagger_endpoints(settings.DEBUG)
 
 handler500 = "backend.views.core.other.errors.universal"
 handler404 = "backend.views.core.other.errors.universal"
