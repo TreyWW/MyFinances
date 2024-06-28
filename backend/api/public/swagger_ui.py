@@ -3,15 +3,17 @@ from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 
+INFO = openapi.Info(
+    title="MyFinances Public API",
+    default_version="v0.0.1",
+    description="",
+    terms_of_service="",
+    contact=openapi.Contact(email="support@strelix.org"),
+    license=openapi.License(name="AGPL v3"),
+)
+
 schema_view = get_schema_view(
-    openapi.Info(
-        title="MyFinances Public API",
-        default_version="v0.0.1",
-        description="",
-        terms_of_service="",
-        contact=openapi.Contact(email="support@strelix.org"),
-        license=openapi.License(name="AGPL v3"),
-    ),
+    INFO,
     public=True,
     permission_classes=[permissions.AllowAny],
 )
