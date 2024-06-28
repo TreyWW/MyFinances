@@ -1,31 +1,31 @@
 from rest_framework import serializers
 
-from backend.models import InvoiceItem, Invoice, InvoiceProduct
+from backend.models import InvoiceItem, Invoice
 
 
 class InvoiceItemSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(required=False)
+    description = serializers.CharField(required=False)
+
     class Meta:
         model = InvoiceItem
-        fields = ["name", "description", "hours", "price_per_hour"]
+        fields = "__all__"
 
 
 class InvoiceSerializer(serializers.ModelSerializer):
-    items = InvoiceItemSerializer(many=True)
-    client_id = serializers.IntegerField(required=False)
+    items = InvoiceItemSerializer(many=True, required=False)
 
     class Meta:
         model = Invoice
-        fields = "__all__"
+        exclude = ("user", "organization", "client_to")
+        # fields = "__all__"
 
-    # def create(self, validated_data):
-    #     items_data = validated_data.pop('items')
-    #     invoice = Invoice.objects.create(**validated_data)
-    #     for item_data in items_data:
-    #         InvoiceItem.objects.create(invoice=invoice, **item_data)
-    #     return invoice
+    def create(self, validated_data):
+        items_data = validated_data.pop("items", [])
+        invoice = Invoice.objects.create(**validated_data)
 
+        for item_data in items_data:
+            item = InvoiceItem.objects.create(invoice=invoice, **item_data)
+            invoice.items.add(item)
 
-class InvoiceProductSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = InvoiceProduct
-        fields = ["id", "name", "description", "rate", "quantity"]
+        return invoice

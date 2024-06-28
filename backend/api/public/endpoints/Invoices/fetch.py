@@ -2,7 +2,6 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.decorators import api_view
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from backend.api.public.decorators import require_scopes
@@ -22,14 +21,14 @@ from backend.service.invoices.fetch import get_context
         openapi.Parameter(
             "sort",
             openapi.IN_QUERY,
-            description="Field you want to order by to. Sort options: 'date_due', 'id', 'payment_status'. Default by " "'id'.",
+            description="Field you want to order by to. Sort options: 'date_due', 'id', 'payment_status'. Default by 'id'.",
             type=openapi.TYPE_STRING,
         ),
         openapi.Parameter(
             "sort_direction",
             openapi.IN_QUERY,
-            description="Order by descending or ascending. False for descending and True for ascending. Default is " "ascending.",
-            type=openapi.TYPE_BOOLEAN,
+            description="Order by descending or ascending. 'False' for descending and 'True' for ascending. Default is ascending.",
+            type=openapi.TYPE_STRING,
         ),
         openapi.Parameter(
             "filter_type",
@@ -62,35 +61,31 @@ from backend.service.invoices.fetch import get_context
 )
 @api_view(["GET"])
 @require_scopes(["invoices:read"])
-def fetch_all_invoices_endpoint(request: APIRequest):
-    if request.user.is_authenticated:
-        if hasattr(request.user, "logged_in_as_team"):
-            invoices = Invoice.objects.filter(organization=request.user.logged_in_as_team)
-        else:
-            invoices = Invoice.objects.filter(user=request.user)
+def fetch_all_invoices_endpoint(request: APIRequest) -> Response:
+    if request.team:
+        invoices = Invoice.objects.filter(organization=request.team)
     else:
-        invoices = Invoice.objects.none()
+        invoices = Invoice.objects.filter(user=request.user)
 
-    sort_by = request.data.get("sort")
-    sort_direction = request.data.get("sort_direction", "")
-    action_filter_type = request.data.get("filter_type")
-    action_filter_by = request.data.get("filter")
+    sort_by = request.query_params.get("sort")
+    sort_direction = request.query_params.get("sort_direction", "")
+    action_filter_type = request.query_params.get("filter_type")
+    action_filter_by = request.query_params.get("filter")
 
-    # TODO: Decide on how to handle this part or to get rid of it in API
     previous_filters = {
         "payment_status": {
-            "paid": True if request.data.get("payment_status_paid") else False,
-            "pending": True if request.data.get("payment_status_pending") else False,
-            "overdue": True if request.data.get("payment_status_overdue") else False,
+            "paid": False,
+            "pending": False,
+            "overdue": False,
         },
         "amount": {
-            "20+": True if request.data.get("amount_20+") else False,
-            "50+": True if request.data.get("amount_50+") else False,
-            "100+": True if request.data.get("amount_100+") else False,
+            "20+": False,
+            "50+": False,
+            "100+": False,
         },
     }
 
-    _, invoices = get_context(invoices, sort_by, sort_direction, action_filter_type, action_filter_by, previous_filters)
+    _, invoices = get_context(invoices, sort_by, previous_filters, sort_direction, action_filter_type, action_filter_by)
 
     serializer = InvoiceSerializer(invoices, many=True)
 
