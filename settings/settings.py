@@ -1,5 +1,6 @@
 import base64
 import logging
+import logging.config
 import mimetypes
 import os
 import sys
@@ -291,14 +292,12 @@ SOCIAL_AUTH_USER_MODEL = "backend.User"
 AWS_TAGS_APP_NAME = get_var("AWS_TAGS_APP_NAME", default="myfinances")
 
 # APP_CONFIG = appconfig
-
-
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "formatters": {
         "verbose": {
-            "format": "[levelname] {asctime} {module} {process:d} {thread:d} {message}",
+            "format": "[{levelname}] {asctime} {module} {process:d} {thread:d} {message}",
             "style": "{",
         },
         "simple": {
@@ -306,11 +305,22 @@ LOGGING = {
             "style": "{",
         },
     },
-    "handlers": {"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "simple",
+        },
+    },
     "loggers": {
+        "django": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": True,
+        },
         "django.db.backends": {
             "handlers": ["console"],
             "level": get_var("DJANGO_LOG_LEVEL", default="INFO"),
+            "propagate": False,
         },
     },
     "root": {
@@ -318,6 +328,10 @@ LOGGING = {
         "level": get_var("DJANGO_LOG_LEVEL", default="INFO"),
     },
 }
+
+logging.config.dictConfig(LOGGING)
+
+logging.info("LOGS ARE WORKING")
 
 
 # MEDIA
@@ -363,13 +377,17 @@ class CustomPrivateMediaStorage(S3Storage):
 AWS_STATIC_ENABLED = get_var("AWS_STATIC_ENABLED", default=False).lower() == "true"
 AWS_STATIC_CDN_TYPE = get_var("AWS_STATIC_CDN_TYPE")
 
+logging.info(f"{AWS_STATIC_ENABLED=} | {AWS_STATIC_CDN_TYPE=}")
+
 if AWS_STATIC_ENABLED or AWS_STATIC_CDN_TYPE.lower() == "aws":
     STATICFILES_STORAGE = "settings.settings.CustomStaticStorage"
     STATIC_LOCATION = get_var("AWS_STATIC_LOCATION", default="static")
+    logging.info(f"{STATIC_LOCATION=} | {STATICFILES_STORAGE=}")
 else:
     STATIC_URL = f"/static/"
     STATIC_ROOT = os.path.join(BASE_DIR, "static")
     STATICFILES_STORAGE = "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
+    logging.info(f"{STATIC_URL=} | {STATIC_ROOT=} | {STATICFILES_STORAGE=}")
 
 AWS_MEDIA_PUBLIC_ENABLED = get_var("AWS_MEDIA_PUBLIC_ENABLED", default=False).lower() == "true"
 
