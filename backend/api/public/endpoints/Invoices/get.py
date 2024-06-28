@@ -48,9 +48,9 @@ from backend.models import Invoice
 def get_invoices_endpoint(request: APIRequest, id: str) -> Response:
     try:
         if request.team:
-            invoices = Invoice.objects.filter(organization=request.team, invoice_id=id)
+            invoices = Invoice.objects.filter(organization=request.team, id=id)
         else:
-            invoices = Invoice.objects.filter(user=request.user, invoice_id=id)
+            invoices = Invoice.objects.filter(user=request.user, id=id)
     except Invoice.DoesNotExist:
         return Response({"success": False, "message": "Invoice not found"}, status=status.HTTP_400_BAD_REQUEST)
 
