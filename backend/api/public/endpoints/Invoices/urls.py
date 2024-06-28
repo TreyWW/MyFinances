@@ -28,14 +28,8 @@ urlpatterns = [
     #     edit.edit_discount_endpoint,
     #     name="edit discount"
     # ),
-    path(
-        "list/",
-        list.list_invoices_endpoint,
-        name="list"),
-    path(
-        "<str:id>/",
-        get.get_invoices_endpoint,
-        name="get"),
+    path("list/", list.list_invoices_endpoint, name="list"),
+    path("<str:id>/", get.get_invoices_endpoint, name="get"),
 ]
 
 app_name = "invoices"
