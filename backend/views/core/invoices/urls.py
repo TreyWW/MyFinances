@@ -44,7 +44,7 @@ urlpatterns = invoice_urls + [
     ),
     path(
         "create/",
-        create.create_invoice_endpoint,
+        create.create_invoice_page,
         name="create",
     ),
 ]
