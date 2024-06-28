@@ -100,6 +100,7 @@ LOGIN_REQUIRED_IGNORE_PATHS = [
     r"^/auth/create_account(/.*)?$",
     r"^/accounts/github/login/callback/$",
     r"^/webhooks/schedules/receive/$",
+    r"^/api/public/(.*)/",
 ]
 # for some reason only allows "login" and not "login create account" or anything
 
