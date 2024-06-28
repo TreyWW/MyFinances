@@ -61,7 +61,7 @@ from backend.service.invoices.fetch import get_context
 )
 @api_view(["GET"])
 @require_scopes(["invoices:read"])
-def fetch_all_invoices_endpoint(request: APIRequest) -> Response:
+def list_invoices_endpoint(request: APIRequest) -> Response:
     if request.team:
         invoices = Invoice.objects.filter(organization=request.team)
     else:
