@@ -1,10 +1,29 @@
-from django.db.models import Prefetch, ExpressionWrapper, F, FloatField, Sum, Case, When, Q, Value, CharField
+from django.db.models import Prefetch, ExpressionWrapper, F, FloatField, Sum, Case, When, Q, Value, CharField, QuerySet
 from django.utils import timezone
 
 from backend.models import Invoice, InvoiceItem
 
 
-def get_context(invoices, sort_by, sort_direction=True, action_filter_type=None, action_filter_by=None, previous_filters=None):
+def build_filter_condition(filter_type, filter_by):
+    if "+" in filter_by:
+        numeric_part = float(filter_by.split("+")[0])
+        return {f"{filter_type}__gte": numeric_part}
+    else:
+        return {f"{filter_type}": filter_by}
+
+
+def should_add_condition(was_previous_selection, has_just_been_selected):
+    return (was_previous_selection and not has_just_been_selected) or (not was_previous_selection and has_just_been_selected)
+
+
+def get_context(
+    invoices: QuerySet,
+    sort_by: str,
+    previous_filters: dict,
+    sort_direction: str = "True",
+    action_filter_type: str = None,
+    action_filter_by: str = None,
+) -> [dict, Invoice]:
     context: dict = {}
 
     invoices = (
@@ -44,18 +63,14 @@ def get_context(invoices, sort_by, sort_direction=True, action_filter_type=None,
         or_conditions_filter = Q()  # Initialize OR conditions for each filter type
         for filter_by, status in filter_by_list.items():
             # Determine if the filter was selected in the previous request
-            was_previous_selection = True if status else False
+            was_previous_selection = bool(status)
             # Determine if the filter is selected in the current request
-            has_just_been_selected = True if action_filter_by == filter_by and action_filter_type == filter_type else False
+            has_just_been_selected = action_filter_by == filter_by and action_filter_type == filter_type
 
             # Check if the filter status has changed
-            if (was_previous_selection and not has_just_been_selected) or (not was_previous_selection and has_just_been_selected):
+            if should_add_condition(was_previous_selection, has_just_been_selected):
                 # Construct filter condition dynamically based on filter_type
-                if "+" in filter_by:
-                    numeric_part = float(filter_by.split("+")[0])
-                    filter_condition: dict[str, str | float] = {f"{filter_type}__gte": numeric_part}
-                else:
-                    filter_condition = {f"{filter_type}": filter_by}
+                filter_condition = build_filter_condition(filter_type, filter_by)
                 or_conditions_filter |= Q(**filter_condition)
                 context["selected_filters"].append(filter_by)
 

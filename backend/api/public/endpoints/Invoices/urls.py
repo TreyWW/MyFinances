@@ -1,22 +1,12 @@
 from django.urls import path
 
-from . import create, set_destination, delete, edit, fetch
+from . import create, delete, edit, fetch
 
 urlpatterns = [
     path(
         "create",
         create.create_invoice_endpoint,
         name="create",
-    ),
-    path(
-        "set_destination/to/",
-        set_destination.set_destination_to_endpoint,
-        name="set_destination to",
-    ),
-    path(
-        "set_destination/from/",
-        set_destination.set_destination_from_endpoint,
-        name="set_destination from",
     ),
     path(
         "delete/",

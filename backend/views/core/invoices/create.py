@@ -6,7 +6,7 @@ from backend.types.htmx import HtmxHttpRequest
 
 
 @require_http_methods(["GET", "POST"])
-def create_invoice_endpoint(request: HtmxHttpRequest):
+def create_invoice_page(request: HtmxHttpRequest):
     if request.method == "POST":
         invoice_items = create_invoice_items(request)
         invoice = save_invoice(request, invoice_items)
