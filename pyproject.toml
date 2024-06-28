@@ -155,6 +155,7 @@ module = [
     "social_django.models",
     "emails",
     "step_functions",
-    "django_components"
+    "django_components",
+    "drf_yasg"
 ]
 ignore_missing_imports = true
