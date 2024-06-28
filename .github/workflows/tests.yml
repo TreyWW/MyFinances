@@ -13,7 +13,6 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.10", "3.11", "3.12"]
-        django-version: ["4", "5"]
     steps:
       - name: Clone repo
         uses: actions/checkout@v4.1.6
@@ -36,10 +35,10 @@ jobs:
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: poetry install --no-interaction --no-root
-      - name: Install django ${{ matrix.django-version }}
+      - name: Install latest Django
         run: |
           source .venv/bin/activate
-          pip install "Django==${{ matrix.django-version }}"
+          pip install Django
       - name: Install dependencies and build frontend
         run: |
           npm ci
