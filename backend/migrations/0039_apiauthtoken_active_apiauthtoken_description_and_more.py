@@ -37,7 +37,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="apiauthtoken",
             name="id",
-            field=models.AutoField(primary_key=True, serialize=False, auto_created=True, default=1),
+            field=models.AutoField(primary_key=True, serialize=False, auto_created=True),
             preserve_default=False,
         ),
         migrations.AddField(
