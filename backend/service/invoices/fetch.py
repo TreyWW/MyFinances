@@ -38,8 +38,9 @@ def get_context(
                 ),
             ),
         )
-        .select_related("client_to", "client_to__user")
-        .only("invoice_id", "id", "payment_status", "date_due", "client_to", "client_name")
+        .select_related("client_to", "client_to__user", "user", "organization")
+        # .only("invoice_id", "id", "payment_status", "date_due", "client_to", "client_name", "user", "organization")
+        # .only was causing 100x more queries due to re-fetching extra fields
         .annotate(
             subtotal=Sum(F("items__hours") * F("items__price_per_hour")),
             amount=Case(
