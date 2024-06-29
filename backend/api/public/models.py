@@ -34,6 +34,11 @@ class APIAuthToken(models.Model):
             return False
         return self.expires < timezone.now()
 
+    def update_last_used(self):
+        self.last_used = timezone.now()
+        self.save()
+        return True
+
     # def save(self, *args, **kwargs):
     #     return super().save(*args, **kwargs)
 

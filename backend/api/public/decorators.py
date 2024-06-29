@@ -30,6 +30,8 @@ def require_scopes(scopes):
             if not all(scope in token.scopes for scope in scopes):
                 return Response({"detail": "Permission denied."}, status=status.HTTP_403_FORBIDDEN)
 
+            token.update_last_used()
+
             return view_func(request, *args, **kwargs)
 
         _wrapped_view.required_scopes = scopes
