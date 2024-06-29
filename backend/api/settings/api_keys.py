@@ -18,12 +18,12 @@ def generate_api_key_endpoint(request: HtmxHttpRequest) -> HttpResponse:
 
     permissions = get_permissions_from_request(request)
 
-    key_create_response: str | APIAuthToken = generate_public_api_key(
+    key_obj, key_response = generate_public_api_key(
         request.user.logged_in_as_team or request.user, name, permissions, expires=expiry, description=description
     )
 
-    if isinstance(key_create_response, str):
-        messages.error(request, key_create_response)
+    if not key_obj:
+        messages.error(request, key_response)
         return render(request, "base/toast.html")
 
     messages.success(request, "API key generated successfully")
@@ -32,8 +32,8 @@ def generate_api_key_endpoint(request: HtmxHttpRequest) -> HttpResponse:
         request,
         "pages/settings/settings/api_key_generated_response.html",
         {
-            "raw_key": key_create_response.key,
-            "name": key_create_response.name,
+            "raw_key": key_response,
+            "name": name,
         },
     )
 

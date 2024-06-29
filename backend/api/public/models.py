@@ -7,9 +7,11 @@ from django.utils import timezone
 
 class APIAuthToken(models.Model):
     id = models.AutoField(primary_key=True)
+
+    hashed_key = models.CharField("Key", max_length=128, unique=True)
+
     name = models.CharField("Key Name", max_length=64)
     description = models.TextField("Description", blank=True, null=True)
-    key = models.CharField("Key", max_length=40, unique=True)
     created = models.DateTimeField("Created", auto_now_add=True)
     last_used = models.DateTimeField("Last Used", null=True, blank=True)
     expires = models.DateTimeField("Expires", null=True, blank=True, help_text="Leave blank for no expiry")
@@ -25,37 +27,32 @@ class APIAuthToken(models.Model):
         verbose_name_plural = "API Keys"
 
     def __str__(self):
-        return self.key
+        return self.name
 
     def has_expired(self):
         if not self.expires:
             return False
         return self.expires < timezone.now()
 
-    def save(self, *args, **kwargs):
-        if not self.key:
-            self.key = self.generate_key()
-        return super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     return super().save(*args, **kwargs)
 
-    def regenerate_key(self):
-        key = self.generate_key()
-        self.hash_and_save(key=key)
-        return key
+    def generate_key(self) -> str:
+        """
+        :returns: raw_key
+        """
+
+        raw = binascii.hexlify(os.urandom(20)).decode()
+        self.hashed_key = self.hash_raw_key(raw)
+
+        return raw
 
     @classmethod
-    def generate_key(cls):
-        """Returns a new raw key"""
-        return binascii.hexlify(os.urandom(20)).decode()
+    def hash_raw_key(cls, raw_key: str):
+        return make_password(raw_key, salt="api_tokens", hasher="default")
 
-    def verify(self, key):
-        return check_password(key, self.key)
-
-    def hash_and_save(self, key=None):
-        if not key:
-            key = self.key
-        self.key = make_password(key)
-        self.save()
-        return self
+    def verify(self, key) -> bool:
+        return check_password(key, self.hashed_key)
 
     def deactivate(self):
         self.active = False

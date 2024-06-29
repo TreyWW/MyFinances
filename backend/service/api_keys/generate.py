@@ -6,23 +6,25 @@ from backend.types.htmx import HtmxHttpRequest
 
 def generate_public_api_key(
     owner: User | Team, api_key_name: str, permissions: list, *, expires=None, description=None
-) -> APIAuthToken | str:
+) -> tuple[APIAuthToken | None, str]:
     if not validate_name(api_key_name):
-        return "Invalid key name"
+        return None, "Invalid key name"
 
     if not validate_description(description):
-        return "Invalid description"
+        return None, "Invalid description"
 
     if not validate_expiry(expires):
-        return "Invalid expiry"
+        return None, "Invalid expiry"
 
     if api_key_exists_under_name(owner, api_key_name):
-        return "A key with this name already exists in your account"
+        return None, "A key with this name already exists in your account"
 
     if not validate_scopes(permissions):
-        return "Invalid permissions"
+        return None, "Invalid permissions"
 
     token = APIAuthToken(name=api_key_name, description=description, expires=expires, scopes=permissions)
+
+    raw_key: str = token.generate_key()
 
     if isinstance(owner, Team):
         token.team = owner
@@ -31,7 +33,7 @@ def generate_public_api_key(
 
     token.save()
 
-    return token
+    return token, raw_key
 
 
 def get_permissions_from_request(request: HtmxHttpRequest) -> list:
