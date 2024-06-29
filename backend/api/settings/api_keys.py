@@ -19,7 +19,7 @@ def generate_api_key_endpoint(request: HtmxHttpRequest) -> HttpResponse:
     permissions: list = get_permissions_from_request(request)
 
     key_obj, key_response = generate_public_api_key(
-        request.user.logged_in_as_team or request.user, name, permissions, expires=expiry, description=description
+        request, request.user.logged_in_as_team or request.user, name, permissions, expires=expiry, description=description
     )
 
     if not key_obj:
@@ -47,7 +47,7 @@ def generate_api_key_endpoint(request: HtmxHttpRequest) -> HttpResponse:
 def revoke_api_key_endpoint(request: HtmxHttpRequest, key_id: str) -> HttpResponse:
     key: APIAuthToken | None = get_api_key_by_id(request.user.logged_in_as_team or request.user, key_id)
 
-    delete_key_response = delete_api_key(request.user.logged_in_as_team or request.user, key=key)
+    delete_key_response = delete_api_key(request, request.user.logged_in_as_team or request.user, key=key)
 
     if isinstance(delete_key_response, str):
         messages.error(request, "This key does not exist")
