@@ -1,9 +1,11 @@
 from typing import Type
-from rest_framework.authentication import TokenAuthentication
+
+from rest_framework import exceptions
+from rest_framework.authentication import TokenAuthentication, get_authorization_header
 from rest_framework.exceptions import AuthenticationFailed
 
 from backend.api.public import APIAuthToken
-from backend.models import User
+from backend.models import User, Team
 
 
 class CustomBearerAuthentication(TokenAuthentication):
@@ -23,7 +25,7 @@ class CustomBearerAuthentication(TokenAuthentication):
         if token.has_expired():
             raise AuthenticationFailed("Token has expired.")
 
-        # token.team = token.team  # todo: figure out a way to use teams
-        return token.user, token
+        # todo: make sure this is safe to set request.user = <Team> obj
+        return token.user or token.team, token
 
     # todo: override more methods + add hashing

@@ -145,8 +145,19 @@ class Team(models.Model):
     leader = models.ForeignKey(User, on_delete=models.CASCADE, related_name="teams_leader_of")
     members = models.ManyToManyField(User, related_name="teams_joined")
 
-    def is_owner(self, user: User):
+    def is_owner(self, user: User) -> bool:
         return self.leader == user
+
+    def is_logged_in_as_team(self, request) -> bool:
+        if isinstance(request.auth, User):
+            return False
+
+        if request.auth and request.auth.team_id == self.id:
+            return True
+        return False
+
+    def is_authenticated(self):
+        return True
 
 
 class TeamMemberPermission(models.Model):

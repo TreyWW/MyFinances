@@ -28,7 +28,7 @@ def require_scopes(scopes):
 
             if request.team:
                 # Check for team permissions based on team_id and scopes
-                if not request.team.is_owner(token.user):
+                if not request.team.is_owner(token.user) and not request.team.is_logged_in_as_team(request):
                     team_permissions = TeamMemberPermission.objects.filter(team=request.team, user=token.user).first()
                     if not team_permissions or not all(scope in team_permissions.scopes for scope in scopes):
                         return Response({"detail": "Permission denied."}, status=status.HTTP_403_FORBIDDEN)

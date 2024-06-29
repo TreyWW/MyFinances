@@ -18,4 +18,8 @@ def get_user_profile(request) -> UserSettings:
 
 
 def get_api_keys(request) -> QuerySet[APIAuthToken]:
-    return APIAuthToken.objects.filter(user=request.user, active=True).only("created", "name", "last_used", "description", "expires")
+    if request.user.logged_in_as_team:
+        token = APIAuthToken.objects.filter(team=request.user.logged_in_as_team)
+    else:
+        token = APIAuthToken.objects.filter(user=request.user)
+    return token.filter(active=True).only("created", "name", "last_used", "description", "expires")
