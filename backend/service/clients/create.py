@@ -1,11 +1,9 @@
-from grpc._interceptor import _unwrap_client_call_details
-
 from backend.models import Client
 from backend.service.clients.validate import validate_client_create
 
 
-def create_client(request, client_details: dict = None) -> str | Client:
-    client_details = client_details or {
+def create_client(request, client_details_default: dict | None = None) -> str | Client:
+    client_details = client_details_default or {
         "name": request.POST.get("client_name"),
         "email": request.POST.get("client_email"),
         "address": request.POST.get("client_address"),

@@ -59,7 +59,7 @@ def edit_invoice_endpoint(request: APIRequest):
         if new_value is not None:
             if column_name == "date_due":
                 try:
-                    new_value = datetime.strptime(new_value, "%Y-%m-%d").date()
+                    new_value = datetime.strptime(new_value, "%Y-%m-%d").date()  # type: ignore[assignment]
                 except ValueError:
                     return Response({"error": "Invalid date format for date_due"}, status=status.HTTP_400_BAD_REQUEST)
             setattr(invoice, column_name, new_value)
@@ -84,7 +84,7 @@ def change_status_endpoint(request, invoice_id: int, invoice_status: str):
     if invoice_status not in ["paid", "overdue", "pending"]:
         return Response({"error": "Invalid status. Please choose from: pending, paid, overdue"}, status=status.HTTP_400_BAD_REQUEST)
 
-    if invoice.payment_invoice_status == invoice_status:
+    if invoice.payment_status == invoice_status:
         return Response({"error": f"Invoice status is already {invoice_status}"}, status=status.HTTP_400_BAD_REQUEST)
 
     invoice.payment_status = invoice_status

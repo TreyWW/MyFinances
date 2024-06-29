@@ -16,7 +16,7 @@ def generate_api_key_endpoint(request: HtmxHttpRequest) -> HttpResponse:
     expiry = request.POST.get("expiry")
     description = request.POST.get("description")
 
-    permissions = get_permissions_from_request(request)
+    permissions: list = get_permissions_from_request(request)
 
     key_obj, key_response = generate_public_api_key(
         request.user.logged_in_as_team or request.user, name, permissions, expires=expiry, description=description

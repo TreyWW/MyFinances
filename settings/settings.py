@@ -58,6 +58,7 @@ INSTALLED_APPS = [
 
 if DEBUG:
     INSTALLED_APPS.append("silk")
+    SILKY_PYTHON_PROFILER = True
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
@@ -221,7 +222,7 @@ MIDDLEWARE = [
     "social_django.middleware.SocialAuthExceptionMiddleware",
     "tz_detect.middleware.TimezoneMiddleware",
     "backend.middleware.HTMXPartialLoadMiddleware",
-    "backend.api.public.middleware.AttachTokenMiddleware",
+    # "backend.api.public.middleware.AttachTokenMiddleware",
     "backend.api.public.middleware.HandleTeamContextMiddleware",
 ]
 

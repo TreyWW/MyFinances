@@ -37,7 +37,7 @@ def get_products(request: APIRequest) -> list[dict] | None:
             "description": product.description,
             "hours": product.quantity,
             "price_per_hour": product.rate,
-            "price": product.rate * product.quantity,
+            "price": (product.rate * product.quantity) if product.rate else product.quantity,
         }
         items_data.append(product_data)
 

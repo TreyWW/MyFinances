@@ -55,7 +55,7 @@ def edit_invoice(request: HtmxHttpRequest):
         if new_value is not None:
             if column_name == "date_due":
                 try:
-                    new_value = datetime.strptime(new_value, "%Y-%m-%d").date()
+                    new_value = datetime.strptime(new_value, "%Y-%m-%d").date()  # type: ignore[assignment]
                 except ValueError:
                     messages.error(request, "Invalid date format for date_due")
                     return render(request, "base/toasts.html")

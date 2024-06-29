@@ -286,7 +286,8 @@ class ClientDefaults(models.Model):
 
 
 class InvoiceProduct(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    organization = models.ForeignKey(Team, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=100)
     quantity = models.IntegerField()

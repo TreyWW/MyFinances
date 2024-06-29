@@ -5,7 +5,7 @@ from backend.types.htmx import HtmxHttpRequest
 
 
 def generate_public_api_key(
-    owner: User | Team, api_key_name: str, permissions: list, *, expires=None, description=None
+    owner: User | Team, api_key_name: str | None, permissions: list, *, expires=None, description=None
 ) -> tuple[APIAuthToken | None, str]:
     if not validate_name(api_key_name):
         return None, "Invalid key name"
@@ -22,7 +22,7 @@ def generate_public_api_key(
     if not validate_scopes(permissions):
         return None, "Invalid permissions"
 
-    token = APIAuthToken(name=api_key_name, description=description, expires=expires, scopes=permissions)
+    token = APIAuthToken(name=api_key_name, description=description, expires=expires, scopes=permissions)  # type: ignore[arg-type, misc]
 
     raw_key: str = token.generate_key()
 
@@ -61,7 +61,7 @@ def validate_scopes(permissions: list[str]) -> bool:
     return True
 
 
-def validate_name(name: str) -> bool:
+def validate_name(name: str | None) -> bool:
     """
     Require name not already exist under account
     """
@@ -70,7 +70,7 @@ def validate_name(name: str) -> bool:
     return len(name) <= 64
 
 
-def validate_description(description: str) -> bool:
+def validate_description(description: str | None) -> bool:
     """
     Accept any description
     Reject description longer than 255 characters
@@ -98,7 +98,7 @@ def validate_expiry(expires: str | int) -> bool:
     return True
 
 
-def api_key_exists_under_name(owner: User | Team, name: str) -> bool:
+def api_key_exists_under_name(owner: User | Team, name: str | None) -> bool:
     """
     Check if API key exists under a given name
     """

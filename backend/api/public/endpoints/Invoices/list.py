@@ -85,7 +85,9 @@ def list_invoices_endpoint(request: APIRequest) -> Response:
         },
     }
 
-    _, invoices = get_context(invoices, sort_by, previous_filters, sort_direction, action_filter_type, action_filter_by)
+    _, invoices = get_context(
+        invoices, sort_by, previous_filters, sort_direction, action_filter_type, action_filter_by
+    )  # type: ignore[assignment]
 
     serializer = InvoiceSerializer(invoices, many=True)
 

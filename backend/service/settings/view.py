@@ -4,7 +4,7 @@ from backend.models import UserSettings
 from backend.api.public.models import APIAuthToken
 
 
-def validate_page(page: str) -> bool:
+def validate_page(page: str | None) -> bool:
     return not page or page in ["profile", "account", "api_keys"]
 
 

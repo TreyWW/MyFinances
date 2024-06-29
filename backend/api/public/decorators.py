@@ -7,6 +7,10 @@ from rest_framework import status
 
 from backend.models import TeamMemberPermission, Team, Client
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 def require_scopes(scopes):
     def decorator(view_func):
@@ -14,6 +18,9 @@ def require_scopes(scopes):
         def _wrapped_view(request, *args, **kwargs):
             token = request.auth
             if not token:
+                logger.info(
+                    f"Authentication credentials were not provided in api request |" f" {request.META.get('REMOTE_ADDR', 'Unknown IP')}"
+                )
                 return Response({"detail": "Authentication credentials were not provided."}, status=status.HTTP_401_UNAUTHORIZED)
 
             if request.team_id and not request.team:

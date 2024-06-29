@@ -18,12 +18,12 @@ def should_add_condition(was_previous_selection, has_just_been_selected):
 
 def get_context(
     invoices: QuerySet,
-    sort_by: str,
+    sort_by: str | None,
     previous_filters: dict,
     sort_direction: str = "True",
-    action_filter_type: str = None,
-    action_filter_by: str = None,
-) -> [dict, Invoice]:
+    action_filter_type: str | None = None,
+    action_filter_by: str | None = None,
+) -> tuple[dict, QuerySet[Invoice]]:
     context: dict = {}
 
     invoices = (

@@ -156,6 +156,8 @@ module = [
     "emails",
     "step_functions",
     "django_components",
-    "drf_yasg"
+    "drf_yasg",
+    "drf_yasg.utils",
+    "drf_yasg.views"
 ]
 ignore_missing_imports = true

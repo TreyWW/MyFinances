@@ -37,7 +37,7 @@ def view_settings_page_endpoint(request: HtmxHttpRequest, page: str | None = Non
 
     response = render(request, template, context)
 
-    response.no_retarget = True
+    response.no_retarget = True  # type: ignore[attr-defined]
     return response
 
 

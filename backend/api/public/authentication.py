@@ -12,7 +12,7 @@ class CustomBearerAuthentication(TokenAuthentication):
     def get_model(self) -> Type[APIAuthToken]:
         return APIAuthToken
 
-    def authenticate_credentials(self, raw_key) -> tuple[User, APIAuthToken]:
+    def authenticate_credentials(self, raw_key) -> tuple[User | None, APIAuthToken]:
         model = self.get_model()
 
         try:

@@ -61,8 +61,12 @@ def create_invoice_items(request: HtmxHttpRequest):
 def save_invoice(request: HtmxHttpRequest, invoice_items):
     currency = request.user.user_profile.currency
 
+    if not (date_due := request.POST.get("date_due")):
+        messages.error(request, "Please enter a valid date")
+        return None
+
     invoice = Invoice(
-        date_due=datetime.strptime(request.POST.get("date_due"), "%Y-%m-%d").date(),
+        date_due=datetime.strptime(date_due, "%Y-%m-%d").date(),
         date_issued=request.POST.get("date_issued"),
         currency=currency,
     )

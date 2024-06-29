@@ -1,17 +1,15 @@
-from backend.models import User
+from backend.models import User, Team
 from backend.service.api_keys.get import get_api_key_by_name
 from backend.api.public.models import APIAuthToken
 
 
-def delete_api_key(user: User, key: str | APIAuthToken) -> bool | str:
+def delete_api_key(owner: User | Team, key: str | None | APIAuthToken) -> bool | str:
     if not isinstance(key, APIAuthToken):
-        key: APIAuthToken | None = get_api_key_by_name(user, key)  # type: ignore[no-redef]
+        key: APIAuthToken | None = get_api_key_by_name(owner, key)  # type: ignore[no-redef, arg-type]
 
     if not key:
         return "Key not found"
 
-    key: APIAuthToken
-
-    key.deactivate()
+    key.deactivate()  # type: ignore[union-attr]
 
     return True
