@@ -9,7 +9,6 @@ class APIAuthToken(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField("Key Name", max_length=64)
     description = models.TextField("Description", blank=True, null=True)
-    user = models.ForeignKey("backend.User", on_delete=models.CASCADE)
     key = models.CharField("Key", max_length=40, unique=True)
     created = models.DateTimeField("Created", auto_now_add=True)
     last_used = models.DateTimeField("Last Used", null=True, blank=True)
@@ -17,6 +16,8 @@ class APIAuthToken(models.Model):
     expired = models.BooleanField("Expired", default=False, help_text="If the key has expired")
     active = models.BooleanField("Active", default=True, help_text="If the key is active")
     scopes = models.JSONField("Scopes", default=list, help_text="List of permitted scopes")
+
+    user = models.ForeignKey("backend.User", on_delete=models.CASCADE, null=True, blank=True)
     team = models.ForeignKey("backend.Team", on_delete=models.CASCADE, null=True, blank=True, related_name="tokens")
 
     class Meta:
