@@ -4,7 +4,7 @@ from backend.api.public.models import APIAuthToken
 
 
 def delete_api_key(request, owner: User | Team, key: str | None | APIAuthToken) -> bool | str:
-    if request.team and "api_keys:write" not in owner.permissions.get(user=request.user).scopes:
+    if isinstance(owner, Team) and "api_keys:write" not in owner.permissions.get(user=request.user).scopes:
         return "No permission to delete key"
 
     if not isinstance(key, APIAuthToken):
