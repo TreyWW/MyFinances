@@ -1,14 +1,14 @@
 <div data-layout="icon_dropdown_items">
     <li hx-boost="true">
-        <a {% if request.resolver_match.url_name == "user settings" %}class="active btn-disabled"{% endif %}
-           href="{% url 'user settings' %}">
+        <a {% if request.resolver_match.view_name == "settings:dashboard" %}class="active btn-disabled"{% endif %}
+           href="{% url 'settings:dashboard' %}">
             <i class="fa fa-solid fa-cog"></i>
             Account Settings
         </a>
     </li>
     <li hx-boost="true">
-        <a {% if request.resolver_match.url_name == "user settings teams" %}class="active btn-disabled"{% endif %}
-           href="{% url "user settings teams" %}">
+        <a {% if request.resolver_match.view_name == "teams:dashboard" %}class="active btn-disabled"{% endif %}
+           href="{% url "teams:dashboard" %}">
             <i class="fa fa-solid fa-users"></i>
             Manage Team
             <span class="badge">New</span>

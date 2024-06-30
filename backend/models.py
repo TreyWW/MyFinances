@@ -145,6 +145,29 @@ class Team(models.Model):
     leader = models.ForeignKey(User, on_delete=models.CASCADE, related_name="teams_leader_of")
     members = models.ManyToManyField(User, related_name="teams_joined")
 
+    def is_owner(self, user: User) -> bool:
+        return self.leader == user
+
+    def is_logged_in_as_team(self, request) -> bool:
+        if isinstance(request.auth, User):
+            return False
+
+        if request.auth and request.auth.team_id == self.id:
+            return True
+        return False
+
+    def is_authenticated(self):
+        return True
+
+
+class TeamMemberPermission(models.Model):
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="permissions")
+    user = models.ForeignKey("backend.User", on_delete=models.CASCADE, related_name="team_permissions")
+    scopes = models.JSONField("Scopes", default=list, help_text="List of permitted scopes")
+
+    class Meta:
+        unique_together = ("team", "user")
+
 
 class TeamInvitation(models.Model):
     code = models.CharField(max_length=10)
@@ -274,7 +297,8 @@ class ClientDefaults(models.Model):
 
 
 class InvoiceProduct(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    organization = models.ForeignKey(Team, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=100)
     quantity = models.IntegerField()

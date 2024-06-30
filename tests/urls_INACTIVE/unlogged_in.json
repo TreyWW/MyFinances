@@ -1,15 +1,35 @@
 {
-  "index": [200],
-  "dashboard": [302],
-  "login": [200],
-  "logout": [302],
-  "login create_account": [200],
-  "login forgot_password": [200],
-  "user settings": [302],
-  "user settings change_password": [302],
+  "index": [
+    200
+  ],
+  "dashboard": [
+    302
+  ],
+  "login": [
+    200
+  ],
+  "logout": [
+    302
+  ],
+  "login create_account": [
+    200
+  ],
+  "login forgot_password": [
+    200
+  ],
+  "settings:dashboard": [
+    302
+  ],
+  "settings:change_password": [
+    302
+  ],
   "invoices:dashboard": [
     302
   ],
-  "receipts dashboard": [302],
-  "api:receipts:new": [405]
+  "receipts dashboard": [
+    302
+  ],
+  "api:receipts:new": [
+    405
+  ]
 }

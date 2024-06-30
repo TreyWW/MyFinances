@@ -1,11 +1,11 @@
 from django.db.models import Q, QuerySet
 
-from backend.models import Client
+from backend.models import Client, Team
 
 
-def fetch_clients(request, *, search_text=None) -> QuerySet[Client]:
-    if request.user.logged_in_as_team:
-        clients = Client.objects.filter(organization=request.user.logged_in_as_team, active=True)
+def fetch_clients(request, *, search_text: str | None = None, team: Team | None = None) -> QuerySet[Client]:
+    if team:
+        clients = Client.objects.filter(organization=team, active=True)
     else:
         clients = Client.objects.filter(user=request.user, active=True)
 

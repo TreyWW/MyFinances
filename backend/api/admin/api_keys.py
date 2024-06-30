@@ -11,7 +11,7 @@ from backend.types.htmx import HtmxHttpRequest
 
 def generate_api_key(request: HtmxHttpRequest) -> HttpResponse:
     if not request.htmx:
-        return redirect("user settings")
+        return redirect("settings:dashboard", page="profile")
     if not request.user.is_staff or not request.user.is_superuser:
         messages.error(request, "You don't have permission to view this page.")
         return redirect("dashboard")

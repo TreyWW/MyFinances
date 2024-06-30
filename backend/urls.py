@@ -9,9 +9,9 @@ from django.urls import re_path as url
 from django.views.generic import RedirectView
 from django.views.static import serve
 
+from backend.api.public.swagger_ui import get_swagger_ui, get_swagger_endpoints
 from backend.views.core import invoices
 from backend.views.core import receipts
-from backend.views.core import settings as settings_v
 from backend.views.core.currency_converter import dashboard as cc_dashboard
 from backend.views.core.invoices.overview import manage_invoice
 from backend.views.core.other.index import dashboard
@@ -31,7 +31,8 @@ urlpatterns = [
     path("webhooks/", include("backend.webhooks.urls")),
     path("", index, name="index"),
     path("dashboard/", dashboard, name="dashboard"),
-    path("dashboard/settings/", settings_v.view.settings_page, name="user settings"),
+    path("dashboard/settings/", include("backend.views.core.settings.urls")),
+    path("dashboard/teams/", include("backend.views.core.teams.urls")),
     path("dashboard/invoices/", include("backend.views.core.invoices.urls")),
     path("dashboard/quotas/", quotas_page, name="quotas"),
     path("dashboard/quotas/<str:group>/", quotas_list, name="quotas group"),
@@ -43,21 +44,6 @@ urlpatterns = [
         name="invoice overview",
     ),
     path("favicon.ico", RedirectView.as_view(url=settings.STATIC_URL + "favicon.ico")),
-    path(
-        "dashboard/settings/teams",
-        settings_v.teams.teams_dashboard,
-        name="user settings teams",
-    ),
-    path(
-        "dashboard/settings/teams/permissions/",
-        settings_v.teams.manage_permissions_dashboard,
-        name="user settings teams permissions",
-    ),
-    path(
-        "dashboard/profile/change_password/",
-        settings_v.view.change_password,
-        name="user settings change_password",
-    ),
     path(
         "dashboard/receipts/",
         receipts.dashboard.receipts_dashboard,
@@ -80,12 +66,14 @@ urlpatterns = [
 ] + static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
 
 if settings.DEBUG:
-
     urlpatterns += [path("silk/", include("silk.urls", namespace="silk"))]
 
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     # may not need to be in debug
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
+
+schema_view = get_swagger_ui()
+urlpatterns += get_swagger_endpoints(settings.DEBUG)
 
 handler500 = "backend.views.core.other.errors.universal"
 handler404 = "backend.views.core.other.errors.universal"
