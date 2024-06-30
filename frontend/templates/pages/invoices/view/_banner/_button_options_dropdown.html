@@ -11,8 +11,8 @@
     </button>
 </li>
 {% if request.user.is_authenticated %}
-<li>
-    <a class="btn btn-sm gradient-btn"
-       href="{% url "invoices:manage_access" invoice_id=invoice.id %}">Share Invoice</a>
-</li>
+    <li>
+        <a class="btn btn-sm gradient-btn"
+           href="{% url "invoices:manage_access" invoice_id=invoice.id %}">Share Invoice</a>
+    </li>
 {% endif %}
