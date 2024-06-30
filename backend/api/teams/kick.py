@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.http import HttpRequest
 from django.shortcuts import redirect
 
-from backend.models import User, Team
+from backend.models import User, Organization
 
 
 def kick_user(request: HttpRequest, user_id):
@@ -16,7 +16,7 @@ def kick_user(request: HttpRequest, user_id):
         messages.error(request, "Invalid confirmation")
         return redirect("teams:dashboard")
 
-    team: Team | None = user.teams_joined.first()
+    team: Organization | None = user.teams_joined.first()
     if not team:
         messages.error(request, "User is not apart of your team")
         return redirect("teams:dashboard")

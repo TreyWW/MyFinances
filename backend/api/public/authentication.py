@@ -5,7 +5,7 @@ from rest_framework.authentication import TokenAuthentication, get_authorization
 from rest_framework.exceptions import AuthenticationFailed
 
 from backend.api.public import APIAuthToken
-from backend.models import User, Team
+from backend.models import User, Organization
 
 
 class CustomBearerAuthentication(TokenAuthentication):
@@ -14,7 +14,7 @@ class CustomBearerAuthentication(TokenAuthentication):
     def get_model(self) -> Type[APIAuthToken]:
         return APIAuthToken
 
-    def authenticate_credentials(self, raw_key) -> tuple[User | Team | None, APIAuthToken]:
+    def authenticate_credentials(self, raw_key) -> tuple[User | Organization | None, APIAuthToken]:
         model = self.get_model()
 
         try:

@@ -2,7 +2,7 @@ from django.utils.deprecation import MiddlewareMixin
 from rest_framework.response import Response
 
 from backend.api.public import APIAuthToken
-from backend.models import Team
+from backend.models import Organization
 
 
 class AttachTokenMiddleware(MiddlewareMixin):
@@ -42,6 +42,7 @@ class HandleTeamContextMiddleware(MiddlewareMixin):
             # No team_id provided, proceed with user context
             return
 
-        team = Team.objects.filter(id=team_id).first()
+        team = Organization.objects.filter(id=team_id).first()
 
         request.team = team
+        request.actor = team

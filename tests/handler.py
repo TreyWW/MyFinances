@@ -7,7 +7,7 @@ from django.test import TestCase, SimpleTestCase, override_settings
 from django.urls import resolve, reverse
 from datetime import date, timedelta
 
-from backend.models import User, Team, Receipt, UserSettings, Invoice
+from backend.models import User, Organization, Receipt, UserSettings, Invoice
 
 
 def assert_url_matches_view(url_path, url_name, view_function_path):
@@ -43,7 +43,7 @@ def create_mock_image():
 class ViewTestCase(TestCase):
     def setUp(self):
         self.log_in_user = User.objects.create_user(username="user@example.com", password="user", email="user@example.com")
-        self.created_team = Team.objects.create(name="Testing", leader=self.log_in_user)
+        self.created_team = Organization.objects.create(name="Testing", leader=self.log_in_user)
         self.created_team.members.add(self.log_in_user)
         self.htmx_headers = {"HTTP_HX-Request": "true"}
 

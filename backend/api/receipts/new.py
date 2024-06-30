@@ -6,13 +6,13 @@ from django.views.decorators.http import require_http_methods
 
 from backend.decorators import quota_usage_check
 from backend.models import Receipt, QuotaUsage
-from backend.types.htmx import HtmxHttpRequest
+from backend.types.requests import WebRequest
 
 
 @require_http_methods(["POST"])
 @quota_usage_check("receipts-count", api=True, htmx=True)
 @login_required
-def receipt_create(request: HtmxHttpRequest):
+def receipt_create(request: WebRequest):
     if not request.htmx:
         return redirect("receipts dashboard")
     file = request.FILES.get("receipt_image")  # InMemoryUploadedFile
@@ -42,14 +42,10 @@ def receipt_create(request: HtmxHttpRequest):
         "merchant_store": merchant_store,
         "purchase_category": purchase_category,
         "total_price": total_price,
+        "owner": request.actor,
     }
 
-    if request.user.logged_in_as_team:
-        receipt_data["organization"] = request.user.logged_in_as_team
-        receipts = Receipt.objects.filter(organization=request.user.logged_in_as_team).order_by("-date")
-    else:
-        receipt_data["user"] = request.user
-        receipts = Receipt.objects.filter(user=request.user).order_by("-date")
+    receipts = Receipt.filter_by_owner(owner=request.actor).order_by("-date")
 
     receipt = Receipt(**receipt_data)
     QuotaUsage.create_str(request.user, "receipts-count", receipt.id)

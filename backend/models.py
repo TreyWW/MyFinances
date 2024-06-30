@@ -39,13 +39,51 @@ def USER_OR_ORGANIZATION_CONSTRAINT():
     )
 
 
+M = typing.TypeVar("M")
+
+
 class OwnerBase(models.Model):
-    emails_sent = GenericRelation("EmailSendStatus", related_query_name="email_statuses")
-    quota_overrides = GenericRelation("QuotaOverrides", related_query_name="quota_overrides")
-    quota_usages = GenericRelation("QuotaUsage", related_query_name="quota_usages")
+    user = models.ForeignKey("User", on_delete=models.CASCADE, null=True, blank=True)
+    organization = models.ForeignKey("Organization", on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         abstract = True
+        constraints = [
+            USER_OR_ORGANIZATION_CONSTRAINT(),
+        ]
+
+    @property
+    def owner(self) -> User | Organization:
+        """
+        Property to dynamically get the owner (either User or Team)
+        """
+        if hasattr(self, "user"):
+            return self.user
+        elif hasattr(self, "team"):
+            return self.team
+
+    @owner.setter
+    def owner(self, value: User | Organization) -> None:
+        if isinstance(value, User):
+            self.user = value
+            self.organization = None
+        elif isinstance(value, Organization):
+            self.user = None
+            self.organization = value
+        else:
+            raise ValueError("Owner must be either a User or a Organization")
+
+    @classmethod
+    def filter_by_owner(cls: typing.Type[M], owner: User | Organization) -> QuerySet[M]:
+        """
+        Class method to filter objects by owner (either User or Team)
+        """
+        if isinstance(owner, User):
+            return cls.objects.filter(user=owner)
+        elif isinstance(owner, Organization):
+            return cls.objects.filter(organization=owner)
+        else:
+            raise ValueError("Owner must be either a User or a Team")
 
 
 OWNER_GENERIC_MODELS = models.Q(app_label="backend", model="User") | models.Q(app_label="backend", model="Team")
@@ -61,10 +99,10 @@ class CustomUserManager(UserManager):
         )
 
 
-class User(AbstractUser, OwnerBase):
+class User(AbstractUser):
     objects: CustomUserManager = CustomUserManager()  # type: ignore
 
-    logged_in_as_team = models.ForeignKey("Team", on_delete=models.SET_NULL, null=True, blank=True)
+    logged_in_as_team = models.ForeignKey("Organization", on_delete=models.SET_NULL, null=True, blank=True)
     awaiting_email_verification = models.BooleanField(default=True)
 
     class Role(models.TextChoices):
@@ -154,7 +192,7 @@ class UserSettings(models.Model):
         verbose_name_plural = "User Settings"
 
 
-class Team(OwnerBase):
+class Organization(models.Model):
     name = models.CharField(max_length=100, unique=True)
     leader = models.ForeignKey(User, on_delete=models.CASCADE, related_name="teams_leader_of")
     members = models.ManyToManyField(User, related_name="teams_joined")
@@ -175,7 +213,7 @@ class Team(OwnerBase):
 
 
 class TeamMemberPermission(models.Model):
-    team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="permissions")
+    team = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name="permissions")
     user = models.ForeignKey("backend.User", on_delete=models.CASCADE, related_name="team_permissions")
     scopes = models.JSONField("Scopes", default=list, help_text="List of permitted scopes")
 
@@ -185,7 +223,7 @@ class TeamMemberPermission(models.Model):
 
 class TeamInvitation(models.Model):
     code = models.CharField(max_length=10)
-    team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="team_invitations")
+    team = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name="team_invitations")
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="team_invitations")
     invited_by = models.ForeignKey(User, on_delete=models.CASCADE)
     expires = models.DateTimeField(null=True, blank=True)
@@ -216,10 +254,7 @@ class TeamInvitation(models.Model):
         verbose_name_plural = "Team Invitations"
 
 
-class Receipt(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    organization = models.ForeignKey(Team, on_delete=models.CASCADE, null=True)
-
+class Receipt(OwnerBase):
     name = models.CharField(max_length=100)
     image = models.ImageField(upload_to="receipts", storage=settings.CustomPrivateMediaStorage())
     total_price = models.FloatField(null=True, blank=True)
@@ -229,19 +264,11 @@ class Receipt(models.Model):
     merchant_store = models.CharField(max_length=255, blank=True, null=True)
     purchase_category = models.CharField(max_length=200, blank=True, null=True)
 
-    owner_content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, limit_choices_to=OWNER_GENERIC_MODELS)
-    owner_object_id = models.PositiveIntegerField()
-    owner = GenericForeignKey("owner_content_type", "owner_object_id")
-
-    class Meta:
-        constraints = [USER_OR_ORGANIZATION_CONSTRAINT()]
-
     def __str__(self):
         return f"{self.name} - {self.date} ({self.total_price})"
 
-    def has_access(self, user: User) -> bool:
-        if not user.is_authenticated:
-            return False
+    def has_access(self, actor: User | Organization) -> bool:
+        return self.owner == actor
 
         if user.logged_in_as_team:
             return self.organization == user.logged_in_as_team
@@ -255,18 +282,8 @@ class ReceiptDownloadToken(models.Model):
     token = models.UUIDField(default=uuid4, editable=False, unique=True)
 
 
-class Client(models.Model):
-    objects: models.Manager
-
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-    organization = models.ForeignKey(Team, on_delete=models.CASCADE, null=True, blank=True)
-
-    owner_content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, limit_choices_to=OWNER_GENERIC_MODELS)
-    owner_object_id = models.PositiveIntegerField()
-    owner = GenericForeignKey("owner_content_type", "owner_object_id")
-
+class Client(OwnerBase):
     active = models.BooleanField(default=True)
-
     name = models.CharField(max_length=64)
     phone_number = models.CharField(max_length=100, blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
@@ -278,9 +295,6 @@ class Client(models.Model):
     address = models.TextField(max_length=100, blank=True, null=True)
     city = models.CharField(max_length=100, blank=True, null=True)
     country = models.CharField(max_length=100, blank=True, null=True)
-
-    class Meta:
-        constraints = [USER_OR_ORGANIZATION_CONSTRAINT()]
 
     def __str__(self):
         return self.name
@@ -320,14 +334,7 @@ class ClientDefaults(models.Model):
     invoice_date_type = models.CharField(max_length=20, choices=InvoiceDateType.choices, default=InvoiceDateType.day_of_month)
 
 
-class InvoiceProduct(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-    organization = models.ForeignKey(Team, on_delete=models.CASCADE, null=True, blank=True)
-
-    owner_content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, limit_choices_to=OWNER_GENERIC_MODELS)
-    owner_object_id = models.PositiveIntegerField()
-    owner = GenericForeignKey("owner_content_type", "owner_object_id")
-
+class InvoiceProduct(OwnerBase):
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=100)
     quantity = models.IntegerField()
@@ -351,19 +358,12 @@ class InvoiceItem(models.Model):
         return self.description
 
 
-class Invoice(models.Model):
+class Invoice(OwnerBase):
     STATUS_CHOICES = (
         ("pending", "Pending"),
         ("paid", "Paid"),
         ("overdue", "Overdue"),
     )
-
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-    organization = models.ForeignKey(Team, on_delete=models.CASCADE, null=True, blank=True)
-
-    owner_content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, limit_choices_to=OWNER_GENERIC_MODELS)
-    owner_object_id = models.PositiveIntegerField()
-    owner = GenericForeignKey("owner_content_type", "owner_object_id")
 
     invoice_id = models.IntegerField(unique=True, blank=True, null=True)  # todo: add
 
@@ -639,18 +639,12 @@ class Notification(models.Model):
     date = models.DateTimeField(auto_now_add=True)
 
 
-class AuditLog(models.Model):
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
-    organization = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True, blank=True)
-
-    owner_content_type = models.ForeignKey(
-        ContentType, on_delete=models.CASCADE, null=True, blank=True, limit_choices_to=OWNER_GENERIC_MODELS
-    )
-    owner_object_id = models.PositiveIntegerField(null=True, blank=True)
-    owner = GenericForeignKey("owner_content_type", "owner_object_id")
-
+class AuditLog(OwnerBase):
     action = models.CharField(max_length=100)
     date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = []
 
     def __str__(self):
         return f"{self.action} - {self.date}"
@@ -823,13 +817,7 @@ class QuotaLimit(models.Model):
                 first.delete()
 
 
-class QuotaOverrides(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-
-    owner_content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, limit_choices_to=OWNER_GENERIC_MODELS)
-    owner_object_id = models.PositiveIntegerField()
-    owner = GenericForeignKey("owner_content_type", "owner_object_id")
-
+class QuotaOverrides(OwnerBase):
     quota_limit = models.ForeignKey(QuotaLimit, on_delete=models.CASCADE, related_name="quota_overrides")
     value = models.IntegerField()
     updated_at = models.DateTimeField(auto_now=True)
@@ -843,13 +831,7 @@ class QuotaOverrides(models.Model):
         return f"{self.user}"
 
 
-class QuotaUsage(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-
-    owner_content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, limit_choices_to=OWNER_GENERIC_MODELS)
-    owner_object_id = models.PositiveIntegerField()
-    owner = GenericForeignKey("owner_content_type", "owner_object_id")
-
+class QuotaUsage(OwnerBase):
     quota_limit = models.ForeignKey(QuotaLimit, on_delete=models.CASCADE, related_name="quota_usage")
     created_at = models.DateTimeField(auto_now_add=True)
     extra_data = models.IntegerField(null=True, blank=True)  # id of Limit Type
@@ -887,18 +869,13 @@ class QuotaUsage(models.Model):
         return self.objects.filter(user=user, quota_limit=ql).count()
 
 
-class QuotaIncreaseRequest(models.Model):
+class QuotaIncreaseRequest(OwnerBase):
     class StatusTypes(models.TextChoices):
         PENDING = "pending"
         APPROVED = "approved"
         REJECTED = "rejected"
 
-    requester = models.ForeignKey(User, on_delete=models.CASCADE)
-
-    # owner is the account being applied to
-    owner_content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, limit_choices_to=OWNER_GENERIC_MODELS)
-    owner_object_id = models.PositiveIntegerField()
-    owner = GenericForeignKey("owner_content_type", "owner_object_id")
+    requester = models.ForeignKey(User, on_delete=models.CASCADE, related_name="quota_increase_requests")
 
     quota_limit = models.ForeignKey(QuotaLimit, on_delete=models.CASCADE, related_name="quota_increase_requests")
     reason = models.CharField(max_length=1000)
@@ -913,10 +890,10 @@ class QuotaIncreaseRequest(models.Model):
         verbose_name_plural = "Quota Increase Requests"
 
     def __str__(self):
-        return f"{self.user}"
+        return f"{self.owner}"
 
 
-class EmailSendStatus(models.Model):
+class EmailSendStatus(OwnerBase):
     STATUS_CHOICES = [
         (status, status.title())
         for status in [
@@ -934,13 +911,6 @@ class EmailSendStatus(models.Model):
             "pending",
         ]
     ]
-
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name="emails_created")
-    organization = models.ForeignKey(Team, on_delete=models.CASCADE, null=True, blank=True, related_name="emails_created")
-
-    owner_content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, limit_choices_to=OWNER_GENERIC_MODELS)
-    owner_object_id = models.PositiveIntegerField()
-    owner = GenericForeignKey("owner_content_type", "owner_object_id")
 
     sent_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name="emails_sent")
 

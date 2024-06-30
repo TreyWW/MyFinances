@@ -1,12 +1,12 @@
 from backend.decorators import *
-from backend.models import Notification, Team, TeamInvitation, User
+from backend.models import Notification, Organization, TeamInvitation, User
 from backend.types.htmx import HtmxHttpRequest
 
 
 def delete_notification(user: User, code: TeamInvitation):
     notification = Notification.objects.filter(
         user=user,
-        message="New Team Invite",
+        message="New Organization Invite",
         action="modal",
         action_value="accept_invite",
         extra_type="accept_invite_with_code",
@@ -43,7 +43,7 @@ def check_team_invitation_is_valid(request, invitation: TeamInvitation, code=Non
 def send_user_team_invite(request: HtmxHttpRequest):
     user_email = request.POST.get("email")
     team_id = request.POST.get("team_id", "")
-    team = Team.objects.filter(leader=request.user, id=team_id).first()
+    team = Organization.objects.filter(leader=request.user, id=team_id).first()
 
     def return_error_notif(request: HtmxHttpRequest, message: str, autohide=None):
         messages.error(request, message)
@@ -97,7 +97,7 @@ def send_user_team_invite(request: HtmxHttpRequest):
 
     Notification.objects.create(
         user=user,
-        message=f"New Team Invite",
+        message=f"New Organization Invite",
         action="modal",
         action_value="accept_invite",
         extra_type="accept_invite_with_code",

@@ -6,10 +6,10 @@ import binascii
 import os
 from django.utils import timezone
 
-from backend.models import OWNER_GENERIC_MODELS
+from backend.models import OWNER_GENERIC_MODELS, OwnerBase
 
 
-class APIAuthToken(models.Model):
+class APIAuthToken(OwnerBase):
     id = models.AutoField(primary_key=True)
 
     hashed_key = models.CharField("Key", max_length=128, unique=True)
@@ -22,13 +22,6 @@ class APIAuthToken(models.Model):
     expired = models.BooleanField("Expired", default=False, help_text="If the key has expired")
     active = models.BooleanField("Active", default=True, help_text="If the key is active")
     scopes = models.JSONField("Scopes", default=list, help_text="List of permitted scopes")
-
-    user = models.ForeignKey("backend.User", on_delete=models.CASCADE, null=True, blank=True)
-    team = models.ForeignKey("backend.Team", on_delete=models.CASCADE, null=True, blank=True, related_name="tokens")
-
-    owner_content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, limit_choices_to=OWNER_GENERIC_MODELS)
-    owner_object_id = models.PositiveIntegerField()
-    owner = GenericForeignKey("owner_content_type", "owner_object_id")
 
     class Meta:
         verbose_name = "API Key"

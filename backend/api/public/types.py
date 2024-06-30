@@ -1,12 +1,12 @@
 from rest_framework.request import Request
 
 from backend.api.public import APIAuthToken
-from backend.models import User, Team
+from backend.models import User, Organization
 
 
 class APIRequest(Request):
     user: User
     auth: APIAuthToken
     api_token: APIAuthToken
-    team: Team | None
+    team: Organization | None
     team_id: int | None

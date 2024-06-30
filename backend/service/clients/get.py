@@ -1,9 +1,9 @@
 from django.db.models import Q, QuerySet
 
-from backend.models import Client, Team
+from backend.models import Client, Organization
 
 
-def fetch_clients(request, *, search_text: str | None = None, team: Team | None = None) -> QuerySet[Client]:
+def fetch_clients(request, *, search_text: str | None = None, team: Organization | None = None) -> QuerySet[Client]:
     if team:
         clients = Client.objects.filter(organization=team, active=True)
     else:
