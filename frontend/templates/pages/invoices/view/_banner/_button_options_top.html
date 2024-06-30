@@ -10,7 +10,9 @@
         <p class="options-text">Print</p>
     </button>
 </li>
+{% if request.user.is_authenticated %}
 <li>
     <a class="btn btn-sm gradient-btn me-8 share-btn"
        href="{% url "invoices:manage_access" invoice_id=invoice.id %}">Share Invoice</a>
 </li>
+{% endif %}
