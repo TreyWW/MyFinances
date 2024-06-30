@@ -1,8 +1,12 @@
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.contrib.auth.hashers import check_password, make_password
 import binascii
 import os
 from django.utils import timezone
+
+from backend.models import OWNER_GENERIC_MODELS
 
 
 class APIAuthToken(models.Model):
@@ -21,6 +25,10 @@ class APIAuthToken(models.Model):
 
     user = models.ForeignKey("backend.User", on_delete=models.CASCADE, null=True, blank=True)
     team = models.ForeignKey("backend.Team", on_delete=models.CASCADE, null=True, blank=True, related_name="tokens")
+
+    owner_content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, limit_choices_to=OWNER_GENERIC_MODELS)
+    owner_object_id = models.PositiveIntegerField()
+    owner = GenericForeignKey("owner_content_type", "owner_object_id")
 
     class Meta:
         verbose_name = "API Key"
