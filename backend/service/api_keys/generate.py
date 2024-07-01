@@ -102,9 +102,7 @@ def api_key_exists_under_name(owner: User | Organization, name: str | None) -> b
     """
     Check if API key exists under a given name
     """
-    if isinstance(owner, Organization):
-        return APIAuthToken.objects.filter(team=owner, name=name, active=True).exists()
-    return APIAuthToken.objects.filter(user=owner, name=name, active=True).exists()
+    return APIAuthToken.filter_by_owner(owner).filter(name=name, active=True).exists()
 
 
 def has_permission_to_create(request, owner: User | Organization) -> bool:

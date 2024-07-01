@@ -270,11 +270,6 @@ class Receipt(OwnerBase):
     def has_access(self, actor: User | Organization) -> bool:
         return self.owner == actor
 
-        if user.logged_in_as_team:
-            return self.organization == user.logged_in_as_team
-        else:
-            return self.user == user
-
 
 class ReceiptDownloadToken(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
