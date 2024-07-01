@@ -14,7 +14,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelatio
 from django.contrib.contenttypes.models import ContentType
 from django.core.validators import MaxValueValidator
 from django.db import models
-from django.db.models import Count
+from django.db.models import Count, Manager
 from django.db.models import QuerySet
 from django.utils import timezone
 from django.utils.crypto import get_random_string
@@ -39,7 +39,7 @@ def USER_OR_ORGANIZATION_CONSTRAINT():
     )
 
 
-M = typing.TypeVar("M")
+M = typing.TypeVar("M", bound=models.Model)
 
 
 class CustomUserManager(UserManager):
@@ -222,10 +222,12 @@ class OwnerBase(models.Model):
         """
         Property to dynamically get the owner (either User or Team)
         """
-        if hasattr(self, "user"):
+        if hasattr(self, "user") and self.user:
             return self.user
-        elif hasattr(self, "team"):
+        elif hasattr(self, "team") and self.team:
             return self.team
+        return self.organization  # type: ignore[return-value]
+        # all responses WILL have either a user or org so this will handle all
 
     @owner.setter
     def owner(self, value: User | Organization) -> None:
@@ -239,16 +241,16 @@ class OwnerBase(models.Model):
             raise ValueError("Owner must be either a User or a Organization")
 
     @classmethod
-    def filter_by_owner(cls: typing.Type[M], owner: User | Organization) -> QuerySet[M]:
+    def filter_by_owner(cls: typing.Type[M], owner: Union[User, Organization]) -> QuerySet[M]:
         """
-        Class method to filter objects by owner (either User or Team)
+        Class method to filter objects by owner (either User or Organization)
         """
         if isinstance(owner, User):
-            return cls.objects.filter(user=owner)
+            return cls.objects.filter(user=owner)  # type: ignore[attr-defined]
         elif isinstance(owner, Organization):
-            return cls.objects.filter(organization=owner)
+            return cls.objects.filter(organization=owner)  # type: ignore[attr-defined]
         else:
-            raise ValueError("Owner must be either a User or a Team")
+            raise ValueError("Owner must be either a User or an Organization")
 
 
 class Receipt(OwnerBase):
@@ -636,7 +638,7 @@ class AuditLog(OwnerBase):
     date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        constraints = []
+        constraints: list = []
 
     def __str__(self):
         return f"{self.action} - {self.date}"
