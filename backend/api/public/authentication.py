@@ -26,6 +26,6 @@ class CustomBearerAuthentication(TokenAuthentication):
             raise AuthenticationFailed("Token has expired.")
 
         # todo: make sure this is safe to set request.user = <Team> obj
-        return token.user or token.team, token
+        return token.user or token.organization, token
 
     # todo: override more methods + add hashing
