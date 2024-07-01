@@ -5,7 +5,7 @@ from rest_framework.authentication import TokenAuthentication, get_authorization
 from rest_framework.exceptions import AuthenticationFailed
 
 from backend.api.public import APIAuthToken
-from backend.models import User, Team
+from backend.models import User, Organization
 
 
 class CustomBearerAuthentication(TokenAuthentication):
@@ -14,7 +14,7 @@ class CustomBearerAuthentication(TokenAuthentication):
     def get_model(self) -> Type[APIAuthToken]:
         return APIAuthToken
 
-    def authenticate_credentials(self, raw_key) -> tuple[User | Team | None, APIAuthToken]:
+    def authenticate_credentials(self, raw_key) -> tuple[User | Organization | None, APIAuthToken]:
         model = self.get_model()
 
         try:
@@ -26,6 +26,6 @@ class CustomBearerAuthentication(TokenAuthentication):
             raise AuthenticationFailed("Token has expired.")
 
         # todo: make sure this is safe to set request.user = <Team> obj
-        return token.user or token.team, token
+        return token.user or token.organization, token
 
     # todo: override more methods + add hashing

@@ -13,10 +13,10 @@ from backend.models import Client, InvoiceProduct
 
 def get_client(request: APIRequest) -> Client | None:
     if request.team:
-        client = Client.objects.get(organization=request.team, id=request.data.get("client_id"))
+        client = Client.objects.get(organization=request.team, id=request.data.get("client_id"))  # type: ignore[misc]
         return client
     elif request.user:
-        client = Client.objects.get(user=request.user, id=request.data.get("client_id"))
+        client = Client.objects.get(user=request.user, id=request.data.get("client_id"))  # type: ignore[misc]
         return client
     return None
 

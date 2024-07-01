@@ -3,7 +3,7 @@ from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpRequest
 from django_htmx.middleware import HtmxDetails
 
-from backend.models import User, Team
+from backend.models import User, Organization
 
 
 class HtmxHttpRequest(HttpRequest):

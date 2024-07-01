@@ -1,11 +1,15 @@
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.contrib.auth.hashers import check_password, make_password
 import binascii
 import os
 from django.utils import timezone
 
+from backend.models import OwnerBase
 
-class APIAuthToken(models.Model):
+
+class APIAuthToken(OwnerBase):
     id = models.AutoField(primary_key=True)
 
     hashed_key = models.CharField("Key", max_length=128, unique=True)
@@ -18,9 +22,6 @@ class APIAuthToken(models.Model):
     expired = models.BooleanField("Expired", default=False, help_text="If the key has expired")
     active = models.BooleanField("Active", default=True, help_text="If the key is active")
     scopes = models.JSONField("Scopes", default=list, help_text="List of permitted scopes")
-
-    user = models.ForeignKey("backend.User", on_delete=models.CASCADE, null=True, blank=True)
-    team = models.ForeignKey("backend.Team", on_delete=models.CASCADE, null=True, blank=True, related_name="tokens")
 
     class Meta:
         verbose_name = "API Key"

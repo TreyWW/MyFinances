@@ -209,13 +209,13 @@ crt = ["botocore[crt] (>=1.21.0,<2.0a0)"]
 
 [[package]]
 name = "boto3-stubs"
-version = "1.34.135"
-description = "Type annotations for boto3 1.34.135 generated with mypy-boto3-builder 7.24.0"
+version = "1.34.136"
+description = "Type annotations for boto3 1.34.136 generated with mypy-boto3-builder 7.24.0"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "boto3_stubs-1.34.135-py3-none-any.whl", hash = "sha256:7aa56baacba4f631400b3cc55d5a0554d63cfa0955ef9189ae28da476a3140e8"},
-    {file = "boto3_stubs-1.34.135.tar.gz", hash = "sha256:7d771b74d5c17987cd73e13add9334ba2e4c85ee1e59019ccd1534aa4f49666d"},
+    {file = "boto3_stubs-1.34.136-py3-none-any.whl", hash = "sha256:5826c22c10fc9032376bbee436d1b23b111e5fb1f13c75ecde8727151191f057"},
+    {file = "boto3_stubs-1.34.136.tar.gz", hash = "sha256:ecbce782ae19037d1f26673cfc30358493c9658ea0af06dd58a999be963ab275"},
 ]
 
 [package.dependencies]
@@ -271,7 +271,7 @@ bedrock-agent = ["mypy-boto3-bedrock-agent (>=1.34.0,<1.35.0)"]
 bedrock-agent-runtime = ["mypy-boto3-bedrock-agent-runtime (>=1.34.0,<1.35.0)"]
 bedrock-runtime = ["mypy-boto3-bedrock-runtime (>=1.34.0,<1.35.0)"]
 billingconductor = ["mypy-boto3-billingconductor (>=1.34.0,<1.35.0)"]
-boto3 = ["boto3 (==1.34.135)", "botocore (==1.34.135)"]
+boto3 = ["boto3 (==1.34.136)", "botocore (==1.34.136)"]
 braket = ["mypy-boto3-braket (>=1.34.0,<1.35.0)"]
 budgets = ["mypy-boto3-budgets (>=1.34.0,<1.35.0)"]
 ce = ["mypy-boto3-ce (>=1.34.0,<1.35.0)"]
@@ -620,13 +620,13 @@ xray = ["mypy-boto3-xray (>=1.34.0,<1.35.0)"]
 
 [[package]]
 name = "botocore"
-version = "1.34.135"
+version = "1.34.136"
 description = "Low-level, data-driven core of boto 3."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "botocore-1.34.135-py3-none-any.whl", hash = "sha256:3aa9e85e7c479babefb5a590e844435449df418085f3c74d604277bc52dc3109"},
-    {file = "botocore-1.34.135.tar.gz", hash = "sha256:2e72f37072f75cb1391fca9d7a4c32cecb52a3557d62431d0f59d5311dc7d0cf"},
+    {file = "botocore-1.34.136-py3-none-any.whl", hash = "sha256:c63fe9032091fb9e9477706a3ebfa4d0c109b807907051d892ed574f9b573e61"},
+    {file = "botocore-1.34.136.tar.gz", hash = "sha256:7f7135178692b39143c8f152a618d2a3b71065a317569a7102d2306d4946f42f"},
 ]
 
 [package.dependencies]
@@ -639,13 +639,13 @@ crt = ["awscrt (==0.20.11)"]
 
 [[package]]
 name = "botocore-stubs"
-version = "1.34.135"
+version = "1.34.136"
 description = "Type annotations and code completion for botocore"
 optional = false
 python-versions = "<4.0,>=3.8"
 files = [
-    {file = "botocore_stubs-1.34.135-py3-none-any.whl", hash = "sha256:b77891dac2324b78f63c854e765cf76a71822f5d2868d9a4219ca1b06a93f9e3"},
-    {file = "botocore_stubs-1.34.135.tar.gz", hash = "sha256:f599499a5e0dacc27137b8b0728b1846c3a502b001dcee6da6a036407ccd1663"},
+    {file = "botocore_stubs-1.34.136-py3-none-any.whl", hash = "sha256:f8a8716d9f1b8387acce6ef35d9428ed4ef1584dbeb6cce3f2f95ba6ff8120f7"},
+    {file = "botocore_stubs-1.34.136.tar.gz", hash = "sha256:b97bece44abc9f16c1fcb022d3f03c22d411ea3dcb4730207a318eb8e6ef63e7"},
 ]
 
 [package.dependencies]
@@ -1281,13 +1281,13 @@ compatible-mypy = ["mypy (>=1.7.0,<1.8.0)"]
 
 [[package]]
 name = "django-stubs-ext"
-version = "5.0.2"
+version = "4.2.7"
 description = "Monkey-patching and extensions for django-stubs"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "django_stubs_ext-5.0.2-py3-none-any.whl", hash = "sha256:8d8efec5a86241266bec94a528fe21258ad90d78c67307f3ae5f36e81de97f12"},
-    {file = "django_stubs_ext-5.0.2.tar.gz", hash = "sha256:409c62585d7f996cef5c760e6e27ea3ff29f961c943747e67519c837422cad32"},
+    {file = "django-stubs-ext-4.2.7.tar.gz", hash = "sha256:519342ac0849cda1559746c9a563f03ff99f636b0ebe7c14b75e816a00dfddc3"},
+    {file = "django_stubs_ext-4.2.7-py3-none-any.whl", hash = "sha256:45a5d102417a412e3606e3c358adb4744988a92b7b58ccf3fd64bddd5d04d14c"},
 ]
 
 [package.dependencies]
@@ -2541,13 +2541,13 @@ six = ">=1.12,<2.0"
 
 [[package]]
 name = "pulumi-aws"
-version = "6.42.0"
+version = "6.42.1"
 description = "A Pulumi package for creating and managing Amazon Web Services (AWS) cloud resources."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "pulumi_aws-6.42.0-py3-none-any.whl", hash = "sha256:204478f7227b4cf4ada77fb12b11e9f0e7d60755368f26668510d31a0f190e68"},
-    {file = "pulumi_aws-6.42.0.tar.gz", hash = "sha256:3f061b1a60a73ad0251e367727acab777c68f0961e609b48837e76551d62bf01"},
+    {file = "pulumi_aws-6.42.1-py3-none-any.whl", hash = "sha256:c408a511351495cf85867d41bdadad4007ba43ddd88cbc1ed0be9af51d277b88"},
+    {file = "pulumi_aws-6.42.1.tar.gz", hash = "sha256:efb053707f793ee901492fcc775a9b1ae89a64a63988f1a35d02d72a7ffd3195"},
 ]
 
 [package.dependencies]
@@ -3180,6 +3180,21 @@ python-http-client = ">=3.2.1"
 starkbank-ecdsa = ">=2.0.1"
 
 [[package]]
+name = "setuptools"
+version = "70.1.1"
+description = "Easily download, build, install, upgrade, and uninstall Python packages"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "setuptools-70.1.1-py3-none-any.whl", hash = "sha256:a58a8fde0541dab0419750bcc521fbdf8585f6e5cb41909df3a472ef7b81ca95"},
+    {file = "setuptools-70.1.1.tar.gz", hash = "sha256:937a48c7cdb7a21eb53cd7f9b59e525503aa8abaf3584c730dc5f7a5bec3a650"},
+]
+
+[package.extras]
+docs = ["furo", "jaraco.packaging (>=9.3)", "jaraco.tidelift (>=1.4)", "pygments-github-lexers (==0.0.5)", "pyproject-hooks (!=1.1)", "rst.linker (>=1.9)", "sphinx (>=3.5)", "sphinx-favicon", "sphinx-inline-tabs", "sphinx-lint", "sphinx-notfound-page (>=1,<2)", "sphinx-reredirects", "sphinxcontrib-towncrier"]
+testing = ["build[virtualenv] (>=1.0.3)", "filelock (>=3.4.0)", "importlib-metadata", "ini2toml[lite] (>=0.14)", "jaraco.develop (>=7.21)", "jaraco.envs (>=2.2)", "jaraco.path (>=3.2.0)", "jaraco.test", "mypy (==1.10.0)", "packaging (>=23.2)", "pip (>=19.1)", "pyproject-hooks (!=1.1)", "pytest (>=6,!=8.1.1)", "pytest-checkdocs (>=2.4)", "pytest-cov", "pytest-enabler (>=2.2)", "pytest-home (>=0.5)", "pytest-mypy", "pytest-perf", "pytest-ruff (>=0.3.2)", "pytest-subprocess", "pytest-timeout", "pytest-xdist (>=3)", "tomli", "tomli-w (>=1.0.0)", "virtualenv (>=13.0.0)", "wheel"]
+
+[[package]]
 name = "shortuuid"
 version = "1.0.13"
 description = "A generator library for concise, unambiguous and URL-safe UUIDs."
@@ -3683,4 +3698,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<4.0"
-content-hash = "eeb7f4c22c2749aa6aac7e4fae3023077c65bd17080e2caea332998e88e5510e"
+content-hash = "68cc0cfb04352a5f27e0c12cd0cdce0f76a108261a3c91eac840edcdbfd52fcd"

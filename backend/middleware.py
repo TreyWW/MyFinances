@@ -4,8 +4,9 @@ from django.contrib.auth import get_user
 from django.db import connection, OperationalError
 from django.http import HttpResponse
 
-from backend.models import User
+from backend.models import User, Organization
 from backend.types.htmx import HtmxAnyHttpRequest
+from backend.types.requests import WebRequest
 
 
 class HealthCheckMiddleware:
@@ -55,12 +56,15 @@ class LastVisitedMiddleware:
 
 
 class CustomUserMiddleware(MiddlewareMixin):
-    def process_request(self, request):
+    def process_request(self, request: WebRequest):
         user = get_user(request)
 
         # Replace request.user with CustomUser instance if authenticated
         if user.is_authenticated:
             request.user = User.objects.get(pk=user.pk)
+
+            request.actor = request.user.logged_in_as_team or request.user
         else:
             # If user is not authenticated, set request.user to AnonymousUser
-            request.user = AnonymousUser()
+            request.user = AnonymousUser()  # type: ignore[assignment]
+            request.actor = request.user

@@ -1,11 +1,11 @@
 from backend.api.public.models import APIAuthToken
 from backend.api.public.permissions import SCOPE_DESCRIPTIONS, SCOPES
-from backend.models import User, Team
+from backend.models import User, Organization
 from backend.types.htmx import HtmxHttpRequest
 
 
 def generate_public_api_key(
-    request, owner: User | Team, api_key_name: str | None, permissions: list, *, expires=None, description=None
+    request, owner: User | Organization, api_key_name: str | None, permissions: list, *, expires=None, description=None
 ) -> tuple[APIAuthToken | None, str]:
     if not validate_name(api_key_name):
         return None, "Invalid key name"
@@ -26,8 +26,8 @@ def generate_public_api_key(
 
     raw_key: str = token.generate_key()
 
-    if isinstance(owner, Team):
-        token.team = owner
+    if isinstance(owner, Organization):
+        token.organization = owner
     else:
         token.user = owner
 
@@ -98,16 +98,14 @@ def validate_expiry(expires: str | int) -> bool:
     return True
 
 
-def api_key_exists_under_name(owner: User | Team, name: str | None) -> bool:
+def api_key_exists_under_name(owner: User | Organization, name: str | None) -> bool:
     """
     Check if API key exists under a given name
     """
-    if isinstance(owner, Team):
-        return APIAuthToken.objects.filter(team=owner, name=name, active=True).exists()
-    return APIAuthToken.objects.filter(user=owner, name=name, active=True).exists()
+    return APIAuthToken.filter_by_owner(owner).filter(name=name, active=True).exists()
 
 
-def has_permission_to_create(request, owner: User | Team) -> bool:
+def has_permission_to_create(request, owner: User | Organization) -> bool:
     if isinstance(owner, User):
         return True
 
