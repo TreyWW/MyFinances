@@ -42,53 +42,6 @@ def USER_OR_ORGANIZATION_CONSTRAINT():
 M = typing.TypeVar("M")
 
 
-class OwnerBase(models.Model):
-    user = models.ForeignKey("User", on_delete=models.CASCADE, null=True, blank=True)
-    organization = models.ForeignKey("Organization", on_delete=models.CASCADE, null=True, blank=True)
-
-    class Meta:
-        abstract = True
-        constraints = [
-            USER_OR_ORGANIZATION_CONSTRAINT(),
-        ]
-
-    @property
-    def owner(self) -> User | Organization:
-        """
-        Property to dynamically get the owner (either User or Team)
-        """
-        if hasattr(self, "user"):
-            return self.user
-        elif hasattr(self, "team"):
-            return self.team
-
-    @owner.setter
-    def owner(self, value: User | Organization) -> None:
-        if isinstance(value, User):
-            self.user = value
-            self.organization = None
-        elif isinstance(value, Organization):
-            self.user = None
-            self.organization = value
-        else:
-            raise ValueError("Owner must be either a User or a Organization")
-
-    @classmethod
-    def filter_by_owner(cls: typing.Type[M], owner: User | Organization) -> QuerySet[M]:
-        """
-        Class method to filter objects by owner (either User or Team)
-        """
-        if isinstance(owner, User):
-            return cls.objects.filter(user=owner)
-        elif isinstance(owner, Organization):
-            return cls.objects.filter(organization=owner)
-        else:
-            raise ValueError("Owner must be either a User or a Team")
-
-
-OWNER_GENERIC_MODELS = models.Q(app_label="backend", model="User") | models.Q(app_label="backend", model="Team")
-
-
 class CustomUserManager(UserManager):
     def get_queryset(self):
         return (
@@ -252,6 +205,50 @@ class TeamInvitation(models.Model):
     class Meta:
         verbose_name = "Team Invitation"
         verbose_name_plural = "Team Invitations"
+
+
+class OwnerBase(models.Model):
+    user = models.ForeignKey("User", on_delete=models.CASCADE, null=True, blank=True)
+    organization = models.ForeignKey("Organization", on_delete=models.CASCADE, null=True, blank=True)
+
+    class Meta:
+        abstract = True
+        constraints = [
+            USER_OR_ORGANIZATION_CONSTRAINT(),
+        ]
+
+    @property
+    def owner(self) -> User | Organization:
+        """
+        Property to dynamically get the owner (either User or Team)
+        """
+        if hasattr(self, "user"):
+            return self.user
+        elif hasattr(self, "team"):
+            return self.team
+
+    @owner.setter
+    def owner(self, value: User | Organization) -> None:
+        if isinstance(value, User):
+            self.user = value
+            self.organization = None
+        elif isinstance(value, Organization):
+            self.user = None
+            self.organization = value
+        else:
+            raise ValueError("Owner must be either a User or a Organization")
+
+    @classmethod
+    def filter_by_owner(cls: typing.Type[M], owner: User | Organization) -> QuerySet[M]:
+        """
+        Class method to filter objects by owner (either User or Team)
+        """
+        if isinstance(owner, User):
+            return cls.objects.filter(user=owner)
+        elif isinstance(owner, Organization):
+            return cls.objects.filter(organization=owner)
+        else:
+            raise ValueError("Owner must be either a User or a Team")
 
 
 class Receipt(OwnerBase):
