@@ -27,7 +27,7 @@ def generate_public_api_key(
     raw_key: str = token.generate_key()
 
     if isinstance(owner, Organization):
-        token.team = owner
+        token.organization = owner
     else:
         token.user = owner
 

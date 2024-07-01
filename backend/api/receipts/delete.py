@@ -26,5 +26,5 @@ def receipt_delete(request: WebRequest, id: int):
     messages.success(request, f"Receipt deleted with the name of {receipt.name}")
     Receipt.objects.filter()
     return render(
-        request, "pages/receipts/_search_results.html", {"receipts": Receipt.objects.filter(owner=request.actor).order_by("-date")}
+        request, "pages/receipts/_search_results.html", {"receipts": Receipt.filter_by_owner(owner=request.actor).order_by("-date")}
     )
