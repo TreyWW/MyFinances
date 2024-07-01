@@ -66,5 +66,5 @@ class CustomUserMiddleware(MiddlewareMixin):
             request.actor = request.user.logged_in_as_team or request.user
         else:
             # If user is not authenticated, set request.user to AnonymousUser
-            request.user = AnonymousUser()
+            request.user = AnonymousUser()  # type: ignore[assignment]
             request.actor = request.user

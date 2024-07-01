@@ -336,8 +336,6 @@ LOGGING = {
 
 logging.config.dictConfig(LOGGING)
 
-logging.info("LOGS ARE WORKING")
-
 
 # MEDIA
 class CustomStaticStorage(S3Storage):
