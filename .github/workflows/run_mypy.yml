@@ -44,4 +44,4 @@ jobs:
       - name: Run mypy checks
         run: |
           source .venv/bin/activate
-          mypy .
+          mypy . -i
