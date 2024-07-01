@@ -6,7 +6,7 @@ import binascii
 import os
 from django.utils import timezone
 
-from backend.models import OWNER_GENERIC_MODELS, OwnerBase
+from backend.models import OwnerBase
 
 
 class APIAuthToken(OwnerBase):
