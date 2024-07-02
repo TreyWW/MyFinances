@@ -1,0 +1,34 @@
+<div class="my-4 card border border-gray-700 dark:border-gray-70 w-full">
+    <div class="card-body ">
+        <div class="text-center text-md mb-2 text-warning">
+            <i class="fa fa-solid fa-user-tie me-2"></i>
+            Administration Settings
+            <i class="fa fa-solid fa-user-tie ms-2"></i>
+        </div>
+        <form hx-post="{% url "api:admin:api-keys generate" %}"
+              hx-indicator='button[data-indicator="generate_api_key"]'
+              hx-swap="none"
+              method="post"
+              class="flex gap-4 flex-col justify-between pt-4 md:flex-row">
+            {% csrf_token %}
+            <div class="flex flex-col">
+                <p class="text-lg font-semibold text-gray-900 dark:text-white">Generate API Key</p>
+                <p class="text-base font-normal text-gray-500 dark:text-gray-400">
+                    Generate an API Key to allow other services to connect to your MyFinances system.
+                </p>
+            </div>
+            <div class="flex gap-2 flex-col flex-1 md:flex-row">
+                <select name="service" class="flex-1 select select-bordered">
+                    <option value="aws_api_destination">AWS API Destination</option>
+                </select>
+                <button data-indicator="generate_api_key"
+                        type="submit"
+                        class="btn btn-outline btn-primary loading-htmx">
+                    <span class="loading-htmx-text">Generate</span>
+                    <span class="loading loading-spinner loading-htmx-loader"></span>
+                </button>
+            </div>
+        </form>
+        <div data-htmx="response" data-id="generate_api_key"></div>
+    </div>
+</div>

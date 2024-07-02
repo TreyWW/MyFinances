@@ -1,0 +1,18 @@
+{% load static %}
+{% if sessions.count > 0 %}
+    <div class="my-4 w-full card border border-gray-700 dark:border-gray-700">
+        <div class="absolute glass top-0 left-0 w-full h-full opacity-50 card">
+            <!-- This section doesn't work yet, so we have an overlay over it -->
+            <p class="text-center text-white text-2xl py-2 px-4 m-auto">Coming Soon</p>
+        </div>
+        <div class="card-body">
+            <div class="card-title">Sessions</div>
+            <ul class="divide-y divide-gray-200 dark:divide-gray-700">
+                {% for session in sessions|slice:":3" %}
+                    {% include 'pages/settings/settings/session.html' with session=session %}
+                {% endfor %}
+            </ul>
+            {% if sessions.count > 3 %}<a class="text-white font-medium text-sm" href="#">See more</a>{% endif %}
+        </div>
+    </div>
+{% endif %}

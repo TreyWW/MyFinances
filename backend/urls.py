@@ -38,6 +38,7 @@ urlpatterns = [
     path("dashboard/quotas/<str:group>/", quotas_list, name="quotas group"),
     path("dashboard/emails/", include("backend.views.core.emails.urls")),
     path("dashboard/admin/quota_requests/", view_quota_increase_requests, name="admin quota increase requests"),
+    path("dashboard/onboarding/", include("backend.views.core.onboarding.urls")),
     path(
         "dashboard/invoice/<str:invoice_id>/",
         manage_invoice,

@@ -1,0 +1,29 @@
+<div class="max-w-screen-xl card border border-gray-700 dark:border-gray-700">
+    <div class="card-body">
+        <div class="card-title">Form Builder</div>
+        <p class="text-content2">{% lorem 10 w %}</p>
+
+        <div class="divider"></div>
+
+        <div class="mb-4">
+            <button class="btn btn-primary mb-4 float-right"
+                    hx-post="{% url 'onboarding:form_builder:create' %}">
+                <i class="fa-solid fa-plus pe-1"></i>
+                Create Form
+            </button>
+        </div>
+        <div class="grid {% if forms.count > 3 %}lg:grid-cols-4{% else %}lg:grid-cols-3{% endif %} sm:grid-cols-3 gap-4">
+            {% for form in forms %}
+                <a class="card border border-neutral col-span-1 hover:border-primary"
+                   title="{{ form.title }}"
+                   href="{% url 'onboarding:form_builder:edit' form_uuid=form.uuid %}">
+                    <div class="card-body p-6">
+                        <h2 class="text-lg font-bold line-clamp-1">{{ form.title }}
+{#                            <i class="fa fa-ellipsis-v"></i>#}
+                        </h2>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+</div>

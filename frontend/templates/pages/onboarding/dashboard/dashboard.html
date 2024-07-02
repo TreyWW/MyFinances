@@ -1,0 +1,27 @@
+{% extends base|default:"base/base.html" %}
+{% block content %}
+    <div class="card w-full p-6 bg-base-100 shadow-xl mt-2">
+        <h2 class="text-xl">
+            Onboarding Flows
+        </h2>
+        <p class="mt-4">
+            Configure seamless onboarding experiences for your new customers with automated emails and easy form
+            management.
+        </p>
+        <div class="divider"></div>
+        <div class="grid grid-cols-3 gap-4">
+            <button class="btn-large-card">
+                <i class="fa fa-plus mr-2"></i>
+                New Booking
+            </button>
+            <button class="btn-large-card">
+                <i class="fa fa-street-view mr-2"></i>
+                Existing Bookings
+            </button>
+            <a class="btn-large-card" href="{% url 'onboarding:settings' %}">
+                <i class="fa fa-cogs mr-2"></i>
+                Settings
+            </a>
+        </div>
+    </div>
+{% endblock content %}

@@ -9,6 +9,9 @@ module.exports = {
       import: './assets/scripts/htmx.js',
       dependOn: 'init'
     },
+    sortable_form_builder: {
+      import: './assets/scripts/sortable_form_builder.js'
+    },
     receipt_downloads: {
       import: './assets/scripts/receipt_downloads.js'
     },

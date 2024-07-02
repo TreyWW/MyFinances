@@ -1,0 +1,43 @@
+{% extends base|default:"base/base.html" %}
+{% block content %}
+    <div class="grid grid-cols-8 gap-4">
+        <div class="card col-span-2 border border-neutral">
+            <div class="card-body">
+                <ul class="menu w-full min-h-full gap-y-1"
+                    hx-boost="true"
+                    hx-target='div[data-hx-swap="content"]'
+                    hx-swap="innerHTML"
+                    hx-vals='{"onboarding_form_builder_structure": "True"}'>
+                    <li>
+                        <a href="{% url 'onboarding:settings with page' page='profile' %}"
+                           hx-replace-url="{% url 'onboarding:settings with page' page='profile' %}">
+                            <i class="fa fa-solid fa-plus"></i>
+                            New Input
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'onboarding:settings with page' page='form-builder' %}"
+                           hx-replace-url="{% url 'onboarding:settings with page' page='form-builder' %}">
+                            <i class="fa fa-solid fa-gear"></i>
+                            Form Builder
+                        </a>
+                    </li>
+                    <div class="divider"></div>
+                    <h2 class="pl-3 text-neutral dark:text-neutral-content">Access</h2>
+                    <li>
+                        <a href="{% url 'onboarding:settings with page' page='api_keys' %}"
+                           hx-replace-url="{% url 'onboarding:settings with page' page='api_keys' %}">
+                            <i class="fa fa-solid fa-code"></i>
+                            API Keys
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-span-6" data-hx-swap="content">
+            {% if page_template %}
+                {% include page_template %}
+            {% endif %}
+        </div>
+    </div>
+{% endblock content %}

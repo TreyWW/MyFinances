@@ -1,0 +1,59 @@
+<div class="max-w-screen-xl card border border-gray-700 dark:border-gray-700">
+    <div class="card-body flex flex-col h-full">
+        <div class="card-title flex-grow">Profile Settings</div>
+        <div class="flex flex-col flex-grow">
+            <p class="text-content2">{% lorem 10 w %}</p>
+            <div class="divide-y divide-gray-200 dark:divide-gray-700">
+                {# Profile Name #}
+                <form hx-post="{% url "api:settings:change_name" %}"
+                      hx-swap="none"
+                      hx-indicator="#save_account_name"
+                      class="flex gap-2 flex-col justify-between py-4 md:flex-row">
+                    {% csrf_token %}
+                    <div class="flex flex-col flex-grow">
+                        <p class="text-lg font-semibold text-gray-900 dark:text-white">Account Name</p>
+                        <p class="text-base font-normal text-gray-500 dark:text-gray-400">This will be displayed on your account</p>
+                    </div>
+                    <input type="hidden" name="section" value="name" />
+                    <input type="text"
+                           name="first_name"
+                           class="input input-bordered md:max-w-[20%]"
+                           placeholder="John"
+                           value="{{ request.user.first_name }}" />
+                    <input type="text"
+                           name="last_name"
+                           class="input input-bordered md:max-w-[20%]"
+                           placeholder="Doe"
+                           value="{{ request.user.last_name }}" />
+                    <button id="save_account_name"
+                            type="submit"
+                            class="btn btn-outline btn-primary loading-htmx">
+                        <span class="loading-htmx-text">
+                            <i class="fa fa-solid fa-save"></i>
+                        </span>
+                        <span class="loading loading-spinner loading-htmx-loader"></span>
+                    </button>
+                </form>
+                {# Profile Picture Input #}
+                <div class="flex gap-2 flex-col justify-between py-4 md:flex-row">
+                    <div class="flex flex-col flex-grow">
+                        <div class="text-lg font-semibold text-gray-900 dark:text-white">Profile Picture</div>
+                        <div class="text-base font-normal text-gray-500 dark:text-gray-400">
+                            This will change your accounts profile picture
+                        </div>
+                    </div>
+                    <button onclick="modal_change_profile_picture.showModal();"
+                            class="btn btn-primary btn-outline"
+                            hx-trigger="click once"
+                            hx-swap="beforeend"
+                            hx-target="#modal_container"
+                            hx-get="{% url "api:base:modal retrieve with context" modal_name="change_profile_picture" context_type="profile_picture" context_value="True" %}">
+                        Change
+                    </button>
+                </div>
+            </div>
+        </div>
+        <button disabled class="btn btn-primary mt-auto">Save All</button>
+    </div>
+</div>
+{% include 'pages/settings/settings/danger_zone.html' %}

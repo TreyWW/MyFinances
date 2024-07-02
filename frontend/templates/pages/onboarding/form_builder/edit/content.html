@@ -1,0 +1,35 @@
+{% load webpack_loader %}
+{% render_bundle 'sortable_form_builder' 'js' %}
+<div class="max-w-screen-xl mx-auto">
+    <div class="card border border-gray-700 dark:border-gray-700">
+        <div class="card-body">
+            <div class="flex items-center justify-between">
+                <input
+                    class="w-full py-2 text-2xl bg-transparent border-b-2 border-gray-300 focus:outline-none focus:border-b-primary"
+                    value="{{ form.title }}"
+                    name="form_name"
+                    type="text"
+                    placeholder="Form Title"
+                    hx-post="{% url 'api:onboarding:form_builder:edit_form_name' form_uuid=form.uuid %}"
+                    hx-trigger="input changed delay:500ms"
+                    hx-target="this"
+                    hx-swap="none"
+                />
+                <div class="flex items-center ml-4">
+                    <span id="saving-indicator"
+                          class="text-sm dark:text-neutral-content text-neutral whitespace-nowrap hidden">
+                        Saving
+                        <span class="loading loading-spinner w-4 h-4"></span>
+                    </span>
+                    <span id="saved-indicator" class="text-sm text-success whitespace-nowrap hidden">All changes saved</span>
+                    <i id="saved-icon" class="fa fa-check-circle text-green-500 hidden"></i>
+                </div>
+            </div>
+            <div id="sortable-container" class="space-y-4 mt-4">
+                {% for field in form.fields.all %}
+                    {% include "pages/onboarding/form_builder/edit/input_container.html" %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>

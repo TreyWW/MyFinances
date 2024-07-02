@@ -1,0 +1,60 @@
+{% if post_return == "currency" %}
+    {#    <select hx-swap-oob="outerHTML:select[name='currency']"
+                  name="currency"
+                  class="select select-bordered w-[25%]">#}
+    {#        {% for code, info in currency_signs.items %}#}
+    {#            <option value="{{ code }}" {% if currency == code %}selected{% endif %}>#}
+    {#                {{ info.symbol }} - {{ code }}#}
+    {#            </option>#}
+    {#        {% endfor %}#}
+    {#    </select>#}
+    <select hx-swap-oob="outerHTML:[name='currency']"
+            name="currency"
+            class="select select-bordered w-[25%]">
+        {% for code, info in currency_signs.items %}
+            <option value="{{ code }}" {% if currency == code %}selected{% endif %}>
+                {{ info.symbol }} - {{ code }}
+            </option>
+        {% endfor %}
+    </select>
+{% else %}
+    <form method="post"
+          class="my-4 max-w-screen-xl card border border-gray-700 dark:border-gray-700">
+        {% csrf_token %}
+        <div class="card-body">
+            <div class="card-title">Account preferences</div>
+            <p class="text-content2">{% lorem 10 w %}</p>
+            <div class="divide-y divide-gray-200 dark:divide-gray-700">
+                {# Currency Input #}
+                <div class="flex gap-4 flex-col justify-between pt-2 md:flex-row">
+                    <div class="flex flex-col flex-grow">
+                        <div class="text-lg font-semibold text-gray-900 dark:text-white">Currency</div>
+                        <div class="text-base font-normal text-gray-500 dark:text-gray-400">
+                            This will change the default currency for your account
+                            {{ request.user.user_profile }}
+                        </div>
+                    </div>
+                    <select name="currency" class="select select-bordered md:w-[25%]">
+                        {% for code, info in request.user.user_profile.CURRENCIES.items %}
+                            <option value="{{ code }}" {% if currency == code %}selected{% endif %}>
+                                {{ info.symbol }}
+                                - {{ code }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {# End Currency Input #}
+            </div>
+            <button class="btn btn-primary mt-2 loading-htmx"
+                    name="section"
+                    value="account_preferences"
+                    hx-post="{% url 'api:settings:change_currency' %}"
+                    hx-swap="none"
+                    hx-trigger="click">
+                <span class="loading-htmx-text">Save</span>
+                <span id="currency_save_loading"
+                      class="loading loading-spinner loading-htmx-loader"></span>
+            </button>
+        </div>
+    </form>
+{% endif %}

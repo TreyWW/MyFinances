@@ -40,7 +40,8 @@ def extras(request: HttpRequest):
 
 
 def breadcrumbs(request: HttpRequest):
-    def get_item(name: str, url_name: Optional[str] = None, icon: Optional[str] = None) -> dict:
+    def get_item(name: str, url_name: Optional[str] = None, icon: Optional[str] = None, kwargs: bool = False) -> dict:
+        print(kwargs)
         """
         Create a breadcrumb item dictionary.
 
@@ -54,7 +55,7 @@ def breadcrumbs(request: HttpRequest):
         """
         return {
             "name": name,
-            "url": reverse(url_name) if url_name else None,
+            "url": reverse(url_name, kwargs=request.resolver_match.kwargs if kwargs else {}) if url_name else "",
             "icon": icon,
         }
 
@@ -68,32 +69,42 @@ def breadcrumbs(request: HttpRequest):
         Returns:
         List[Dict[str, Any]]: A list of dictionaries representing the breadcrumb items.
         """
-        return [all_items.get(breadcrumb) for breadcrumb in breadcrumb_list]
+        return [get_item(*all_items.get(breadcrumb, (None, None, None))) for breadcrumb in breadcrumb_list if breadcrumb in all_items]
 
     current_url_name: str | Any = request.resolver_match.view_name  # type: ignore[union-attr]
 
-    all_items: dict[str, dict] = {
-        "dashboard": get_item("Dashboard", "dashboard", "house"),
-        "invoices:dashboard": get_item("Invoices", "invoices:dashboard", "file-invoice"),
-        "invoices:create": get_item("Create", "invoices:create"),
-        "invoices:edit": get_item("Edit", None, "pencil"),
-        "receipts dashboard": get_item("Receipts", "receipts dashboard", "file-invoice"),
-        "teams:dashboard": get_item("Teams", "teams:dashboard", "users"),
-        "settings:dashboard": get_item("Settings", "settings:dashboard", "gear"),
-        "clients:dashboard": get_item("Clients", "clients:dashboard", "users"),
-        "clients:create": get_item("Create", "clients:create"),
+    all_items: dict[str, tuple[str, Optional[str], Optional[str], bool]] = {
+        "dashboard": ("Dashboard", "dashboard", "house"),
+        "invoices:dashboard": ("Invoices", "invoices:dashboard", "file-invoice"),
+        "invoices:create": ("Create", "invoices:create"),
+        "invoices:edit": ("Edit", None, "pencil"),
+        "receipts dashboard": ("Receipts", "receipts dashboard", "file-invoice"),
+        "teams:dashboard": ("Teams", "teams:dashboard", "users"),
+        "settings:dashboard": ("Settings", "settings:dashboard", "gear"),
+        "clients:dashboard": ("Clients", "clients:dashboard", "users"),
+        "clients:create": ("Create", "clients:create"),
+        "onboarding:dashboard": ("Onboarding", "onboarding:dashboard", "rocket"),
+        "onboarding:settings": ("Settings", "onboarding:settings", "gear"),
+        "onboarding:form_builder": ("Form Builder", None, "table"),
+        "onboarding:form_builder:edit": ("Edit", "onboarding:form_builder:edit", "pencil", True),
+        "onboarding:form_builder:create": ("Create", "onboarding:form_builder:create", "plus"),
     }
 
-    all_breadcrumbs: dict[str | None, list] = {
-        "dashboard": generate_breadcrumbs("dashboard"),
-        "teams:dashboard": generate_breadcrumbs("dashboard", "teams:dashboard"),
-        "receipts dashboard": generate_breadcrumbs("dashboard", "receipts dashboard"),
-        "invoices:dashboard": generate_breadcrumbs("dashboard", "invoices:dashboard"),
-        "invoices:create": generate_breadcrumbs("dashboard", "invoices:dashboard", "invoices:create"),
-        "invoices:edit": generate_breadcrumbs("dashboard", "invoices:dashboard", "invoices:edit"),
-        "clients:dashboard": generate_breadcrumbs("dashboard", "clients:dashboard"),
-        "clients:create": generate_breadcrumbs("dashboard", "clients:dashboard", "clients:create"),
-        "settings:dashboard": generate_breadcrumbs("dashboard", "settings:dashboard"),
+    all_breadcrumbs: dict[str, str | tuple[str]] = {
+        "dashboard": "dashboard",
+        "teams:dashboard": ("dashboard", "teams:dashboard"),
+        "receipts dashboard": ("dashboard", "receipts dashboard"),
+        "invoices:dashboard": ("dashboard", "invoices:dashboard"),
+        "invoices:create": ("dashboard", "invoices:dashboard", "invoices:create"),
+        "invoices:edit": ("dashboard", "invoices:dashboard", "invoices:edit"),
+        "clients:dashboard": ("dashboard", "clients:dashboard"),
+        "clients:create": ("dashboard", "clients:dashboard", "clients:create"),
+        "settings:dashboard": ("dashboard", "settings:dashboard"),
+        "onboarding:dashboard": "onboarding:dashboard",
+        "onboarding:settings": ("onboarding:dashboard", "onboarding:settings"),
+        "onboarding:form_builder": ("onboarding:dashboard", "onboarding:form_builder"),
+        "onboarding:form_builder:edit": ("onboarding:dashboard", "onboarding:form_builder", "onboarding:form_builder:edit"),
+        "onboarding:form_builder:create": ("onboarding:dashboard", "onboarding:form_builder", "onboarding:form_builder:create"),
     }
 
-    return {"breadcrumb": all_breadcrumbs.get(current_url_name, [])}
+    return {"breadcrumb": generate_breadcrumbs(*all_breadcrumbs.get(current_url_name, []))}

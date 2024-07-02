@@ -54,6 +54,14 @@
                 </a>
             {% endwith %}
         </li>
+        <li>
+            {% with i_url="onboarding:dashboard" %}
+                <a href="{% url i_url %}"
+                   {% if request.resolver_match.view_name == "onboarding:dashboard" %}class="active"{% endif %}>
+                    Onboarding
+                </a>
+            {% endwith %}
+        </li>
         {% if are_user_emails_allowed %}
             <li>
                 {% with i_url="emails:dashboard" %}

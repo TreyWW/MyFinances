@@ -150,6 +150,9 @@ class Organization(models.Model):
     leader = models.ForeignKey(User, on_delete=models.CASCADE, related_name="teams_leader_of")
     members = models.ManyToManyField(User, related_name="teams_joined")
 
+    def __str__(self):
+        return self.name
+
     def is_owner(self, user: User) -> bool:
         return self.leader == user
 
@@ -216,6 +219,14 @@ class OwnerBase(models.Model):
         constraints = [
             USER_OR_ORGANIZATION_CONSTRAINT(),
         ]
+
+    def save(self, *args, **kwargs):
+        if hasattr(self, "owner") and not self.user and not self.organization:
+            if isinstance(self.owner, User):
+                self.user = self.owner
+            elif isinstance(self.owner, Organization):
+                self.organization = self.owner
+        super().save(*args, **kwargs)
 
     @property
     def owner(self) -> User | Organization:

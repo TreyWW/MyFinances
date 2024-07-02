@@ -1,0 +1,27 @@
+<div class="card border border-gray-300 p-4 relative group" data-id="{{ forloop.counter }}">
+    <div
+        class="flex items-center justify-center absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-full p-1 opacity-0 group-hover:opacity-100">
+        <i class="fas fa-grip-lines cursor-pointer" aria-hidden="true"></i>
+    </div>
+    <div class="flex items-center space-x-4 mt-2">
+        <input
+            class="input input-bordered flex-grow"
+            placeholder="Question"
+            value="{{ field.label }}"
+            type="text"
+        />
+        <select class="select select-bordered flex-shrink-0">
+            {% for choice in field.FieldTypes.choices %}
+                <option value="{{ choice.0 }}" {% if field.type == choice.0 %}selected{% endif %}>
+                    {{ choice.1 }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+    <input
+        type="text"
+        class="input w-1/2 mt-2"
+        placeholder="Text"
+        disabled
+    />
+</div>

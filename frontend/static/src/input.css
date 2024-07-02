@@ -131,6 +131,15 @@
 /*       HTMX LOADING       */
 /****************************/
 
+.htmx-request #saving-indicator {
+    display: inline;
+}
+
+.htmx-request #saved-icon {
+    display: none;
+}
+
+
 /* Show button text when not loading*/
 .loading-htmx .loading-htmx-text {
     display: inline-block;
