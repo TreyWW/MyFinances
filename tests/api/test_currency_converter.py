@@ -2,6 +2,8 @@ from django.urls import reverse
 
 from tests.handler import ViewTestCase, assert_url_matches_view
 
+from datetime import datetime
+
 
 class CurrencyConverterConvertAPI(ViewTestCase):
     def setUp(self):
@@ -30,22 +32,35 @@ class CurrencyConverterConvertAPI(ViewTestCase):
     def test_clients_view_matches_with_urls_view(self):
         assert_url_matches_view(self.url_path, self.url_name, self.view_function_path)
 
-    # fails for some reason
+    def test_conversion(self):
+        # Ensure that conversion returns converted value
+        self.login_user()
+        response = self.make_request(
+            method="post",
+            data={
+                "currency_amount": 5.50,
+                "from_currency": "USD",
+                "to_currency": "GBP",
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context.get("original_amount"), 5.50)
+        self.assertEqual(response.context.get("original_currency"), "USD")
+        self.assertEqual(response.context.get("original_currency_sign"), "$")
+        self.assertEqual(response.context.get("target_currency"), "GBP")
+        self.assertEqual(response.context.get("target_currency_sign"), "£")
+        self.assertIsNotNone(response.context.get("converted_amount"))
 
-    # def test_conversion_VALID(self):
-    #     self.login_user()
-    #     response = self.make_request(
-    #         method="post",
-    #         data={
-    #             "currency_amount": 5.50,
-    #             "from_currency": "usd",
-    #             "to_currency": "gbp",
-    #         },
-    #     )
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertEqual(4.2 <= response.context.get("converted_amount") <= 4.6)
-    #     self.assertEqual(response.context.get("original_amount"), 5.50)
-    #     self.assertEqual(response.context.get("original_currency"), "usd")
-    #     self.assertEqual(response.context.get("original_currency_sign"), "$")
-    #     self.assertEqual(response.context.get("target_currency"), "gbp")
-    #     self.assertEqual(response.context.get("target_currency_sign"), "£")
+    def test_conversion_with_date(self):
+        # Ensure that conversion when specifiying date returns converted value
+        self.login_user()
+        response = self.make_request(
+            method="post", data={"currency_amount": 5.50, "from_currency": "USD", "to_currency": "GBP", "date": datetime(2023, 7, 1)}
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context.get("original_amount"), 5.50)
+        self.assertEqual(response.context.get("original_currency"), "USD")
+        self.assertEqual(response.context.get("original_currency_sign"), "$")
+        self.assertEqual(response.context.get("target_currency"), "GBP")
+        self.assertEqual(response.context.get("target_currency_sign"), "£")
+        self.assertIsNotNone(response.context.get("converted_amount"))

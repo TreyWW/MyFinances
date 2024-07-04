@@ -24,6 +24,7 @@ djangorestframework = "^3.15.1"
 drf-yasg = "^1.21.7"
 
 setuptools = "^70.1.1"
+currencyconverter = "^0.17.24"
 [tool.poetry.group.mypy.dependencies]
 mypy = "1.7.1"
 django-stubs = { version = "4.2.7" }
