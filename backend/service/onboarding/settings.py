@@ -1,7 +1,7 @@
 from django.db.models import QuerySet
 
-from backend.models import UserSettings, User, Organization
-from backend.views.core.onboarding.models import OnboardingForm
+from backend.models import User, Organization
+from backend.views.core.onboarding.models import OnboardingForm, OnboardingField
 
 
 def validate_page(page: str | None, sub_page: str | None) -> bool:
@@ -17,5 +17,14 @@ def get_form(uuid, actor: User | Organization) -> OnboardingForm:
 
 
 def get_valid_form(uuid, actor: User | Organization) -> OnboardingForm:
-    form = get_form(uuid, actor)
-    return form
+    # may do extra logic at a later point
+    return get_form(uuid, actor)
+
+
+def get_valid_form_field(form_uuid, field_uuid, actor: User | Organization) -> OnboardingField:
+    """
+    :raises: OnboardingField.DoesNotExist
+    :return: OnboardingField
+    """
+    form = get_valid_form(form_uuid, actor)
+    return form.fields.get(uuid=field_uuid)

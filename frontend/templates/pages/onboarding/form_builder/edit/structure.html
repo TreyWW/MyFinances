@@ -9,11 +9,12 @@
                     hx-swap="innerHTML"
                     hx-vals='{"onboarding_form_builder_structure": "True"}'>
                     <li>
-                        <a href="{% url 'onboarding:settings with page' page='profile' %}"
-                           hx-replace-url="{% url 'onboarding:settings with page' page='profile' %}">
+                        <button hx-post="{% url 'api:onboarding:form_builder:inputs:new' form_uuid=form.uuid %}"
+                                hx-target='div[data-hx-container="inputs"]'
+                                hx-swap="beforeend">
                             <i class="fa fa-solid fa-plus"></i>
                             New Input
-                        </a>
+                        </button>
                     </li>
                     <li>
                         <a href="{% url 'onboarding:settings with page' page='form-builder' %}"

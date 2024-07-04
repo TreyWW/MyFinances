@@ -63,7 +63,7 @@ def edit_form_endpoint(request: WebRequest, form_uuid) -> HttpResponse:
             response["HX-Redirect"] = reverse("onboarding:settings with page", kwargs={"page": "form-builder"})
             return response
         return redirect("onboarding:settings with page", "form-builder")
-    context: dict = {"form": form}
+    context: dict = {"form": form, "fields": form.fields.order_by("order")}
     template = f"pages/onboarding/form_builder/edit/content.html"
 
     if not request.GET.get("onboarding_form_builder_structure"):

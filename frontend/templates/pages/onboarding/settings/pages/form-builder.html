@@ -2,9 +2,7 @@
     <div class="card-body">
         <div class="card-title">Form Builder</div>
         <p class="text-content2">{% lorem 10 w %}</p>
-
         <div class="divider"></div>
-
         <div class="mb-4">
             <button class="btn btn-primary mb-4 float-right"
                     hx-post="{% url 'onboarding:form_builder:create' %}">
@@ -18,8 +16,9 @@
                    title="{{ form.title }}"
                    href="{% url 'onboarding:form_builder:edit' form_uuid=form.uuid %}">
                     <div class="card-body p-6">
-                        <h2 class="text-lg font-bold line-clamp-1">{{ form.title }}
-{#                            <i class="fa fa-ellipsis-v"></i>#}
+                        <h2 class="text-lg font-bold line-clamp-1">
+                            {{ form.title }}
+                            {#                            <i class="fa fa-ellipsis-v"></i>#}
                         </h2>
                     </div>
                 </a>

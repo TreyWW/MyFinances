@@ -1,7 +1,7 @@
 import Sortable from 'sortablejs';
 
 document.addEventListener('DOMContentLoaded', function () {
-  const sortable = new Sortable(document.getElementById('sortable-container'), {
+  const sortable = new Sortable(document.querySelector('div[data-hx-container="inputs"]'), {
     animation: 150,
     handle: '.fa-grip-lines',
     onEnd: function (evt) {

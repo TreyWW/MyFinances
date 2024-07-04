@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.text import slugify
 from django.utils.translation import gettext as _
@@ -85,13 +86,13 @@ class OnboardingFieldManager(models.Manager):
 class OnboardingField(models.Model):
     class FieldTypes(models.TextChoices):
         TEXT = "text", _("Text")
-        NUMBER = "number", _("Number")
         EMAIL = "email", _("Email")
         CHECKBOX = "checkbox", _("Checkbox")
         DATE = "date", _("Date")
         TIME = "time", _("Time")
         DATETIME = "datetime", _("Combined Datetime")
 
+    uuid = models.UUIDField(_("UUID"), unique=True, default=uuid.uuid4)
     form = models.ForeignKey(OnboardingForm, on_delete=models.CASCADE, related_name="fields")
     label = models.CharField(_("Label"), max_length=100)
     name = models.CharField(_("Name"), max_length=100)
@@ -108,6 +109,10 @@ class OnboardingField(models.Model):
 
     def __str__(self):
         return self.label
+
+    def clean(self):
+        if self.type not in self.FieldTypes.values:
+            raise ValidationError(_("Invalid field type"))
 
 
 class OnboardingFieldEntry(models.Model):
