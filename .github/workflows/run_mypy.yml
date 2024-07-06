@@ -1,0 +1,47 @@
+name: Mypy
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+jobs:
+  mypy:
+    name: mypy
+    runs-on: ubuntu-latest
+    env:
+      SECRET_KEY: "some!random!secret!key!use!online!generator!to!get"
+      URL: "127.0.0.1"
+      PROXY_IP: "localhost"
+      BRANCH: "debug"
+      DEBUG: "true"
+      DATABASE_TYPE: "sqlite3"
+      SITE_URL: "http://myfinances.example.com"
+      SITE_NAME: "myfinances"
+    steps:
+      - name: Clone repo
+        uses: actions/checkout@v4.1.6
+      - name: Set up python
+        uses: actions/setup-python@v5.1.0
+        with:
+          python-version: "3.12"
+      - name: Install and configure Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+          installer-parallel: true
+      - name: Load cached venv
+        id: cached-poetry-dependencies
+        uses: actions/cache@v4.0.2
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
+      - name: Install dependencies
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        run: poetry install --no-interaction --no-root
+      - name: Run mypy checks
+        run: |
+          source .venv/bin/activate
+          mypy . -i

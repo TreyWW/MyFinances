@@ -66,3 +66,96 @@ class ReceiptsAPIFetch(ViewTestCase):
         # Check that all created clients are in the response
         for receipt in receipts:
             self.assertIn(receipt, response.context.get("receipts"))
+
+    def test_search_functionality(self):
+        # Log in the user
+        self.login_user()
+
+        # Create some receipts with different names, dates, merchant stores, purchase categories, and IDs
+        receipt1 = baker.make(
+            "backend.Receipt",
+            name="Groceries",
+            date="2022-06-01",
+            merchant_store="Walmart",
+            purchase_category="Food",
+            id=1,
+            user=self.log_in_user,
+        )
+        receipt2 = baker.make(
+            "backend.Receipt",
+            name="Electronics",
+            date="2021-06-02",
+            merchant_store="Best Buy",
+            purchase_category="Gadgets",
+            id=2,
+            user=self.log_in_user,
+        )
+        receipt3 = baker.make(
+            "backend.Receipt",
+            name="Clothing",
+            date="2023-05-03",
+            merchant_store="Gap",
+            purchase_category="Apparel",
+            id=3,
+            user=self.log_in_user,
+        )
+
+        # Define the URL with the search query parameter
+        url = reverse(self.url_name)
+        headers = {"HTTP_HX-Request": "true"}
+
+        # Test searching by name
+        response = self.client.get(url, {"search": "Groceries"}, **headers)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(receipt1, response.context["receipts"])
+        self.assertNotIn(receipt2, response.context["receipts"])
+        self.assertNotIn(receipt3, response.context["receipts"])
+
+        # Test searching by date
+        response = self.client.get(url, {"search": "2021-06-02"}, **headers)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(receipt2, response.context["receipts"])
+        self.assertNotIn(receipt1, response.context["receipts"])
+        self.assertNotIn(receipt3, response.context["receipts"])
+
+        # Test searching by merchant/store
+        response = self.client.get(url, {"search": "Best Buy"}, **headers)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(receipt2, response.context["receipts"])
+        self.assertNotIn(receipt1, response.context["receipts"])
+        self.assertNotIn(receipt3, response.context["receipts"])
+
+        # Test searching by purchase category
+        response = self.client.get(url, {"search": "Apparel"}, **headers)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(receipt3, response.context["receipts"])
+        self.assertNotIn(receipt1, response.context["receipts"])
+        self.assertNotIn(receipt2, response.context["receipts"])
+
+        # Test searching by ID
+        response = self.client.get(url, {"search": "3"}, **headers)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(receipt3, response.context["receipts"])
+        self.assertNotIn(receipt1, response.context["receipts"])
+        self.assertNotIn(receipt2, response.context["receipts"])
+
+        # Test searching with a substring
+        response = self.client.get(url, {"search": "Elec"}, **headers)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(receipt2, response.context["receipts"])
+        self.assertNotIn(receipt1, response.context["receipts"])
+        self.assertNotIn(receipt3, response.context["receipts"])
+
+        # Test searching with a query that matches multiple receipt records
+        response = self.client.get(url, {"search": "6"}, **headers)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(receipt1, response.context["receipts"])
+        self.assertIn(receipt2, response.context["receipts"])
+        self.assertNotIn(receipt3, response.context["receipts"])
+
+        # Test searching with an empty query
+        response = self.client.get(url, {"search": ""}, **headers)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(receipt1, response.context["receipts"])
+        self.assertIn(receipt2, response.context["receipts"])
+        self.assertIn(receipt3, response.context["receipts"])

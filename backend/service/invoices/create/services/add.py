@@ -1,15 +1,13 @@
 from django.http import JsonResponse
-from django.shortcuts import render
-from django.views.decorators.http import require_http_methods
 
+from backend.api.public.types import APIRequest
 from backend.models import InvoiceProduct
 from backend.types.htmx import HtmxHttpRequest
 
 
-@require_http_methods(["POST"])
-def add_service(request: HtmxHttpRequest):
+def add(request: APIRequest | HtmxHttpRequest):
     context: dict = {}
-    existing_service = request.POST.get("existing_service", "")
+    existing_service = request.POST.get("existing_service", 0)
 
     try:
         existing_service_obj = InvoiceProduct.objects.get(user=request.user, id=existing_service)
@@ -23,10 +21,10 @@ def add_service(request: HtmxHttpRequest):
     list_of_current_rows = [row for row in zip(list_hours, list_service_name, list_service_description, list_price_per_hour)]
 
     if not existing_service:
-        hours = int(request.POST.get("post_hours", ""))
+        hours = int(request.POST.get("post_hours", "0"))
         service_name = request.POST.get("post_service_name")
         service_description = request.POST.get("post_service_description")
-        price_per_hour = int(request.POST.get("post_rate", ""))
+        price_per_hour = int(request.POST.get("post_rate", "0"))
 
         if not hours:
             return JsonResponse(
@@ -77,4 +75,4 @@ def add_service(request: HtmxHttpRequest):
             }
         )
 
-    return render(request, "pages/invoices/create/_services_table_body.html", context)
+    return context

@@ -1,0 +1,23 @@
+<div class="my-4 card border border-gray-700 dark:border-gray-70 w-full">
+    <div class="card-body">
+        <div class="flex justify-between">
+            <div class="text-xl mb-2">
+                <i class="fa fa-solid fa-key me-2"></i>
+                Created API key - {{ name }}
+            </div>
+            <button onclick="return this.parentNode.parentNode.parentNode.remove();"
+                    class="flex-shrink-0 inline-flex justify-center w-10 h-10 items-center rounded-lg text-sm hover:bg-gray-600 hover:text-white">
+                <i class="fa fa-solid fa-xmark w-4 h-4"></i>
+            </button>
+        </div>
+        <div class="divider"></div>
+        <p>
+            Please note this key down, as soon as you refresh the page or click somewhere else this key will be hidden and you
+            will have to generate a new one.
+        </p>
+        <p>Key: {{ raw_key }}</p>
+        <button class="btn btn-neutral w-32"
+                onclick="return this.parentNode.parentNode.remove();">Hide key now</button>
+    </div>
+</div>
+{% component "messages_list" %}

@@ -12,11 +12,10 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.10", "3.11", "3.12"]
-        django-version: ["4", "5"]
+        python-version: [ "3.10", "3.11", "3.12" ]
     steps:
       - name: Clone repo
-        uses: actions/checkout@v4.1.4
+        uses: actions/checkout@v4.1.6
       - name: Set up python
         uses: actions/setup-python@v5.1.0
         with:
@@ -24,7 +23,6 @@ jobs:
       - name: Install and configure Poetry
         uses: snok/install-poetry@v1
         with:
-          version: 1.8.0
           virtualenvs-create: true
           virtualenvs-in-project: true
           installer-parallel: true
@@ -37,10 +35,14 @@ jobs:
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: poetry install --no-interaction --no-root
-      - name: Install django ${{ matrix.django-version }}
+      - name: Install latest setuptools
         run: |
           source .venv/bin/activate
-          pip install "Django==${{ matrix.django-version }}"
+          pip install setuptools
+      - name: Install latest Django
+        run: |
+          source .venv/bin/activate
+          pip install Django
       - name: Install dependencies and build frontend
         run: |
           npm ci
@@ -67,16 +69,15 @@ jobs:
           fi
       - name: Run tests
         env:
-            SECRET_KEY: "some!random!secret!key!use!online!generator!to!get"
-            URL: "127.0.0.1"
-            PROXY_IP: "localhost"
-            BRANCH: "debug"
-            DEBUG: "true"
-            DATABASE_TYPE: "sqlite3"
-            SITE_URL: "http://myfinances.example.com"
-            SITE_NAME: "myfinances"
+          SECRET_KEY: "some!random!secret!key!use!online!generator!to!get"
+          URL: "127.0.0.1"
+          PROXY_IP: "localhost"
+          BRANCH: "debug"
+          DEBUG: "true"
+          DATABASE_TYPE: "sqlite3"
+          SITE_URL: "http://myfinances.example.com"
+          SITE_NAME: "myfinances"
         run: |
           source .venv/bin/activate
           python3 manage.py collectstatic --no-input
           python3 manage.py test --parallel
-

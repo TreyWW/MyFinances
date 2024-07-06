@@ -1,19 +1,20 @@
 from __future__ import annotations
 
+import typing
 from datetime import datetime
 from decimal import Decimal
-from typing import Literal
-from typing import NoReturn
+from typing import Literal, Union
 from uuid import uuid4
 
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import AbstractUser
-from django.contrib.auth.models import AnonymousUser
 from django.contrib.auth.models import UserManager
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
+from django.contrib.contenttypes.models import ContentType
 from django.core.validators import MaxValueValidator
 from django.db import models
-from django.db.models import Count
+from django.db.models import Count, Manager
 from django.db.models import QuerySet
 from django.utils import timezone
 from django.utils.crypto import get_random_string
@@ -38,6 +39,9 @@ def USER_OR_ORGANIZATION_CONSTRAINT():
     )
 
 
+M = typing.TypeVar("M", bound=models.Model)
+
+
 class CustomUserManager(UserManager):
     def get_queryset(self):
         return (
@@ -49,9 +53,9 @@ class CustomUserManager(UserManager):
 
 
 class User(AbstractUser):
-    objects = CustomUserManager()  # type: ignore
+    objects: CustomUserManager = CustomUserManager()  # type: ignore
 
-    logged_in_as_team = models.ForeignKey("Team", on_delete=models.SET_NULL, null=True, blank=True)
+    logged_in_as_team = models.ForeignKey("Organization", on_delete=models.SET_NULL, null=True, blank=True)
     awaiting_email_verification = models.BooleanField(default=True)
 
     class Role(models.TextChoices):
@@ -62,22 +66,6 @@ class User(AbstractUser):
         TESTER = "TESTER", "Tester"
 
     role = models.CharField(max_length=10, choices=Role.choices, default=Role.USER)
-
-
-class CustomUserMiddleware:
-    def __init__(self, get_response):
-        self.get_response = get_response
-
-    def __call__(self, request):
-        # Replace request.user with CustomUser instance if authenticated
-        if request.user.is_authenticated:
-            request.user = User.objects.get(pk=request.user.pk)
-        else:
-            # If user is not authenticated, set request.user to AnonymousUser
-            request.user = AnonymousUser()
-
-        response = self.get_response(request)
-        return response
 
 
 def add_3hrs_from_now():
@@ -157,15 +145,38 @@ class UserSettings(models.Model):
         verbose_name_plural = "User Settings"
 
 
-class Team(models.Model):
+class Organization(models.Model):
     name = models.CharField(max_length=100, unique=True)
     leader = models.ForeignKey(User, on_delete=models.CASCADE, related_name="teams_leader_of")
     members = models.ManyToManyField(User, related_name="teams_joined")
 
+    def is_owner(self, user: User) -> bool:
+        return self.leader == user
+
+    def is_logged_in_as_team(self, request) -> bool:
+        if isinstance(request.auth, User):
+            return False
+
+        if request.auth and request.auth.team_id == self.id:
+            return True
+        return False
+
+    def is_authenticated(self):
+        return True
+
+
+class TeamMemberPermission(models.Model):
+    team = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name="permissions")
+    user = models.ForeignKey("backend.User", on_delete=models.CASCADE, related_name="team_permissions")
+    scopes = models.JSONField("Scopes", default=list, help_text="List of permitted scopes")
+
+    class Meta:
+        unique_together = ("team", "user")
+
 
 class TeamInvitation(models.Model):
     code = models.CharField(max_length=10)
-    team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="team_invitations")
+    team = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name="team_invitations")
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="team_invitations")
     invited_by = models.ForeignKey(User, on_delete=models.CASCADE)
     expires = models.DateTimeField(null=True, blank=True)
@@ -196,9 +207,53 @@ class TeamInvitation(models.Model):
         verbose_name_plural = "Team Invitations"
 
 
-class Receipt(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    organization = models.ForeignKey(Team, on_delete=models.CASCADE, null=True)
+class OwnerBase(models.Model):
+    user = models.ForeignKey("User", on_delete=models.CASCADE, null=True, blank=True)
+    organization = models.ForeignKey("Organization", on_delete=models.CASCADE, null=True, blank=True)
+
+    class Meta:
+        abstract = True
+        constraints = [
+            USER_OR_ORGANIZATION_CONSTRAINT(),
+        ]
+
+    @property
+    def owner(self) -> User | Organization:
+        """
+        Property to dynamically get the owner (either User or Team)
+        """
+        if hasattr(self, "user") and self.user:
+            return self.user
+        elif hasattr(self, "team") and self.team:
+            return self.team
+        return self.organization  # type: ignore[return-value]
+        # all responses WILL have either a user or org so this will handle all
+
+    @owner.setter
+    def owner(self, value: User | Organization) -> None:
+        if isinstance(value, User):
+            self.user = value
+            self.organization = None
+        elif isinstance(value, Organization):
+            self.user = None
+            self.organization = value
+        else:
+            raise ValueError("Owner must be either a User or a Organization")
+
+    @classmethod
+    def filter_by_owner(cls: typing.Type[M], owner: Union[User, Organization]) -> QuerySet[M]:
+        """
+        Class method to filter objects by owner (either User or Organization)
+        """
+        if isinstance(owner, User):
+            return cls.objects.filter(user=owner)  # type: ignore[attr-defined]
+        elif isinstance(owner, Organization):
+            return cls.objects.filter(organization=owner)  # type: ignore[attr-defined]
+        else:
+            raise ValueError("Owner must be either a User or an Organization")
+
+
+class Receipt(OwnerBase):
     name = models.CharField(max_length=100)
     image = models.ImageField(upload_to="receipts", storage=settings.CustomPrivateMediaStorage())
     total_price = models.FloatField(null=True, blank=True)
@@ -208,11 +263,35 @@ class Receipt(models.Model):
     merchant_store = models.CharField(max_length=255, blank=True, null=True)
     purchase_category = models.CharField(max_length=200, blank=True, null=True)
 
-    class Meta:
-        constraints = [USER_OR_ORGANIZATION_CONSTRAINT()]
-
     def __str__(self):
         return f"{self.name} - {self.date} ({self.total_price})"
+
+    def has_access(self, actor: User | Organization) -> bool:
+        return self.owner == actor
+
+
+class ReceiptDownloadToken(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    file = models.ForeignKey(Receipt, on_delete=models.CASCADE)
+    token = models.UUIDField(default=uuid4, editable=False, unique=True)
+
+
+class Client(OwnerBase):
+    active = models.BooleanField(default=True)
+    name = models.CharField(max_length=64)
+    phone_number = models.CharField(max_length=100, blank=True, null=True)
+    email = models.EmailField(blank=True, null=True)
+    email_verified = models.BooleanField(default=False)
+    company = models.CharField(max_length=100, blank=True, null=True)
+    contact_method = models.CharField(max_length=100, blank=True, null=True)
+    is_representative = models.BooleanField(default=False)
+
+    address = models.TextField(max_length=100, blank=True, null=True)
+    city = models.CharField(max_length=100, blank=True, null=True)
+    country = models.CharField(max_length=100, blank=True, null=True)
+
+    def __str__(self):
+        return self.name
 
     def has_access(self, user: User) -> bool:
         if not user.is_authenticated:
@@ -224,37 +303,32 @@ class Receipt(models.Model):
             return self.user == user
 
 
-class ReceiptDownloadToken(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    file = models.ForeignKey(Receipt, on_delete=models.CASCADE)
-    token = models.UUIDField(default=uuid4, editable=False, unique=True)
+class ClientDefaults(models.Model):
+    class InvoiceDueDateType(models.TextChoices):
+        days_after = "days_after"
+        date_following = "date_following"
+        date_current = "date_current"
+
+    class InvoiceDateType(models.TextChoices):
+        day_of_month = "day_of_month"
+        days_after = "days_after"
+
+    client = models.OneToOneField(Client, on_delete=models.CASCADE, related_name="client_defaults")
+
+    currency = models.CharField(
+        max_length=3,
+        default="GBP",
+        choices=[(code, info["name"]) for code, info in UserSettings.CURRENCIES.items()],
+    )
+
+    invoice_due_date_value = models.PositiveSmallIntegerField(default=7, null=False, blank=False)
+    invoice_due_date_type = models.CharField(max_length=20, choices=InvoiceDueDateType.choices, default=InvoiceDueDateType.days_after)
+
+    invoice_date_value = models.PositiveSmallIntegerField(default=15, null=False, blank=False)
+    invoice_date_type = models.CharField(max_length=20, choices=InvoiceDateType.choices, default=InvoiceDateType.day_of_month)
 
 
-class Client(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-    organization = models.ForeignKey(Team, on_delete=models.CASCADE, null=True, blank=True)
-    active = models.BooleanField(default=True)
-
-    name = models.CharField(max_length=64)
-    phone_number = models.CharField(max_length=100, blank=True, null=True)
-    email = models.EmailField(blank=True, null=True)
-    email_verified = models.BooleanField(default=False)
-    company = models.CharField(max_length=100, blank=True, null=True)
-    is_representative = models.BooleanField(default=False)
-
-    address = models.CharField(max_length=100, blank=True, null=True)
-    city = models.CharField(max_length=100, blank=True, null=True)
-    country = models.CharField(max_length=100, blank=True, null=True)
-
-    class Meta:
-        constraints = [USER_OR_ORGANIZATION_CONSTRAINT()]
-
-    def __str__(self):
-        return self.name
-
-
-class InvoiceProduct(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+class InvoiceProduct(OwnerBase):
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=100)
     quantity = models.IntegerField()
@@ -278,15 +352,13 @@ class InvoiceItem(models.Model):
         return self.description
 
 
-class Invoice(models.Model):
+class Invoice(OwnerBase):
     STATUS_CHOICES = (
         ("pending", "Pending"),
         ("paid", "Paid"),
         ("overdue", "Overdue"),
     )
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-    organization = models.ForeignKey(Team, on_delete=models.CASCADE, null=True, blank=True)
     invoice_id = models.IntegerField(unique=True, blank=True, null=True)  # todo: add
 
     client_to = models.ForeignKey(Client, on_delete=models.SET_NULL, blank=True, null=True)
@@ -358,7 +430,7 @@ class Invoice(models.Model):
             return self.payment_status
 
     @property
-    def get_to_details(self) -> tuple[str, dict[str, str]] | tuple[str, Client]:
+    def get_to_details(self) -> tuple[str, dict[str, str | None]] | tuple[str, Client]:
         """
         Returns the client details for the invoice
         "client" and Client object if client_to
@@ -378,13 +450,13 @@ class Invoice(models.Model):
             subtotal += item.get_total_price()
         return Decimal(round(subtotal, 2))
 
-    def get_tax(self, amount: Decimal = 0.00) -> Decimal:
+    def get_tax(self, amount: Decimal = Decimal(0.00)) -> Decimal:
         amount = amount or self.get_subtotal()
         if self.vat_number:
             return Decimal(round(amount * Decimal(0.2), 2))
         return Decimal(0)
 
-    def get_percentage_amount(self, subtotal: float = 0.00) -> Decimal:
+    def get_percentage_amount(self, subtotal: Decimal = Decimal(0.00)) -> Decimal:
         total = subtotal or self.get_subtotal()
 
         if self.discount_percentage > 0:
@@ -401,7 +473,7 @@ class Invoice(models.Model):
         total -= discount_amount
 
         if 0 > total:
-            total = 0
+            total = Decimal(0)
         else:
             total -= self.get_tax(total)
 
@@ -561,11 +633,12 @@ class Notification(models.Model):
     date = models.DateTimeField(auto_now_add=True)
 
 
-class AuditLog(models.Model):
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
-    organization = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True, blank=True)
+class AuditLog(OwnerBase):
     action = models.CharField(max_length=100)
     date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints: list = []
 
     def __str__(self):
         return f"{self.action} - {self.date}"
@@ -649,6 +722,7 @@ class QuotaLimit(models.Model):
         return self.name
 
     def get_quota_limit(self, user: User, quota_limit: QuotaLimit | None = None):
+        user_quota_override: QuotaOverrides | QuotaLimit
         try:
             if quota_limit:
                 user_quota_override = quota_limit
@@ -669,6 +743,8 @@ class QuotaLimit(models.Model):
             return "Not available"
 
     def strict_goes_above_limit(self, user: User, extra: str | int | None = None, add: int = 0) -> bool:
+        current: Union[int, None, QuerySet[QuotaUsage], Literal["Not Available"]]
+
         current = self.strict_get_quotas(user, extra)
         current = current.count() if current != "Not Available" else None
         return current + add >= self.get_quota_limit(user) if current else False
@@ -681,35 +757,39 @@ class QuotaLimit(models.Model):
         :return: QuerySet of quota usages OR "Not Available" if utilisation isn't available (e.g. per invoice you can't get in total)
         """
         current = None
-        quota_limit = quota_limit.quota_usage if quota_limit else QuotaUsage.objects.filter(user=user, quota_limit=self)
+        if quota_limit is not None:
+            quota_lim = quota_limit.quota_usage
+        else:
+            quota_lim = QuotaUsage.objects.filter(user=user, quota_limit=self)  # type: ignore[assignment]
 
         if self.limit_type == "forever":
             current = self.quota_usage.filter(user=user, quota_limit=self)
         elif self.limit_type == "per_month":
             current_month = timezone.now().month
             current_year = timezone.now().year
-            current = quota_limit.filter(created_at__year=current_year, created_at__month=current_month)
+            current = quota_lim.filter(created_at__year=current_year, created_at__month=current_month)
         elif self.limit_type == "per_day":
             current_day = timezone.now().day
             current_month = timezone.now().month
             current_year = timezone.now().year
-            current = quota_limit.filter(created_at__year=current_year, created_at__month=current_month, created_at__day=current_day)
+            current = quota_lim.filter(created_at__year=current_year, created_at__month=current_month, created_at__day=current_day)
         elif self.limit_type in ["per_client", "per_invoice", "per_team", "per_receipt", "per_quota"] and extra:
-            current = quota_limit.filter(extra_data=extra)
+            current = quota_lim.filter(extra_data=extra)
         else:
             return "Not Available"
         return current
 
     @classmethod
-    def delete_quota_usage(cls, quota_limit: str | QuotaLimit, user: User, extra, timestamp=None) -> NoReturn:
+    @typing.no_type_check
+    def delete_quota_usage(cls, quota_limit: str | QuotaLimit, user: User, extra, timestamp=None):
         quota_limit = cls.objects.get(slug=quota_limit) if isinstance(quota_limit, str) else quota_limit
 
         all_usages = quota_limit.strict_get_quotas(user, extra)
         closest_obj = None
 
         if all_usages.count() > 1 and timestamp:
-            earliest: QuotaUsage = all_usages.filter(created_at__gte=timestamp).order_by("created_at").first()
-            latest: QuotaUsage = all_usages.filter(created_at__lte=timestamp).order_by("created_at").last()
+            earliest: QuotaUsage | None = all_usages.filter(created_at__gte=timestamp).order_by("created_at").first()
+            latest: QuotaUsage | None = all_usages.filter(created_at__lte=timestamp).order_by("created_at").last()
 
             if earliest and latest:
                 time_until_soonest_obj = abs(earliest.created_at - timestamp)
@@ -731,8 +811,7 @@ class QuotaLimit(models.Model):
                 first.delete()
 
 
-class QuotaOverrides(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+class QuotaOverrides(OwnerBase):
     quota_limit = models.ForeignKey(QuotaLimit, on_delete=models.CASCADE, related_name="quota_overrides")
     value = models.IntegerField()
     updated_at = models.DateTimeField(auto_now=True)
@@ -746,8 +825,7 @@ class QuotaOverrides(models.Model):
         return f"{self.user}"
 
 
-class QuotaUsage(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+class QuotaUsage(OwnerBase):
     quota_limit = models.ForeignKey(QuotaLimit, on_delete=models.CASCADE, related_name="quota_usage")
     created_at = models.DateTimeField(auto_now_add=True)
     extra_data = models.IntegerField(null=True, blank=True)  # id of Limit Type
@@ -785,13 +863,14 @@ class QuotaUsage(models.Model):
         return self.objects.filter(user=user, quota_limit=ql).count()
 
 
-class QuotaIncreaseRequest(models.Model):
+class QuotaIncreaseRequest(OwnerBase):
     class StatusTypes(models.TextChoices):
         PENDING = "pending"
         APPROVED = "approved"
         REJECTED = "rejected"
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    requester = models.ForeignKey(User, on_delete=models.CASCADE, related_name="quota_increase_requests")
+
     quota_limit = models.ForeignKey(QuotaLimit, on_delete=models.CASCADE, related_name="quota_increase_requests")
     reason = models.CharField(max_length=1000)
     new_value = models.IntegerField()
@@ -805,10 +884,10 @@ class QuotaIncreaseRequest(models.Model):
         verbose_name_plural = "Quota Increase Requests"
 
     def __str__(self):
-        return f"{self.user}"
+        return f"{self.owner}"
 
 
-class EmailSendStatus(models.Model):
+class EmailSendStatus(OwnerBase):
     STATUS_CHOICES = [
         (status, status.title())
         for status in [
@@ -827,8 +906,6 @@ class EmailSendStatus(models.Model):
         ]
     ]
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name="emails_created")
-    organization = models.ForeignKey(Team, on_delete=models.CASCADE, null=True, blank=True, related_name="emails_created")
     sent_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name="emails_sent")
 
     created_at = models.DateTimeField(auto_now_add=True)

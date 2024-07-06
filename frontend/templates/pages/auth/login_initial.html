@@ -47,12 +47,49 @@
         .slide-transition {
             view-transition-name: slide-it;
         }
+
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: inherit;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .popup .h2 {
+            color: inherit;
+        }
+
+        .popup .p {
+            color: inherit;
+        }
+
+
     </style>
     <form method="post"
           class="slide-transition"
           hx-swap="none"
-          hx-post="{% url 'auth:login manual' %}">
+          hx-post="{% url 'auth:login manual' %}"
+          action="{% url 'auth:login manual' %}">
         {% csrf_token %}
+        <noscript>
+            <div data-theme="dim"
+                 class="overlay fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center">
+                <div class="popup bg-gray-700 rounded-lg p-8 w-96">
+                    <br>
+                    <h2 class="text-2xl font-bold text-center">
+                        JavaScript is disabled in your browser. Please enable JavaScript.
+                    </h2>
+                    <br>
+                    <p class="text-center mt-4">
+                        Need to know how to enable JavaScript ?
+                        <a href="http://enable-javascript.com/" class="text-blue-500 underline">Go here.</a>
+                    </p>
+                    <br>
+                </div>
+            </div>
+        </noscript>
         <div data-swap="form_fields">
             <div class="form-control w-full mt-4">
                 <label class="label">

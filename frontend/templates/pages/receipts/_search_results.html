@@ -62,28 +62,33 @@
                         <form method="post">
                             <button type="button"
                                     onclick="modal_receipt_{{ row.id }}.showModal();"
-                                    class="btn btn-outline btn-success btn-sm">Preview</button>
+                                    data-tip="Preview receipt in modal"
+                                    class="btn btn-outline btn-primary btn-sm tooltip">
+                                <i class="fa fa-eye"></i>
+                            </button>
                             <button onclick="modal_{{ row.id }}_receipts_upload.showModal();"
                                     id="edit_receipt_button"
-                                    class="btn btn-outline btn-success btn-sm"
+                                    class="btn btn-outline btn-warning btn-sm tooltip"
                                     for="edit_receipt"
+                                    data-tip="Edit receipt details"
                                     hx-trigger="click once"
                                     hx-swap="beforeend"
                                     hx-target="#modal_container"
                                     hx-get="{% url "api:base:modal retrieve with context" modal_name="receipts_upload" context_type="edit_receipt" context_value=row.id %}">
-                                <i class="fa-solid fa-receipt pe-1"></i>
-                                Edit Receipt
+                                <i class="fa-solid fa-edit"></i>
                             </button>
                             <button type="button"
-                                    class="btn btn-outline btn-primary btn-sm"
+                                    class="btn btn-outline btn-success btn-sm tooltip"
+                                    data-tip="Download Receipt"
                                     onclick="download_file('{% url 'api:receipts:generate_download_link' receipt_id=row.id %}')">
-                                Download
+                                <i class="fa fa-download"></i>
                             </button>
-                            <button class="btn btn-outline btn-error btn-sm"
+                            <button class="btn btn-error btn-sm tooltip"
+                                    data-tip="Delete receipt"
                                     hx-delete="{% url 'api:receipts:delete' id=row.id %}"
                                     hx-target="#items"
                                     hx-confirm="Are you sure you would like to delete the receipt?">
-                                Delete
+                                <i class="fa fa-trash"></i>
                             </button>
                         </form>
                     </td>

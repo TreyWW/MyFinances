@@ -16,6 +16,7 @@ urlpatterns = [
     path("quotas/", include("backend.api.quotas.urls")),
     path("emails/", include("backend.api.emails.urls")),
     path("hc/", include("backend.api.healthcheck.urls")),
+    path("public/", include("backend.api.public.urls")),
 ]
 
 app_name = "api"

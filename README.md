@@ -88,8 +88,8 @@ To contribute code:
 3. Create a new branch for your changes.
 4. Make your changes, following the coding style guidelines.
 5. Test your changes thoroughly
-    - `python manage.py test`
-    - run the app (`python manage.py runserver`)
+    - `python3 manage.py test`
+    - run the app (`python3 manage.py runserver`)
     - view any changed pages in browser (`http://127.0.0.1:8000`) and make sure the changes work as expected
 6. Submit a pull request to the main repository's `main` branch.
 
@@ -110,6 +110,12 @@ will fail if you haven't ran the command below:
 ```
 pip install black
 black ./
+```
+
+For static type checking we are using [mypy](https://mypy-lang.org/). Code tests will be run before PRs can be merged, they will fail if types in you code will be incorrect. You can run check with this command:
+
+```
+mypy .
 ```
 
 ### Version Control
@@ -448,6 +454,30 @@ Thank you for your contributions!
                     <br />
                     <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Aglizondo" title="Bug Fixes">🐞</a>
                 </td>
+                </td><td>
+                <td align="center">
+                    <a href="https://github.com/marvinl803" title="marvinl803">
+                        <img title="Full Stack" src="https://github.com/marvinl803.png" width="100px;" alt="" />
+                        <br />
+                        <sub>
+                            <b>Marvin Lopez</b>
+                        </sub>
+                    </a>
+                    <br />
+                    <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Amarvinl803" title="Backend">🖥</a><a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Amarvinl803" title="Frontend">🎨</a>
+                </td>
+                </td><td>
+                <td align="center">
+                    <a href="https://github.com/artkolpakov" title="artkolpakov">
+                        <img title="Bug Fixes" src="https://github.com/artkolpakov.png" width="100px;" alt="" />
+                        <br />
+                        <sub>
+                            <b>Artem Kolpakov</b>
+                        </sub>
+                    </a>
+                    <br />
+                    <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Aartkolpakov" title="Bug Fixes">🐞</a>
+                </td>
                 </td></tr></table>
 <!-- CONTRIBUTORS TABLE END -->
 
@@ -456,8 +486,8 @@ manually edit with the details below.
 
 ### How to edit the contributors table?
 
-- Updated any info using `python manage.py contriubtors`
-- Run `python manage.py contributors sync`
+- Updated any info using `python3 manage.py contriubtors`
+- Run `python3 manage.py contributors sync`
 - Make a PR to request these changes in
 - Done :)
 

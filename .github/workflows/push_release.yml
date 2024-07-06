@@ -39,7 +39,7 @@ jobs:
       - name: Build frontend
         run: |
           npm ci
-          npm run tailwind-build
+          npm run tailwind-minify
           npm run webpack-build
 
           if [ -f frontend/static/src/output.css ]; then

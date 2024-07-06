@@ -3,7 +3,7 @@ from django.contrib.auth.models import AnonymousUser
 from django.http import HttpResponse
 from django.shortcuts import render
 
-from backend.models import Team
+from backend.models import Organization
 from backend.types.htmx import HtmxHttpRequest
 
 
@@ -19,7 +19,7 @@ def switch_team(request: HtmxHttpRequest, team_id):
         response["HX-Refresh"] = "true"
         return response
 
-    team: Team | None = Team.objects.filter(id=team_id).first()
+    team: Organization | None = Organization.objects.filter(id=team_id).first()
 
     if not team:
         messages.error(request, "Team not found")
