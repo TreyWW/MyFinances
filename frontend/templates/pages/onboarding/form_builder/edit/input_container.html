@@ -39,17 +39,20 @@
                 <button class=""
                         hx-swap="outerHTML"
                         hx-target="closest .card"
+                        title="Delete form field"
+                        hx-confirm="Are you sure you would like to remove this form field?"
                         hx-delete="{% url 'api:onboarding:form_builder:inputs:delete' form_uuid=field.form.uuid field_uuid=field.uuid %}">
                     <i class="fa fa-trash cursor-pointer"></i>
                 </button>
                 <div class="divider divider-horizontal divider-accent"></div>
                 <div class="form-control">
-                    <div class="flex items-center space-x-2">
+                    <div class="flex items-center space-x-2" title="Mark field as required">
                         <span class="label-text">Required</span>
                         <input name="field_required" type="checkbox" class="toggle toggle-primary"
                                hx-post="{% url 'api:onboarding:form_builder:inputs:save' form_uuid=field.form.uuid field_uuid=field.uuid %}"
                                hx-trigger="input"
-                               value="{{ field.required }}"
+                               hx-include='input[name="changing_required_field"]'
+                               {% if field.required %}checked{% endif %}
                                hx-swap="none"
                                hx-target="this" />
                     </div>

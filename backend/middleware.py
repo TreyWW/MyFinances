@@ -37,6 +37,7 @@ class HTMXPartialLoadMiddleware:
             response.headers["HX-Retarget"] = response.retarget
         elif request.htmx.boosted and not response.headers.get("HX-Retarget") and not hasattr(response, "no_retarget"):
             response.headers["HX-Retarget"] = "#main_content"
+            response.headers["HX-Reswap"] = "innerHTML"
         return response
 
 

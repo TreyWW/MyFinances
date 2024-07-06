@@ -5,7 +5,7 @@ from backend.views.core.onboarding.models import OnboardingForm, OnboardingField
 
 
 def validate_page(page: str | None, sub_page: str | None) -> bool:
-    return (not page or page in ["profile", "form-builder", "api_keys"]) and (not sub_page or sub_page in ["list", "edit"])
+    return (not page or page in ["form-builder"]) and (not sub_page or sub_page in ["list", "edit"])
 
 
 def get_existing_forms(actor: User | Organization) -> QuerySet[OnboardingForm]:

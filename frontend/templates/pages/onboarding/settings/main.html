@@ -9,26 +9,10 @@
                     hx-swap="innerHTML"
                     hx-vals='{"onboarding_main": "True"}'>
                     <li>
-                        <a href="{% url 'onboarding:settings with page' page='profile' %}"
-                           hx-replace-url="{% url 'onboarding:settings with page' page='profile' %}">
-                            <i class="fa fa-solid fa-user"></i>
-                            Public Profile
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'onboarding:settings with page' page='form-builder' %}"
-                           hx-replace-url="{% url 'onboarding:settings with page' page='form-builder' %}">
+                        <a href="{% url 'onboarding:form_builder:dashboard' %}"
+                           hx-replace-url="{% url 'onboarding:form_builder:dashboard' %}">
                             <i class="fa fa-solid fa-gear"></i>
                             Form Builder
-                        </a>
-                    </li>
-                    <div class="divider"></div>
-                    <h2 class="pl-3 text-neutral dark:text-neutral-content">Access</h2>
-                    <li>
-                        <a href="{% url 'onboarding:settings with page' page='api_keys' %}"
-                           hx-replace-url="{% url 'onboarding:settings with page' page='api_keys' %}">
-                            <i class="fa fa-solid fa-code"></i>
-                            API Keys
                         </a>
                     </li>
                 </ul>

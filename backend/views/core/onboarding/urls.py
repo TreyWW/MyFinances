@@ -1,10 +1,10 @@
 from django.urls import path, include
 
 from .dashboard import dashboard
-from .settings import view_settings_page_endpoint, edit_form_endpoint, create_form_endpoint
+from .settings import view_settings_page_endpoint, edit_form_endpoint, create_form_endpoint, form_builder_list_forms_endpoint
 
 FORM_BUILDER_URLS = [
-    # path("", name="dashboard"), # needs view
+    path("", form_builder_list_forms_endpoint, name="dashboard"),  # needs view
     path("<uuid:form_uuid>/edit/", edit_form_endpoint, name="edit"),
     path("create/", create_form_endpoint, name="create"),
 ]

@@ -34,7 +34,7 @@ def save_field_endpoint(request: WebRequest, form_uuid: str, field_uuid: str) ->
     field_label = request.POST.get("field_label")
     field_type = request.POST.get("field_type")
     field_required = request.POST.get("field_required")
-    required_input_change = request.POST.get("required_input_change")
+    required_input_change = request.POST.get("changing_required_field")
 
     context: dict = {}
 

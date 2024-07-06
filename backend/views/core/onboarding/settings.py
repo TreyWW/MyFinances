@@ -12,7 +12,7 @@ from backend.views.core.onboarding import OnboardingForm
 
 
 @require_http_methods(["GET"])
-def view_settings_page_endpoint(request: WebRequest, page: str | None = None, sub_page: str | None = None) -> HttpResponse:
+def view_settings_page_endpoint(request: WebRequest, page: str | None = "form-builder", sub_page: str | None = None) -> HttpResponse:
     if not validate_page(page, sub_page):
         messages.error(request, "Invalid onboarding page")
         if request.htmx:
@@ -41,6 +41,30 @@ def view_settings_page_endpoint(request: WebRequest, page: str | None = None, su
     return response
 
 
+@require_http_methods(["GET"])
+def form_builder_list_forms_endpoint(request: WebRequest, page: str | None = None, sub_page: str | None = None) -> HttpResponse:
+    if not validate_page(page, sub_page):
+        messages.error(request, "Invalid onboarding page")
+        if request.htmx:
+            response = render(request, "base/toast.html")
+            response["HX-Redirect"] = reverse("onboarding:settings")
+            return response
+        return redirect("onboarding:settings")
+
+    forms = get_existing_forms(request.actor)
+    context = {"forms": forms}
+
+    template = f"pages/onboarding/settings/pages/form-builder.html"
+    if not page or not request.GET.get("onboarding_main"):
+        context["page_template"] = template
+        return render(request, "pages/onboarding/settings/main.html", context)
+    response = render(request, template, context)
+
+    response.no_retarget = True  # type: ignore[attr-defined]
+    response["HX-Trigger"] = "update_breadcrumbs"
+    return response
+
+
 @require_http_methods(["POST"])
 def create_form_endpoint(request: WebRequest) -> HttpResponse:
     onboarding_form = create_onboarding_form(request.actor)
@@ -60,9 +84,9 @@ def edit_form_endpoint(request: WebRequest, form_uuid) -> HttpResponse:
         messages.error(request, "Form not found")
         if request.htmx:
             response = render(request, "base/toast.html")
-            response["HX-Redirect"] = reverse("onboarding:settings with page", kwargs={"page": "form-builder"})
+            response["HX-Redirect"] = reverse("onboarding:form_builder:dashboard")
             return response
-        return redirect("onboarding:settings with page", "form-builder")
+        return redirect("onboarding:form_builder:dashboard")
     context: dict = {"form": form, "fields": form.fields.order_by("order")}
     template = f"pages/onboarding/form_builder/edit/content.html"
 

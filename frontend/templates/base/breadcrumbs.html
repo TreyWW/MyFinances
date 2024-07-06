@@ -1,8 +1,11 @@
 {% if breadcrumb %}
     <div class="breadcrumbs text-sm mb-4 -mt-4"
-         data-layout="breadcrumps"
+         data-layout="breadcrumbs"
          hx-boost="true"
-         {% if swap %}hx-swap-oob='innerHTML:div[data-layout="breadcrumps"]'{% endif %}>
+         hx-get="{% url 'api:base:breadcrumbs refetch' %}?url={{ request.path }}"
+         hx-trigger="update_breadcrumbs"
+         hx-swap="outerHTML"
+         {% if swap %}hx-swap-oob='innerHTML:div[data-layout="breadcrumbs"]'{% endif %}>
         <ul>
             {% for item in breadcrumb %}
                 <li>
