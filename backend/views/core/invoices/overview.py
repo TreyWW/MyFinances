@@ -3,10 +3,12 @@ from backend.models import *
 from backend.types.htmx import HtmxHttpRequest
 
 
+@web_require_scopes("invoices:read", False, False, "dashboard")
 def invoices_dashboard(request: HtmxHttpRequest):
     return render(request, "pages/invoices/dashboard/dashboard.html")
 
 
+@web_require_scopes("invoices:read", False, False, "invoices:dashboard")
 def manage_invoice(request: HtmxHttpRequest, invoice_id: str):
     context: dict = {}
 

@@ -2,12 +2,13 @@ from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
-from backend.decorators import feature_flag_check
+from backend.decorators import feature_flag_check, web_require_scopes
 from backend.models import Invoice, QuotaLimit
 from backend.types.htmx import HtmxHttpRequest
 
 
 @feature_flag_check("isInvoiceSchedulingEnabled", True)
+@web_require_scopes("invoices:read", False, False, "dashboard")
 def view_schedules(request: HtmxHttpRequest, invoice_id) -> HttpResponse:
     context: dict = {}
     try:

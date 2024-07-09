@@ -6,11 +6,13 @@ from django.shortcuts import redirect
 from django.shortcuts import render
 from login_required import login_not_required
 
+from backend.decorators import web_require_scopes
 from backend.models import Invoice
 from backend.models import InvoiceURL
 from backend.models import UserSettings
 
 
+@web_require_scopes("invoices:read", False, False, "dashboard")
 def preview(request, invoice_id):
     context = {"type": "preview"}
 

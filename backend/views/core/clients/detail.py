@@ -6,6 +6,7 @@ from django.http.response import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
 
+from backend.decorators import web_require_scopes
 from backend.service.clients.delete import delete_client
 from backend.service.clients.validate import validate_client
 from backend.types.htmx import HtmxHttpRequest
@@ -24,6 +25,7 @@ def handle_client_defaults_endpoints(request: HtmxHttpRequest, id):
 
 
 @require_http_methods(["GET"])
+@web_require_scopes("clients:read", False, False, "clients:dashboard")
 def client_detail_endpoint(request: HtmxHttpRequest, id):
     try:
         client = validate_client(request, id)
@@ -35,6 +37,7 @@ def client_detail_endpoint(request: HtmxHttpRequest, id):
 
 
 @require_http_methods(["GET"])
+@web_require_scopes("clients:read", False, False, "clients:dashboard")
 def get_client_defaults_endpoint(request: HtmxHttpRequest, id):
     try:
         client = validate_client(request, id, get_defaults=True)
@@ -49,6 +52,7 @@ def get_client_defaults_endpoint(request: HtmxHttpRequest, id):
 
 
 @require_http_methods(["PUT"])
+@web_require_scopes("clients:write", False, False, "clients:dashboard")
 def change_client_defaults_endpoint(request: HtmxHttpRequest, id):
     try:
         client = validate_client(request, id, get_defaults=True)
@@ -70,6 +74,7 @@ def change_client_defaults_endpoint(request: HtmxHttpRequest, id):
 
 
 @require_http_methods(["DELETE"])
+@web_require_scopes("clients:write", False, False, "clients:dashboard")
 def delete_client_endpoint(request: HtmxHttpRequest, id) -> HttpResponse:
     response: str | Literal[True] = delete_client(request, id)
 

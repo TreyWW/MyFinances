@@ -44,7 +44,7 @@ class Invalid:
 @require_POST
 @htmx_only("emails:dashboard")
 @feature_flag_check("areUserEmailsAllowed", status=True, api=True, htmx=True)
-@web_require_scopes("emails:send", False, False, "/dashboard/emails/")
+@web_require_scopes("emails:send", False, False, "emails:dashboard")
 def send_single_email_view(request: HtmxHttpRequest) -> HttpResponse:
     check_usage = quota_usage_check_under(request, "emails-single-count", api=True, htmx=True)
     if not isinstance(check_usage, bool):
@@ -56,7 +56,7 @@ def send_single_email_view(request: HtmxHttpRequest) -> HttpResponse:
 @require_POST
 @htmx_only("emails:dashboard")
 @feature_flag_check("areUserEmailsAllowed", status=True, api=True, htmx=True)
-@web_require_scopes("emails:send", False, False, "/dashboard/emails/")
+@web_require_scopes("emails:send", False, False, "emails:dashboard")
 def send_bulk_email_view(request: HtmxHttpRequest) -> HttpResponse:
     email_count = len(request.POST.getlist("emails")) - 1
 

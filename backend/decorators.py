@@ -215,6 +215,18 @@ def web_require_scopes(scopes: str | list[str], htmx=False, api=False, redirect_
             return render(request, "base/toast.html", {"autohide": False})
         elif api:
             return HttpResponse(status=403, content=msg)
+        elif request.htmx:
+            messages.error(request, msg)
+            resp = render(request, "base/toast.html", {"autohide": False})
+
+            try:
+                last_visited_url = request.session["last_visited"]
+                current_url = request.build_absolute_uri()
+                if last_visited_url != current_url:
+                    resp["HX-Replace-Url"] = last_visited_url
+            except KeyError:
+                resp["HX-Refresh"] = "true"
+            return resp
 
         messages.error(request, msg)
 

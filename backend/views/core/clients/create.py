@@ -1,11 +1,13 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect
 
+from backend.decorators import web_require_scopes
 from backend.models import Client
 from backend.types.htmx import HtmxHttpRequest
 from backend.service.clients.create import create_client
 
 
+@web_require_scopes("clients:write", False, False, "clients:dashboard")
 def create_client_endpoint(request: HtmxHttpRequest):
     if request.method == "GET":
         return render(request, "pages/clients/create/create.html")
