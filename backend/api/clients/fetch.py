@@ -7,7 +7,7 @@ from backend.types.htmx import HtmxHttpRequest
 
 
 @require_http_methods(["GET"])
-@web_require_scopes("clients:read", "/dashboard", True, True)
+@web_require_scopes("clients:read", True, True)
 def fetch_all_clients(request: HtmxHttpRequest):
     if not request.htmx:
         return redirect("clients:dashboard")
@@ -20,6 +20,7 @@ def fetch_all_clients(request: HtmxHttpRequest):
 
 
 @require_http_methods(["GET"])
+@web_require_scopes("clients:read", True, True)
 def fetch_clients_dropdown(request: HtmxHttpRequest):
     if not request.htmx:
         return redirect("clients:dashboard")

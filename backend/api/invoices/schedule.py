@@ -1,18 +1,15 @@
 from django.contrib import messages
 from django.db.models import Q
-from django.http import HttpResponse, HttpResponseForbidden, JsonResponse
+from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import render
-from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_http_methods, require_POST, require_GET
+from django.views.decorators.http import require_http_methods, require_GET
 from django_ratelimit.core import is_ratelimited
 from mypy_boto3_iam.type_defs import GetRoleResponseTypeDef
-from mypy_boto3_scheduler.type_defs import ScheduleSummaryTypeDef
 
-from backend.decorators import feature_flag_check
-from backend.models import Invoice, AuditLog, APIKey, InvoiceOnetimeSchedule, InvoiceURL, QuotaUsage
-from backend.types.emails import SingleEmailInput
+from backend.decorators import feature_flag_check, web_require_scopes
+from backend.models import Invoice, APIKey, InvoiceOnetimeSchedule, QuotaUsage
 from backend.types.htmx import HtmxHttpRequest
 from backend.utils.quota_limit_ops import quota_usage_check_under
 from infrastructure.aws.handler import get_iam_client
@@ -26,7 +23,6 @@ from infrastructure.aws.schedules.list_schedules import list_schedules, Schedule
 from settings.helpers import send_email
 from settings.settings import AWS_TAGS_APP_NAME
 
-
 import logging
 
 logger = logging.getLogger(__name__)
@@ -34,6 +30,7 @@ logger = logging.getLogger(__name__)
 
 @csrf_exempt
 @feature_flag_check("isInvoiceSchedulingEnabled", True, api=True)
+@web_require_scopes("invoices:write", True, True)
 def create_schedule(request: HtmxHttpRequest):
     option = request.POST.get("option")  # 1=one time 2=recurring
 
@@ -60,6 +57,7 @@ def create_schedule(request: HtmxHttpRequest):
     return render(request, "base/toasts.html")
 
 
+@web_require_scopes("invoices:write", True, True)
 def create_ots(request: HtmxHttpRequest) -> HttpResponse:
     invoice_id = request.POST.get("invoice_id", "") or request.POST.get("invoice", "")
 
@@ -79,7 +77,11 @@ def create_ots(request: HtmxHttpRequest) -> HttpResponse:
 
     schedule = create_onetime_schedule(
         CreateOnetimeScheduleInputData(
-            invoice=invoice, option=1, datetime=request.POST.get("date_time"), email_type=request.POST.get("email_type")  # type: ignore[arg-type]
+            invoice=invoice,
+            option=1,
+            datetime=request.POST.get("date_time"),
+            email_type=request.POST.get("email_type"),
+            # type: ignore[arg-type]
         )
     )
 
@@ -151,6 +153,7 @@ def authenticate_api_key(request: HtmxHttpRequest):
 
 @require_http_methods(["DELETE", "POST"])
 @feature_flag_check("isInvoiceSchedulingEnabled", True, api=True)
+@web_require_scopes("invoices:write", True, True)
 def cancel_onetime_schedule(request: HtmxHttpRequest, schedule_id: str):
     if not request.htmx:
         return HttpResponseForbidden()
@@ -188,6 +191,7 @@ def cancel_onetime_schedule(request: HtmxHttpRequest, schedule_id: str):
 
 @require_GET
 @feature_flag_check("isInvoiceSchedulingEnabled", True, api=True, htmx=True)
+@web_require_scopes("invoices:read", True, True)
 def fetch_onetime_schedules(request: HtmxHttpRequest, invoice_id: str):
     ratelimit = is_ratelimited(request, group="fetch_onetime_schedules", key="user", rate="5/30s", increment=True)
     if ratelimit:

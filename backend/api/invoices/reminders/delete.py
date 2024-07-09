@@ -4,7 +4,7 @@ from django.http import HttpResponseForbidden
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
-from backend.decorators import feature_flag_check
+from backend.decorators import feature_flag_check, web_require_scopes
 from backend.models import InvoiceReminder
 from infrastructure.aws.schedules.delete_reminder import delete_reminder
 
@@ -13,6 +13,7 @@ from backend.types.htmx import HtmxHttpRequest
 
 @require_http_methods(["DELETE", "POST"])
 @feature_flag_check("areInvoiceRemindersEnabled", True, api=True)
+@web_require_scopes("invoices:write", True, True)
 def cancel_reminder_view(request: HtmxHttpRequest, reminder_id: str):
     if not request.htmx:
         return HttpResponseForbidden()

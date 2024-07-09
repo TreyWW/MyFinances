@@ -4,7 +4,7 @@ from django.http import HttpResponseBadRequest
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
 
-from backend.decorators import quota_usage_check
+from backend.decorators import quota_usage_check, web_require_scopes
 from backend.models import Receipt, QuotaUsage
 from backend.types.requests import WebRequest
 
@@ -12,6 +12,7 @@ from backend.types.requests import WebRequest
 @require_http_methods(["POST"])
 @quota_usage_check("receipts-count", api=True, htmx=True)
 @login_required
+@web_require_scopes("receipts:write", True, True)
 def receipt_create(request: WebRequest):
     if not request.htmx:
         return redirect("receipts dashboard")

@@ -6,6 +6,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.utils import timezone
 
+from backend.decorators import web_require_scopes
 from backend.models import Invoice, InvoiceReminder, QuotaUsage
 from backend.utils.quota_limit_ops import quota_usage_check_under
 from infrastructure.aws.schedules.create_reminder import CreateReminderInputData, create_reminder_schedule
@@ -26,6 +27,7 @@ def get_datetime_from_reminder(reminder: InvoiceReminder) -> str:
     return date
 
 
+@web_require_scopes("invoices:write", True, True)
 def create_reminder_view(request: HtmxHttpRequest) -> HttpResponse:
     if not request.htmx:
         return redirect("invoices:dashboard")

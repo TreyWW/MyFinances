@@ -7,7 +7,6 @@ from collections.abc import Iterator
 
 from django.contrib import messages
 from django.core.exceptions import ValidationError
-from django.core.handlers.wsgi import WSGIRequest
 from django.core.validators import validate_email
 from django.db.models import QuerySet
 from django.http import HttpResponse
@@ -15,7 +14,7 @@ from django.shortcuts import render
 from django.views.decorators.http import require_POST
 from mypy_boto3_sesv2.type_defs import BulkEmailEntryResultTypeDef
 
-from backend.decorators import feature_flag_check
+from backend.decorators import feature_flag_check, web_require_scopes
 from backend.decorators import htmx_only
 from backend.models import Client
 from backend.models import EmailSendStatus
@@ -45,6 +44,7 @@ class Invalid:
 @require_POST
 @htmx_only("emails:dashboard")
 @feature_flag_check("areUserEmailsAllowed", status=True, api=True, htmx=True)
+@web_require_scopes("emails:send", False, False, "/dashboard/emails/")
 def send_single_email_view(request: HtmxHttpRequest) -> HttpResponse:
     check_usage = quota_usage_check_under(request, "emails-single-count", api=True, htmx=True)
     if not isinstance(check_usage, bool):
@@ -56,6 +56,7 @@ def send_single_email_view(request: HtmxHttpRequest) -> HttpResponse:
 @require_POST
 @htmx_only("emails:dashboard")
 @feature_flag_check("areUserEmailsAllowed", status=True, api=True, htmx=True)
+@web_require_scopes("emails:send", False, False, "/dashboard/emails/")
 def send_bulk_email_view(request: HtmxHttpRequest) -> HttpResponse:
     email_count = len(request.POST.getlist("emails")) - 1
 

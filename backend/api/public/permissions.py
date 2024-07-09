@@ -8,6 +8,12 @@ SCOPES = {
     "clients:write",
     "invoices:read",
     "invoices:write",
+    "receipts:read",
+    "receipts:write",
+    "clients:read",
+    "clients:write",
+    "emails:read",
+    "emails:send",
     "profile:read",
     "profile:write",
     "api_keys:read",
@@ -15,6 +21,7 @@ SCOPES = {
     "team_permissions:read",
     "team_permissions:write",
     "team:invite",
+    "team:kick",
 }
 
 SCOPES_TREE = {
@@ -29,6 +36,7 @@ SCOPES_TREE = {
     "team_permissions:read": {"team_permissions:read"},
     "team_permissions:write": {"team_permissions:read", "team_permissions:write"},
     "team:invite": {"team:invite"},
+    "team:kick": {"team:kick", "team:invite"},
 }
 
 SCOPE_DESCRIPTIONS = {

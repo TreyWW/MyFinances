@@ -1,10 +1,12 @@
 from django.db.models import Q, QuerySet
 from django.shortcuts import render
 
+from backend.decorators import web_require_scopes
 from backend.models import InvoiceProduct
 from backend.types.htmx import HtmxHttpRequest
 
 
+@web_require_scopes("invoices:read", True, True)
 def fetch_products(request: HtmxHttpRequest):
     results: QuerySet
     search_text = request.GET.get("search_existing_service")

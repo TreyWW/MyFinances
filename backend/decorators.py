@@ -192,15 +192,17 @@ def web_require_scopes(scopes: str | list[str], htmx=False, api=False, redirect_
                     team_permissions = TeamMemberPermission.objects.filter(team=request.team, user=request.user).first()
 
                     if not team_permissions:
-                        return return_error(request, "You do not have permission to perform this action")
+                        return return_error(request, "You do not have permission to perform this action (no permissions for team)")
 
                     # single scope
                     if isinstance(scopes, str) and scopes not in team_permissions.scopes:
-                        return return_error(request, "You do not have permission to perform this action")
+                        return return_error(request, f"You do not have permission to perform this action ({scopes})")
 
                     # scope list
-                    if isinstance(scopes, list) and not all(scope in team_permissions.scopes for scope in scopes):
-                        return return_error(request, "You do not have permission to perform this action")
+                    if isinstance(scopes, list):
+                        for scope in scopes:
+                            if scope not in team_permissions.scopes:
+                                return return_error(request, f"You do not have permission to perform this action ({scope})")
             return view_func(request, *args, **kwargs)
 
         _wrapped_view.required_scopes = scopes

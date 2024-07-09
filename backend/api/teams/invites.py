@@ -40,6 +40,7 @@ def check_team_invitation_is_valid(request, invitation: TeamInvitation, code=Non
     return True
 
 
+@web_require_scopes("team:invite", True, True)
 def send_user_team_invite(request: HtmxHttpRequest):
     user_email = request.POST.get("email")
     team_id = request.POST.get("team_id", "")

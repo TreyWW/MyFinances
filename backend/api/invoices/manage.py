@@ -10,6 +10,7 @@ from django.shortcuts import redirect
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
+from backend.decorators import web_require_scopes
 from backend.models import Invoice
 from backend.types.htmx import HtmxHttpRequest
 
@@ -33,6 +34,7 @@ class ErrorResponse:
 
 
 @require_http_methods(["GET"])
+@web_require_scopes("invoices:read", True, True)
 def tab_preview_invoice(request: HtmxHttpRequest, invoice_id):
     # Redirect if not an HTMX request
     if not request.htmx:
@@ -48,6 +50,7 @@ def tab_preview_invoice(request: HtmxHttpRequest, invoice_id):
     return render(request, "base/toasts.html")
 
 
+@web_require_scopes("invoices:read", True, True)
 def preview_invoice(request: HtmxHttpRequest, invoice_id) -> SuccessResponse | ErrorResponse:
     context: dict[str, str | Invoice] = {"type": "preview"}
 
