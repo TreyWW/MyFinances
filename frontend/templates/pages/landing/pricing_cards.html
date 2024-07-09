@@ -1,0 +1,85 @@
+<div class="space-y-8 lg:grid lg:grid-cols-4 sm:gap-6 xl:gap-10 lg:space-y-0">
+    {# Free #}
+    <div
+        class="flex flex-col h-fit max-w-lg p-6 mx-auto text-center text-gray-900 bg-white border border-gray-100
+                    rounded-lg shadow dark:border-gray-600 xl:p-8 dark:bg-gray-800 dark:text-white">
+        <h3 class="mb-4 text-2xl font-semibold">Free</h3>
+        <p class="font-light text-gray-500 sm:text-lg dark:text-gray-400">
+            Give us a go before purchasing a plan
+        </p>
+        <div class="flex items-baseline justify-center my-8">
+            <span class="mr-2 text-5xl font-extrabold">£0</span>
+            <span class="text-gray-500 dark:text-gray-400">for 1 month</span>
+        </div>
+        <ul role="list" class="mb-8 space-y-4 text-left">
+            {% include 'pages/landing/pricing_feature.html' with feature='Basic Invoicing' %}
+            {% include 'pages/landing/pricing_feature.html' with feature='Create up to 10 invoices' %}
+            {% include 'pages/landing/pricing_feature.html' with feature='Store up to 5 customers' %}
+        </ul>
+    </div>
+    {# Starter #}
+    <div
+        class="flex flex-col max-w-lg p-6 mx-auto text-center text-gray-900 bg-white border border-gray-100 rounded-lg shadow dark:border-gray-600 xl:p-8 dark:bg-gray-800 dark:text-white">
+        <h3 class="mb-4 text-2xl font-semibold">Starter</h3>
+        <p class="font-light text-gray-500 sm:text-lg dark:text-gray-400">
+            For startups or small businesses looking to accelerate invoicing
+        </p>
+        <div class="flex items-baseline justify-center my-8">
+            <span class="mr-2 text-5xl font-extrabold">£15</span>
+            <span class="text-gray-500 dark:text-gray-400">per month</span>
+        </div>
+        <ul role="list" class="mb-8 space-y-4 text-left">
+            {% include 'pages/landing/pricing_feature.html' with feature='Unlimited clients' %}
+            {% include 'pages/landing/pricing_feature.html' with feature='Unlimited invoices' %}
+            {% include 'pages/landing/pricing_feature.html' with feature='Recurring Invoices' %}
+            {% include 'pages/landing/pricing_feature.html' with feature='Basic customer onboarding' %}
+            {% include 'pages/landing/pricing_feature.html' with feature='Bulk email sending' %}
+            {% include 'pages/landing/pricing_feature.html' with feature='Membership management' %}
+            {% include 'pages/landing/pricing_feature.html' with feature='File storage' %}
+        </ul>
+    </div>
+    {# Growth #}
+    <div
+        class="flex flex-col max-w-lg p-6 mx-auto text-center text-gray-900 bg-white border border-gray-100 rounded-lg shadow dark:border-gray-600 xl:p-8 dark:bg-gray-800 dark:text-white">
+        <h3 class="mb-4 text-2xl font-semibold">Growth</h3>
+        <p class="font-light text-gray-500 sm:text-lg dark:text-gray-400">
+            For growing businesses looking to spend less time with manual invoices
+        </p>
+        <div class="flex items-baseline justify-center my-8">
+            <span class="mr-2 text-5xl font-extrabold">£30</span>
+            <span class="text-gray-500 dark:text-gray-400">per month</span>
+        </div>
+        <!-- List -->
+        <ul role="list" class="mb-8 space-y-4 text-left">
+            {% include 'pages/landing/pricing_feature.html' with feature='Advanced onboarding' %}
+            {% include 'pages/landing/pricing_feature.html' with feature='Invoice reminders' %}
+            {% include 'pages/landing/pricing_feature.html' with feature='API Access' %}
+            {% include 'pages/landing/pricing_feature.html' with feature='Extra file storage' %}
+
+        </ul>
+    </div>
+    {# Enterprise #}
+    <div
+        class="flex flex-col max-w-lg p-6 mx-auto text-center text-gray-900 bg-white border border-gray-100 rounded-lg shadow dark:border-gray-600 xl:p-8 dark:bg-gray-800 dark:text-white">
+        <h3 class="mb-4 text-2xl font-semibold">Enterprise</h3>
+        <p class="font-light text-gray-500 sm:text-lg dark:text-gray-400">
+            For larger businesses that want more control
+        </p>
+        <div class="flex items-baseline justify-center my-8">
+            <span class="mr-2 text-5xl font-extrabold">Enquire</span>
+        </div>
+        <!-- List -->
+        <ul role="list" class="mb-8 space-y-4 text-left">
+            {% include 'pages/landing/pricing_feature.html' with feature='Custom price (choose your feature set)' %}
+            {% include 'pages/landing/pricing_feature.html' with feature='Higher service quota limits' %}
+            {% include 'pages/landing/pricing_feature.html' with feature='Organisation Accounts' %}
+            {% include 'pages/landing/pricing_feature.html' with feature='Dedicated customer success' %}
+            {% include 'pages/landing/pricing_feature.html' with feature='Workflow automation' %}
+            {% include 'pages/landing/pricing_feature.html' with feature='Priority support' %}
+        </ul>
+        <a href="#"
+           class="btn btn-primary">
+            Contact us
+        </a>
+    </div>
+</div>

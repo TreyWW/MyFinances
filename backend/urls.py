@@ -15,7 +15,7 @@ from backend.views.core import receipts
 from backend.views.core.currency_converter import dashboard as cc_dashboard
 from backend.views.core.invoices.overview import manage_invoice
 from backend.views.core.other.index import dashboard
-from backend.views.core.other.index import index
+from backend.views.core.other.index import index, pricing
 from backend.views.core.quotas.view import quotas_list
 from backend.views.core.quotas.view import quotas_page
 from backend.views.core.quotas.view import view_quota_increase_requests
@@ -30,6 +30,7 @@ urlpatterns = [
     path("api/", include("backend.api.urls")),
     path("webhooks/", include("backend.webhooks.urls")),
     path("", index, name="index"),
+    path("pricing", pricing, name="pricing"),
     path("dashboard/", dashboard, name="dashboard"),
     path("dashboard/settings/", include("backend.views.core.settings.urls")),
     path("dashboard/teams/", include("backend.views.core.teams.urls")),

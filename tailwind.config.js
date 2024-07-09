@@ -90,9 +90,19 @@ module.exports = {
         '60': '60'
       },
       animation: {
-        // 'pulse-slow': 'pulse 4s linear infinite',
-      }
-      ,
+        'infinite-scroll': 'infinite-scroll 40s linear infinite',
+        'infinite-scroll-replay': 'infinite-scroll-replay 40s linear infinite'
+      },
+      keyframes: {
+        'infinite-scroll': {
+          '0%': {transform: 'translateX(0)'},
+          '100%': {transform: 'translateX(-100%)'},
+        },
+        'infinite-scroll-replay': {
+          '0%': {transform: 'translateX(100%)'},
+          '100%': {transform: 'translateX(0)'},
+        }
+      },
       dropShadow: {
         glow: [
           "0 0px 20px rgba(255,255, 255, 0.35)",
