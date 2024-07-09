@@ -4,14 +4,15 @@ from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
 from backend.service.api_keys.delete import delete_api_key
-from backend.service.api_keys.generate import generate_public_api_key, get_permissions_from_request
+from backend.service.api_keys.generate import generate_public_api_key
 from backend.service.api_keys.get import get_api_key_by_id
-from backend.types.htmx import HtmxHttpRequest
 from backend.api.public.models import APIAuthToken
+from backend.service.permissions.scopes import get_permissions_from_request
+from backend.types.requests import WebRequest
 
 
 @require_http_methods(["POST"])
-def generate_api_key_endpoint(request: HtmxHttpRequest) -> HttpResponse:
+def generate_api_key_endpoint(request: WebRequest) -> HttpResponse:
     name = request.POST.get("name")
     expiry = request.POST.get("expiry")
     description = request.POST.get("description")
@@ -44,7 +45,7 @@ def generate_api_key_endpoint(request: HtmxHttpRequest) -> HttpResponse:
 
 
 @require_http_methods(["DELETE"])
-def revoke_api_key_endpoint(request: HtmxHttpRequest, key_id: str) -> HttpResponse:
+def revoke_api_key_endpoint(request: WebRequest, key_id: str) -> HttpResponse:
     key: APIAuthToken | None = get_api_key_by_id(request.user.logged_in_as_team or request.user, key_id)
 
     delete_key_response = delete_api_key(request, request.user.logged_in_as_team or request.user, key=key)

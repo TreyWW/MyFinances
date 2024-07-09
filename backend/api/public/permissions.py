@@ -12,6 +12,9 @@ SCOPES = {
     "profile:write",
     "api_keys:read",
     "api_keys:write",
+    "team_permissions:read",
+    "team_permissions:write",
+    "team:invite",
 }
 
 SCOPES_TREE = {
@@ -23,13 +26,18 @@ SCOPES_TREE = {
     "profile:write": {"profile:read", "profile:write"},
     "api_keys:read": {"api_keys:read"},
     "api_keys:write": {"api_keys:read", "api_keys:write"},
+    "team_permissions:read": {"team_permissions:read"},
+    "team_permissions:write": {"team_permissions:read", "team_permissions:write"},
+    "team:invite": {"team:invite"},
 }
 
 SCOPE_DESCRIPTIONS = {
     "clients": {"description": "Access customer details", "options": {"read": "Read only", "write": "Read and write"}},
     "invoices": {"description": "Access invoices", "options": {"read": "Read only", "write": "Read and write"}},
-    "profile": {"description": "Access user profile", "options": {"read": "Read only", "write": "Read and write"}},
+    "profile": {"description": "Access profile details", "options": {"read": "Read only", "write": "Read and write"}},
     "api_keys": {"description": "Access API keys", "options": {"read": "Read only", "write": "Read and write"}},
+    "team_permissions": {"description": "Access team permissions", "options": {"read": "Read only", "write": "Read and write"}},
+    "team": {"description": "Invite team members", "options": {"invite": "Invite members"}},
 }
 
 

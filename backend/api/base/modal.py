@@ -5,7 +5,7 @@ from django.http import HttpResponseBadRequest
 from django.shortcuts import render
 
 from backend.api.public.permissions import SCOPE_DESCRIPTIONS
-from backend.models import Client, Receipt
+from backend.models import Client, Receipt, User
 from backend.models import Invoice
 from backend.models import QuotaLimit
 from backend.models import Organization
@@ -141,7 +141,7 @@ def open_modal(request: HtmxHttpRequest, modal_name, context_type=None, context_
         elif modal_name == "invoices_to_destination":
             if existing_client := request.GET.get("client"):
                 context["existing_client_id"] = existing_client
-        elif modal_name == "generate_api_key":
+        elif modal_name == "generate_api_key" or modal_name == "edit_team_member_permissions":
             permissions = SCOPE_DESCRIPTIONS
             # example
             # "clients": {
@@ -152,6 +152,14 @@ def open_modal(request: HtmxHttpRequest, modal_name, context_type=None, context_
                 {"name": group, "description": perms["description"], "options": perms["options"]}
                 for group, perms in SCOPE_DESCRIPTIONS.items()
             ]
+
+        if modal_name == "edit_team_member_permissions":
+            team = request.user.logged_in_as_team
+            for_user = team.members.filter(id=context_value).first()
+            for_user_perms = team.permissions.filter(user=for_user).first()
+            if for_user:
+                context["editing_user"] = for_user
+                context["user_current_scopes"] = for_user_perms.scopes if for_user_perms else []
 
         return render(request, template_name, context)
     except ValueError as e:

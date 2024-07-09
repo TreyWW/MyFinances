@@ -62,8 +62,9 @@ class CustomUserMiddleware(MiddlewareMixin):
         # Replace request.user with CustomUser instance if authenticated
         if user.is_authenticated:
             request.user = User.objects.get(pk=user.pk)
-
-            request.actor = request.user.logged_in_as_team or request.user
+            request.team = request.user.logged_in_as_team or None
+            request.team_id = request.team.id if request.team else None
+            request.actor = request.team or request.user
         else:
             # If user is not authenticated, set request.user to AnonymousUser
             request.user = AnonymousUser()  # type: ignore[assignment]

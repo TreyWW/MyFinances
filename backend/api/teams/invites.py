@@ -63,7 +63,7 @@ def send_user_team_invite(request: HtmxHttpRequest):
     if not user:
         return return_error_notif(request, "User not found")
 
-    if user.teams_joined.exists():
+    if user.teams_joined.filter(pk=team_id).exists():
         return return_error_notif(request, "User already is in this team")
 
     try:
@@ -125,8 +125,8 @@ def accept_team_invite(request: HtmxHttpRequest, code):
         messages.error(request, "Invalid invite - Maybe it has expired?")
         return render(request, "partials/messages_list.html")
 
-    if request.user.teams_joined.exists():
-        messages.error(request, "You are already in a team, please leave the team first")
+    if request.user.teams_joined.filter(pk=invitation.team_id).exists():
+        messages.error(request, "You are already in this team")
         response = render(request, "partials/messages_list.html", status=200)
         response["HX-Trigger-After-Swap"] = "accept_invite_error"
         return response
