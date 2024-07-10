@@ -20,7 +20,7 @@ def render_to_pdf(template_src, context_dict):
     result = BytesIO()
     pdf = pisa.pisaDocument(BytesIO(html.encode("UTF-8")), result)
     if not pdf.err:
-        return HttpResponse(result.getvalue(), content_type='application/pdf')
+        return HttpResponse(result.getvalue(), content_type="application/pdf")
     return None
 
 
@@ -28,7 +28,7 @@ def preview(request, invoice_id):
     invoice = Invoice.objects.filter(id=invoice_id).prefetch_related("items").first()
 
     context = {
-        'invoice': invoice,
+        "invoice": invoice,
     }
 
     if not invoice:
@@ -49,12 +49,12 @@ def preview(request, invoice_id):
 
     context.update({"invoice": invoice, "currency_symbol": currency_symbol})
 
-    pdf = render_to_pdf('pages/invoices/view/invoice_page.html', context)
+    pdf = render_to_pdf("pages/invoices/view/invoice_page.html", context)
 
     if pdf:
-        response = HttpResponse(pdf, content_type='application/pdf')
+        response = HttpResponse(pdf, content_type="application/pdf")
         content = f"inline; filename=invoice_{invoice.id}.pdf"
-        response['Content-Disposition'] = content
+        response["Content-Disposition"] = content
         return response
     return HttpResponse("Error generating PDF", status=400)
 
