@@ -102,7 +102,7 @@ npm run tailwind-watch
 
 #### Tailwind Build
 
-To be honest, tailwind watch is nice, but especially on my windows PC it is VERY CPU and Memory intesive, every single change,
+To be honest, tailwind watch is nice, but especially on my windows computer it is very CPU and Memory intesive, every single change,
 even 1 character causes a re-watch, and this is a lot... Instead of that, you can use `tailwind-build` to only do a one-time
 build. You need to remember to run the command after a major update though, incase you add new classes.
 
@@ -113,7 +113,7 @@ npm run tailwind-build
 ### Webpack for JS
 
 Webpack is used to bundle our javascript into one file to make development easier and speed up builds. The project now uses
-chunks to load javascript, so you should see a few files with ids such as `937`. Django will automatically pick these up.
+chunks to load javascript, so you should see a few files with ids such as `937`. Django will automatically pick these up. Check below for details on how to run webpack.
 
 
 #### Run webpack dev
