@@ -162,6 +162,7 @@ module = [
     "django_components",
     "drf_yasg",
     "drf_yasg.utils",
-    "drf_yasg.views"
+    "drf_yasg.views",
+    "xhtml2pdf",
 ]
 ignore_missing_imports = true

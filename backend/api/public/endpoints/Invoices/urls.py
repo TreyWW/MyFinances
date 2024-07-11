@@ -1,6 +1,6 @@
 from django.urls import path
 
-from . import create, list, get
+from . import create, list, get, download_pdf
 
 urlpatterns = [
     path(
@@ -30,6 +30,7 @@ urlpatterns = [
     # ),
     path("", list.list_invoices_endpoint, name="list"),
     path("<str:id>/", get.get_invoices_endpoint, name="get"),
+    path("<str:id>/download/", download_pdf.download, name="download"),
 ]
 
 app_name = "invoices"

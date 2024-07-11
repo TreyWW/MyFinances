@@ -4,32 +4,17 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from django.shortcuts import render
 from django.http import HttpResponse
-from django.template.loader import get_template
 
-from io import BytesIO
-from xhtml2pdf import pisa
 from login_required import login_not_required
 
-from backend.models import Invoice, UserSettings
+from backend.models import Invoice
 from backend.models import InvoiceURL
+from backend.service.invoices.create_pdf import generate_pdf
+from backend.types.htmx import HtmxHttpRequest
 
 
-def render_to_pdf(template_src, context_dict):
-    template = get_template(template_src)
-    html = template.render(context_dict)
-    result = BytesIO()
-    pdf = pisa.pisaDocument(BytesIO(html.encode("UTF-8")), result)
-    if not pdf.err:
-        return HttpResponse(result.getvalue(), content_type="application/pdf")
-    return None
-
-
-def preview(request, invoice_id):
+def preview(request: HtmxHttpRequest, invoice_id: str) -> HttpResponse:
     invoice = Invoice.objects.filter(id=invoice_id).prefetch_related("items").first()
-
-    context = {
-        "invoice": invoice,
-    }
 
     if not invoice:
         messages.error(request, "Invoice not found")
@@ -42,19 +27,7 @@ def preview(request, invoice_id):
         messages.error(request, "You don't have access to this invoice")
         return redirect("invoices:dashboard")
 
-    try:
-        currency_symbol = invoice.get_currency_symbol()
-    except UserSettings.DoesNotExist:
-        currency_symbol = "$"
-
-    context.update({"invoice": invoice, "currency_symbol": currency_symbol})
-
-    pdf = render_to_pdf("pages/invoices/view/invoice_page.html", context)
-
-    if pdf:
-        response = HttpResponse(pdf, content_type="application/pdf")
-        content = f"inline; filename=invoice_{invoice.id}.pdf"
-        response["Content-Disposition"] = content
+    if response := generate_pdf(invoice, "inline"):
         return response
     return HttpResponse("Error generating PDF", status=400)
 
