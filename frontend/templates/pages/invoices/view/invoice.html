@@ -2,14 +2,12 @@
 {% load mathfilters %}
 {% load markdownify %}
 {% load strfilters %}
-
 <div class="invoice-container">
     <div class="header">
         <!-- Company Logo and Info -->
         <div>
             {% if invoice.logo %}
-                <img src="{{ img_path }}"
-                     alt="company-logo">
+                <img src="{{ img_path }}" alt="company-logo">
             {% else %}
                 <img src="https://github.com/TreyWW/MyFinances/blob/main/documentation/assets/logo_single.png?raw=true"
                      alt="company-logo">
@@ -18,8 +16,7 @@
                 <h3>{{ invoice.self_company|default_if_none:"" }}</h3>
                 <p>{{ invoice.self_name|default_if_none:"" }}</p>
                 <p>{{ invoice.self_phone|default_if_none:"" }}</p>
-                {% if invoice.vat_number %}
-                    <p>VAT: {{ invoice.vat_number }}</p>{% endif %}
+                {% if invoice.vat_number %}<p>VAT: {{ invoice.vat_number }}</p>{% endif %}
             </div>
         </div>
         <!-- Invoice Info -->
@@ -43,75 +40,73 @@
     <div class="invoice-items">
         <table>
             <thead>
-            <tr>
-                <th colspan="2">Items</th>
-                <th>Quantity</th>
-                <th>Price</th>
-                <th>Amount</th>
-            </tr>
+                <tr>
+                    <th colspan="2">Items</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Amount</th>
+                </tr>
             </thead>
             <tbody>
-            {% for item in invoice.items.all %}
-                <tr>
-                    <td colspan="2">
-                        <div>{{ item.name }}</div>
-                        <div>{{ item.description|markdownify }}</div>
-                    </td>
-                    <td>{{ item.hours }}</td>
-                    <td>{{ invoice.get_currency_symbol }}{{ item.price_per_hour }}</td>
-                    <td>{{ invoice.get_currency_symbol }}{{ item.get_total_price | floatformat:2 }}</td>
-                </tr>
-            {% endfor %}
+                {% for item in invoice.items.all %}
+                    <tr>
+                        <td colspan="2">
+                            <div>{{ item.name }}</div>
+                            <div>{{ item.description|markdownify }}</div>
+                        </td>
+                        <td>{{ item.hours }}</td>
+                        <td>{{ invoice.get_currency_symbol }}{{ item.price_per_hour }}</td>
+                        <td>{{ invoice.get_currency_symbol }}{{ item.get_total_price | floatformat:2 }}</td>
+                    </tr>
+                {% endfor %}
             </tbody>
             <tfoot>
-            <tr class="subtotal">
-                <td colspan="4">Subtotal</td>
-                <td>{{ invoice.get_currency_symbol }}{{ invoice.get_subtotal }}</td>
-            </tr>
-            {% if tax %}
-                {# todo add tax #}
                 <tr class="subtotal">
-                    <td colspan="4">
-                        Tax
-                    </td>
-                    <td>
-                        {{ invoice.get_currency_symbol }}0.00
-                    </td>
+                    <td colspan="4">Subtotal</td>
+                    <td>{{ invoice.get_currency_symbol }}{{ invoice.get_subtotal }}</td>
                 </tr>
-            {% endif %}
-            {% if invoice.discount_percentage %}
-                <tr class="subtotal">
-                    <td colspan="4">
-                        Discount
-                    </td>
-                    <td>
-                        {{ invoice.discount_percentage }}% off
-                                                         (-{{ invoice.get_currency_symbol }}{{ invoice.get_percentage_amount }})
-                    </td>
+                {% if tax %}
+                    {# todo add tax #}
+                    <tr class="subtotal">
+                        <td colspan="4">Tax</td>
+                        <td>{{ invoice.get_currency_symbol }}0.00</td>
+                    </tr>
+                {% endif %}
+                {% if invoice.discount_percentage %}
+                    <tr class="subtotal">
+                        <td colspan="4">Discount</td>
+                        <td>
+                            {{ invoice.discount_percentage }}% off
+                            (-{{ invoice.get_currency_symbol }}{{ invoice.get_percentage_amount }})
+                        </td>
+                    </tr>
+                {% endif %}
+                {% if invoice.discount_amount %}
+                    <tr class="subtotal">
+                        <td colspan="4">
+                            {% if not invoice.discount_percentage %}Discount{% endif %}
+                        </td>
+                        <td>-{{ invoice.get_currency_symbol }}{{ invoice.discount_amount }}</td>
+                    </tr>
+                {% endif %}
+                <tr class="total">
+                    <td colspan="4">Total</td>
+                    <td>{{ invoice.get_currency_symbol }}{{ invoice.get_total_price }}</td>
                 </tr>
-            {% endif %}
-            {% if invoice.discount_amount %}
-                <tr class="subtotal">
-                    <td colspan="4">
-                        {% if not invoice.discount_percentage %}Discount{% endif %}
-                    </td>
-                    <td>
-                        -{{ invoice.get_currency_symbol }}{{ invoice.discount_amount }}
-                    </td>
-                </tr>
-            {% endif %}
-            <tr class="total">
-                <td colspan="4">Total</td>
-                <td>{{ invoice.get_currency_symbol }}{{ invoice.get_total_price }}</td>
-            </tr>
             </tfoot>
         </table>
     </div>
     <!-- Payment Details -->
     <div class="payment-details">
-        <p>Account Holder Name: <span class="font-semibold">{{ invoice.account_holder_name }}</span></p>
-        <p>Account Number: <span class="font-semibold">{{ invoice.account_number }}</span></p>
-        <p>Account Sort Code: <span class="font-semibold">{{ invoice.sort_code|dashify }}</span></p>
+        <p>
+            Account Holder Name: <span class="font-semibold">{{ invoice.account_holder_name }}</span>
+        </p>
+        <p>
+            Account Number: <span class="font-semibold">{{ invoice.account_number }}</span>
+        </p>
+        <p>
+            Account Sort Code: <span class="font-semibold">{{ invoice.sort_code|dashify }}</span>
+        </p>
     </div>
     <!-- Footer -->
     <div class="footer" style="display: none">

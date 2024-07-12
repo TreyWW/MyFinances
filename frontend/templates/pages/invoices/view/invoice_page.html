@@ -4,13 +4,12 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invoice</title>
-    {#    <link rel="stylesheet" href="{% static 'src/output.css' %}">#}
-    <style>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Invoice</title>
+        {#    <link rel="stylesheet" href="{% static 'src/output.css' %}">#}
+        <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #f8f8f8;
@@ -153,10 +152,7 @@
         .footer a {
             text-decoration: underline;
         }
-    </style>
-</head>
-
-<body>
-{% include 'pages/invoices/view/invoice.html' %}
-</body>
+        </style>
+    </head>
+    <body>{% include 'pages/invoices/view/invoice.html' %}</body>
 </html>
