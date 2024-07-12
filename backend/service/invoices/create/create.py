@@ -7,6 +7,12 @@ from backend.models import Invoice, InvoiceItem, Client, QuotaUsage, InvoiceProd
 from backend.service.clients.validate import validate_client
 from backend.types.htmx import HtmxHttpRequest
 
+# to load the default invoice logo
+from os import path
+from django.core.files.images import ImageFile
+from django.conf import settings
+# the logo name
+DEFAULT_INVOICE_LOGO_FILE_PATH =  "invoice_default_logo.PNG"
 
 def get_invoice_context(request: HtmxHttpRequest) -> dict:
     context: dict = {
@@ -60,6 +66,8 @@ def create_invoice_items(request: HtmxHttpRequest):
 
 def save_invoice(request: HtmxHttpRequest, invoice_items):
     currency = request.user.user_profile.currency
+    # default invoice logo path
+    # default_logo_path = os.path("......")
 
     if not (date_due := request.POST.get("date_due")):
         messages.error(request, "Please enter a valid date")
@@ -103,7 +111,17 @@ def save_invoice(request: HtmxHttpRequest, invoice_items):
     invoice.notes = request.POST.get("notes")
     invoice.invoice_number = request.POST.get("invoice_number")
     invoice.vat_number = request.POST.get("vat_number")
-    invoice.logo = request.FILES.get("logo")
+
+    # the old line of code
+    # invoice.logo = request.FILES.get("logo")
+    ############################
+    if request.FILES.get("logo") is not None:
+        invoice.logo = request.FILES.get("logo")
+    else:
+        # I did not perfectly handle the path to frontend/static/img, so if you know a better way please # TODO , before merge
+        with  open((path.join(settings.BASE_DIR,'frontend','static','img',DEFAULT_INVOICE_LOGO_FILE_PATH )),'rb') as img_file:
+            invoice.logo.save(DEFAULT_INVOICE_LOGO_FILE_PATH, ImageFile(img_file), True)
+    ############################
     invoice.reference = request.POST.get("reference")
     invoice.sort_code = request.POST.get("sort_code")
     invoice.account_number = request.POST.get("account_number")
