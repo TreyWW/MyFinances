@@ -41,7 +41,7 @@ def tab_preview_invoice(request: HtmxHttpRequest, invoice_id):
     prev_invoice = preview_invoice(request, invoice_id)
 
     if prev_invoice.success:
-        return render(request, "pages/invoices/view/invoice.html", prev_invoice.context)
+        return render(request, "pages/invoices/view/preview_embed.html", prev_invoice.context)
 
     messages.error(request, prev_invoice.message)
 

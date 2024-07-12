@@ -23,7 +23,11 @@ def generate_pdf(invoice: Invoice, content_type: str) -> HttpResponse | None:
     except UserSettings.DoesNotExist:
         currency_symbol = "$"
 
-    context = {"invoice": invoice, "currency_symbol": currency_symbol}
+    context = {
+        "invoice": invoice,
+        "currency_symbol": currency_symbol,
+        "img_path": invoice.logo.path.replace("\\", "/") if invoice.logo else None,
+    }
 
     pdf = render_to_pdf("pages/invoices/view/invoice_page.html", context)
 
