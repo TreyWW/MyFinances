@@ -6,7 +6,8 @@
         <div class=" text-3xl w-full grid grid-cols-4">
             <div hx-boost="true">
                 <a href="{% url "invoices:dashboard" %}"
-                   class="btn btn-sm btn-outline btn-secondary me-3 float-left">Back to list</a>
+                   class="btn btn-sm btn-outline btn-secondary me-3 float-left">Back to list
+                </a>
             </div>
             <h1 class="text-center col-span-2">Invoice #{{ invoice.id }}</h1>
             <div>
@@ -103,7 +104,7 @@
             </div>
         </div>
     </div>
-    <div class="collapse collapse-arrow card bg-base-100 shadow-xl w-full p-6 flex-row gap-x-4 mt-4">
+    <div class="collapse collapse-arrow card bg-base-100 shadow-xl w-full h-screen p-6 flex-row gap-x-4 mt-4">
         <input type="checkbox" checked />
         <div class="collapse-title text-xl font-medium">Manage Invoice Content</div>
         <div id="container" class="collapse-content"></div>
