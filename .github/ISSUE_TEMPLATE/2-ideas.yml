@@ -43,15 +43,15 @@ body:
 
         You may paste links of any reference images, please upload directly by pasting into the comment (so it uploads through github). 
   - type: textarea
-      id: solution
-      validations:
-        required: false
-      attributes:
-        label: Describe a possible solution
-        description: |
-            [OPTIONAL] Please describe a potential solution to the problem that we may be able to solve.
+    id: solution
+    validations:
+      required: false
+    attributes:
+      label: Describe a possible solution
+      description: |
+          [OPTIONAL] Please describe a potential solution to the problem that we may be able to solve.
 
-            Things you may want to address:
-            - Details of the technical implementation
-            - Tradeoffs made in design decisions
-            - Caveats and considerations for the future
+          Things you may want to address:
+          - Details of the technical implementation
+          - Tradeoffs made in design decisions
+          - Caveats and considerations for the future
