@@ -42,7 +42,7 @@ body:
         Please describe the problem needed to be solved in detail.
 
         You may paste links of any reference images, please upload directly by pasting into the comment (so it uploads through github). 
-   - type: textarea
+  - type: textarea
       id: solution
       validations:
         required: false
