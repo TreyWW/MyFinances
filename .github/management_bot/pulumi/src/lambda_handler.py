@@ -1,13 +1,25 @@
+import json
 import os, base64
 from textwrap import dedent
 
 import github.GithubException
-from github import Github, Issue
+from prs import handler as pr_handler
+from issues import handler as issue_handler
+from helpers import decode_private_key
+import _types
+from github import Github, Issue, GithubIntegration
 from github import Auth
 
-raw_private_key = os.environ.get("private_key")
-PRIVATE_KEY = base64.b64decode(raw_private_key).decode("ascii")
+import logging
+
+logging.basicConfig()
+logging.getLogger().setLevel(logging.DEBUG if os.environ.get("DEBUG") else logging.DEBUG)  # todo go back to info
+logger = logging.getLogger(__name__)
+
+PRIVATE_KEY = decode_private_key(os.environ.get("private_key"))
 APP_ID = os.environ.get("app_id")
+
+REPOSITORY_NAME = "TreyWW/MyFinances"
 
 
 def check_if_user_perm_issue(issue: dict, sender: dict, repository: dict):
@@ -45,98 +57,36 @@ def is_trey(sender):
 
 
 def lambda_handler(event: dict, _):
-    auth = Auth.AppAuth(APP_ID, PRIVATE_KEY).get_installation_auth(event.get("installation", {}).get("id"))
-    g = Github(auth=auth)
+    auth = Auth.AppAuth(APP_ID, PRIVATE_KEY)
+    gi = GithubIntegration(auth=auth)
+    g: Github = gi.get_installations()[0].get_github_for_installation()
 
-    ACTION = event.get("action", {})
-    ISSUE = event.get("issue", {})
-    PR = event.get("pull_request", {})
-    COMMENT = event.get("comment", {})
-    SENDER = event.get("sender", {})
-    REPOSITORY = event.get("repository", {})
+    logger.debug(event)
 
-    repo = g.get_repo(event.get("repository", {}).get("full_name")) if REPOSITORY else {}
+    context_dicts = _types.Context(
+        event=event,
+        action=event.get("action", ""),
+        issue=_types.fill_dataclass_from_dict(_types.Issue, event.get("issue", {})),
+        pull_request=_types.fill_dataclass_from_dict(_types.PullRequest, event.get("pull_request", {})),
+        comment=_types.fill_dataclass_from_dict(_types.Comment, event.get("comment", {})),
+        sender=_types.fill_dataclass_from_dict(_types.User, event.get("sender", {})),
+        repository=_types.fill_dataclass_from_dict(_types.Repository, event.get("repository", {})),
+        changes=_types.fill_dataclass_from_dict(_types.Changes, event.get("changes", {})),
+    )
 
-    if ISSUE or PR:
-        selected_json: dict = ISSUE or PR
+    logger.debug(context_dicts)
 
-        selected_obj = repo.get_issue(number=ISSUE["number"]) if repo and ISSUE else repo.get_pull(number=PR["id"]) if repo and PR else {}
+    context_objs = _types.Objects(github=g, dict_context=context_dicts, repository=g.get_repo(context_dicts.repository.full_name))
 
-        LABELS = selected_json.get("labels")
-        label_names = {label["name"] for label in LABELS}
+    logger.debug(context_objs)
 
-        if "awaiting-response" in label_names and is_owner(selected_json, SENDER) and COMMENT:
-            try:
-                selected_obj.remove_from_labels("awaiting-response")
-            except github.GithubException:
-                ...
+    if context_dicts.pull_request:
+        logger.debug("Using PR handler")
+        pr_handler.handler(context_dicts, context_objs)
+    elif context_dicts.issue:
+        logger.debug("Using issue handler")
+        issue_handler.handler(context_dicts, context_objs)
+    else:
+        logger.debug("Using no handler; invalid request.")
 
-        if COMMENT and (is_trey(SENDER) or is_owner(selected_json, SENDER)):
-            if ACTION == "created":  # sent comment
-                msg = COMMENT.get("body", "")
-                msg_stripped = msg.strip().split(" ")
-                msg_len = len(msg_stripped)
-
-                match msg_stripped[0]:
-                    case "/add_label":
-                        if not msg_len == 2:
-                            send_error(
-                                selected_obj,
-                                sender=SENDER["login"],
-                                body=COMMENT["body"],
-                                msg_len=msg_len,
-                                required=2,
-                                example_cmd="add_label bug",
-                            )
-
-                            return g.close()
-
-                        selected_obj.add_to_labels(msg_stripped[1])
-                        selected_obj.create_comment(f"Okay @{SENDER['login']}, I have added the label '{msg_stripped[1]}'")
-                    case "/add_labels":
-                        selected_obj.add_to_labels(*msg_stripped[1:])
-                        selected_obj.create_comment(f"Okay @{SENDER['login']}, I have added the labels \"{', '.join(msg_stripped[1:])}\"")
-                    case "/remove_label":
-                        if not msg_len == 2:
-                            send_error(
-                                selected_obj,
-                                sender=SENDER["login"],
-                                body=COMMENT["body"],
-                                msg_len=msg_len,
-                                required=2,
-                                example_cmd="remove_label bug",
-                            )
-
-                            return g.close()
-
-                        selected_obj.remove_from_labels(msg_stripped[1])
-                        selected_obj.create_comment(f"Okay @{SENDER['login']}, I have removed the label \"{msg_stripped[1]}\"")
-                    case "/remove_labels":
-                        selected_obj.remove_from_labels(*msg_stripped[1:])
-                        selected_obj.create_comment(f"Okay @{SENDER['login']}, I have removed the labels \"{', '.join(msg_stripped[1:])}\"")
-                    case _:
-                        selected_obj.create_comment(
-                            dedent(
-                                f"""
-                                Hi @{SENDER["login"]},
-
-                                <details><summary>My available commands:</summary>
-                                <p>
-
-                                | Command | Description | Arg Types | Example |
-                                |---------|-------------|--------|--------|
-                                | /add_label | Adds one label | string | /add_label bug |
-                                | /add_labels | Adds multiple labels | list[string] | /add_label bug enhancement |
-                                | /remove_label | Removes one label | string | /remove_label bug |
-                                | /remove_labels | Removes multiple labels | list[string] | /remove_labels bug enhancement |
-                                </p>
-                                </details>
-                            """
-                            )
-                        )
-    # elif PR:
-    #     match ACTION:
-    #         case "labeled":
-    #
-
-    return {"statusCode": 200, "body": {}}
+    return {"statusCode": 200, "body": json.dumps({})}

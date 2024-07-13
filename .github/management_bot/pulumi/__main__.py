@@ -43,6 +43,7 @@ lambda_func = lambda_.Function(
     role=lambda_access_role.arn,
     code=pulumi.AssetArchive({".": pulumi.FileArchive("./src")}),
     handler="lambda_handler.lambda_handler",
+    timeout=8,
     runtime=lambda_.Runtime.PYTHON3D12,
     environment=lambda_.FunctionEnvironmentArgs(
         variables={"app_id": config.require_secret("app_id"), "private_key": config.require_secret("private_key")}
@@ -71,7 +72,7 @@ rest_api_lambda_integration = apigateway.Integration(
     http_method="POST",
     integration_http_method="POST",
     type="AWS",
-    timeout_milliseconds=4000,
+    timeout_milliseconds=8000,
     uri=lambda_func.invoke_arn,
 )
 
