@@ -6,6 +6,6 @@ contact_links:
   - name: ❓ Need some help
     url: https://github.com/TreyWW/MyFinances/discussions/categories/q-a
     about: If you have a question or are stuck setting up the project, open a Q&A discussion!
-  - name: 💡 Idea or Feature request
-    url: https://github.com/TreyWW/MyFinances/discussions/new?category=ideas
-    about: If you would like to suggest a new idea or would like a new feature added to MyFinances, discuss it on the Discussions tab!
+  - name: 📖 View our documentation
+    url: https://docs.myfinances.cloud/?utm_source=github_issue_create
+    about: Check out our documentation to get started! We have lots of helpful info in there
