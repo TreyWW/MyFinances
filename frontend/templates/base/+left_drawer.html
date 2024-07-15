@@ -16,32 +16,32 @@
         <li>
             {% with i_url="dashboard" %}
                 <a href="{% url i_url %}"
-                   {% if  request.resolver_match.url_name == i_url %}class="active{% endif %}
+                   {% if  request.resolver_match.view_name == i_url %}class="active{% endif %}
                    ">My Dashboard</a>
             {% endwith %}
         </li>
         <li>
-            {% with i_url="clients dashboard" %}
+            {% with i_url="clients:dashboard" %}
                 <a href="{% url i_url %}"
-                   {% if request.resolver_match.url_name == i_url %}class="active"{% endif %}>Clients</a>
+                   {% if request.resolver_match.view_name == i_url %}class="active"{% endif %}>Clients</a>
             {% endwith %}
         </li>
         <li>
             {% with i_url="invoices:dashboard" %}
                 <a href="{% url i_url %}"
-                   {% if request.resolver_match.url_name == i_url %}class="active"{% endif %}>Invoices</a>
+                   {% if request.resolver_match.view_name == i_url %}class="active"{% endif %}>Invoices</a>
             {% endwith %}
         </li>
         <li>
             {% with i_url="receipts dashboard" %}
                 <a href="{% url i_url %}"
-                   {% if request.resolver_match.url_name == i_url %}class="active"{% endif %}>Receipts</a>
+                   {% if request.resolver_match.view_name == i_url %}class="active"{% endif %}>Receipts</a>
             {% endwith %}
         </li>
         <li>
             {% with i_url="currency converter" %}
                 <a href="{% url i_url %}"
-                   {% if request.resolver_match.url_name == i_url %}class="active"{% endif %}>
+                   {% if request.resolver_match.view_name == i_url %}class="active"{% endif %}>
                     Currency Converter
                 </a>
             {% endwith %}
@@ -49,16 +49,16 @@
         <li>
             {% with i_url="quotas" %}
                 <a href="{% url i_url %}"
-                   {% if request.resolver_match.url_name == i_url %}class="active"{% endif %}>
+                   {% if request.resolver_match.view_name == i_url %}class="active"{% endif %}>
                     Service Quotas
                 </a>
             {% endwith %}
         </li>
         {% if are_user_emails_allowed %}
             <li>
-                {% with i_url="emails:dashboard" ns="emails" uname="dashboard" %}
+                {% with i_url="emails:dashboard" %}
                     <a href="{% url i_url %}"
-                       {% if request.resolver_match.url_name == uname and ns in request.resolver_match.namespaces %} class="active" {% endif %}>
+                       {% if request.resolver_match.view_name == "emails:dashboard" %}class="active"{% endif %}>
                         Email Sending
                     </a>
                 {% endwith %}

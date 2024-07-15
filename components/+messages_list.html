@@ -1,6 +1,5 @@
-<div {% if not no_swap %}hx-swap-oob='{% if custom_oob %}{{ custom_oob }}{% else %}innerHTML:#messages_list{% endif %}
-     '
-     {% endif %}>
+<div
+    {% if not no_swap %}hx-swap-oob='{% if custom_oob %}{{ custom_oob }}{% else %}innerHTML:#messages_list{% endif %}'{% endif %}>
     {% for message in messages %}
         <div onclick="clicked_alert_to_close(this);"
              class="mb-4 rounded-lg alert {{ message.tags }}"
@@ -14,11 +13,11 @@
             </div>
             {% if autohide != False %}
                 <script>
-                var scriptElement = document.currentScript;
-                var divElement = scriptElement.parentNode;
-                setTimeout(function () {
-                    clicked_alert_to_close(divElement);
-                }, 7000);
+                    var scriptElement = document.currentScript;
+                    var divElement = scriptElement.parentNode;
+                    setTimeout(function () {
+                        clicked_alert_to_close(divElement);
+                    }, 7000);
                 </script>
             {% endif %}
         </div>

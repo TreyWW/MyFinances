@@ -1,7 +1,7 @@
 from django.views.decorators.http import require_POST
 
 from backend.decorators import *
-from backend.models import Team, QuotaUsage
+from backend.models import Organization, QuotaUsage
 from backend.types.htmx import HtmxHttpRequest
 
 
@@ -14,11 +14,11 @@ def create_team(request: HtmxHttpRequest):
         messages.error(request, "A team name field must be filled.")
         return render(request, "partials/messages_list.html")
 
-    if Team.objects.filter(name=name).exists():
+    if Organization.objects.filter(name=name).exists():
         messages.error(request, "A team with this name already exists.")
         return render(request, "partials/messages_list.html")
 
-    team = Team.objects.create(name=name, leader=request.user)
+    team = Organization.objects.create(name=name, leader=request.user)
 
     QuotaUsage.create_str(request.user, "teams-count", team.id)
     QuotaUsage.create_str(request.user, "teams-joined", team.id)

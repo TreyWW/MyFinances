@@ -1,4 +1,5 @@
 import datetime
+from decimal import Decimal
 from typing import Literal
 
 from django.contrib import messages
@@ -46,13 +47,16 @@ def convert_currency(init_currency, target_currency, amount, date=None):
     ----------
     Returns an int or float representing the new amount
     """
+
+    amount = Decimal(amount)
+
     if not isinstance(init_currency, str) or len(init_currency) != 3:
         raise ValueError("Initial currency not recognized")
 
     if not isinstance(target_currency, str) or len(target_currency) != 3:
         raise ValueError("Target currency not recognized")
 
-    if not isinstance(amount, (int, float)):
+    if not isinstance(amount, (int, float, Decimal)):
         raise ValueError("Amount is not an accepted datatype")
 
     currency_rates = CurrencyRates()

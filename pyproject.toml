@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "MyFinances"
-version = "0.4.5"
+version = "0.4.6"
 description = "github.com/TreyWW/MyFinances"
 authors = ["TreyWW"]
 readme = "README.md"
@@ -14,14 +14,21 @@ django-storages = "1.14.2"
 pillow = "10.3.0"
 tblib = "^3.0.0"
 forex-python = "^1.8"
-django = "^5.0.2"
+django = "^5.0.7"
 django-mathfilters = "^1.0.0"
 sample-helper-aws-appconfig = "^2.1.0"
 redis = { extras = ["hiredis"], version = "^5.0.1" }
 django-webpack-loader = "^3.1.0"
+django-silk = "^5.1.0"
+djangorestframework = "^3.15.1"
+drf-yasg = "^1.21.7"
 
+setuptools = "^70.1.1"
+xhtml2pdf = "^0.2.16"
 [tool.poetry.group.mypy.dependencies]
 mypy = "1.7.1"
+django-stubs = { version = "4.2.7" }
+django-stubs-ext = { version = "4.2.7" }
 djangorestframework-stubs = { extras = ["compatible-mypy"], version = "^3.14.5" }
 boto3-stubs = { extras = [
     "sesv2",
@@ -38,7 +45,7 @@ pre-commit = "^3.7.0"
 pulumi-aws = "^6.29.0"
 
 [tool.poetry.group.django.dependencies]
-Django = "^5.0.2"
+Django = "^5.0.7"
 gunicorn = "22.0.0"
 social-auth-app-django = "5.4.1"
 django-sendgrid-v5 = "1.2.3"
@@ -51,7 +58,6 @@ django-htmlmin = "0.11.0"
 python-memcached = "1.62"
 django-htmx = "1.17.3"
 django-login-required-middleware = "0.9.0"
-django-debug-toolbar = "4.3.0"
 django-components = "0.37"
 django-markdownify = "0.9.3"
 shortuuid = "1.0.13"
@@ -94,7 +100,7 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.bumpversion]
-current_version = "0.4.5"
+current_version = "0.4.6"
 commit = true
 commit_args = "-s"
 tag = true
@@ -141,7 +147,6 @@ django_settings_module = "settings.settings"
 
 [[tool.mypy.overrides]]
 module = [
-    "debug_toolbar",
     "django.core.cache.backends.redis",
     "django_ratelimit.core",
     "django_ratelimit.decorators",
@@ -154,6 +159,10 @@ module = [
     "social_django.models",
     "emails",
     "step_functions",
-    "django_components"
+    "django_components",
+    "drf_yasg",
+    "drf_yasg.utils",
+    "drf_yasg.views",
+    "xhtml2pdf",
 ]
 ignore_missing_imports = true

@@ -4,10 +4,11 @@ from django.contrib import messages
 from django.http import HttpResponseBadRequest
 from django.shortcuts import render
 
+from backend.api.public.permissions import SCOPE_DESCRIPTIONS
 from backend.models import Client, Receipt
 from backend.models import Invoice
 from backend.models import QuotaLimit
-from backend.models import Team
+from backend.models import Organization
 from backend.models import UserSettings
 from backend.types.htmx import HtmxHttpRequest
 from backend.utils.feature_flags import get_feature_status
@@ -31,7 +32,7 @@ def open_modal(request: HtmxHttpRequest, modal_name, context_type=None, context_
                 context["code"] = context_value
             elif context_type == "leave_team":
                 if request.user.teams_joined.filter(id=context_value).exists():
-                    context["team"] = Team.objects.filter(id=context_value).first()
+                    context["team"] = Organization.objects.filter(id=context_value).first()
             elif context_type == "edit_receipt":
                 try:
                     receipt = Receipt.objects.get(pk=context_value)
@@ -137,6 +138,20 @@ def open_modal(request: HtmxHttpRequest, modal_name, context_type=None, context_
             else:
                 clients = Client.objects.filter(user=request.user)
             context["email_list"] = clients
+        elif modal_name == "invoices_to_destination":
+            if existing_client := request.GET.get("client"):
+                context["existing_client_id"] = existing_client
+        elif modal_name == "generate_api_key":
+            permissions = SCOPE_DESCRIPTIONS
+            # example
+            # "clients": {
+            #     "description": "Access customer details",
+            #     "options": ["read", "write"]
+            # },
+            context["permissions"] = [
+                {"name": group, "description": perms["description"], "options": perms["options"]}
+                for group, perms in SCOPE_DESCRIPTIONS.items()
+            ]
 
         return render(request, template_name, context)
     except ValueError as e:

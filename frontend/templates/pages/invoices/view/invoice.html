@@ -2,37 +2,34 @@
 {% load mathfilters %}
 {% load markdownify %}
 {% load strfilters %}
-<div class="max-w-3xl mx-auto p-6 bg-white mt-8 rounded-lg shadow-sm min-h-screen flex flex-col justify-between invoice-container">
-    <div class="flex justify-between items-center mb-8 mt-4">
+<div class="invoice-container">
+    <div class="header">
         <!-- Company Logo and Info -->
         <div>
             {% if invoice.logo %}
-                <img src="{{ invoice.logo.url }}"
-                     alt="company-logo"
-                     class="h-24 w-24 object-cover rounded-full">
+                <img src="{{ img_path }}" alt="company-logo">
             {% else %}
                 <img src="https://github.com/TreyWW/MyFinances/blob/main/documentation/assets/logo_single.png?raw=true"
-                     alt="company-logo"
-                     class="h-24 w-24 object-cover rounded-full">
+                     alt="company-logo">
             {% endif %}
-            <div class="mt-4">
-                <h3 class="text-lg text-gray-800">{{ invoice.self_company|default_if_none:"" }}</h3>
-                <p class="text-gray-600">{{ invoice.self_name|default_if_none:"" }}</p>
-                <p class="text-gray-600">{{ invoice.self_phone|default_if_none:"" }}</p>
-                {% if invoice.vat_number %}<p class="text-gray-600">VAT: {{ invoice.vat_number }}</p>{% endif %}
+            <div class="company-info">
+                <h3>{{ invoice.self_company|default_if_none:"" }}</h3>
+                <p>{{ invoice.self_name|default_if_none:"" }}</p>
+                <p>{{ invoice.self_phone|default_if_none:"" }}</p>
+                {% if invoice.vat_number %}<p>VAT: {{ invoice.vat_number }}</p>{% endif %}
             </div>
         </div>
         <!-- Invoice Info -->
-        <div class="text-right">
-            <h2 class="text-2xl font-bold text-gray-800">INVOICE</h2>
-            <p class="mt-2 text-gray-600">INV #{{ invoice.invoice_id|default:invoice.id }}</p>
-            <p class="text-gray-600">Invoice date: {{ invoice.date_issued|date:"d/m/Y" }}</p>
-            <p class="text-gray-600">Due date: {{ invoice.date_due|date:"d/m/Y" }}</p>
-            <p class="text-gray-600">Balance Due: {{ invoice.get_currency_symbol }}{{ invoice.get_total_price }}</p>
+        <div class="invoice-info">
+            <h2>INVOICE</h2>
+            <p>INV #{{ invoice.invoice_id|default:invoice.id }}</p>
+            <p>Invoice date: {{ invoice.date_issued|date:"d/m/Y" }}</p>
+            <p>Due date: {{ invoice.date_due|date:"d/m/Y" }}</p>
+            <p>Balance Due: {{ invoice.get_currency_symbol }}{{ invoice.get_total_price }}</p>
         </div>
     </div>
     <!-- Client info -->
-    <div class="grid grid-cols-2 items-center mt-4">
+    <div class="client-info">
         <div>
             {% with details=invoice.get_to_details %}
                 {% include 'pages/invoices/view/_client-details.html' with c_type=details.0 c_details=details.1 %}
@@ -40,133 +37,81 @@
         </div>
     </div>
     <!-- Invoice Items -->
-    <div class="-mx-4 sm:mx-0 mt-4 flex-grow overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
+    <div class="invoice-items">
+        <table>
+            <thead>
                 <tr>
-                    <th scope="col"
-                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Items
-                    </th>
-                    <th scope="col"
-                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Quantity
-                    </th>
-                    <th scope="col"
-                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Price
-                    </th>
-                    <th scope="col"
-                        class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Amount
-                    </th>
+                    <th colspan="2">Items</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Amount</th>
                 </tr>
             </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
+            <tbody>
                 {% for item in invoice.items.all %}
                     <tr>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900">{{ item.name }}</div>
-                            <div class="text-sm text-gray-500">{{ item.description|markdownify }}</div>
+                        <td colspan="2">
+                            <div>{{ item.name }}</div>
+                            <div>{{ item.description|markdownify }}</div>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="text-sm text-gray-900">{{ item.hours }}</span>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="text-sm text-gray-900">{{ invoice.get_currency_symbol }}{{ item.price_per_hour }}</span>
-                        </td>
-                        <td class="px-6 py-4 text-right whitespace-nowrap">
-                            <span class="text-sm text-gray-900">{{ invoice.get_currency_symbol }}{{ item.get_total_price | floatformat:2 }}</span>
-                        </td>
+                        <td>{{ item.hours }}</td>
+                        <td>{{ invoice.get_currency_symbol }}{{ item.price_per_hour }}</td>
+                        <td>{{ invoice.get_currency_symbol }}{{ item.get_total_price | floatformat:2 }}</td>
                     </tr>
                 {% endfor %}
             </tbody>
             <tfoot>
-                <tr class="bg-gray-50">
-                    <th colspan="3"
-                        class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                        Subtotal
-                    </th>
-                    <td class="px-6 py-3 text-right text-sm font-medium text-gray-500 uppercase tracking-wider">
-                        {{ invoice.get_currency_symbol }}{{ invoice.get_subtotal }}
-                    </td>
+                <tr class="subtotal">
+                    <td colspan="4">Subtotal</td>
+                    <td>{{ invoice.get_currency_symbol }}{{ invoice.get_subtotal }}</td>
                 </tr>
                 {% if tax %}
                     {# todo add tax #}
-                    <tr class="bg-gray-50">
-                        <th colspan="3"
-                            class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                            Tax
-                        </th>
-                        <td class="px-6 py-3 text-right text-sm font-medium text-gray-500 uppercase tracking-wider">
-                            {{ invoice.get_currency_symbol }}0.00
-                        </td>
+                    <tr class="subtotal">
+                        <td colspan="4">Tax</td>
+                        <td>{{ invoice.get_currency_symbol }}0.00</td>
                     </tr>
                 {% endif %}
                 {% if invoice.discount_percentage %}
-                    <tr class="bg-gray-50">
-                        <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Discount</th>
-                        <td colspan="4"
-                            class="px-6 py-3 text-right text-sm font-medium text-error uppercase tracking-wider text-balance">
+                    <tr class="subtotal">
+                        <td colspan="4">Discount</td>
+                        <td>
                             {{ invoice.discount_percentage }}% off
                             (-{{ invoice.get_currency_symbol }}{{ invoice.get_percentage_amount }})
                         </td>
                     </tr>
                 {% endif %}
                 {% if invoice.discount_amount %}
-                    <tr class="bg-gray-50">
-                        <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                    <tr class="subtotal">
+                        <td colspan="4">
                             {% if not invoice.discount_percentage %}Discount{% endif %}
-                        </th>
-                        <td colspan="4"
-                            class="px-6 py-3 text-right text-sm font-medium text-error uppercase tracking-wider">
-                            -{{ invoice.get_currency_symbol }}{{ invoice.discount_amount }}
                         </td>
+                        <td>-{{ invoice.get_currency_symbol }}{{ invoice.discount_amount }}</td>
                     </tr>
                 {% endif %}
-                <tr class="bg-gray-50">
-                    <th class="px-6 py-3 text-left text-sm font-bold text-gray-900 uppercase tracking-wider">Total</th>
-                    <th colspan="4"
-                        class="px-6 py-3 text-right text-sm font-bold text-gray-900 uppercase tracking-wider">
-                        {{ invoice.get_currency_symbol }}{{ invoice.get_total_price }}
-                    </th>
+                <tr class="total">
+                    <td colspan="4">Total</td>
+                    <td>{{ invoice.get_currency_symbol }}{{ invoice.get_total_price }}</td>
                 </tr>
             </tfoot>
         </table>
     </div>
     <!-- Payment Details -->
-    {% if invoice.account_holder_name or invoice.account_number or invoice.sort_code %}
-        <div class="divider divider-secondary"></div>
-        <div class="text-sm text-gray-600 my-4">
-            {% if invoice.account_holder_name %}
-                <p>
-                    Account Holder Name: <span class="font-semibold ms-2">{{ invoice.account_holder_name }}</span>
-                </p>
-            {% endif %}
-            {% if invoice.account_number %}
-                <p>
-                    Account Number: <span class="font-semibold ms-2">{{ invoice.account_number }}</span>
-                </p>
-            {% endif %}
-            {% if invoice.sort_code %}
-                <p>
-                    Account Sort Code: <span class="font-semibold ms-2">{{ invoice.sort_code|dashify }}</span>
-                </p>
-            {% endif %}
-        </div>
-    {% endif %}
-    <!--  Footer  -->
-    {% if invoice.notes %}
-        <div class="divider divider-secondary"></div>
-        <div class="border-t-2 pt-4 text-xs text-gray-500 text-center">
-            {#        Please pay the invoice before the due date. You can pay the invoice by logging in to your account from our client portal.#}
-            {{ invoice.notes|markdownify }}
-        </div>
-    {% endif %}
-    <!-- Credits -->
-    <div class="divider rounded-lg divider-secondary mb-auto pt-3 text-xs text-gray-500 text-center print:hidden">
-        {# Print ignored #}
-        This invoice was generated with 💜 by
-        <a class="underline" href="https://github.com/TreyWW/MyFinances">MyFinances</a>
+    <div class="payment-details">
+        <p>
+            Account Holder Name: <span class="font-semibold">{{ invoice.account_holder_name }}</span>
+        </p>
+        <p>
+            Account Number: <span class="font-semibold">{{ invoice.account_number }}</span>
+        </p>
+        <p>
+            Account Sort Code: <span class="font-semibold">{{ invoice.sort_code|dashify }}</span>
+        </p>
+    </div>
+    <!-- Footer -->
+    <div class="footer" style="display: none">
+        {# TODO: remove credit if on paid plan #}
+        This invoice was generated using
+        <a href="https://github.com/TreyWW/MyFinances">MyFinances</a>
     </div>
 </div>

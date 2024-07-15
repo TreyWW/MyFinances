@@ -14,7 +14,7 @@ def return_error_notif(request: HtmxHttpRequest, message: str):
 
 
 def leave_team_confirmed(request: HtmxHttpRequest, team_id):
-    team: Team | None = Team.objects.filter(id=team_id).first()
+    team: Organization | None = Organization.objects.filter(id=team_id).first()
 
     if not team:
         return return_error_notif(request, "Team not found")

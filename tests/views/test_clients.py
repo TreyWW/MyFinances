@@ -7,30 +7,30 @@ from model_bakery import baker
 
 class ClientsViewTestCase(ViewTestCase):
     def test_clients_view_302_for_non_authenticated_users(self):
-        response = self.client.get(reverse("clients dashboard"))
+        response = self.client.get(reverse("clients:dashboard"))
         self.assertEqual(response.status_code, 302)
 
     def test_clients_view_200_for_authenticated_users(self):
         self.login_user()
-        response = self.client.get(reverse("clients dashboard"))
+        response = self.client.get(reverse("clients:dashboard"))
         self.assertEqual(response.status_code, 200)
 
     def test_clients_view_matches_with_template(self):
         self.login_user()
-        response = self.client.get(reverse("clients dashboard"))
+        response = self.client.get(reverse("clients:dashboard"))
         self.assertTemplateUsed(response, "pages/clients/dashboard/dashboard.html")
 
     def test_clients_view_matches_with_urls_view(self):
         func = resolve("/dashboard/clients/").func
         func_name = f"{func.__module__}.{func.__name__}"
-        self.assertEqual("/dashboard/clients/", reverse("clients dashboard"))
-        self.assertEqual("backend.views.core.clients.dashboard.clients_dashboard", func_name)
+        self.assertEqual("/dashboard/clients/", reverse("clients:dashboard"))
+        self.assertEqual("backend.views.core.clients.dashboard.clients_dashboard_endpoint", func_name)
 
     def test_clients_view_doesnt_create_invalid_client_no_first_name(self):
         self.login_user()
         client_objects_before = Client.objects.count()
         response = self.client.post(
-            reverse("clients dashboard"),
+            reverse("clients:dashboard"),
             {
                 "first_name": "",
                 "last_name": "Testy",
@@ -45,7 +45,7 @@ class ClientsViewTestCase(ViewTestCase):
         self.login_user()
         client_objects_before = Client.objects.count()
         response = self.client.post(
-            reverse("clients dashboard"),
+            reverse("clients:dashboard"),
             {
                 "first_name": "Testy",
                 "last_name": "",

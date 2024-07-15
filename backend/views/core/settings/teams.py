@@ -11,7 +11,7 @@ from backend.types.htmx import HtmxHttpRequest
 def teams_dashboard(request: HtmxHttpRequest):
     context: dict[str, str | int] = {}
 
-    users_team: Optional[Team] = request.user.logged_in_as_team
+    users_team: Optional[Organization] = request.user.logged_in_as_team
 
     if not users_team:
         user_with_counts = User.objects.prefetch_related("teams_joined", "teams_leader_of").get(pk=request.user.pk)
@@ -27,7 +27,7 @@ def teams_dashboard(request: HtmxHttpRequest):
 
     try:
         team = (
-            Team.objects.annotate(
+            Organization.objects.annotate(
                 is_leader=Case(
                     When(leader=request.user, then=True),
                     default=False,
@@ -38,7 +38,7 @@ def teams_dashboard(request: HtmxHttpRequest):
             .get(id=users_team.id)
         )
 
-    except Team.DoesNotExist:
+    except Organization.DoesNotExist:
         user_with_counts = User.objects.prefetch_related("teams_joined", "teams_leader_of").get(pk=request.user.pk)
         return render(
             request,

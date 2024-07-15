@@ -5,6 +5,7 @@
     <form id="sort_direction_storage">
     </form>
     <div class="card bg-base-100 p-6 mb-4 h-screen">
+        <h2 class="text-xl">Invoices</h2>
         <div class="flex gap-3 justify-between mb-3">
             <div class="dropdown dropdown-hover dropdown-right w-14">
                 <div tabindex="0"
@@ -16,6 +17,7 @@
                           class="loading loading-spinner loading-htmx-loader"></span>
                 </div>
                 <ul class="dropdown-content menu z-[1] w-52 rounded-box bg-base-200 p-2 shadow"
+                    tabindex="0"
                     hx-swap="outerHTML"
                     hx-target="#table_body"
                     hx-include="#sort_direction_storage"

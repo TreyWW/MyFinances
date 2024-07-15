@@ -17,6 +17,7 @@ urlpatterns = [
         notifications.get_notification_html,
         name="notifications get",
     ),
+    path("notifications/get_count", notifications.get_notification_count_html, name="notifications get count"),
     path(
         "notifications/delete/<int:id>",
         notifications.delete_notification,

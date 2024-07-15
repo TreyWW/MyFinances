@@ -42,6 +42,12 @@ git clone [copied fork url]
 
  	./venv/Scripts/activate
 	```
+    OR if you are running in a POSIX system such as: bash/zsh, fish, csh/tcsh, or PowerShell, the command to activate the virtual environment is:
+
+    ```shell
+    ./venv/bin/activate
+    ```
+    More information [here](https://docs.python.org/3/library/venv.html)  
 
 2. Install our dependencies using [python poetry](https://python-poetry.org/docs/#installing-manually)
    ```shell
@@ -49,6 +55,8 @@ git clone [copied fork url]
 
    poetry install --no-root --with mypy,django,dev
    ```
+   If the installation of poetry gives error messages check out our [debugging section on poetry](../debugging/python/poetry.md).  
+
 3. Setup a database (we suggest using sqlite so there's no installation!)
    To do this you can use one of our database guides, we currently only support 3 databases:
    	- [SQlite3 (recommended for dev)](./databases/sqlite.md)
@@ -94,7 +102,7 @@ npm run tailwind-watch
 
 #### Tailwind Build
 
-To be honest, tailwind watch is nice, but especially on my windows PC it is VERY CPU and Memory intesive, every single change,
+To be honest, tailwind watch is nice, but especially on my windows computer it is very CPU and Memory intesive, every single change,
 even 1 character causes a re-watch, and this is a lot... Instead of that, you can use `tailwind-build` to only do a one-time
 build. You need to remember to run the command after a major update though, incase you add new classes.
 
@@ -105,7 +113,7 @@ npm run tailwind-build
 ### Webpack for JS
 
 Webpack is used to bundle our javascript into one file to make development easier and speed up builds. The project now uses
-chunks to load javascript, so you should see a few files with ids such as `937`. Django will automatically pick these up.
+chunks to load javascript, so you should see a few files with ids such as `937`. Django will automatically pick these up. Check below for details on how to run webpack.
 
 
 #### Run webpack dev
@@ -115,3 +123,6 @@ npm run webpack-dev # this only runs it once
 
 npm run webpack-watch # this does the same as above, but listens for updates
 ```
+
+### Problem Solving Errors
+If you are having trouble with the installation process, we have some possible fixes. Check out our [debugging](../../debugging/python/poetry/) section.

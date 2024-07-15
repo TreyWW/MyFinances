@@ -3,6 +3,7 @@ import random
 from django.urls import reverse
 from model_bakery import baker
 
+from backend.models import Client
 from tests.handler import ViewTestCase, assert_url_matches_view
 
 
@@ -109,3 +110,44 @@ class ClientsAPIFetch(ViewTestCase):
         self.assertIn(client1, response.context["clients"])
         self.assertIn(client2, response.context["clients"])
         self.assertIn(client3, response.context["clients"])
+
+
+class ClientAPIDelete(ViewTestCase):
+    def setUp(self):
+        super().setUp()
+        self.id = 1
+        self.url_path = f"/api/clients/delete/{self.id}/"
+        self.url_name = "api:clients:delete"
+        self.view_function_path = "backend.api.clients.delete.client_delete"
+
+    def test_client_delete_view_matches_with_urls_view(self):
+        self.assertEqual(reverse(self.url_name, args=[self.id]), self.url_path)
+
+    def test_client_delete_view_302_for_non_authenticated_users(self):
+        response = self.client.delete(reverse(self.url_name, args=[self.id]))
+        self.assertEqual(response.status_code, 302)
+
+    def test_client_delete_view_200_for_authenticated_users(self):
+        self.login_user()
+        client = baker.make("backend.Client", user=self.log_in_user)
+        response = self.client.delete(reverse(self.url_name, args=[client.id]))
+        self.assertEqual(response.status_code, 200)
+
+    def test_client_delete_view_deletes_client(self):
+        self.login_user()
+        client = baker.make("backend.Client", user=self.log_in_user)
+        self.client.delete(reverse(self.url_name, args=[client.id]))
+        with self.assertRaises(Client.DoesNotExist):
+            Client.objects.get(id=client.id)
+
+    def test_client_delete_view_returns_error_for_non_existent_client(self):
+        self.login_user()
+        response = self.client.delete(reverse(self.url_name, args=[999]))
+        self.assertEqual(response.status_code, 200)  # in future should be 404
+        self.assertIn("This client does not exist", str(response.content))
+        messages = self.get_all_messages(response)
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(
+            str(messages[0]),
+            "This client does not exist",
+        )

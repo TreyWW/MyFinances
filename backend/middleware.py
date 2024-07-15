@@ -1,7 +1,12 @@
+from django.contrib.auth.models import AnonymousUser
+from django.utils.deprecation import MiddlewareMixin
+from django.contrib.auth import get_user
 from django.db import connection, OperationalError
 from django.http import HttpResponse
 
+from backend.models import User, Organization
 from backend.types.htmx import HtmxAnyHttpRequest
+from backend.types.requests import WebRequest
 
 
 class HealthCheckMiddleware:
@@ -27,7 +32,10 @@ class HTMXPartialLoadMiddleware:
 
     def __call__(self, request: HtmxAnyHttpRequest):
         response = self.get_response(request)
-        if request.htmx.boosted:
+
+        if hasattr(response, "retarget"):
+            response.headers["HX-Retarget"] = response.retarget
+        elif request.htmx.boosted and not response.headers.get("HX-Retarget") and not hasattr(response, "no_retarget"):
             response.headers["HX-Retarget"] = "#main_content"
         return response
 
@@ -45,3 +53,18 @@ class LastVisitedMiddleware:
             current_url = request.build_absolute_uri()
             request.session["currently_visiting"] = current_url
         return self.get_response(request)
+
+
+class CustomUserMiddleware(MiddlewareMixin):
+    def process_request(self, request: WebRequest):
+        user = get_user(request)
+
+        # Replace request.user with CustomUser instance if authenticated
+        if user.is_authenticated:
+            request.user = User.objects.get(pk=user.pk)
+
+            request.actor = request.user.logged_in_as_team or request.user
+        else:
+            # If user is not authenticated, set request.user to AnonymousUser
+            request.user = AnonymousUser()  # type: ignore[assignment]
+            request.actor = request.user

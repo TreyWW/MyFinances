@@ -15,8 +15,9 @@ from backend.models import (
     TracebackError,
     UserSettings,
     Notification,
-    Team,
+    Organization,
     TeamInvitation,
+    TeamMemberPermission,
     User,
     InvoiceProduct,
     FeatureFlags,
@@ -33,6 +34,8 @@ from backend.models import (
     InvoiceReminder,
 )
 
+from backend.api.public.models import APIAuthToken
+
 # from django.contrib.auth.models imp/ort User
 # admin.register(Invoice)
 admin.site.register(
@@ -48,8 +51,9 @@ admin.site.register(
         Error,
         TracebackError,
         Notification,
-        Team,
+        Organization,
         TeamInvitation,
+        TeamMemberPermission,
         InvoiceProduct,
         FeatureFlags,
         VerificationCodes,
@@ -58,6 +62,7 @@ admin.site.register(
         Receipt,
         ReceiptDownloadToken,
         InvoiceReminder,
+        APIAuthToken,
     ]
 )
 
