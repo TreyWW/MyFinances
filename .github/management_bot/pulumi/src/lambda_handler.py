@@ -57,9 +57,8 @@ def is_trey(sender):
 
 
 def lambda_handler(event: dict, lambda_context):
-    print(lambda_context)
     # https://docs.aws.amazon.com/systems-manager/latest/userguide/ps-integration-lambda-extensions.html
-    stage = "production"
+    stage = "staging" if lambda_context.function_version == "$LATEST" else "production"
     req = urllib.request.Request(
         f"http://localhost:2773/systemsmanager/parameters/get?withDecryption=true&name=%2Fmyfinances%2Fgithub_bot%2F{stage}"
     )
@@ -105,5 +104,7 @@ def lambda_handler(event: dict, lambda_context):
         actions_taken.extend(issue_handler.handler(context_dicts, context_objs))
     else:
         logger.debug("Using no handler; invalid request.")
+
+    logger.info("Actions taken: %s", actions_taken)
 
     return {"statusCode": 200, "body": json.dumps({"actions_taken": actions_taken}), "headers": {"Content-Type": "application/json"}}

@@ -18,7 +18,7 @@ else:
 
 
 def title_handler(context_dicts: _types.Context, context_objs: _types.Objects) -> list[str]:
-    if not re.match(r"^(bug|idea|implement|cleanup):\s*\S.*", context_objs.issue.title):
+    if not re.match(r"^(bug|idea|implement|cleanup):\s*\S.*", context_objs.issue.title) and context_objs.sender.type == "User":
         logger.info(f"Regex title doesn't match. {context_objs.issue.title} doesnt start with bug|idea|implement|cleanup:")
         logger.info(f"Commenting on {context_objs.issue.html_url}")
         context_objs.issue.create_comment(
@@ -42,7 +42,7 @@ def title_handler(context_dicts: _types.Context, context_objs: _types.Objects) -
 def delete_reply_handler(context_dicts: _types.Context, context_objs: _types.Objects) -> list[str]:
     match = re.search(r"DELREPLY-(.{8})", context_dicts.comment.body)
 
-    if not match:
+    if not match or context_objs.sender.type != "User":
         return []
 
     logger.info("Deleting comment due to DELREPLY in body")
