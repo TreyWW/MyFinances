@@ -104,6 +104,10 @@ def save_invoice(request: HtmxHttpRequest, invoice_items):
     invoice.invoice_number = request.POST.get("invoice_number")
     invoice.vat_number = request.POST.get("vat_number")
     invoice.logo = request.FILES.get("logo")
+
+    if request.FILES.get("logo") is None:
+        invoice.logo = invoice.client_to.client_defaults.default_invoice_logo
+
     invoice.reference = request.POST.get("reference")
     invoice.sort_code = request.POST.get("sort_code")
     invoice.account_number = request.POST.get("account_number")

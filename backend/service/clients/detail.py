@@ -27,6 +27,8 @@ def change_client_defaults(request: HttpRequest, client: Client, defaults: Clien
     defaults.invoice_date_type = invoice_date_option
     defaults.invoice_date_value = invoice_date_value
 
+    defaults.default_invoice_logo = put.get("logo")
+
     defaults.save()
 
     return None

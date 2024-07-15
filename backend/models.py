@@ -327,7 +327,12 @@ class ClientDefaults(models.Model):
     invoice_date_value = models.PositiveSmallIntegerField(default=15, null=False, blank=False)
     invoice_date_type = models.CharField(max_length=20, choices=InvoiceDateType.choices, default=InvoiceDateType.day_of_month)
 
-
+    default_invoice_logo = models.ImageField(
+        upload_to="invoice_logos",
+        storage=settings.CustomPrivateMediaStorage(),
+        blank=True,
+        null=True,
+    )
 class InvoiceProduct(OwnerBase):
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=100)
