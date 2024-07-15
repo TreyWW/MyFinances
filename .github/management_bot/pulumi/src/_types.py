@@ -3,13 +3,14 @@ from typing import Optional, Type, TypeVar, Any, TypedDict
 
 # from github import Github
 import github
-import github.Repository
-import github.Issue
-import github.PullRequest
-import github.Label
-import github.IssueComment
-import github.PullRequestComment
-import github.NamedUser
+from github.MainClass import Github as MainGithub
+from github.Repository import Repository as GithubRepository
+from github.Issue import Issue as GithubIssue
+from github.PullRequest import PullRequest as GithubPullRequest
+from github.Label import Label as GithubLabel
+from github.IssueComment import IssueComment as GithubIssueComment
+from github.PullRequestComment import PullRequestComment as GithubPullRequestComment
+from github.NamedUser import NamedUser as GithubNamedUser
 from github.PaginatedList import PaginatedList
 
 T = TypeVar("T")
@@ -81,14 +82,14 @@ class Context:
 
 @dataclass
 class Objects:
-    github: github.MainClass.Github
+    github: MainGithub
     dict_context: Context
-    repository: github.Repository.Repository
-    sender: Optional[github.NamedUser] = None
-    issue: Optional[github.Issue.Issue] = None
-    pull_request: Optional[github.PullRequest.PullRequest] = None
-    labels: PaginatedList[github.Label.Label] = None
-    comment: Optional[github.IssueComment.IssueComment | github.PullRequestComment.PullRequestComment] = None
+    repository: GithubRepository
+    sender: GithubNamedUser = None
+    issue: Optional[GithubIssue] = None
+    pull_request: Optional[GithubPullRequest] = None
+    labels: PaginatedList[GithubLabel] = None
+    comment: Optional[GithubIssueComment | GithubPullRequestComment] = None
 
     def __post_init__(self):
         print("post_init")

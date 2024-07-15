@@ -37,6 +37,10 @@ lambda_layer = lambda_.LayerVersion(
     "lambda_layer", code=pulumi.FileArchive(config.require("lambda_zip_path")), layer_name="PyGithub_for_myfinances_management_bot"
 )
 
+# lambda_ssm_layer = lambda_.LayerVersion(
+#     "lambda_ssm_layer", layer_name="AWS-Parameters-and-Secrets-Lambda-Extension",
+# )
+
 lambda_func = lambda_.Function(
     "webhook_lambda",
     name="myfinances_github_bot_webhooks",
@@ -45,10 +49,8 @@ lambda_func = lambda_.Function(
     handler="lambda_handler.lambda_handler",
     timeout=8,
     runtime=lambda_.Runtime.PYTHON3D12,
-    environment=lambda_.FunctionEnvironmentArgs(
-        variables={"app_id": config.require_secret("app_id"), "private_key": config.require_secret("private_key")}
-    ),
-    layers=[lambda_layer.arn],
+    environment=lambda_.FunctionEnvironmentArgs(variables={"ssm_prefix": "/myfinances/github_bot/"}),
+    layers=[lambda_layer.arn, "arn:aws:lambda:eu-west-2:133256977650:layer:AWS-Parameters-and-Secrets-Lambda-Extension:11"],
     tags={"project": "MyFinancesBot"},
 )
 
@@ -63,6 +65,13 @@ rest_api_main_resource_post = apigateway.Method(
     http_method="POST",
     authorization="NONE",
     api_key_required=False,
+    request_parameters={
+        "method.request.header.X-GitHub-Delivery": True,
+        "method.request.header.X-GitHub-Event": True,
+        "method.request.header.X-GitHub-Hook-ID": True,
+        "method.request.header.X-GitHub-Hook-Installation-Target-ID": True,
+        "method.request.header.X-GitHub-Hook-Installation-Target-Type": True,
+    },
 )
 
 rest_api_lambda_integration = apigateway.Integration(
@@ -105,6 +114,12 @@ api_gw_lambda = lambda_.Permission(
 
 deployment = apigateway.Deployment("deployment_resource", rest_api=rest_api.id)
 
-prod_stage = apigateway.Stage("productionStage", stage_name="production", rest_api=rest_api.id, deployment=deployment.id)
+prod_stage = apigateway.Stage(
+    "productionStage",
+    stage_name="production",
+    rest_api=rest_api.id,
+    deployment=deployment.id,
+    opts=pulumi.ResourceOptions(ignore_changes=["variables", "deployment"]),
+)
 
 pulumi.export("invoke_url", prod_stage.invoke_url)

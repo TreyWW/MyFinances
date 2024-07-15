@@ -1,5 +1,6 @@
 import json
 import os, base64
+import urllib.request
 from textwrap import dedent
 
 import github.GithubException
@@ -16,8 +17,7 @@ logging.basicConfig()
 logging.getLogger().setLevel(logging.DEBUG if os.environ.get("DEBUG") else logging.DEBUG)  # todo go back to info
 logger = logging.getLogger(__name__)
 
-PRIVATE_KEY = decode_private_key(os.environ.get("private_key"))
-APP_ID = os.environ.get("app_id")
+aws_session_token = os.environ.get("AWS_SESSION_TOKEN")
 
 REPOSITORY_NAME = "TreyWW/MyFinances"
 
@@ -56,7 +56,22 @@ def is_trey(sender):
     return str(sender["id"]) == "171095439"
 
 
-def lambda_handler(event: dict, _):
+def lambda_handler(event: dict, lambda_context):
+    print(lambda_context)
+    # https://docs.aws.amazon.com/systems-manager/latest/userguide/ps-integration-lambda-extensions.html
+    stage = "production"
+    req = urllib.request.Request(
+        f"http://localhost:2773/systemsmanager/parameters/get?withDecryption=true&name=%2Fmyfinances%2Fgithub_bot%2F{stage}"
+    )
+    req.add_header("X-Aws-Parameters-Secrets-Token", aws_session_token)
+    config = urllib.request.urlopen(req).read()
+
+    ssm_result: json = json.loads(config)
+    ssm_value: json = json.loads(ssm_result["Parameter"]["Value"])
+
+    PRIVATE_KEY = decode_private_key(ssm_value["private_key"])
+    APP_ID = ssm_value["app_id"]
+
     auth = Auth.AppAuth(APP_ID, PRIVATE_KEY)
     gi = GithubIntegration(auth=auth)
     g: Github = gi.get_installations()[0].get_github_for_installation()
@@ -80,13 +95,15 @@ def lambda_handler(event: dict, _):
 
     logger.debug(context_objs)
 
+    actions_taken = []
+
     if context_dicts.pull_request:
         logger.debug("Using PR handler")
-        pr_handler.handler(context_dicts, context_objs)
+        actions_taken.extend(pr_handler.handler(context_dicts, context_objs))
     elif context_dicts.issue:
         logger.debug("Using issue handler")
-        issue_handler.handler(context_dicts, context_objs)
+        actions_taken.extend(issue_handler.handler(context_dicts, context_objs))
     else:
         logger.debug("Using no handler; invalid request.")
 
-    return {"statusCode": 200, "body": json.dumps({})}
+    return {"statusCode": 200, "body": json.dumps({"actions_taken": actions_taken}), "headers": {"Content-Type": "application/json"}}
