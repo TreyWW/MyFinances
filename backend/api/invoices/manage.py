@@ -32,22 +32,6 @@ class ErrorResponse:
     success: Literal[False] = False
 
 
-@require_http_methods(["GET"])
-def tab_preview_invoice(request: HtmxHttpRequest, invoice_id):
-    # Redirect if not an HTMX request
-    if not request.htmx:
-        return redirect("invoices dashboard")  # Maybe should be 404?
-
-    prev_invoice = preview_invoice(request, invoice_id)
-
-    if prev_invoice.success:
-        return render(request, "pages/invoices/view/preview_embed.html", prev_invoice.context)
-
-    messages.error(request, prev_invoice.message)
-
-    return render(request, "base/toasts.html")
-
-
 def preview_invoice(request: HtmxHttpRequest, invoice_id) -> SuccessResponse | ErrorResponse:
     context: dict[str, str | Invoice] = {"type": "preview"}
 

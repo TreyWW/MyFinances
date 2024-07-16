@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.http import HttpResponse
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
@@ -6,6 +8,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from backend.api.public.decorators import require_scopes
+from backend.api.public.helpers.deprecate import deprecated
 from backend.api.public.swagger_ui import TEAM_PARAMETER
 from backend.api.public.types import APIRequest
 from backend.models import Invoice
@@ -53,8 +56,10 @@ from backend.service.invoices.create_pdf import generate_pdf
             ),
         ),
     },
+    deprecated=True,
 )
 @api_view(["GET"])
+@deprecated(datetime(2024, 7, 16), datetime(2024, 7, 16))
 @require_scopes(["invoices:read"])
 def download(request: APIRequest, id: str) -> HttpResponse | Response:
     try:

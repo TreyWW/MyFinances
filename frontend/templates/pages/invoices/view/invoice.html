@@ -1,117 +1,145 @@
-{% load static %}
-{% load mathfilters %}
 {% load markdownify %}
 {% load strfilters %}
-<div class="invoice-container">
-    <div class="header">
-        <!-- Company Logo and Info -->
-        <div>
+<nav class="meta">
+    <div class="container">
+        <aside>
             {% if invoice.logo %}
-                <img src="{{ img_path }}" alt="company-logo">
+                <img src="{{ img_path }}" width="100" height="100" alt="Company logo">
             {% else %}
                 <img src="https://github.com/TreyWW/MyFinances/blob/main/documentation/assets/logo_single.png?raw=true"
-                     alt="company-logo">
+                     width="100"
+                     height="100"
+                     alt="Company logo">
             {% endif %}
-            <div class="company-info">
-                <h3>{{ invoice.self_company|default_if_none:"" }}</h3>
-                <p>{{ invoice.self_name|default_if_none:"" }}</p>
+            <section class="data">
+                <h1>{{ invoice.self_company|default_if_none:invoice.self_name }}</h1>
                 <p>{{ invoice.self_phone|default_if_none:"" }}</p>
+                <!--                <a style="color: #000;" href="mailto:address@example.com">address@example.com</a>-->
                 {% if invoice.vat_number %}<p>VAT: {{ invoice.vat_number }}</p>{% endif %}
+            </section>
+        </aside>
+        <section class="details">
+            <div class="card">
+                <header>
+                    Invoice Ref
+                </header>
+                <p>{{ invoice.invoice_id|default:invoice.id }}</p>
             </div>
-        </div>
-        <!-- Invoice Info -->
-        <div class="invoice-info">
-            <h2>INVOICE</h2>
-            <p>INV #{{ invoice.invoice_id|default:invoice.id }}</p>
-            <p>Invoice date: {{ invoice.date_issued|date:"d/m/Y" }}</p>
-            <p>Due date: {{ invoice.date_due|date:"d/m/Y" }}</p>
-            <p>Balance Due: {{ invoice.get_currency_symbol }}{{ invoice.get_total_price }}</p>
-        </div>
+            <div class="card">
+                <header>
+                    Date sent
+                </header>
+                <p>{{ invoice.date_issued|date:"d/m/Y" }}</p>
+            </div>
+            <div class="card">
+                <header>
+                    Due by
+                </header>
+                <p>{{ invoice.date_due|date:"d/m/Y" }}</p>
+            </div>
+            <div class="card">
+                <header>
+                    Balance due
+                </header>
+                <p>USD {{ invoice.get_currency_symbol }}{{ invoice.get_total_price }}</p>
+            </div>
+        </section>
     </div>
-    <!-- Client info -->
-    <div class="client-info">
-        <div>
-            {% with details=invoice.get_to_details %}
-                {% include 'pages/invoices/view/_client-details.html' with c_type=details.0 c_details=details.1 %}
-            {% endwith %}
-        </div>
-    </div>
-    <!-- Invoice Items -->
-    <div class="invoice-items">
-        <table>
-            <thead>
+</nav>
+<main class="bill">
+    {% with details=invoice.get_to_details %}
+        {% include 'pages/invoices/view/_client-details.html' with c_type=details.0 c_details=details.1 %}
+    {% endwith %}
+    <table>
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th>Rate</th>
+                <th>QTY</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in invoice.items.all %}
                 <tr>
-                    <th colspan="2">Items</th>
-                    <th>Quantity</th>
-                    <th>Price</th>
-                    <th>Amount</th>
+                    <td>
+                        {{ item.name }}
+                        <br />
+                        {{ item.description|markdownify }}
+                    </td>
+                    <td>{{ invoice.get_currency_symbol }}{{ item.price_per_hour }}</td>
+                    <td>{{ item.hours }}</td>
+                    <td>{{ invoice.get_currency_symbol }}{{ item.get_total_price | floatformat:2 }}</td>
                 </tr>
-            </thead>
-            <tbody>
-                {% for item in invoice.items.all %}
-                    <tr>
-                        <td colspan="2">
-                            <div>{{ item.name }}</div>
-                            <div>{{ item.description|markdownify }}</div>
-                        </td>
-                        <td>{{ item.hours }}</td>
-                        <td>{{ invoice.get_currency_symbol }}{{ item.price_per_hour }}</td>
-                        <td>{{ invoice.get_currency_symbol }}{{ item.get_total_price | floatformat:2 }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-            <tfoot>
-                <tr class="subtotal">
-                    <td colspan="4">Subtotal</td>
-                    <td>{{ invoice.get_currency_symbol }}{{ invoice.get_subtotal }}</td>
-                </tr>
-                {% if tax %}
-                    {# todo add tax #}
-                    <tr class="subtotal">
-                        <td colspan="4">Tax</td>
-                        <td>{{ invoice.get_currency_symbol }}0.00</td>
-                    </tr>
-                {% endif %}
-                {% if invoice.discount_percentage %}
-                    <tr class="subtotal">
-                        <td colspan="4">Discount</td>
-                        <td>
-                            {{ invoice.discount_percentage }}% off
-                            (-{{ invoice.get_currency_symbol }}{{ invoice.get_percentage_amount }})
-                        </td>
-                    </tr>
-                {% endif %}
-                {% if invoice.discount_amount %}
-                    <tr class="subtotal">
-                        <td colspan="4">
-                            {% if not invoice.discount_percentage %}Discount{% endif %}
-                        </td>
-                        <td>-{{ invoice.get_currency_symbol }}{{ invoice.discount_amount }}</td>
-                    </tr>
-                {% endif %}
-                <tr class="total">
-                    <td colspan="4">Total</td>
-                    <td>{{ invoice.get_currency_symbol }}{{ invoice.get_total_price }}</td>
-                </tr>
-            </tfoot>
-        </table>
+            {% endfor %}
+        </tbody>
+    </table>
+    <section class="summary">
+        <div class="card">
+            <header>
+                Subtotal
+            </header>
+            <p>{{ invoice.get_currency_symbol }}{{ invoice.get_subtotal }}</p>
+        </div>
+        {% if invoice.tax %}
+            <div class="card">
+                <header>
+                    Tax
+                </header>
+                <p>{{ invoice.get_currency_symbol }}0.00</p>
+            </div>
+        {% endif %}
+        {% if invoice.discount_percentage %}
+            <div class="card">
+                <header>
+                    Discount
+                </header>
+                <p>
+                    {{ invoice.discount_percentage }}% off
+                    (-{{ invoice.get_currency_symbol }}{{ invoice.get_percentage_amount }})
+                </p>
+            </div>
+        {% endif %}
+        {% if invoice.discount_amount %}
+            <div class="card">
+                <header>
+                    {% if not invoice.discount_percentage %}Discount{% endif %}
+                </header>
+                <p>{{ invoice.get_currency_symbol }}{{ invoice.discount_amount }}</p>
+            </div>
+        {% endif %}
+        <div class="card">
+            <header>
+                Total
+            </header>
+            <p>{{ invoice.get_currency_symbol }}{{ invoice.get_total_price }}</p>
+        </div>
+        <div class="card">
+            <header>
+                Balance due
+            </header>
+            <h2>GBP {{ invoice.get_currency_symbol }}{{ invoice.get_total_price }}</h2>
+        </div>
+    </section>
+</main>
+<footer class="payment">
+    <h1>Payment details</h1>
+    <div class="card">
+        <header>
+            Account holder name
+        </header>
+        <p>{{ invoice.account_holder_name }}</p>
     </div>
-    <!-- Payment Details -->
-    <div class="payment-details">
-        <p>
-            Account Holder Name: <span class="font-semibold">{{ invoice.account_holder_name }}</span>
-        </p>
-        <p>
-            Account Number: <span class="font-semibold">{{ invoice.account_number }}</span>
-        </p>
-        <p>
-            Account Sort Code: <span class="font-semibold">{{ invoice.sort_code|dashify }}</span>
-        </p>
+    <div class="card">
+        <header>
+            Account number
+        </header>
+        <p>{{ invoice.account_number }}</p>
     </div>
-    <!-- Footer -->
-    <div class="footer" style="display: none">
-        {# TODO: remove credit if on paid plan #}
-        This invoice was generated using
-        <a href="https://github.com/TreyWW/MyFinances">MyFinances</a>
+    <div class="card">
+        <header>
+            Sort code
+        </header>
+        <p>{{ invoice.sort_code|dashify }}</p>
     </div>
-</div>
+</footer>
