@@ -4,6 +4,12 @@
         margin: 10mm;
     }
 
+    @page :left {
+        @bottom-left {
+            content: counter(page);
+        }
+    }
+
     body {
         font-family: "Inter", sans-serif;
         margin: 0;
@@ -20,14 +26,19 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        min-height: 100vh;
-        color: black;
+    {#min-height: 100vh;#} color: black;
+        page-break-inside: avoid;
+    }
+
+    table {
+        page-break-inside: avoid;
     }
 
     nav.meta {
-        margin-top: 4px;
+        margin-top: 4px
         border-top: 3px solid #7b1fa2;
         box-sizing: border-box;
+        page-break-inside: avoid;
     }
 
     nav.meta .container {
@@ -69,7 +80,7 @@
     }
 
     nav.meta .details .card header {
-        font-size: 14px;
+        font-size: 9px;
         font-weight: 400;
         opacity: 0.8;
         text-transform: uppercase;
@@ -78,7 +89,7 @@
     }
 
     nav.meta .details .card p {
-        font-size: 18px;
+        font-size: 11px;
         margin: 0;
     }
 
@@ -159,7 +170,16 @@
     }
 
     main.bill table td:nth-child(1) {
-        text-align: left;
+        text-align: left !important;
+        padding-right: 10px;
+    }
+
+    main.bill table td:nth-child(1) p {
+        padding-top: 5px;
+    }
+
+    main.bill table td:nth-child(2) {
+        text-align: left !important;
     }
 
     main.bill .summary {
@@ -218,5 +238,24 @@
 
     footer.payment .card p b {
         font-weight: 500;
+    }
+
+    main.bill table {
+        page-break-inside: auto;
+        margin: 50px 0;
+        margin-bottom: 0;
+    }
+
+    main.bill .summary {
+        width: 50%;
+        margin-top: 20px; /* Add margin to avoid float issue */
+        page-break-inside: avoid;
+    }
+
+    main.bill footer.payment {
+        margin: 150px 40px;
+        margin-bottom: 150px;
+        box-sizing: border-box;
+        page-break-inside: avoid;
     }
 </style>

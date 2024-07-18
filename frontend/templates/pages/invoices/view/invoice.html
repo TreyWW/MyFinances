@@ -1,10 +1,13 @@
 {% load markdownify %}
-{% load strfilters %}
+{% load dashify contains from strfilters %}
 <nav class="meta">
     <div class="container">
         <aside>
             {% if invoice.logo %}
-                <img src="{{ invoice.logo.url }}" width="100" height="100" alt="Company logo">
+                <img src="{{ invoice.logo.url }}"
+                     width="100"
+                     height="100"
+                     alt="Company logo">
             {% else %}
                 <img src="https://github.com/TreyWW/MyFinances/blob/main/documentation/assets/logo_single.png?raw=true"
                      width="100"
@@ -140,6 +143,10 @@
         <header>
             Sort code
         </header>
-        <p>{{ invoice.sort_code|dashify }}</p>
+        {% if invoice.sort_code|contains:"-" %}
+            <p>{{ invoice.sort_code }}</p>
+        {% else %}
+            <p>{{ invoice.sort_code|dashify }}</p>
+        {% endif %}
     </div>
 </footer>

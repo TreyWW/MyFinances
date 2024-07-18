@@ -15,18 +15,16 @@
                 {{ invoice.client_to.email|default_if_none:"" }} - {{ invoice.client_to.phone_number|default_if_none:"" }}
             </p>
         {% endif %}
-    </p>
-{% endif %}
+    {% endif %}
 {% elif c_type == "manual" %}
-{% if invoice.client_is_representative %}
-    <h1>{{ invoice.client_company }}</h1>
-    <p>
-        <b>Representative - </b> {{ invoice.client_name|default_if_none:"" }}
-        <br />
-    </p>
-{% else %}
-    <h1>{{ invoice.client_name|default_if_none:"" }}</h1>
-    <p>{{ invoice.client_address|default_if_none:"" }}</p>
-{% endif %}
-</p>
+    {% if invoice.client_is_representative %}
+        <h1>{{ invoice.client_company }}</h1>
+        <p>
+            <b>Representative - </b> {{ invoice.client_name|default_if_none:"" }}
+            <br />
+        </p>
+    {% else %}
+        <h1>{{ invoice.client_name|default_if_none:"" }}</h1>
+        <p>{{ invoice.client_address|default_if_none:"" }}</p>
+    {% endif %}
 {% endif %}
