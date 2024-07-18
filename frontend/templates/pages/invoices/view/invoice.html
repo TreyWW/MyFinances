@@ -4,13 +4,9 @@
     <div class="container">
         <aside>
             {% if invoice.logo %}
-                <img src="{{ invoice.logo.url }}"
-                     width="100"
-                     height="100"
-                     alt="Company logo">
+                <img src="{{ invoice.logo.url }}" height="100" alt="Company logo">
             {% else %}
-                <img src="https://github.com/TreyWW/MyFinances/blob/main/documentation/assets/logo_single.png?raw=true"
-                     width="100"
+                <img src="https://raw.githubusercontent.com/TreyWW/MyFinances/main/frontend/static/img/logo_single.png"
                      height="100"
                      alt="Company logo">
             {% endif %}

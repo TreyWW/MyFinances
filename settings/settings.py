@@ -356,6 +356,8 @@ class CustomPublicMediaStorage(S3Storage):
     custom_domain = get_var("AWS_MEDIA_PUBLIC_CUSTOM_DOMAIN")
     querystring_auth = False  # Removes auth from URL in case of shared media
 
+    region_name = get_var("AWS_MEDIA_PUBLIC_REGION_NAME")
+
     access_key = get_var("AWS_MEDIA_PUBLIC_ACCESS_KEY_ID")
     secret_key = get_var("AWS_MEDIA_PUBLIC_ACCESS_KEY")
 
