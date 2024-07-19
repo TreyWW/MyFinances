@@ -1,18 +1,16 @@
 from django.views.decorators.http import require_http_methods
-from PIL import Image
 from django.contrib.auth import update_session_auth_hash
-from django.contrib.sessions.models import Session
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.shortcuts import render
 
-from backend.models import UserSettings
+from backend.service.defaults.get import get_account_defaults
 from backend.service.settings.view import validate_page, get_user_profile, get_api_keys
-from backend.types.htmx import HtmxHttpRequest
+from backend.types.requests import WebRequest
 
 
 @require_http_methods(["GET"])
-def view_settings_page_endpoint(request: HtmxHttpRequest, page: str | None = None):
+def view_settings_page_endpoint(request: WebRequest, page: str | None = None):
     if not validate_page(page):
         messages.error(request, "Invalid settings page")
         if request.htmx:
@@ -28,6 +26,8 @@ def view_settings_page_endpoint(request: HtmxHttpRequest, page: str | None = Non
         case "api_keys":
             api_keys = get_api_keys(request)
             context.update({"api_keys": api_keys})
+        case "account_defaults":
+            context.update({"account_defaults": get_account_defaults(request)})
 
     template = f"pages/settings/pages/{page or 'profile'}.html"
 
@@ -41,7 +41,7 @@ def view_settings_page_endpoint(request: HtmxHttpRequest, page: str | None = Non
     return response
 
 
-def change_password(request: HtmxHttpRequest):
+def change_password(request: WebRequest):
     if request.method == "POST":
         current_password = request.POST.get("current_password")
         password = request.POST.get("password")

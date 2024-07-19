@@ -21,6 +21,13 @@
                         Account
                     </a>
                 </li>
+                <li>
+                    <a href="{% url 'settings:dashboard with page' page='account_defaults' %}"
+                       hx-replace-url="/dashboard/settings/account_defaults/">
+                        <i class="fa fa-solid fa-toolbox"></i>
+                        Account defaults
+                    </a>
+                </li>
                 <div class="divider"></div>
                 <h2 class="pl-3 text-neutral-content">Access</h2>
                 <li>

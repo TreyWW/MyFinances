@@ -4,11 +4,11 @@ from django.views.decorators.http import require_http_methods
 
 from backend.service.settings.update import update_profile_picture
 from backend.service.settings.view import get_user_profile
-from backend.types.htmx import HtmxHttpRequest
+from backend.types.requests import WebRequest
 
 
 @require_http_methods(["POST"])
-def change_profile_picture_endpoint(request: HtmxHttpRequest):
+def change_profile_picture_endpoint(request: WebRequest):
     if not request.htmx:
         messages.error(request, "Invalid request")
         return redirect("settings:dashboard with page", page="profile")

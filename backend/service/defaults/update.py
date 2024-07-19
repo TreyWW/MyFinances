@@ -1,10 +1,10 @@
-from django.http import HttpRequest, QueryDict
+from django.http import QueryDict
 
-from backend.models import Client, ClientDefaults
-from backend.types.htmx import HtmxHttpRequest
+from backend.models import DefaultValues, Client
+from backend.types.requests import WebRequest
 
 
-def change_client_defaults(request: HttpRequest, client: Client, defaults: ClientDefaults) -> str | None:
+def change_client_defaults(request: WebRequest, defaults: DefaultValues) -> str | None:
     put = QueryDict(request.body)
 
     invoice_due_date_option = put.get("invoice_due_date_option", "")

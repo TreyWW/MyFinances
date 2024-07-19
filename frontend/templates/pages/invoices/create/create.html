@@ -23,6 +23,11 @@
         <div class="divider my-4">
             STEP 2 - DATES <span class="required_star">*</span>
         </div>
+        <div class="alert alert-warning my-2 inline-block hidden"
+             id="before_due_date_alert">
+            <i class="fa fa-warning"></i>
+            The due date is currently set <b>before</b> the issue date, meaning the invoice will instantly be marked as "overdue"
+        </div>
         <div class="my-4 flex w-full flex-col">
             <div class="w-full gap-4 grid grid-cols-1 lg:grid-cols-2">
                 <div class="input_card">
@@ -37,6 +42,7 @@
                                    name="date_issued"
                                    value="{{ issue_date }}"
                                    type="date"
+                                   onchange="checkDueDate()"
                                    class="peer input input-bordered input-block">
                             <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden ">
                                 <span class="label-text-alt text-error">Please enter a valid date.</span>
@@ -56,6 +62,7 @@
                                    id="dueDate"
                                    value="{{ due_date }}"
                                    type="date"
+                                   onchange="checkDueDate();"
                                    class="peer input-bordered input input-block">
                             <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden ">
                                 <span class="label-text-alt text-error">Please enter a valid date.</span>
@@ -234,11 +241,50 @@
             return value;
         }
 
-        document.body.addEventListener('htmx:afterOnLoad', function () {
-            document.getElementById("modal_input-service_name").value = "";
-            document.getElementById("modal_input-service_description").value = "";
-            document.getElementById("modal_input-hours").value = "";
-            document.getElementById("modal_input-price_per_hour").value = "";
+        function checkDueDate() {
+            const alertElement = document.getElementById('before_due_date_alert');
+            const issueDateInput = document.getElementById('dateIssued');
+            const dueDateInput = document.getElementById('dueDate');
+
+            if (!alertElement || !issueDateInput || !dueDateInput) {
+                console.error('Required elements not found on the page.');
+                return;
+            }
+
+            const issueDateValue = new Date(issueDateInput.value);
+            const dueDateValue = new Date(dueDateInput.value);
+
+            if (dueDateValue < issueDateValue) {
+                alertElement.classList.remove('hidden');
+            } else {
+                alertElement.classList.add('hidden');
+            }
+        }
+
+        checkDueDate();
+
+        document.body.addEventListener('htmx:afterOnLoad.htmx', function () {
+            const serviceNameInput = document.getElementById("modal_input-service_name");
+            const serviceDescriptionInput = document.getElementById("modal_input-service_description");
+            const hoursInput = document.getElementById("modal_input-hours");
+            const pricePerHourInput = document.getElementById("modal_input-price_per_hour");
+
+            if (serviceNameInput) {
+                serviceNameInput.value = "";
+            }
+
+            if (serviceDescriptionInput) {
+                serviceDescriptionInput.value = "";
+            }
+
+            if (hoursInput) {
+                hoursInput.value = "";
+            }
+
+            if (pricePerHourInput) {
+                pricePerHourInput.value = "";
+            }
         });
+
 </script>
 {% endblock content %}

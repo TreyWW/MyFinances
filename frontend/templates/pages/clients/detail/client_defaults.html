@@ -1,6 +1,6 @@
 <form class="py-4"
       method="POST"
-      hx-put="{% url 'clients:detail defaults' id=client.id %}"
+      {% if client %} hx-put="{% url 'api:settings:client_defaults' client_id=client.id %}" {% else %} hx-put="{% url 'api:settings:client_defaults without client' %}" {% endif %}
       hx-target="this"
       hx-indicator='button[data-hx-loading="save"]'
       hx-swap="none">
