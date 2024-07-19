@@ -17,12 +17,11 @@
             <p class="text-content2">{% lorem 10 w %}</p>
             <div class="divide-y divide-gray-200 dark:divide-gray-700">
                 {# Currency Input #}
-                <div class="flex gap-4 flex-col justify-between pt-2 md:flex-row">
+                <div class="flex gap-4 py-4 flex-col justify-between pt-2 md:flex-row">
                     <div class="flex flex-col flex-grow">
                         <div class="text-lg font-semibold text-gray-900 dark:text-white">Currency</div>
                         <div class="text-base font-normal text-gray-500 dark:text-gray-400">
                             This will change the default currency for your account
-                            {{ request.user.user_profile }}
                         </div>
                     </div>
                     <select name="currency" class="select select-bordered md:w-[25%]">
@@ -35,11 +34,35 @@
                     </select>
                 </div>
                 {# End Currency Input #}
+                {# Enabled features #}
+                <div class="flex gap-4 py-4 flex-col justify-between pt-2 md:flex-row">
+                    <div class="flex flex-col flex-grow">
+                        <div class="text-lg font-semibold text-gray-900 dark:text-white">Enabled features</div>
+                        <div class="text-base font-normal text-gray-500 dark:text-gray-400">
+                            Disabling these features will remove the tabs around the site
+                            <br>
+                            for you, to reduce clutter. You can
+                            re-enable them at any point.
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-4">
+                        {% for feature in request.user.user_profile.CoreFeatures.choices %}
+                            <div class="form-control">
+                                <label class="label">{{ feature.1 }}</label>
+                                <input type="checkbox"
+                                       class="checkbox"
+                                       name="selected_{{ feature.0 }}"
+                                       {% if feature.0 not in request.user.user_profile.disabled_features %}checked{% endif %}>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {# End Enabled features #}
             </div>
             <button class="btn btn-primary mt-2 loading-htmx"
                     name="section"
                     value="account_preferences"
-                    hx-post="{% url 'api:settings:change_currency' %}"
+                    hx-post="{% url 'api:settings:account_preferences' %}"
                     hx-swap="none"
                     hx-trigger="click">
                 <span class="loading-htmx-text">Save</span>

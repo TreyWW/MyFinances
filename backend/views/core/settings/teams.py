@@ -1,14 +1,14 @@
 from typing import Optional
 
 from django.db.models import When, Case, BooleanField
-from django.http import HttpRequest
 from django.shortcuts import render
 
 from backend.models import *
-from backend.types.htmx import HtmxHttpRequest
+from backend.service.teams.fetch import get_all_users_teams
+from backend.types.requests import WebRequest
 
 
-def teams_dashboard(request: HtmxHttpRequest):
+def teams_dashboard(request: WebRequest):
     context: dict[str, str | int] = {}
 
     users_team: Optional[Organization] = request.user.logged_in_as_team
@@ -57,5 +57,15 @@ def teams_dashboard(request: HtmxHttpRequest):
     )
 
 
-def manage_permissions_dashboard(request: HttpRequest):
-    return render(request, "pages/settings/teams/permissions.html")
+def login_to_team_page(request: WebRequest, all_teams: QuerySet[Organization]):
+    print(all_teams)
+    return render(request, "pages/settings/teams/login_to_team.html", {"team_list": all_teams})
+
+
+def teams_dashboard_handler(request: WebRequest):
+    all_teams: QuerySet[Organization] = get_all_users_teams(request)
+    logged_in_team: Organization | None = request.user.logged_in_as_team
+
+    if not logged_in_team:
+        return login_to_team_page(request, all_teams)
+    return teams_dashboard(request)

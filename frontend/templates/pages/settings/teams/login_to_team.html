@@ -1,0 +1,33 @@
+{% extends base|default:"base/base.html" %}
+{% block content %}
+    <div class="card w-full p-6 bg-base-100 shadow-xl mt-2">
+        <button onclick="modal_create_team.showModal();"
+                class="btn btn-primary w-40"
+                hx-get="{% url "api:base:modal retrieve" modal_name="create_team" %}"
+                hx-trigger="click once"
+                hx-swap="beforeend"
+                hx-target="#modal_container">
+            <i class="fa-solid fa-plus pe-2"></i>
+            Create Team
+        </button>
+        <div class="text-center">
+            <h1 class="text-2xl">You aren't logged into an organisation.</h1>
+            {#            <br>#}
+            <h2 class="text-xl my-4">
+                You are in <strong>{{ team_list.count }}</strong> team{{ team_list.count | pluralize }}.
+            </h2>
+            <br>
+            <form id="modal_create_reminder-form"
+                hx-post="{% url 'api:teams:switch_team input' %}"
+                {#                  hx-include='input[name="invoice_id"]'#}
+                {#                  hx-target='tbody[data-hx-swap="reminders"]'#}
+                {#                  hx-swap="beforeend">#}
+                >
+                <select class="select select-bordered" name="join_team">
+                    {% for team in team_list %}<option value="{{ team.id }}">{{ team.name }}</option>{% endfor %}
+                </select>
+                <button class="btn btn-secondary">Switch to team</button>
+            </form>
+        </div>
+    </div>
+{% endblock content %}

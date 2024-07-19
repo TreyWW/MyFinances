@@ -17,5 +17,5 @@ class UserSettingsTeamsDashboardViewTestCase(ViewTestCase):
         path = "/dashboard/teams/"
         func = resolve(path).func
         func_name = f"{func.__module__}.{func.__name__}"
-        self.assertEqual("backend.views.core.settings.teams.teams_dashboard", func_name)
+        self.assertEqual("backend.views.core.settings.teams.teams_dashboard_handler", func_name)
         self.assertEqual(path, reverse("teams:dashboard"))

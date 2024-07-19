@@ -105,6 +105,12 @@ class VerificationCodes(models.Model):
 
 
 class UserSettings(models.Model):
+    class CoreFeatures(models.TextChoices):
+        INVOICES = "invoices", "Invoices"
+        RECEIPTS = "receipts", "Receipts"
+        CURRENCY_CONVERTER = "currency_converter", "Currency Converter"
+        EMAIL_SENDING = "email_sending", "Email Sending"
+
     CURRENCIES = {
         "GBP": {"name": "British Pound Sterling", "symbol": "£"},
         "EUR": {"name": "Euro", "symbol": "€"},
@@ -128,6 +134,8 @@ class UserSettings(models.Model):
         null=True,
     )
 
+    disabled_features = models.JSONField(default=list)
+
     @property
     def profile_picture_url(self):
         if self.profile_picture and hasattr(self.profile_picture, "url"):
@@ -136,6 +144,9 @@ class UserSettings(models.Model):
 
     def get_currency_symbol(self):
         return self.CURRENCIES.get(self.currency, {}).get("symbol", "$")
+
+    def has_feature(self, feature: str) -> bool:
+        return feature not in self.disabled_features
 
     def __str__(self):
         return self.user.username
@@ -359,6 +370,7 @@ class InvoiceItem(models.Model):
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=100)
     is_service = models.BooleanField(default=True)
+    # from
     # if service
     hours = models.DecimalField(max_digits=15, decimal_places=2, blank=True, null=True)
     price_per_hour = models.DecimalField(max_digits=15, decimal_places=2, blank=True, null=True)

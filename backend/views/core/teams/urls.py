@@ -5,13 +5,8 @@ from backend.views.core import settings
 urlpatterns = [
     path(
         "",
-        settings.teams.teams_dashboard,
+        settings.teams.teams_dashboard_handler,
         name="dashboard",
-    ),
-    path(
-        "permissions/",
-        settings.teams.manage_permissions_dashboard,
-        name="permissions",
     ),
 ]
 

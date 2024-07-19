@@ -13,6 +13,11 @@ urlpatterns = [
         switch_team.switch_team,
         name="switch_team",
     ),
+    path(
+        "switch_team/",
+        switch_team.switch_team,
+        name="switch_team input",
+    ),
     # INVITES #
     path(
         "invite/",

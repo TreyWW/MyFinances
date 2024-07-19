@@ -1,14 +1,14 @@
 from django.urls import path
 
-from . import currency, change_name, profile_picture
+from . import change_name, profile_picture, preferences
 from .api_keys import generate_api_key_endpoint, revoke_api_key_endpoint
 from .defaults import handle_client_defaults_endpoints
 
 urlpatterns = [
     path(
-        "change_currency/",
-        currency.update_currency_view,
-        name="change_currency",
+        "account_preferences/",
+        preferences.update_account_preferences,
+        name="account_preferences",
     ),
     path(
         "change_name/",
