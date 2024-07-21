@@ -59,6 +59,11 @@ def change_client_defaults_endpoint(request: HtmxHttpRequest, id):
         client.client_defaults if hasattr(client, "client_defaults") else ClientDefaults.objects.create(client=client)
     )
 
+    if request.POST.get("logo") is not None:
+        print("Not None in change_client_defaults_endpoints")
+    else:
+        print("None in change_client_defaults_endpoints")
+
     response: str | None = change_client_defaults(request, client, defaults)
 
     if response:

@@ -328,11 +328,16 @@ class ClientDefaults(models.Model):
     invoice_date_type = models.CharField(max_length=20, choices=InvoiceDateType.choices, default=InvoiceDateType.day_of_month)
 
     default_invoice_logo = models.ImageField(
-        upload_to="invoice_logos",
-        storage=settings.CustomPrivateMediaStorage(),
+        upload_to="invoice_logos/",
+        storage=settings.CustomPublicMediaStorage(),
         blank=True,
         null=True,
     )
+
+    def __str__(self):
+        return(f"invoice_due_date_value  = {self.invoice_due_date_value}\n"
+              f"invoice_date_value = {self.invoice_date_value}\n"
+              f"logo = {self.default_invoice_logo.name}")
 class InvoiceProduct(OwnerBase):
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=100)

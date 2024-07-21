@@ -6,6 +6,7 @@ from backend.types.htmx import HtmxHttpRequest
 
 def change_client_defaults(request: HttpRequest, client: Client, defaults: ClientDefaults) -> str | None:
     put = QueryDict(request.body)
+    print("put", type(put.get("logo")))
 
     invoice_due_date_option = put.get("invoice_due_date_option", "")
     invoice_due_date_value = put.get("invoice_due_date_value", "")
@@ -27,11 +28,21 @@ def change_client_defaults(request: HttpRequest, client: Client, defaults: Clien
     defaults.invoice_date_type = invoice_date_option
     defaults.invoice_date_value = invoice_date_value
 
-    defaults.default_invoice_logo = put.get("logo")
+    defaults.default_invoice_logo = request.POST.get("logo")
 
+    if request.POST.get("logo") is not None:
+        print(request.POST.get("logo"))
+        print("Not None")
+    else:
+        print("None in change_client_defaults")
     defaults.save()
 
     return None
+
+
+def validate_invoice_default_logo(default_invoice_logo) -> bool:
+    # If future need to control invoice size and dimensions before assignment
+    pass
 
 
 def validate_invoice_due_date(due_date_type, due_date_value) -> str | None:
