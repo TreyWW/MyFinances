@@ -21,5 +21,8 @@ def manage_invoice(request: HtmxHttpRequest, invoice_id: str):
     if not invoice:
         return redirect("invoices:dashboard")
 
+    if not invoice.has_access(request.user):
+        return redirect("invoices:dashboard")
+
     print(context | {"invoice": invoice})
     return render(request, "pages/invoices/dashboard/manage.html", context | {"invoice": invoice})

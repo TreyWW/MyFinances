@@ -7,7 +7,7 @@ from backend.types.requests import WebRequest
 
 
 @require_http_methods(["GET", "POST"])
-@web_require_scopes("invoices:read", False, False, "invoices:dashboard")
+@web_require_scopes("invoices:write", False, False, "invoices:dashboard")
 def create_invoice_page(request: WebRequest):
     if request.method == "POST":
         invoice_items = create_invoice_items(request)

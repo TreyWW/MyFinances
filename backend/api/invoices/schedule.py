@@ -203,11 +203,7 @@ def fetch_onetime_schedules(request: HtmxHttpRequest, invoice_id: str):
         messages.error(request, "Invoice not found")
         return render(request, "base/toasts.html")
 
-    if invoice.user and not invoice.user.logged_in_as_team and invoice.user != request.user:
-        messages.error(request, "You do not have permission to view this invoice")
-        return render(request, "base/toasts.html")
-
-    if invoice.user and invoice.user.logged_in_as_team and invoice.organization != request.user.logged_in_as_team:
+    if not invoice.has_access(request.user):
         messages.error(request, "You do not have permission to view this invoice")
         return render(request, "base/toasts.html")
 

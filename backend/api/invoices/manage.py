@@ -44,12 +44,8 @@ def preview_invoice(request: HtmxHttpRequest, invoice_id) -> SuccessResponse | E
     except Invoice.DoesNotExist:
         return ErrorResponse("Invoice not found")
 
-    if request.user.logged_in_as_team:
-        if invoice.organization != request.user.logged_in_as_team:
-            return ErrorResponse("You don't have access to this invoice")
-    else:
-        if invoice.user != request.user:
-            return ErrorResponse("You don't have access to this invoice")
+    if not invoice.has_access(request.user):
+        return ErrorResponse("You don't have access to this invoice")
 
     currency_symbol = invoice.get_currency_symbol()
 
