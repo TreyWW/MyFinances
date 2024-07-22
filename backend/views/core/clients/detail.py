@@ -1,3 +1,4 @@
+import json
 from typing import Literal
 
 from django.contrib import messages
@@ -13,11 +14,13 @@ from backend.models import Client, ClientDefaults, User
 from backend.service.clients.detail import change_client_defaults
 
 
-@require_http_methods(["GET", "PUT"])
+# @require_http_methods(["GET", "PUT"])
+@require_http_methods(["GET", "POST"])
 def handle_client_defaults_endpoints(request: HtmxHttpRequest, id):
     if request.method == "GET":
         return get_client_defaults_endpoint(request, id)
-    elif request.method == "PUT":
+    # elif request.method == "PUT":
+    elif request.method == "POST":
         return change_client_defaults_endpoint(request, id)
     else:
         return HttpResponse("Something went wrong")
@@ -48,7 +51,7 @@ def get_client_defaults_endpoint(request: HtmxHttpRequest, id):
     return render(request, "pages/clients/detail/client_defaults.html", {"defaults": defaults, "client": client})
 
 
-@require_http_methods(["PUT"])
+@require_http_methods(["PUT","POST"])
 def change_client_defaults_endpoint(request: HtmxHttpRequest, id):
     try:
         client = validate_client(request, id, get_defaults=True)
@@ -58,11 +61,17 @@ def change_client_defaults_endpoint(request: HtmxHttpRequest, id):
     defaults: ClientDefaults = (
         client.client_defaults if hasattr(client, "client_defaults") else ClientDefaults.objects.create(client=client)
     )
+    # print(request.FILES, "in endpoints")
+    # print(request.POST, "in endpoints")
 
-    if request.POST.get("logo") is not None:
-        print("Not None in change_client_defaults_endpoints")
+    # body_unicode = request.body.decode('utf-8')
+    # body = json.loads(body_unicode)
+    print(request.content_params, "in endpoints")
+
+    if request.FILES.get("logo") is not None:
+        print("Not None in change_client_defaults_endpoints in backend/views/core/clients/detail.py")
     else:
-        print("None in change_client_defaults_endpoints")
+        print("None in change_client_defaults_endpoints in backend/views/core/clients/detail.py")
 
     response: str | None = change_client_defaults(request, client, defaults)
 

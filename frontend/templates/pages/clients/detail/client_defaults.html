@@ -1,9 +1,11 @@
 <form class="py-4"
       method="POST"
-      hx-put="{% url 'clients:detail defaults' id=client.id %}"
+      hx-post="{% url 'clients:detail defaults' id=client.id %}"
       hx-target="this"
       hx-indicator='button[data-hx-loading="save"]'
-      hx-swap="none">
+      hx-swap="none"
+      enctype="multipart/form-data"
+      hx-encoding="multipart/form-data">
     {% csrf_token %}
     <div class="form-control mb-4">
         <label class="label justify-start" for="due_date_value">
@@ -83,6 +85,7 @@
         <label class="label justify-start">Default logo for client's invoices</label>
         <input type="file"
                name="logo"
+               hx-encoding="multipart/form-data"
                class="file-input file-input-bordered max-w-full"
                accept="image/jpeg,image/png,image/jpg"/>
     </div>
