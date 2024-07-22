@@ -61,17 +61,6 @@ def change_client_defaults_endpoint(request: HtmxHttpRequest, id):
     defaults: ClientDefaults = (
         client.client_defaults if hasattr(client, "client_defaults") else ClientDefaults.objects.create(client=client)
     )
-    # print(request.FILES, "in endpoints")
-    # print(request.POST, "in endpoints")
-
-    # body_unicode = request.body.decode('utf-8')
-    # body = json.loads(body_unicode)
-    print(request.content_params, "in endpoints")
-
-    if request.FILES.get("logo") is not None:
-        print("Not None in change_client_defaults_endpoints in backend/views/core/clients/detail.py")
-    else:
-        print("None in change_client_defaults_endpoints in backend/views/core/clients/detail.py")
 
     response: str | None = change_client_defaults(request, client, defaults)
 

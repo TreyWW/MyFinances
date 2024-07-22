@@ -6,43 +6,34 @@ from backend.types.htmx import HtmxHttpRequest
 
 def change_client_defaults(request: HttpRequest, client: Client, defaults: ClientDefaults) -> str | None:
     # put = QueryDict(request.body)
-    # print("body", request.body)
-    print(request.FILES)
 
-    # invoice_due_date_option = put.get("invoice_due_date_option", "")
-    # invoice_due_date_value = put.get("invoice_due_date_value", "")
-    #
-    # invoice_date_option = put.get("invoice_date_option", "")
-    # invoice_date_value = put.get("invoice_date_value", "")
-    #
-    # due_date_error = validate_invoice_due_date(invoice_due_date_option, invoice_due_date_value)
-    # if due_date_error:
-    #     return due_date_error
-    #
-    # invoice_date_error = validate_invoice_date(invoice_date_option, invoice_date_value)
-    # if invoice_date_error:
-    #     return invoice_date_error
-    #
-    # defaults.invoice_due_date_type = invoice_due_date_option
-    # defaults.invoice_due_date_value = invoice_due_date_value
-    #
-    # defaults.invoice_date_type = invoice_date_option
-    # defaults.invoice_date_value = invoice_date_value
+    invoice_due_date_option = request.POST.get("invoice_due_date_option")
+    invoice_due_date_value = request.POST.get("invoice_due_date_value")
+
+    invoice_date_option = request.POST.get("invoice_date_option")
+    invoice_date_value = request.POST.get("invoice_date_value")
+
+    due_date_error = validate_invoice_due_date(invoice_due_date_option, invoice_due_date_value)
+    if due_date_error:
+        return due_date_error
+
+    invoice_date_error = validate_invoice_date(invoice_date_option, invoice_date_value)
+    if invoice_date_error:
+        return invoice_date_error
+
+    defaults.invoice_due_date_type = invoice_due_date_option
+    defaults.invoice_due_date_value = invoice_due_date_value
+
+    defaults.invoice_date_type = invoice_date_option
+    defaults.invoice_date_value = invoice_date_value
 
     defaults.default_invoice_logo = request.FILES.get("logo")
-
-    if request.FILES.get("logo") is not None:
-        print(request.FILES.get("logo"))
-        print("Not None in backend\service\clients\detail.py")
-    else:
-        print("None in change_client_defaults in backend\service\clients\detail.py")
     defaults.save()
 
     return None
 
-
 def validate_invoice_default_logo(default_invoice_logo) -> bool:
-    # If future need to control invoice size and dimensions before assignment
+    # If a future need to control invoice size and dimensions before assignment arise
     pass
 
 

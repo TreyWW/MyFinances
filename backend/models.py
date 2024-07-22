@@ -334,10 +334,6 @@ class ClientDefaults(models.Model):
         null=True,
     )
 
-    def __str__(self):
-        return(f"invoice_due_date_value  = {self.invoice_due_date_value}\n"
-              f"invoice_date_value = {self.invoice_date_value}\n"
-              f"logo = {self.default_invoice_logo.name}")
 class InvoiceProduct(OwnerBase):
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=100)
