@@ -14,7 +14,7 @@ django-storages = "1.14.2"
 pillow = "10.3.0"
 tblib = "^3.0.0"
 forex-python = "^1.8"
-django = "^5.0.2"
+django = "^5.0.7"
 django-mathfilters = "^1.0.0"
 sample-helper-aws-appconfig = "^2.1.0"
 redis = { extras = ["hiredis"], version = "^5.0.1" }
@@ -24,6 +24,7 @@ djangorestframework = "^3.15.1"
 drf-yasg = "^1.21.7"
 
 setuptools = "^70.1.1"
+xhtml2pdf = "^0.2.16"
 [tool.poetry.group.mypy.dependencies]
 mypy = "1.7.1"
 django-stubs = { version = "4.2.7" }
@@ -44,7 +45,7 @@ pre-commit = "^3.7.0"
 pulumi-aws = "^6.29.0"
 
 [tool.poetry.group.django.dependencies]
-Django = "^5.0.2"
+Django = "^5.0.7"
 gunicorn = "22.0.0"
 social-auth-app-django = "5.4.1"
 django-sendgrid-v5 = "1.2.3"
@@ -161,6 +162,7 @@ module = [
     "django_components",
     "drf_yasg",
     "drf_yasg.utils",
-    "drf_yasg.views"
+    "drf_yasg.views",
+    "xhtml2pdf",
 ]
 ignore_missing_imports = true

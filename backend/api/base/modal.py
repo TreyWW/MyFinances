@@ -11,6 +11,7 @@ from backend.models import QuotaLimit
 from backend.models import Organization
 from backend.models import UserSettings
 from backend.types.htmx import HtmxHttpRequest
+from backend.types.requests import WebRequest
 from backend.utils.feature_flags import get_feature_status
 from backend.utils.quota_limit_ops import quota_usage_check_under
 
@@ -18,7 +19,7 @@ from backend.utils.quota_limit_ops import quota_usage_check_under
 # Still working on
 
 
-def open_modal(request: HtmxHttpRequest, modal_name, context_type=None, context_value=None):
+def open_modal(request: WebRequest, modal_name, context_type=None, context_value=None):
     try:
         context = {}
         template_name = f"modals/{modal_name}.html"
@@ -133,10 +134,7 @@ def open_modal(request: HtmxHttpRequest, modal_name, context_type=None, context_
             context["content_min_length"] = 64
             quota = QuotaLimit.objects.prefetch_related("quota_overrides").get(slug="emails-email_character_count")
             context["content_max_length"] = quota.get_quota_limit(user=request.user, quota_limit=quota)
-            if request.user.logged_in_as_team:
-                clients = Client.objects.filter(organization=request.user.logged_in_as_team)
-            else:
-                clients = Client.objects.filter(user=request.user)
+            clients = Client.filter_by_owner(owner=request.actor).filter(email__isnull=False)
             context["email_list"] = clients
         elif modal_name == "invoices_to_destination":
             if existing_client := request.GET.get("client"):

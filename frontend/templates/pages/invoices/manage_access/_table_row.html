@@ -6,7 +6,13 @@
         </td>
         <td>{{ created_on }}</td>
         <td>
-            <span class="tooltip tooltip-top" data-tip="Delete Code">
+            <span class="tooltip tooltip-top" data-tip="Copy URL">
+                <button class="btn btn-primary btn-outline btn-sm"
+                        onclick="navigator.clipboard.writeText('{{ code }}')">
+                    <i class="fa fa-paperclip"></i>
+                </button>
+            </span>
+            <span class="tooltip tooltip-top tooltip-" data-tip="Delete Code">
                 <button class="btn btn-error btn-outline btn-sm"
                         hx-delete="{% url 'invoices:manage_access delete' code=code %}"
                         hx-target="closest tr"
@@ -15,7 +21,6 @@
                 </button>
             </span>
         </td>
-        {% if added %}<script>navigator.clipboard.writeText("{{ code }}");</script>{% endif %}
     </tr>
 {% endif %}
 {% component "messages_list" %}

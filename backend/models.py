@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import typing
-from datetime import datetime
+from datetime import datetime, date, timedelta
 from decimal import Decimal
 from typing import Literal, Union
 from uuid import uuid4
@@ -105,6 +105,12 @@ class VerificationCodes(models.Model):
 
 
 class UserSettings(models.Model):
+    class CoreFeatures(models.TextChoices):
+        INVOICES = "invoices", "Invoices"
+        RECEIPTS = "receipts", "Receipts"
+        CURRENCY_CONVERTER = "currency_converter", "Currency Converter"
+        EMAIL_SENDING = "email_sending", "Email Sending"
+
     CURRENCIES = {
         "GBP": {"name": "British Pound Sterling", "symbol": "£"},
         "EUR": {"name": "Euro", "symbol": "€"},
@@ -128,6 +134,8 @@ class UserSettings(models.Model):
         null=True,
     )
 
+    disabled_features = models.JSONField(default=list)
+
     @property
     def profile_picture_url(self):
         if self.profile_picture and hasattr(self.profile_picture, "url"):
@@ -136,6 +144,9 @@ class UserSettings(models.Model):
 
     def get_currency_symbol(self):
         return self.CURRENCIES.get(self.currency, {}).get("symbol", "$")
+
+    def has_feature(self, feature: str) -> bool:
+        return feature not in self.disabled_features
 
     def __str__(self):
         return self.user.username
@@ -303,17 +314,17 @@ class Client(OwnerBase):
             return self.user == user
 
 
-class ClientDefaults(models.Model):
+class DefaultValues(OwnerBase):
     class InvoiceDueDateType(models.TextChoices):
-        days_after = "days_after"
-        date_following = "date_following"
-        date_current = "date_current"
+        days_after = "days_after"  # days after issue
+        date_following = "date_following"  # date of following month
+        date_current = "date_current"  # date of current month
 
     class InvoiceDateType(models.TextChoices):
         day_of_month = "day_of_month"
         days_after = "days_after"
 
-    client = models.OneToOneField(Client, on_delete=models.CASCADE, related_name="client_defaults")
+    client = models.OneToOneField(Client, on_delete=models.CASCADE, related_name="default_values", null=True, blank=True)
 
     currency = models.CharField(
         max_length=3,
@@ -327,6 +338,26 @@ class ClientDefaults(models.Model):
     invoice_date_value = models.PositiveSmallIntegerField(default=15, null=False, blank=False)
     invoice_date_type = models.CharField(max_length=20, choices=InvoiceDateType.choices, default=InvoiceDateType.day_of_month)
 
+    def get_issue_and_due_dates(self, issue_date: date | str | None = None) -> tuple[str, str]:
+        due: date
+        issue: date
+
+        if isinstance(issue_date, str):
+            issue = date.fromisoformat(issue_date) or date.today()
+        else:
+            issue = issue_date or date.today()
+
+        match self.invoice_due_date_type:
+            case self.InvoiceDueDateType.days_after:
+                due = issue + timedelta(days=self.invoice_due_date_value)
+            case self.InvoiceDueDateType.date_following:
+                due = date(issue.year, issue.month + 1, self.invoice_due_date_value)
+            case self.InvoiceDueDateType.date_current:
+                due = date(issue.year, issue.month, self.invoice_due_date_value)
+            case _:
+                raise ValueError("Invalid invoice due date type")
+        return date.isoformat(issue), date.isoformat(due)
+
 
 class InvoiceProduct(OwnerBase):
     name = models.CharField(max_length=50)
@@ -339,6 +370,7 @@ class InvoiceItem(models.Model):
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=100)
     is_service = models.BooleanField(default=True)
+    # from
     # if service
     hours = models.DecimalField(max_digits=15, decimal_places=2, blank=True, null=True)
     price_per_hour = models.DecimalField(max_digits=15, decimal_places=2, blank=True, null=True)

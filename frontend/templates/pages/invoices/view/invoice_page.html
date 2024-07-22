@@ -1,145 +1,65 @@
 <!DOCTYPE html>
-<html class="{ 'theme-dark': dark }" x-data="data()" lang="en">
-    {% include 'base/_head.html' %}
-    <body style="background-color: #94c0eb;">
-        {% include "pages/invoices/view/_banner/_banner.html" %}
-        <div class="flex-1 min-h-screen overflow-y-auto px-7 pb-4 bg-base-200 invoice-page">
-            <!-- Start of Banner -->
-            <!-- Start of Invoice -->
-            {% include "pages/invoices/view/invoice.html" %}
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Invoice #{{ invoice.id }}</title>
+        {% include 'pages/invoices/view/style.html' %}
+    </head>
+    <body>
+        <div class="invoice-container">
+            <div style="display: flex;
+                        margin-bottom: 2rem;
+                        justify-content: space-between">
+                {% if request.user.is_authenticated %}
+                    <a class="top_button back_button print_hidden"
+                       href="{% url 'invoice overview' invoice_id=invoice.id %}">Back to invoice overview</a>
+                {% endif %}
+                <button class="top_button print_button print_hidden"
+                        role="button"
+                        onclick="print()">Print invoice</button>
+            </div>
+            <style>
+        @media print {
+            .print_hidden {
+                display: none !important;
+            }
+        }
+
+        .top_button {
+            border-radius: 100px;
+            text-decoration: none;
+            font-size: 16px;
+            transition: all 250ms;
+            border: 0;
+            text-align: center;
+            display: inline-block;
+            padding: 10px 20px 5px;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            width: auto;
+            cursor: pointer;
+        }
+
+        .print_button {
+            background-color: #c2fbd7;
+            box-shadow: rgba(44, 187, 99, .2) 0 -25px 18px -14px inset, rgba(44, 187, 99, .15) 0 1px 2px, rgba(44, 187, 99, .15) 0 2px 4px, rgba(44, 187, 99, .15) 0 4px 8px, rgba(44, 187, 99, .15) 0 8px 16px, rgba(44, 187, 99, .15) 0 16px 32px;
+            color: green;
+        }
+
+        .back_button {
+            background-color: #d3f5ff;
+            box-shadow: rgba(33, 132, 197, 0.2) 0 -25px 18px -14px inset, rgba(8, 131, 199, 0.21) 0 1px 2px, rgba(47, 149, 164, 0.31) 0 2px 4px, rgba(6, 146, 248, 0.3) 0 4px 8px, rgba(44, 187, 99, .15) 0 8px 16px, rgba(44, 187, 99, .15) 0 16px 32px;
+            color: #007580;
+        }
+
+        .print_button:hover {
+            box-shadow: rgba(44, 187, 99, .35) 0 -25px 18px -14px inset, rgba(44, 187, 99, .25) 0 1px 2px, rgba(44, 187, 99, .25) 0 2px 4px, rgba(44, 187, 99, .25) 0 4px 8px, rgba(44, 187, 99, .25) 0 8px 16px, rgba(44, 187, 99, .25) 0 16px 32px;
+            transform: scale(1.05) rotate(-1deg);
+        }
+            </style>
+            {% include 'pages/invoices/view/invoice.html' %}
         </div>
-        <style>
-    body {
-        font-family: 'Inter', sans-serif;
-        font-size: 16px;
-        line-height: 1.6;
-        color: #333;
-        background-size: cover;
-    }
-
-    .gradient-btn {
-        background: linear-gradient(45deg, #6f26ff, #db93db);
-        color: #fff;
-        border: none;
-    }
-
-    .gradient-btn:hover {
-        background: linear-gradient(45deg, #6874fc, #80e1ff);
-    }
-
-    @media (max-width: 375px) {
-        .return-btn {
-            .fa-arrow-left {
-                margin-inline-end: 0rem;
-            }
-
-            .return-btn-text {
-                display: none;
-            }
-        }
-    }
-
-    @media (max-width: 768px) {
-        #status_banner {
-            display: flex;
-            flex-direction: column;
-
-            .options-btn {
-                order: 2;
-                margin-top: -2rem;
-
-                .options-text {
-                    display: none;
-                }
-
-                .fa-download,
-                .fa-print {
-                    margin-inline-end: 0;
-                }
-
-                .share-btn {
-                    margin-inline-end: 1rem;
-                }
-            }
-
-            .status-btn {
-                flex-direction: row;
-                flex-grow: 1;
-                order: 5;
-                align-self: center;
-                margin-top: 0.5rem;
-            }
-
-            .return-btn {
-                display: flex;
-                width: fit-content;
-                order: 1;
-            }
-        }
-    }
-
-    .invoice-container {
-        margin-top: 6rem; /* Adjust the start of the invoice */
-    }
-
-    @media print {
-
-        .invoice-page {
-            padding: 0 !important;
-        }
-
-        .invoice-container {
-            padding-top: 0 !important;
-            margin-top: 0 !important;
-        }
-
-        body, html {
-            visibility: visible;
-            padding: 0 !important;
-        }
-
-
-        #invoice, #invoice * {
-            visibility: visible;
-            box-shadow: none;
-        }
-
-        #invoice {
-            width: 100%;
-            position: absolute;
-            left: 0;
-            top: 0;
-            margin: 0 auto;
-            padding: 10mm; /*Adjust padding to reduce white space */
-            box-shadow: none;
-            height: auto;
-            background: none;
-            overflow: visible;
-            border: none; /* Remove borders for printing */
-        }
-
-        .glass-effect {
-            background: none;
-            backdrop-filter: none;
-        }
-
-        /* Avoid breaking inside these elements */
-        .avoid-page-break {
-            page-break-inside: avoid;
-        }
-
-        /* Scale the content if it still doesn't fit */
-        @page {
-            size: portrait; /* Adjust page size to content */
-            margin: 5mm; /* Reduce page margin to fit content */
-        }
-
-        .page-scale {
-            transform-origin: top left;
-            transform: scale(0.95);
-            width: 100% !important;
-        }
-    }
-        </style>
     </body>
 </html>

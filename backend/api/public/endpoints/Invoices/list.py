@@ -14,8 +14,8 @@ from backend.service.invoices.fetch import get_context
 
 @swagger_auto_schema(
     method="get",
-    operation_description="Fetch all invoices",
-    operation_id="invoices_list",
+    operation_description="List all invoices",
+    operation_id="list_invoices",
     manual_parameters=[
         TEAM_PARAMETER,
         openapi.Parameter(

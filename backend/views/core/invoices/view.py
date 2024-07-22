@@ -1,21 +1,21 @@
 from __future__ import annotations
 
 from django.contrib import messages
-from django.contrib.auth.models import AnonymousUser
 from django.shortcuts import redirect
 from django.shortcuts import render
+from django.http import HttpResponse
+
 from login_required import login_not_required
 
 from backend.decorators import web_require_scopes
 from backend.models import Invoice
 from backend.models import InvoiceURL
-from backend.models import UserSettings
+from backend.service.invoices.create_pdf import generate_pdf
+from backend.types.htmx import HtmxHttpRequest
 
 
 @web_require_scopes("invoices:read", False, False, "dashboard")
-def preview(request, invoice_id):
-    context = {"type": "preview"}
-
+def preview(request: HtmxHttpRequest, invoice_id: str) -> HttpResponse:
     invoice = Invoice.objects.filter(id=invoice_id).prefetch_related("items").first()
 
     if not invoice:
@@ -29,17 +29,12 @@ def preview(request, invoice_id):
         messages.error(request, "You don't have access to this invoice")
         return redirect("invoices:dashboard")
 
-    try:
-        currency_symbol = invoice.get_currency_symbol()
-    except UserSettings.DoesNotExist:
-        currency_symbol = "$"
-
-    context.update({"invoice": invoice, "currency_symbol": currency_symbol})
-
+    # if response := generate_pdf(invoice, "inline"):
+    #     return response
     return render(
         request,
         "pages/invoices/view/invoice_page.html",
-        context,
+        {"invoice": invoice},
     )
 
 

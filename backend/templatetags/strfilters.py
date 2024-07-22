@@ -13,5 +13,10 @@ def dashify(string, recurrence=2):
     return "-".join(num_str[i : i + recurrence] for i in range(0, len(num_str), recurrence))
 
 
+def contains(value, arg):
+    return arg in str(value)
+
+
 register.filter("split", split)
 register.filter("dashify", dashify)
+register.filter("contains", contains)

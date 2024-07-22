@@ -3,30 +3,39 @@ from datetime import datetime, date
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied, ValidationError
 
-from backend.models import Invoice, InvoiceItem, Client, QuotaUsage, InvoiceProduct
+from backend.models import Invoice, InvoiceItem, Client, QuotaUsage, InvoiceProduct, DefaultValues
 from backend.service.clients.validate import validate_client
-from backend.types.htmx import HtmxHttpRequest
+from backend.service.defaults.get import get_account_defaults
+from backend.types.requests import WebRequest
 
 
-def get_invoice_context(request: HtmxHttpRequest) -> dict:
+def get_invoice_context(request: WebRequest) -> dict:
     context: dict = {
         "clients": Client.objects.filter(user=request.user),
         "existing_products": InvoiceProduct.objects.filter(user=request.user),
     }
 
+    defaults: DefaultValues
+
     if client_id := request.GET.get("client"):
         try:
             client: Client = validate_client(request, client_id)
             context["existing_client"] = client
+            defaults = get_account_defaults(request, client)
+
         except (Client.DoesNotExist, PermissionDenied, ValidationError):
-            ...
+            defaults = get_account_defaults(request, client=None)
+    else:
+        defaults = get_account_defaults(request, client=None)
 
     if issue_date := request.GET.get("issue_date"):
         try:
             date.fromisoformat(issue_date)
             context["issue_date"] = issue_date
         except ValueError:
-            ...
+            context["issue_date"] = date.isoformat(date.today())
+    else:
+        context["issue_date"] = date.isoformat(date.today())
 
     if due_date := request.GET.get("due_date"):
         try:
@@ -34,6 +43,9 @@ def get_invoice_context(request: HtmxHttpRequest) -> dict:
             context["due_date"] = due_date
         except ValueError:
             ...
+
+    if not due_date:
+        context["issue_date"], context["due_date"] = defaults.get_issue_and_due_dates(context["issue_date"])
 
     if sort_code := (request.GET.get("sort_code") or "").replace("-", ""):
         if len(sort_code) == 6:
@@ -46,7 +58,7 @@ def get_invoice_context(request: HtmxHttpRequest) -> dict:
     return context
 
 
-def create_invoice_items(request: HtmxHttpRequest):
+def create_invoice_items(request: WebRequest):
     return [
         InvoiceItem.objects.create(name=row[0], description=row[1], hours=row[2], price_per_hour=row[3])
         for row in zip(
@@ -58,7 +70,7 @@ def create_invoice_items(request: HtmxHttpRequest):
     ]
 
 
-def save_invoice(request: HtmxHttpRequest, invoice_items):
+def save_invoice(request: WebRequest, invoice_items):
     currency = request.user.user_profile.currency
 
     if not (date_due := request.POST.get("date_due")):

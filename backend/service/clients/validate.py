@@ -18,13 +18,13 @@ def validate_client(request, client_id: str | int, *, get_defaults: bool = False
     """
     try:
         client_id = int(client_id)
-    except ValueError:
+    except (ValueError, TypeError):
         raise ValidationError("Invalid client ID")
 
     client_query = Client.objects.all()
 
     if get_defaults:
-        client_query = client_query.select_related("client_defaults")
+        client_query = client_query.select_related("default_values")
 
     client = client_query.get(id=client_id)
 

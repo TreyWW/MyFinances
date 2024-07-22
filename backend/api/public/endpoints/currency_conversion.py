@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from rest_framework.permissions import IsAuthenticated
@@ -57,7 +59,7 @@ class CurrencyConversionSerializer(serializers.Serializer):
     deprecated=True,
 )
 @api_view(["GET"])
-@deprecated
+@deprecated(datetime(2024, 6, 30), datetime(2024, 8, 1))
 def convert_currency_endpoint(request):
     if request.method == "GET":
         serializer = CurrencyConversionSerializer(data=request.query_params)

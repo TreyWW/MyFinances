@@ -1,5 +1,6 @@
 from backend.models import Client
 from backend.service.clients.validate import validate_client_create
+from backend.service.defaults.get import get_account_defaults
 
 
 def create_client(request, client_details_default: dict | None = None) -> str | Client:
@@ -31,5 +32,4 @@ def create_client(request, client_details_default: dict | None = None) -> str | 
         setattr(client, model_field, new_value)
 
     client.save()
-
     return client
