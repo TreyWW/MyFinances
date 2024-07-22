@@ -6,6 +6,7 @@ from textwrap import dedent
 import github.GithubException
 from prs import handler as pr_handler
 from issues import handler as issue_handler
+from pr_and_issues import handler as pr_and_issue_handler
 from helpers import decode_private_key
 import _types
 from github import Github, Issue, GithubIntegration
@@ -100,6 +101,10 @@ def lambda_handler(event: dict, lambda_context):
     logger.debug(context_objs)
 
     actions_taken = []
+
+    if context_objs.target_discussion:
+        logger.debug("Using discussion handler")
+        actions_taken.extend(pr_and_issue_handler.handler(context_dicts, context_objs))
 
     if context_dicts.pull_request:
         logger.debug("Using PR handler")

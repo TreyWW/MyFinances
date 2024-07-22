@@ -87,6 +87,8 @@ class Objects:
     dict_context: Context
     repository: GithubRepository
     sender: GithubNamedUser = None
+    target_discussion: GithubIssue | GithubPullRequest | None = None
+    target_discussion_type: str | None = None
     issue: Optional[GithubIssue] = None
     pull_request: Optional[GithubPullRequest] = None
     labels: PaginatedList[GithubLabel] = None
@@ -100,9 +102,13 @@ class Objects:
 
         if self.dict_context.issue:
             self.issue = self.repository.get_issue(self.dict_context.issue.number)
+            self.target_discussion = self.issue
+            self.target_discussion_type = "issue"
 
         if self.dict_context.pull_request:
             self.pull_request = self.repository.get_pull(self.dict_context.pull_request.number)
+            self.target_discussion = self.pull_request
+            self.target_discussion_type = "pull_request"
 
         if self.pull_request:
             self.labels = self.pull_request.get_labels()
