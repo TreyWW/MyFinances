@@ -24,12 +24,15 @@ def edit_member_permissions(receiver: User, team: Organization | None, permissio
     return None
 
 
-def validate_receiver(receiver: User | None, team: Organization) -> bool:
+def validate_receiver(receiver: User | None, team: Organization | None) -> bool:
     """
     Make sure receiver is in team and not already owner
     """
 
     if not receiver:
+        return False
+
+    if not team:
         return False
 
     if not team.members.filter(id=receiver.id).first():
