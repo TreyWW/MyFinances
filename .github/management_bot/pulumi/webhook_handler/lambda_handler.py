@@ -65,11 +65,15 @@ def lambda_handler(event: dict, lambda_context):
     req.add_header("X-Aws-Parameters-Secrets-Token", aws_session_token)
     config = urllib.request.urlopen(req).read()
 
+    logger.info(f"Using stage: {stage}")
+
     ssm_result: json = json.loads(config)
     ssm_value: json = json.loads(ssm_result["Parameter"]["Value"])
 
     PRIVATE_KEY = decode_private_key(ssm_value["private_key"])
     APP_ID = ssm_value["app_id"]
+
+    logger.info(f"Using app id: {APP_ID}")
 
     auth = Auth.AppAuth(APP_ID, PRIVATE_KEY)
     gi = GithubIntegration(auth=auth)
@@ -79,6 +83,7 @@ def lambda_handler(event: dict, lambda_context):
 
     context_dicts = _types.Context(
         event=event,
+        lambda_context=lambda_context,
         action=event.get("action", ""),
         issue=_types.fill_dataclass_from_dict(_types.Issue, event.get("issue", {})),
         pull_request=_types.fill_dataclass_from_dict(_types.PullRequest, event.get("pull_request", {})),

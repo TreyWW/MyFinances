@@ -71,6 +71,7 @@ class Changes:
 @dataclass
 class Context:
     event: dict
+    lambda_context: Any
     action: str
     sender: User
     issue: Optional[Issue] = None
