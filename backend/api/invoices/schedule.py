@@ -80,8 +80,7 @@ def create_ots(request: HtmxHttpRequest) -> HttpResponse:
             invoice=invoice,
             option=1,
             datetime=request.POST.get("date_time"),
-            email_type=request.POST.get("email_type"),
-            # type: ignore[arg-type]
+            email_type=request.POST.get("email_type"),  # type: ignore[arg-type]
         )
     )
 

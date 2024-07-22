@@ -21,9 +21,12 @@ def edit_user_permissions_endpoint(request: WebRequest) -> HttpResponse:
     permissions: list = get_permissions_from_request(request)
     user_id = request.POST.get("user_id")
 
-    receiver = User.objects.filter(id=user_id).first()
+    receiver: User | None = User.objects.filter(id=user_id).first()
 
-    error = edit_member_permissions(request, request.user, receiver, request.user.logged_in_as_team, permissions)
+    if receiver:
+        error = edit_member_permissions(request, request.user, receiver, request.user.logged_in_as_team, permissions)
+    else:
+        error = "Something went wrong"
 
     if error:
         messages.error(request, error)

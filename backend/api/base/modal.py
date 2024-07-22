@@ -153,11 +153,12 @@ def open_modal(request: WebRequest, modal_name, context_type=None, context_value
 
         if modal_name == "edit_team_member_permissions":
             team = request.user.logged_in_as_team
-            for_user = team.members.filter(id=context_value).first()
-            for_user_perms = team.permissions.filter(user=for_user).first()
-            if for_user:
-                context["editing_user"] = for_user
-                context["user_current_scopes"] = for_user_perms.scopes if for_user_perms else []
+            if team:
+                for_user = team.members.filter(id=context_value).first()
+                for_user_perms = team.permissions.filter(user=for_user).first()
+                if for_user:
+                    context["editing_user"] = for_user
+                    context["user_current_scopes"] = for_user_perms.scopes if for_user_perms else []
 
         return render(request, template_name, context)
     except ValueError as e:

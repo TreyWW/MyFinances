@@ -10,12 +10,11 @@ def edit_member_permissions(request, actor: User | Organization, receiver: User,
     if not validate_scopes(permissions):
         return "Invalid permissions"
 
-    user_team_perms = team.permissions.filter(user=receiver).first()
+    user_team_perms: TeamMemberPermission | None = team.permissions.filter(user=receiver).first()
 
     if not user_team_perms:
         team.permissions.add(TeamMemberPermission.objects.create(user=receiver, team=team, scopes=permissions))
     else:
-        user_team_perms: TeamMemberPermission
         user_team_perms.scopes = permissions
         user_team_perms.save()
 
