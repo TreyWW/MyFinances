@@ -19,7 +19,7 @@ def validate_scopes(permissions: list[str]) -> bool:
     Validate permissions are valid
     """
     if not permissions:
-        return False
+        return True
 
     for permission in permissions:
         if permission not in SCOPES:
