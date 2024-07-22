@@ -24,7 +24,7 @@ def edit_user_permissions_endpoint(request: WebRequest) -> HttpResponse:
     receiver: User | None = User.objects.filter(id=user_id).first()
 
     if receiver:
-        error = edit_member_permissions(request, request.user, receiver, request.user.logged_in_as_team, permissions)
+        error = edit_member_permissions(receiver, request.user.logged_in_as_team, permissions)
     else:
         error = "Something went wrong"
 

@@ -3,12 +3,15 @@ from backend.models import User, Organization, TeamMemberPermission
 from backend.service.permissions.scopes import validate_scopes
 
 
-def edit_member_permissions(request, actor: User | Organization, receiver: User, team: Organization, permissions: list) -> str | None:
+def edit_member_permissions(receiver: User, team: Organization | None, permissions: list) -> str | None:
     if not validate_receiver(receiver, team):
         return "Invalid key name"
 
     if not validate_scopes(permissions):
         return "Invalid permissions"
+
+    if not team:
+        return "Invalid team, something went wrong"
 
     user_team_perms: TeamMemberPermission | None = team.permissions.filter(user=receiver).first()
 
