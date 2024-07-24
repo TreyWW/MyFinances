@@ -7,23 +7,22 @@ from django.http import HttpResponse
 
 from login_required import login_not_required
 
+from backend.decorators import web_require_scopes
 from backend.models import Invoice
 from backend.models import InvoiceURL
 from backend.service.invoices.create_pdf import generate_pdf
 from backend.types.htmx import HtmxHttpRequest
 
 
+@web_require_scopes("invoices:read", False, False, "dashboard")
 def preview(request: HtmxHttpRequest, invoice_id: str) -> HttpResponse:
-    invoice = Invoice.objects.filter(id=invoice_id).prefetch_related("items").first()
+    invoice: Invoice | None = Invoice.objects.filter(id=invoice_id).prefetch_related("items").first()
 
     if not invoice:
         messages.error(request, "Invoice not found")
         return redirect("invoices:dashboard")
 
-    if request.user.logged_in_as_team and invoice.organization != request.user.logged_in_as_team:
-        messages.error(request, "You don't have access to this invoice")
-        return redirect("invoices:dashboard")
-    elif invoice.user != request.user:
+    if not invoice.has_access(request.user):
         messages.error(request, "You don't have access to this invoice")
         return redirect("invoices:dashboard")
 

@@ -1,13 +1,13 @@
-from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
 
-from backend.models import Client
+from backend.decorators import web_require_scopes
 from backend.service.clients.get import fetch_clients
 from backend.types.htmx import HtmxHttpRequest
 
 
 @require_http_methods(["GET"])
+@web_require_scopes("clients:read", True, True)
 def fetch_all_clients(request: HtmxHttpRequest):
     if not request.htmx:
         return redirect("clients:dashboard")
@@ -20,6 +20,7 @@ def fetch_all_clients(request: HtmxHttpRequest):
 
 
 @require_http_methods(["GET"])
+@web_require_scopes("clients:read", True, True)
 def fetch_clients_dropdown(request: HtmxHttpRequest):
     if not request.htmx:
         return redirect("clients:dashboard")

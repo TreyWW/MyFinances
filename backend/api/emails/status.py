@@ -8,7 +8,7 @@ from django.views.decorators.http import require_POST
 from django_ratelimit.core import is_ratelimited
 from mypy_boto3_sesv2.type_defs import GetMessageInsightsResponseTypeDef, InsightsEventTypeDef
 
-from backend.decorators import htmx_only, feature_flag_check
+from backend.decorators import htmx_only, feature_flag_check, web_require_scopes
 from backend.models import EmailSendStatus
 from backend.types.htmx import HtmxHttpRequest
 from settings.helpers import EMAIL_CLIENT
@@ -17,6 +17,7 @@ from settings.helpers import EMAIL_CLIENT
 @require_POST
 @htmx_only("emails:dashboard")
 @feature_flag_check("areUserEmailsAllowed", status=True, api=True, htmx=True)
+@web_require_scopes("emails:read", True, True)
 def get_status_view(request: HtmxHttpRequest, status_id: str) -> HttpResponse:
     try:
         if request.user.logged_in_as_team:

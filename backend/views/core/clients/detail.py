@@ -6,6 +6,7 @@ from django.http.response import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
 
+from backend.decorators import web_require_scopes
 from backend.service.clients.delete import delete_client
 from backend.service.clients.validate import validate_client
 from backend.models import Client
@@ -13,6 +14,7 @@ from backend.types.requests import WebRequest
 
 
 @require_http_methods(["GET"])
+@web_require_scopes("clients:read", False, False, "clients:dashboard")
 def client_detail_endpoint(request: WebRequest, id):
     try:
         client = validate_client(request, id)
@@ -24,6 +26,7 @@ def client_detail_endpoint(request: WebRequest, id):
 
 
 @require_http_methods(["DELETE"])
+@web_require_scopes("clients:write", False, False, "clients:dashboard")
 def delete_client_endpoint(request: WebRequest, id) -> HttpResponse:
     response: str | Literal[True] = delete_client(request, id)
 

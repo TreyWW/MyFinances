@@ -10,6 +10,7 @@ from django.shortcuts import redirect
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
+from backend.decorators import web_require_scopes
 from backend.models import Invoice
 from backend.types.htmx import HtmxHttpRequest
 
@@ -32,6 +33,8 @@ class ErrorResponse:
     success: Literal[False] = False
 
 
+@require_http_methods(["GET"])
+@web_require_scopes("invoices:read", True, True)
 def preview_invoice(request: HtmxHttpRequest, invoice_id) -> SuccessResponse | ErrorResponse:
     context: dict[str, str | Invoice] = {"type": "preview"}
 
@@ -41,12 +44,8 @@ def preview_invoice(request: HtmxHttpRequest, invoice_id) -> SuccessResponse | E
     except Invoice.DoesNotExist:
         return ErrorResponse("Invoice not found")
 
-    if request.user.logged_in_as_team:
-        if invoice.organization != request.user.logged_in_as_team:
-            return ErrorResponse("You don't have access to this invoice")
-    else:
-        if invoice.user != request.user:
-            return ErrorResponse("You don't have access to this invoice")
+    if not invoice.has_access(request.user):
+        return ErrorResponse("You don't have access to this invoice")
 
     currency_symbol = invoice.get_currency_symbol()
 

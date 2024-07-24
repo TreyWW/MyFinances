@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass
 from functools import wraps
 from typing import Optional, TypedDict, List
@@ -11,8 +12,11 @@ from django.shortcuts import redirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from backend.models import QuotaLimit
+from backend.models import QuotaLimit, TeamMemberPermission
+from backend.types.requests import WebRequest
 from backend.utils.feature_flags import get_feature_status
+
+logger = logging.getLogger(__name__)
 
 
 def not_authenticated(view_func):
@@ -169,3 +173,78 @@ def quota_usage_check(limit: str | QuotaLimit, extra_data: str | int | None = No
 
 not_logged_in = not_authenticated
 logged_out = not_authenticated
+
+
+def web_require_scopes(scopes: str | list[str], htmx=False, api=False, redirect_url=None):
+    """
+    Only to be used by WebRequests (htmx or html) NOT PUBLIC API
+    """
+
+    def decorator(view_func):
+        @wraps(view_func)
+        def _wrapped_view(request: WebRequest, *args, **kwargs):
+            if request.team_id and not request.team:
+                return return_error(request, "Team not found")
+
+            if request.team:
+                # Check for team permissions based on team_id and scopes
+                if not request.team.is_owner(request.user):
+                    team_permissions = TeamMemberPermission.objects.filter(team=request.team, user=request.user).first()
+
+                    if not team_permissions:
+                        return return_error(request, "You do not have permission to perform this action (no permissions for team)")
+
+                    # single scope
+                    if isinstance(scopes, str) and scopes not in team_permissions.scopes:
+                        return return_error(request, f"You do not have permission to perform this action ({scopes})")
+
+                    # scope list
+                    if isinstance(scopes, list):
+                        for scope in scopes:
+                            if scope not in team_permissions.scopes:
+                                return return_error(request, f"You do not have permission to perform this action ({scope})")
+            return view_func(request, *args, **kwargs)
+
+        _wrapped_view.required_scopes = scopes
+        return _wrapped_view
+
+    def return_error(request: WebRequest, msg: str):
+        logging.info(f"User does not have permission to perform this action (User ID: {request.user.id}, Scopes: {scopes})")
+        if api and htmx:
+            messages.error(request, msg)
+            return render(request, "base/toast.html", {"autohide": False})
+        elif api:
+            return HttpResponse(status=403, content=msg)
+        elif request.htmx:
+            messages.error(request, msg)
+            resp = HttpResponse(status=200)
+
+            try:
+                last_visited_url = request.session["last_visited"]
+                current_url = request.build_absolute_uri()
+                if last_visited_url != current_url:
+                    resp["HX-Replace-Url"] = last_visited_url
+            except KeyError:
+                ...
+            resp["HX-Refresh"] = "true"
+            return resp
+
+        messages.error(request, msg)
+
+        try:
+            last_visited_url = request.session["last_visited"]
+            current_url = request.build_absolute_uri()
+            if last_visited_url != current_url:
+                return HttpResponseRedirect(last_visited_url)
+        except KeyError:
+            pass
+
+        if not redirect_url:
+            return HttpResponseRedirect(reverse("dashboard"))
+
+        try:
+            return HttpResponseRedirect(reverse(redirect_url))
+        except KeyError:
+            return HttpResponseRedirect(reverse("dashboard"))
+
+    return decorator

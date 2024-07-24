@@ -3,10 +3,12 @@ from backend.models import *
 from backend.types.htmx import HtmxHttpRequest
 
 
+@web_require_scopes("invoices:read", False, False, "dashboard")
 def invoices_dashboard(request: HtmxHttpRequest):
     return render(request, "pages/invoices/dashboard/dashboard.html")
 
 
+@web_require_scopes("invoices:read", False, False, "invoices:dashboard")
 def manage_invoice(request: HtmxHttpRequest, invoice_id: str):
     context: dict = {}
 
@@ -17,6 +19,9 @@ def manage_invoice(request: HtmxHttpRequest, invoice_id: str):
     invoice = Invoice.objects.get(id=invoice_id)
 
     if not invoice:
+        return redirect("invoices:dashboard")
+
+    if not invoice.has_access(request.user):
         return redirect("invoices:dashboard")
 
     print(context | {"invoice": invoice})

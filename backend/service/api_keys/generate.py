@@ -1,6 +1,7 @@
 from backend.api.public.models import APIAuthToken
 from backend.api.public.permissions import SCOPE_DESCRIPTIONS, SCOPES
 from backend.models import User, Organization
+from backend.service.permissions.scopes import validate_scopes
 from backend.types.htmx import HtmxHttpRequest
 
 
@@ -34,31 +35,6 @@ def generate_public_api_key(
     token.save()
 
     return token, raw_key
-
-
-def get_permissions_from_request(request: HtmxHttpRequest) -> list:
-    scopes = [
-        f"{group}:{perm}"
-        for group, items in SCOPE_DESCRIPTIONS.items()
-        if (perm := request.POST.get(f"permission_{group}")) in items["options"]
-    ]
-
-    scopes.extend(f"{group}:read" for group, items in SCOPE_DESCRIPTIONS.items() if request.POST.get(f"permission_{group}") == "write")
-
-    return scopes
-
-
-def validate_scopes(permissions: list[str]) -> bool:
-    """
-    Validate permissions are valid
-    """
-    if not permissions:
-        return False
-
-    for permission in permissions:
-        if permission not in SCOPES:
-            return False
-    return True
 
 
 def validate_name(name: str | None) -> bool:

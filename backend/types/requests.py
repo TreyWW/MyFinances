@@ -8,6 +8,7 @@ from backend.models import User, Organization
 class WebRequest(HttpRequest):
     user: User
     team: Organization | None
+    team_id: int | None
     actor: User | Organization
 
     htmx: HtmxDetails

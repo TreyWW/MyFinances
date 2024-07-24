@@ -6,6 +6,7 @@ from django.http.response import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
 
+from backend.decorators import web_require_scopes
 from backend.models import Invoice, Client, InvoiceItem
 from backend.types.htmx import HtmxHttpRequest
 
@@ -150,6 +151,7 @@ def edit_invoice(request: HtmxHttpRequest, invoice_id):
 
 # decorator & view function for rendering page and updating invoice items in the backend
 @require_http_methods(["GET", "POST"])
+@web_require_scopes("invoices:write", False, False, "invoices:dashboard")
 def edit_invoice_page(request: HtmxHttpRequest, invoice_id):
     if request.method == "POST":
         return edit_invoice(request, invoice_id)

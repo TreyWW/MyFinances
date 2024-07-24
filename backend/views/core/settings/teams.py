@@ -34,9 +34,12 @@ def teams_dashboard(request: WebRequest):
                     output_field=BooleanField(),
                 ),
             )
-            .prefetch_related("members")
+            .prefetch_related("members", "permissions")
             .get(id=users_team.id)
         )
+        user_permissions = {
+            member: list(team.permissions.filter(user=member).values_list("scopes", flat=True))[0] for member in team.members.all()
+        }
 
     except Organization.DoesNotExist:
         user_with_counts = User.objects.prefetch_related("teams_joined", "teams_leader_of").get(pk=request.user.pk)
@@ -53,7 +56,7 @@ def teams_dashboard(request: WebRequest):
     return render(
         request,
         "pages/settings/teams/main.html",
-        context | {"team": team},
+        context | {"team": team, "user_permissions": user_permissions},
     )
 
 

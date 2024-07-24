@@ -2,12 +2,13 @@ from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 
-from backend.decorators import quota_usage_check
+from backend.decorators import quota_usage_check, web_require_scopes
 from backend.models import Invoice, InvoiceURL, QuotaUsage, QuotaLimit
 from backend.types.htmx import HtmxHttpRequest
 from backend.utils.quota_limit_ops import quota_usage_check_under
 
 
+@web_require_scopes("invoices:write", False, False, "invoices:dashboard")
 def manage_access(request: HtmxHttpRequest, invoice_id):
     try:
         invoice = Invoice.objects.prefetch_related("invoice_urls").get(id=invoice_id, user=request.user)
@@ -24,6 +25,7 @@ def manage_access(request: HtmxHttpRequest, invoice_id):
     )
 
 
+@web_require_scopes("invoices:write", False, False, "invoices:dashboard")
 def create_code(request: HtmxHttpRequest, invoice_id):
     if not request.htmx:
         return redirect("invoices:dashboard")
@@ -57,6 +59,7 @@ def create_code(request: HtmxHttpRequest, invoice_id):
     )
 
 
+@web_require_scopes("invoices:write", False, False, "invoices:dashboard")
 def delete_code(request: HtmxHttpRequest, code):
     if request.method != "DELETE" or not request.htmx:
         return HttpResponse("Request invalid", status=400)

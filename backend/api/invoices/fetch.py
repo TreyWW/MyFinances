@@ -1,12 +1,14 @@
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
 
+from backend.decorators import web_require_scopes
 from backend.models import Invoice
 from backend.types.htmx import HtmxHttpRequest
 from backend.service.invoices.fetch import get_context
 
 
 @require_http_methods(["GET"])
+@web_require_scopes("invoices:read", True, True)
 def fetch_all_invoices(request: HtmxHttpRequest):
     # Redirect if not an HTMX request
     if not request.htmx:

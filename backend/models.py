@@ -178,7 +178,7 @@ class Organization(models.Model):
 
 class TeamMemberPermission(models.Model):
     team = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name="permissions")
-    user = models.ForeignKey("backend.User", on_delete=models.CASCADE, related_name="team_permissions")
+    user = models.OneToOneField("backend.User", on_delete=models.CASCADE, related_name="team_permissions")
     scopes = models.JSONField("Scopes", default=list, help_text="List of permitted scopes")
 
     class Meta:

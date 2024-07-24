@@ -4,13 +4,14 @@ from django.shortcuts import render
 from django.views.decorators.http import require_GET
 from django_ratelimit.core import is_ratelimited
 
-from backend.decorators import feature_flag_check
+from backend.decorators import feature_flag_check, web_require_scopes
 from backend.models import Invoice
 from backend.types.htmx import HtmxHttpRequest
 
 
 @require_GET
 @feature_flag_check("areInvoiceRemindersEnabled", True, api=True, htmx=True)
+@web_require_scopes("invoices:read", True, True)
 def fetch_reminders(request: HtmxHttpRequest, invoice_id: str):
     ratelimit = is_ratelimited(request, group="fetch_reminders", key="user", rate="20/30s", increment=True)
     if ratelimit:

@@ -5,11 +5,13 @@ from django.urls import resolve, reverse
 from django.urls.exceptions import Resolver404
 from django.views.decorators.http import require_http_methods
 
+from backend.decorators import web_require_scopes
 from backend.models import Invoice, QuotaLimit
 from backend.types.htmx import HtmxHttpRequest
 
 
 @require_http_methods(["DELETE"])
+@web_require_scopes("invoices:write", True, True)
 def delete_invoice(request: HtmxHttpRequest):
     delete_items = QueryDict(request.body)
 
