@@ -1,5 +1,12 @@
+from dataclasses import dataclass
+
 from backend.api.public.permissions import SCOPE_DESCRIPTIONS, SCOPES
 from backend.types.requests import WebRequest
+from backend.utils.dataclasses import BaseServiceResponse
+
+
+class PermissionScopesServiceResponse(BaseServiceResponse[None]):
+    response: None = None
 
 
 def get_permissions_from_request(request: WebRequest) -> list:
@@ -14,14 +21,16 @@ def get_permissions_from_request(request: WebRequest) -> list:
     return scopes
 
 
-def validate_scopes(permissions: list[str]) -> bool:
+def validate_scopes(permissions: list[str]) -> PermissionScopesServiceResponse:
     """
     Validate permissions are valid
     """
     if not permissions:
-        return True
+        return PermissionScopesServiceResponse(True)
 
-    for permission in permissions:
-        if permission not in SCOPES:
-            return False
-    return True
+    invalid_permissions: list[str] = [permission for permission in permissions if permission not in SCOPES]
+
+    if invalid_permissions:
+        return PermissionScopesServiceResponse(False, error_message=f"Invalid permissions: {', '.join(invalid_permissions)}")
+
+    return PermissionScopesServiceResponse(True)

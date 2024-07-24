@@ -1,9 +1,16 @@
+from dataclasses import dataclass
+from typing import Optional
+
 from django.db.models import Q, QuerySet
 
 from backend.models import Client, Organization
+from backend.utils.dataclasses import BaseServiceResponse
 
 
-def fetch_clients(request, *, search_text: str | None = None, team: Organization | None = None) -> QuerySet[Client]:
+class FetchClientServiceResponse(BaseServiceResponse[QuerySet[Client]]): ...
+
+
+def fetch_clients(request, *, search_text: str | None = None, team: Organization | None = None) -> FetchClientServiceResponse:
     if team:
         clients = Client.objects.filter(organization=team, active=True)
     else:
@@ -12,4 +19,4 @@ def fetch_clients(request, *, search_text: str | None = None, team: Organization
     if search_text:
         clients = clients.filter(Q(name__icontains=search_text) | Q(email__icontains=search_text) | Q(id__icontains=search_text))
 
-    return clients
+    return FetchClientServiceResponse(True, clients)

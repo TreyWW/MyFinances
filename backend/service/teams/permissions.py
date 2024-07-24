@@ -1,17 +1,24 @@
+from dataclasses import dataclass
+
 from backend.api.public.models import APIAuthToken
 from backend.models import User, Organization, TeamMemberPermission
 from backend.service.permissions.scopes import validate_scopes
+from backend.utils.dataclasses import BaseServiceResponse
 
 
-def edit_member_permissions(receiver: User, team: Organization | None, permissions: list) -> str | None:
+class EditMemberPermissionsServiceResponse(BaseServiceResponse[None]):
+    response: None = None
+
+
+def edit_member_permissions(receiver: User, team: Organization | None, permissions: list) -> EditMemberPermissionsServiceResponse:
     if not validate_receiver(receiver, team):
-        return "Invalid key name"
+        return EditMemberPermissionsServiceResponse(error_message="Invalid key name")
 
-    if not validate_scopes(permissions):
-        return "Invalid permissions"
+    if (scopes_response := validate_scopes(permissions)).failed:
+        return EditMemberPermissionsServiceResponse(error_message=scopes_response.error)
 
     if not team:
-        return "Invalid team, something went wrong"
+        return EditMemberPermissionsServiceResponse(error_message="Invalid team, something went wrong")
 
     user_team_perms: TeamMemberPermission | None = team.permissions.filter(user=receiver).first()
 
@@ -21,7 +28,7 @@ def edit_member_permissions(receiver: User, team: Organization | None, permissio
         user_team_perms.scopes = permissions
         user_team_perms.save()
 
-    return None
+    return EditMemberPermissionsServiceResponse(True)
 
 
 def validate_receiver(receiver: User | None, team: Organization | None) -> bool:

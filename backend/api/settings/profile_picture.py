@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_http_methods
 
-from backend.service.settings.update import update_profile_picture
+from backend.service.settings.update import update_profile_picture, UpdateProfilePictureServiceResponse
 from backend.service.settings.view import get_user_profile
 from backend.types.requests import WebRequest
 
@@ -15,14 +15,12 @@ def change_profile_picture_endpoint(request: WebRequest):
 
     user_profile = get_user_profile(request)
 
-    print(request.FILES)
+    update_response: UpdateProfilePictureServiceResponse = update_profile_picture(request.FILES.get("profile_picture_image"), user_profile)
 
-    status, message = update_profile_picture(request.FILES.get("profile_picture_image"), user_profile)
-
-    if not status:
-        messages.error(request, message)
+    if update_response.success:
+        messages.success(request, update_response.response)
     else:
-        messages.success(request, message)
+        messages.error(request, update_response.error)
 
     return render(
         request,

@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
 
 from backend.decorators import web_require_scopes
-from backend.service.clients.delete import delete_client
+from backend.service.clients.delete import delete_client, DeleteClientServiceResponse
 from backend.service.clients.validate import validate_client
 from backend.models import Client
 from backend.types.requests import WebRequest
@@ -28,10 +28,10 @@ def client_detail_endpoint(request: WebRequest, id):
 @require_http_methods(["DELETE"])
 @web_require_scopes("clients:write", False, False, "clients:dashboard")
 def delete_client_endpoint(request: WebRequest, id) -> HttpResponse:
-    response: str | Literal[True] = delete_client(request, id)
+    delete_response: DeleteClientServiceResponse = delete_client(request, id)
 
-    if isinstance(response, str):
-        messages.error(request, f"Failed to delete the client {id}: {response}")
+    if delete_response.failed:
+        messages.error(request, delete_response.error)
     else:
         messages.success(request, f"Successfully deleted client #{id}")
 

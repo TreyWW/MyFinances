@@ -54,10 +54,10 @@ def change_client_defaults_endpoint(request: WebRequest, client_id: int | None =
     else:
         defaults = get_account_defaults(request)
 
-    response: str | None = change_client_defaults(request, defaults)
+    response = change_client_defaults(request, defaults)
 
-    if response:
-        messages.error(request, response)
+    if response.failed:
+        messages.error(request, response.error)
         return render(request, "base/toast.html")
 
     messages.success(request, "Successfully updated client defaults")

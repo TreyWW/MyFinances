@@ -5,12 +5,7 @@ from django.views.decorators.http import require_http_methods
 
 from backend.decorators import web_require_scopes
 from backend.models import User
-from backend.service.api_keys.delete import delete_api_key
-from backend.service.api_keys.generate import generate_public_api_key
-
-from backend.service.api_keys.get import get_api_key_by_id
 from backend.service.permissions.scopes import get_permissions_from_request
-from backend.api.public.models import APIAuthToken
 from backend.service.teams.permissions import edit_member_permissions
 from backend.types.requests import WebRequest
 
@@ -23,13 +18,14 @@ def edit_user_permissions_endpoint(request: WebRequest) -> HttpResponse:
 
     receiver: User | None = User.objects.filter(id=user_id).first()
 
-    if receiver:
-        error = edit_member_permissions(receiver, request.user.logged_in_as_team, permissions)
-    else:
-        error = "Something went wrong"
+    if not receiver:
+        messages.error(request, "Invalid user")
+        return render(request, "base/toast.html")
 
-    if error:
-        messages.error(request, error)
-    else:
+    edit_response = edit_member_permissions(receiver, request.user.logged_in_as_team, permissions)
+
+    if edit_response.success:
         messages.success(request, "User permissions saved successfully")
+    else:
+        messages.error(request, edit_response.error)
     return render(request, "base/toast.html")

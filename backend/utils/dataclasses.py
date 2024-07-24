@@ -1,5 +1,5 @@
-from typing import TypeVar
-
+from dataclasses import dataclass
+from typing import TypeVar, Any, Optional, Generic
 
 T = TypeVar("T")
 
@@ -53,3 +53,74 @@ def extract_to_dataclass(request, class_type: T, request_types: list[str], *args
         return class_type(**data)
     else:
         raise TypeError("class_type must be a class")
+
+
+class BaseServiceResponse(Generic[T]):
+    _success: bool = False
+    _response: Optional[T] = None
+    _error_message: str = ""
+
+    def __init__(self, success: bool = False, response: Optional[T] = None, error_message: str = ""):
+        self._success = success
+        self._response = response
+        self._error_message = error_message
+
+    @property
+    def success(self) -> bool:
+        if not isinstance(self._success, bool):
+            raise TypeError("success must be a boolean")
+
+        return self._success
+
+    @property
+    def response(self) -> T:
+        if self._response is None:
+            raise TypeError("response must be present if it was a successful response")
+        return self._response
+
+    @property
+    def error_message(self) -> str:
+        if not isinstance(self._error_message, str):
+            raise TypeError("error_message must be a string")
+        return self._error_message
+
+    @property
+    def failed(self) -> bool:
+        return not self.success
+
+    @property
+    def error(self) -> str:
+        return self.error_message if self.failed else "Unknown error"
+
+    def __post_init__(self):
+        if self.success and self.response is None:
+            raise ValueError("Response cannot be None when success is True.")
+        if not self.success and self.response is not None:
+            raise ValueError("Response must be None when success is False.")
+        if not self.success and not self.error_message:
+            raise ValueError("Error message cannot be empty when success is False.")
+
+
+# * BaseServiceResponse Usage
+
+# from backend.utils.dataclasses import BaseServiceResponse
+#
+#
+# class XyzServiceResponse(BaseServiceResponse[ResponseObject]):
+#     response: Optional[ResponseObject] = None
+# or
+# ...
+
+# * Return Response
+
+# return CreateClientServiceResponse(False, error_message="my error")
+# return CreateClientServiceResponse(False, ClientObject)
+
+# * View Usage
+#
+# client_response: CreateClientServiceResponse = create_client(request)
+#
+# if client_response.failed:
+#     print(client_response.error)
+# else:
+#     print(client_response.response) # < ClientObject>

@@ -1,9 +1,15 @@
+from dataclasses import dataclass
+from typing import Optional
+
 from backend.models import Client
 from backend.service.clients.validate import validate_client_create
-from backend.service.defaults.get import get_account_defaults
+from backend.utils.dataclasses import BaseServiceResponse
 
 
-def create_client(request, client_details_default: dict | None = None) -> str | Client:
+class CreateClientServiceResponse(BaseServiceResponse[Client]): ...
+
+
+def create_client(request, client_details_default: dict | None = None) -> CreateClientServiceResponse:
     client_details = client_details_default or {
         "name": request.POST.get("client_name"),
         "email": request.POST.get("client_email"),
@@ -17,7 +23,7 @@ def create_client(request, client_details_default: dict | None = None) -> str | 
     error = validate_client_create(client_details)
 
     if error:
-        return error
+        return CreateClientServiceResponse(False, error_message=error)
 
     if request.user.logged_in_as_team:
         client = Client.objects.create(
@@ -32,4 +38,4 @@ def create_client(request, client_details_default: dict | None = None) -> str | 
         setattr(client, model_field, new_value)
 
     client.save()
-    return client
+    return CreateClientServiceResponse(True, client)

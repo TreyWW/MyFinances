@@ -20,7 +20,7 @@ def generate_public_api_key(
     if api_key_exists_under_name(owner, api_key_name):
         return None, "A key with this name already exists in your account"
 
-    if not validate_scopes(permissions) or not has_permission_to_create(request, owner):
+    if validate_scopes(permissions).failed or not has_permission_to_create(request, owner):
         return None, "Invalid permissions"
 
     token = APIAuthToken(name=api_key_name, description=description, expires=expires, scopes=permissions)  # type: ignore[arg-type, misc]
