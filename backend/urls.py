@@ -10,10 +10,10 @@ from django.views.generic import RedirectView
 from django.views.static import serve
 
 from backend.api.public.swagger_ui import get_swagger_ui, get_swagger_endpoints
-from backend.views.core import invoices
 from backend.views.core import receipts
 from backend.views.core.currency_converter import dashboard as cc_dashboard
-from backend.views.core.invoices.overview import manage_invoice
+from backend.views.core.invoices.single.overview import manage_invoice
+from backend.views.core.invoices.single.view import view_invoice_with_uuid_endpoint
 from backend.views.core.other.index import dashboard
 from backend.views.core.other.index import index
 from backend.views.core.quotas.view import quotas_list
@@ -51,7 +51,7 @@ urlpatterns = [
     ),
     path(
         "invoice/<str:uuid>",
-        invoices.view.view,
+        view_invoice_with_uuid_endpoint,
         name="invoices view invoice",
     ),
     path("login/external/", include("social_django.urls", namespace="social")),

@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html>
     {% include 'base/_head.html' %}
-    <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+    <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+          hx-indicator=".loading-bar">
+        <style></style>
         <div class="drawer drawer-mobile min-h-full">
             <input id="left-sidebar-drawer" type="checkbox" class="drawer-toggle">
             <div class="drawer-content flex flex-col">
                 {% include 'base/topbar/_topbar.html' %}
                 <div class="flex-1 min-h-screen overflow-y-auto pt-8 px-6 pb-4 bg-base-200">
+                    <div class="loading-bar"></div>
                     {% include 'base/breadcrumbs.html' %}
                     {% include 'base/toasts.html' %}
                     <div id="modal_container">{# Leave here #}</div>

@@ -1,0 +1,45 @@
+<div class="card col-span-2  border border-neutral">
+    <div class="card-body py-4 px-2">
+        <ul class="menu w-full min-h-full gap-y-1"
+            hx-boost="true"
+            hx-target='div[data-hx-swap="content"]'
+            hx-swap="innerHTML"
+            hx-vals='{"invoice_structure_main": "True"}'>
+            <div class="divider">
+                <i class="fa fa-solid fa-file-invoice"></i> Single
+            </div>
+            <li>
+                <a href="{% url 'invoices:single:dashboard' %}"
+                   hx-replace-url="{% url 'invoices:single:dashboard' %}">
+                    <i class="fa fa-solid fa-list-ol"></i>
+                    View existing
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'invoices:create' %}"
+                   hx-replace-url="{% url 'invoices:create' %}">
+                    <i class="fa fa-solid fa-plus"></i>
+                    New
+                </a>
+            </li>
+            <div class="divider">
+                <i class="fa fa-solid fa-sync-alt"></i>
+                Recurring
+            </div>
+            <li>
+                <a href="{% url 'invoices:recurring:dashboard' %}"
+                   hx-replace-url="{% url 'invoices:recurring:dashboard' %}">
+                    <i class="fa fa-solid fa-list-ol"></i>
+                    View existing
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'invoices:single:dashboard' %}"
+                   hx-replace-url="{% url 'invoices:single:dashboard' %}">
+                    <i class="fa fa-solid fa-plus"></i>
+                    New
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>

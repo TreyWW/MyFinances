@@ -4,7 +4,7 @@ from django.views.decorators.http import require_http_methods
 from backend.decorators import web_require_scopes
 from backend.models import Invoice
 from backend.types.htmx import HtmxHttpRequest
-from backend.service.invoices.fetch import get_context
+from backend.service.invoices.single.fetch import get_context
 
 
 @require_http_methods(["GET"])
@@ -12,7 +12,7 @@ from backend.service.invoices.fetch import get_context
 def fetch_all_invoices(request: HtmxHttpRequest):
     # Redirect if not an HTMX request
     if not request.htmx:
-        return redirect("invoices:dashboard")
+        return redirect("invoices:single:dashboard")
 
     if request.user.logged_in_as_team:
         invoices = Invoice.objects.filter(organization=request.user.logged_in_as_team)

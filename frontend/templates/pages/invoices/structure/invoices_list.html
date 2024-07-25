@@ -1,0 +1,35 @@
+<div class="card col-span-3 border border-neutral">
+    <div class="card-body p-0">
+        <ul class="menu flex-row w-full min-h-full gap-y-px p-0 max-h-screen overflow-y-scroll overflow-x-hidden"
+            hx-boost="true"
+            hx-target='div[data-hx-swap="content"]'
+            hx-swap="innerHTML"
+            hx-vals='{"invoice_structure_main": "True"}'>
+            {% for _ in "x"|rjust:"20" %}
+                <li class="w-full p-0 bg-base-100">
+                    <div hx-get="{% url 'invoice overview' invoice_id="1" %}"
+                         hx-replace-url="{% url 'invoice overview' invoice_id="1" %}"
+                         hx-trigger="click"
+                         class="block rounded-none">
+                        <div class="flex align-center">
+                            <h2 class="mr-auto text-md">#2321511</h2>
+                            <div class="justify-end rounded-xl border border-white border-opacity-20 shadow-xl p-1">
+                                <p>£123</p>
+                            </div>
+                        </div>
+                        <h2 class="mr-auto">
+                            <i class="fa-regular fa-building"></i>
+                            Client Xyz
+                        </h2>
+                        <div class="flex align-center mt-2">
+                            <h2 class="mr-auto"></h2>
+                            <div class="justify-end badge badge-accent">
+                                <p>PAID</p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>

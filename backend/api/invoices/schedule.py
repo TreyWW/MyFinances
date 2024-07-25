@@ -89,7 +89,7 @@ def create_ots(request: HtmxHttpRequest) -> HttpResponse:
     if isinstance(schedule, CreateOnetimeScheduleSuccessResponse):
         QuotaUsage.create_str(request.user, "invoices-schedules", schedule.schedule.id)
         messages.success(request, "Schedule created!")
-        return render(request, "pages/invoices/schedules/schedules/_table_row.html", {"schedule": schedule.schedule})
+        return render(request, "pages/invoices/single/schedules/schedules/_table_row.html", {"schedule": schedule.schedule})
 
     messages.error(request, schedule.message)
     return render(request, "base/toasts.html")
@@ -174,7 +174,7 @@ def cancel_onetime_schedule(request: HtmxHttpRequest, schedule_id: str):
             schedule.save()
 
             messages.success(request, "Schedule cancelled.")
-            return render(request, "pages/invoices/schedules/schedules/_table_row.html", {"schedule": schedule})
+            return render(request, "pages/invoices/single/schedules/schedules/_table_row.html", {"schedule": schedule})
         else:
             schedule.status = original_status
             schedule.save()
@@ -185,7 +185,7 @@ def cancel_onetime_schedule(request: HtmxHttpRequest, schedule_id: str):
     schedule.save()
 
     messages.success(request, "Schedule cancelled.")
-    return render(request, "pages/invoices/schedules/schedules/_table_row.html", {"schedule": schedule})
+    return render(request, "pages/invoices/single/schedules/schedules/_table_row.html", {"schedule": schedule})
 
 
 @require_GET
@@ -293,4 +293,4 @@ def fetch_onetime_schedules(request: HtmxHttpRequest, invoice_id: str):
 
     context["schedules"] = schedules.filter(or_conditions)
 
-    return render(request, "pages/invoices/schedules/schedules/_table_body.html", context)
+    return render(request, "pages/invoices/single/schedules/schedules/_table_body.html", context)

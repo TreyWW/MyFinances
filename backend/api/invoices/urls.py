@@ -4,7 +4,7 @@ from . import fetch, delete, edit, schedule, manage
 from .create import set_destination
 from .create.services import add_service
 
-urlpatterns = [
+SINGLE_INVOICE_URLS = [
     path(
         "add_service/",
         add_service.add_service_endpoint,
@@ -37,6 +37,13 @@ urlpatterns = [
     path("schedules/onetime/<str:schedule_id>/cancel/", schedule.cancel_onetime_schedule, name="schedules onetime cancel"),
     path("schedules/onetime/fetch/<str:invoice_id>/", schedule.fetch_onetime_schedules, name="schedules onetime fetch"),
     path("", include("backend.api.invoices.reminders.urls")),
+]
+
+RECURRING_INVOICE_URLS = []
+
+urlpatterns = [
+    path("single/", include((SINGLE_INVOICE_URLS, "single"), namespace="single")),
+    path("recurring/", include((SINGLE_INVOICE_URLS, "recurring"), namespace="recurring")),
 ]
 
 app_name = "invoices"

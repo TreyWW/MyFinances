@@ -9,7 +9,7 @@ from backend.api.public.serializers.invoices import InvoiceSerializer
 from backend.api.public.swagger_ui import TEAM_PARAMETER
 from backend.api.public.types import APIRequest
 from backend.models import Invoice
-from backend.service.invoices.fetch import get_context
+from backend.service.invoices.single.fetch import get_context
 
 
 @swagger_auto_schema(

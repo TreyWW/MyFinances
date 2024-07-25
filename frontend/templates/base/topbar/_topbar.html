@@ -57,7 +57,7 @@
             {% endif %}
             {% if feature_enabled_invoices %}
                 <li>
-                    <a href="{% url "invoices:dashboard" %}"
+                    <a href="{% url "invoices:single:dashboard" %}"
                        hx-boost="true"
                        hx-swap="innerHTML show:no-scroll">My Invoices</a>
                 </li>

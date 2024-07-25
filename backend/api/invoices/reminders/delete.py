@@ -37,7 +37,7 @@ def cancel_reminder_view(request: HtmxHttpRequest, reminder_id: str):
             reminder.set_status("cancelled")
 
             messages.success(request, "Schedule cancelled.")
-            return render(request, "pages/invoices/schedules/reminders/_table_row.html", {"reminder": reminder})
+            return render(request, "pages/invoices/single/schedules/reminders/_table_row.html", {"reminder": reminder})
         else:
             reminder.set_status(original_status)
             messages.error(request, f"Failed to delete schedule: {delete_status.message}")
@@ -46,4 +46,4 @@ def cancel_reminder_view(request: HtmxHttpRequest, reminder_id: str):
     reminder.set_status("cancelled")
 
     messages.success(request, "Schedule cancelled.")
-    return render(request, "pages/invoices/schedules/reminders/_table_row.html", {"reminder": reminder})
+    return render(request, "pages/invoices/single/schedules/reminders/_table_row.html", {"reminder": reminder})

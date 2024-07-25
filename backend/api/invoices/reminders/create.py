@@ -30,7 +30,7 @@ def get_datetime_from_reminder(reminder: InvoiceReminder) -> str:
 @web_require_scopes("invoices:write", True, True)
 def create_reminder_view(request: HtmxHttpRequest) -> HttpResponse:
     if not request.htmx:
-        return redirect("invoices:dashboard")
+        return redirect("invoices:single:dashboard")
 
     check_usage = quota_usage_check_under(request, "invoices-schedules", api=True, htmx=True)
 
@@ -93,7 +93,7 @@ def create_reminder_view(request: HtmxHttpRequest) -> HttpResponse:
         reminder.save()
         QuotaUsage.create_str(request.user, "invoices-schedules", REMINDER.reminder.id)
         messages.success(request, "Schedule created!")
-        return render(request, "pages/invoices/schedules/reminders/_table_row.html", {"reminder": REMINDER.reminder})
+        return render(request, "pages/invoices/single/schedules/reminders/_table_row.html", {"reminder": REMINDER.reminder})
     else:
         messages.error(request, REMINDER.message)
         return render(request, "base/toasts.html")

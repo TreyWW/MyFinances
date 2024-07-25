@@ -12,7 +12,7 @@ from backend.api.public.helpers.deprecate import deprecated
 from backend.api.public.swagger_ui import TEAM_PARAMETER
 from backend.api.public.types import APIRequest
 from backend.models import Invoice
-from backend.service.invoices.create_pdf import generate_pdf
+from backend.service.invoices.single.create_pdf import generate_pdf
 
 
 @swagger_auto_schema(

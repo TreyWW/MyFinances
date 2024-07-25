@@ -1,0 +1,59 @@
+<div class="input_card max-w-full min-w-full">
+    <div class="card-body" data-card="services_card_body">
+        <div class="flex py-4 gap-x-3">
+            <div class="dropdown w-1/3">
+                <div tabindex="0" role="button" class="btn btn-primary w-full">Existing Service</div>
+                <ul tabindex="0"
+                    class="dropdown-content z-[1] menu p-8 shadow bg-base-200 rounded-box w-full min-w-full">
+                    <div class="flex flex-row gap-2">
+                        <input placeholder="🔎 Search"
+                               type="text"
+                               name="search_existing_service"
+                               class="input input-bordered w-full flex-1"
+                               hx-get="{% url 'api:products:fetch' %}"
+                               hx-target="#search_existing_products_items"
+                               hx-trigger="keyup changed delay:500ms,load"
+                               hx-indicator="#search_loading">
+                        <button onclick="modal_create_invoice_product.showModal();"
+                                class="btn btn-primary w-12.25"
+                                hx-trigger="click once"
+                                hx-swap="beforeend"
+                                hx-target="#modal_container"
+                                hx-get="{% url "api:base:modal retrieve" modal_name="create_invoice_product" %}">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                    </div>
+                    <div class="divider">ITEMS (search for > 5)</div>
+                    <span id="search_loading"
+                          class="loading loading-spinner loading-htmx-loader-individual"></span>
+                    <div id="search_existing_products_items"></div>
+                </ul>
+            </div>
+            <button onclick="modal_invoices_add_service.showModal();"
+                    class="btn btn-primary w-2/3"
+                    hx-trigger="click once"
+                    hx-swap="beforeend"
+                    hx-target="#modal_container"
+                    hx-get="{% url "api:base:modal retrieve" modal_name="invoices_add_service" %}">
+                Add New Service
+            </button>
+        </div>
+        <div class="flex w-full overflow-x-auto">
+            <table class="table table-zebra max-w-full" id="services_table">
+                <thead>
+                    <tr>
+                        <th>Service</th>
+                        <th>Quantity</th>
+                        <th>Rate</th>
+                        <th>Total Price</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="services_table_body"
+                       _="on every htmx:afterRequest in closest .card-body log 'hi'">
+                    {% include 'pages/invoices/single/create/services/_services_table_body.html' %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

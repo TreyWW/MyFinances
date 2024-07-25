@@ -2,7 +2,7 @@
 {% fill "content" %}
 <form class="py-4"
       id="modal_invoices_add_service-form"
-      hx-post="{% url 'api:invoices:services add' %}"
+      hx-post="{% url 'api:invoices:single:services add' %}"
       hx-include="#services_table_body"
       hx-swap="innerHTML"
       hx-target="#services_table_body">

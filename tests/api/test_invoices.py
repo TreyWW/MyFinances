@@ -11,7 +11,7 @@ class InvoicesAPIFetch(ViewTestCase):
     def setUp(self):
         super().setUp()
         self.url_path = "/api/invoices/fetch/"
-        self.url_name = "api:invoices:fetch"
+        self.url_name = "api:invoices:single:fetch"
         self.view_function_path = "backend.api.invoices.fetch.fetch_all_invoices"
 
     def test_302_for_all_normal_get_requests(self):
@@ -82,7 +82,7 @@ class InvoicesAPIDelete(ViewTestCase):
     def setUp(self):
         super().setUp()
         self.url_path = "/api/invoices/delete/"
-        self.url_name = "api:invoices:delete"
+        self.url_name = "api:invoices:single:delete"
         self.view_function_path = "backend.api.invoices.delete.delete_invoice"
 
     def test_302_for_all_normal_get_requests(self):
@@ -119,7 +119,7 @@ class InvoicesEditDiscount(ViewTestCase):
     def setUp(self):
         super().setUp()
         self.url_path = "/api/invoices/edit/discount/"
-        self.url_name = "api:invoices:edit discount"
+        self.url_name = "api:invoices:single:edit discount"
         self.view_function_path = "backend.api.invoices.edit.edit_discount"
         self.invoice: Invoice = baker.make("backend.Invoice", user=self.log_in_user)
 
