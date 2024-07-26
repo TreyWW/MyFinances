@@ -251,6 +251,14 @@ class OwnerBase(models.Model):
         else:
             raise ValueError("Owner must be either a User or a Organization")
 
+    def save(self, *args, **kwargs):
+        if hasattr(self, "owner") and not self.user and not self.organization:
+            if isinstance(self.owner, User):
+                self.user = self.owner
+            elif isinstance(self.owner, Organization):
+                self.organization = self.owner
+        super().save(*args, **kwargs)
+
     @classmethod
     def filter_by_owner(cls: typing.Type[M], owner: Union[User, Organization]) -> QuerySet[M]:
         """

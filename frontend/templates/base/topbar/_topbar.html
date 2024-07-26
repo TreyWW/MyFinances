@@ -76,9 +76,9 @@
         <details class="dropdown dropdown-end mr-3">
             <summary class="btn btn-ghost"
                      hx-get="{% url "api:base:notifications get" %}"
-                     hx-target='[data-notifications="container"]'
+                     hx-target='ul[data-notifications="container"]'
                      hx-swap="innerHTML"
-                     hx-trigger="click ">
+                     hx-trigger="click">
                 <i class="fa-solid fa-bell"></i>
                 {% include "base/topbar/_notification_count.html" %}
             </summary>

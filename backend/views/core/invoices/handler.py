@@ -14,4 +14,5 @@ def invoices_core_handler(request: WebRequest, template_name: str, context: Dict
 
     response = render(request, template_name, context, **kwargs)
     response.no_retarget = True
+    response["HX-Trigger-After-Settle"] = "update_breadcrumbs"
     return response

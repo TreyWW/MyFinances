@@ -31,13 +31,15 @@ class HTMXPartialLoadMiddleware:
         self.get_response = get_response
 
     def __call__(self, request: HtmxAnyHttpRequest):
-        response = self.get_response(request)
+        response: HttpResponse = self.get_response(request)
 
         if hasattr(response, "retarget"):
             response.headers["HX-Retarget"] = response.retarget
         elif request.htmx.boosted and not response.headers.get("HX-Retarget") and not hasattr(response, "no_retarget"):
             response.headers["HX-Retarget"] = "#main_content"
             response.headers["HX-Reswap"] = "innerHTML"
+            # if 'data-layout="breadcrumbs"' not in str(response.content):
+            response.headers["HX-Trigger"] = "update_breadcrumbs"
         return response
 
 
