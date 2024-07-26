@@ -17,7 +17,7 @@ def invoices_single_dashboard_endpoint(request: WebRequest):
 @web_require_scopes("invoices:read", False, False, "dashboard")
 def invoices_dashboard_id(request: WebRequest, invoice_id):
     if invoice_id == "create":
-        return redirect("invoices:create")
+        return redirect("invoices:single:create")
     elif not isinstance(invoice_id, int):
         messages.error(request, "Invalid invoice ID")
         return redirect("invoices:single:dashboard")

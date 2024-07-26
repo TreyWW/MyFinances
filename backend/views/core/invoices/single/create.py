@@ -2,20 +2,32 @@ from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
 
 from backend.decorators import web_require_scopes
-from backend.service.invoices.single.create.create import get_invoice_context, create_invoice_items, save_invoice
+from backend.service.invoices.create.create import save_invoice
+from backend.service.invoices.single.create.create import create_invoice_items
+from backend.service.invoices.single.create.get_page import get_invoice_context
 from backend.types.requests import WebRequest
 from backend.views.core.invoices.handler import invoices_core_handler
 
 
 @require_http_methods(["GET", "POST"])
-@web_require_scopes("invoices:write", False, False, "invoices:single:dashboard")
-def create_invoice_page(request: WebRequest):
+def create_single_invoice_endpoint_handler(request: WebRequest):
     if request.method == "POST":
-        invoice_items = create_invoice_items(request)
-        invoice = save_invoice(request, invoice_items)
-        if not invoice:
-            return invoices_core_handler(request, "pages/invoices/single/create/create.html")
-        return redirect("invoices:single:dashboard")
+        return create_invoice_post_endpoint(request)
+    return create_invoice_page_endpoint(request)
 
+
+@require_http_methods(["GET"])
+@web_require_scopes("invoices:read", False, False, "invoices:single:dashboard")
+def create_invoice_page_endpoint(request: WebRequest):
     context = get_invoice_context(request)
-    return invoices_core_handler(request, "pages/invoices/single/create/create.html", context)
+    return invoices_core_handler(request, "pages/invoices/create/create_single.html", context)
+
+
+@require_http_methods(["POST"])
+@web_require_scopes("invoices:write", False, False, "invoices:single:dashboard")
+def create_invoice_post_endpoint(request: WebRequest):
+    invoice_items = create_invoice_items(request)
+    invoice = save_invoice(request, invoice_items)
+    if not invoice:
+        return invoices_core_handler(request, "pages/invoices/create/create_single.html")
+    return redirect("invoices:single:dashboard")

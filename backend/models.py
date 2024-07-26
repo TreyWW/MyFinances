@@ -12,6 +12,7 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import UserManager
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
+from django.core.files.storage import get_storage_class
 from django.core.validators import MaxValueValidator
 from django.db import models
 from django.db.models import Count, Manager
@@ -22,6 +23,16 @@ from shortuuid.django_fields import ShortUUIDField
 
 from settings import settings
 from settings.settings import AWS_TAGS_APP_NAME
+
+
+def _public_storage():
+    storage_class = get_storage_class("settings.settings.CustomPublicMediaStorage")
+    return storage_class()
+
+
+def _private_storage():
+    storage_class = get_storage_class("settings.settings.CustomPrivateMediaStorage")
+    return storage_class()
 
 
 def RandomCode(length=6):
@@ -129,7 +140,7 @@ class UserSettings(models.Model):
     )
     profile_picture = models.ImageField(
         upload_to="profile_pictures/",
-        storage=settings.CustomPublicMediaStorage(),
+        storage=_public_storage,
         blank=True,
         null=True,
     )
@@ -274,7 +285,7 @@ class OwnerBase(models.Model):
 
 class Receipt(OwnerBase):
     name = models.CharField(max_length=100)
-    image = models.ImageField(upload_to="receipts", storage=settings.CustomPrivateMediaStorage())
+    image = models.ImageField(upload_to="receipts", storage=_private_storage)
     total_price = models.FloatField(null=True, blank=True)
     date = models.DateField(null=True, blank=True)
     date_uploaded = models.DateTimeField(auto_now_add=True)
@@ -392,15 +403,7 @@ class InvoiceItem(models.Model):
         return self.description
 
 
-class Invoice(OwnerBase):
-    STATUS_CHOICES = (
-        ("pending", "Pending"),
-        ("paid", "Paid"),
-        ("overdue", "Overdue"),
-    )
-
-    invoice_id = models.IntegerField(unique=True, blank=True, null=True)  # todo: add
-
+class InvoiceBase(OwnerBase):
     client_to = models.ForeignKey(Client, on_delete=models.SET_NULL, blank=True, null=True)
 
     client_name = models.CharField(max_length=100, blank=True, null=True)
@@ -427,29 +430,39 @@ class Invoice(OwnerBase):
     vat_number = models.CharField(max_length=100, blank=True, null=True)
     logo = models.ImageField(
         upload_to="invoice_logos",
-        storage=settings.CustomPrivateMediaStorage(),
+        storage=_private_storage,
         blank=True,
         null=True,
     )
     notes = models.TextField(blank=True, null=True)
 
-    payment_status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="pending")
     items = models.ManyToManyField(InvoiceItem, blank=True)
     currency = models.CharField(
         max_length=3,
         default="GBP",
         choices=[(code, info["name"]) for code, info in UserSettings.CURRENCIES.items()],
     )
-
     date_created = models.DateTimeField(auto_now_add=True)
-    date_due = models.DateField()
     date_issued = models.DateField(blank=True, null=True)
 
     discount_amount = models.DecimalField(max_digits=15, default=0, decimal_places=2)
     discount_percentage = models.DecimalField(default=0, max_digits=5, decimal_places=2, validators=[MaxValueValidator(100)])
 
     class Meta:
+        abstract = True
         constraints = [USER_OR_ORGANIZATION_CONSTRAINT()]
+
+
+class Invoice(InvoiceBase):
+    STATUS_CHOICES = (
+        ("pending", "Pending"),
+        ("paid", "Paid"),
+        ("overdue", "Overdue"),
+    )
+
+    invoice_id = models.IntegerField(unique=True, blank=True, null=True)  # todo: add
+    date_due = models.DateField()
+    payment_status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="pending")
 
     def __str__(self):
         invoice_id = self.invoice_id or self.id
@@ -530,6 +543,17 @@ class Invoice(OwnerBase):
 
     def get_currency_symbol(self):
         return UserSettings.CURRENCIES.get(self.currency, {}).get("symbol", "$")
+
+
+class InvoiceRecurringSet(InvoiceBase):
+    class Frequencies(models.TextChoices):
+        WEEKLY = "weekly", "Weekly"
+        TWO_WEEKS = "two_weeks", "Every 2 Weeks"
+        MONTHLY = "monthly", "Monthly"
+
+    frequency = models.CharField(max_length=20, choices=Frequencies.choices, default=Frequencies.MONTHLY)
+    end_date = models.DateField(blank=True, null=True)
+    due_after_days = models.PositiveSmallIntegerField(default=7)
 
 
 class InvoiceURL(models.Model):

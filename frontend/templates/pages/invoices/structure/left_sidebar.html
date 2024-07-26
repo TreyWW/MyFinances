@@ -14,12 +14,12 @@
                 <a href="{% url 'invoices:single:dashboard' %}"
                    hx-replace-url="{% url 'invoices:single:dashboard' %}">
                     <i class="fa fa-solid fa-list-ol"></i>
-                    View Existing
+                    View existing
                 </a>
             </li>
             <li class="hidden lg:block">
-                <a href="{% url 'invoices:create' %}"
-                   hx-replace-url="{% url 'invoices:create' %}">
+                <a href="{% url 'invoices:single:create' %}"
+                   hx-replace-url="{% url 'invoices:single:create' %}">
                     <i class="fa fa-solid fa-plus"></i>
                     New
                 </a>
@@ -36,8 +36,8 @@
                 </a>
             </li>
             <li class="hidden lg:block">
-                <a href="{% url 'invoices:single:dashboard' %}"
-                   hx-replace-url="{% url 'invoices:single:dashboard' %}">
+                <a href="{% url 'invoices:recurring:create' %}"
+                   hx-replace-url="{% url 'invoices:recurring:create' %}">
                     <i class="fa fa-solid fa-plus"></i>
                     New
                 </a>
@@ -55,8 +55,8 @@
             </li>
             <li class="lg:hidden tooltip tooltip-right tooltip-secondary"
                 data-tip="New invoice">
-                <a href="{% url 'invoices:create' %}"
-                   hx-replace-url="{% url 'invoices:create' %}">
+                <a href="{% url 'invoices:single:create' %}"
+                   hx-replace-url="{% url 'invoices:single:create' %}">
                     <i class="fa fa-solid fa-plus"></i>
                 </a>
             </li>

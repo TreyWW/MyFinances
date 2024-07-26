@@ -2,8 +2,10 @@ from django.urls import path
 from django.urls.conf import include
 
 from .dashboard import invoices_dashboard_core_endpoint
+from .recurring.create import create_recurring_invoice_endpoint_handler
 from .recurring.dashboard import invoices_recurring_dashboard_endpoint
 from .single import schedule, edit, create, view, manage_access
+from .single.create import create_single_invoice_endpoint_handler
 from .single.dashboard import invoices_single_dashboard_endpoint
 
 SINGLE_INVOICE_URLS = [
@@ -39,21 +41,26 @@ SINGLE_INVOICE_URLS = [
         name="edit",
     ),
     path("", invoices_single_dashboard_endpoint, name="dashboard"),
+    path(
+        "create/",
+        create.create_single_invoice_endpoint_handler,
+        name="create",
+    ),
 ]
 
 RECURRING_INVOICE_URLS = [
     path("", invoices_recurring_dashboard_endpoint, name="dashboard"),
+    path(
+        "create/",
+        create_recurring_invoice_endpoint_handler,
+        name="create",
+    ),
 ]
 
 urlpatterns = [
     path("single/", include((SINGLE_INVOICE_URLS, "single"), namespace="single")),
     path("recurring/", include((RECURRING_INVOICE_URLS, "recurring"), namespace="recurring")),
     path("", invoices_single_dashboard_endpoint),
-    path(
-        "create/",
-        create.create_invoice_page,
-        name="create",
-    ),
     path("dashboard/temp", invoices_dashboard_core_endpoint, name="dashboard core"),
 ]
 

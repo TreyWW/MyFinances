@@ -14,8 +14,8 @@
         </div>
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full"
              id="to_and_from_container">
-            {% include 'pages/invoices/single/create/destinations/_from_destination.html' %}
-            {% include 'pages/invoices/single/create/destinations/_to_destination.html' %}
+            {% include 'pages/invoices/create/destinations/_from_destination.html' %}
+            {% include 'pages/invoices/create/destinations/_to_destination.html' %}
         </div>
     </div>
     <div class="divider my-4">
@@ -28,14 +28,14 @@
     </div>
     <div class="my-4 flex w-full flex-col">
         <div class="w-full gap-4 grid grid-cols-1 lg:grid-cols-2">
-            {% include "pages/invoices/single/create/dates/issue.html" %}
-            {% include "pages/invoices/single/create/dates/due.html" %}
+            {% include "pages/invoices/create/dates/issue.html" %}
+            {% include "pages/invoices/create/dates/due.html" %}
         </div>
     </div>
     <div class="divider my-4">
         STEP 3 - SERVICES <span class="required_star">*</span>
     </div>
-    {% component_block "pages:invoices:single:create:services:services_table" %}
+    {% component_block "pages:invoices:create:services:services_table" %}
 {% endcomponent_block %}
 <div class="divider my-4">
     STEP 4 - BANK DETAILS
@@ -43,18 +43,18 @@
 </div>
 <div class="my-4 flex w-full flex-col">
     <div class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-2 lg:gap-4">
-        {% include "pages/invoices/single/create/bank_details/holder_name.html" %}
-        {% include "pages/invoices/single/create/bank_details/account_number.html" %}
-        {% include "pages/invoices/single/create/bank_details/sort_code.html" %}
+        {% include "pages/invoices/create/bank_details/holder_name.html" %}
+        {% include "pages/invoices/create/bank_details/account_number.html" %}
+        {% include "pages/invoices/create/bank_details/sort_code.html" %}
     </div>
 </div>
 <div class="divider my-4">
     STEP 5 - CUSTOM DESIGNS
     <i class="text-neutral-content">[OPTIONAL]</i>
 </div>
-{% include "pages/invoices/single/create/custom_designs/logo.html" %}
+{% include "pages/invoices/create/custom_designs/logo.html" %}
 {#    <div class="divider my-4">STEP 5 - NOTES [OPTIONAL]</div>#}
-{#    {% include "pages/invoices/single/create/notes/notes.html" %}#}
+{#    {% include "pages/invoices/create/notes/notes.html" %}#}
 <div class="group-invalid:tooltip"
      data-tip="Fill out all required details to save the invoice.">
     <button class="btn btn-primary group-invalid:btn-disabled btn-block">Create Invoice</button>

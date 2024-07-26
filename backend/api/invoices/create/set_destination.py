@@ -24,7 +24,7 @@ def set_destination_to(request: HtmxHttpRequest):
         except Client.DoesNotExist:
             messages.error(request, "Client not found")
 
-    return render(request, "pages/invoices/single/create/destinations/_to_destination.html", context)
+    return render(request, "pages/invoices/create/destinations/_to_destination.html", context)
 
 
 @require_http_methods(["POST"])
@@ -33,4 +33,4 @@ def set_destination_from(request: HtmxHttpRequest):
 
     context.update({key: request.POST.get(key, "") for key in to_get})
 
-    return render(request, "pages/invoices/single/create/destinations/_from_destination.html", context)
+    return render(request, "pages/invoices/create/destinations/_from_destination.html", context)

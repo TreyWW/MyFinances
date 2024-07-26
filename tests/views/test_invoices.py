@@ -40,7 +40,7 @@ class InvoicesCreateTestCase(ViewTestCase):
     def setUp(self):
         super().setUp()
 
-        self._invoices_create_url = reverse("invoices:create")
+        self._invoices_create_url = reverse("invoices:single:create")
         self.data = {
             "service_name[]": ["Service 1", "Service 2"],
             "hours[]": [2, 3],
@@ -83,7 +83,7 @@ class InvoicesCreateTestCase(ViewTestCase):
     def test_invoices_create_match_with_template(self):
         self.login_user()
         response = self.client.get(self._invoices_create_url)
-        self.assertTemplateUsed(response, "pages/invoices/single/create/create.html")
+        self.assertTemplateUsed(response, "pages/invoices/create/create.html")
 
     def test_invoices_create_matches_with_urls_view(self):
         func = resolve("/dashboard/invoices/create/").func

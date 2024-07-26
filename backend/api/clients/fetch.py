@@ -30,6 +30,6 @@ def fetch_clients_dropdown(request: HtmxHttpRequest):
 
     return render(
         request,
-        "pages/invoices/single/create/destinations/_view_clients_dropdown.html",
+        "pages/invoices/create/destinations/_view_clients_dropdown.html",
         {"clients": clients.response, "selected_client": selected_client},
     )

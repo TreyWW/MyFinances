@@ -6,21 +6,6 @@ from .create.services import add_service
 
 SINGLE_INVOICE_URLS = [
     path(
-        "add_service/",
-        add_service.add_service_endpoint,
-        name="services add",
-    ),
-    path(
-        "set_destination/to/",
-        set_destination.set_destination_to,
-        name="set_destination to",
-    ),
-    path(
-        "set_destination/from/",
-        set_destination.set_destination_from,
-        name="set_destination from",
-    ),
-    path(
         "delete/",
         delete.delete_invoice,
         name="delete",
@@ -41,9 +26,28 @@ SINGLE_INVOICE_URLS = [
 
 RECURRING_INVOICE_URLS = []
 
+CREATE_INVOICE_URLS = [
+    path(
+        "add_service/",
+        add_service.add_service_endpoint,
+        name="services add",
+    ),
+    path(
+        "set_destination/to/",
+        set_destination.set_destination_to,
+        name="set_destination to",
+    ),
+    path(
+        "set_destination/from/",
+        set_destination.set_destination_from,
+        name="set_destination from",
+    ),
+]
+
 urlpatterns = [
     path("single/", include((SINGLE_INVOICE_URLS, "single"), namespace="single")),
     path("recurring/", include((SINGLE_INVOICE_URLS, "recurring"), namespace="recurring")),
+    path("create/", include((CREATE_INVOICE_URLS, "create"), namespace="create")),
 ]
 
 app_name = "invoices"
