@@ -2,7 +2,7 @@ from datetime import datetime
 
 from django.contrib import messages
 
-from backend.models import Invoice, InvoiceItem, Client, QuotaUsage
+from backend.models import Invoice, InvoiceRecurringSet, InvoiceItem, Client, QuotaUsage
 from backend.types.requests import WebRequest
 
 
@@ -18,19 +18,7 @@ def create_invoice_items(request: WebRequest):
     ]
 
 
-def save_invoice(request: WebRequest, invoice_items):
-    currency = request.user.user_profile.currency
-
-    if not (date_due := request.POST.get("date_due")):
-        messages.error(request, "Please enter a valid date")
-        return None
-
-    invoice = Invoice(
-        date_due=datetime.strptime(date_due, "%Y-%m-%d").date(),
-        date_issued=request.POST.get("date_issued"),
-        currency=currency,
-    )
-
+def save_invoice_common(request: WebRequest, invoice_items, invoice: Invoice | InvoiceRecurringSet):
     if request.user.logged_in_as_team:
         invoice.organization = request.user.logged_in_as_team
     else:
@@ -68,8 +56,6 @@ def save_invoice(request: WebRequest, invoice_items):
     invoice.sort_code = request.POST.get("sort_code")
     invoice.account_number = request.POST.get("account_number")
     invoice.account_holder_name = request.POST.get("account_holder_name")
-
-    invoice.payment_status = invoice.dynamic_payment_status
 
     invoice.save()
     invoice.items.set(invoice_items)

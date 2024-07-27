@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
 
 from backend.decorators import web_require_scopes
-from backend.service.invoices.create.create import save_invoice
+from backend.service.invoices.create.create import save_invoice_common
 from backend.service.invoices.single.create.create import create_invoice_items
 from backend.service.invoices.single.create.get_page import get_invoice_context
 from backend.types.requests import WebRequest

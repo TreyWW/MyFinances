@@ -10,7 +10,6 @@ from django.contrib.auth.hashers import check_password
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import UserManager
-from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.core.files.storage import get_storage_class
 from django.core.validators import MaxValueValidator
@@ -548,12 +547,19 @@ class Invoice(InvoiceBase):
 class InvoiceRecurringSet(InvoiceBase):
     class Frequencies(models.TextChoices):
         WEEKLY = "weekly", "Weekly"
-        TWO_WEEKS = "two_weeks", "Every 2 Weeks"
         MONTHLY = "monthly", "Monthly"
+        YEARLY = "yearly", "Yearly"
 
     frequency = models.CharField(max_length=20, choices=Frequencies.choices, default=Frequencies.MONTHLY)
     end_date = models.DateField(blank=True, null=True)
     due_after_days = models.PositiveSmallIntegerField(default=7)
+
+    day_of_week = models.PositiveSmallIntegerField(null=True, blank=True)
+    day_of_month = models.PositiveSmallIntegerField(null=True, blank=True)
+    month_of_year = models.PositiveSmallIntegerField(null=True, blank=True)
+
+    schedule_arn = models.CharField(max_length=2048, null=True, blank=True)
+    schedule_name = models.UUIDField(default=None, null=True, blank=True)
 
 
 class InvoiceURL(models.Model):

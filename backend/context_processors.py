@@ -3,6 +3,8 @@ from typing import List, Optional, Dict, Any
 from django.http import HttpRequest
 from django.urls import reverse
 
+import calendar
+
 from backend.service.base.breadcrumbs import get_breadcrumbs
 
 from settings.helpers import get_var
@@ -34,6 +36,8 @@ def extras(request: HttpRequest):
     data["git_version"] = get_var("VERSION")
     data["import_method"] = get_var("IMPORT_METHOD", default="webpack")
     data["analytics"] = get_var("ANALYTICS_STRING")
+    data["calendar_util"] = calendar
+    data["day_names_sunday_first"] = [calendar.day_name[(i + 6) % 7] for i in range(7)]
 
     if hasattr(request, "htmx") and request.htmx.boosted:
         data["base"] = "base/htmx.html"

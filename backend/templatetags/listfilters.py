@@ -15,5 +15,10 @@ def lookup_separator_perms(items: list, lookup_value: Any):
     return values
 
 
+def at_index(items: list, index: int = 0):
+    return items[index]
+
+
 register.filter("list_item_prefix_distinct", list_item_prefix_distinct)
 register.filter("lookup_separator_perms", lookup_separator_perms)
+register.filter("at_index", at_index)

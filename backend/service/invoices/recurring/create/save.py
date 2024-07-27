@@ -3,11 +3,16 @@ from datetime import datetime
 from django.contrib import messages
 from django.core.exceptions import ValidationError
 
-from backend.models import InvoiceRecurringSet, Client, QuotaUsage
+from backend.models import InvoiceRecurringSet, Client, QuotaUsage, Invoice
+from backend.service.invoices.create.create import save_invoice_common
 from backend.types.requests import WebRequest
+from backend.utils.dataclasses import BaseServiceResponse
 
 
-def save_invoice(request: WebRequest, invoice_items):
+class SaveInvoiceServiceResponse(BaseServiceResponse[InvoiceRecurringSet]): ...
+
+
+def save_invoice(request: WebRequest, invoice_items) -> SaveInvoiceServiceResponse:
     currency = request.user.user_profile.currency
 
     end_date = request.POST.get("end_date")
@@ -16,8 +21,7 @@ def save_invoice(request: WebRequest, invoice_items):
         if end_date:
             datetime.strptime(end_date, "%Y-%m-%d").date()
     except ValueError:
-        messages.error(request, "Please enter a valid end date")
-        return None
+        return SaveInvoiceServiceResponse(error_message="Please enter a valid end date")
     finally:
         end_date = datetime.strptime(end_date, "%Y-%m-%d").date() if end_date else None
 
@@ -27,42 +31,61 @@ def save_invoice(request: WebRequest, invoice_items):
         currency=currency,
     )
 
-    if request.user.logged_in_as_team:
-        invoice_set.organization = request.user.logged_in_as_team
-    else:
-        invoice_set.user = request.user
+    save_invoice_common(request, invoice_items, invoice_set)
 
-    if request.POST.get("selected_client"):
-        try:
-            client = Client.objects.get(user=request.user, id=request.POST.get("selected_client", ""))
-            invoice_set.client_to = client
-        except Client.DoesNotExist:
-            messages.error(request, "Client not found")
-            return None
-    else:
-        invoice_set.client_name = request.POST.get("to_name")
-        invoice_set.client_company = request.POST.get("to_company")
-        invoice_set.client_address = request.POST.get("to_address")
-        invoice_set.client_city = request.POST.get("to_city")
-        invoice_set.client_county = request.POST.get("to_county")
-        invoice_set.client_country = request.POST.get("to_country")
-        invoice_set.client_is_representative = True if request.POST.get("is_representative") == "on" else False
+    frequency = request.POST.get("frequency", "")
+    frequency_day_of_week = request.POST.get("frequency_day_of_week", "")
+    frequency_day_of_month = request.POST.get("frequency_day_of_month", "")
+    frequency_month_of_year = request.POST.get("frequency_month_of_year", "")
 
-    invoice_set.self_name = request.POST.get("from_name")
-    invoice_set.self_company = request.POST.get("from_company")
-    invoice_set.self_address = request.POST.get("from_address")
-    invoice_set.self_city = request.POST.get("from_city")
-    invoice_set.self_county = request.POST.get("from_county")
-    invoice_set.self_country = request.POST.get("from_country")
+    # Weekly = day_of_week
+    # Monthly = day_of_month
+    # Yearly = day_of_month + month_of_year
 
-    invoice_set.notes = request.POST.get("notes")
-    invoice_set.invoice_number = request.POST.get("invoice_number")
-    invoice_set.vat_number = request.POST.get("vat_number")
-    invoice_set.logo = request.FILES.get("logo")
-    invoice_set.reference = request.POST.get("reference")
-    invoice_set.sort_code = request.POST.get("sort_code")
-    invoice_set.account_number = request.POST.get("account_number")
-    invoice_set.account_holder_name = request.POST.get("account_holder_name")
+    # region Match Frequency
+    match frequency.lower():
+        # region Weekly
+        case "weekly":
+            if frequency_day_of_week not in [i for i in "0123456"]:
+                return SaveInvoiceServiceResponse(error_message="Please select a valid day of the week")
+
+            invoice_set.frequency = InvoiceRecurringSet.Frequencies.WEEKLY
+            invoice_set.day_of_week = int(frequency_day_of_week)
+        # endregion Weekly
+        # region Monthly
+        case "monthly":
+            try:
+                frequency_day_of_month = int(frequency_day_of_month)
+            except ValueError:
+                return SaveInvoiceServiceResponse(error_message="Please select a valid day of the month")
+
+            if frequency_day_of_month < -1 or frequency_day_of_month > 28:
+                return SaveInvoiceServiceResponse(error_message="Please select a valid day of the month")
+
+            invoice_set.frequency = InvoiceRecurringSet.Frequencies.MONTHLY
+            invoice_set.day_of_month = frequency_day_of_month
+        # endregion Monthly
+        # region Yearly
+        case "yearly":
+            try:
+                frequency_day_of_month = int(frequency_day_of_month)
+                frequency_month_of_year = int(frequency_month_of_year)
+
+                if frequency_day_of_month < -1 or frequency_day_of_month > 28:
+                    raise ValueError
+
+                if frequency_month_of_year < 1 or frequency_month_of_year > 12:
+                    raise ValueError
+            except ValueError:
+                return SaveInvoiceServiceResponse(error_message="Please select a valid day of the month and month of the year")
+
+            invoice_set.frequency = InvoiceRecurringSet.Frequencies.YEARLY
+            invoice_set.day_of_month = frequency_day_of_month
+            invoice_set.month_of_year = frequency_month_of_year
+        # endregion Yearly
+        case _:
+            return SaveInvoiceServiceResponse(error_message="Invalid frequency")
+    # endregion Match Frequency
 
     try:
         invoice_set.full_clean()
@@ -70,11 +93,11 @@ def save_invoice(request: WebRequest, invoice_items):
         for field, error in validation_errors.error_dict.items():
             for e in error:
                 messages.error(request, f"{field}: {e.messages[0]}")
-        return None
+        return SaveInvoiceServiceResponse(error_message="There's at least one invalid input; please check the above error messages")
 
     invoice_set.save()
     invoice_set.items.set(invoice_items)
 
     QuotaUsage.create_str(request.user, "invoices-count", invoice_set.id)
 
-    return invoice_set
+    return SaveInvoiceServiceResponse(True, invoice_set)
