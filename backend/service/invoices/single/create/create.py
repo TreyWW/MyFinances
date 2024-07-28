@@ -6,7 +6,7 @@ from django.core.exceptions import PermissionDenied, ValidationError
 from backend.models import Invoice, InvoiceItem, Client, QuotaUsage, InvoiceProduct, DefaultValues
 from backend.service.clients.validate import validate_client
 from backend.service.defaults.get import get_account_defaults
-from backend.service.invoices.create.create import save_invoice_common
+from backend.service.invoices.common.create.create import save_invoice_common
 from backend.types.requests import WebRequest
 
 

@@ -25,6 +25,7 @@ drf-yasg = "^1.21.7"
 
 setuptools = "^70.1.1"
 xhtml2pdf = "^0.2.16"
+celery = {extras = ["redis"], version = "^5.4.0"}
 [tool.poetry.group.mypy.dependencies]
 mypy = "1.7.1"
 django-stubs = { version = "4.2.7" }

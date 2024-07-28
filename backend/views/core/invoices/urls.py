@@ -1,7 +1,6 @@
 from django.urls import path
 from django.urls.conf import include
 
-from .dashboard import invoices_dashboard_core_endpoint
 from .recurring.create import create_recurring_invoice_endpoint_handler
 from .recurring.dashboard import invoices_recurring_dashboard_endpoint
 from .single import schedule, edit, create, view, manage_access
@@ -61,7 +60,6 @@ urlpatterns = [
     path("single/", include((SINGLE_INVOICE_URLS, "single"), namespace="single")),
     path("recurring/", include((RECURRING_INVOICE_URLS, "recurring"), namespace="recurring")),
     path("", invoices_single_dashboard_endpoint),
-    path("dashboard/temp", invoices_dashboard_core_endpoint, name="dashboard core"),
 ]
 
 app_name = "invoices"

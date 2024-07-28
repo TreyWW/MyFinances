@@ -6,7 +6,7 @@ from backend.views.core.invoices.handler import invoices_core_handler
 
 @web_require_scopes("invoices:read", False, False, "dashboard")
 def invoices_dashboard(request: WebRequest):
-    return render(request, "pages/invoices/single/dashboard/dashboard.html")
+    return render(request, "pages/invoices/recurring/dashboard/dashboard.html")
 
 
 @web_require_scopes("invoices:read", False, False, "invoices:single:dashboard")

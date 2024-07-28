@@ -1,3 +1,6 @@
+from django.db.models import Case, When, CharField
+from django.db.models.expressions import Value, F
+from django.utils import timezone
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
@@ -9,7 +12,7 @@ from backend.api.public.serializers.invoices import InvoiceSerializer
 from backend.api.public.swagger_ui import TEAM_PARAMETER
 from backend.api.public.types import APIRequest
 from backend.models import Invoice
-from backend.service.invoices.single.fetch import get_context
+from backend.service.invoices.common.fetch import get_context
 
 
 @swagger_auto_schema(
@@ -88,6 +91,24 @@ def list_invoices_endpoint(request: APIRequest) -> Response:
     _, invoices = get_context(
         invoices, sort_by, previous_filters, sort_direction, action_filter_type, action_filter_by
     )  # type: ignore[assignment]
+
+    # check/update payment status to make sure it is correct before invoices are filtered and displayed
+    invoices.update(
+        payment_status=Case(
+            When(
+                date_due__lt=timezone.now().date(),
+                payment_status="pending",
+                then=Value("overdue"),
+            ),
+            When(
+                date_due__gt=timezone.now().date(),
+                payment_status="overdue",
+                then=Value("pending"),
+            ),
+            default=F("payment_status"),
+            output_field=CharField(),
+        )
+    )
 
     serializer = InvoiceSerializer(invoices, many=True)
 

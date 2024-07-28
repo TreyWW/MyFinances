@@ -58,7 +58,7 @@
     <form id="sort_direction_storage">
     </form>
     <h2 class="text-xl">Recurring Invoices</h2>
-    <div class="w-full">
+    <div class="w-full h-full overflow-y-auto">
         <table class="table h-full">
             <thead>
                 <tr hx-swap="outerHTML"
@@ -138,7 +138,7 @@
             <tbody id="table_body"
                    hx-swap="outerHTML"
                    hx-trigger="load"
-                   hx-get="{% url 'api:invoices:single:fetch' %}">
+                   hx-get="{% url 'api:invoices:recurring:fetch' %}">
                 {% include 'components/table/skeleton_rows.html' with rows=3 cols=6 %}
             </tbody>
         </table>

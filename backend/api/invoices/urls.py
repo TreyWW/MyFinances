@@ -3,6 +3,7 @@ from django.urls import path, include
 from . import fetch, delete, edit, schedule, manage
 from .create import set_destination
 from .create.services import add_service
+from .recurring.fetch import fetch_all_recurring_invoices_endpoint
 
 SINGLE_INVOICE_URLS = [
     path(
@@ -24,7 +25,7 @@ SINGLE_INVOICE_URLS = [
     path("", include("backend.api.invoices.reminders.urls")),
 ]
 
-RECURRING_INVOICE_URLS = []
+RECURRING_INVOICE_URLS = [path("fetch/", fetch_all_recurring_invoices_endpoint, name="fetch")]
 
 CREATE_INVOICE_URLS = [
     path(
@@ -46,7 +47,7 @@ CREATE_INVOICE_URLS = [
 
 urlpatterns = [
     path("single/", include((SINGLE_INVOICE_URLS, "single"), namespace="single")),
-    path("recurring/", include((SINGLE_INVOICE_URLS, "recurring"), namespace="recurring")),
+    path("recurring/", include((RECURRING_INVOICE_URLS, "recurring"), namespace="recurring")),
     path("create/", include((CREATE_INVOICE_URLS, "create"), namespace="create")),
 ]
 

@@ -1,6 +1,6 @@
 from datetime import date
 
-from backend.service.invoices.create.get_page import global_get_invoice_context
+from backend.service.invoices.common.create.get_page import global_get_invoice_context
 from backend.types.requests import WebRequest
 
 

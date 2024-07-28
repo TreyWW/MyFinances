@@ -11,4 +11,5 @@ from backend.views.core.invoices.handler import invoices_core_handler
 @require_http_methods(["GET"])
 @web_require_scopes("invoices:read", False, False, "dashboard")
 def invoices_recurring_dashboard_endpoint(request: WebRequest):
+    print("using this")
     return invoices_core_handler(request, "pages/invoices/recurring/dashboard/dashboard.html")

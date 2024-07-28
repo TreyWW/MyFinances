@@ -84,24 +84,6 @@ def get_context(
     if action_filter_by or action_filter_type:
         or_conditions, context = filter_conditions(or_conditions, previous_filters, action_filter_by, action_filter_type, context)
 
-    # check/update payment status to make sure it is correct before invoices are filtered and displayed
-    invoices.update(
-        payment_status=Case(
-            When(
-                date_due__lt=timezone.now().date(),
-                payment_status="pending",
-                then=Value("overdue"),
-            ),
-            When(
-                date_due__gt=timezone.now().date(),
-                payment_status="overdue",
-                then=Value("pending"),
-            ),
-            default=F("payment_status"),
-            output_field=CharField(),
-        )
-    )
-
     invoices = invoices.filter(or_conditions)
 
     # Validate and sanitize the sort_by parameter

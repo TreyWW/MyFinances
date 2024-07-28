@@ -21,6 +21,13 @@ SITE_NAME = get_var("SITE_NAME", default="myfinances")
 SITE_NAME_FRIENDLY = get_var("SITE_NAME_FRIENDLY", default="MyFinances")
 SITE_ABUSE_EMAIL = get_var("SITE_ABUSE_EMAIL", default="abuse@strelix.org")
 
+CELERY_BROKER_URL = "redis://localhost:6379"
+CELERY_RESULT_BACKEND = "redis://localhost:6379"
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TIMEZONE = "UTC"
+
 if not SITE_URL.startswith("http"):
     exit("[BACKEND] SITE_URL must start with http:// or https://")
 

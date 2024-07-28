@@ -4,6 +4,9 @@ from botocore.config import Config
 from settings.helpers import get_var
 
 import boto3
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class Boto3Handler:
@@ -27,6 +30,7 @@ class Boto3Handler:
 
     def _initiate_clients(self):
         if not get_var("AWS_ACCESS_KEY_ID") or not get_var("AWS_ACCESS_KEY") or get_var("AWS_DISABLED"):
+            logger.info("AWS credentials not provided")
             return
 
         self._initiate_session()
