@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
 from backend.types.htmx import HtmxHttpRequest
-from backend.service.invoices.create.services import add
+from backend.service.invoices.create.services.add import add
 
 
 @require_http_methods(["POST"])

@@ -22,12 +22,12 @@ def get_invoice_context(request: WebRequest) -> dict:
         try:
             client: Client = validate_client(request, client_id)
             context["existing_client"] = client
-            defaults = get_account_defaults(request, client)
+            defaults = get_account_defaults(request.actor, client)
 
         except (Client.DoesNotExist, PermissionDenied, ValidationError):
-            defaults = get_account_defaults(request, client=None)
+            defaults = get_account_defaults(request.actor, client=None)
     else:
-        defaults = get_account_defaults(request, client=None)
+        defaults = get_account_defaults(request.actor, client=None)
 
     if issue_date := request.GET.get("issue_date"):
         try:

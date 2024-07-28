@@ -462,6 +462,7 @@ class Invoice(InvoiceBase):
     invoice_id = models.IntegerField(unique=True, blank=True, null=True)  # todo: add
     date_due = models.DateField()
     payment_status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="pending")
+    invoice_recurring_set = models.ForeignKey("InvoiceRecurringSet", on_delete=models.SET_NULL, blank=True, null=True)
 
     def __str__(self):
         invoice_id = self.invoice_id or self.id

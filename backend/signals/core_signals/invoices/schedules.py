@@ -48,19 +48,22 @@ def recurring_set_created(instance: InvoiceRecurringSet, **kwargs):
 
     EXCEPTIONS = BOTO3_HANDLER._schedule_client.exceptions
 
-    SITE_URL = get_var("SITE_URL", default="http://127.0.0.1:8000") + reverse("webhooks:receive_scheduled_invoice schedule")
+    SITE_URL = get_var("SITE_URL", default="http://127.0.0.1:8000") + reverse("webhooks:receive_recurring_invoices")
 
     try:
         boto_response = BOTO3_HANDLER._schedule_client.create_schedule(
             Name=f"{schedule_uuid}",
             GroupName=BOTO3_HANDLER.scheduler_invoices_group_name,
-            FlexibleTimeWindow={"Mode": "FLEXIBLE", "MaximumWindowInMinutes": 10},
-            ScheduleExpression=f"cron({CRON_RESPONSE.response})",
+            # FlexibleTimeWindow={"Mode": "FLEXIBLE", "MaximumWindowInMinutes": 10},
+            FlexibleTimeWindow={"Mode": "OFF"},
+            ScheduleExpression=f"cron(0/2 * * * ? *)",  # ScheduleExpression=f"cron({CRON_RESPONSE.response})",
             Target={
                 "Arn": BOTO3_HANDLER.scheduler_lambda_arn,
                 "RoleArn": BOTO3_HANDLER.scheduler_lambda_access_role_arn,
                 "Input": json.dumps({"invoice_set_id": instance.id, "endpoint_url": f"{SITE_URL}"}),
+                "RetryPolicy": {"MaximumRetryAttempts": 20, "MaximumEventAgeInSeconds": 21600},  # 6 hours
             },
+            ActionAfterCompletion="NONE",
         )
     except (
         EXCEPTIONS.ServiceQuotaExceededException,

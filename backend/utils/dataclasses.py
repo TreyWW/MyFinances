@@ -59,11 +59,13 @@ class BaseServiceResponse(Generic[T]):
     _success: bool = False
     _response: Optional[T] = None
     _error_message: str = ""
+    _status_code: Optional[int] = None
 
-    def __init__(self, success: bool = False, response: Optional[T] = None, error_message: str = ""):
+    def __init__(self, success: bool = False, response: Optional[T] = None, error_message: str = "", status_code: Optional[int] = None):
         self._success = success
         self._response = response
         self._error_message = error_message
+        self._status_code = status_code
 
     @property
     def success(self) -> bool:
@@ -83,6 +85,12 @@ class BaseServiceResponse(Generic[T]):
         if not isinstance(self._error_message, str):
             raise TypeError("error_message must be a string")
         return self._error_message
+
+    @property
+    def status_code(self) -> int:
+        if not isinstance(self._status_code, int):
+            raise TypeError("status code must be an integer")
+        return self._status_code
 
     @property
     def failed(self) -> bool:
