@@ -1,0 +1,15 @@
+{% if invoiceSet.status == "paused" %}
+    <button class="btn btn-outline"
+            hx-swap="none"
+            hx-post=" {% url "api:invoices:recurring:edit status" invoice_set_id=invoiceSet.id status='unpause' %}">
+        <i class="fa-solid fa-repeat"></i>
+        Unpause Schedule
+    </button>
+{% elif invoiceSet.status == "ongoing" %}
+    <button class="btn btn-outline"
+            hx-swap="none"
+            hx-post=" {% url "api:invoices:recurring:edit status" invoice_set_id=invoiceSet.id status='pause' %}">
+        <i class="fa-solid fa-pause"></i>
+        Pause Schedule
+    </button>
+{% endif %}

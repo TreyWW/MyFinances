@@ -4,6 +4,7 @@ from . import fetch, delete, edit, schedule, manage
 from .create import set_destination
 from .create.services import add_service
 from .recurring.fetch import fetch_all_recurring_invoices_endpoint
+from .recurring.poll import poll_recurring_schedule_update_endpoint
 from .recurring.update_status import recurring_set_change_status_endpoint
 
 SINGLE_INVOICE_URLS = [
@@ -29,6 +30,7 @@ SINGLE_INVOICE_URLS = [
 RECURRING_INVOICE_URLS = [
     path("fetch/", fetch_all_recurring_invoices_endpoint, name="fetch"),
     path("edit/<int:invoice_set_id>/set_status/<str:status>/", recurring_set_change_status_endpoint, name="edit status"),
+    path("poll/<str:invoice_set_id>/update_schedule/", poll_recurring_schedule_update_endpoint, name="poll_update_schedule"),
 ]
 
 CREATE_INVOICE_URLS = [

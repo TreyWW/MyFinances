@@ -4425,4 +4425,4 @@ test = ["coverage (>=5.3)", "tomli (>=2.0.1)", "tox"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<4.0"
-content-hash = "380a74004d9c3640ae8bbd75a70582ca5b015961fac7c83421b253a1a880c8c2"
+content-hash = "1d5ad31c77f62774568c711cf78c08edea0eaaea8e2b1339281037dc5c2d51e3"

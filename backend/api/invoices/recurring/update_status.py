@@ -5,6 +5,8 @@ from django.views.decorators.http import require_POST
 
 from backend.decorators import web_require_scopes
 from backend.models import InvoiceRecurringSet
+from backend.service.boto3.scheduler.create_schedule import update_boto_schedule
+from backend.service.boto3.scheduler.get import get_boto_schedule, GetScheduleServiceResponse
 from backend.service.boto3.scheduler.pause import pause_boto_schedule, PauseScheduleServiceResponse
 from backend.types.requests import WebRequest
 
@@ -17,8 +19,8 @@ def recurring_set_change_status_endpoint(request: WebRequest, invoice_set_id: in
     if not request.htmx:
         return redirect("invoices:recurring:dashboard")
 
-    if status not in ["pause", "unpause"]:
-        return return_message(request, "Invalid status. Please choose from: paused, ongoing, cancelled")
+    if status not in ["pause", "unpause", "refresh"]:
+        return return_message(request, "Invalid status. Please choose from: paused, ongoing, refresh")
 
     try:
         invoice_set: InvoiceRecurringSet = InvoiceRecurringSet.objects.get(pk=invoice_set_id)
@@ -33,20 +35,36 @@ def recurring_set_change_status_endpoint(request: WebRequest, invoice_set_id: in
     elif status == "unpause" and invoice_set.status != "paused":
         return return_message(request, "Can only unpause a paused invoice schedule")
 
-    boto_response: PauseScheduleServiceResponse | None = None
+    boto_pause_response: PauseScheduleServiceResponse | None = None
+    boto_get_response: GetScheduleServiceResponse | None = None
+    new_status: str = ""
 
-    if status == "pause":
-        boto_response = pause_boto_schedule(str(invoice_set.schedule_name), pause=True)
-    elif status == "unpause":
-        boto_response = pause_boto_schedule(str(invoice_set.schedule_name), pause=False)
+    if status == "refresh":
+        if invoice_set.schedule_name:
+            boto_get_response = get_boto_schedule(str(invoice_set.schedule_name))
 
-    if boto_response and boto_response.failed:
-        return return_message(request, boto_response.error_message, success=False)
+            if not boto_get_response.success:
+                update_boto_schedule.delay(invoice_set.pk)
+                return render(request, "pages/invoices/recurring/dashboard/poll_update.html", {"invoice_set_id": invoice_set_id})
 
-    invoice_set.status = "ongoing" if status == "unpause" else "paused"
-    invoice_set.save()
+            new_status = "ongoing" if boto_get_response.response["State"] == "ACTIVE" else "paused"
+            invoice_set.status = new_status
+            invoice_set.save(update_fields=["status"])
+        else:
+            update_boto_schedule.delay(invoice_set.pk)
+            return render(request, "pages/invoices/recurring/dashboard/poll_update.html", {"invoice_set_id": invoice_set_id})
+    else:
+        if status == "pause":
+            pause_boto_schedule.delay(str(invoice_set.schedule_name), pause=True)
+        elif status == "unpause":
+            pause_boto_schedule.delay(str(invoice_set.schedule_name), pause=False)
 
-    send_message(request, f"Invoice status been changed to <strong>{status}</strong>", success=True)
+        new_status = "ongoing" if status == "unpause" else "paused"
+
+        invoice_set.status = new_status
+        invoice_set.save(update_fields=["status"])
+
+    send_message(request, f"Invoice status been changed to <strong>{new_status}</strong>", success=True)
 
     return render(request, "pages/invoices/recurring/dashboard/_modify_status.html", {"status": status, "invoice_set_id": invoice_set_id})
 

@@ -10,9 +10,10 @@
             hx-target='div[data-hx-swap="content"]'
             hx-swap="innerHTML"
             hx-vals='{"invoice_structure_main": "True"}'
-            hx-get="{% url "invoice overview" invoice_id=invoiceSet.id %}">
+            hx-push-url="{% url "invoices:recurring:overview" invoice_id=invoiceSet.id %}"
+            hx-get="{% url "invoices:recurring:overview" invoice_id=invoiceSet.id %}">
             <td class="link link-primary no-underline">
-                <a href="{% url "invoice overview" invoice_id=invoiceSet.id %}">{{ invoiceSet.id }}</a>
+                <a href="{% url "invoices:recurring:overview" invoice_id=invoiceSet.id %}">{{ invoiceSet.id }}</a>
             </td>
             <td>{{ invoiceSet.date_due | date:"d/m/Y" }}</td>
             <td>
@@ -32,7 +33,7 @@
                 {{ invoiceSet.get_currency_symbol }}{{ invoiceSet.amount | default_if_none:0 | floatformat:2 | intcomma }}
             </td>
             <td>
-                {% component "pages:invoices:recurring:dashboard:status_badge" status=invoiceSet.status inv_id=invoiceSet.id %}
+                {% include "pages/invoices/recurring/dashboard/_status_badge.html" with status=invoiceSet.status inv_id=invoiceSet.id %}
             </td>
             <td colspan="2"
                 onclick="const e = arguments[0] || window.event; e.stopPropagation();"
@@ -47,7 +48,7 @@
                     <ul tabindex="0"
                         class="dropdown-content z-[1] menu wp-2 shadow-2xl bg-base-200 rounded-box w-52">
                         <li hx-boost="true">
-                            <a href="{% url "invoice overview" invoice_id=invoiceSet.id %}">
+                            <a href="{% url "invoices:recurring:overview" invoice_id=invoiceSet.id %}">
                                 <i class="fa-solid fa-eye"></i>
                                 Overview
                             </a>

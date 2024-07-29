@@ -38,11 +38,6 @@ urlpatterns = [
     path("dashboard/quotas/<str:group>/", quotas_list, name="quotas group"),
     path("dashboard/emails/", include("backend.views.core.emails.urls")),
     path("dashboard/admin/quota_requests/", view_quota_increase_requests, name="admin quota increase requests"),
-    path(
-        "dashboard/invoice/<str:invoice_id>/",
-        manage_invoice,
-        name="invoice overview",
-    ),
     path("favicon.ico", RedirectView.as_view(url=settings.STATIC_URL + "favicon.ico")),
     path(
         "dashboard/receipts/",

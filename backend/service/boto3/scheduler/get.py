@@ -20,6 +20,7 @@ def get_boto_schedule(name: str) -> GetScheduleServiceResponse:
     except (
         BOTO3_HANDLER.SCHEDULE_EXCEPTIONS.ValidationException,
         BOTO3_HANDLER.SCHEDULE_EXCEPTIONS.InternalServerException,
-        BOTO3_HANDLER.SCHEDULE_EXCEPTIONS.ResourceNotFoundException,
     ):
+        return GetScheduleServiceResponse(False, error_message="Something went wrong")
+    except BOTO3_HANDLER.SCHEDULE_EXCEPTIONS.ResourceNotFoundException:
         return GetScheduleServiceResponse(False, error_message="Schedule not found")

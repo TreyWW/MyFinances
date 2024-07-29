@@ -14,11 +14,9 @@ logger = logging.getLogger(__name__)
 
 
 @shared_task
-def update_boto_schedule(instance: int | str | InvoiceRecurringSet):
+def update_boto_schedule(instance: int | str):
     if isinstance(instance, int | str):
         instance = InvoiceRecurringSet.objects.get(id=instance)
-
-    logger.info(f"Invoice recurring set was just created")
 
     schedule_uuid: str = instance.schedule_name or str(uuid4())
 

@@ -13,7 +13,9 @@
                         justify-content: space-between">
                 {% if request.user.is_authenticated %}
                     <a class="top_button back_button print_hidden"
-                       href="{% url 'invoice overview' invoice_id=invoice.id %}">Back to invoice overview</a>
+                       href="{% url 'invoices:single:overview' invoice_id=invoice.id %}">
+                        Back to invoice overview
+                    </a>
                 {% endif %}
                 <button class="top_button print_button print_hidden"
                         role="button"

@@ -15,4 +15,6 @@ def create_client_defaults(sender: Type[InvoiceRecurringSet], instance: InvoiceR
     if not created:
         return
 
+    logger.info(f"Invoice recurring set was just created")
+
     update_boto_schedule.delay(instance.pk)

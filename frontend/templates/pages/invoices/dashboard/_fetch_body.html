@@ -10,9 +10,9 @@
             hx-target='div[data-hx-swap="content"]'
             hx-swap="innerHTML"
             hx-vals='{"invoice_structure_main": "True"}'
-            hx-get="{% url "invoice overview" invoice_id=invoice.id %}">
+            hx-get="{% url "invoices:single:overview" invoice_id=invoice.id %}">
             <td class="link link-primary no-underline">
-                <a href="{% url "invoice overview" invoice_id=invoice.id %}">{{ invoice.id }}</a>
+                <a href="{% url "invoices:single:overview" invoice_id=invoice.id %}">{{ invoice.id }}</a>
             </td>
             <td>{{ invoice.date_due | date:"d/m/Y" }}</td>
             <td>
@@ -45,7 +45,7 @@
                     <ul tabindex="0"
                         class="dropdown-content z-[1] menu wp-2 shadow-2xl bg-base-200 rounded-box w-52">
                         <li hx-boost="true">
-                            <a href="{% url "invoice overview" invoice_id=invoice.id %}">
+                            <a href="{% url "invoices:single:overview" invoice_id=invoice.id %}">
                                 <i class="fa-solid fa-eye"></i>
                                 Overview
                             </a>

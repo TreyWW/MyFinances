@@ -4,8 +4,9 @@ from django.urls.conf import include
 from .recurring.create import create_recurring_invoice_endpoint_handler
 from .recurring.dashboard import invoices_recurring_dashboard_endpoint
 from .single import schedule, edit, create, view, manage_access
-from .single.create import create_single_invoice_endpoint_handler
 from .single.dashboard import invoices_single_dashboard_endpoint
+from .single.overview import manage_invoice
+from .recurring.overview import manage_recurring_invoice_set_endpoint
 
 SINGLE_INVOICE_URLS = [
     path(
@@ -45,6 +46,11 @@ SINGLE_INVOICE_URLS = [
         create.create_single_invoice_endpoint_handler,
         name="create",
     ),
+    path(
+        "<str:invoice_id>",
+        manage_invoice,
+        name="overview",
+    ),
 ]
 
 RECURRING_INVOICE_URLS = [
@@ -53,6 +59,11 @@ RECURRING_INVOICE_URLS = [
         "create/",
         create_recurring_invoice_endpoint_handler,
         name="create",
+    ),
+    path(
+        "<str:invoice_id>",
+        manage_recurring_invoice_set_endpoint,
+        name="overview",
     ),
 ]
 

@@ -10,19 +10,19 @@ def invoices_dashboard(request: WebRequest):
 
 
 @web_require_scopes("invoices:read", False, False, "invoices:single:dashboard")
-def manage_invoice(request: WebRequest, invoice_id: str):
+def manage_recurring_invoice_set_endpoint(request: WebRequest, invoice_id: str):
     context: dict = {}
 
     if not invoice_id.isnumeric():
         messages.error(request, "Invalid invoice ID")
         return redirect("invoices:single:dashboard")
 
-    invoice = Invoice.objects.get(id=invoice_id)
+    invoice_set = InvoiceRecurringSet.objects.get(id=invoice_id)
 
-    if not invoice:
+    if not invoice_set:
         return redirect("invoices:single:dashboard")
 
-    if not invoice.has_access(request.user):
+    if not invoice_set.has_access(request.user):
         return redirect("invoices:single:dashboard")
 
-    return invoices_core_handler(request, "pages/invoices/dashboard/manage.html", context | {"invoice": invoice})
+    return invoices_core_handler(request, "pages/invoices/recurring/dashboard/manage.html", context | {"invoiceSet": invoice_set})

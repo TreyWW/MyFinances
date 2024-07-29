@@ -1,0 +1,5 @@
+<div hx-swap-oob='outerHTML:div[data-oob="await_schedule_update_refresh"]'>
+    <div hx-get="{% url 'api:invoices:recurring:poll_update_schedule' invoice_set_id=invoice_set_id %}"
+         data-oob="await_schedule_update_refresh"
+         hx-trigger="every 1.2s"></div>
+</div>
