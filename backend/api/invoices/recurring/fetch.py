@@ -39,4 +39,4 @@ def fetch_all_recurring_invoices_endpoint(request: WebRequest):
     context, _ = get_context(invoices, sort_by, previous_filters, sort_direction, action_filter_type, action_filter_by)
 
     # Render the HTMX response
-    return render(request, "pages/invoices/dashboard/_fetch_body.html", context)
+    return render(request, "pages/invoices/recurring/dashboard/_fetch_body.html", context)

@@ -6,21 +6,17 @@ from decimal import Decimal
 from typing import Literal, Union
 from uuid import uuid4
 
-from django.contrib.auth.hashers import check_password
-from django.contrib.auth.hashers import make_password
-from django.contrib.auth.models import AbstractUser
-from django.contrib.auth.models import UserManager
+from django.contrib.auth.hashers import check_password, make_password
+from django.contrib.auth.models import AbstractUser, UserManager
 from django.contrib.contenttypes.models import ContentType
 from django.core.files.storage import get_storage_class
 from django.core.validators import MaxValueValidator
 from django.db import models
-from django.db.models import Count, Manager
-from django.db.models import QuerySet
+from django.db.models import Count, QuerySet
 from django.utils import timezone
 from django.utils.crypto import get_random_string
 from shortuuid.django_fields import ShortUUIDField
 
-from settings import settings
 from settings.settings import AWS_TAGS_APP_NAME
 
 
@@ -451,6 +447,15 @@ class InvoiceBase(OwnerBase):
         abstract = True
         constraints = [USER_OR_ORGANIZATION_CONSTRAINT()]
 
+    def has_access(self, user: User) -> bool:
+        if not user.is_authenticated:
+            return False
+
+        if user.logged_in_as_team:
+            return self.organization == user.logged_in_as_team
+        else:
+            return self.user == user
+
 
 class Invoice(InvoiceBase):
     STATUS_CHOICES = (
@@ -532,15 +537,6 @@ class Invoice(InvoiceBase):
 
         return Decimal(round(total, 2))
 
-    def has_access(self, user: User) -> bool:
-        if not user.is_authenticated:
-            return False
-
-        if user.logged_in_as_team:
-            return self.organization == user.logged_in_as_team
-        else:
-            return self.user == user
-
     def get_currency_symbol(self):
         return UserSettings.CURRENCIES.get(self.currency, {}).get("symbol", "$")
 
@@ -550,6 +546,14 @@ class InvoiceRecurringSet(InvoiceBase):
         WEEKLY = "weekly", "Weekly"
         MONTHLY = "monthly", "Monthly"
         YEARLY = "yearly", "Yearly"
+
+    STATUS_CHOICES = (
+        ("ongoing", "Ongoing"),
+        ("paused", "paused"),
+        ("cancelled", "cancelled"),
+    )
+
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="ongoing")
 
     frequency = models.CharField(max_length=20, choices=Frequencies.choices, default=Frequencies.MONTHLY)
     end_date = models.DateField(blank=True, null=True)

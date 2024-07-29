@@ -36,6 +36,7 @@ class Boto3Handler:
         self._initiate_session()
 
         self._schedule_client = self._boto3_session.client("scheduler")
+        self.SCHEDULE_EXCEPTIONS = self._schedule_client.exceptions
         self.initiated = True
 
 

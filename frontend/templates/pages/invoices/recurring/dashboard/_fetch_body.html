@@ -1,0 +1,149 @@
+{% load humanize %}
+{% load mathfilters %}
+{% load feature_enabled %}
+{% feature_enabled "isInvoiceSchedulingEnabled" as schedule_invoices_enabled %}
+<tbody id="table_body">
+    {% for invoiceSet in invoices %}
+        <tr class="hover cursor-pointer"
+            hx-trigger="click"
+            hx-boost="true"
+            hx-target='div[data-hx-swap="content"]'
+            hx-swap="innerHTML"
+            hx-vals='{"invoice_structure_main": "True"}'
+            hx-get="{% url "invoice overview" invoice_id=invoiceSet.id %}">
+            <td class="link link-primary no-underline">
+                <a href="{% url "invoice overview" invoice_id=invoiceSet.id %}">{{ invoiceSet.id }}</a>
+            </td>
+            <td>{{ invoiceSet.date_due | date:"d/m/Y" }}</td>
+            <td>
+                <div class="flex items-center text-sm">
+                    <div>
+                        {% with cli_name=invoiceSet.client_to.name|default:invoiceSet.client_name %}
+                            {% if cli_name %}
+                                <p class="font-semibold">{{ cli_name }}</p>
+                            {% else %}
+                                <p class="font-thin">No Client</p>
+                            {% endif %}
+                        {% endwith %}
+                    </div>
+                </div>
+            </td>
+            <td>
+                {{ invoiceSet.get_currency_symbol }}{{ invoiceSet.amount | default_if_none:0 | floatformat:2 | intcomma }}
+            </td>
+            <td>
+                {% component "pages:invoices:recurring:dashboard:status_badge" status=invoiceSet.status inv_id=invoiceSet.id %}
+            </td>
+            <td colspan="2"
+                onclick="const e = arguments[0] || window.event; e.stopPropagation();"
+                class="cursor-default">
+                {# The if statement for dropdown top goes as follows #}
+                {# Use dropdown on top if these: #}
+                {# - is last item           (and not first item) (and more than 4 items) #}
+                <div class="dropdown dropdown-left {% if forloop.last and invoices.count > 4 %}dropdown-top{% endif %}">
+                    <label tabindex="0" class="btn btn-primary btn-outline btn-sm">
+                        <i class="fa-solid fa-ellipsis-vertical"></i>
+                    </label>
+                    <ul tabindex="0"
+                        class="dropdown-content z-[1] menu wp-2 shadow-2xl bg-base-200 rounded-box w-52">
+                        <li hx-boost="true">
+                            <a href="{% url "invoice overview" invoice_id=invoiceSet.id %}">
+                                <i class="fa-solid fa-eye"></i>
+                                Overview
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url "invoices:single:preview" invoice_id=invoiceSet.id %}">
+                                <i class="fa-solid fa-file-pdf"></i>
+                                Preview
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url "invoices:single:manage_access" invoice_id=invoiceSet.id %}">
+                                <i class="fa-solid fa-key"></i>
+                                Manage Access
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url "invoices:single:edit" invoice_id=invoiceSet.id %}">
+                                <i class="fa-solid fa-pencil"></i>
+                                Edit
+                            </a>
+                        </li>
+                        <li>
+                            {% if invoiceSet.status == "paused" %}
+                                <button hx-swap="none"
+                                        hx-post=" {% url "api:invoices:recurring:edit status" invoice_set_id=invoiceSet.id status='unpause' %}">
+                                    <i class="fa-solid fa-repeat"></i>
+                                    Unpause Schedule
+                                </button>
+                            {% elif invoiceSet.status == "ongoing" %}
+                                <button hx-swap="none"
+                                        hx-post=" {% url "api:invoices:recurring:edit status" invoice_set_id=invoiceSet.id status='pause' %}">
+                                    <i class="fa-solid fa-pause"></i>
+                                    Pause Schedule
+                                </button>
+                            {% endif %}
+                        </li>
+                        <li>
+                            <button hx-delete="{% url 'api:invoices:single:delete' %}"
+                                    hx-target="closest tr"
+                                    hx-confirm="Are you sure you would like to delete invoice #{{ invoiceSet.id }}?"
+                                    hx-vals='{"invoice": "{{ invoiceSet.id }}" }'>
+                                <i class="fa-solid fa-trash"></i>
+                                Delete
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    {% empty %}
+        <td colspan="100%" class="text-center">No Invoices Found</td>
+    {% endfor %}
+</tbody>
+{% for option in all_sort_options %}
+    <div hx-swap-oob="innerHTML:li[data-sort='{{ option }}'] button">
+        {% if sort == option or sort == "-"|add:option %}<i class="fa fa-solid fa-sort"></i>{% endif %}
+        {% if option == "status" %}
+            Status
+        {% elif option == "date_due" %}
+            Date
+        {% elif option == "amount" %}
+            Amount
+        {% else %}
+            ID
+        {% endif %}
+    </div>
+{% endfor %}
+{% for filter_type, inner_filters in all_filters.items %}
+    {% for filter in inner_filters %}
+        <div hx-swap-oob="innerHTML:div[data-filter-type='{{ filter_type }}'] ul li[data-filter-by='{{ filter }}'] button">
+            {% if filter in selected_filters %}<i class="fa fa-solid fa-check text-success"></i>{% endif %}
+            {{ filter | title }}
+        </div>
+    {% endfor %}
+{% endfor %}
+<div hx-swap-oob="innerHTML:#filter_list_storage">
+    <input type="hidden"
+           name="status_paid"
+           value="{% if 'paid' in selected_filters %}true{% endif %}">
+    <input type="hidden"
+           name="status_pending"
+           value="{% if 'pending' in selected_filters %}true{% endif %}">
+    <input type="hidden"
+           name="status_overdue"
+           value="{% if 'overdue' in selected_filters %}true{% endif %}">
+    <input type="hidden"
+           name="amount_20+"
+           value="{% if '20+' in selected_filters %}true{% endif %}">
+    <input type="hidden"
+           name="amount_50+"
+           value="{% if '50+' in selected_filters %}true{% endif %}">
+    <input type="hidden"
+           name="amount_100+"
+           value="{% if '100+' in selected_filters %}true{% endif %}">
+</div>
+<div hx-swap-oob="innerHTML:#sort_direction_storage">
+    <input type="hidden" name="sort_direction" value="{{ sort_direction }}">
+</div>

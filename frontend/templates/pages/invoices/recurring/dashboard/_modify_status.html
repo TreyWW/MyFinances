@@ -1,0 +1,7 @@
+<div id="messages_list">{% component "messages_list" with_js=True %}</div>
+<div hx-swap-oob='outerHTML:span[data-invoice-set-id="{{ invoice_set_id }}"]'>
+    {% component "pages:invoices:recurring:dashboard:status_badge" status=status inv_id=invoice_set_id %}
+</div>
+<div hx-swap-oob='innerHTML:div[data-oob="status"]'>
+    {% component "pages:invoices:recurring:dashboard:status_badge" status=status inv_id=invoice_set_id design="default" %}
+</div>

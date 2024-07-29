@@ -6,6 +6,6 @@ def get_account_defaults(actor: User | Organization, client: Client | None = Non
     if not client:
         account_defaults: DefaultValues | None
         if not (account_defaults := DefaultValues.filter_by_owner(owner=actor).filter(client__isnull=True).first()):
-            account_defaults = DefaultValues.objects.create(owner=request.actor, client=None)  # type: ignore[misc]
+            account_defaults = DefaultValues.objects.create(owner=actor, client=None)  # type: ignore[misc]
         return account_defaults
     return DefaultValues.filter_by_owner(owner=actor).get(client=client)

@@ -1,29 +1,26 @@
 import json
 import logging
-from time import sleep
+from uuid import uuid4
 
 from celery import shared_task
 from django.urls import reverse
+
+from backend.models import InvoiceRecurringSet
 from backend.service.boto3.handler import BOTO3_HANDLER
 from backend.service.invoices.recurring.schedules.date_handlers import get_schedule_cron, CronServiceResponse
-from backend.models import InvoiceRecurringSet
 from settings.helpers import get_var
-from uuid import uuid4
 
 logger = logging.getLogger(__name__)
 
 
 @shared_task
-def create_boto_schedule(instance_id):
-    sleep(5)
-    instance = InvoiceRecurringSet.objects.get(id=instance_id)
+def update_boto_schedule(instance: int | str | InvoiceRecurringSet):
+    if isinstance(instance, int | str):
+        instance = InvoiceRecurringSet.objects.get(id=instance)
+
     logger.info(f"Invoice recurring set was just created")
 
     schedule_uuid: str = instance.schedule_name or str(uuid4())
-
-    if instance.schedule_arn:
-        logger.info("Invoice recurring set already has schedule ARN. Leaving.")
-        return None
 
     if not BOTO3_HANDLER.initiated:
         logger.error(f"Boto3 handler not initiated. Cannot use AWS services.")
@@ -79,4 +76,5 @@ def create_boto_schedule(instance_id):
         return None
 
     instance.schedule_arn = schedule_arn
-    instance.save(update_fields=["schedule_arn"])
+    instance.schedule_name = schedule_uuid
+    instance.save(update_fields=["schedule_arn", "schedule_name"])
