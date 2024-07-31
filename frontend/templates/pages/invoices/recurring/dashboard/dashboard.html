@@ -44,12 +44,17 @@
                 </ul>
             </div>
         </div>
-        <a class="btn btn-primary btn-sm"
-           href="{% url 'invoices:single:create' %}"
-           hx-boost="true">
-            <i class="fa-solid fa-file-invoice"></i>
-            Create Recurring Invoice Profile
-        </a>
+        <div class="flex items-center space-x-2">
+            <a class="btn btn-sm btn-square btn-success">
+                <i class="fa fa-refresh"></i>
+            </a>
+            <a class="btn btn-primary btn-sm"
+               href="{% url 'invoices:single:create' %}"
+               hx-boost="true">
+                <i class="fa-solid fa-file-invoice"></i>
+                Create Recurring Invoice Profile
+            </a>
+        </div>
     </div>
 </div>
 <div class="card bg-base-100 p-6 h-screen">
@@ -65,8 +70,8 @@
                     hx-target="#table_body"
                     hx-indicator=""
                     hx-include="#filter_list_storage">
-                    <th>Invoice ID</th>
-                    <th>Due Date</th>
+                    <th>Profile ID</th>
+                    <th>End Date</th>
                     <th>Client Name</th>
                     <th>
                         <div class="dropdown"

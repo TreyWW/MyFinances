@@ -1,0 +1,32 @@
+<div data-oob="next_invoice_block"
+     hx-swap-oob='outerHTML:div[data-oob="next_invoice_block"]'
+     class="card bg-base-100 shadow-xl w-full p-10 flex-row gap-x-4 mt-4">
+    <div class="card-body p-0">
+        <h1 class="text-2xl font-bold">Next Invoice</h1>
+        <div class="flex gap-x-4 w-full">
+            <div class="w-1/2">
+                <h4 class="text-md text-neutral-content my-3">Issue date</h4>
+                <h1 class="text-2xl font-bold">
+                    {{ next_invoice_issue_date | date:"D dS, M Y" | default:"Failed to calculate" }}
+                </h1>
+                <h4 class="text-md text-neutral-content my-3">Due date</h4>
+                <h1 class="text-2xl font-bold">
+                    {{ next_invoice_due_date | date:"D dS, M Y" | default:"Failed to calculate" }}
+                </h1>
+                <h4 class="text-md text-neutral-content my-3">Total amount</h4>
+                <h1 class="text-2xl font-bold">coming soon</h1>
+                <div class="divider"></div>
+                <button class="btn btn-success loading-htmx"
+                        hx-post="{% url 'api:invoices:recurring:generate next invoice' invoice_set_id=invoiceSet.id %}">
+                    <span class="loading-htmx-text">Generate invoice now</span>
+                    <span class="loading loading-spinner loading-htmx-loader"></span>
+                </button>
+            </div>
+            <div class="w-1/2">
+                <div class="w-full bg-base-300 h-full rounded-lg items-center flex justify-center">
+                    <p class="grow-0">next invoice preview (coming soon)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -10,12 +10,12 @@
             hx-target='div[data-hx-swap="content"]'
             hx-swap="innerHTML"
             hx-vals='{"invoice_structure_main": "True"}'
-            hx-push-url="{% url "invoices:recurring:overview" invoice_id=invoiceSet.id %}"
-            hx-get="{% url "invoices:recurring:overview" invoice_id=invoiceSet.id %}">
+            hx-push-url="{% url "invoices:recurring:overview" invoice_set_id=invoiceSet.id %}"
+            hx-get="{% url "invoices:recurring:overview" invoice_set_id=invoiceSet.id %}">
             <td class="link link-primary no-underline">
-                <a href="{% url "invoices:recurring:overview" invoice_id=invoiceSet.id %}">{{ invoiceSet.id }}</a>
+                <a href="{% url "invoices:recurring:overview" invoice_set_id=invoiceSet.id %}">{{ invoiceSet.id }}</a>
             </td>
-            <td>{{ invoiceSet.date_due | date:"d/m/Y" }}</td>
+            <td>{{ invoiceSet.end_date | date:"d/m/Y" | default:"never" }}</td>
             <td>
                 <div class="flex items-center text-sm">
                     <div>
@@ -30,7 +30,7 @@
                 </div>
             </td>
             <td>
-                {{ invoiceSet.get_currency_symbol }}{{ invoiceSet.amount | default_if_none:0 | floatformat:2 | intcomma }}
+                {{ invoiceSet.get_currency_symbol }}{{ invoiceSet.get_total_price | default_if_none:0 | floatformat:2 | intcomma }}
             </td>
             <td>
                 {% include "pages/invoices/recurring/dashboard/_status_badge.html" with status=invoiceSet.status inv_id=invoiceSet.id %}
@@ -48,44 +48,29 @@
                     <ul tabindex="0"
                         class="dropdown-content z-[1] menu wp-2 shadow-2xl bg-base-200 rounded-box w-52">
                         <li hx-boost="true">
-                            <a href="{% url "invoices:recurring:overview" invoice_id=invoiceSet.id %}">
+                            <a href="{% url "invoices:recurring:overview" invoice_set_id=invoiceSet.id %}">
                                 <i class="fa-solid fa-eye"></i>
                                 Overview
                             </a>
                         </li>
-                        <li>
-                            <a href="{% url "invoices:single:preview" invoice_id=invoiceSet.id %}">
-                                <i class="fa-solid fa-file-pdf"></i>
-                                Preview
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{% url "invoices:single:manage_access" invoice_id=invoiceSet.id %}">
-                                <i class="fa-solid fa-key"></i>
-                                Manage Access
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{% url "invoices:single:edit" invoice_id=invoiceSet.id %}">
-                                <i class="fa-solid fa-pencil"></i>
-                                Edit
-                            </a>
-                        </li>
-                        <li>
-                            {% if invoiceSet.status == "paused" %}
-                                <button hx-swap="none"
-                                        hx-post=" {% url "api:invoices:recurring:edit status" invoice_set_id=invoiceSet.id status='unpause' %}">
-                                    <i class="fa-solid fa-repeat"></i>
-                                    Unpause Schedule
-                                </button>
-                            {% elif invoiceSet.status == "ongoing" %}
-                                <button hx-swap="none"
-                                        hx-post=" {% url "api:invoices:recurring:edit status" invoice_set_id=invoiceSet.id status='pause' %}">
-                                    <i class="fa-solid fa-pause"></i>
-                                    Pause Schedule
-                                </button>
-                            {% endif %}
-                        </li>
+                        {#                    <li>#}
+                        {#                        <a href="{% url "invoices:single:preview" invoice_id=invoiceSet.id %}">#}
+                        {#                            <i class="fa-solid fa-file-pdf"></i>#}
+                        {#                            Preview#}
+                        {#                        </a>#}
+                        {#                    </li>#}
+                        {#                    <li>#}
+                        {#                        <a href="{% url "invoices:single:manage_access" invoice_id=invoiceSet.id %}">#}
+                        {#                            <i class="fa-solid fa-key"></i>#}
+                        {#                            Manage Access#}
+                        {#                        </a>#}
+                        {#                    </li>#}
+                        {#                    <li>#}
+                        {#                        <a href="{% url "invoices:single:edit" invoice_id=invoiceSet.id %}">#}
+                        {#                            <i class="fa-solid fa-pencil"></i>#}
+                        {#                            Edit#}
+                        {#                        </a>#}
+                        {#                    </li>#}
                         <li>
                             <button hx-delete="{% url 'api:invoices:single:delete' %}"
                                     hx-target="closest tr"

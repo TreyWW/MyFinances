@@ -14,12 +14,13 @@ class PauseScheduleServiceResponse(BaseServiceResponse[UpdateScheduleOutputTypeD
 
 
 @shared_task
-def pause_boto_schedule(name: str, pause: bool = True) -> PauseScheduleServiceResponse:
+def pause_boto_schedule(name: str, pause: bool = True) -> bool:
     state = "DISABLED" if pause else "ENABLED"
     schedule_response = get_boto_schedule(name)
 
     if not schedule_response.success:
-        return PauseScheduleServiceResponse(False, error_message=schedule_response.error_message)
+        return False
+        # return PauseScheduleServiceResponse(False, error_message=schedule_response.error_message)
 
     try:
         filtered_response = {
@@ -30,10 +31,12 @@ def pause_boto_schedule(name: str, pause: bool = True) -> PauseScheduleServiceRe
         merged_response = filtered_response | {"State": state}
 
         resp = BOTO3_HANDLER._schedule_client.update_schedule(**merged_response)
-        return PauseScheduleServiceResponse(True, response=resp)
+        return True
+        # return PauseScheduleServiceResponse(True, response=resp)
     except (
         BOTO3_HANDLER.SCHEDULE_EXCEPTIONS.ValidationException,
         BOTO3_HANDLER.SCHEDULE_EXCEPTIONS.InternalServerException,
         BOTO3_HANDLER.SCHEDULE_EXCEPTIONS.ResourceNotFoundException,
     ):
-        return PauseScheduleServiceResponse(False, error_message="Schedule not found")
+        return False
+        # return PauseScheduleServiceResponse(False, error_message="Schedule not found").asdict()

@@ -12,11 +12,14 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.files.storage import get_storage_class
 from django.core.validators import MaxValueValidator
 from django.db import models
-from django.db.models import Count, QuerySet
+from django.db.models import Count, QuerySet, Sum, Case, When, FloatField
+from django.db.models.expressions import F
+from django.db.models.fields import DecimalField
 from django.utils import timezone
 from django.utils.crypto import get_random_string
 from shortuuid.django_fields import ShortUUIDField
 
+from backend.managers import InvoiceRecurringSet_WithItemsManager
 from settings.settings import AWS_TAGS_APP_NAME
 
 
@@ -381,6 +384,8 @@ class InvoiceProduct(OwnerBase):
 
 
 class InvoiceItem(models.Model):
+    # objects = InvoiceItemManager()
+
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=100)
     is_service = models.BooleanField(default=True)
@@ -456,8 +461,13 @@ class InvoiceBase(OwnerBase):
         else:
             return self.user == user
 
+    def get_currency_symbol(self):
+        return UserSettings.CURRENCIES.get(self.currency, {}).get("symbol", "$")
+
 
 class Invoice(InvoiceBase):
+    # objects = InvoiceManager()
+
     STATUS_CHOICES = (
         ("pending", "Pending"),
         ("paid", "Paid"),
@@ -467,7 +477,9 @@ class Invoice(InvoiceBase):
     invoice_id = models.IntegerField(unique=True, blank=True, null=True)  # todo: add
     date_due = models.DateField()
     payment_status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="pending")
-    invoice_recurring_set = models.ForeignKey("InvoiceRecurringSet", on_delete=models.SET_NULL, blank=True, null=True)
+    invoice_recurring_set = models.ForeignKey(
+        "InvoiceRecurringSet", related_name="generated_invoices", on_delete=models.SET_NULL, blank=True, null=True
+    )
 
     def __str__(self):
         invoice_id = self.invoice_id or self.id
@@ -537,11 +549,11 @@ class Invoice(InvoiceBase):
 
         return Decimal(round(total, 2))
 
-    def get_currency_symbol(self):
-        return UserSettings.CURRENCIES.get(self.currency, {}).get("symbol", "$")
-
 
 class InvoiceRecurringSet(InvoiceBase):
+    objects = models.Manager()
+    with_items = InvoiceRecurringSet_WithItemsManager()
+
     class Frequencies(models.TextChoices):
         WEEKLY = "weekly", "Weekly"
         MONTHLY = "monthly", "Monthly"
@@ -565,6 +577,42 @@ class InvoiceRecurringSet(InvoiceBase):
 
     schedule_arn = models.CharField(max_length=2048, null=True, blank=True)
     schedule_name = models.UUIDField(default=None, null=True, blank=True)
+
+    def get_total_price(self) -> Decimal:
+        total = 0
+        for invoice in self.generated_invoices.all():
+            total += invoice.get_total_price()
+        return Decimal(round(total, 2))
+
+    def get_last_invoice(self) -> Invoice | None:
+        return self.generated_invoices.order_by("-id").first()
+
+    def next_invoice_issue_date(self) -> date:
+        last_invoice = self.get_last_invoice()
+
+        if not last_invoice:
+            return max(self.date_issued, datetime.now().date())
+
+        match self.frequency:
+            case "weekly":
+                return last_invoice.date_issued + timedelta(days=7)
+            case "monthly":
+                return date(year=last_invoice.date_issued.year, month=last_invoice.date_issued.month + 1, day=last_invoice.date_issued.day)
+            case "yearly":
+                return date(year=last_invoice.date_issued.year + 1, month=last_invoice.date_issued.month, day=last_invoice.date_issued.day)
+            case _:
+                return datetime.now().date()
+
+    def next_invoice_due_date(self, account_defaults: "DefaultValues", from_date: date = datetime.now().date()) -> date:
+        match account_defaults.invoice_due_date_type:
+            case account_defaults.InvoiceDueDateType.days_after:
+                return from_date + timedelta(days=account_defaults.invoice_due_date_value)
+            case account_defaults.InvoiceDueDateType.date_following:
+                return datetime(from_date.year, from_date.month + 1, account_defaults.invoice_due_date_value)
+            case account_defaults.InvoiceDueDateType.date_current:
+                return datetime(from_date.year, from_date.month, account_defaults.invoice_due_date_value)
+            case _:
+                return from_date + timedelta(days=7)
 
 
 class InvoiceURL(models.Model):

@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     "drf_yasg",
     "tz_detect",
     "webpack_loader",
+    "django_minify_html",
 ]
 
 if DEBUG:
@@ -228,15 +229,11 @@ MIDDLEWARE = [
     "login_required.middleware.LoginRequiredMiddleware",
     "social_django.middleware.SocialAuthExceptionMiddleware",
     "tz_detect.middleware.TimezoneMiddleware",
-    "htmlmin.middleware.HtmlMinifyMiddleware",
-    "htmlmin.middleware.MarkRequestMiddleware",
     "backend.middleware.HTMXPartialLoadMiddleware",
     # "backend.api.public.middleware.AttachTokenMiddleware",
     "backend.api.public.middleware.HandleTeamContextMiddleware",
+    "django_minify_html.middleware.MinifyHtmlMiddleware",
 ]
-
-HTML_MINIFY = True
-CONSERVATIVE_WHITESPACE_ON_MINIFYING = False
 
 if DEBUG:
     MIDDLEWARE.append("silk.middleware.SilkyMiddleware")

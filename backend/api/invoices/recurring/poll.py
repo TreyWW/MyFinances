@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
@@ -23,6 +25,14 @@ def return_create_schedule(recurring_schedule):
 @web_require_scopes("invoices:read", False, False, "dashboard")
 def poll_recurring_schedule_update_endpoint(request: WebRequest, invoice_set_id):
     try:
+        decoded_timestamp = datetime.fromtimestamp(int(request.GET.get("t")))
+    except ValueError:
+        decoded_timestamp = None
+
+    if decoded_timestamp and decoded_timestamp < datetime.now():
+        return HttpResponse("cancel poll | too long wait", status=286)
+
+    try:
         recurring_schedule: InvoiceRecurringSet = InvoiceRecurringSet.objects.get(id=invoice_set_id)
         if not recurring_schedule.has_access(request.actor):
             raise InvoiceRecurringSet.DoesNotExist()
@@ -38,7 +48,7 @@ def poll_recurring_schedule_update_endpoint(request: WebRequest, invoice_set_id)
         return render(
             request,
             "pages/invoices/recurring/dashboard/poll_response.html",
-            {"status": recurring_schedule.status, "invoice_set_id": invoice_set_id},
+            {"status": recurring_schedule.status, "invoice_set_id": invoice_set_id, "invoiceSet": recurring_schedule},
             status=286,
         )
 

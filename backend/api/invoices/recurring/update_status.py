@@ -10,6 +10,8 @@ from backend.service.boto3.scheduler.get import get_boto_schedule, GetScheduleSe
 from backend.service.boto3.scheduler.pause import pause_boto_schedule, PauseScheduleServiceResponse
 from backend.types.requests import WebRequest
 
+from datetime import timedelta, datetime
+
 
 @require_POST
 @web_require_scopes("invoices:write", True, True)
@@ -66,7 +68,15 @@ def recurring_set_change_status_endpoint(request: WebRequest, invoice_set_id: in
 
     send_message(request, f"Invoice status been changed to <strong>{new_status}</strong>", success=True)
 
-    return render(request, "pages/invoices/recurring/dashboard/_modify_status.html", {"status": status, "invoice_set_id": invoice_set_id})
+    # poll time stamp (now + 15 seconds) as dateTtime
+
+    poll_end_timestamp_unix = int((datetime.now() + timedelta(seconds=15)).timestamp())
+
+    return render(
+        request,
+        "pages/invoices/recurring/dashboard/_modify_status.html",
+        {"status": status, "invoice_set_id": invoice_set_id, "poll_end_timestamp": poll_end_timestamp_unix},
+    )
 
 
 def return_message(request: HttpRequest, message: str, success: bool = True) -> HttpResponse:

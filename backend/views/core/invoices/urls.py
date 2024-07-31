@@ -61,7 +61,7 @@ RECURRING_INVOICE_URLS = [
         name="create",
     ),
     path(
-        "<str:invoice_id>",
+        "<str:invoice_set_id>",
         manage_recurring_invoice_set_endpoint,
         name="overview",
     ),

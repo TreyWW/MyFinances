@@ -10,6 +10,7 @@
             hx-target='div[data-hx-swap="content"]'
             hx-swap="innerHTML"
             hx-vals='{"invoice_structure_main": "True"}'
+            hx-push-url="{% url "invoices:single:overview" invoice_id=invoice.id %}"
             hx-get="{% url "invoices:single:overview" invoice_id=invoice.id %}">
             <td class="link link-primary no-underline">
                 <a href="{% url "invoices:single:overview" invoice_id=invoice.id %}">{{ invoice.id }}</a>
@@ -28,7 +29,9 @@
                     </div>
                 </div>
             </td>
-            <td>{{ invoice.get_currency_symbol }}{{ invoice.amount | default_if_none:0 | floatformat:2 | intcomma }}</td>
+            <td>
+                {{ invoice.get_currency_symbol }}{{ invoice.get_total_price | default_if_none:0 | floatformat:2 | intcomma }}
+            </td>
             <td>
                 {% component "pages:invoices:dashboard:payment_status_badge" status=invoice.payment_status inv_id=invoice.id %}
             </td>

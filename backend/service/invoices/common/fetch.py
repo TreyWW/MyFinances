@@ -86,6 +86,11 @@ def get_context(
 
     invoices = invoices.filter(or_conditions)
 
+    if action_filter_type == "id":
+        invoices = invoices.filter(id=action_filter_by)
+    elif action_filter_type == "recurring_set_id":
+        invoices = invoices.filter(invoice_recurring_set=action_filter_by)
+
     # Validate and sanitize the sort_by parameter
     all_sort_options = ["date_due", "id", "payment_status"]
     context["all_sort_options"] = all_sort_options
