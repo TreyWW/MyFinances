@@ -184,25 +184,4 @@ default_quota_limits: list[QuotaGroup] = [
             ),
         ],
     ),
-    QuotaGroup(
-        "currency_conversion",
-        [
-            QuotaItem(
-                slug="ratelimit_minute",
-                name="Ratelimit/minute",
-                description="Maximum amount of requests allowed per minute",
-                period="per_minute",
-                default_value=10,
-                adjustable=True,
-            ),
-            QuotaItem(
-                slug="ratelimit_hour",
-                name="Ratelimit/hour",
-                description="Maximum amount of requests allowed per hour",
-                period="per_hour",
-                default_value=500,
-                adjustable=True,
-            ),
-        ],
-    ),
 ]

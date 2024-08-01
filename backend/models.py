@@ -108,7 +108,6 @@ class UserSettings(models.Model):
     class CoreFeatures(models.TextChoices):
         INVOICES = "invoices", "Invoices"
         RECEIPTS = "receipts", "Receipts"
-        CURRENCY_CONVERTER = "currency_converter", "Currency Converter"
         EMAIL_SENDING = "email_sending", "Email Sending"
 
     CURRENCIES = {

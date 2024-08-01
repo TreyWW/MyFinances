@@ -34,8 +34,7 @@ from backend.api.public.permissions import IsSuperuser
             examples={
                 "application/json": {
                     "problems": [
-                        {"id": "database", "message": "database failed to connect"},
-                        {"id": "forex_api", "message": "forex api failed to connect"},
+                        {"id": "database", "message": "database failed to connect"},\
                     ],
                     "healthy": False,
                 }
@@ -60,12 +59,5 @@ def system_health_endpoint(request):
         cache._cache.get_client().ping()
     except ConnectionError:
         problems.append({"id": "redis", "message": "redis failed to connect"})
-
-    try:
-        forex_api_response = requests.get("https://theforexapi.com/", timeout=2)
-        if forex_api_response.status_code != 200:
-            raise OperationalError
-    except (requests.ReadTimeout, OperationalError):
-        problems.append({"id": "forex_api", "message": "forex api failed to connect"})
 
     return Response({"problems": problems, "healthy": not bool(problems)})
