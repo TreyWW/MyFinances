@@ -34,7 +34,7 @@ from backend.api.public.permissions import IsSuperuser
             examples={
                 "application/json": {
                     "problems": [
-                        {"id": "database", "message": "database failed to connect"},\
+                        {"id": "database", "message": "database failed to connect"},
                     ],
                     "healthy": False,
                 }
