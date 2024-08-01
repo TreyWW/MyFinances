@@ -1,6 +1,5 @@
 {% load static %}
 {% load feature_enabled %}
-{% personal_feature_enabled request.user "currency_converter" as feature_enabled_currency_converter %}
 {% personal_feature_enabled request.user "invoices" as feature_enabled_invoices %}
 {% personal_feature_enabled request.user "receipts" as feature_enabled_receipts %}
 {% personal_feature_enabled request.user "email_sending" as feature_enabled_emails %}

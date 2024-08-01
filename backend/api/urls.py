@@ -12,7 +12,6 @@ urlpatterns = [
     path("clients/", include("backend.api.clients.urls")),
     path("settings/", include("backend.api.settings.urls")),
     path("products/", include("backend.api.products.urls")),
-    path("currency_converter/", include("backend.api.currency_converter.urls")),
     path("quotas/", include("backend.api.quotas.urls")),
     path("emails/", include("backend.api.emails.urls")),
     path("hc/", include("backend.api.healthcheck.urls")),
