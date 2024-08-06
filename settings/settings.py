@@ -427,7 +427,6 @@ else:
     PRIVATE_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 
 # SENDGRID_SANDBOX_MODE_IN_DEBUG = True
-
 if "test" in sys.argv[1:]:
     print("[BACKEND] Using sqlite3 database due to a test being ran", flush=True)
     DATABASES = {

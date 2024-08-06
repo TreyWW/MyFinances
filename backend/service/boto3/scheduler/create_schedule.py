@@ -19,7 +19,11 @@ def update_boto_schedule(instance_id: int | str):
     instance: InvoiceRecurringSet
 
     if isinstance(instance_id, int | str):
-        instance = InvoiceRecurringSet.objects.get(id=instance_id)
+        try:
+            instance = InvoiceRecurringSet.objects.get(id=instance_id)
+        except InvoiceRecurringSet.DoesNotExist:
+            logger.error(f"InvoiceRecurringSet with id {instance_id} does not exist.")
+            return None
     elif isinstance(instance_id, InvoiceRecurringSet):
         instance = instance_id
     else:

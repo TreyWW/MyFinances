@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 
 @receiver(post_save, sender=InvoiceRecurringSet)
-def create_client_defaults(sender: Type[InvoiceRecurringSet], instance: InvoiceRecurringSet, created, **kwargs):
+def create_recurring_schedule(sender: Type[InvoiceRecurringSet], instance: InvoiceRecurringSet, created, **kwargs):
     if not created:
         return
 

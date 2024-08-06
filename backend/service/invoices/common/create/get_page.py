@@ -72,5 +72,4 @@ def global_get_invoice_context(request: WebRequest) -> CreateInvoiceContextServi
     if account_number := request.GET.get("account_number"):
         context["account_number"] = account_number
 
-    print(context)
     return CreateInvoiceContextServiceResponse(True, CreateInvoiceContextTuple(defaults, context))

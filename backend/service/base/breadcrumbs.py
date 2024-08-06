@@ -33,7 +33,6 @@ ALL_BREADCRUMBS: dict[str, str | tuple] = {
 
 
 def get_item(name: str, url_name: Optional[str] = None, icon: Optional[str] = None, kwargs: dict = {}, *, request=None) -> dict:
-    print(kwargs)
     """
     Create a breadcrumb item dictionary.
     Parameters:

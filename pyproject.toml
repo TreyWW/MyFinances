@@ -171,10 +171,10 @@ ignore_missing_imports = true
 
 [tool.typos]
 [files]
-extend-exclude = ["**/bundle.js", "**/bundle.js.map"]
+extend-exclude = ["**/bundle.js", "**/bundle.js.map", "/backend/templatetags/cal_filters.py"]
 
 [default]
 extend-ignore-identifiers-re = [
     "zUfuhFKKZCbHTY6aRR46gxiqszMk5tcHjsVFxnUo8VMus4kHGVdIYVbOYYNlKmHV",
-    '"nd"'
+    "sha384-*"
 ]
