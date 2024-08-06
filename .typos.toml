@@ -1,0 +1,8 @@
+[files]
+extend-exclude = ["**/bundle.js", "**/bundle.js.map", "**/cal_filters.py"]
+
+[default]
+extend-ignore-identifiers-re = [
+    "zUfuhFKKZCbHTY6aRR46gxiqszMk5tcHjsVFxnUo8VMus4kHGVdIYVbOYYNlKmHV",
+    "sha384-zUfuhFKKZCbHTY6aRR46gxiqszMk5tcHjsVFxnUo8VMus4kHGVdIYVbOYYNlKmHV"
+]
