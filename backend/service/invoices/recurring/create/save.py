@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 
 from django.contrib import messages
 from django.core.exceptions import ValidationError
@@ -16,18 +16,18 @@ class SaveInvoiceServiceResponse(BaseServiceResponse[InvoiceRecurringSet]): ...
 def save_invoice(request: WebRequest, invoice_items) -> SaveInvoiceServiceResponse:
     currency = request.user.user_profile.currency
 
-    end_date = request.POST.get("end_date")
+    end_date_str: str = request.POST.get("end_date", "")
 
     try:
-        if end_date:
-            datetime.strptime(end_date, "%Y-%m-%d").date()
+        if end_date_str:
+            datetime.strptime(end_date_str, "%Y-%m-%d").date()
     except ValueError:
         return SaveInvoiceServiceResponse(error_message="Please enter a valid end date")
     finally:
-        end_date = datetime.strptime(end_date, "%Y-%m-%d").date() if end_date else None
+        end_date_obj: date | None = datetime.strptime(end_date_str, "%Y-%m-%d").date() if end_date_str else None
 
     invoice_set = InvoiceRecurringSet(
-        end_date=end_date,
+        end_date=end_date_obj,
         date_issued=request.POST.get("date_issued"),
         currency=currency,
     )
@@ -58,7 +58,7 @@ def save_invoice(request: WebRequest, invoice_items) -> SaveInvoiceServiceRespon
         invoice_set.full_clean()
 
         if frequency_validate_response.failed:
-            raise ValidationError
+            raise ValidationError(frequency_validate_response.error)
     except ValidationError as validation_errors:
         for field, error in validation_errors.error_dict.items():
             for e in error:

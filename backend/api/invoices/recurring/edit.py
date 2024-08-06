@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import render
@@ -23,10 +25,10 @@ def edit_invoice_recurring_set_endpoint(request: WebRequest, invoice_set_id):
 
     frequency_update_response = validate_and_update_frequency(
         invoice_set=invoice_set,
-        frequency=request.POST.get("frequency"),
-        frequency_day_of_week=request.POST.get("frequency_day_of_week"),
-        frequency_day_of_month=request.POST.get("frequency_day_of_month"),
-        frequency_month_of_year=request.POST.get("frequency_month_of_year"),
+        frequency=request.POST.get("frequency", ""),
+        frequency_day_of_week=request.POST.get("frequency_day_of_week", ""),
+        frequency_day_of_month=request.POST.get("frequency_day_of_month", ""),
+        frequency_month_of_year=request.POST.get("frequency_month_of_year", ""),
     )
 
     if frequency_update_response.failed:

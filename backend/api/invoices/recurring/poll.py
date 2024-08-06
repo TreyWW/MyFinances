@@ -26,7 +26,7 @@ def return_create_schedule(recurring_schedule):
 @web_require_scopes("invoices:read", False, False, "dashboard")
 def poll_recurring_schedule_update_endpoint(request: WebRequest, invoice_set_id):
     try:
-        decoded_timestamp = datetime.fromtimestamp(int(request.GET.get("t")))
+        decoded_timestamp = datetime.fromtimestamp(int(request.GET.get("t", "")))
     except ValueError:
         decoded_timestamp = None
 
@@ -35,7 +35,7 @@ def poll_recurring_schedule_update_endpoint(request: WebRequest, invoice_set_id)
 
     try:
         recurring_schedule: InvoiceRecurringSet = InvoiceRecurringSet.objects.get(id=invoice_set_id)
-        if not recurring_schedule.has_access(request.actor):
+        if not recurring_schedule.has_access(request.user):
             raise InvoiceRecurringSet.DoesNotExist()
     except InvoiceRecurringSet.DoesNotExist:
         return HttpResponseNotFound()

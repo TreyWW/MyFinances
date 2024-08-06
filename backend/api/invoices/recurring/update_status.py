@@ -11,6 +11,7 @@ from backend.service.boto3.scheduler.pause import pause_boto_schedule, PauseSche
 from backend.types.requests import WebRequest
 
 from datetime import timedelta, datetime
+from typing import Optional
 
 
 @require_POST
@@ -29,7 +30,7 @@ def recurring_set_change_status_endpoint(request: WebRequest, invoice_set_id: in
     except InvoiceRecurringSet.DoesNotExist:
         return return_message(request, "Recurring Invoice Set not found")
 
-    if not invoice_set.has_access(request.actor):
+    if not invoice_set.has_access(request.user):
         return return_message(request, "You don't have permission to make changes to this invoice.")
 
     if status == "pause" and invoice_set.status != "ongoing":
@@ -37,20 +38,15 @@ def recurring_set_change_status_endpoint(request: WebRequest, invoice_set_id: in
     elif status == "unpause" and invoice_set.status != "paused":
         return return_message(request, "Can only unpause a paused invoice schedule")
 
-    boto_pause_response: PauseScheduleServiceResponse | None = None
-    boto_get_response: GetScheduleServiceResponse | None = None
-    new_status: str = ""
-
     if status == "refresh":
         if invoice_set.schedule_name:
             boto_get_response = get_boto_schedule(str(invoice_set.schedule_name))
 
-            if not boto_get_response.success:
+            if boto_get_response.failed:
                 update_boto_schedule.delay(invoice_set.pk)
                 return render(request, "pages/invoices/recurring/dashboard/poll_update.html", {"invoice_set_id": invoice_set_id})
 
-            new_status = "ongoing" if boto_get_response.response["State"] == "ACTIVE" else "paused"
-            invoice_set.status = new_status
+            invoice_set.status = "ongoing" if boto_get_response.response["State"] == "ACTIVE" else "paused"
             invoice_set.save(update_fields=["status"])
         else:
             update_boto_schedule.delay(invoice_set.pk)

@@ -165,6 +165,7 @@ module = [
     "drf_yasg.utils",
     "drf_yasg.views",
     "xhtml2pdf",
+    "celery"
 ]
 ignore_missing_imports = true
 

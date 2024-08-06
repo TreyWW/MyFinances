@@ -25,7 +25,7 @@ def get_monthly_cron(day_of_month: int | None = None, date: Date | None = None) 
         return MonthlyCronServiceResponse(False, "", "Invalid input for monthly cron")
 
 
-def get_weekly_cron(day_of_week: int) -> WeeklyCronServiceResponse:
+def get_weekly_cron(day_of_week: int | None = None) -> WeeklyCronServiceResponse:
     if 0 <= day_of_week <= 6:
         cron_expression = f"0 7 ? * {day_of_week} *"
         return WeeklyCronServiceResponse(True, cron_expression)
@@ -42,7 +42,7 @@ def get_yearly_cron(day_of_month: int, month: int) -> YearlyCronServiceResponse:
 
 
 def get_schedule_cron(
-    frequency: str, day_of_month: int = None, day_of_week: int = None, month: int = None, date: Date = None
+    frequency: str, day_of_month: int | None = None, day_of_week: int | None = None, month: int | None = None, date: Date | None = None
 ) -> CronServiceResponse:
     """
     Generates a cron expression for AWS EventBridge based on the specified frequency.
@@ -68,6 +68,8 @@ def get_schedule_cron(
             get_schedule_cron(frequency="yearly", day_of_month=15, month=1)
     """
 
+    response: MonthlyCronServiceResponse | YearlyCronServiceResponse | WeeklyCronServiceResponse
+
     if frequency == "monthly":
         response = get_monthly_cron(day_of_month, date)
     elif frequency == "weekly":
@@ -83,4 +85,4 @@ def get_schedule_cron(
     if response.success:
         return CronServiceResponse(True, response.response)
     else:
-        return CronServiceResponse(False, "", response.error_message)
+        return CronServiceResponse(False, "", response.error)

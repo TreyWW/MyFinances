@@ -1,7 +1,6 @@
 import datetime
 import json
 import logging
-from datetime import datetime
 from uuid import uuid4
 
 from celery import shared_task
@@ -16,11 +15,21 @@ logger = logging.getLogger(__name__)
 
 
 @shared_task
-def update_boto_schedule(instance: int | str):
-    if isinstance(instance, int | str):
-        instance = InvoiceRecurringSet.objects.get(id=instance)
+def update_boto_schedule(instance_id: int | str):
+    instance: InvoiceRecurringSet
 
-    schedule_uuid: str = instance.schedule_name or str(uuid4())
+    if isinstance(instance_id, int | str):
+        instance = InvoiceRecurringSet.objects.get(id=instance_id)
+    elif isinstance(instance_id, InvoiceRecurringSet):
+        instance = instance_id
+    else:
+        logger.error(f"Invalid instance type: {type(instance_id)}")
+        return None
+
+    if isinstance(instance.schedule_name, str):
+        schedule_uuid: str = instance.schedule_name
+    else:
+        schedule_uuid = str(uuid4())
 
     if not BOTO3_HANDLER.initiated:
         logger.error(f"Boto3 handler not initiated. Cannot use AWS services.")
@@ -48,7 +57,7 @@ def update_boto_schedule(instance: int | str):
     SITE_URL = get_var("SITE_URL", default="http://127.0.0.1:8000") + reverse("webhooks:receive_recurring_invoices")
 
     end_date: datetime.date | None = instance.end_date
-    end_datetime: datetime | None = datetime.combine(end_date, datetime.min.time()) if end_date else None
+    end_datetime: datetime.datetime | None = datetime.datetime.combine(end_date, datetime.datetime.now().time()) if end_date else None
 
     try:
         boto_response = BOTO3_HANDLER._schedule_client.create_schedule(

@@ -4,28 +4,28 @@ from django.http import HttpRequest
 from django.urls import resolve, reverse
 from django.urls.exceptions import NoReverseMatch
 
-ALL_ITEMS: dict[str, tuple[str, Optional[str], Optional[str], bool]] = {
+ALL_ITEMS: dict[str, tuple[str, Optional[str], Optional[str]]] = {
     "dashboard": ("Dashboard", "dashboard", "house"),
     "invoices:dashboard": ("Invoices", "invoices:single:dashboard", "file-invoice"),
     "invoices:single:dashboard": ("Single", "invoices:single:dashboard", "file-invoice"),
-    "invoices:single:create": ("Create (single)", "invoices:single:create"),
-    "invoices:recurring:create": ("Create (recurring)", "invoices:recurring:create"),
-    "invoices:edit": ("Edit", None, "pencil"),
+    "invoices:single:create": ("Create (single)", "invoices:single:create", None),
+    "invoices:recurring:create": ("Create (recurring)", "invoices:recurring:create", None),
+    "invoices:single:edit": ("Edit", None, "pencil"),
     "receipts dashboard": ("Receipts", "receipts dashboard", "file-invoice"),
     "teams:dashboard": ("Teams", "teams:dashboard", "users"),
     "settings:dashboard": ("Settings", "settings:dashboard", "gear"),
     "clients:dashboard": ("Clients", "clients:dashboard", "users"),
-    "clients:create": ("Create", "clients:create"),
+    "clients:create": ("Create", "clients:create", None),
 }
 
-ALL_BREADCRUMBS: dict[str, str | tuple[str]] = {
+ALL_BREADCRUMBS: dict[str, str | tuple] = {
     "dashboard": "dashboard",
     "teams:dashboard": ("dashboard", "teams:dashboard"),
     "receipts dashboard": ("dashboard", "receipts dashboard"),
     "invoices:single:dashboard": ("dashboard", "invoices:dashboard", "invoices:single:dashboard"),
     "invoices:single:create": ("dashboard", "invoices:dashboard", "invoices:single:create"),
     "invoices:recurring:create": ("dashboard", "invoices:dashboard", "invoices:recurring:create"),
-    "invoices:edit": ("dashboard", "invoices:dashboard", "invoices:edit"),
+    "invoices:single:edit": ("dashboard", "invoices:dashboard", "invoices:single:edit"),
     "clients:dashboard": ("dashboard", "clients:dashboard"),
     "clients:create": ("dashboard", "clients:dashboard", "clients:create"),
     "settings:dashboard": ("dashboard", "settings:dashboard"),

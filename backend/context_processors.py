@@ -29,7 +29,7 @@ def navbar(request):
 
 def extras(request: HttpRequest):
     # import_method can be one of: "webpack", "public_cdn", "custom_cdn"
-    data = {}
+    data: Dict[str, Any] = {}
 
     data["version"] = __version__
     data["git_branch"] = get_var("BRANCH")

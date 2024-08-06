@@ -29,7 +29,7 @@ def generate_next_invoice_now_endpoint(request: WebRequest, invoice_set_id):
     else:
         account_defaults = get_account_defaults(invoice_recurring_set.owner)
 
-    if not invoice_recurring_set.has_access(request.actor):
+    if not invoice_recurring_set.has_access(request.user):
         messages.error(request, "You do not have permission to modify this invoice set.")
         return render(request, "base/toast.html")
 
@@ -40,8 +40,6 @@ def generate_next_invoice_now_endpoint(request: WebRequest, invoice_set_id):
     )
 
     if svc_resp.success:
-        invoice_recurring_set: InvoiceRecurringSet = InvoiceRecurringSet.objects.filter(pk=invoice_set_id).first()  # refetch to get updated
-
         context["next_invoice_issue_date"] = invoice_recurring_set.next_invoice_issue_date()
         context["next_invoice_due_date"] = invoice_recurring_set.next_invoice_due_date(
             account_defaults=account_defaults, from_date=context["next_invoice_issue_date"]

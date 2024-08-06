@@ -579,7 +579,7 @@ class InvoiceRecurringSet(InvoiceBase):
     schedule_name = models.UUIDField(default=None, null=True, blank=True)
 
     def get_total_price(self) -> Decimal:
-        total = 0
+        total = Decimal(0)
         for invoice in self.generated_invoices.all():
             total += invoice.get_total_price()
         return Decimal(round(total, 2))
@@ -591,15 +591,19 @@ class InvoiceRecurringSet(InvoiceBase):
         last_invoice = self.get_last_invoice()
 
         if not last_invoice:
+            if self.date_issued is None:
+                return datetime.now().date()
             return max(self.date_issued, datetime.now().date())
+
+        last_invoice_date_issued: date = last_invoice.date_issued or datetime.now().date()
 
         match self.frequency:
             case "weekly":
-                return last_invoice.date_issued + timedelta(days=7)
+                return last_invoice_date_issued + timedelta(days=7)
             case "monthly":
-                return date(year=last_invoice.date_issued.year, month=last_invoice.date_issued.month + 1, day=last_invoice.date_issued.day)
+                return date(year=last_invoice_date_issued.year, month=last_invoice_date_issued.month + 1, day=last_invoice_date_issued.day)
             case "yearly":
-                return date(year=last_invoice.date_issued.year + 1, month=last_invoice.date_issued.month, day=last_invoice.date_issued.day)
+                return date(year=last_invoice_date_issued.year + 1, month=last_invoice_date_issued.month, day=last_invoice_date_issued.day)
             case _:
                 return datetime.now().date()
 

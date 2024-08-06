@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, date, timedelta
 from backend.models import Invoice, InvoiceRecurringSet, DefaultValues, AuditLog
 from backend.service.defaults.get import get_account_defaults
 from backend.utils.dataclasses import BaseServiceResponse
@@ -13,7 +13,7 @@ class GenerateNextInvoiceServiceResponse(BaseServiceResponse[Invoice]): ...
 
 def generate_next_invoice_service(
     invoice_recurring_set: InvoiceRecurringSet,
-    issue_date: datetime.date = datetime.now().date(),
+    issue_date: date = date.today(),
     account_defaults: DefaultValues | None = None,
 ) -> GenerateNextInvoiceServiceResponse:
 
@@ -75,7 +75,8 @@ def generate_next_invoice_service(
 
     AuditLog.objects.create(
         action=f"[SYSTEM] Generated invoice #{generated_invoice.pk} from Recurring Set #{invoice_recurring_set.pk}",
-        owner=invoice_recurring_set.owner,
+        user=invoice_recurring_set.user,
+        organization=invoice_recurring_set.organization,
     )
 
     return GenerateNextInvoiceServiceResponse(True, generated_invoice)
