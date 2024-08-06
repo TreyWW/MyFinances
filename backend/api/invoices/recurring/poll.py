@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from django.contrib import messages
 from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
@@ -44,6 +45,8 @@ def poll_recurring_schedule_update_endpoint(request: WebRequest, invoice_set_id)
 
         if get_response.failed and get_response.error == "Schedule not found":
             return return_create_schedule(recurring_schedule)
+        elif get_response.failed:
+            messages.error(request, get_response.error)
 
         return render(
             request,

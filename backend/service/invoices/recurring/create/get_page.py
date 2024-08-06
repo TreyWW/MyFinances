@@ -17,12 +17,17 @@ def get_invoice_context(request: WebRequest) -> dict:
         except ValueError:
             ...
 
-    if sort_code := (request.GET.get("sort_code") or "").replace("-", ""):
-        if len(sort_code) == 6:
-            if len(sort_code) >= 2:
-                sort_code = sort_code[0:2] + "-" + sort_code[2:]
-            if len(sort_code) >= 5:
-                sort_code = sort_code[0:5] + "-" + sort_code[5:]
-            context["sort_code"] = sort_code
+    if frequency := request.GET.get("frequency", ""):
+        if frequency.lower() in ["weekly", "monthly", "yearly"]:
+            context["frequency"] = frequency.lower()
+
+            if day_of_week := request.GET.get("day_of_week"):
+                context["day_of_week"] = day_of_week
+
+            if day_of_month := request.GET.get("day_of_month"):
+                context["day_of_month"] = day_of_month
+
+            if month_of_year := request.GET.get("month_of_year"):
+                context["month_of_year"] = month_of_year
 
     return context

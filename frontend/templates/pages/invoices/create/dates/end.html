@@ -2,13 +2,13 @@
     <div class="card-body">
         <div class="form-control w-full">
             <label class="label justify-start">
-                End date
+                End date {{ end_date }}
                 <i class="ms-2 text-neutral-content text-sm">[leave blank for infinite]</i>
             </label>
             <input
-                name="end_due"
+                name="end_date"
                 id="dueDate" {# leave as due date #}
-                value="{{ end_date }}"
+                value="{% if end_date|date:"Y-m-d" %}{{ end_date | date:"Y-m-d" }}{% else %}{{ end_date }}{% endif %}"
                 type="date"
                 onchange="checkDueDate();" {# leave as due date #}
                 class="peer input-bordered input input-block">

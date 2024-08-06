@@ -1,5 +1,7 @@
+import datetime
 import json
 import logging
+from datetime import datetime
 from uuid import uuid4
 
 from celery import shared_task
@@ -45,6 +47,9 @@ def update_boto_schedule(instance: int | str):
 
     SITE_URL = get_var("SITE_URL", default="http://127.0.0.1:8000") + reverse("webhooks:receive_recurring_invoices")
 
+    end_date: datetime.date | None = instance.end_date
+    end_datetime: datetime | None = datetime.combine(end_date, datetime.min.time()) if end_date else None
+
     try:
         boto_response = BOTO3_HANDLER._schedule_client.create_schedule(
             Name=f"{schedule_uuid}",
@@ -58,6 +63,7 @@ def update_boto_schedule(instance: int | str):
                 "RetryPolicy": {"MaximumRetryAttempts": 20, "MaximumEventAgeInSeconds": 21600},  # 6 hours
             },
             ActionAfterCompletion="NONE",
+            EndDate=end_datetime,
         )
     except (
         EXCEPTIONS.ServiceQuotaExceededException,

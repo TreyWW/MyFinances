@@ -92,7 +92,7 @@ def get_context(
         invoices = invoices.filter(invoice_recurring_set=action_filter_by)
 
     # Validate and sanitize the sort_by parameter
-    all_sort_options = ["date_due", "id", "payment_status"]
+    all_sort_options = ["end_date", "id", "status"]
     context["all_sort_options"] = all_sort_options
 
     # Apply sorting to the invoices queryset

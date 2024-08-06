@@ -232,7 +232,6 @@ MIDDLEWARE = [
     "backend.middleware.HTMXPartialLoadMiddleware",
     # "backend.api.public.middleware.AttachTokenMiddleware",
     "backend.api.public.middleware.HandleTeamContextMiddleware",
-    "django_minify_html.middleware.MinifyHtmlMiddleware",
 ]
 
 if DEBUG:

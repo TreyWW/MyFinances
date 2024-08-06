@@ -4,6 +4,7 @@ from django.views.decorators.http import require_http_methods
 
 from backend.models import InvoiceRecurringSet
 from backend.decorators import web_require_scopes
+from backend.service.boto3.scheduler.create_schedule import update_boto_schedule
 from backend.service.invoices.common.create.create import create_invoice_items
 from backend.service.invoices.recurring.create.get_page import get_invoice_context
 from backend.service.invoices.recurring.create.save import save_invoice
@@ -33,4 +34,5 @@ def create_invoice_post_endpoint(request: WebRequest):
     if invoice_response.failed:
         messages.error(request, invoice_response.error_message)
         return invoices_core_handler(request, "pages/invoices/create/create_recurring.html", {"autohide": False})
+    update_boto_schedule.delay(invoice_response.response.pk)
     return redirect("invoices:recurring:dashboard")

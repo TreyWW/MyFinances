@@ -14,6 +14,8 @@ class GetScheduleServiceResponse(BaseServiceResponse[GetScheduleOutputTypeDef]):
 
 @shared_task
 def get_boto_schedule(name: str) -> GetScheduleServiceResponse:
+    if not BOTO3_HANDLER.initiated:
+        return GetScheduleServiceResponse(False, error_message="Scheduling is currently unavailable. Please try again later.")
     try:
         resp = BOTO3_HANDLER._schedule_client.get_schedule(Name=name, GroupName=BOTO3_HANDLER.scheduler_invoices_group_name)
         return GetScheduleServiceResponse(True, response=resp)

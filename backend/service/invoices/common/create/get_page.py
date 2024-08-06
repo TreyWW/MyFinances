@@ -36,6 +36,9 @@ def global_get_invoice_context(request: WebRequest) -> CreateInvoiceContextServi
     else:
         defaults = get_account_defaults(request.actor, client=None)
 
+    for item in ["name", "company", "address", "city", "county", "country"]:
+        context[f"{item}"] = request.GET.get(f"from_{item}", "")
+
     if issue_date := request.GET.get("issue_date"):
         try:
             date.fromisoformat(issue_date)
@@ -63,4 +66,11 @@ def global_get_invoice_context(request: WebRequest) -> CreateInvoiceContextServi
                 sort_code = sort_code[0:5] + "-" + sort_code[5:]
             context["sort_code"] = sort_code
 
+    if account_holder_name := request.GET.get("account_holder_name"):
+        context["account_holder_name"] = account_holder_name
+
+    if account_number := request.GET.get("account_number"):
+        context["account_number"] = account_number
+
+    print(context)
     return CreateInvoiceContextServiceResponse(True, CreateInvoiceContextTuple(defaults, context))

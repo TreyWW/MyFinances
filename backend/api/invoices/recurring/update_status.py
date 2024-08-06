@@ -55,6 +55,7 @@ def recurring_set_change_status_endpoint(request: WebRequest, invoice_set_id: in
         else:
             update_boto_schedule.delay(invoice_set.pk)
             return render(request, "pages/invoices/recurring/dashboard/poll_update.html", {"invoice_set_id": invoice_set_id})
+        send_message(request, f"Invoice status has been refreshed!", success=True)
     else:
         if status == "pause":
             pause_boto_schedule.delay(str(invoice_set.schedule_name), pause=True)
@@ -66,7 +67,7 @@ def recurring_set_change_status_endpoint(request: WebRequest, invoice_set_id: in
         invoice_set.status = new_status
         invoice_set.save(update_fields=["status"])
 
-    send_message(request, f"Invoice status been changed to <strong>{new_status}</strong>", success=True)
+        send_message(request, f"Invoice status been changed to <strong>{new_status}</strong>", success=True)
 
     # poll time stamp (now + 15 seconds) as dateTtime
 

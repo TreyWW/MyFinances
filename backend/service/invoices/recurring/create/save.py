@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 
 from backend.models import InvoiceRecurringSet, QuotaUsage
 from backend.service.invoices.common.create.create import save_invoice_common
+from backend.service.invoices.recurring.validate.frequencies import validate_and_update_frequency
 from backend.types.requests import WebRequest
 from backend.utils.dataclasses import BaseServiceResponse
 
@@ -42,53 +43,22 @@ def save_invoice(request: WebRequest, invoice_items) -> SaveInvoiceServiceRespon
     # Monthly = day_of_month
     # Yearly = day_of_month + month_of_year
 
-    # region Match Frequency
-    match frequency.lower():
-        # region Weekly
-        case "weekly":
-            if frequency_day_of_week not in [i for i in "0123456"]:
-                return SaveInvoiceServiceResponse(error_message="Please select a valid day of the week")
+    frequency_validate_response = validate_and_update_frequency(
+        invoice_set=invoice_set,
+        frequency=frequency,
+        frequency_day_of_week=frequency_day_of_week,
+        frequency_day_of_month=frequency_day_of_month,
+        frequency_month_of_year=frequency_month_of_year,
+    )
 
-            invoice_set.frequency = InvoiceRecurringSet.Frequencies.WEEKLY
-            invoice_set.day_of_week = int(frequency_day_of_week)
-        # endregion Weekly
-        # region Monthly
-        case "monthly":
-            try:
-                frequency_day_of_month = int(frequency_day_of_month)
-            except ValueError:
-                return SaveInvoiceServiceResponse(error_message="Please select a valid day of the month")
-
-            if frequency_day_of_month < -1 or frequency_day_of_month > 28:
-                return SaveInvoiceServiceResponse(error_message="Please select a valid day of the month")
-
-            invoice_set.frequency = InvoiceRecurringSet.Frequencies.MONTHLY
-            invoice_set.day_of_month = frequency_day_of_month
-        # endregion Monthly
-        # region Yearly
-        case "yearly":
-            try:
-                frequency_day_of_month = int(frequency_day_of_month)
-                frequency_month_of_year = int(frequency_month_of_year)
-
-                if frequency_day_of_month < -1 or frequency_day_of_month > 28:
-                    raise ValueError
-
-                if frequency_month_of_year < 1 or frequency_month_of_year > 12:
-                    raise ValueError
-            except ValueError:
-                return SaveInvoiceServiceResponse(error_message="Please select a valid day of the month and month of the year")
-
-            invoice_set.frequency = InvoiceRecurringSet.Frequencies.YEARLY
-            invoice_set.day_of_month = frequency_day_of_month
-            invoice_set.month_of_year = frequency_month_of_year
-        # endregion Yearly
-        case _:
-            return SaveInvoiceServiceResponse(error_message="Invalid frequency")
-    # endregion Match Frequency
+    if frequency_validate_response.failed:
+        messages.error(request, frequency_validate_response.error_message)
 
     try:
         invoice_set.full_clean()
+
+        if frequency_validate_response.failed:
+            raise ValidationError
     except ValidationError as validation_errors:
         for field, error in validation_errors.error_dict.items():
             for e in error:

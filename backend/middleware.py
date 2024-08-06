@@ -7,6 +7,7 @@ from django.http import HttpResponse
 from backend.models import User, Organization
 from backend.types.htmx import HtmxAnyHttpRequest
 from backend.types.requests import WebRequest
+import re
 
 
 class HealthCheckMiddleware:

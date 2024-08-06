@@ -11,10 +11,10 @@
         </div>
         <h1 class="text-center col-span-2 text-xl">Invoice Set (#{{ invoiceSet.id }})</h1>
         <div>
-            <button hx-delete="{% url 'api:invoices:single:delete' %}"
+            <button hx-delete="{% url 'api:invoices:recurring:delete' %}"
                     hx-swap="none"
-                    hx-confirm="Are you sure you would like to delete invoice #{{ invoiceSet.id }}?"
-                    hx-vals='{"invoice": "{{ invoiceSet.id }}", "redirect": "/dashboard/invoices/"}'
+                    hx-confirm="Are you sure you would like to delete the recurring set #{{ invoiceSet.id }}?"
+                    hx-vals='{"invoice": "{{ invoiceSet.id }}", "redirect": "{% url 'invoices:recurring:dashboard' %}"}'
                     class="btn btn-sm btn-outline btn-error me-3 float-right">
                 <i class="fa-solid fa-trash"></i>
                 Delete
@@ -30,8 +30,8 @@
 </div>
 <div class="card bg-base-100 shadow-xl w-full p-6 flex-col gap-y-4">
     <div class="flex flex-wrap gap-4">
-        <a href="{% url 'invoices:single:edit' invoice_id=invoiceSet.id %}"
-           class="btn btn-md btn-outline btn-default grow mr-4 btn-disabled flex-1 min-w-[150px]">
+        <a href="{% url 'invoices:recurring:edit' invoice_set_id=invoiceSet.id %}"
+           class="btn btn-md btn-outline btn-default grow mr-4 flex-1 min-w-[150px]">
             <i class="fa-solid fa-edit mr-2"></i>
             Edit Set
         </a>

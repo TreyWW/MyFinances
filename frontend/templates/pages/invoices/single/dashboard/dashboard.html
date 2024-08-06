@@ -4,7 +4,7 @@
             <button class="btn btn-square btn-sm">
                 <i class="fa fa-filter"></i>
             </button>
-            <div class="dropdown dropdown-hover dropdown-right w-14">
+            <div class="dropdown dropdown-right w-14">
                 <div tabindex="0"
                      role="button"
                      class="btn btn-square btn-sm btn-outline loading-htmx"
@@ -44,6 +44,7 @@
                 </ul>
             </div>
         </div>
+        <h2 class="text-xl" data-oob="invoices-title">Invoices</h2>
         <a class="btn btn-primary btn-sm"
            href="{% url 'invoices:single:create' %}"
            hx-boost="true">
@@ -57,7 +58,6 @@
     </form>
     <form id="sort_direction_storage">
     </form>
-    <h2 class="text-xl">Single Invoices</h2>
     <div class="w-full overflow-x-auto overflow-y-hidden">
         <table class="table h-full">
             <thead>

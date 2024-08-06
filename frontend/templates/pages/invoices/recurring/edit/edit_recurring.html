@@ -2,8 +2,19 @@
 {% load markdownify %}
 <form method="post"
       class="card bg-base-100 p-6 group"
+      hx-post="{% url 'api:invoices:recurring:edit' invoice_set_id=invoice_object.id %}"
+      hx-swap="none"
       enctype="multipart/form-data">
     {% csrf_token %}
+    <div class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        <a class="btn btn-outline btn-secondary btn-sm w-28"
+           href="{% url 'invoices:recurring:dashboard' %}">Back to list</a>
+        <h2 class="text-xl">Editing recurring invoice set #{{ invoice_object.id }}</h2>
+        <a class="btn btn-outline btn-primary btn-sm w-36 justify-self-end"
+           href="{% url 'invoices:recurring:overview' invoice_set_id=invoice_object.id %}">
+            Back to overview
+        </a>
+    </div>
     <div class="divider">
         STEP 1 - DESTINATIONS <span class="required_star">*</span>
     </div>
@@ -58,7 +69,7 @@
 {#    {% include "pages/invoices/create/notes/notes.html" %}#}
 <div class="group-invalid:tooltip"
      data-tip="Fill out all required details to save the invoice.">
-    <button class="btn btn-primary group-invalid:btn-disabled btn-block">Create Recurring Schedule</button>
+    <button class="btn btn-primary group-invalid:btn-disabled btn-block">Edit Invoice</button>
 </div>
 </form>
 <script>
