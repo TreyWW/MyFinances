@@ -73,10 +73,10 @@
                             </a>
                         </li>
                         <li>
-                            <button hx-delete="{% url 'api:invoices:single:delete' %}"
+                            <button hx-delete="{% url 'api:invoices:recurring:delete' %}"
                                     hx-target="closest tr"
-                                    hx-confirm="Are you sure you would like to delete invoice #{{ invoiceSet.id }}?"
-                                    hx-vals='{"invoice": "{{ invoiceSet.id }}" }'>
+                                    hx-confirm="Are you sure you would like to delete invoice set #{{ invoiceSet.id }}?"
+                                    hx-vals='{"invoice_set": "{{ invoiceSet.id }}" }'>
                                 <i class="fa-solid fa-trash"></i>
                                 Delete
                             </button>
@@ -88,41 +88,43 @@
     {% empty %}
         <td colspan="100%" class="text-center">No Invoices Found</td>
     {% endfor %}
-    <tr>
-        <td>
-            <div class="join">
-                {% if page.has_previous %}
-                    <button class="join-item btn"
-                            hx-swap="outerHTML"
-                            hx-target="#table_body"
-                            hx-indicator=""
-                            hx-include='#filter_list_storage, #sort_direction_storage, [name="sort"]'
-                            hx-get="{% url "api:invoices:recurring:fetch" %}?page={{ page.previous_page_number }}">
-                        «
-                    </button>
-                {% else %}
-                    <button class="join-item btn">
-                        <i class="fa fa-x w-2 h-2"></i>
-                    </button>
-                {% endif %}
-                <button class="join-item btn">Page {{ page.number }}</button>
-                {% if page.has_next %}
-                    <button class="join-item btn"
-                            hx-swap="outerHTML"
-                            hx-target="#table_body"
-                            hx-indicator=""
-                            hx-include='#filter_list_storage, #sort_direction_storage, [name="sort"]'
-                            hx-get="{% url "api:invoices:recurring:fetch" %}?page={{ page.next_page_number }}">
-                        »
-                    </button>
-                {% else %}
-                    <button class="join-item btn">
-                        <i class="fa fa-x w-2 h-2"></i>
-                    </button>
-                {% endif %}
-            </div>
-        </td>
-    </tr>
+    {% if page.has_other_pages %}
+        <tr>
+            <td>
+                <div class="join">
+                    {% if page.has_previous %}
+                        <button class="join-item btn"
+                                hx-swap="outerHTML"
+                                hx-target="#table_body"
+                                hx-indicator=""
+                                hx-include='#filter_list_storage, #sort_direction_storage, [name="sort"]'
+                                hx-get="{% url "api:invoices:recurring:fetch" %}?page={{ page.previous_page_number }}">
+                            «
+                        </button>
+                    {% else %}
+                        <button class="join-item btn">
+                            <i class="fa fa-x w-2 h-2"></i>
+                        </button>
+                    {% endif %}
+                    <button class="join-item btn">Page {{ page.number }}</button>
+                    {% if page.has_next %}
+                        <button class="join-item btn"
+                                hx-swap="outerHTML"
+                                hx-target="#table_body"
+                                hx-indicator=""
+                                hx-include='#filter_list_storage, #sort_direction_storage, [name="sort"]'
+                                hx-get="{% url "api:invoices:recurring:fetch" %}?page={{ page.next_page_number }}">
+                            »
+                        </button>
+                    {% else %}
+                        <button class="join-item btn">
+                            <i class="fa fa-x w-2 h-2"></i>
+                        </button>
+                    {% endif %}
+                </div>
+            </td>
+        </tr>
+    {% endif %}
 </tbody>
 {% for option in all_sort_options %}
     <div hx-swap-oob="innerHTML:li[data-sort='{{ option }}'] button">

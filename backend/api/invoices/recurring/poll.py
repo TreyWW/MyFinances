@@ -14,9 +14,9 @@ from backend.types.requests import WebRequest
 
 
 def return_create_schedule(recurring_schedule):
-    recurring_schedule.schedule_name = None
-    recurring_schedule.schedule_arn = None
-    recurring_schedule.save(update_fields=["schedule_name", "schedule_arn"])
+    recurring_schedule.boto_schedule_uuid = None
+    recurring_schedule.boto_schedule_arn = None
+    recurring_schedule.save(update_fields=["boto_schedule_uuid", "boto_schedule_arn"])
     update_boto_schedule.delay(recurring_schedule.pk)
     return HttpResponse("continue poll", status=200)
 
@@ -40,8 +40,8 @@ def poll_recurring_schedule_update_endpoint(request: WebRequest, invoice_set_id)
     except InvoiceRecurringSet.DoesNotExist:
         return HttpResponseNotFound()
 
-    if recurring_schedule.schedule_name:
-        get_response = get_boto_schedule(str(recurring_schedule.schedule_name))
+    if recurring_schedule.boto_schedule_uuid:
+        get_response = get_boto_schedule(str(recurring_schedule.boto_schedule_uuid))
 
         if get_response.failed and get_response.error == "Schedule not found":
             return return_create_schedule(recurring_schedule)

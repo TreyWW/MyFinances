@@ -39,8 +39,8 @@ def recurring_set_change_status_endpoint(request: WebRequest, invoice_set_id: in
         return return_message(request, "Can only unpause a paused invoice schedule")
 
     if status == "refresh":
-        if invoice_set.schedule_name:
-            boto_get_response = get_boto_schedule(str(invoice_set.schedule_name))
+        if invoice_set.boto_schedule_uuid:
+            boto_get_response = get_boto_schedule(str(invoice_set.boto_schedule_uuid))
 
             if boto_get_response.failed:
                 update_boto_schedule.delay(invoice_set.pk)
@@ -54,9 +54,9 @@ def recurring_set_change_status_endpoint(request: WebRequest, invoice_set_id: in
         send_message(request, f"Invoice status has been refreshed!", success=True)
     else:
         if status == "pause":
-            pause_boto_schedule.delay(str(invoice_set.schedule_name), pause=True)
+            pause_boto_schedule.delay(str(invoice_set.boto_schedule_uuid), pause=True)
         elif status == "unpause":
-            pause_boto_schedule.delay(str(invoice_set.schedule_name), pause=False)
+            pause_boto_schedule.delay(str(invoice_set.boto_schedule_uuid), pause=False)
 
         new_status = "ongoing" if status == "unpause" else "paused"
 

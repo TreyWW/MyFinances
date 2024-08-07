@@ -14,7 +14,7 @@
             <button hx-delete="{% url 'api:invoices:recurring:delete' %}"
                     hx-swap="none"
                     hx-confirm="Are you sure you would like to delete the recurring set #{{ invoiceSet.id }}?"
-                    hx-vals='{"invoice": "{{ invoiceSet.id }}", "redirect": "{% url 'invoices:recurring:dashboard' %}"}'
+                    hx-vals='{"invoice_set": "{{ invoiceSet.id }}", "redirect": "{% url 'invoices:recurring:dashboard' %}"}'
                     class="btn btn-sm btn-outline btn-error me-3 float-right">
                 <i class="fa-solid fa-trash"></i>
                 Delete
@@ -104,3 +104,4 @@
     </div>
 </div>
 {% include "pages/invoices/recurring/manage/next_invoice_block.html" %}
+{% component "messages_list" %}

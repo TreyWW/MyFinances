@@ -30,8 +30,13 @@ def update_boto_schedule(instance_id: int | str):
         logger.error(f"Invalid instance type: {type(instance_id)}")
         return None
 
-    if isinstance(instance.schedule_name, str):
-        schedule_uuid: str = instance.schedule_name
+    if not BOTO3_HANDLER.initiated:
+        instance.status = "paused"
+        instance.save()
+        logger.error(f'BOTO3 IS CURRENTLY DOWN, #{instance_id} has been set to "Paused"!')
+
+    if isinstance(instance.boto_schedule_uuid, str):
+        schedule_uuid: str = instance.boto_schedule_uuid
     else:
         schedule_uuid = str(uuid4())
 
@@ -61,23 +66,28 @@ def update_boto_schedule(instance_id: int | str):
     SITE_URL = get_var("SITE_URL", default="http://127.0.0.1:8000") + reverse("webhooks:receive_recurring_invoices")
 
     end_date: datetime.date | None = instance.end_date
-    end_datetime: datetime.datetime | None = datetime.datetime.combine(end_date, datetime.datetime.now().time()) if end_date else None
+    end_datetime: datetime.datetime | None = datetime.datetime.combine(end_date, datetime.datetime.now().time()) if end_date else ""
+
+    create_schedule_params = {
+        "Name": schedule_uuid,
+        "GroupName": BOTO3_HANDLER.scheduler_invoices_group_name,
+        "FlexibleTimeWindow": {"Mode": "OFF"},
+        "ScheduleExpression": f"cron({CRON_RESPONSE.response})",
+        "Target": {
+            "Arn": BOTO3_HANDLER.scheduler_lambda_arn,
+            "RoleArn": BOTO3_HANDLER.scheduler_lambda_access_role_arn,
+            "Input": json.dumps({"invoice_set_id": instance.id, "endpoint_url": f"{SITE_URL}"}),
+            "RetryPolicy": {"MaximumRetryAttempts": 20, "MaximumEventAgeInSeconds": 21600},  # 6 hours
+        },
+        "ActionAfterCompletion": "NONE",
+        "EndDate": end_datetime,
+    }
+
+    if not end_datetime:
+        del create_schedule_params["EndDate"]
 
     try:
-        boto_response = BOTO3_HANDLER._schedule_client.create_schedule(
-            Name=f"{schedule_uuid}",
-            GroupName=BOTO3_HANDLER.scheduler_invoices_group_name,
-            FlexibleTimeWindow={"Mode": "OFF"},
-            ScheduleExpression=f"cron(0/2 * * * ? *)",  # ScheduleExpression=f"cron({CRON_RESPONSE.response})",
-            Target={
-                "Arn": BOTO3_HANDLER.scheduler_lambda_arn,
-                "RoleArn": BOTO3_HANDLER.scheduler_lambda_access_role_arn,
-                "Input": json.dumps({"invoice_set_id": instance.id, "endpoint_url": f"{SITE_URL}"}),
-                "RetryPolicy": {"MaximumRetryAttempts": 20, "MaximumEventAgeInSeconds": 21600},  # 6 hours
-            },
-            ActionAfterCompletion="NONE",
-            EndDate=end_datetime,
-        )
+        boto_response = BOTO3_HANDLER._schedule_client.create_schedule(**create_schedule_params)
     except (
         EXCEPTIONS.ServiceQuotaExceededException,
         EXCEPTIONS.ValidationException,
@@ -92,6 +102,7 @@ def update_boto_schedule(instance_id: int | str):
         logger.error(f"Something went wrong when creating the schedule. {boto_response}")
         return None
 
-    instance.schedule_arn = schedule_arn
-    instance.schedule_name = schedule_uuid
-    instance.save(update_fields=["schedule_arn", "schedule_name"])
+    instance.boto_schedule_arn = schedule_arn
+    instance.boto_schedule_uuid = schedule_uuid
+    instance.status = "ongoing"
+    instance.save(update_fields=["boto_schedule_arn", "boto_schedule_uuid", "status"])

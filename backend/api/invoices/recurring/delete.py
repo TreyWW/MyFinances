@@ -7,6 +7,7 @@ from django.views.decorators.http import require_http_methods
 
 from backend.decorators import web_require_scopes
 from backend.models import QuotaLimit, InvoiceRecurringSet
+from backend.service.boto3.scheduler.delete_schedule import delete_boto_schedule
 from backend.types.requests import WebRequest
 
 
@@ -18,7 +19,7 @@ def delete_invoice_recurring_set_endpoint(request: WebRequest):
     redirect = delete_items.get("redirect", None)
 
     try:
-        invoice_set = InvoiceRecurringSet.objects.get(id=delete_items.get("invoice", ""))
+        invoice_set = InvoiceRecurringSet.objects.get(id=delete_items.get("invoice_set", ""))
     except InvoiceRecurringSet.DoesNotExist:
         messages.error(request, "Invoice Set Not Found")
         return render(request, "base/toasts.html")
@@ -29,7 +30,10 @@ def delete_invoice_recurring_set_endpoint(request: WebRequest):
 
     # QuotaLimit.delete_quota_usage("invoices-count", request.user, invoice.id, invoice.date_created)
 
-    invoice_set.delete()
+    delete_boto_schedule.delay("InvoiceRecurringSet", invoice_set.id)
+
+    invoice_set.active = False
+    invoice_set.save()
 
     if request.htmx:
         if not redirect:

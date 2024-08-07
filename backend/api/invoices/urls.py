@@ -1,6 +1,6 @@
 from django.urls import path, include
 
-from . import fetch, delete, edit, schedule, manage
+from . import fetch, delete, edit, manage
 from .create import set_destination
 from .create.services import add_service
 from .recurring.delete import delete_invoice_recurring_set_endpoint
@@ -24,10 +24,7 @@ SINGLE_INVOICE_URLS = [
     path("edit/<int:invoice_id>/set_status/<str:status>/", edit.change_status, name="edit status"),
     path("edit/<str:invoice_id>/discount/", edit.edit_discount, name="edit discount"),
     path("fetch/", fetch.fetch_all_invoices, name="fetch"),
-    path("create_schedule/", schedule.create_schedule, name="create_schedule"),
-    path("schedules/onetime/<str:schedule_id>/cancel/", schedule.cancel_onetime_schedule, name="schedules onetime cancel"),
-    path("schedules/onetime/fetch/<str:invoice_id>/", schedule.fetch_onetime_schedules, name="schedules onetime fetch"),
-    path("", include("backend.api.invoices.reminders.urls")),
+    # path("", include("backend.api.invoices.reminders.urls")),
 ]
 
 RECURRING_INVOICE_URLS = [

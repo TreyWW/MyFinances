@@ -6,7 +6,6 @@ from django.views.decorators.http import require_http_methods
 
 from backend.decorators import feature_flag_check, web_require_scopes
 from backend.models import InvoiceReminder
-from infrastructure.aws.schedules.delete_reminder import delete_reminder
 
 from backend.types.htmx import HtmxHttpRequest
 

@@ -376,6 +376,40 @@ class DefaultValues(OwnerBase):
         return date.isoformat(issue), date.isoformat(due)
 
 
+class BotoSchedule(models.Model):
+    class BotoStatusTypes(models.TextChoices):
+        PENDING = "pending", "Pending"
+        CREATING = "creating", "Creating"
+        COMPLETED = "completed", "Completed"
+        FAILED = "failed", "Failed"
+        DELETING = "deleting", "Deleting"
+        CANCELLED = "cancelled", "Cancelled"
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    boto_schedule_arn = models.CharField(max_length=2048, null=True, blank=True)
+    boto_schedule_uuid = models.UUIDField(default=None, null=True, blank=True)
+    boto_last_updated = models.DateTimeField(auto_now=True)
+
+    received = models.BooleanField(default=False)
+    boto_schedule_status = models.CharField(max_length=100, choices=BotoStatusTypes.choices, default=BotoStatusTypes.PENDING)
+
+    class Meta:
+        abstract = True
+
+    def set_status(self, status, save=True):
+        self.status = status
+        if save:
+            self.save()
+        return self
+
+    def set_received(self, status: bool = True, save=True):
+        self.received = status
+        if save:
+            self.save()
+        return self
+
+
 class InvoiceProduct(OwnerBase):
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=100)
@@ -550,7 +584,7 @@ class Invoice(InvoiceBase):
         return Decimal(round(total, 2))
 
 
-class InvoiceRecurringSet(InvoiceBase):
+class InvoiceRecurringSet(InvoiceBase, BotoSchedule):
     objects = models.Manager()
     with_items = InvoiceRecurringSet_WithItemsManager()
 
@@ -565,7 +599,8 @@ class InvoiceRecurringSet(InvoiceBase):
         ("cancelled", "cancelled"),
     )
 
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="ongoing")
+    active = models.BooleanField(default=True)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="paused")
 
     frequency = models.CharField(max_length=20, choices=Frequencies.choices, default=Frequencies.MONTHLY)
     end_date = models.DateField(blank=True, null=True)
@@ -574,9 +609,6 @@ class InvoiceRecurringSet(InvoiceBase):
     day_of_week = models.PositiveSmallIntegerField(null=True, blank=True)
     day_of_month = models.PositiveSmallIntegerField(null=True, blank=True)
     month_of_year = models.PositiveSmallIntegerField(null=True, blank=True)
-
-    schedule_arn = models.CharField(max_length=2048, null=True, blank=True)
-    schedule_name = models.UUIDField(default=None, null=True, blank=True)
 
     def get_total_price(self) -> Decimal:
         total = Decimal(0)
@@ -654,49 +686,7 @@ class InvoiceURL(models.Model):
         verbose_name_plural = "Invoice URLs"
 
 
-class InvoiceSchedule(models.Model):
-    class StatusTypes(models.TextChoices):
-        PENDING = "pending", "Pending"
-        CREATING = "creating", "Creating"
-        COMPLETED = "completed", "Completed"
-        FAILED = "failed", "Failed"
-        DELETING = "deleting", "Deleting"
-        CANCELLED = "cancelled", "Cancelled"
-
-    created_at = models.DateTimeField(auto_now_add=True)
-    stored_schedule_arn = models.CharField(max_length=500, null=True, blank=True)
-    received = models.BooleanField(default=False)
-    status = models.CharField(max_length=100, choices=StatusTypes.choices, default=StatusTypes.PENDING)
-
-    def get_tags(self):
-        return {"invoice_id": self.invoice.id, "schedule_id": self.id, "app": AWS_TAGS_APP_NAME}
-
-    class Meta:
-        abstract = True
-
-    def set_status(self, status, save=True):
-        self.status = status
-        if save:
-            self.save()
-        return self
-
-    def set_received(self, status: bool = True, save=True):
-        self.received = status
-        if save:
-            self.save()
-        return self
-
-
-class InvoiceOnetimeSchedule(InvoiceSchedule):
-    invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE, related_name="onetime_invoice_schedules")
-    due = models.DateTimeField()
-
-    class Meta:
-        verbose_name = "One-Time Invoice Schedule"
-        verbose_name_plural = "One-Time Invoice Schedules"
-
-
-class InvoiceReminder(InvoiceSchedule):
+class InvoiceReminder(BotoSchedule):
     class ReminderTypes(models.TextChoices):
         BEFORE_DUE = "before_due", "Before Due"
         AFTER_DUE = "after_due", "After Due"

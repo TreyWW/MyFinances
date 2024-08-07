@@ -5,11 +5,10 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
 from backend.decorators import feature_flag_check, quota_usage_check
-from backend.models import Invoice, AuditLog, APIKey, InvoiceURL, InvoiceReminder, InvoiceOnetimeSchedule
+from backend.models import Invoice, AuditLog, APIKey, InvoiceURL, InvoiceReminder
 from backend.types.emails import SingleEmailInput, SingleTemplatedEmailContent
 from backend.types.htmx import HtmxHttpRequest
 from settings.helpers import send_email
-
 
 import logging
 
