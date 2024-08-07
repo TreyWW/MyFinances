@@ -26,7 +26,7 @@ def get_monthly_cron(day_of_month: int | None = None, date: Date | None = None) 
 
 
 def get_weekly_cron(day_of_week: int | None = None) -> WeeklyCronServiceResponse:
-    if 0 <= day_of_week <= 6:
+    if isinstance(day_of_week, int) and 0 <= day_of_week <= 6:
         cron_expression = f"0 7 ? * {day_of_week} *"
         return WeeklyCronServiceResponse(True, cron_expression)
     else:
