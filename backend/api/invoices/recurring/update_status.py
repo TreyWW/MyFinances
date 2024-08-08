@@ -5,6 +5,7 @@ from django.views.decorators.http import require_POST
 
 from backend.decorators import web_require_scopes
 from backend.models import InvoiceRecurringSet
+from backend.service.asyn_tasks.tasks import Task
 from backend.service.boto3.scheduler.create_schedule import update_boto_schedule
 from backend.service.boto3.scheduler.get import get_boto_schedule, GetScheduleServiceResponse
 from backend.service.boto3.scheduler.pause import pause_boto_schedule, PauseScheduleServiceResponse
@@ -39,24 +40,26 @@ def recurring_set_change_status_endpoint(request: WebRequest, invoice_set_id: in
         return return_message(request, "Can only unpause a paused invoice schedule")
 
     if status == "refresh":
+        print("using refresh")
         if invoice_set.boto_schedule_uuid:
             boto_get_response = get_boto_schedule(str(invoice_set.boto_schedule_uuid))
 
             if boto_get_response.failed:
-                update_boto_schedule.delay(invoice_set.pk)
+                print("TASK 1 - no schedule found, let's create one")
+                Task().queue_task(update_boto_schedule, invoice_set.pk)
                 return render(request, "pages/invoices/recurring/dashboard/poll_update.html", {"invoice_set_id": invoice_set_id})
 
-            invoice_set.status = "ongoing" if boto_get_response.response["State"] == "ACTIVE" else "paused"
+            invoice_set.status = "ongoing" if boto_get_response.response["State"] == "ENABLED" else "paused"
             invoice_set.save(update_fields=["status"])
         else:
-            update_boto_schedule.delay(invoice_set.pk)
+            Task().queue_task(update_boto_schedule, invoice_set.pk)
             return render(request, "pages/invoices/recurring/dashboard/poll_update.html", {"invoice_set_id": invoice_set_id})
         send_message(request, f"Invoice status has been refreshed!", success=True)
     else:
         if status == "pause":
-            pause_boto_schedule.delay(str(invoice_set.boto_schedule_uuid), pause=True)
+            Task().queue_task(pause_boto_schedule, str(invoice_set.boto_schedule_uuid), pause=True)
         elif status == "unpause":
-            pause_boto_schedule.delay(str(invoice_set.boto_schedule_uuid), pause=False)
+            Task().queue_task(pause_boto_schedule, str(invoice_set.boto_schedule_uuid), pause=False)
 
         new_status = "ongoing" if status == "unpause" else "paused"
 

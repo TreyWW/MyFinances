@@ -17,4 +17,4 @@ def create_recurring_schedule(sender: Type[InvoiceRecurringSet], instance: Invoi
 
     logger.info(f"Invoice recurring set was just created")
 
-    update_boto_schedule.delay(instance.pk)
+    update_boto_schedule(instance.pk)

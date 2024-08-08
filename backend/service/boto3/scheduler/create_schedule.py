@@ -3,7 +3,6 @@ import json
 import logging
 from uuid import uuid4
 
-from celery import shared_task
 from django.urls import reverse
 
 from backend.models import InvoiceRecurringSet
@@ -14,8 +13,8 @@ from settings.helpers import get_var
 logger = logging.getLogger(__name__)
 
 
-@shared_task
 def update_boto_schedule(instance_id: int | str):
+    print("TASK 7 - View logic")
     instance: InvoiceRecurringSet
 
     if isinstance(instance_id, int | str):

@@ -66,7 +66,7 @@ INSTALLED_APPS = [
 
 if DEBUG:
     INSTALLED_APPS.append("silk")
-    SILKY_PYTHON_PROFILER = True
+    SILKY_PYTHON_PROFILER = False
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
@@ -112,6 +112,7 @@ LOGIN_REQUIRED_IGNORE_PATHS = [
     r"^/auth/create_account(/.*)?$",
     r"^/accounts/github/login/callback/$",
     r"^/webhooks/schedules/receive/$",
+    r"^/webhooks/receive/global/$",
     r"^/api/public/(.*)/",
 ]
 # for some reason only allows "login" and not "login create account" or anything

@@ -7,6 +7,7 @@ from django.views.decorators.http import require_http_methods
 
 from backend.decorators import web_require_scopes
 from backend.models import QuotaLimit, InvoiceRecurringSet
+from backend.service.asyn_tasks.tasks import Task
 from backend.service.boto3.scheduler.delete_schedule import delete_boto_schedule
 from backend.types.requests import WebRequest
 
@@ -30,7 +31,7 @@ def delete_invoice_recurring_set_endpoint(request: WebRequest):
 
     # QuotaLimit.delete_quota_usage("invoices-count", request.user, invoice.id, invoice.date_created)
 
-    delete_boto_schedule.delay("InvoiceRecurringSet", invoice_set.id)
+    Task().queue_task(delete_boto_schedule, "InvoiceRecurringSet", invoice_set.id)
 
     invoice_set.active = False
     invoice_set.save()

@@ -1,6 +1,6 @@
 import logging
+import time
 
-from celery import shared_task
 from mypy_boto3_scheduler.type_defs import UpdateScheduleOutputTypeDef
 
 from backend.service.boto3.handler import BOTO3_HANDLER
@@ -13,7 +13,6 @@ logger = logging.getLogger(__name__)
 class PauseScheduleServiceResponse(BaseServiceResponse[UpdateScheduleOutputTypeDef]): ...
 
 
-@shared_task
 def pause_boto_schedule(name: str, pause: bool = True) -> bool:
     state = "DISABLED" if pause else "ENABLED"
     schedule_response = get_boto_schedule(name)

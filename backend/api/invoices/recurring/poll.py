@@ -7,6 +7,7 @@ from django.views.decorators.http import require_http_methods
 
 from backend.decorators import web_require_scopes, htmx_only
 from backend.models import InvoiceRecurringSet
+from backend.service.asyn_tasks.tasks import Task
 from backend.service.boto3.scheduler.create_schedule import update_boto_schedule
 from backend.service.boto3.scheduler.get import get_boto_schedule
 
@@ -17,7 +18,7 @@ def return_create_schedule(recurring_schedule):
     recurring_schedule.boto_schedule_uuid = None
     recurring_schedule.boto_schedule_arn = None
     recurring_schedule.save(update_fields=["boto_schedule_uuid", "boto_schedule_arn"])
-    update_boto_schedule.delay(recurring_schedule.pk)
+    Task().queue_task(update_boto_schedule, recurring_schedule.pk)
     return HttpResponse("continue poll", status=200)
 
 

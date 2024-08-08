@@ -1,6 +1,5 @@
 import logging
 
-from celery import shared_task
 from mypy_boto3_scheduler.type_defs import GetScheduleOutputTypeDef
 
 from backend.service.boto3.handler import BOTO3_HANDLER
@@ -12,7 +11,6 @@ logger = logging.getLogger(__name__)
 class GetScheduleServiceResponse(BaseServiceResponse[GetScheduleOutputTypeDef]): ...
 
 
-@shared_task
 def get_boto_schedule(name: str) -> GetScheduleServiceResponse:
     if not BOTO3_HANDLER.initiated:
         return GetScheduleServiceResponse(False, error_message="Scheduling is currently unavailable. Please try again later.")

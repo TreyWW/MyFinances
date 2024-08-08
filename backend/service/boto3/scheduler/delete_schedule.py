@@ -4,12 +4,10 @@ import logging
 from typing import Type
 from uuid import uuid4
 
-from celery import shared_task
 from django.apps import apps
 from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
 
-from backend.celery import app
 from backend.models import InvoiceRecurringSet, BotoSchedule, InvoiceReminder
 from backend.service.boto3.handler import BOTO3_HANDLER
 from backend.service.invoices.recurring.schedules.date_handlers import get_schedule_cron, CronServiceResponse
@@ -20,7 +18,6 @@ logger = logging.getLogger(__name__)
 BotoScheduleType = Type[BotoSchedule]
 
 
-@app.task(autoretry_for=(Exception,), retry_backoff=True)
 def delete_boto_schedule(model_name: str, instance_id: int | str):
     instance: BotoSchedule
     model_type: BotoScheduleType = apps.get_model("backend", model_name)
