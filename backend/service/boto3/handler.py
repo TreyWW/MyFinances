@@ -15,7 +15,7 @@ DEBUG_LEVEL = "debug" if DEBUG_LEVEL == "debug" else "info" if DEBUG_LEVEL == "i
 class Boto3Handler:
     def __init__(self):
         self.initiated: bool = False
-        self.region_name: str = get_var("AWS_REGION_NAME")
+        self.region_name: str = get_var("AWS_REGION_NAME", "eu-west-2")
         self.aws_access_key_id: str = get_var("AWS_ACCESS_KEY_ID")
         self.aws_access_key_secret: str = get_var("AWS_ACCESS_KEY")
         self.scheduler_lambda_arn: str = get_var("SCHEDULER_LAMBDA_ARN")

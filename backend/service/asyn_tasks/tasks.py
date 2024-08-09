@@ -60,6 +60,7 @@ class Task:
             print(f"SQS Response: {res}")
         except Exception as e:
             print(f"Error sending message to SQS: {str(e)}")
+            return self.execute_now(func_name, *args, **kwargs)
 
     def execute_now(self, func_name, *args, **kwargs):
         print("TASK 6 - Execute function directly")

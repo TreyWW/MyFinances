@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 @web_require_scopes("invoices:write", True, True)
 def generate_next_invoice_now_endpoint(request: WebRequest, invoice_set_id):
     context: dict = {}
-    invoice_recurring_set: InvoiceRecurringSet | None = InvoiceRecurringSet.objects.filter(pk=invoice_set_id).first()
+    invoice_recurring_set: InvoiceRecurringSet | None = InvoiceRecurringSet.objects.filter(pk=invoice_set_id, active=True).first()
 
     if not invoice_recurring_set:
         messages.error(request, "Failed to fetch next invoice; cannot find invoice set.")

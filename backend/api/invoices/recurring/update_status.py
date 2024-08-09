@@ -6,7 +6,7 @@ from django.views.decorators.http import require_POST
 from backend.decorators import web_require_scopes
 from backend.models import InvoiceRecurringSet
 from backend.service.asyn_tasks.tasks import Task
-from backend.service.boto3.scheduler.create_schedule import update_boto_schedule
+from backend.service.boto3.scheduler.create_schedule import create_boto_schedule
 from backend.service.boto3.scheduler.get import get_boto_schedule, GetScheduleServiceResponse
 from backend.service.boto3.scheduler.pause import pause_boto_schedule, PauseScheduleServiceResponse
 from backend.types.requests import WebRequest
@@ -27,7 +27,7 @@ def recurring_set_change_status_endpoint(request: WebRequest, invoice_set_id: in
         return return_message(request, "Invalid status. Please choose from: paused, ongoing, refresh")
 
     try:
-        invoice_set: InvoiceRecurringSet = InvoiceRecurringSet.objects.get(pk=invoice_set_id)
+        invoice_set: InvoiceRecurringSet = InvoiceRecurringSet.objects.get(pk=invoice_set_id, active=True)
     except InvoiceRecurringSet.DoesNotExist:
         return return_message(request, "Recurring Invoice Set not found")
 
@@ -46,13 +46,13 @@ def recurring_set_change_status_endpoint(request: WebRequest, invoice_set_id: in
 
             if boto_get_response.failed:
                 print("TASK 1 - no schedule found, let's create one")
-                Task().queue_task(update_boto_schedule, invoice_set.pk)
+                Task().queue_task(create_boto_schedule, invoice_set.pk)
                 return render(request, "pages/invoices/recurring/dashboard/poll_update.html", {"invoice_set_id": invoice_set_id})
 
             invoice_set.status = "ongoing" if boto_get_response.response["State"] == "ENABLED" else "paused"
             invoice_set.save(update_fields=["status"])
         else:
-            Task().queue_task(update_boto_schedule, invoice_set.pk)
+            Task().queue_task(create_boto_schedule, invoice_set.pk)
             return render(request, "pages/invoices/recurring/dashboard/poll_update.html", {"invoice_set_id": invoice_set_id})
         send_message(request, f"Invoice status has been refreshed!", success=True)
     else:

@@ -48,7 +48,7 @@
                    name="frequency_day_of_month"
                    class="peer input-bordered input"
                    pattern="^-1|0|[1-9]|1[0-9]|2[0-8]$"
-                   value="{{ day_of_month }}"
+                   value="{{ day_of_month | default_if_none:"" }}"
                    minlength="1"
                    maxlength="2"
                    placeholder="15" />

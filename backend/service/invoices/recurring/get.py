@@ -8,7 +8,7 @@ class GetRecurringSetServiceResponse(BaseServiceResponse[InvoiceRecurringSet]): 
 
 def get_invoice_set(request: WebRequest, invoice_set_id: int | str, check_permissions: bool = True):
     try:
-        invoice_set = InvoiceRecurringSet.objects.get(id=invoice_set_id)
+        invoice_set = InvoiceRecurringSet.objects.get(id=invoice_set_id, active=True)
     except InvoiceRecurringSet.DoesNotExist:
         return GetRecurringSetServiceResponse(error_message="Invoice Set not found", status_code=404)
 

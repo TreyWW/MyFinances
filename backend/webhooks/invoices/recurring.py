@@ -39,7 +39,7 @@ def handle_recurring_invoice_webhook_endpoint(request: WebRequest):
         return JsonResponse({"message": api_auth_response.error, "success": False}, status=api_auth_response.status_code or 400)
 
     try:
-        invoice_recurring_set: InvoiceRecurringSet = InvoiceRecurringSet.objects.get(pk=invoice_set_id)
+        invoice_recurring_set: InvoiceRecurringSet = InvoiceRecurringSet.objects.get(pk=invoice_set_id, active=True)
     except InvoiceRecurringSet.DoesNotExist:
         logger.error(f"Invoice set was not found (#{invoice_set_id}). ERROR!")
         return JsonResponse({"message": "Invoice set not found", "success": False}, status=404)

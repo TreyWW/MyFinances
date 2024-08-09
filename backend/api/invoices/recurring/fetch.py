@@ -15,7 +15,7 @@ def fetch_all_recurring_invoices_endpoint(request: WebRequest):
     if not request.htmx:
         return redirect("invoices:recurring:dashboard")
 
-    invoices = InvoiceRecurringSet.filter_by_owner(owner=request.actor)
+    invoices = InvoiceRecurringSet.filter_by_owner(owner=request.actor).filter(active=True)
 
     # Get filter and sort parameters from the request
     sort_by = request.GET.get("sort")

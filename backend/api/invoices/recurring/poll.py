@@ -8,7 +8,7 @@ from django.views.decorators.http import require_http_methods
 from backend.decorators import web_require_scopes, htmx_only
 from backend.models import InvoiceRecurringSet
 from backend.service.asyn_tasks.tasks import Task
-from backend.service.boto3.scheduler.create_schedule import update_boto_schedule
+from backend.service.boto3.scheduler.create_schedule import create_boto_schedule
 from backend.service.boto3.scheduler.get import get_boto_schedule
 
 from backend.types.requests import WebRequest
@@ -18,7 +18,7 @@ def return_create_schedule(recurring_schedule):
     recurring_schedule.boto_schedule_uuid = None
     recurring_schedule.boto_schedule_arn = None
     recurring_schedule.save(update_fields=["boto_schedule_uuid", "boto_schedule_arn"])
-    Task().queue_task(update_boto_schedule, recurring_schedule.pk)
+    Task().queue_task(create_boto_schedule, recurring_schedule.pk)
     return HttpResponse("continue poll", status=200)
 
 
@@ -35,7 +35,7 @@ def poll_recurring_schedule_update_endpoint(request: WebRequest, invoice_set_id)
         return HttpResponse("cancel poll | too long wait", status=286)
 
     try:
-        recurring_schedule: InvoiceRecurringSet = InvoiceRecurringSet.objects.get(id=invoice_set_id)
+        recurring_schedule: InvoiceRecurringSet = InvoiceRecurringSet.objects.get(id=invoice_set_id, active=True)
         if not recurring_schedule.has_access(request.user):
             raise InvoiceRecurringSet.DoesNotExist()
     except InvoiceRecurringSet.DoesNotExist:

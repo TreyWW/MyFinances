@@ -38,7 +38,7 @@ def delete_invoice_recurring_set_endpoint(request: WebRequest):
 
     if request.htmx:
         if not redirect:
-            messages.success(request, "Invoice deleted")
+            messages.success(request, "Invoice profile deleted")
             return render(request, "base/toasts.html")
 
         try:

@@ -20,7 +20,7 @@ def manage_recurring_invoice_set_endpoint(request: WebRequest, invoice_set_id: s
         messages.error(request, "Invalid invoice ID")
         return redirect("invoices:single:dashboard")
 
-    invoice_set = InvoiceRecurringSet.with_items.get(id=invoice_set_id)
+    invoice_set = InvoiceRecurringSet.with_items.get(id=invoice_set_id, active=True)
 
     if invoice_set.client_to:
         context["client_name"] = invoice_set.client_to.name
@@ -48,9 +48,11 @@ def manage_recurring_invoice_set_endpoint(request: WebRequest, invoice_set_id: s
     )
 
     if not invoice_set:
-        return redirect("invoices:single:dashboard")
+        messages.error(request, "Invalid invoice profile")
+        return redirect("invoices:recurring:dashboard")
 
     if not invoice_set.has_access(request.user):
-        return redirect("invoices:single:dashboard")
+        messages.error(request, "You do not have access to this invoice profile")
+        return redirect("invoices:recurring:dashboard")
 
     return invoices_core_handler(request, "pages/invoices/recurring/dashboard/manage.html", context | {"invoiceSet": invoice_set})

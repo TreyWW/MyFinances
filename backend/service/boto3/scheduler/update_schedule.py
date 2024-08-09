@@ -1,23 +1,23 @@
 import datetime
-import json
 import logging
-from uuid import uuid4, UUID
+from uuid import UUID
 
 from backend.models import InvoiceRecurringSet
 from backend.service.boto3.handler import BOTO3_HANDLER
+from backend.service.boto3.scheduler.create_schedule import create_boto_schedule
+from backend.service.boto3.scheduler.get import get_boto_schedule
 from backend.service.invoices.recurring.schedules.date_handlers import get_schedule_cron, CronServiceResponse
-from backend.service.webhooks.get_url import get_global_webhook_response_url
 
 logger = logging.getLogger(__name__)
 
 
-def create_boto_schedule(instance_id: int | str | InvoiceRecurringSet):
-    print("TASK 7 - View logic")
+def update_boto_schedule(instance_id: int | str):
+    print(f"Updating existing boto schedule {str(instance_id)}")
     instance: InvoiceRecurringSet
 
     if isinstance(instance_id, int | str):
         try:
-            instance = InvoiceRecurringSet.objects.get(id=instance_id, active=True)
+            instance = InvoiceRecurringSet.objects.get(id=instance_id)
         except InvoiceRecurringSet.DoesNotExist:
             logger.error(f"InvoiceRecurringSet with id {instance_id} does not exist.")
             return None
@@ -28,9 +28,8 @@ def create_boto_schedule(instance_id: int | str | InvoiceRecurringSet):
         return None
 
     if not BOTO3_HANDLER.initiated:
-        instance.status = "paused"
-        instance.save()
         logger.error(f'BOTO3 IS CURRENTLY DOWN, #{instance_id} has been set to "Paused"!')
+        logger.error(f"Boto3 handler not initiated. Cannot use AWS services.")
         return None
 
     if isinstance(instance.boto_schedule_uuid, str):
@@ -38,7 +37,7 @@ def create_boto_schedule(instance_id: int | str | InvoiceRecurringSet):
     elif isinstance(instance.boto_schedule_uuid, UUID):
         schedule_uuid: str = str(instance.boto_schedule_uuid)
     else:
-        schedule_uuid = str(uuid4())
+        return create_boto_schedule(instance)
 
     CRON_FREQUENCY_TYPE = instance.frequency.lower()
     CRON_RESPONSE: CronServiceResponse
@@ -59,47 +58,61 @@ def create_boto_schedule(instance_id: int | str | InvoiceRecurringSet):
 
     EXCEPTIONS = BOTO3_HANDLER._schedule_client.exceptions
 
-    SITE_URL = get_global_webhook_response_url()
-
     end_date: datetime.date | None = instance.end_date
     end_datetime: datetime.datetime | None = datetime.datetime.combine(end_date, datetime.datetime.now().time()) if end_date else ""
 
-    create_schedule_params = {
-        "Name": schedule_uuid,
-        "GroupName": BOTO3_HANDLER.scheduler_invoices_group_name,
-        "FlexibleTimeWindow": {"Mode": "OFF"},
+    schedule_response = get_boto_schedule(schedule_uuid)
+
+    if not schedule_response.success:
+        logger.error(schedule_response.error)
+        if schedule_response.error == "Schedule not found":
+            return create_boto_schedule(instance)
+        return schedule_response.error
+
+    new_schedule_params = {
+        # "FlexibleTimeWindow": {"Mode": "OFF"},
         "ScheduleExpression": f"cron({CRON_RESPONSE.response})",
-        "Target": {
-            "Arn": BOTO3_HANDLER.scheduler_lambda_arn,
-            "RoleArn": BOTO3_HANDLER.scheduler_lambda_access_role_arn,
-            "Input": json.dumps({"invoice_set_id": instance.id, "endpoint_url": f"{SITE_URL}"}),
-            "RetryPolicy": {"MaximumRetryAttempts": 20, "MaximumEventAgeInSeconds": 21600},  # 6 hours
-        },
-        "ActionAfterCompletion": "NONE",
+        "State": "ENABLED" if instance.status == "ongoing" else "DISABLED",
+        # "Target": {
+        #     "Arn": BOTO3_HANDLER.scheduler_lambda_arn,
+        #     "RoleArn": BOTO3_HANDLER.scheduler_lambda_access_role_arn,
+        #     "Input": json.dumps({"invoice_set_id": instance.id, "endpoint_url": f"{SITE_URL}"}),
+        #     "RetryPolicy": {"MaximumRetryAttempts": 20, "MaximumEventAgeInSeconds": 21600},  # 6 hours
+        # },
+        # "ActionAfterCompletion": "NONE",
         "EndDate": end_datetime,
     }
 
     if not end_datetime:
-        del create_schedule_params["EndDate"]
+        del new_schedule_params["EndDate"]
+
+    # check if every new param is the exact same as the original schedule_response, if so return None and add logger msg but ignore the
+    # missing keys from the new one, only check the keys in the new one
+
+    for k, v in new_schedule_params.items():
+        if schedule_response.response.get(k) != v:
+            break
+
+        logger.info("No changes to schedule, returning early instead of sending request.")
+        return None
 
     try:
-        boto_response = BOTO3_HANDLER._schedule_client.create_schedule(**create_schedule_params)
+        filtered_response = {
+            k: v
+            for k, v in schedule_response.response.items()
+            if k not in ["ResponseMetadata", "Arn", "CreationDate", "LastModificationDate"]
+        }
+        merged_response = filtered_response | new_schedule_params
+
+        resp = BOTO3_HANDLER._schedule_client.update_schedule(**merged_response)
     except (
-        EXCEPTIONS.ServiceQuotaExceededException,
         EXCEPTIONS.ValidationException,
         EXCEPTIONS.InternalServerException,
-        EXCEPTIONS.ConflictException,
         EXCEPTIONS.ResourceNotFoundException,
-    ) as error:
-        logger.error(f"Error creating schedule for inv set #{instance.id}: {error}")
-        return None
+    ):
+        return False
 
-    if not (schedule_arn := boto_response.get("ScheduleArn")):
-        logger.error(f"Something went wrong when creating the schedule. {boto_response}")
-        return None
-
-    instance.boto_schedule_arn = schedule_arn
+    instance.boto_schedule_arn = resp["ScheduleArn"]
     instance.boto_schedule_uuid = schedule_uuid
-    instance.status = "ongoing"
+    instance.status = "ongoing" if instance.status == "ongoing" else "paused"
     instance.save(update_fields=["boto_schedule_arn", "boto_schedule_uuid", "status"])
-    return True
