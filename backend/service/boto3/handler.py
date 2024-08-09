@@ -39,6 +39,9 @@ class Boto3Handler:
         self._boto3_session = boto3.Session(
             aws_access_key_id=self.aws_access_key_id, aws_secret_access_key=self.aws_access_key_secret, region_name=self.region_name
         )
+        print(self._boto3_session)
+        available_services = self._boto3_session.get_available_services()
+        print(available_services)
 
         if DEBUG_LEVEL == "debug":
             boto3.set_stream_logger("", level=logging.DEBUG)
