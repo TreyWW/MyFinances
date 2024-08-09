@@ -48,6 +48,7 @@ class Task:
 
     def _send_message(self, func_name, args, kwargs):
         message_body = {"func_name": func_name, "args": args, "kwargs": kwargs, "webhook_url": self.WEBHOOK_URL}
+        print(message_body)
 
         try:
             print("TASK 4 - Send SQS message")

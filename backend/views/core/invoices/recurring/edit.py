@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
 from backend.decorators import web_require_scopes
-from backend.models import InvoiceRecurringSet
+from backend.models import InvoiceRecurringProfile
 from backend.service.invoices.recurring.create.get_page import get_invoice_context
 from backend.service.invoices.recurring.get import get_invoice_set, GetRecurringSetServiceResponse
 from backend.views.core.invoices.handler import invoices_core_handler
@@ -13,7 +13,7 @@ from backend.views.core.invoices.handler import invoices_core_handler
 
 
 # Function that takes an invoice object and makes a dict of its attributes
-def invoice_get_existing_data(invoice_obj: InvoiceRecurringSet):
+def invoice_get_existing_data(invoice_obj: InvoiceRecurringProfile):
     stored_data = {
         "from_name": invoice_obj.self_name,
         "from_company": invoice_obj.self_company,
@@ -71,10 +71,10 @@ def invoice_edit_page_endpoint(request, invoice_set_id):
         messages.error(request, get_response.error_message)
         return render(request, "base/toast.html")
 
-    invoice_set: InvoiceRecurringSet = get_response.response
+    invoice_set: InvoiceRecurringProfile = get_response.response
 
     # use to populate fields with existing data in edit_from_destination.html AND edit_to_destination.html
-    data_to_populate = invoice_get_existing_data(invoice_set) | {"InvoiceRecurringSet": InvoiceRecurringSet}
+    data_to_populate = invoice_get_existing_data(invoice_set) | {"InvoiceRecurringSet": InvoiceRecurringProfile}
 
     print(data_to_populate)
 

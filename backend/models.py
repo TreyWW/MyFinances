@@ -12,15 +12,12 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.files.storage import get_storage_class
 from django.core.validators import MaxValueValidator
 from django.db import models
-from django.db.models import Count, QuerySet, Sum, Case, When, FloatField
-from django.db.models.expressions import F
-from django.db.models.fields import DecimalField
+from django.db.models import Count, QuerySet
 from django.utils import timezone
 from django.utils.crypto import get_random_string
 from shortuuid.django_fields import ShortUUIDField
 
-from backend.managers import InvoiceRecurringSet_WithItemsManager
-from settings.settings import AWS_TAGS_APP_NAME
+from backend.managers import InvoiceRecurringProfile_WithItemsManager
 
 
 def _public_storage():
@@ -511,8 +508,8 @@ class Invoice(InvoiceBase):
     invoice_id = models.IntegerField(unique=True, blank=True, null=True)  # todo: add
     date_due = models.DateField()
     payment_status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="pending")
-    invoice_recurring_set = models.ForeignKey(
-        "InvoiceRecurringSet", related_name="generated_invoices", on_delete=models.SET_NULL, blank=True, null=True
+    invoice_recurring_profile = models.ForeignKey(
+        "InvoiceRecurringProfile", related_name="generated_invoices", on_delete=models.SET_NULL, blank=True, null=True
     )
 
     def __str__(self):
@@ -584,9 +581,9 @@ class Invoice(InvoiceBase):
         return Decimal(round(total, 2))
 
 
-class InvoiceRecurringSet(InvoiceBase, BotoSchedule):
+class InvoiceRecurringProfile(InvoiceBase, BotoSchedule):
     objects = models.Manager()
-    with_items = InvoiceRecurringSet_WithItemsManager()
+    with_items = InvoiceRecurringProfile_WithItemsManager()
 
     class Frequencies(models.TextChoices):
         WEEKLY = "weekly", "Weekly"

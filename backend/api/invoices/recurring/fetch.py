@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
 
 from backend.decorators import web_require_scopes
-from backend.models import InvoiceRecurringSet
+from backend.models import InvoiceRecurringProfile
 from backend.service.invoices.common.fetch import get_context
 from backend.types.requests import WebRequest
 
@@ -15,7 +15,7 @@ def fetch_all_recurring_invoices_endpoint(request: WebRequest):
     if not request.htmx:
         return redirect("invoices:recurring:dashboard")
 
-    invoices = InvoiceRecurringSet.filter_by_owner(owner=request.actor).filter(active=True)
+    invoices = InvoiceRecurringProfile.filter_by_owner(owner=request.actor).filter(active=True)
 
     # Get filter and sort parameters from the request
     sort_by = request.GET.get("sort")

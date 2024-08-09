@@ -3,14 +3,14 @@ from datetime import datetime, date
 from django.contrib import messages
 from django.core.exceptions import ValidationError
 
-from backend.models import InvoiceRecurringSet, QuotaUsage
+from backend.models import InvoiceRecurringProfile, QuotaUsage
 from backend.service.invoices.common.create.create import save_invoice_common
 from backend.service.invoices.recurring.validate.frequencies import validate_and_update_frequency
 from backend.types.requests import WebRequest
 from backend.utils.dataclasses import BaseServiceResponse
 
 
-class SaveInvoiceServiceResponse(BaseServiceResponse[InvoiceRecurringSet]): ...
+class SaveInvoiceServiceResponse(BaseServiceResponse[InvoiceRecurringProfile]): ...
 
 
 def save_invoice(request: WebRequest, invoice_items) -> SaveInvoiceServiceResponse:
@@ -26,7 +26,7 @@ def save_invoice(request: WebRequest, invoice_items) -> SaveInvoiceServiceRespon
     finally:
         end_date_obj: date | None = datetime.strptime(end_date_str, "%Y-%m-%d").date() if end_date_str else None
 
-    invoice_set = InvoiceRecurringSet(
+    invoice_set = InvoiceRecurringProfile(
         end_date=end_date_obj,
         date_issued=request.POST.get("date_issued"),
         currency=currency,

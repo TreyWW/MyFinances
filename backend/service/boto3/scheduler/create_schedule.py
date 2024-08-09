@@ -3,7 +3,7 @@ import json
 import logging
 from uuid import uuid4, UUID
 
-from backend.models import InvoiceRecurringSet
+from backend.models import InvoiceRecurringProfile
 from backend.service.boto3.handler import BOTO3_HANDLER
 from backend.service.invoices.recurring.schedules.date_handlers import get_schedule_cron, CronServiceResponse
 from backend.service.webhooks.get_url import get_global_webhook_response_url
@@ -11,17 +11,17 @@ from backend.service.webhooks.get_url import get_global_webhook_response_url
 logger = logging.getLogger(__name__)
 
 
-def create_boto_schedule(instance_id: int | str | InvoiceRecurringSet):
+def create_boto_schedule(instance_id: int | str | InvoiceRecurringProfile):
     print("TASK 7 - View logic")
-    instance: InvoiceRecurringSet
+    instance: InvoiceRecurringProfile
 
     if isinstance(instance_id, int | str):
         try:
-            instance = InvoiceRecurringSet.objects.get(id=instance_id, active=True)
-        except InvoiceRecurringSet.DoesNotExist:
-            logger.error(f"InvoiceRecurringSet with id {instance_id} does not exist.")
+            instance = InvoiceRecurringProfile.objects.get(id=instance_id, active=True)
+        except InvoiceRecurringProfile.DoesNotExist:
+            logger.error(f"InvoiceRecurringProfile with id {instance_id} does not exist.")
             return None
-    elif isinstance(instance_id, InvoiceRecurringSet):
+    elif isinstance(instance_id, InvoiceRecurringProfile):
         instance = instance_id
     else:
         logger.error(f"Invalid instance type: {type(instance_id)}")

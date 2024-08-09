@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 from django.views.decorators.http import require_POST
 
 from backend.decorators import web_require_scopes
-from backend.models import InvoiceRecurringSet
+from backend.models import InvoiceRecurringProfile
 from backend.service.asyn_tasks.tasks import Task
 from backend.service.boto3.scheduler.create_schedule import create_boto_schedule
 from backend.service.boto3.scheduler.get import get_boto_schedule, GetScheduleServiceResponse
@@ -17,7 +17,7 @@ from typing import Optional
 
 @require_POST
 @web_require_scopes("invoices:write", True, True)
-def recurring_set_change_status_endpoint(request: WebRequest, invoice_set_id: int, status: str) -> HttpResponse:
+def recurring_profile_change_status_endpoint(request: WebRequest, invoice_set_id: int, status: str) -> HttpResponse:
     status = status.lower() if status else ""
 
     if not request.htmx:
@@ -27,8 +27,8 @@ def recurring_set_change_status_endpoint(request: WebRequest, invoice_set_id: in
         return return_message(request, "Invalid status. Please choose from: paused, ongoing, refresh")
 
     try:
-        invoice_set: InvoiceRecurringSet = InvoiceRecurringSet.objects.get(pk=invoice_set_id, active=True)
-    except InvoiceRecurringSet.DoesNotExist:
+        invoice_set: InvoiceRecurringProfile = InvoiceRecurringProfile.objects.get(pk=invoice_set_id, active=True)
+    except InvoiceRecurringProfile.DoesNotExist:
         return return_message(request, "Recurring Invoice Set not found")
 
     if not invoice_set.has_access(request.user):

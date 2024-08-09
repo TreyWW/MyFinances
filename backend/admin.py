@@ -31,7 +31,7 @@ from backend.models import (
     ReceiptDownloadToken,
     EmailSendStatus,
     InvoiceReminder,
-    InvoiceRecurringSet,
+    InvoiceRecurringProfile,
 )
 
 from backend.api.public.models import APIAuthToken
@@ -62,7 +62,7 @@ admin.site.register(
         ReceiptDownloadToken,
         InvoiceReminder,
         APIAuthToken,
-        InvoiceRecurringSet,
+        InvoiceRecurringProfile,
     ]
 )
 

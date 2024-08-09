@@ -2,7 +2,7 @@ from datetime import datetime
 
 from django.contrib import messages
 
-from backend.models import Invoice, InvoiceRecurringSet, InvoiceItem, Client, QuotaUsage
+from backend.models import Invoice, InvoiceRecurringProfile, InvoiceItem, Client, QuotaUsage
 from backend.types.requests import WebRequest
 
 
@@ -18,7 +18,7 @@ def create_invoice_items(request: WebRequest):
     ]
 
 
-def save_invoice_common(request: WebRequest, invoice_items, invoice: Invoice | InvoiceRecurringSet):
+def save_invoice_common(request: WebRequest, invoice_items, invoice: Invoice | InvoiceRecurringProfile):
     if request.user.logged_in_as_team:
         invoice.organization = request.user.logged_in_as_team
     else:

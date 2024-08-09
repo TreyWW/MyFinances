@@ -20,7 +20,7 @@ def manage_recurring_invoice_set_endpoint(request: WebRequest, invoice_set_id: s
         messages.error(request, "Invalid invoice ID")
         return redirect("invoices:single:dashboard")
 
-    invoice_set = InvoiceRecurringSet.with_items.get(id=invoice_set_id, active=True)
+    invoice_set = InvoiceRecurringProfile.with_items.get(id=invoice_set_id, active=True)
 
     if invoice_set.client_to:
         context["client_name"] = invoice_set.client_to.name

@@ -8,7 +8,7 @@ from django.apps import apps
 from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
 
-from backend.models import InvoiceRecurringSet, BotoSchedule, InvoiceReminder
+from backend.models import InvoiceRecurringProfile, BotoSchedule, InvoiceReminder
 from backend.service.boto3.handler import BOTO3_HANDLER
 from backend.service.invoices.recurring.schedules.date_handlers import get_schedule_cron, CronServiceResponse
 from settings.helpers import get_var

@@ -6,7 +6,7 @@ from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
 from backend.decorators import web_require_scopes
-from backend.models import InvoiceRecurringSet
+from backend.models import InvoiceRecurringProfile
 from backend.service.invoices.recurring.get import get_invoice_set
 from backend.service.invoices.recurring.validate.frequencies import validate_and_update_frequency
 from backend.types.requests import WebRequest
@@ -14,14 +14,14 @@ from backend.types.requests import WebRequest
 
 @require_http_methods(["POST"])
 @web_require_scopes("invoices:write", True, True)
-def edit_invoice_recurring_set_endpoint(request: WebRequest, invoice_set_id):
+def edit_invoice_recurring_profile_endpoint(request: WebRequest, invoice_set_id):
     invoice_set_response = get_invoice_set(request, invoice_set_id)
 
     if invoice_set_response.failed:
         messages.error(request, invoice_set_response.error)
         return render(request, "base/toasts.html", {"autohide": False})
 
-    invoice_set: InvoiceRecurringSet = invoice_set_response.response
+    invoice_set: InvoiceRecurringProfile = invoice_set_response.response
 
     frequency_update_response = validate_and_update_frequency(
         invoice_set=invoice_set,

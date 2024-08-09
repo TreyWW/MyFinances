@@ -88,8 +88,8 @@ def get_context(
 
     if action_filter_type == "id":
         invoices = invoices.filter(id=action_filter_by)
-    elif action_filter_type == "recurring_set_id":
-        invoices = invoices.filter(invoice_recurring_set=action_filter_by)
+    elif action_filter_type == "recurring_profile_id":
+        invoices = invoices.filter(invoice_recurring_profile=action_filter_by)
 
     # Validate and sanitize the sort_by parameter
     all_sort_options = ["end_date", "id", "status"]

@@ -6,7 +6,7 @@ from django.urls.exceptions import Resolver404
 from django.views.decorators.http import require_http_methods
 
 from backend.decorators import web_require_scopes
-from backend.models import QuotaLimit, InvoiceRecurringSet
+from backend.models import QuotaLimit, InvoiceRecurringProfile
 from backend.service.asyn_tasks.tasks import Task
 from backend.service.boto3.scheduler.delete_schedule import delete_boto_schedule
 from backend.types.requests import WebRequest
@@ -14,14 +14,14 @@ from backend.types.requests import WebRequest
 
 @require_http_methods(["DELETE"])
 @web_require_scopes("invoices:write", True, True)
-def delete_invoice_recurring_set_endpoint(request: WebRequest):
+def delete_invoice_recurring_profile_endpoint(request: WebRequest):
     delete_items = QueryDict(request.body)
 
     redirect = delete_items.get("redirect", None)
 
     try:
-        invoice_set = InvoiceRecurringSet.objects.get(id=delete_items.get("invoice_set", ""))
-    except InvoiceRecurringSet.DoesNotExist:
+        invoice_set = InvoiceRecurringProfile.objects.get(id=delete_items.get("invoice_set", ""))
+    except InvoiceRecurringProfile.DoesNotExist:
         messages.error(request, "Invoice Set Not Found")
         return render(request, "base/toasts.html")
 

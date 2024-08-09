@@ -3,7 +3,7 @@ from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
 
-from backend.models import InvoiceRecurringSet
+from backend.models import InvoiceRecurringProfile
 from backend.decorators import web_require_scopes
 from backend.service import BOTO3_HANDLER
 from backend.service.asyn_tasks.tasks import Task
@@ -29,7 +29,7 @@ def create_invoice_page_endpoint(request: WebRequest):
         messages.error(request, "Something went wrong with the recurring service, please try again later or contact an administrator.")
         response = redirect("invoices:recurring:dashboard")
         return response
-    context = get_invoice_context(request) | {"InvoiceRecurringSet": InvoiceRecurringSet}
+    context = get_invoice_context(request) | {"InvoiceRecurringSet": InvoiceRecurringProfile}
     return invoices_core_handler(request, "pages/invoices/create/create_recurring.html", context)
 
 

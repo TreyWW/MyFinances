@@ -1,15 +1,15 @@
-from backend.models import InvoiceRecurringSet, User, Organization
+from backend.models import InvoiceRecurringProfile, User, Organization
 from backend.types.requests import WebRequest
 from backend.utils.dataclasses import BaseServiceResponse
 
 
-class GetRecurringSetServiceResponse(BaseServiceResponse[InvoiceRecurringSet]): ...
+class GetRecurringSetServiceResponse(BaseServiceResponse[InvoiceRecurringProfile]): ...
 
 
 def get_invoice_set(request: WebRequest, invoice_set_id: int | str, check_permissions: bool = True):
     try:
-        invoice_set = InvoiceRecurringSet.objects.get(id=invoice_set_id, active=True)
-    except InvoiceRecurringSet.DoesNotExist:
+        invoice_set = InvoiceRecurringProfile.objects.get(id=invoice_set_id, active=True)
+    except InvoiceRecurringProfile.DoesNotExist:
         return GetRecurringSetServiceResponse(error_message="Invoice Set not found", status_code=404)
 
     if check_permissions:

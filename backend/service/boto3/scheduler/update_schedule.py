@@ -2,7 +2,7 @@ import datetime
 import logging
 from uuid import UUID
 
-from backend.models import InvoiceRecurringSet
+from backend.models import InvoiceRecurringProfile
 from backend.service.boto3.handler import BOTO3_HANDLER
 from backend.service.boto3.scheduler.create_schedule import create_boto_schedule
 from backend.service.boto3.scheduler.get import get_boto_schedule
@@ -13,15 +13,15 @@ logger = logging.getLogger(__name__)
 
 def update_boto_schedule(instance_id: int | str):
     print(f"Updating existing boto schedule {str(instance_id)}")
-    instance: InvoiceRecurringSet
+    instance: InvoiceRecurringProfile
 
     if isinstance(instance_id, int | str):
         try:
-            instance = InvoiceRecurringSet.objects.get(id=instance_id)
-        except InvoiceRecurringSet.DoesNotExist:
-            logger.error(f"InvoiceRecurringSet with id {instance_id} does not exist.")
+            instance = InvoiceRecurringProfile.objects.get(id=instance_id)
+        except InvoiceRecurringProfile.DoesNotExist:
+            logger.error(f"InvoiceRecurringProfile with id {instance_id} does not exist.")
             return None
-    elif isinstance(instance_id, InvoiceRecurringSet):
+    elif isinstance(instance_id, InvoiceRecurringProfile):
         instance = instance_id
     else:
         logger.error(f"Invalid instance type: {type(instance_id)}")
@@ -39,6 +39,7 @@ def update_boto_schedule(instance_id: int | str):
     elif isinstance(instance.boto_schedule_uuid, UUID):
         schedule_uuid = str(instance.boto_schedule_uuid)
     else:
+        print("Creating new boto schedule due to invalid schedule uuid")
         return create_boto_schedule(instance)
 
     CRON_FREQUENCY_TYPE = instance.frequency.lower()
@@ -68,6 +69,7 @@ def update_boto_schedule(instance_id: int | str):
     if not schedule_response.success:
         logger.error(schedule_response.error)
         if schedule_response.error == "Schedule not found":
+            print(f"Creating new boto schedule due to schedule {schedule_uuid} not being found")
             return create_boto_schedule(instance)
         return schedule_response.error
 
