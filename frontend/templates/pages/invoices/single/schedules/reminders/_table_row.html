@@ -43,7 +43,7 @@
             {% if reminder.status == schedule.StatusTypes.DELETING or reminder.status == reminder.StatusTypes.PENDING %}
                 <button class="btn btn-error btn-outline btn-sm"
                         {% if reminder.status == reminder.StatusTypes.DELETING %}disabled{% endif %}
-                        hx-post="{% url "api:invoices:single:reminders:cancel" reminder_id=reminder.id %}"
+                        hx-post="{% comment %}{% url "api:invoices:single:reminders:cancel" reminder_id=reminder.id %}{% endcomment %}"
                         hx-target="closest tr"
                         hx-swap="outerHTML">
                     <i class="fa-solid fa-cancel"></i>

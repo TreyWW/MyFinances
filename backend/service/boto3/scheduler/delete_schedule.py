@@ -24,7 +24,7 @@ def delete_boto_schedule(model_name: str, instance_id: int | str):
 
     try:
         # Dynamically retrieve the instance based on the model type and ID
-        instance = model_type.objects.get(id=instance_id)
+        instance = model_type.objects.get(id=instance_id)  # type: ignore[attr-defined]
     except ObjectDoesNotExist:
         logger.error(f"{model_type.__name__} with id {instance_id} does not exist.")
         return None
@@ -48,7 +48,7 @@ def delete_boto_schedule(model_name: str, instance_id: int | str):
         # EXCEPTIONS.InternalServerException, # use celery retry
         # EXCEPTIONS.ConflictException, # use celery retry
     ) as error:
-        logger.error(f"Error deleting schedule for {model_type.__name__} #{instance.id}: {error}")
+        logger.error(f"Error deleting schedule for {model_type.__name__} #{instance.id}: {error}")  # type: ignore[attr-defined]
         return None
 
     instance.boto_schedule_status = instance.BotoStatusTypes.CANCELLED

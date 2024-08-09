@@ -5,7 +5,8 @@
     <div class=" text-3xl w-full grid grid-cols-4">
         <div hx-boost="true">
             <a href="{% url "invoices:single:dashboard" %}"
-               class="btn btn-sm btn-outline btn-secondary me-3 float-left">Back to list</a>
+               class="btn btn-sm btn-outline btn-secondary me-3 float-left">Back to list
+            </a>
         </div>
         <h1 class="text-center col-span-2">Invoice #{{ invoice.id }}</h1>
         <div>
@@ -43,8 +44,8 @@
             Send Invoice
         </a>
         {% if schedule_invoices_enabled %}
-            <a href="{% url "invoices:single:schedules view" invoice_id=invoice.id %}"
-               class="btn btn-outline btn-default grow mr-4">
+            <a
+                class="btn btn-outline btn-default grow mr-4">
                 <i class="fa-solid fa-clock"></i>
                 Schedule Invoice
             </a>

@@ -32,10 +32,12 @@ def update_boto_schedule(instance_id: int | str):
         logger.error(f"Boto3 handler not initiated. Cannot use AWS services.")
         return None
 
+    schedule_uuid: str
+
     if isinstance(instance.boto_schedule_uuid, str):
-        schedule_uuid: str = instance.boto_schedule_uuid
+        schedule_uuid = instance.boto_schedule_uuid
     elif isinstance(instance.boto_schedule_uuid, UUID):
-        schedule_uuid: str = str(instance.boto_schedule_uuid)
+        schedule_uuid = str(instance.boto_schedule_uuid)
     else:
         return create_boto_schedule(instance)
 
@@ -59,7 +61,7 @@ def update_boto_schedule(instance_id: int | str):
     EXCEPTIONS = BOTO3_HANDLER._schedule_client.exceptions
 
     end_date: datetime.date | None = instance.end_date
-    end_datetime: datetime.datetime | None = datetime.datetime.combine(end_date, datetime.datetime.now().time()) if end_date else ""
+    end_datetime: datetime.datetime | str = datetime.datetime.combine(end_date, datetime.datetime.now().time()) if end_date else ""
 
     schedule_response = get_boto_schedule(schedule_uuid)
 

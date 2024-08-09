@@ -33,10 +33,12 @@ def create_boto_schedule(instance_id: int | str | InvoiceRecurringSet):
         logger.error(f'BOTO3 IS CURRENTLY DOWN, #{instance_id} has been set to "Paused"!')
         return None
 
+    schedule_uuid: str
+
     if isinstance(instance.boto_schedule_uuid, str):
-        schedule_uuid: str = instance.boto_schedule_uuid
+        schedule_uuid = instance.boto_schedule_uuid
     elif isinstance(instance.boto_schedule_uuid, UUID):
-        schedule_uuid: str = str(instance.boto_schedule_uuid)
+        schedule_uuid = str(instance.boto_schedule_uuid)
     else:
         schedule_uuid = str(uuid4())
 
@@ -62,7 +64,7 @@ def create_boto_schedule(instance_id: int | str | InvoiceRecurringSet):
     SITE_URL = get_global_webhook_response_url()
 
     end_date: datetime.date | None = instance.end_date
-    end_datetime: datetime.datetime | None = datetime.datetime.combine(end_date, datetime.datetime.now().time()) if end_date else ""
+    end_datetime: datetime.datetime | str = datetime.datetime.combine(end_date, datetime.datetime.now().time()) if end_date else ""
 
     create_schedule_params = {
         "Name": schedule_uuid,

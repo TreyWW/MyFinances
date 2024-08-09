@@ -10,11 +10,11 @@ from .single.overview import manage_invoice
 from .recurring.overview import manage_recurring_invoice_set_endpoint
 
 SINGLE_INVOICE_URLS = [
-    path(
-        "<int:invoice_id>/schedules/",
-        schedule.view_schedules,
-        name="schedules view",
-    ),
+    # path(
+    #     "<int:invoice_id>/schedules/",
+    #     schedule.view_schedules,
+    #     name="schedules view",
+    # ),
     path(
         "<int:invoice_id>/access/",
         manage_access.manage_access,
