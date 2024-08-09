@@ -1,0 +1,20 @@
+<div class="input_card">
+    <div class="card-body">
+        <div class="form-control w-full">
+            <label class="label justify-start">
+                Start date
+                <span class="required_star">*</span>
+            </label>
+            <input required
+                   id="dateIssued"
+                   name="date_issued"
+                   value="{% if issue_date|date:"Y-m-d" %}{{ issue_date | date:"Y-m-d" }}{% else %}{{ issue_date }}{% endif %}"
+                   type="date"
+                   onchange="checkDueDate()"
+                   class="peer input input-bordered input-block">
+            <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden ">
+                <span class="label-text-alt text-error">Please enter a valid date.</span>
+            </label>
+        </div>
+    </div>
+</div>

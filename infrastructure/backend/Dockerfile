@@ -43,7 +43,7 @@ RUN poetry install --without dev,mysql,postgres --no-root && rm -rf $POETRY_CACH
 COPY . .
 
 RUN chmod +x infrastructure/backend/scripts/*
-RUN chmod +x infrastructure/backend/scripts/tests/*
+
 ENTRYPOINT ["sh", "infrastructure/backend/scripts/entrypoint.sh"]
 
 EXPOSE 10012

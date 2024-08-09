@@ -1,10 +1,13 @@
+from django.db.models import When, CharField, F
+from django.db.models.expressions import Case, Value
 from django.shortcuts import render, redirect
+from django.utils import timezone
 from django.views.decorators.http import require_http_methods
 
 from backend.decorators import web_require_scopes
 from backend.models import Invoice
 from backend.types.htmx import HtmxHttpRequest
-from backend.service.invoices.fetch import get_context
+from backend.service.invoices.common.fetch import get_context
 
 
 @require_http_methods(["GET"])
@@ -12,7 +15,7 @@ from backend.service.invoices.fetch import get_context
 def fetch_all_invoices(request: HtmxHttpRequest):
     # Redirect if not an HTMX request
     if not request.htmx:
-        return redirect("invoices:dashboard")
+        return redirect("invoices:single:dashboard")
 
     if request.user.logged_in_as_team:
         invoices = Invoice.objects.filter(organization=request.user.logged_in_as_team)
@@ -39,7 +42,25 @@ def fetch_all_invoices(request: HtmxHttpRequest):
         },
     }
 
-    context, _ = get_context(invoices, sort_by, previous_filters, sort_direction, action_filter_type, action_filter_by)
+    context, invoices = get_context(invoices, sort_by, previous_filters, sort_direction, action_filter_type, action_filter_by)
+
+    # check/update payment status to make sure it is correct before invoices are filtered and displayed
+    invoices.update(
+        payment_status=Case(
+            When(
+                date_due__lt=timezone.now().date(),
+                payment_status="pending",
+                then=Value("overdue"),
+            ),
+            When(
+                date_due__gt=timezone.now().date(),
+                payment_status="overdue",
+                then=Value("pending"),
+            ),
+            default=F("payment_status"),
+            output_field=CharField(),
+        )
+    )
 
     # Render the HTMX response
     return render(request, "pages/invoices/dashboard/_fetch_body.html", context)

@@ -78,7 +78,7 @@ def change_status(request: HtmxHttpRequest, invoice_id: int, status: str) -> Htt
     status = status.lower() if status else ""
 
     if not request.htmx:
-        return redirect("invoices:dashboard")
+        return redirect("invoices:single:dashboard")
 
     try:
         invoice = Invoice.objects.get(id=invoice_id)
@@ -118,7 +118,7 @@ def edit_discount(request: HtmxHttpRequest, invoice_id: str):
     percentage_amount_str: str = request.POST.get("percentage_amount", "")
 
     if not request.htmx:
-        return redirect("invoices:dashboard")
+        return redirect("invoices:single:dashboard")
 
     try:
         invoice: Invoice = Invoice.objects.get(id=invoice_id)

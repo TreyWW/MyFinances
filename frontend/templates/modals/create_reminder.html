@@ -2,7 +2,7 @@
 {% fill "content" %}
 <form class="py-4"
       id="modal_create_reminder-form"
-      hx-post="{% url 'api:invoices:reminders:create' %}"
+      hx-post="{% comment %}{% url 'api:invoices:single:reminders:create' %}{% endcomment %}"
       hx-include='input[name="invoice_id"]'
       hx-target='tbody[data-hx-swap="reminders"]'
       hx-swap="beforeend">
@@ -43,7 +43,7 @@
                class="input input-bordered input-block"
                required>
     </div>
-    {% component "pages:invoices:schedules:schedules:input-email_to_send_to" %}
+    {% component "pages:invoices:single:schedules:schedules:input-email_to_send_to" %}
     <div class="modal-action">
         {% if above_quota_usage %}
             <button type="button"

@@ -2,7 +2,7 @@
 {% component "messages_list" custom_oob='afterbegin:div[data-card="services_card_body"]' %}
 {% for product in products %}
     <li>
-        <button hx-post="{% url 'api:invoices:services add' %}"
+        <button hx-post="{% url 'api:invoices:create:services add' %}"
                 hx-include="#services_table_body"
                 hx-swap="innerHTML"
                 hx-target="#services_table_body"

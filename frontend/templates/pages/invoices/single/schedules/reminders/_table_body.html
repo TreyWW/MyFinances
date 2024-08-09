@@ -1,0 +1,33 @@
+<tbody data-hx-swap="reminders">
+    {% for reminder in reminders %}
+        {% include 'pages/invoices/single/schedules/reminders/_table_row.html' with reminder=reminder %}
+    {% endfor %}
+</tbody>
+{% for filter_type, inner_filters in all_filters.items %}
+    {% for filter in inner_filters %}
+        <div hx-swap-oob="innerHTML:div[data-filter-type='{{ filter_type }}'] ul li[data-filter-by='{{ filter }}'] button">
+            {% if filter in selected_filters %}<i class="fa fa-solid fa-check text-success"></i>{% endif %}
+            {{ filter | title }}
+        </div>
+    {% endfor %}
+{% endfor %}
+<div hx-swap-oob="innerHTML:#filter_reminders_list_storage">
+    <input type="hidden"
+           name=""
+           value="reminder_type_before_due"
+           "
+           {% if 'before_due' in selected_filters %}true{% endif %}
+           ">
+    <input type="hidden"
+           name=""
+           value="reminder_type_after_due"
+           "
+           {% if 'after_due' in selected_filters %}true{% endif %}
+           ">
+    <input type="hidden"
+           name=""
+           value="reminder_type_on_overdue"
+           "
+           {% if 'on_overdue' in selected_filters %}true{% endif %}
+           ">
+</div>

@@ -31,10 +31,10 @@ def get_defaults_endpoint(request: WebRequest, client_id: int | None = None):
         except (ValidationError, Client.DoesNotExist):
             return HttpResponse("Something went wrong")
 
-        defaults = get_account_defaults(request, client)
+        defaults = get_account_defaults(request.actor, client)
         context |= {"client": client}
     else:
-        defaults = get_account_defaults(request)
+        defaults = get_account_defaults(request.actor)
 
     return render(request, "pages/clients/detail/client_defaults.html", context | {"defaults": defaults})
 
@@ -49,10 +49,10 @@ def change_client_defaults_endpoint(request: WebRequest, client_id: int | None =
         except (ValidationError, Client.DoesNotExist):
             return HttpResponse("Something went wrong")
 
-        defaults = get_account_defaults(request, client)
+        defaults = get_account_defaults(request.actor, client)
         context |= {"client": client}
     else:
-        defaults = get_account_defaults(request)
+        defaults = get_account_defaults(request.actor)
 
     response = change_client_defaults(request, defaults)
 

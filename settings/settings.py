@@ -21,6 +21,13 @@ SITE_NAME = get_var("SITE_NAME", default="myfinances")
 SITE_NAME_FRIENDLY = get_var("SITE_NAME_FRIENDLY", default="MyFinances")
 SITE_ABUSE_EMAIL = get_var("SITE_ABUSE_EMAIL", default="abuse@strelix.org")
 
+CELERY_BROKER_URL = "redis://localhost:6379"
+CELERY_RESULT_BACKEND = "redis://localhost:6379"
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TIMEZONE = "UTC"
+
 if not SITE_URL.startswith("http"):
     exit("[BACKEND] SITE_URL must start with http:// or https://")
 
@@ -54,11 +61,12 @@ INSTALLED_APPS = [
     "drf_yasg",
     "tz_detect",
     "webpack_loader",
+    # "django_minify_html",
 ]
 
 if DEBUG:
     INSTALLED_APPS.append("silk")
-    SILKY_PYTHON_PROFILER = True
+    SILKY_PYTHON_PROFILER = False
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
@@ -104,6 +112,7 @@ LOGIN_REQUIRED_IGNORE_PATHS = [
     r"^/auth/create_account(/.*)?$",
     r"^/accounts/github/login/callback/$",
     r"^/webhooks/schedules/receive/$",
+    r"^/webhooks/receive/global/$",
     r"^/api/public/(.*)/",
 ]
 # for some reason only allows "login" and not "login create account" or anything
@@ -419,7 +428,6 @@ else:
     PRIVATE_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 
 # SENDGRID_SANDBOX_MODE_IN_DEBUG = True
-
 if "test" in sys.argv[1:]:
     print("[BACKEND] Using sqlite3 database due to a test being ran", flush=True)
     DATABASES = {

@@ -71,4 +71,4 @@ def fetch_reminders(request: HtmxHttpRequest, invoice_id: str):
 
     context["reminders"] = reminders.filter(or_conditions)
 
-    return render(request, "pages/invoices/schedules/reminders/_table_body.html", context)
+    return render(request, "pages/invoices/single/schedules/reminders/_table_body.html", context)

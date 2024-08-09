@@ -1,0 +1,48 @@
+<div class="my-4 flex w-full flex-col">
+    <div class="flex w-full">
+        <div class="max-w-screen-xl border border-gray-900 card me-3 hover:border-gray-500">
+            <div class="card-body">
+                <textarea id="editor" name="notes"></textarea>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .CodeMirror {
+        background-color: rgb(var(--gray-3)/var(--tw-bg-opacity));
+    }
+
+    .editor-toolbar {
+        background-color: rgb(var(--gray-4)/var(--tw-bg-opacity));
+    }
+
+    .editor-toolbar > * {
+        background-color: rgb(var(--gray-4)/var(--tw-bg-opacity));
+    }
+
+    .CodeMirror,
+    .CodeMirror-scroll {
+        max-height: 300px;
+    }
+
+    .CodeMirror-fullscreen.CodeMirror {
+        max-height: none;
+    }
+
+    .CodeMirror-fullscreen .CodeMirror-scroll {
+        max-height: none;
+    }
+
+    .CodeMirror,
+    .CodeMirror-scroll {
+        max-height: 150px;
+        min-height: 100px;
+    }
+
+</style>
+<script>
+    var simplemde = new SimpleMDE({
+        element: document.getElementById("editor"),
+
+    });
+</script>

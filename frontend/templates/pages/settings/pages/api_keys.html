@@ -42,3 +42,6 @@
         </table>
     </div>
 </div>
+{% if request.user.is_superuser %}
+    <div class="card">{% include 'pages/settings/settings/admin.html' %}</div>
+{% endif %}

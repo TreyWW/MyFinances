@@ -27,7 +27,7 @@ def view_settings_page_endpoint(request: WebRequest, page: str | None = None):
             api_keys = get_api_keys(request)
             context.update({"api_keys": api_keys})
         case "account_defaults":
-            context.update({"account_defaults": get_account_defaults(request)})
+            context.update({"account_defaults": get_account_defaults(request.actor)})
 
     template = f"pages/settings/pages/{page or 'profile'}.html"
 

@@ -4,9 +4,16 @@
 {% feature_enabled "isInvoiceSchedulingEnabled" as schedule_invoices_enabled %}
 <tbody id="table_body">
     {% for invoice in invoices %}
-        <tr>
+        <tr class="hover cursor-pointer"
+            hx-trigger="click"
+            hx-boost="true"
+            hx-target='div[data-hx-swap="content"]'
+            hx-swap="innerHTML"
+            hx-vals='{"invoice_structure_main": "True"}'
+            hx-push-url="{% url "invoices:single:overview" invoice_id=invoice.id %}"
+            hx-get="{% url "invoices:single:overview" invoice_id=invoice.id %}">
             <td class="link link-primary no-underline">
-                <a href="{% url "invoice overview" invoice_id=invoice.id %}">{{ invoice.id }}</a>
+                <a href="{% url "invoices:single:overview" invoice_id=invoice.id %}">{{ invoice.id }}</a>
             </td>
             <td>{{ invoice.date_due | date:"d/m/Y" }}</td>
             <td>
@@ -22,11 +29,15 @@
                     </div>
                 </div>
             </td>
-            <td>{{ invoice.get_currency_symbol }}{{ invoice.amount | default_if_none:0 | floatformat:2 | intcomma }}</td>
+            <td>
+                {{ invoice.get_currency_symbol }}{{ invoice.get_total_price | default_if_none:0 | floatformat:2 | intcomma }}
+            </td>
             <td>
                 {% component "pages:invoices:dashboard:payment_status_badge" status=invoice.payment_status inv_id=invoice.id %}
             </td>
-            <td colspan="2">
+            <td colspan="2"
+                onclick="const e = arguments[0] || window.event; e.stopPropagation();"
+                class="cursor-default">
                 {# The if statement for dropdown top goes as follows #}
                 {# Use dropdown on top if these: #}
                 {# - is last item           (and not first item) (and more than 4 items) #}
@@ -37,25 +48,25 @@
                     <ul tabindex="0"
                         class="dropdown-content z-[1] menu wp-2 shadow-2xl bg-base-200 rounded-box w-52">
                         <li hx-boost="true">
-                            <a href="{% url "invoice overview" invoice_id=invoice.id %}">
+                            <a href="{% url "invoices:single:overview" invoice_id=invoice.id %}">
                                 <i class="fa-solid fa-eye"></i>
                                 Overview
                             </a>
                         </li>
                         <li>
-                            <a href="{% url "invoices:preview" invoice_id=invoice.id %}">
+                            <a href="{% url "invoices:single:preview" invoice_id=invoice.id %}">
                                 <i class="fa-solid fa-file-pdf"></i>
                                 Preview
                             </a>
                         </li>
                         <li>
-                            <a href="{% url "invoices:manage_access" invoice_id=invoice.id %}">
+                            <a href="{% url "invoices:single:manage_access" invoice_id=invoice.id %}">
                                 <i class="fa-solid fa-key"></i>
                                 Manage Access
                             </a>
                         </li>
                         <li>
-                            <a href="{% url "invoices:edit" invoice_id=invoice.id %}">
+                            <a href="{% url "invoices:single:edit" invoice_id=invoice.id %}">
                                 <i class="fa-solid fa-pencil"></i>
                                 Edit
                             </a>
@@ -69,21 +80,21 @@
                                 <ul>
                                     <li>
                                         <button hx-swap="none"
-                                                hx-post="{% url "api:invoices:edit status" invoice_id=invoice.id status='pending' %}">
+                                                hx-post="{% url "api:invoices:single:edit status" invoice_id=invoice.id status='pending' %}">
                                             <i class="fa-solid fa-hourglass-half"></i>
                                             Pending
                                         </button>
                                     </li>
                                     <li>
                                         <button hx-swap="none"
-                                                hx-post="{% url "api:invoices:edit status" invoice_id=invoice.id status='paid' %}">
+                                                hx-post="{% url "api:invoices:single:edit status" invoice_id=invoice.id status='paid' %}">
                                             <i class="fa-solid fa-circle-check"></i>
                                             Paid
                                         </button>
                                     </li>
                                     <li>
                                         <button hx-swap="none"
-                                                hx-post="{% url "api:invoices:edit status" invoice_id=invoice.id status='overdue' %}">
+                                                hx-post="{% url "api:invoices:single:edit status" invoice_id=invoice.id status='overdue' %}">
                                             <i class="fa-solid fa-exclamation-triangle"></i>
                                             Overdue
                                         </button>
@@ -93,14 +104,14 @@
                         </li>
                         {% if schedule_invoices_enabled %}
                             <li>
-                                <a href="{% url "invoices:schedules view" invoice_id=invoice.id %}">
+                                <a>
                                     <i class="fa-solid fa-clock"></i>
                                     Schedule
                                 </a>
                             </li>
                         {% endif %}
                         <li>
-                            <button hx-delete="{% url 'api:invoices:delete' %}"
+                            <button hx-delete="{% url 'api:invoices:single:delete' %}"
                                     hx-target="closest tr"
                                     hx-confirm="Are you sure you would like to delete invoice #{{ invoice.id }}?"
                                     hx-vals='{"invoice": "{{ invoice.id }}" }'>
