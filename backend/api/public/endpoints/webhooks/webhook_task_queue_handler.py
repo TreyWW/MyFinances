@@ -1,22 +1,28 @@
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
+from rest_framework.response import Response
+
+from backend.api.public.models import APIAuthToken
 import json
-from django.views.decorators.http import require_POST
+from rest_framework.decorators import api_view
 
 from backend.service.asyn_tasks.tasks import Task
 
 
-@csrf_exempt
-@require_POST
+@api_view(["POST"])
 def webhook_task_queue_handler_view_endpoint(request):
-    print("TASK 5 - Webhook Callback")
+    token: APIAuthToken | None = request.auth
+
+    if not token:
+        return Response({"status": "error", "message": "No token found"}, status=500)
+
+    if not token.administrator_service_type == token.AdministratorServiceTypes.AWS_WEBHOOK_CALLBACK:
+        return Response({"status": "error", "message": "Invalid API key for this service"}, status=500)
+
     try:
-        data: dict = json.loads(request.body)
+        data: dict = request.data
         func_name: str = data.get("func_name")
         args: list = data.get("args", [])
         kwargs: dict = data.get("kwargs", {})
 
-        print(data)
         print(f"Function Name: {func_name}")
         print(f"Arguments: {args}")
         print(f"Keyword Arguments: {kwargs}")
@@ -34,8 +40,8 @@ def webhook_task_queue_handler_view_endpoint(request):
         # Handle the result (e.g., store it or log it)
         print(f"Webhook executed: {func_name} with result: {result}")
 
-        return JsonResponse({"status": "success", "result": result})
+        return Response({"status": "success", "result": result})
 
     except Exception as e:
         print(f"Error executing webhook task: {str(e)}")
-        return JsonResponse({"status": "error", "message": str(e)}, status=500)
+        return Response({"status": "error", "message": str(e)}, status=500)

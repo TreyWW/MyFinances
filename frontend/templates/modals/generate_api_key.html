@@ -49,6 +49,28 @@
             <span class="label-text-alt text-error">Please enter a message between 3 and 255 characters.</span>
         </label>
     </div>
+    {% if request.user.is_superuser %}
+    <div class="form-control w-full">
+        <label class="label">
+            Administrator Connection?
+        </label>
+
+        <div class="grid grid-cols-8 gap-4 items-center">
+            <input id="modal_input-administrator"
+                   name="administrator"
+                   type="checkbox"
+                   class="peer checkbox checkbox-block checkbox-bordered">
+            <select name="administrator_type" class="select select-bordered col-span-7 w-full">
+                {% for option in APIAuthToken_types %}
+                    <option value="{{ option }}">{{ option.label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden">
+            <span class="label-text-alt text-error">Please enter a valid name for your key</span>
+        </label>
+    </div>
+    {% endif %}
     <div class="collapse collapse-arrow border select-bordered mt-4">
         <input type="checkbox" />
         <div class="collapse-title text-xl font-medium">Permissions</div>

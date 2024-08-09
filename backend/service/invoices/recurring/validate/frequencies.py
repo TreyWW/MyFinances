@@ -22,7 +22,7 @@ def validate_and_update_frequency(
     match frequency.lower():
         # region Weekly
         case "weekly":
-            if frequency_day_of_week not in [i for i in "0123456"]:
+            if frequency_day_of_week not in [i for i in "1234567"]:
                 return ValidateFrequencyServiceResponse(error_message="Please select a valid day of the week")
 
             invoice_set.frequency = InvoiceRecurringSet.Frequencies.WEEKLY

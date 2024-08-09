@@ -15,6 +15,7 @@ class CustomBearerAuthentication(TokenAuthentication):
         return APIAuthToken
 
     def authenticate_credentials(self, raw_key) -> tuple[User | Organization | None, APIAuthToken]:
+        print("is here")
         model = self.get_model()
 
         try:
