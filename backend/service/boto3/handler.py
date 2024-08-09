@@ -22,6 +22,15 @@ class Boto3Handler:
         self.scheduler_lambda_access_role_arn: str = get_var("SCHEDULER_LAMBDA_ACCESS_ROLE_ARN")
         self.scheduler_invoices_group_name: str = get_var("SCHEDULER_INVOICES_GROUP_NAME")
 
+        print(f"Region: {self.region_name}")
+        print("| has aws access key id" if self.aws_access_key_id else "X no aws access key id")
+        print("| has aws access key secret" if self.aws_access_key_secret else "X no aws access key secret")
+        print("| has scheduler lambda arn" if self.scheduler_lambda_arn else "X no scheduler lambda arn")
+        print(
+            "| has scheduler lambda access role arn" if self.scheduler_lambda_access_role_arn else "X no scheduler lambda access role arn"
+        )
+        print("| has scheduler invoices group name" if self.scheduler_invoices_group_name else "X no scheduler invoices group name")
+
         self._initiate_clients()
 
     def _initiate_session(self):
