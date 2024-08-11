@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from botocore.config import Config
+from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 
 from settings.helpers import get_var
 
@@ -39,9 +40,6 @@ class Boto3Handler:
         self._boto3_session = boto3.Session(
             aws_access_key_id=self.aws_access_key_id, aws_secret_access_key=self.aws_access_key_secret, region_name=self.region_name
         )
-        print(self._boto3_session)
-        available_services = self._boto3_session.get_available_services()
-        print(available_services)
 
         if DEBUG_LEVEL == "debug":
             boto3.set_stream_logger("", level=logging.DEBUG)
@@ -49,11 +47,19 @@ class Boto3Handler:
             boto3.set_stream_logger("", level=logging.INFO)
 
     def _initiate_clients(self):
-        if not get_var("AWS_ACCESS_KEY_ID") or not get_var("AWS_ACCESS_KEY") or get_var("AWS_DISABLED"):
-            logger.info("AWS credentials not provided, not initiating boto3")
+        if get_var("AWS_DISABLED"):
+            logger.info("The variable AWS_DISABLED is present, not initiating boto3")
             return
 
         self._initiate_session()
+
+        try:
+            if not self.aws_access_key_id or not self.aws_access_key_secret and not self._boto3_session.client("sts").get_caller_identity():
+                logger.info("No AWS Credentials found, not initiating clients.")
+                return
+        except (NoCredentialsError, PartialCredentialsError) as error:
+            logger.error(error)
+            return None
 
         self._schedule_client = self._boto3_session.client("scheduler")
         self.SCHEDULE_EXCEPTIONS = self._schedule_client.exceptions

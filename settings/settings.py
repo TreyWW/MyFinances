@@ -351,7 +351,7 @@ class CustomStaticStorage(S3Storage):
     default_acl = None
     bucket_name = get_var("AWS_STATIC_BUCKET_NAME")
     custom_domain = get_var("AWS_STATIC_CUSTOM_DOMAIN")
-    region_name = get_var("AWS_STATIC_REGION_NAME")
+    region_name = get_var("AWS_STATIC_REGION_NAME") or get_var("AWS_REGION_NAME")
 
     access_key = get_var("AWS_STATIC_ACCESS_KEY_ID")
     secret_key = get_var("AWS_STATIC_ACCESS_KEY")
@@ -364,7 +364,7 @@ class CustomPublicMediaStorage(S3Storage):
     custom_domain = get_var("AWS_MEDIA_PUBLIC_CUSTOM_DOMAIN")
     querystring_auth = False  # Removes auth from URL in case of shared media
 
-    region_name = get_var("AWS_MEDIA_PUBLIC_REGION_NAME")
+    region_name = get_var("AWS_MEDIA_PUBLIC_REGION_NAME") or get_var("AWS_REGION_NAME")
 
     access_key = get_var("AWS_MEDIA_PUBLIC_ACCESS_KEY_ID")
     secret_key = get_var("AWS_MEDIA_PUBLIC_ACCESS_KEY")
