@@ -9,7 +9,7 @@
                 {% else %}
                     Account
                 {% endif %}
-                    API Keys
+                API Keys
                 <span class="ml-2 badge badge-success badge-outline">NEW</span>
             </div>
             <button onclick="modal_generate_api_key.showModal();"
@@ -24,20 +24,20 @@
         <div class="divider"></div>
         <table class="table table-zebra max-w-full">
             <thead>
-            <tr>
-                <th>Name</th>
-                <th>Last used</th>
-                <th>Actions</th>
-            </tr>
+                <tr>
+                    <th>Name</th>
+                    <th>Last used</th>
+                    <th>Actions</th>
+                </tr>
             </thead>
             <tbody data-hx-swap="tbody_api_keys">
-            {% for key in api_keys %}
-                {% include "pages/settings/settings/api_key_row.html" with key=key %}
-            {% empty %}
-                <tr>
-                    <td colspan="100%" class="text-center">No API Keys</td>
-                </tr>
-            {% endfor %}
+                {% for key in api_keys %}
+                    {% include "pages/settings/settings/api_key_row.html" with key=key %}
+                {% empty %}
+                    <tr>
+                        <td colspan="100%" class="text-center">No API Keys</td>
+                    </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>

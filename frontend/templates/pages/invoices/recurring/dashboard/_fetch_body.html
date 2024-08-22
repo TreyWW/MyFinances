@@ -4,127 +4,127 @@
 {% load common_children_filter from listfilters %}
 {% feature_enabled "isInvoiceSchedulingEnabled" as schedule_invoices_enabled %}
 <tbody id="table_body">
-{% for invoiceProfile in page.object_list %}
-    <tr class="hover cursor-pointer"
-        hx-trigger="click"
-        hx-boost="true"
-        hx-target='div[data-hx-swap="content"]'
-        hx-swap="innerHTML"
-        hx-vals='{"invoice_structure_main": "True"}'
-        hx-push-url="{% url "invoices:recurring:overview" invoice_profile_id=invoiceProfile.id %}"
-        hx-get="{% url "invoices:recurring:overview" invoice_profile_id=invoiceProfile.id %}">
-        <td class="link link-primary no-underline">
-            <a href="{% url "invoices:recurring:overview" invoice_profile_id=invoiceProfile.id %}">{{ invoiceProfile.id }}</a>
-        </td>
-        <td>{{ invoiceProfile.end_date | date:"d/m/Y" | default:"never" }}</td>
-        <td>
-            <div class="flex items-center text-sm">
-                <div>
-                    {% with cli_name=invoiceProfile.client_to.name|default:invoiceProfile.client_name %}
-                        {% if cli_name %}
-                            <p class="font-semibold">{{ cli_name }}</p>
-                        {% else %}
-                            <p class="font-thin">No Client</p>
-                        {% endif %}
-                    {% endwith %}
+    {% for invoiceProfile in page.object_list %}
+        <tr class="hover cursor-pointer"
+            hx-trigger="click"
+            hx-boost="true"
+            hx-target='div[data-hx-swap="content"]'
+            hx-swap="innerHTML"
+            hx-vals='{"invoice_structure_main": "True"}'
+            hx-push-url="{% url "invoices:recurring:overview" invoice_profile_id=invoiceProfile.id %}"
+            hx-get="{% url "invoices:recurring:overview" invoice_profile_id=invoiceProfile.id %}">
+            <td class="link link-primary no-underline">
+                <a href="{% url "invoices:recurring:overview" invoice_profile_id=invoiceProfile.id %}">{{ invoiceProfile.id }}</a>
+            </td>
+            <td>{{ invoiceProfile.end_date | date:"d/m/Y" | default:"never" }}</td>
+            <td>
+                <div class="flex items-center text-sm">
+                    <div>
+                        {% with cli_name=invoiceProfile.client_to.name|default:invoiceProfile.client_name %}
+                            {% if cli_name %}
+                                <p class="font-semibold">{{ cli_name }}</p>
+                            {% else %}
+                                <p class="font-thin">No Client</p>
+                            {% endif %}
+                        {% endwith %}
+                    </div>
                 </div>
-            </div>
-        </td>
-        <td>
-            {{ invoiceProfile.get_currency_symbol }}{{ invoiceProfile.get_total_price | default_if_none:0 | floatformat:2 | intcomma }}
-        </td>
-        <td>
-            {% include "pages/invoices/recurring/dashboard/_status_badge.html" with status=invoiceProfile.status inv_id=invoiceProfile.id %}
-        </td>
-        <td colspan="2"
-            onclick="const e = arguments[0] || window.event; e.stopPropagation();"
-            class="cursor-default">
-            {# The if statement for dropdown top goes as follows #}
-            {# Use dropdown on top if these: #}
-            {# - is last item           (and not first item) (and more than 4 items) #}
-            <div class="dropdown dropdown-left {% if forloop.last and invoices.count > 4 %}dropdown-top{% endif %}">
-                <label tabindex="0" class="btn btn-primary btn-outline btn-sm">
-                    <i class="fa-solid fa-ellipsis-vertical"></i>
-                </label>
-                <ul tabindex="0"
-                    class="dropdown-content z-[1] menu wp-2 shadow-2xl bg-base-200 rounded-box w-52">
-                    <li hx-boost="true">
-                        <a href="{% url "invoices:recurring:overview" invoice_profile_id=invoiceProfile.id %}">
-                            <i class="fa-solid fa-eye"></i>
-                            Overview
-                        </a>
-                    </li>
-                    {#                    <li>#}
-                    {#                        <a href="{% url "invoices:single:preview" invoice_id=invoiceProfile.id %}">#}
-                    {#                            <i class="fa-solid fa-file-pdf"></i>#}
-                    {#                            Preview#}
-                    {#                        </a>#}
-                    {#                    </li>#}
-                    {#                    <li>#}
-                    {#                        <a href="{% url "invoices:single:manage_access" invoice_id=invoiceProfile.id %}">#}
-                    {#                            <i class="fa-solid fa-key"></i>#}
-                    {#                            Manage Access#}
-                    {#                        </a>#}
-                    {#                    </li>#}
-                    <li>
-                        <a href="{% url "invoices:recurring:edit" invoice_profile_id=invoiceProfile.id %}">
-                            <i class="fa-solid fa-pencil"></i>
-                            Edit
-                        </a>
-                    </li>
-                    <li>
-                        <button hx-delete="{% url 'api:invoices:recurring:delete' %}"
-                                hx-target="closest tr"
-                                hx-confirm="Are you sure you would like to delete invoice recurring profile #{{ invoiceProfile.id }}?"
-                                hx-vals='{"invoice_profile": "{{ invoiceProfile.id }}" }'>
-                            <i class="fa-solid fa-trash"></i>
-                            Delete
+            </td>
+            <td>
+                {{ invoiceProfile.get_currency_symbol }}{{ invoiceProfile.get_total_price | default_if_none:0 | floatformat:2 | intcomma }}
+            </td>
+            <td>
+                {% include "pages/invoices/recurring/dashboard/_status_badge.html" with status=invoiceProfile.status inv_id=invoiceProfile.id %}
+            </td>
+            <td colspan="2"
+                onclick="const e = arguments[0] || window.event; e.stopPropagation();"
+                class="cursor-default">
+                {# The if statement for dropdown top goes as follows #}
+                {# Use dropdown on top if these: #}
+                {# - is last item           (and not first item) (and more than 4 items) #}
+                <div class="dropdown dropdown-left {% if forloop.last and invoices.count > 4 %}dropdown-top{% endif %}">
+                    <label tabindex="0" class="btn btn-primary btn-outline btn-sm">
+                        <i class="fa-solid fa-ellipsis-vertical"></i>
+                    </label>
+                    <ul tabindex="0"
+                        class="dropdown-content z-[1] menu wp-2 shadow-2xl bg-base-200 rounded-box w-52">
+                        <li hx-boost="true">
+                            <a href="{% url "invoices:recurring:overview" invoice_profile_id=invoiceProfile.id %}">
+                                <i class="fa-solid fa-eye"></i>
+                                Overview
+                            </a>
+                        </li>
+                        {#                    <li>#}
+                        {#                        <a href="{% url "invoices:single:preview" invoice_id=invoiceProfile.id %}">#}
+                        {#                            <i class="fa-solid fa-file-pdf"></i>#}
+                        {#                            Preview#}
+                        {#                        </a>#}
+                        {#                    </li>#}
+                        {#                    <li>#}
+                        {#                        <a href="{% url "invoices:single:manage_access" invoice_id=invoiceProfile.id %}">#}
+                        {#                            <i class="fa-solid fa-key"></i>#}
+                        {#                            Manage Access#}
+                        {#                        </a>#}
+                        {#                    </li>#}
+                        <li>
+                            <a href="{% url "invoices:recurring:edit" invoice_profile_id=invoiceProfile.id %}">
+                                <i class="fa-solid fa-pencil"></i>
+                                Edit
+                            </a>
+                        </li>
+                        <li>
+                            <button hx-delete="{% url 'api:invoices:recurring:delete' %}"
+                                    hx-target="closest tr"
+                                    hx-confirm="Are you sure you would like to delete invoice recurring profile #{{ invoiceProfile.id }}?"
+                                    hx-vals='{"invoice_profile": "{{ invoiceProfile.id }}" }'>
+                                <i class="fa-solid fa-trash"></i>
+                                Delete
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    {% empty %}
+        <td colspan="100%" class="text-center">No Invoices Found</td>
+    {% endfor %}
+    {% if page.has_other_pages %}
+        <tr>
+            <td>
+                <div class="join">
+                    {% if page.has_previous %}
+                        <button class="join-item btn"
+                                hx-swap="outerHTML"
+                                hx-target="#table_body"
+                                hx-indicator=""
+                                hx-include='#filter_list_storage, #sort_direction_storage, [name="sort"]'
+                                hx-get="{% url "api:invoices:recurring:fetch" %}?page={{ page.previous_page_number }}">
+                            «
                         </button>
-                    </li>
-                </ul>
-            </div>
-        </td>
-    </tr>
-{% empty %}
-    <td colspan="100%" class="text-center">No Invoices Found</td>
-{% endfor %}
-{% if page.has_other_pages %}
-    <tr>
-        <td>
-            <div class="join">
-                {% if page.has_previous %}
-                    <button class="join-item btn"
-                            hx-swap="outerHTML"
-                            hx-target="#table_body"
-                            hx-indicator=""
-                            hx-include='#filter_list_storage, #sort_direction_storage, [name="sort"]'
-                            hx-get="{% url "api:invoices:recurring:fetch" %}?page={{ page.previous_page_number }}">
-                        «
-                    </button>
-                {% else %}
-                    <button class="join-item btn">
-                        <i class="fa fa-x w-2 h-2"></i>
-                    </button>
-                {% endif %}
-                <button class="join-item btn">Page {{ page.number }}</button>
-                {% if page.has_next %}
-                    <button class="join-item btn"
-                            hx-swap="outerHTML"
-                            hx-target="#table_body"
-                            hx-indicator=""
-                            hx-include='#filter_list_storage, #sort_direction_storage, [name="sort"]'
-                            hx-get="{% url "api:invoices:recurring:fetch" %}?page={{ page.next_page_number }}">
-                        »
-                    </button>
-                {% else %}
-                    <button class="join-item btn">
-                        <i class="fa fa-x w-2 h-2"></i>
-                    </button>
-                {% endif %}
-            </div>
-        </td>
-    </tr>
-{% endif %}
+                    {% else %}
+                        <button class="join-item btn">
+                            <i class="fa fa-x w-2 h-2"></i>
+                        </button>
+                    {% endif %}
+                    <button class="join-item btn">Page {{ page.number }}</button>
+                    {% if page.has_next %}
+                        <button class="join-item btn"
+                                hx-swap="outerHTML"
+                                hx-target="#table_body"
+                                hx-indicator=""
+                                hx-include='#filter_list_storage, #sort_direction_storage, [name="sort"]'
+                                hx-get="{% url "api:invoices:recurring:fetch" %}?page={{ page.next_page_number }}">
+                            »
+                        </button>
+                    {% else %}
+                        <button class="join-item btn">
+                            <i class="fa fa-x w-2 h-2"></i>
+                        </button>
+                    {% endif %}
+                </div>
+            </td>
+        </tr>
+    {% endif %}
 </tbody>
 {% for option in all_sort_options %}
     <div hx-swap-oob="innerHTML:li[data-sort='{{ option }}'] button">

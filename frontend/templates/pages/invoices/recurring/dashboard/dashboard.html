@@ -104,15 +104,13 @@
                         <button class="dropdown-item"
                                 hx-get="{% url 'api:invoices:recurring:fetch' %}"
                                 name="sort"
-                                value="status">Payment Status
-                        </button>
+                                value="status">Payment Status</button>
                     </li>
                     <li data-sort="date_due">
                         <button class="dropdown-item"
                                 hx-get="{% url 'api:invoices:recurring:fetch' %}"
                                 name="sort"
-                                value="date_due">Date
-                        </button>
+                                value="date_due">Date</button>
                     </li>
                 </ul>
             </div>
@@ -143,22 +141,22 @@
     <div class="w-full overflow-x-auto">
         <table class="table">
             <thead>
-            <tr hx-swap="outerHTML"
-                hx-target="#table_body"
-                hx-include="#filter_list_storage">
-                <th>Profile ID</th>
-                <th>End Date</th>
-                <th>Client Name</th>
-                <th>Amount</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
+                <tr hx-swap="outerHTML"
+                    hx-target="#table_body"
+                    hx-include="#filter_list_storage">
+                    <th>Profile ID</th>
+                    <th>End Date</th>
+                    <th>Client Name</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
             </thead>
             <tbody id="table_body"
                    hx-swap="outerHTML"
                    hx-trigger="load"
                    hx-get="{% url 'api:invoices:recurring:fetch' %}?page={{ page.next_page_number }}">
-            {% include 'components/table/skeleton_rows.html' with rows=3 cols=6 %}
+                {% include 'components/table/skeleton_rows.html' with rows=3 cols=6 %}
             </tbody>
         </table>
     </div>

@@ -8,8 +8,7 @@
     {% csrf_token %}
     <div class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         <a class="btn btn-outline btn-secondary btn-sm w-28"
-           href="{% url 'invoices:recurring:dashboard' %}">Back to list
-        </a>
+           href="{% url 'invoices:recurring:dashboard' %}">Back to list</a>
         <h2 class="text-xl">Editing recurring invoice recurring profile #{{ invoice_object.id }}</h2>
         <a class="btn btn-outline btn-primary btn-sm w-36 justify-self-end"
            href="{% url 'invoices:recurring:overview' invoice_profile_id=invoice_object.id %}">
@@ -49,29 +48,29 @@
         STEP 3 - SERVICES <span class="required_star">*</span>
     </div>
     {% component_block "pages:invoices:create:services:services_table" %}
-    {% endcomponent_block %}
-    <div class="divider my-4">
-        STEP 4 - BANK DETAILS
-        <i class="text-neutral-content">[OPTIONAL]</i>
+{% endcomponent_block %}
+<div class="divider my-4">
+    STEP 4 - BANK DETAILS
+    <i class="text-neutral-content">[OPTIONAL]</i>
+</div>
+<div class="my-4 flex w-full flex-col">
+    <div class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-2 lg:gap-4">
+        {% include "pages/invoices/create/bank_details/holder_name.html" %}
+        {% include "pages/invoices/create/bank_details/account_number.html" %}
+        {% include "pages/invoices/create/bank_details/sort_code.html" %}
     </div>
-    <div class="my-4 flex w-full flex-col">
-        <div class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-2 lg:gap-4">
-            {% include "pages/invoices/create/bank_details/holder_name.html" %}
-            {% include "pages/invoices/create/bank_details/account_number.html" %}
-            {% include "pages/invoices/create/bank_details/sort_code.html" %}
-        </div>
-    </div>
-    <div class="divider my-4">
-        STEP 5 - CUSTOM DESIGNS
-        <i class="text-neutral-content">[OPTIONAL]</i>
-    </div>
-    {% include "pages/invoices/create/custom_designs/logo.html" %}
-    {#    <div class="divider my-4">STEP 5 - NOTES [OPTIONAL]</div>#}
-    {#    {% include "pages/invoices/create/notes/notes.html" %}#}
-    <div class="group-invalid:tooltip"
-         data-tip="Fill out all required details to save the invoice.">
-        <button class="btn btn-primary group-invalid:btn-disabled btn-block">Edit profile</button>
-    </div>
+</div>
+<div class="divider my-4">
+    STEP 5 - CUSTOM DESIGNS
+    <i class="text-neutral-content">[OPTIONAL]</i>
+</div>
+{% include "pages/invoices/create/custom_designs/logo.html" %}
+{#    <div class="divider my-4">STEP 5 - NOTES [OPTIONAL]</div>#}
+{#    {% include "pages/invoices/create/notes/notes.html" %}#}
+<div class="group-invalid:tooltip"
+     data-tip="Fill out all required details to save the invoice.">
+    <button class="btn btn-primary group-invalid:btn-disabled btn-block">Edit profile</button>
+</div>
 </form>
 <script>
     function validate_sort_code(value) {
