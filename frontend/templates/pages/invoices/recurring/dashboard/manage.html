@@ -9,12 +9,12 @@
             <a href="{% url 'invoices:recurring:dashboard' %}"
                class="btn btn-sm btn-outline btn-secondary me-3 float-left">Back to list</a>
         </div>
-        <h1 class="text-center col-span-2 text-xl">Invoice Set (#{{ invoiceSet.id }})</h1>
+        <h1 class="text-center col-span-2 text-xl">Invoice Recurring Profile (#{{ invoiceProfile.id }})</h1>
         <div>
             <button hx-delete="{% url 'api:invoices:recurring:delete' %}"
                     hx-swap="none"
-                    hx-confirm="Are you sure you would like to delete the recurring set #{{ invoiceSet.id }}?"
-                    hx-vals='{"invoice_set": "{{ invoiceSet.id }}", "redirect": "{% url 'invoices:recurring:dashboard' %}"}'
+                    hx-confirm="Are you sure you would like to delete the recurring profile #{{ invoiceProfile.id }}?"
+                    hx-vals='{"invoice_profile": "{{ invoiceProfile.id }}", "redirect": "{% url 'invoices:recurring:dashboard' %}"}'
                     class="btn btn-sm btn-outline btn-error me-3 float-right">
                 <i class="fa-solid fa-trash"></i>
                 Delete
@@ -30,22 +30,22 @@
 </div>
 <div class="card bg-base-100 shadow-xl w-full p-6 flex-col gap-y-4">
     <div class="flex flex-wrap gap-4">
-        <a href="{% url 'invoices:recurring:edit' invoice_set_id=invoiceSet.id %}"
+        <a href="{% url 'invoices:recurring:edit' invoice_profile_id=invoiceProfile.id %}"
            class="btn btn-md btn-outline btn-default grow mr-4 flex-1 min-w-[150px]">
             <i class="fa-solid fa-edit mr-2"></i>
-            Edit Set
+            Edit Profile
         </a>
-        <a href="{% url 'invoices:single:edit' invoice_id=invoiceSet.id %}"
+        <a href="{% url 'invoices:single:edit' invoice_id=invoiceProfile.id %}"
            class="btn btn-md btn-outline btn-default grow mr-4 btn-disabled flex-1 min-w-[150px]">
             <i class="fa-solid fa-clone mr-2"></i>
-            Clone Set
+            Clone Profile
         </a>
     </div>
     <div class="mt-2">
         <div class="flex flex-wrap items-center gap-2">
             <!-- Icon and Text for Current Status -->
             <div data-oob="status" class="flex-shrink-0">
-                {% include "pages/invoices/recurring/dashboard/_status_badge.html" with status=invoiceSet.status inv_id=invoice_id design="default" %}
+                {% include "pages/invoices/recurring/dashboard/_status_badge.html" with status=invoiceProfile.status inv_id=invoice_id design="default" %}
             </div>
             <button class="btn btn-outline btn-secondary btn-disabled flex-1 min-w-[150px]"
                     hx-trigger="click once"
@@ -60,7 +60,7 @@
             <button class="btn btn-outline flex-1 min-w-[200px]"
                     hx-swap="none"
                     data-tip="Something went wrong with the schedule. Refresh its status"
-                    hx-post="{% url "api:invoices:recurring:edit status" invoice_set_id=invoiceSet.id status='refresh' %}">
+                    hx-post="{% url "api:invoices:recurring:edit status" invoice_profile_id=invoiceProfile.id status='refresh' %}">
                 <i class="fa-solid fa-refresh mr-2"></i>
                 Refresh Schedule status
             </button>
@@ -85,19 +85,19 @@
     <div class="card bg-base-100 shadow-xl p-10 flex-row gap-x-4 mt-4">
         <div class="card-body p-0">
             <h4 class="text-md text-neutral-content my-3">Issue date</h4>
-            <h1 class="text-2xl font-bold">{{ invoiceSet.date_issued | default:"No start date" }}</h1>
+            <h1 class="text-2xl font-bold">{{ invoiceProfile.date_issued | default:"No start date" }}</h1>
             <h4 class="text-md text-neutral-content my-3">End date</h4>
-            <h1 class="text-2xl font-bold">{{ invoiceSet.end_date | default:"Never" }}</h1>
+            <h1 class="text-2xl font-bold">{{ invoiceProfile.end_date | default:"Never" }}</h1>
             <h4 class="text-md text-neutral-content my-3">Frequency</h4>
             <h1 class="text-2xl font-bold">
-                {% if invoiceSet.frequency == "weekly" %}
-                    Every {{ day_names_sunday_first | at_index:invoiceSet.day_of_week }}
-                {% elif invoiceSet.frequency == "monthly" %}
-                    Monthly on the {{ invoiceSet.day_of_month | ordinal }}
-                {% elif invoiceSet.frequency == "yearly" %}
+                {% if invoiceProfile.frequency == "weekly" %}
+                    Every {{ day_names_sunday_first | at_index:invoiceProfile.day_of_week }}
+                {% elif invoiceProfile.frequency == "monthly" %}
+                    Monthly on the {{ invoiceProfile.day_of_month | ordinal }}
+                {% elif invoiceProfile.frequency == "yearly" %}
                     Yearly
                 {% else %}
-                    {{ invoiceSet.frequency | title }}
+                    {{ invoiceProfile.frequency | title }}
                 {% endif %}
             </h1>
         </div>

@@ -25,7 +25,7 @@ def return_create_schedule(recurring_schedule):
 @require_http_methods(["GET"])
 @htmx_only("invoices:recurring:dashboard")
 @web_require_scopes("invoices:read", False, False, "dashboard")
-def poll_recurring_schedule_update_endpoint(request: WebRequest, invoice_set_id):
+def poll_recurring_schedule_update_endpoint(request: WebRequest, invoice_profile_id):
     try:
         decoded_timestamp = datetime.fromtimestamp(int(request.GET.get("t", "")))
     except ValueError:
@@ -35,7 +35,7 @@ def poll_recurring_schedule_update_endpoint(request: WebRequest, invoice_set_id)
         return HttpResponse("cancel poll | too long wait", status=286)
 
     try:
-        recurring_schedule: InvoiceRecurringProfile = InvoiceRecurringProfile.objects.get(id=invoice_set_id, active=True)
+        recurring_schedule: InvoiceRecurringProfile = InvoiceRecurringProfile.objects.get(id=invoice_profile_id, active=True)
         if not recurring_schedule.has_access(request.user):
             raise InvoiceRecurringProfile.DoesNotExist()
     except InvoiceRecurringProfile.DoesNotExist:
@@ -52,7 +52,7 @@ def poll_recurring_schedule_update_endpoint(request: WebRequest, invoice_set_id)
         return render(
             request,
             "pages/invoices/recurring/dashboard/poll_response.html",
-            {"status": recurring_schedule.status, "invoice_set_id": invoice_set_id, "invoiceSet": recurring_schedule},
+            {"status": recurring_schedule.status, "invoice_profile_id": invoice_profile_id, "invoiceProfile": recurring_schedule},
             status=286,
         )
 

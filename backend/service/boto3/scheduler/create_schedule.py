@@ -74,7 +74,7 @@ def create_boto_schedule(instance_id: int | str | InvoiceRecurringProfile):
         "Target": {
             "Arn": BOTO3_HANDLER.scheduler_lambda_arn,
             "RoleArn": BOTO3_HANDLER.scheduler_lambda_access_role_arn,
-            "Input": json.dumps({"invoice_set_id": instance.id, "endpoint_url": f"{SITE_URL}"}),
+            "Input": json.dumps({"invoice_profile_id": instance.id, "endpoint_url": f"{SITE_URL}"}),
             "RetryPolicy": {"MaximumRetryAttempts": 20, "MaximumEventAgeInSeconds": 21600},  # 6 hours
         },
         "ActionAfterCompletion": "NONE",

@@ -22,6 +22,6 @@ def create_recurring_schedule(
         print("Schedule updated calling update_boto_schedule")
         return update_boto_schedule(instance.pk)
 
-    logger.info(f"Invoice recurring set was just created")
+    logger.info(f"Invoice recurring profile was just created")
 
     create_boto_schedule(instance)

@@ -26,13 +26,13 @@ def save_invoice(request: WebRequest, invoice_items) -> SaveInvoiceServiceRespon
     finally:
         end_date_obj: date | None = datetime.strptime(end_date_str, "%Y-%m-%d").date() if end_date_str else None
 
-    invoice_set = InvoiceRecurringProfile(
+    invoice_profile = InvoiceRecurringProfile(
         end_date=end_date_obj,
         date_issued=request.POST.get("date_issued"),
         currency=currency,
     )
 
-    save_invoice_common(request, invoice_items, invoice_set)
+    save_invoice_common(request, invoice_items, invoice_profile)
 
     frequency = request.POST.get("frequency", "")
     frequency_day_of_week = request.POST.get("frequency_day_of_week", "")
@@ -44,7 +44,7 @@ def save_invoice(request: WebRequest, invoice_items) -> SaveInvoiceServiceRespon
     # Yearly = day_of_month + month_of_year
 
     frequency_validate_response = validate_and_update_frequency(
-        invoice_set=invoice_set,
+        invoice_profile=invoice_profile,
         frequency=frequency,
         frequency_day_of_week=frequency_day_of_week,
         frequency_day_of_month=frequency_day_of_month,
@@ -55,7 +55,7 @@ def save_invoice(request: WebRequest, invoice_items) -> SaveInvoiceServiceRespon
         messages.error(request, frequency_validate_response.error_message)
 
     try:
-        invoice_set.full_clean()
+        invoice_profile.full_clean()
 
         if frequency_validate_response.failed:
             raise ValidationError(frequency_validate_response.error)
@@ -65,9 +65,9 @@ def save_invoice(request: WebRequest, invoice_items) -> SaveInvoiceServiceRespon
                 messages.error(request, f"{field}: {e.messages[0]}")
         return SaveInvoiceServiceResponse(error_message="There's at least one invalid input; please check the above error messages")
 
-    invoice_set.save()
-    invoice_set.items.set(invoice_items)
+    invoice_profile.save()
+    invoice_profile.items.set(invoice_items)
 
-    QuotaUsage.create_str(request.user, "invoices-count", invoice_set.id)
+    QuotaUsage.create_str(request.user, "invoices-count", invoice_profile.id)
 
-    return SaveInvoiceServiceResponse(True, invoice_set)
+    return SaveInvoiceServiceResponse(True, invoice_profile)

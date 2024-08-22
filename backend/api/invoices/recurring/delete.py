@@ -20,21 +20,21 @@ def delete_invoice_recurring_profile_endpoint(request: WebRequest):
     redirect = delete_items.get("redirect", None)
 
     try:
-        invoice_set = InvoiceRecurringProfile.objects.get(id=delete_items.get("invoice_set", ""))
+        invoice_profile = InvoiceRecurringProfile.objects.get(id=delete_items.get("invoice_profile", ""))
     except InvoiceRecurringProfile.DoesNotExist:
-        messages.error(request, "Invoice Set Not Found")
+        messages.error(request, "Invoice recurring profile Not Found")
         return render(request, "base/toasts.html")
 
-    if not invoice_set.has_access(request.user):
-        messages.error(request, "You do not have permission to delete this invoice set")
+    if not invoice_profile.has_access(request.user):
+        messages.error(request, "You do not have permission to delete this Invoice recurring profile")
         return render(request, "base/toasts.html")
 
     # QuotaLimit.delete_quota_usage("invoices-count", request.user, invoice.id, invoice.date_created)
 
-    Task().queue_task(delete_boto_schedule, "InvoiceRecurringSet", invoice_set.id)
+    Task().queue_task(delete_boto_schedule, "InvoiceRecurringSet", invoice_profile.id)
 
-    invoice_set.active = False
-    invoice_set.save()
+    invoice_profile.active = False
+    invoice_profile.save()
 
     if request.htmx:
         if not redirect:

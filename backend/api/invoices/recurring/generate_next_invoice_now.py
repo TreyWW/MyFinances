@@ -16,14 +16,14 @@ logger = logging.getLogger(__name__)
 @require_POST
 @htmx_only("invoices:recurring:dashboard")
 @web_require_scopes("invoices:write", True, True)
-def generate_next_invoice_now_endpoint(request: WebRequest, invoice_set_id):
+def generate_next_invoice_now_endpoint(request: WebRequest, invoice_profile_id):
     context: dict = {}
     invoice_recurring_profile: InvoiceRecurringProfile | None = InvoiceRecurringProfile.objects.filter(
-        pk=invoice_set_id, active=True
+        pk=invoice_profile_id, active=True
     ).first()
 
     if not invoice_recurring_profile:
-        messages.error(request, "Failed to fetch next invoice; cannot find invoice set.")
+        messages.error(request, "Failed to fetch next invoice; cannot find Invoice recurring profile.")
         return render(request, "base/toast.html")
 
     if invoice_recurring_profile.client_to:
@@ -32,7 +32,7 @@ def generate_next_invoice_now_endpoint(request: WebRequest, invoice_set_id):
         account_defaults = get_account_defaults(invoice_recurring_profile.owner)
 
     if not invoice_recurring_profile.has_access(request.user):
-        messages.error(request, "You do not have permission to modify this invoice set.")
+        messages.error(request, "You do not have permission to modify this invoice recurring profile.")
         return render(request, "base/toast.html")
 
     next_invoice_issue_date = invoice_recurring_profile.next_invoice_issue_date()
@@ -48,9 +48,9 @@ def generate_next_invoice_now_endpoint(request: WebRequest, invoice_set_id):
         )
 
         return render(
-            request, "pages/invoices/recurring/manage/next_invoice_block.html", {"invoiceSet": invoice_recurring_profile} | context
+            request, "pages/invoices/recurring/manage/next_invoice_block.html", {"invoiceProfile": invoice_recurring_profile} | context
         )
     else:
         logger.info(svc_resp.error)
-        messages.error(request, "Failed to fetch next invoice; cannot find invoice set.")
+        messages.error(request, "Failed to fetch next invoice; cannot find invoice recurring profile.")
         return render(request, "base/toast.html")

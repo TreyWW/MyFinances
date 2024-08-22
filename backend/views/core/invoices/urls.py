@@ -7,7 +7,7 @@ from .recurring.edit import invoice_edit_page_endpoint
 from .single import schedule, edit, create, view, manage_access
 from .single.dashboard import invoices_single_dashboard_endpoint
 from .single.overview import manage_invoice
-from .recurring.overview import manage_recurring_invoice_set_endpoint
+from .recurring.overview import manage_recurring_invoice_profile_endpoint
 
 SINGLE_INVOICE_URLS = [
     # path(
@@ -62,11 +62,11 @@ RECURRING_INVOICE_URLS = [
         name="create",
     ),
     path(
-        "<str:invoice_set_id>",
-        manage_recurring_invoice_set_endpoint,
+        "<str:invoice_profile_id>",
+        manage_recurring_invoice_profile_endpoint,
         name="overview",
     ),
-    path("<str:invoice_set_id>/edit", invoice_edit_page_endpoint, name="edit"),
+    path("<str:invoice_profile_id>/edit", invoice_edit_page_endpoint, name="edit"),
 ]
 
 urlpatterns = [

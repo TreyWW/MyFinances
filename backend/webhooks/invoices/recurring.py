@@ -27,10 +27,10 @@ def handle_recurring_invoice_webhook_endpoint(request: WebRequest):
     """
 
     requires:
-    - invoice_set_id
+    - invoice_profile_id
     """
 
-    invoice_set_id = request.POST.get("invoice_set_id", "")
+    invoice_profile_id = request.POST.get("invoice_profile_id", "")
 
     logger.info("Received Scheduled Invoice. Now authenticating...")
     api_auth_response = authenticate_api_key(request)
@@ -39,12 +39,12 @@ def handle_recurring_invoice_webhook_endpoint(request: WebRequest):
         return JsonResponse({"message": api_auth_response.error, "success": False}, status=api_auth_response.status_code or 400)
 
     try:
-        invoice_recurring_profile: InvoiceRecurringProfile = InvoiceRecurringProfile.objects.get(pk=invoice_set_id, active=True)
+        invoice_recurring_profile: InvoiceRecurringProfile = InvoiceRecurringProfile.objects.get(pk=invoice_profile_id, active=True)
     except InvoiceRecurringProfile.DoesNotExist:
-        logger.error(f"Invoice set was not found (#{invoice_set_id}). ERROR!")
-        return JsonResponse({"message": "Invoice set not found", "success": False}, status=404)
+        logger.error(f"Invoice recurring profile was not found (#{invoice_profile_id}). ERROR!")
+        return JsonResponse({"message": "Invoice recurring profile not found", "success": False}, status=404)
 
-    logger.info("Invoice Set found. Now processing...")
+    logger.info("Invoice recurring profile found. Now processing...")
 
     DATE_TODAY = datetime.now().date()
 

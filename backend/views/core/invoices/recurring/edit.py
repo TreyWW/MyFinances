@@ -5,7 +5,7 @@ from django.views.decorators.http import require_http_methods
 from backend.decorators import web_require_scopes
 from backend.models import InvoiceRecurringProfile
 from backend.service.invoices.recurring.create.get_page import get_invoice_context
-from backend.service.invoices.recurring.get import get_invoice_set, GetRecurringSetServiceResponse
+from backend.service.invoices.recurring.get import get_invoice_profile, GetRecurringSetServiceResponse
 from backend.views.core.invoices.handler import invoices_core_handler
 
 
@@ -64,17 +64,17 @@ def invoice_get_existing_data(invoice_obj: InvoiceRecurringProfile):
 # gets invoice object from invoice id, convert obj to dict, and renders edit.html while passing the stored invoice values to frontend
 @require_http_methods(["GET"])
 @web_require_scopes("invoices:write", False, False, "invoices:recurring:dashboard")
-def invoice_edit_page_endpoint(request, invoice_set_id):
-    get_response = get_invoice_set(request, invoice_set_id)
+def invoice_edit_page_endpoint(request, invoice_profile_id):
+    get_response = get_invoice_profile(request, invoice_profile_id)
 
     if get_response.failed:
         messages.error(request, get_response.error_message)
         return render(request, "base/toast.html")
 
-    invoice_set: InvoiceRecurringProfile = get_response.response
+    invoice_profile: InvoiceRecurringProfile = get_response.response
 
     # use to populate fields with existing data in edit_from_destination.html AND edit_to_destination.html
-    data_to_populate = invoice_get_existing_data(invoice_set) | {"InvoiceRecurringSet": InvoiceRecurringProfile}
+    data_to_populate = invoice_get_existing_data(invoice_profile) | {"InvoiceRecurringSet": InvoiceRecurringProfile}
 
     print(data_to_populate)
 

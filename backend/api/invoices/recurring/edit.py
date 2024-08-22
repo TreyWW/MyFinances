@@ -7,24 +7,24 @@ from django.views.decorators.http import require_http_methods
 
 from backend.decorators import web_require_scopes
 from backend.models import InvoiceRecurringProfile
-from backend.service.invoices.recurring.get import get_invoice_set
+from backend.service.invoices.recurring.get import get_invoice_profile
 from backend.service.invoices.recurring.validate.frequencies import validate_and_update_frequency
 from backend.types.requests import WebRequest
 
 
 @require_http_methods(["POST"])
 @web_require_scopes("invoices:write", True, True)
-def edit_invoice_recurring_profile_endpoint(request: WebRequest, invoice_set_id):
-    invoice_set_response = get_invoice_set(request, invoice_set_id)
+def edit_invoice_recurring_profile_endpoint(request: WebRequest, invoice_profile_id):
+    invoice_profile_response = get_invoice_profile(request, invoice_profile_id)
 
-    if invoice_set_response.failed:
-        messages.error(request, invoice_set_response.error)
+    if invoice_profile_response.failed:
+        messages.error(request, invoice_profile_response.error)
         return render(request, "base/toasts.html", {"autohide": False})
 
-    invoice_set: InvoiceRecurringProfile = invoice_set_response.response
+    invoice_profile: InvoiceRecurringProfile = invoice_profile_response.response
 
     frequency_update_response = validate_and_update_frequency(
-        invoice_set=invoice_set,
+        invoice_profile=invoice_profile,
         frequency=request.POST.get("frequency", ""),
         frequency_day_of_week=request.POST.get("frequency_day_of_week", ""),
         frequency_day_of_month=request.POST.get("frequency_day_of_month", ""),
@@ -67,9 +67,9 @@ def edit_invoice_recurring_profile_endpoint(request: WebRequest, invoice_set_id)
                 except ValueError:
                     messages.error(request, "Invalid date format for date_due")
                     return render(request, "base/toasts.html")
-            setattr(invoice_set, column_name, new_value)
+            setattr(invoice_profile, column_name, new_value)
 
-    invoice_set.save()
+    invoice_profile.save()
 
     if request.htmx:
         messages.success(request, "Invoice edited")

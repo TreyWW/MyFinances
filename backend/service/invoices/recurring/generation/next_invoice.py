@@ -18,7 +18,7 @@ def generate_next_invoice_service(
 ) -> GenerateNextInvoiceServiceResponse:
 
     if not invoice_recurring_profile:
-        return GenerateNextInvoiceServiceResponse(error_message="Invoice recurring set not found")
+        return GenerateNextInvoiceServiceResponse(error_message="Invoice recurring profile not found")
 
     generated_invoice = Invoice(
         invoice_recurring_profile=invoice_recurring_profile,
@@ -74,7 +74,7 @@ def generate_next_invoice_service(
     logger.info(f"Invoice generated with the ID of {generated_invoice.pk}")
 
     AuditLog.objects.create(
-        action=f"[SYSTEM] Generated invoice #{generated_invoice.pk} from Recurring Set #{invoice_recurring_profile.pk}",
+        action=f"[SYSTEM] Generated invoice #{generated_invoice.pk} from the recurring profile #{invoice_recurring_profile.pk}",
         user=invoice_recurring_profile.user,
         organization=invoice_recurring_profile.organization,
     )

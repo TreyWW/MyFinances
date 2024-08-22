@@ -29,10 +29,10 @@ SINGLE_INVOICE_URLS = [
 
 RECURRING_INVOICE_URLS = [
     path("fetch/", fetch_all_recurring_invoices_endpoint, name="fetch"),
-    path("edit/<int:invoice_set_id>/set_status/<str:status>/", recurring_profile_change_status_endpoint, name="edit status"),
-    path("poll/<str:invoice_set_id>/update_schedule/", poll_recurring_schedule_update_endpoint, name="poll_update_schedule"),
-    path("<str:invoice_set_id>/generate_next_invoice/", generate_next_invoice_now_endpoint, name="generate next invoice"),
-    path("<str:invoice_set_id>/edit/", edit_invoice_recurring_profile_endpoint, name="edit"),
+    path("edit/<int:invoice_profile_id>/set_status/<str:status>/", recurring_profile_change_status_endpoint, name="edit status"),
+    path("poll/<str:invoice_profile_id>/update_schedule/", poll_recurring_schedule_update_endpoint, name="poll_update_schedule"),
+    path("<str:invoice_profile_id>/generate_next_invoice/", generate_next_invoice_now_endpoint, name="generate next invoice"),
+    path("<str:invoice_profile_id>/edit/", edit_invoice_recurring_profile_endpoint, name="edit"),
     path("delete/", delete_invoice_recurring_profile_endpoint, name="delete"),
 ]
 

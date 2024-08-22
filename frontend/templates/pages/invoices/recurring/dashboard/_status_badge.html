@@ -34,7 +34,7 @@
               data-invoice-set-id="{{ inv_id }}">Cancelled</span>
     {% else %}
         <span class="badge badge-outline rounded p-3 badge-info"
-              data-status="{{ invoiceSet.status | lower }}"
+              data-status="{{ invoiceProfile.status | lower }}"
               data-invoice-set-id="{{ inv_id }}">{{ status | default:"paused" | title }}</span>
     {% endif %}
 {% endif %}
