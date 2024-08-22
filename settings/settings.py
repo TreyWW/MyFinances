@@ -268,11 +268,11 @@ STORAGES = {
     },
     "public_media": {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
-        "OPTIONS": {"location": "/media/public", "base_url": "/media/public/"},
+        "OPTIONS": {"location": "media/public", "base_url": "/media/public/"},
     },
     "private_media": {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
-        "OPTIONS": {"location": "/media/private", "base_url": "/media/private/"},
+        "OPTIONS": {"location": "media/private", "base_url": "/media/private/"},
     },
 }
 
