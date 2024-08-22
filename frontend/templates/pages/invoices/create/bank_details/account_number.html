@@ -1,0 +1,18 @@
+<div class="input_card">
+    <div class="card-body">
+        <div class="form-control w-full">
+            <label class="label">Account Number</label>
+            <input onkeyup="this.value = validate_account_number(this.value);"
+                   pattern="[0-9]{8}"
+                   maxlength="8"
+                   name="account_number"
+                   value="{{ account_number | default_if_none:"" }}"
+                   placeholder="12345678"
+                   type="text"
+                   class="peer input input-bordered input-block">
+            <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden ">
+                <span class="label-text-alt text-error">Please enter a valid account number.</span>
+            </label>
+        </div>
+    </div>
+</div>

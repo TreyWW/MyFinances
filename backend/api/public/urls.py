@@ -12,6 +12,7 @@ urlpatterns = [
     path("internal/", include(INTERNAL_URLS)),
     path("clients/", include("backend.api.public.endpoints.clients.urls")),
     path("invoices/", include("backend.api.public.endpoints.Invoices.urls")),
+    path("webhooks/", include("backend.api.public.endpoints.webhooks.urls")),
 ]
 
 app_name = "public"

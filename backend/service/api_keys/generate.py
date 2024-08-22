@@ -6,7 +6,15 @@ from backend.types.htmx import HtmxHttpRequest
 
 
 def generate_public_api_key(
-    request, owner: User | Organization, api_key_name: str | None, permissions: list, *, expires=None, description=None
+    request,
+    owner: User | Organization,
+    api_key_name: str | None,
+    permissions: list,
+    *,
+    expires=None,
+    description=None,
+    administrator_toggle: bool = False,
+    administrator_type: str | None = None
 ) -> tuple[APIAuthToken | None, str]:
     if not validate_name(api_key_name):
         return None, "Invalid key name"
@@ -23,7 +31,21 @@ def generate_public_api_key(
     if validate_scopes(permissions).failed or not has_permission_to_create(request, owner):
         return None, "Invalid permissions"
 
-    token = APIAuthToken(name=api_key_name, description=description, expires=expires, scopes=permissions)  # type: ignore[arg-type, misc]
+    administrator_service_type = None
+
+    if request.user.is_superuser:
+        if administrator_toggle:
+            if administrator_type not in [option[0] for option in APIAuthToken.AdministratorServiceTypes.choices]:
+                return None, "Invalid administration type"
+            administrator_service_type = administrator_type
+
+    token = APIAuthToken(
+        name=api_key_name,
+        description=description,
+        expires=expires,
+        scopes=permissions,
+        administrator_service_type=administrator_service_type,
+    )  # type: ignore[arg-type, misc]
 
     raw_key: str = token.generate_key()
 

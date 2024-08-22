@@ -31,9 +31,18 @@
         </li>
         {% if feature_enabled_invoices %}
             <li>
-                {% with i_url="invoices:dashboard" %}
+                {% with i_url="invoices:single:dashboard" %}
                     <a href="{% url i_url %}"
-                       {% if request.resolver_match.view_name == i_url %}class="active"{% endif %}>Invoices
+                       {% if request.resolver_match.view_name == i_url %}class="active"{% endif %}>
+                        Single Invoices
+                    </a>
+                {% endwith %}
+            </li>
+            <li>
+                {% with i_url="invoices:recurring:dashboard" %}
+                    <a href="{% url i_url %}"
+                       {% if request.resolver_match.view_name == i_url %}class="active"{% endif %}>
+                        Recurring Invoices
                     </a>
                 {% endwith %}
             </li>
@@ -42,7 +51,8 @@
             <li>
                 {% with i_url="receipts dashboard" %}
                     <a href="{% url i_url %}"
-                       {% if request.resolver_match.view_name == i_url %}class="active"{% endif %}>Receipts
+                       {% if request.resolver_match.view_name == i_url %}class="active"{% endif %}>
+                        Receipts
                     </a>
                 {% endwith %}
             </li>

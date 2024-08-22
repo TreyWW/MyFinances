@@ -23,7 +23,7 @@
   "settings:change_password change_password": [
     200
   ],
-  "invoices:dashboard": [
+  "invoices:single:dashboard": [
     200
   ],
   "receipts dashboard": [

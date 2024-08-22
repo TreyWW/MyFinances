@@ -5,6 +5,7 @@ from django.http import HttpResponseBadRequest
 from django.shortcuts import render
 
 from backend.api.public.permissions import SCOPE_DESCRIPTIONS
+from backend.api.public.models import APIAuthToken
 from backend.models import Client, Receipt, User
 from backend.models import Invoice
 from backend.models import QuotaLimit
@@ -150,6 +151,7 @@ def open_modal(request: WebRequest, modal_name, context_type=None, context_value
                 {"name": group, "description": perms["description"], "options": perms["options"]}
                 for group, perms in SCOPE_DESCRIPTIONS.items()
             ]
+            context["APIAuthToken_types"] = APIAuthToken.AdministratorServiceTypes
 
         if modal_name == "edit_team_member_permissions":
             team = request.user.logged_in_as_team
