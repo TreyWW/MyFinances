@@ -259,14 +259,22 @@ else:
         }
     }
 
-# STORAGES = {
-#     "default": {
-#         "BACKEND": "django.core.files.storage.FileSystemStorage",
-#     },
-#     "staticfiles": {
-#         "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
-#     },
-# }
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+    "public_media": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+        "OPTIONS": {"location": "/media/public", "base_url": "/media/public/"},
+    },
+    "private_media": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+        "OPTIONS": {"location": "/media/private", "base_url": "/media/private/"},
+    },
+}
 
 MARKDOWNIFY = {
     "default": {
@@ -406,6 +414,9 @@ AWS_MEDIA_PUBLIC_ENABLED = get_var("AWS_MEDIA_PUBLIC_ENABLED", default=False).lo
 
 if AWS_MEDIA_PUBLIC_ENABLED:
     DEFAULT_FILE_STORAGE = "settings.settings.CustomPublicMediaStorage"
+    STORAGES["public_media"] = {
+        "BACKEND": "settings.settings.CustomPublicMediaStorage",
+    }
 else:
     MEDIA_URL = "/media/"
     MEDIA_ROOT = os.path.join(BASE_DIR, "media")
@@ -419,6 +430,9 @@ AWS_MEDIA_PRIVATE_ENABLED = get_var("AWS_MEDIA_PRIVATE_ENABLED", default=False).
 
 if AWS_MEDIA_PRIVATE_ENABLED:
     PRIVATE_FILE_STORAGE = "settings.settings.CustomPrivateMediaStorage"
+    STORAGES["private_media"] = {
+        "BACKEND": "settings.settings.CustomPrivateMediaStorage",
+    }
 else:
 
     class CustomPrivateMediaStorage(FileSystemStorage):  # type: ignore # This overrides the AWS version

@@ -9,7 +9,7 @@ from uuid import uuid4
 from django.contrib.auth.hashers import check_password, make_password
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.contrib.contenttypes.models import ContentType
-from django.core.files.storage import get_storage_class
+from django.core.files.storage import storages
 from django.core.validators import MaxValueValidator
 from django.db import models
 from django.db.models import Count, QuerySet
@@ -21,13 +21,11 @@ from backend.managers import InvoiceRecurringProfile_WithItemsManager
 
 
 def _public_storage():
-    storage_class = get_storage_class("settings.settings.CustomPublicMediaStorage")
-    return storage_class()
+    return storages["public_media"]
 
 
 def _private_storage():
-    storage_class = get_storage_class("settings.settings.CustomPrivateMediaStorage")
-    return storage_class()
+    return storages["private_media"]
 
 
 def RandomCode(length=6):
