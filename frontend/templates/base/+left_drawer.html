@@ -1,6 +1,5 @@
 {% load feature_enabled %}
 {% feature_enabled "areUserEmailsAllowed" as are_user_emails_allowed %}
-{% personal_feature_enabled request.user "currency_converter" as feature_enabled_currency_converter %}
 {% personal_feature_enabled request.user "invoices" as feature_enabled_invoices %}
 {% personal_feature_enabled request.user "receipts" as feature_enabled_receipts %}
 {% personal_feature_enabled request.user "email_sending" as feature_enabled_emails %}
@@ -54,16 +53,6 @@
                     <a href="{% url i_url %}"
                        {% if request.resolver_match.view_name == i_url %}class="active"{% endif %}>
                         Receipts
-                    </a>
-                {% endwith %}
-            </li>
-        {% endif %}
-        {% if feature_enabled_currency_converter %}
-            <li>
-                {% with i_url="currency converter" %}
-                    <a href="{% url i_url %}"
-                       {% if request.resolver_match.view_name == i_url %}class="active"{% endif %}>
-                        Currency Converter
                     </a>
                 {% endwith %}
             </li>

@@ -11,7 +11,6 @@ from django.views.static import serve
 
 from backend.api.public.swagger_ui import get_swagger_ui, get_swagger_endpoints
 from backend.views.core import receipts
-from backend.views.core.currency_converter import dashboard as cc_dashboard
 from backend.views.core.invoices.single.overview import manage_invoice
 from backend.views.core.invoices.single.view import view_invoice_with_uuid_endpoint
 from backend.views.core.other.index import dashboard
@@ -52,11 +51,6 @@ urlpatterns = [
     path("login/external/", include("social_django.urls", namespace="social")),
     path("auth/", include("backend.views.core.auth.urls")),
     path("dashboard/clients/", include("backend.views.core.clients.urls")),
-    path(
-        "dashboard/currency_converter/",
-        cc_dashboard.currency_convert_view,
-        name="currency converter",
-    ),
     path("admin/", admin.site.urls),
 ] + static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
 
