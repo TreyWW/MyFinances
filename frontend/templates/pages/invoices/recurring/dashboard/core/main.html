@@ -1,0 +1,11 @@
+{% extends base|default:"base/base.html" %}
+{% block content %}
+    <div class="grid grid-cols-1 md:grid-cols-10 gap-4">
+        {% include "pages/invoices/structure/left_sidebar.html" %}
+        <div class="col-span-9 lg:col-span-8" data-hx-swap="content">
+            {% if page_template %}
+                {% include page_template %}
+            {% endif %}
+        </div>
+    </div>
+{% endblock content %}

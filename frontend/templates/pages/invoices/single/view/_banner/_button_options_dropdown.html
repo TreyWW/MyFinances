@@ -1,0 +1,18 @@
+<li>
+    <a class="btn btn-sm gradient-btn" download>
+        <i class="fa-solid fa-download me-2"></i>
+        <p class="options-text">Download</p>
+    </a>
+</li>
+<li>
+    <button onclick="window.print()" class="btn btn-sm gradient-btn">
+        <i class="fa-solid fa-print me-2"></i>
+        <p class="options-text">Print</p>
+    </button>
+</li>
+{% if request.user.is_authenticated %}
+    <li>
+        <a class="btn btn-sm gradient-btn"
+           href="{% url "invoices:single:manage_access" invoice_id=invoice.id %}">Share Invoice</a>
+    </li>
+{% endif %}

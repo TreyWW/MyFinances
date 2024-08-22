@@ -38,14 +38,16 @@ htmx.config.useTemplateFragments = true; // for swapping of table items
 htmx.config.scrollIntoViewOnBoost = false; // to stop hx-boost scrolling down automatically
 
 
-window.addEventListener("DOMContentLoaded", (event) => {
-  document.body.addEventListener("htmx:sendError", htmx_resend);
-  document.body.addEventListener("htmx:responseError", htmx_resend);
-  document.body.addEventListener("htmx:loadError", htmx_resend);
-  document.body.addEventListener("htmx:afterRequest", (event) => {
-    const drawer = document.getElementById("service_list_drawer");
-    if (drawer) {
-      toggleDrawer(false, true);
-    }
-  });
-});
+// window.addEventListener("DOMContentLoaded", (event) => {
+//   document.body.addEventListener("htmx:sendError", htmx_resend);
+//   document.body.addEventListener("htmx:responseError", htmx_resend);
+//   document.body.addEventListener("htmx:loadError", htmx_resend);
+//   document.body.addEventListener("htmx:afterRequest", (event) => {
+//     const drawer = document.getElementById("service_list_drawer");
+//     if (drawer) {
+//       toggleDrawer(false, true);
+//     }
+//   });
+// });
+
+// todo: fix retry | only retry connection ones

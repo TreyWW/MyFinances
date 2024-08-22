@@ -1,6 +1,6 @@
+import uuid
 from django.core.management.base import BaseCommand
-
-from backend.models import APIKey
+from backend.api.public.models import APIAuthToken
 
 
 class Command(BaseCommand):
@@ -9,24 +9,24 @@ class Command(BaseCommand):
     """
 
     def handle(self, *args, **kwargs):
-        token = APIKey.objects.create(service=APIKey.ServiceTypes.AWS_API_DESTINATION)
-        key = f"{token.id}:{token.key}"
-        token.hash()
+        token = APIAuthToken(service=APIAuthToken.AdministratorServiceTypes.AWS_API_DESTINATION, name=str(uuid.uuid4()))
+        raw_key: str = token.generate_key()
+        token.save()
 
         self.stdout.write(
             f"""
         NOTE: Keep this key secret. It is used to authenticate your API requests with the AWS EventBridge API.
 
-        Your API Key: {key}
+        Your API Key: {raw_key}
 
         To use this API Key for development you can use:
 
-        pulumi config set api_destination-api_key {key}
+        pulumi config set api_destination-api_key {raw_key}
         pulumi up
 
         If you would like to use it for production use:
         pulumi stack select production
-        pulumi config set api_destination-api_key {key}
+        pulumi config set api_destination-api_key {raw_key}
         pulumi up
         """
         )

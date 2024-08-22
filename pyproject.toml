@@ -54,7 +54,6 @@ django-extensions = "3.2.3"
 python-dateutil = "2.9.0"
 django-mathfilters = "1.0.0"
 django-ratelimit = "4.1.0"
-django-htmlmin = "0.11.0"
 python-memcached = "1.62"
 django-htmx = "1.17.3"
 django-login-required-middleware = "0.9.0"
@@ -164,5 +163,6 @@ module = [
     "drf_yasg.utils",
     "drf_yasg.views",
     "xhtml2pdf",
+    "celery"
 ]
 ignore_missing_imports = true

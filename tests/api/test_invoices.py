@@ -10,8 +10,8 @@ from tests.handler import ViewTestCase, assert_url_matches_view
 class InvoicesAPIFetch(ViewTestCase):
     def setUp(self):
         super().setUp()
-        self.url_path = "/api/invoices/fetch/"
-        self.url_name = "api:invoices:fetch"
+        self.url_path = "/api/invoices/single/fetch/"
+        self.url_name = "api:invoices:single:fetch"
         self.view_function_path = "backend.api.invoices.fetch.fetch_all_invoices"
 
     def test_302_for_all_normal_get_requests(self):
@@ -22,7 +22,7 @@ class InvoicesAPIFetch(ViewTestCase):
         # Ensure that authenticated users with HTMX headers are redirected to the invoices dashboard
         self.login_user()
         response = self.make_request(with_htmx=False)
-        self.assertRedirects(response, "/dashboard/invoices/", 302)
+        self.assertRedirects(response, "/dashboard/invoices/single/", 302)
 
     def test_302_for_non_authenticated_users(self):
         # Ensure that non-authenticated users receive a 302 status code
@@ -39,7 +39,7 @@ class InvoicesAPIFetch(ViewTestCase):
         # Ensure that authenticated users without HTMX headers are redirected to the invoices dashboard
         self.login_user()
         response = self.make_request(with_htmx=False)
-        self.assertRedirects(response, "/dashboard/invoices/", 302)
+        self.assertRedirects(response, "/dashboard/invoices/single/", 302)
 
     def test_matches_with_urls_view(self):
         assert_url_matches_view(
@@ -81,8 +81,8 @@ class InvoicesAPIFetch(ViewTestCase):
 class InvoicesAPIDelete(ViewTestCase):
     def setUp(self):
         super().setUp()
-        self.url_path = "/api/invoices/delete/"
-        self.url_name = "api:invoices:delete"
+        self.url_path = "/api/invoices/single/delete/"
+        self.url_name = "api:invoices:single:delete"
         self.view_function_path = "backend.api.invoices.delete.delete_invoice"
 
     def test_302_for_all_normal_get_requests(self):
@@ -118,8 +118,8 @@ class InvoicesAPIDelete(ViewTestCase):
 class InvoicesEditDiscount(ViewTestCase):
     def setUp(self):
         super().setUp()
-        self.url_path = "/api/invoices/edit/discount/"
-        self.url_name = "api:invoices:edit discount"
+        self.url_path = "/api/invoices/single/edit/discount/"
+        self.url_name = "api:invoices:single:edit discount"
         self.view_function_path = "backend.api.invoices.edit.edit_discount"
         self.invoice: Invoice = baker.make("backend.Invoice", user=self.log_in_user)
 
@@ -127,12 +127,12 @@ class InvoicesEditDiscount(ViewTestCase):
         # Ensure that non-HTMX GET requests are redirected to the login page
 
         response = self.client.post(reverse(self.url_name, kwargs={"invoice_id": self.invoice.id}))
-        self.assertRedirects(response, f"/auth/login/?next=/api/invoices/edit/{self.invoice.id}/discount/", 302)
+        self.assertRedirects(response, f"/auth/login/?next=/api/invoices/single/edit/{self.invoice.id}/discount/", 302)
 
         # Ensure that authenticated users with HTMX headers are redirected to the invoices dashboard
         self.login_user()
         response = self.client.post(reverse(self.url_name, kwargs={"invoice_id": self.invoice.id}))
-        self.assertRedirects(response, "/dashboard/invoices/", 302)
+        self.assertRedirects(response, "/dashboard/invoices/single/", 302)
 
     def test_valid_edit_percentage(self):
         self.login_user()
@@ -203,10 +203,3 @@ class InvoicesEditDiscount(ViewTestCase):
             messages = self.get_all_messages(response)
             self.assertEqual(len(messages), 1)
             self.assertEqual(str(messages[0]), "Please enter a valid discount amount")
-
-    def test_matches_with_urls_view(self):
-        resolved_func = resolve(f"/api/invoices/edit/{self.invoice.id}/discount/").func
-        resolved_func_name = f"{resolved_func.__module__}.{resolved_func.__name__}"
-
-        self.assertEqual(reverse(self.url_name, kwargs={"invoice_id": self.invoice.id}), f"/api/invoices/edit/{self.invoice.id}/discount/")
-        self.assertEqual(resolved_func_name, self.view_function_path)

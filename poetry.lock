@@ -128,27 +128,6 @@ files = [
 dev = ["freezegun (>=1.0,<2.0)", "pytest (>=6.0)", "pytest-cov"]
 
 [[package]]
-name = "beautifulsoup4"
-version = "4.12.3"
-description = "Screen-scraping library"
-optional = false
-python-versions = ">=3.6.0"
-files = [
-    {file = "beautifulsoup4-4.12.3-py3-none-any.whl", hash = "sha256:b80878c9f40111313e55da8ba20bdba06d8fa3969fc68304167741bbf9e082ed"},
-    {file = "beautifulsoup4-4.12.3.tar.gz", hash = "sha256:74e3d1928edc070d21748185c46e3fb33490f22f52a3addee9aee0f4f7781051"},
-]
-
-[package.dependencies]
-soupsieve = ">1.2"
-
-[package.extras]
-cchardet = ["cchardet"]
-chardet = ["chardet"]
-charset-normalizer = ["charset-normalizer"]
-html5lib = ["html5lib"]
-lxml = ["lxml"]
-
-[[package]]
 name = "black"
 version = "24.4.2"
 description = "The uncompromising code formatter."
@@ -234,13 +213,13 @@ crt = ["botocore[crt] (>=1.21.0,<2.0a0)"]
 
 [[package]]
 name = "boto3-stubs"
-version = "1.34.147"
-description = "Type annotations for boto3 1.34.147 generated with mypy-boto3-builder 7.25.0"
+version = "1.34.149"
+description = "Type annotations for boto3 1.34.149 generated with mypy-boto3-builder 7.25.0"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "boto3_stubs-1.34.147-py3-none-any.whl", hash = "sha256:6a5b276eb3414b370a084561f23d610a1e8c8e7630f6fe463523fc06766bc887"},
-    {file = "boto3_stubs-1.34.147.tar.gz", hash = "sha256:3a483d2a55b247029d6e5e04002153984353c0c19882607af7e37038a7ce72b0"},
+    {file = "boto3_stubs-1.34.149-py3-none-any.whl", hash = "sha256:d4d28c5d349364292efe83b26bf1caf909a95f4ed3a57614045371f777cf14fe"},
+    {file = "boto3_stubs-1.34.149.tar.gz", hash = "sha256:3deb59b18fc73c4fbe3324fcb52cc3c7d0cc789338d43e07e0efd1ef1bc0d98c"},
 ]
 
 [package.dependencies]
@@ -296,7 +275,7 @@ bedrock-agent = ["mypy-boto3-bedrock-agent (>=1.34.0,<1.35.0)"]
 bedrock-agent-runtime = ["mypy-boto3-bedrock-agent-runtime (>=1.34.0,<1.35.0)"]
 bedrock-runtime = ["mypy-boto3-bedrock-runtime (>=1.34.0,<1.35.0)"]
 billingconductor = ["mypy-boto3-billingconductor (>=1.34.0,<1.35.0)"]
-boto3 = ["boto3 (==1.34.147)", "botocore (==1.34.147)"]
+boto3 = ["boto3 (==1.34.149)", "botocore (==1.34.149)"]
 braket = ["mypy-boto3-braket (>=1.34.0,<1.35.0)"]
 budgets = ["mypy-boto3-budgets (>=1.34.0,<1.35.0)"]
 ce = ["mypy-boto3-ce (>=1.34.0,<1.35.0)"]
@@ -645,13 +624,13 @@ xray = ["mypy-boto3-xray (>=1.34.0,<1.35.0)"]
 
 [[package]]
 name = "botocore"
-version = "1.34.148"
+version = "1.34.149"
 description = "Low-level, data-driven core of boto 3."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "botocore-1.34.148-py3-none-any.whl", hash = "sha256:9e09428b0bc4d0c1cf5e368dd6ab18eabf6047304060f8b5dd8391677cfe00e6"},
-    {file = "botocore-1.34.148.tar.gz", hash = "sha256:258dd95570b43db9fa21cce5426eabaea5867e3a61224157650448b5019d1bbd"},
+    {file = "botocore-1.34.149-py3-none-any.whl", hash = "sha256:ae6c4be52eeee96f68c116b27d252bab069cd046d61a17cfe8e9da411cf22906"},
+    {file = "botocore-1.34.149.tar.gz", hash = "sha256:2e1eb5ef40102a3d796bb3dd05f2ac5e8fb43fe1ff114b4f6d33153437f5a372"},
 ]
 
 [package.dependencies]
@@ -664,13 +643,13 @@ crt = ["awscrt (==0.20.11)"]
 
 [[package]]
 name = "botocore-stubs"
-version = "1.34.147"
+version = "1.34.149"
 description = "Type annotations and code completion for botocore"
 optional = false
 python-versions = "<4.0,>=3.8"
 files = [
-    {file = "botocore_stubs-1.34.147-py3-none-any.whl", hash = "sha256:ef1643787c95036641cc49700d8e7d48e31826ce4c25b50e2745a4e9104c662b"},
-    {file = "botocore_stubs-1.34.147.tar.gz", hash = "sha256:d69c75b71c2fe1456b724653f586adcd5bf660ff6d104ecb6ac5efb40fcf363b"},
+    {file = "botocore_stubs-1.34.149-py3-none-any.whl", hash = "sha256:5fe4b32209b32cf98c75df5287acdde5df978e3586809329e3078045493b6bfc"},
+    {file = "botocore_stubs-1.34.149.tar.gz", hash = "sha256:0d7b41d97206a5957ebc95e33f7a865d338c4404535aaa5a1d32cd3fa5d1ea88"},
 ]
 
 [package.dependencies]
@@ -1172,20 +1151,6 @@ files = [
 
 [package.dependencies]
 Django = ">=3.2"
-
-[[package]]
-name = "django-htmlmin"
-version = "0.11.0"
-description = "HTML minifier for Python frameworks (not only Django, despite the name)."
-optional = false
-python-versions = "*"
-files = [
-    {file = "django-htmlmin-0.11.0.tar.gz", hash = "sha256:e41b2a2157570846645cc636a9bddde8aa3e03f6834a9211e61a17f2ed42b87e"},
-]
-
-[package.dependencies]
-beautifulsoup4 = "*"
-html5lib = "*"
 
 [[package]]
 name = "django-htmx"
@@ -2419,13 +2384,13 @@ typing-extensions = {version = ">=4.1.0", markers = "python_version < \"3.12\""}
 
 [[package]]
 name = "mypy-boto3-stepfunctions"
-version = "1.34.137"
-description = "Type annotations for boto3.SFN 1.34.137 service generated with mypy-boto3-builder 7.25.0"
+version = "1.34.149"
+description = "Type annotations for boto3.SFN 1.34.149 service generated with mypy-boto3-builder 7.25.0"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "mypy_boto3_stepfunctions-1.34.137-py3-none-any.whl", hash = "sha256:c78a6abaaf6b3c9eaee183b4cc59cb0d6aa838e2f20698be3d6ad46788a64945"},
-    {file = "mypy_boto3_stepfunctions-1.34.137.tar.gz", hash = "sha256:c568275ab1b2d9600352ec26e9915335526d39fc6e7192a664428118f6c7799f"},
+    {file = "mypy_boto3_stepfunctions-1.34.149-py3-none-any.whl", hash = "sha256:dbe3c90af541178826f0992c58ef3699d5f1f42d0f51ff5b761d4c8036768726"},
+    {file = "mypy_boto3_stepfunctions-1.34.149.tar.gz", hash = "sha256:155f6d7aa4b61799166e5beae85386cf5393612e4cbabe7a8426225325e3c12b"},
 ]
 
 [package.dependencies]
@@ -2688,22 +2653,22 @@ wcwidth = "*"
 
 [[package]]
 name = "protobuf"
-version = "4.25.3"
+version = "4.25.4"
 description = ""
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "protobuf-4.25.3-cp310-abi3-win32.whl", hash = "sha256:d4198877797a83cbfe9bffa3803602bbe1625dc30d8a097365dbc762e5790faa"},
-    {file = "protobuf-4.25.3-cp310-abi3-win_amd64.whl", hash = "sha256:209ba4cc916bab46f64e56b85b090607a676f66b473e6b762e6f1d9d591eb2e8"},
-    {file = "protobuf-4.25.3-cp37-abi3-macosx_10_9_universal2.whl", hash = "sha256:f1279ab38ecbfae7e456a108c5c0681e4956d5b1090027c1de0f934dfdb4b35c"},
-    {file = "protobuf-4.25.3-cp37-abi3-manylinux2014_aarch64.whl", hash = "sha256:e7cb0ae90dd83727f0c0718634ed56837bfeeee29a5f82a7514c03ee1364c019"},
-    {file = "protobuf-4.25.3-cp37-abi3-manylinux2014_x86_64.whl", hash = "sha256:7c8daa26095f82482307bc717364e7c13f4f1c99659be82890dcfc215194554d"},
-    {file = "protobuf-4.25.3-cp38-cp38-win32.whl", hash = "sha256:f4f118245c4a087776e0a8408be33cf09f6c547442c00395fbfb116fac2f8ac2"},
-    {file = "protobuf-4.25.3-cp38-cp38-win_amd64.whl", hash = "sha256:c053062984e61144385022e53678fbded7aea14ebb3e0305ae3592fb219ccfa4"},
-    {file = "protobuf-4.25.3-cp39-cp39-win32.whl", hash = "sha256:19b270aeaa0099f16d3ca02628546b8baefe2955bbe23224aaf856134eccf1e4"},
-    {file = "protobuf-4.25.3-cp39-cp39-win_amd64.whl", hash = "sha256:e3c97a1555fd6388f857770ff8b9703083de6bf1f9274a002a332d65fbb56c8c"},
-    {file = "protobuf-4.25.3-py3-none-any.whl", hash = "sha256:f0700d54bcf45424477e46a9f0944155b46fb0639d69728739c0e47bab83f2b9"},
-    {file = "protobuf-4.25.3.tar.gz", hash = "sha256:25b5d0b42fd000320bd7830b349e3b696435f3b329810427a6bcce6a5492cc5c"},
+    {file = "protobuf-4.25.4-cp310-abi3-win32.whl", hash = "sha256:db9fd45183e1a67722cafa5c1da3e85c6492a5383f127c86c4c4aa4845867dc4"},
+    {file = "protobuf-4.25.4-cp310-abi3-win_amd64.whl", hash = "sha256:ba3d8504116a921af46499471c63a85260c1a5fc23333154a427a310e015d26d"},
+    {file = "protobuf-4.25.4-cp37-abi3-macosx_10_9_universal2.whl", hash = "sha256:eecd41bfc0e4b1bd3fa7909ed93dd14dd5567b98c941d6c1ad08fdcab3d6884b"},
+    {file = "protobuf-4.25.4-cp37-abi3-manylinux2014_aarch64.whl", hash = "sha256:4c8a70fdcb995dcf6c8966cfa3a29101916f7225e9afe3ced4395359955d3835"},
+    {file = "protobuf-4.25.4-cp37-abi3-manylinux2014_x86_64.whl", hash = "sha256:3319e073562e2515c6ddc643eb92ce20809f5d8f10fead3332f71c63be6a7040"},
+    {file = "protobuf-4.25.4-cp38-cp38-win32.whl", hash = "sha256:7e372cbbda66a63ebca18f8ffaa6948455dfecc4e9c1029312f6c2edcd86c4e1"},
+    {file = "protobuf-4.25.4-cp38-cp38-win_amd64.whl", hash = "sha256:051e97ce9fa6067a4546e75cb14f90cf0232dcb3e3d508c448b8d0e4265b61c1"},
+    {file = "protobuf-4.25.4-cp39-cp39-win32.whl", hash = "sha256:90bf6fd378494eb698805bbbe7afe6c5d12c8e17fca817a646cd6a1818c696ca"},
+    {file = "protobuf-4.25.4-cp39-cp39-win_amd64.whl", hash = "sha256:ac79a48d6b99dfed2729ccccee547b34a1d3d63289c71cef056653a846a2240f"},
+    {file = "protobuf-4.25.4-py3-none-any.whl", hash = "sha256:bfbebc1c8e4793cfd58589acfb8a1026be0003e852b9da7db5a4285bde996978"},
+    {file = "protobuf-4.25.4.tar.gz", hash = "sha256:0dc4a62cc4052a036ee2204d26fe4d835c62827c855c8a03f29fe6da146b380d"},
 ]
 
 [[package]]
@@ -2730,12 +2695,12 @@ files = [
 
 [[package]]
 name = "pulumi"
-version = "3.126.0"
+version = "3.127.0"
 description = "Pulumi's Python SDK"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "pulumi-3.126.0-py3-none-any.whl", hash = "sha256:44d8f55978b7ae444cfd2a078050aac22bc92224e16f01b990151c51a31dacfc"},
+    {file = "pulumi-3.127.0-py3-none-any.whl", hash = "sha256:0b63ac7ac938cb7facf1317f94453b0b6a061f6c6197229f255de30af5b86aae"},
 ]
 
 [package.dependencies]
@@ -2748,13 +2713,13 @@ six = ">=1.12,<2.0"
 
 [[package]]
 name = "pulumi-aws"
-version = "6.46.0"
+version = "6.47.0"
 description = "A Pulumi package for creating and managing Amazon Web Services (AWS) cloud resources."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "pulumi_aws-6.46.0-py3-none-any.whl", hash = "sha256:e6565c41ae74e66fe2a826d786d32b622195fa7b4ce02de1620e29d74a221b47"},
-    {file = "pulumi_aws-6.46.0.tar.gz", hash = "sha256:91f8dc18685de1f4db795ec806e6ef2a06f56b177e981c5806736d0ab8da634c"},
+    {file = "pulumi_aws-6.47.0-py3-none-any.whl", hash = "sha256:fa8dddae88063cf0f0db7937a198885a21f9b65ab340a44f922035b3e945dc0d"},
+    {file = "pulumi_aws-6.47.0.tar.gz", hash = "sha256:ed57bfe99bed0095247e6c95ef2c5a9f3a17bfec3051128f9cd1b429dd001d21"},
 ]
 
 [package.dependencies]
@@ -3018,13 +2983,13 @@ tests = ["coverage[toml] (==5.0.4)", "pytest (>=6.0.0,<7.0.0)"]
 
 [[package]]
 name = "pymdown-extensions"
-version = "10.8.1"
+version = "10.9"
 description = "Extension pack for Python Markdown."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "pymdown_extensions-10.8.1-py3-none-any.whl", hash = "sha256:f938326115884f48c6059c67377c46cf631c733ef3629b6eed1349989d1b30cb"},
-    {file = "pymdown_extensions-10.8.1.tar.gz", hash = "sha256:3ab1db5c9e21728dabf75192d71471f8e50f216627e9a1fa9535ecb0231b9940"},
+    {file = "pymdown_extensions-10.9-py3-none-any.whl", hash = "sha256:d323f7e90d83c86113ee78f3fe62fc9dee5f56b54d912660703ea1816fed5626"},
+    {file = "pymdown_extensions-10.9.tar.gz", hash = "sha256:6ff740bcd99ec4172a938970d42b96128bdc9d4b9bcad72494f29921dc69b753"},
 ]
 
 [package.dependencies]
@@ -3856,17 +3821,6 @@ azuread = ["cryptography (>=2.1.1)"]
 saml = ["python3-saml (>=1.5.0)"]
 
 [[package]]
-name = "soupsieve"
-version = "2.5"
-description = "A modern CSS selector implementation for Beautiful Soup."
-optional = false
-python-versions = ">=3.8"
-files = [
-    {file = "soupsieve-2.5-py3-none-any.whl", hash = "sha256:eaa337ff55a1579b6549dc679565eac1e3d000563bcb1c8ab0d0fefbc0c2cdc7"},
-    {file = "soupsieve-2.5.tar.gz", hash = "sha256:5663d5a7b3bfaeee0bc4372e7fc48f9cff4940b3eec54a6451cc5299f1097690"},
-]
-
-[[package]]
 name = "sqlparse"
 version = "0.5.1"
 description = "A non-validating SQL parser."
@@ -4049,21 +4003,21 @@ files = [
 
 [[package]]
 name = "typos"
-version = "1.23.3"
+version = "1.23.5"
 description = "Source Code Spelling Correction"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "typos-1.23.3-py3-none-macosx_10_12_x86_64.whl", hash = "sha256:64eb857fd5d9fbceddf84f14dcb102355e95f79e61639c96b76a81f6526fe589"},
-    {file = "typos-1.23.3-py3-none-macosx_11_0_arm64.whl", hash = "sha256:3413933c235362f3a9dc99ea02acfbe096ac451f0828cf8e0617e9ea859add31"},
-    {file = "typos-1.23.3-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:5633d7baccc9ee5f3c0a2675c3eed6369983845994d6582f70bb2dd30b55bd64"},
-    {file = "typos-1.23.3-py3-none-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:07cb89e916ed3114ac5980e4df4cca936d4305f13944fa4821afdf319b24b1e2"},
-    {file = "typos-1.23.3-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:4f3887869fe4a16f203a749b97d32dac763d3b8bf2a71728d20726e8f1aee33e"},
-    {file = "typos-1.23.3-py3-none-musllinux_1_2_aarch64.whl", hash = "sha256:eb2bf8c347e82687fa97f5208ded28377fcf4c0cdd685f5323b22cb756bd70d3"},
-    {file = "typos-1.23.3-py3-none-musllinux_1_2_x86_64.whl", hash = "sha256:4286ca8b7cda18e83e7e8be6aa2b37306b75138a7b0cbf3384f983a5772c0cdb"},
-    {file = "typos-1.23.3-py3-none-win32.whl", hash = "sha256:a0bd7a04f476126cb7a2e4d5c11c1083d1d68657e3349817cdb757ce110cf265"},
-    {file = "typos-1.23.3-py3-none-win_amd64.whl", hash = "sha256:372139f46e57f18943e2b83d12dc9f4533a93618f0aac8d59684479628e5e576"},
-    {file = "typos-1.23.3.tar.gz", hash = "sha256:2bcbfc32660170b2b4797a5613c4ce269fba2eef30d47d0a08ea0be57ddd3b99"},
+    {file = "typos-1.23.5-py3-none-macosx_10_12_x86_64.whl", hash = "sha256:f605a44e94b1ddf68b9fc3988e82bbc5f795de51a9928f3d9aa43f02e64cb123"},
+    {file = "typos-1.23.5-py3-none-macosx_11_0_arm64.whl", hash = "sha256:03355aca30babaedfa2ebaf8b79da0b911f015e4449b184777a9d70ee6c754ad"},
+    {file = "typos-1.23.5-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:485ffaa9a910bf01a3a6502e1668f945255f314dd7eb6cd66a26df82e0d66d8b"},
+    {file = "typos-1.23.5-py3-none-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:70e3abe5af98707a4ea307d98d1b09b20664c00acb5fb78761349700d8581ee8"},
+    {file = "typos-1.23.5-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:064ece60188de95e71a5420cfc2e1fde3ea650186ddf214145befcbe7bfd0086"},
+    {file = "typos-1.23.5-py3-none-musllinux_1_2_aarch64.whl", hash = "sha256:0cfcf37df9ecce20277a360e56fe39b1e847298cb6aaafaaed10e842c815e43d"},
+    {file = "typos-1.23.5-py3-none-musllinux_1_2_x86_64.whl", hash = "sha256:6aa53d4e5cbc77fb052e806f79d485f0b468d3054754163feb65ad4893d6e2ac"},
+    {file = "typos-1.23.5-py3-none-win32.whl", hash = "sha256:ea7892fb35e9dee45716ca12df68453c1d6dc3b0d42ec1d4a7859b1d2f3a252e"},
+    {file = "typos-1.23.5-py3-none-win_amd64.whl", hash = "sha256:221bd0e1945fc0ade5eaf713e8dcbbd6c2331e79a68074c4b991f054fa5024f4"},
+    {file = "typos-1.23.5.tar.gz", hash = "sha256:afc455cf5d90f4f350af3c73b3ccbcf22f1c4aa10308b89eb3ce263d350e4ad9"},
 ]
 
 [[package]]
@@ -4251,4 +4205,4 @@ test = ["coverage (>=5.3)", "tomli (>=2.0.1)", "tox"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<4.0"
-content-hash = "9303adab1c4277a8230f204b9027cfda73d8f0832ba7582f3d22a717de4a22b9"
+content-hash = "a36bd7bede6d79a05bb8c5c01b30139ea946b5583e746c24255720e7938cf16a"
