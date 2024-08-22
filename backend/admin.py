@@ -23,7 +23,6 @@ from backend.models import (
     FeatureFlags,
     VerificationCodes,
     APIKey,
-    InvoiceOnetimeSchedule,
     QuotaLimit,
     QuotaOverrides,
     QuotaUsage,
@@ -32,6 +31,7 @@ from backend.models import (
     ReceiptDownloadToken,
     EmailSendStatus,
     InvoiceReminder,
+    InvoiceRecurringProfile,
 )
 
 from backend.api.public.models import APIAuthToken
@@ -58,11 +58,11 @@ admin.site.register(
         FeatureFlags,
         VerificationCodes,
         APIKey,
-        InvoiceOnetimeSchedule,
         Receipt,
         ReceiptDownloadToken,
         InvoiceReminder,
         APIAuthToken,
+        InvoiceRecurringProfile,
     ]
 )
 

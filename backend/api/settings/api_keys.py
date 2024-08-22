@@ -16,11 +16,20 @@ def generate_api_key_endpoint(request: WebRequest) -> HttpResponse:
     name = request.POST.get("name")
     expiry = request.POST.get("expiry")
     description = request.POST.get("description")
+    administrator_toggle = True if request.POST.get("administrator") == "on" else False
+    administrator_type = request.POST.get("administrator_type")
 
     permissions: list = get_permissions_from_request(request)
 
     key_obj, key_response = generate_public_api_key(
-        request, request.user.logged_in_as_team or request.user, name, permissions, expires=expiry, description=description
+        request,
+        request.user.logged_in_as_team or request.user,
+        name,
+        permissions,
+        expires=expiry,
+        description=description,
+        administrator_toggle=administrator_toggle,
+        administrator_type=administrator_type,
     )
 
     if not key_obj:

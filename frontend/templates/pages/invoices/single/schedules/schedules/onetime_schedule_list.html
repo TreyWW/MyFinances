@@ -1,0 +1,103 @@
+<div class="w-full p-6 shadow-xl card bg-base-100">
+    <div class="grid w-full grid-cols-7 text-xl font-medium">
+        <div class="col-span-2">
+            <div>
+                <a hx-get="{% url 'api:invoices:single:single:schedules onetime fetch' invoice_id=invoice.id %}"
+                   hx-trigger="click"
+                   hx-swap="outerHTML"
+                   hx-target='tbody[data-hx-swap="onetime_schedules"]'
+                   hx-indicator="this"
+                   class="float-left btn btn-outline btn-square btn-white me-3 loading-htmx">
+                    <span class="loading-htmx-text">
+                        <i class="fa-solid fa-rotate-right"></i>
+                    </span>
+                    <span class="loading loading-spinner loading-htmx-loader"></span>
+                </a>
+            </div>
+        </div>
+        <h1 class="text-center col-span-3">View scheduled invoices</h1>
+        <div class="col-span-2">
+            <a hx-get="{% url 'api:invoices:single:single:schedules onetime fetch' invoice_id=invoice.id %}"
+               hx-trigger="click"
+               hx-swap="outerHTML"
+               hx-target='tbody[data-hx-swap="onetime_schedules"]'
+               hx-indicator="this"
+               hx-vals='{"refresh-statuses": "true"}'
+               class="float-right btn btn-outline btn-accent me-3 loading-htmx">
+                <span class="loading-htmx-text">
+                    <i class="fa-solid fa-rotate-right"></i>
+                    Refresh statuses
+                </span>
+                <span class="loading loading-spinner loading-htmx-loader"></span>
+            </a>
+        </div>
+    </div>
+    <div class="divider"></div>
+    <table class="mt-3 table w-full">
+        <thead>
+            <tr hx-swap="outerHTML"
+                hx-target='tbody[data-hx-swap="onetime_schedules"]'
+                hx-indicator=""
+                hx-include="#filter_schedules_list_storage">
+                <th>ID</th>
+                <th>
+                    <div class="dropdown"
+                         data-filter-type="status"
+                         hx-vals='{"filter_type": "status"}'>
+                        <label tabindex="0" class="border-none">
+                            Status
+                            <i class="border-none pt-1 fa-solid fa-caret-down pl-1/2"></i>
+                        </label>
+                        <ul class="dropdown-content">
+                            <h2 class="menu-title">Status</h2>
+                            <div class="-mt-2 -mb-1 divider"></div>
+                            <li data-filter-by="completed">
+                                <button class="border-none text-sm dropdown-item"
+                                        hx-get="{% url "api:invoices:single:single:schedules onetime fetch" invoice_id=invoice.id %}"
+                                        name="filter"
+                                        value="completed">Completed</button>
+                            </li>
+                            <li data-filter-by="pending">
+                                <button class="border-none text-sm dropdown-item"
+                                        hx-get="{% url "api:invoices:single:single:schedules onetime fetch" invoice_id=invoice.id %}"
+                                        name="filter"
+                                        value="pending">Pending</button>
+                            </li>
+                            <li data-filter-by="creating">
+                                <button class="border-none text-sm dropdown-item"
+                                        hx-get="{% url "api:invoices:single:single:schedules onetime fetch" invoice_id=invoice.id %}"
+                                        name="filter"
+                                        value="creating">Creating</button>
+                            </li>
+                            <li data-filter-by="deleting">
+                                <button class="border-none text-sm dropdown-item"
+                                        hx-get="{% url "api:invoices:single:single:schedules onetime fetch" invoice_id=invoice.id %}"
+                                        name="filter"
+                                        value="deleting">Deleting</button>
+                            </li>
+                            <li data-filter-by="cancelled">
+                                <button class="border-none text-sm dropdown-item"
+                                        hx-get="{% url "api:invoices:single:single:schedules onetime fetch" invoice_id=invoice.id %}"
+                                        name="filter"
+                                        value="cancelled">Cancelled</button>
+                            </li>
+                            <li data-filter-by="failed">
+                                <button class="border-none text-sm dropdown-item"
+                                        hx-get="{% url "api:invoices:single:single:schedules onetime fetch" invoice_id=invoice.id %}"
+                                        name="filter"
+                                        value="failed">Failed</button>
+                            </li>
+                        </ul>
+                    </div>
+                </th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody data-hx-swap="onetime_schedules"
+               hx-swap="outerHTML"
+               hx-trigger="load"
+               hx-get="{% url "api:invoices:single:single:schedules onetime fetch" invoice_id=invoice.id %}">
+        </tbody>
+    </table>
+</div>

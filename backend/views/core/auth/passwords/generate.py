@@ -10,6 +10,7 @@ from django.utils import timezone
 
 from backend.models import *
 from backend.types.htmx import HtmxHttpRequest
+from settings import settings
 
 
 def msg_if_valid_email_then_sent(request):

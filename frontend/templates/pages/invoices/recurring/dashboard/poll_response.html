@@ -1,0 +1,7 @@
+<div hx-swap-oob='innerHTML:div[data-oob="status"]'>
+    {% include "pages/invoices/recurring/dashboard/_status_badge.html" with status=status inv_id=invoice_profile_id design="default" %}
+</div>
+<div hx-swap-oob='innerHTML:div[data-oob="pause_refresh_button"]'>
+    {% include "pages/invoices/recurring/dashboard/_pause_button.html" %}
+</div>
+{% component "messages_list" %}

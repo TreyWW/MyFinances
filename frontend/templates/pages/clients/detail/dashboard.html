@@ -25,7 +25,7 @@
                 <i class="fa-solid fa-edit"></i>
                 Edit Customer
             </a>
-            <a href="{% url 'invoices:create' %}?client={{ client.id }}"
+            <a href="{% url 'invoices:single:create' %}?client={{ client.id }}"
                class="btn btn-md btn-outline btn-default grow mr-4">
                 <i class="fa-solid fa-share-nodes"></i>
                 Send Invoice
