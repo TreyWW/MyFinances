@@ -12,13 +12,13 @@ class ClientDefaultsServiceResponse(BaseServiceResponse[DefaultValues]): ...
 
 
 def change_client_defaults(request: WebRequest, defaults: DefaultValues) -> ClientDefaultsServiceResponse:
-    put = QueryDict(request.body)
 
-    invoice_due_date_option = put.get("invoice_due_date_option", "")
-    invoice_due_date_value = put.get("invoice_due_date_value", "")
+    # put = QueryDict(request.body)
+    invoice_due_date_option = request.POST.get("invoice_due_date_option")
+    invoice_due_date_value = request.POST.get("invoice_due_date_value")
 
-    invoice_date_option = put.get("invoice_date_option", "")
-    invoice_date_value = put.get("invoice_date_value", "")
+    invoice_date_option = request.POST.get("invoice_date_option")
+    invoice_date_value = request.POST.get("invoice_date_value")
 
     due_date_error = validate_invoice_due_date(invoice_due_date_option, invoice_due_date_value)
 
@@ -35,10 +35,14 @@ def change_client_defaults(request: WebRequest, defaults: DefaultValues) -> Clie
 
     defaults.invoice_date_type = invoice_date_option
     defaults.invoice_date_value = invoice_date_value
-
+    defaults.default_invoice_logo = request.FILES.get("logo")
     defaults.save()
 
     return ClientDefaultsServiceResponse(True)
+
+def validate_invoice_default_logo(default_invoice_logo) -> bool:
+    # If a future need to control invoice logo size and dimensions before assignment arise
+    pass
 
 
 def validate_invoice_due_date(due_date_type, due_date_value) -> ClientDefaultsServiceResponse:

@@ -11,11 +11,13 @@ from backend.service.defaults.update import change_client_defaults
 from backend.types.requests import WebRequest
 
 
-@require_http_methods(["GET", "PUT"])
+#@require_http_methods(["GET", "PUT"])
+@require_http_methods(["GET", "POST"])
 def handle_client_defaults_endpoints(request: WebRequest, client_id: int | None = None):
     if request.method == "GET":
         return get_defaults_endpoint(request, client_id)
-    elif request.method == "PUT":
+    # elif request.method == "PUT":
+    elif request.method == "POST":
         return change_client_defaults_endpoint(request, client_id)
     else:
         return HttpResponse("Something went wrong")
@@ -39,7 +41,8 @@ def get_defaults_endpoint(request: WebRequest, client_id: int | None = None):
     return render(request, "pages/clients/detail/client_defaults.html", context | {"defaults": defaults})
 
 
-@require_http_methods(["PUT"])
+# @require_http_methods(["PUT"])
+@require_http_methods(["POST"])
 def change_client_defaults_endpoint(request: WebRequest, client_id: int | None = None):
     context: dict = {}
 
