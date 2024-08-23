@@ -32,6 +32,9 @@ from backend.models import (
     EmailSendStatus,
     InvoiceReminder,
     InvoiceRecurringProfile,
+    Usage,
+    UserPlan,
+    PlanFeature,
 )
 
 from backend.api.public.models import APIAuthToken
@@ -63,6 +66,9 @@ admin.site.register(
         InvoiceReminder,
         APIAuthToken,
         InvoiceRecurringProfile,
+        Usage,
+        UserPlan,
+        PlanFeature,
     ]
 )
 

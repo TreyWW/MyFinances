@@ -6,6 +6,7 @@ from decimal import Decimal
 from typing import Literal, Union
 from uuid import uuid4
 
+from dateutil.relativedelta import relativedelta
 from django.contrib.auth.hashers import check_password, make_password
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.contrib.contenttypes.models import ContentType
@@ -1029,3 +1030,47 @@ class EmailSendStatus(OwnerBase):
 
     class Meta:
         constraints = [USER_OR_ORGANIZATION_CONSTRAINT()]
+
+
+# region New usage based billing
+class Usage(OwnerBase):
+    feature = models.CharField(max_length=50)  # E.g., 'email', 'storage', 'events'
+    quantity = models.FloatField()  # E.g., GB for storage, count for emails
+    unit = models.CharField(max_length=20)  # E.g., 'GB', 'emails', 'invocations'
+    timestamp = models.DateTimeField(auto_now_add=True)  # When the usage occurred
+    end_time = models.DateTimeField(null=True, blank=True)  # Storage end time for time-based billing (for storage)
+
+    def __str__(self):
+        return f"{self.user} - {self.feature}: {self.quantity} {self.unit}"
+
+
+class PlanFeature(models.Model):
+    feature = models.CharField(max_length=50)  # E.g., 'email', 'storage', 'events'
+    free_tier_limit = models.FloatField(default=0)  # Free units per month (e.g., 1000 emails)
+    free_period_in_months = models.IntegerField(null=True, blank=True)  # First N months free
+    cost_per_unit = models.DecimalField(max_digits=10, decimal_places=6)  # E.g., cost per unit (e.g., GB or emails)
+    units_per_cost = models.FloatField(default=1)  # E.g., cost applies to how many units? (1000 emails or 1 GB)
+    unit = models.CharField(max_length=20)  # E.g., 'GB', 'emails', 'invocations'
+
+    # Storage-specific fields
+    minimum_billable_size = models.FloatField(null=True, blank=True)  # Minimum billable size in units (e.g., MB)
+    transfer_cost_per_unit = models.DecimalField(max_digits=10, decimal_places=6, null=True, blank=True)  # Transfer cost
+
+    def __str__(self):
+        return f"{self.feature} - {self.cost_per_unit}/{self.units_per_cost} {self.unit}, Free: {self.free_tier_limit}"
+
+
+class UserPlan(OwnerBase):
+    plan = models.ForeignKey(PlanFeature, on_delete=models.CASCADE)  # Link to PlanFeature for the specific feature
+    start_date = models.DateField()  # For calculating free periods
+    is_active = models.BooleanField(default=True)
+
+    def is_in_free_period(self):
+        """Check if the user is still in the free period."""
+        if self.plan.free_period_in_months:
+            free_period_end = self.start_date + relativedelta(months=self.plan.free_period_in_months)
+            return timezone.now().date() <= free_period_end
+        return False
+
+
+# endregion
