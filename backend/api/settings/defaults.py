@@ -11,7 +11,7 @@ from backend.service.defaults.update import change_client_defaults
 from backend.types.requests import WebRequest
 
 
-#@require_http_methods(["GET", "PUT"])
+# @require_http_methods(["GET", "PUT"])
 @require_http_methods(["GET", "POST"])
 def handle_client_defaults_endpoints(request: WebRequest, client_id: int | None = None):
     if request.method == "GET":

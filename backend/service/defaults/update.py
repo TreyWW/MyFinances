@@ -40,6 +40,7 @@ def change_client_defaults(request: WebRequest, defaults: DefaultValues) -> Clie
 
     return ClientDefaultsServiceResponse(True)
 
+
 def validate_invoice_default_logo(default_invoice_logo) -> bool:
     # If a future need to control invoice logo size and dimensions before assignment arise
     pass
