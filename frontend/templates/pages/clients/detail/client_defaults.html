@@ -1,6 +1,6 @@
 <form class="py-4"
       method="POST"
-      {% if client %} hx-post="{% url 'api:settings:client_defaults' client_id=client.id %}" {% else %} hx-put="{% url 'api:settings:client_defaults without client' %}" {% endif %}
+      {% if client %} hx-post="{% url 'api:settings:client_defaults' client_id=client.id %}" {% else %} hx-post="{% url 'api:settings:client_defaults without client' %}" {% endif %}
       hx-target="this"
       hx-indicator='button[data-hx-loading="save"]'
       hx-swap="none"
@@ -87,7 +87,8 @@
                name="logo"
                hx-encoding="multipart/form-data"
                class="file-input file-input-bordered max-w-full"
-               accept="image/jpeg,image/png,image/jpg"/>
+               accept="image/jpeg,image/png,image/jpg"
+               value="{{ defaults.default_invoice_logo }}"/>
     </div>
     <button class="btn btn-primary loading-htmx"
             data-hx-loading="save"

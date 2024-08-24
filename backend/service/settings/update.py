@@ -28,7 +28,7 @@ def update_profile_picture(profile_picture, user_profile: UserSettings) -> Updat
         img.verify()
 
         if img.format is None or img.format.lower() not in ["jpeg", "png", "jpg"]:
-            return UpdateProfilePictureServiceResponse(error_message="Unsupported image format. We support only JPEG, JPG, PNG")
+            return UpdateProfilePictureServiceResponse(error_message="Unsupported image format. We support only JPEG, JPG, PNG, if you have a good extension, your file just got renamed.")
 
         user_profile.profile_picture = profile_picture
         user_profile.save()

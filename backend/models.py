@@ -139,6 +139,7 @@ class UserSettings(models.Model):
 
     disabled_features = models.JSONField(default=list)
 
+
     @property
     def profile_picture_url(self):
         if self.profile_picture and hasattr(self.profile_picture, "url"):
