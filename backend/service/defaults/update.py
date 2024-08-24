@@ -36,22 +36,19 @@ def change_client_defaults(request: WebRequest, defaults: DefaultValues) -> Clie
 
     defaults.invoice_date_type = invoice_date_option
     defaults.invoice_date_value = invoice_date_value
-    if request.FILES.get("logo") is not None :
+    if request.FILES.get("logo") is not None:
         # an image was uploaded
         logo_ok = validate_invoice_default_logo(request.FILES.get("logo"))
         if logo_ok == "ok":
             defaults.default_invoice_logo = request.FILES.get("logo")
-            print("Defaults updated with upload logo")
         else:
             return ClientDefaultsServiceResponse(error_message=logo_ok)
 
     defaults.save()
-    print("Defaults ")
-    print(defaults.default_invoice_logo)
     return ClientDefaultsServiceResponse(True)
 
 
-def validate_invoice_default_logo(default_invoice_logo) -> str :
+def validate_invoice_default_logo(default_invoice_logo) -> str:
     if not default_invoice_logo:
         return "Invalid image file"
     try:
