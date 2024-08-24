@@ -53,7 +53,9 @@ def save_invoice_common(request: WebRequest, invoice_items, invoice: Invoice | I
     invoice.vat_number = request.POST.get("vat_number")
     invoice.logo = request.FILES.get("logo")
     if request.FILES.get("logo") is None:
-        invoice.logo = invoice.client_to.default_values.default_invoice_logo
+        if invoice.client_to is not None:
+            invoice.logo = invoice.client_to.default_values.default_invoice_logo
+
     invoice.reference = request.POST.get("reference")
     invoice.sort_code = request.POST.get("sort_code")
     invoice.account_number = request.POST.get("account_number")

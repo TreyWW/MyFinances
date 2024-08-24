@@ -43,7 +43,7 @@ def change_client_defaults(request: WebRequest, defaults: DefaultValues) -> Clie
 
 def validate_invoice_default_logo(default_invoice_logo) -> bool:
     # If a future need to control invoice logo size and dimensions before assignment arise
-    pass
+    return True
 
 
 def validate_invoice_due_date(due_date_type, due_date_value) -> ClientDefaultsServiceResponse:
