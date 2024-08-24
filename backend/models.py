@@ -370,6 +370,13 @@ class DefaultValues(OwnerBase):
                 raise ValueError("Invalid invoice due date type")
         return date.isoformat(issue), date.isoformat(due)
 
+    default_invoice_logo = models.ImageField(
+        upload_to="invoice_logos/",
+        storage=_private_storage,
+        blank=True,
+        null=True,
+    )
+
 
 class BotoSchedule(models.Model):
     class BotoStatusTypes(models.TextChoices):
