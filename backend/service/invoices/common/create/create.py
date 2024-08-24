@@ -2,7 +2,8 @@ from datetime import datetime
 
 from django.contrib import messages
 
-from backend.models import Invoice, InvoiceRecurringProfile, InvoiceItem, Client, QuotaUsage
+from backend.models import Invoice, InvoiceRecurringProfile, InvoiceItem, Client, QuotaUsage, DefaultValues
+from backend.service.defaults.get import get_account_defaults
 from backend.types.requests import WebRequest
 
 
@@ -19,6 +20,7 @@ def create_invoice_items(request: WebRequest):
 
 
 def save_invoice_common(request: WebRequest, invoice_items, invoice: Invoice | InvoiceRecurringProfile):
+
     if request.user.logged_in_as_team:
         invoice.organization = request.user.logged_in_as_team
     else:
@@ -47,11 +49,18 @@ def save_invoice_common(request: WebRequest, invoice_items, invoice: Invoice | I
     invoice.self_city = request.POST.get("from_city")
     invoice.self_county = request.POST.get("from_county")
     invoice.self_country = request.POST.get("from_country")
-
     invoice.notes = request.POST.get("notes")
     invoice.invoice_number = request.POST.get("invoice_number")
     invoice.vat_number = request.POST.get("vat_number")
-    invoice.logo = request.FILES.get("logo")
+    if request.FILES.get("logo") is not None:
+        invoice.logo = request.FILES.get("logo")
+    else:
+        if invoice.client_to is not None:
+            invoice.logo = invoice.client_to.default_values.default_invoice_logo
+        else:
+            defaults: DefaultValues = get_account_defaults(request.actor)
+            if defaults:
+                invoice.logo = defaults.default_invoice_logo
     invoice.reference = request.POST.get("reference")
     invoice.sort_code = request.POST.get("sort_code")
     invoice.account_number = request.POST.get("account_number")

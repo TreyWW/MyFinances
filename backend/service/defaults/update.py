@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import Optional
 
+from PIL import Image
 from django.http import QueryDict
 
 from backend.models import DefaultValues, Client
@@ -12,13 +13,13 @@ class ClientDefaultsServiceResponse(BaseServiceResponse[DefaultValues]): ...
 
 
 def change_client_defaults(request: WebRequest, defaults: DefaultValues) -> ClientDefaultsServiceResponse:
-    put = QueryDict(request.body)
 
-    invoice_due_date_option = put.get("invoice_due_date_option", "")
-    invoice_due_date_value = put.get("invoice_due_date_value", "")
+    # put = QueryDict(request.body)
+    invoice_due_date_option = request.POST.get("invoice_due_date_option", "")
+    invoice_due_date_value = request.POST.get("invoice_due_date_value", "")
 
-    invoice_date_option = put.get("invoice_date_option", "")
-    invoice_date_value = put.get("invoice_date_value", "")
+    invoice_date_option = request.POST.get("invoice_date_option", "")
+    invoice_date_value = request.POST.get("invoice_date_value", "")
 
     due_date_error = validate_invoice_due_date(invoice_due_date_option, invoice_due_date_value)
 
@@ -35,10 +36,38 @@ def change_client_defaults(request: WebRequest, defaults: DefaultValues) -> Clie
 
     defaults.invoice_date_type = invoice_date_option
     defaults.invoice_date_value = invoice_date_value
+    if request.FILES.get("logo") is not None:
+        # an image was uploaded
+        logo_ok = validate_invoice_default_logo(request.FILES.get("logo"))
+        if logo_ok == "ok":
+            defaults.default_invoice_logo = request.FILES.get("logo")
+        else:
+            return ClientDefaultsServiceResponse(error_message=logo_ok)
 
     defaults.save()
-
     return ClientDefaultsServiceResponse(True)
+
+
+def validate_invoice_default_logo(default_invoice_logo) -> str:
+    if not default_invoice_logo:
+        return "Invalid image file"
+    try:
+        max_file_size = 10 * 1024 * 1024
+
+        if default_invoice_logo.size is None:
+            return "Invalid image file"
+
+        if default_invoice_logo.size > max_file_size:
+            return "File size should be less or equal to 10MB"
+
+        img = Image.open(default_invoice_logo)
+        img.verify()
+
+        if img.format is None or img.format.lower() not in ["jpeg", "png", "jpg"]:
+            return "Unsupported image format. We support only JPEG, JPG, PNG, if you have a good extension, your file just got renamed."
+    except (FileNotFoundError, Image.UnidentifiedImageError):
+        return "Invalid or unsupported image file"
+    return "ok"
 
 
 def validate_invoice_due_date(due_date_type, due_date_value) -> ClientDefaultsServiceResponse:
