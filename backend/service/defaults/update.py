@@ -15,11 +15,11 @@ class ClientDefaultsServiceResponse(BaseServiceResponse[DefaultValues]): ...
 def change_client_defaults(request: WebRequest, defaults: DefaultValues) -> ClientDefaultsServiceResponse:
 
     # put = QueryDict(request.body)
-    invoice_due_date_option = request.POST.get("invoice_due_date_option")
-    invoice_due_date_value = request.POST.get("invoice_due_date_value")
+    invoice_due_date_option = request.POST.get("invoice_due_date_option","")
+    invoice_due_date_value = request.POST.get("invoice_due_date_value","")
 
-    invoice_date_option = request.POST.get("invoice_date_option")
-    invoice_date_value = request.POST.get("invoice_date_value")
+    invoice_date_option = request.POST.get("invoice_date_option","")
+    invoice_date_value = request.POST.get("invoice_date_value","")
 
     due_date_error = validate_invoice_due_date(invoice_due_date_option, invoice_due_date_value)
 
