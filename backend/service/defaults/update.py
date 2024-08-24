@@ -41,9 +41,13 @@ def change_client_defaults(request: WebRequest, defaults: DefaultValues) -> Clie
         logo_ok = validate_invoice_default_logo(request.FILES.get("logo"))
         if logo_ok == "ok":
             defaults.default_invoice_logo = request.FILES.get("logo")
+            print("Defaults updated with upload logo")
         else:
             return ClientDefaultsServiceResponse(error_message=logo_ok)
+
     defaults.save()
+    print("Defaults ")
+    print(defaults.default_invoice_logo)
     return ClientDefaultsServiceResponse(True)
 
 
