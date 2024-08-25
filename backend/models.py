@@ -1036,3 +1036,10 @@ class EmailSendStatus(OwnerBase):
 
     class Meta:
         constraints = [USER_OR_ORGANIZATION_CONSTRAINT()]
+
+
+class FileStorageFile(OwnerBase):
+    file = models.FileField(upload_to="users_cust om_file_storage", storage=_private_storage)
+    last_edited_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, editable=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
