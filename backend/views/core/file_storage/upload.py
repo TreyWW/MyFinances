@@ -15,6 +15,7 @@ def upload_file_post(request: WebRequest):
     django_bulk_files: list[FileStorageFile]
 
     files = request.FILES.getlist("files")  # Retrieve all uploaded files
+    should_override = request.POST.get("should_override", False)
 
     service_response = parse_files_for_creation(request.actor, files)
 
@@ -27,7 +28,11 @@ def upload_file_post(request: WebRequest):
         return redirect("file_storage:dashboard")
 
     messages.error(request, service_response.error or "Something went wrong")
-    return render(request, "base/toast.html")
+    if request.htmx:
+        resp = HttpResponse()
+        resp["HX-Location"] = reverse("file_storage:upload")
+        return resp
+    return redirect("file_storage:upload")
 
 
 def upload_file_dashboard(request: WebRequest):

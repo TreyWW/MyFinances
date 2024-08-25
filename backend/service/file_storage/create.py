@@ -15,7 +15,11 @@ def parse_files_for_creation(actor: User | Organization, uploaded_files: list[Te
     if uploaded_files_count == 0:
         return CreateFileServiceResponse(error_message="No files were uploaded.", status_code=400)
 
+    if uploaded_files_count >= 400:
+        return CreateFileServiceResponse(error_message="Too many files were uploaded. (max 400 at a time)", status_code=400)
+
     for file in uploaded_files:
+        print(file)
         file_object = FileStorageFile(file=file, owner=actor)
 
         file_objects.append(file_object)
