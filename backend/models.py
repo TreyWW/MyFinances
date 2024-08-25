@@ -1039,7 +1039,7 @@ class EmailSendStatus(OwnerBase):
 
 
 class FileStorageFile(OwnerBase):
-    file = models.FileField(upload_to="users_cust om_file_storage", storage=_private_storage)
+    file = models.FileField(upload_to="users_custom_file_storage", storage=_private_storage)
     last_edited_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, editable=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
