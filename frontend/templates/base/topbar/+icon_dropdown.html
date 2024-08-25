@@ -29,4 +29,9 @@
     <li>
         <span>Current Version: {{ version }}</span>
     </li>
+    {% if git_version %}
+        <li>
+            <span class="text-center">{{ git_version | slice:7 }}</span>
+        </li>
+    {% endif %}
 </div>
