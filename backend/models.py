@@ -36,6 +36,16 @@ def RandomAPICode(length=89):
     return get_random_string(length=length).lower()
 
 
+def upload_to_user_separate_folder(instance, filename):
+    instance_name = instance._meta.verbose_name.replace(" ", "-")
+
+    if hasattr(instance, "user") and instance.user:
+        return f"{instance_name}/users/{instance.user.id}/{filename}"
+    elif hasattr(instance, "organization") and instance.organization:
+        return f"{instance_name}/orgs/{instance.organization.id}/{filename}"
+    return f"{instance_name}/global/{filename}"
+
+
 def USER_OR_ORGANIZATION_CONSTRAINT():
     return models.CheckConstraint(
         name=f"%(app_label)s_%(class)s_check_user_or_organization",
@@ -1039,7 +1049,7 @@ class EmailSendStatus(OwnerBase):
 
 
 class FileStorageFile(OwnerBase):
-    file = models.FileField(upload_to="users_custom_file_storage", storage=_private_storage)
-    last_edited_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, editable=False)
+    file = models.FileField(upload_to=upload_to_user_separate_folder, storage=_private_storage)
+    last_edited_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, editable=False, related_name="files_edited")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

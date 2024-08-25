@@ -37,6 +37,7 @@ urlpatterns = [
     path("dashboard/quotas/<str:group>/", quotas_list, name="quotas group"),
     path("dashboard/emails/", include("backend.views.core.emails.urls")),
     path("dashboard/admin/quota_requests/", view_quota_increase_requests, name="admin quota increase requests"),
+    path("dashboard/file_storage/", include("backend.views.core.file_storage.urls")),
     path("favicon.ico", RedirectView.as_view(url=settings.STATIC_URL + "favicon.ico")),
     path(
         "dashboard/receipts/",

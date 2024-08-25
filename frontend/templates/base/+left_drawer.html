@@ -20,13 +20,15 @@
             {% with i_url="dashboard" %}
                 <a href="{% url i_url %}"
                    {% if  request.resolver_match.view_name == i_url %}class="active{% endif %}
-                   ">My Dashboard</a>
+                   ">My Dashboard
+                </a>
             {% endwith %}
         </li>
         <li>
             {% with i_url="clients:dashboard" %}
                 <a href="{% url i_url %}"
-                   {% if request.resolver_match.view_name == i_url %}class="active"{% endif %}>Clients</a>
+                   {% if request.resolver_match.view_name == i_url %}class="active"{% endif %}>Clients
+                </a>
             {% endwith %}
         </li>
         {% if feature_enabled_invoices %}
@@ -75,5 +77,10 @@
                 {% endwith %}
             </li>
         {% endif %}
+        <li>
+            <a href="{% url 'file_storage:dashboard' %}">
+                File Storage
+            </a>
+        </li>
     </ul>
 </div>
