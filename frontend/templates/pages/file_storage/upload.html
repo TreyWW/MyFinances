@@ -2,49 +2,53 @@
 {% block content %}
     <div class="card bg-base-100 p-3 mb-2 py-4">
         <div class="flex items-center justify-between">
-            <a class="btn btn-neutral btn-outline btn-sm" href="{% url 'file_storage:dashboard' %}">
-                Go back
-            </a>
+            <a class="btn btn-neutral btn-outline btn-sm"
+               href="{% url 'file_storage:dashboard' %}">Go back</a>
             <h2 class="text-xl" data-oob="invoices-title">File Storage - Upload Files</h2>
             <div></div>
         </div>
     </div>
-
     <!-- File Upload and Directory Upload Buttons -->
     <div class="flex justify-end space-x-4 my-4">
         <input type="file" id="singleFileInput" class="hidden" />
         <button type="button" id="singleFileButton" class="btn btn-sm btn-outline">Upload File</button>
-
-        <input type="file" id="directoryInput" class="hidden" multiple webkitdirectory directory />
+        <input type="file"
+               id="directoryInput"
+               class="hidden"
+               multiple
+               webkitdirectory
+               directory />
         <button type="button" id="directoryButton" class="btn btn-sm btn-outline">Upload Folder</button>
     </div>
-
     <div id="dropZone"
          class="w-full border-2 border-dashed border-primary p-6 text-center bg-base-100 rounded-lg hover:bg-base-200 transition-colors cursor-pointer">
         <span class="text-primary">Drag files or folders anywhere on the page</span>
     </div>
-
     <div class="overflow-x-auto mt-6">
         <div class="card bg-base-100 shadow-lg p-4">
-            <h2 class="text-xl">Objects to upload <span id="file_count" class="text-neutral-content font-bold">(0)</span></h2>
+            <h2 class="text-xl">
+                Objects to upload <span id="file_count" class="text-neutral-content font-bold">(0)</span>
+            </h2>
             <table class="table w-full">
                 <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Directory</th>
-                    <th>Size</th>
-                    <th>Action</th>
-                </tr>
+                    <tr>
+                        <th>Name</th>
+                        <th>Directory</th>
+                        <th>Size</th>
+                        <th>Action</th>
+                    </tr>
                 </thead>
-                <tbody id="fileList"></tbody>
+                <tbody id="fileList">
+                </tbody>
             </table>
         </div>
     </div>
-
     <div class="flex justify-end mt-6">
-        <button type="button" id="submitAllButton" class="btn btn-primary btn-sm" disabled>Submit All</button>
+        <button type="button"
+                id="submitAllButton"
+                class="btn btn-primary btn-sm"
+                disabled>Submit All</button>
     </div>
-
     <script>const dropZone = document.getElementById('dropZone');
     const fileList = document.getElementById('fileList');
     const fileCount = document.getElementById('file_count');

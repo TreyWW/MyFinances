@@ -2,8 +2,7 @@
 {% block content %}
     <div class="card bg-base-100 p-3 mb-2">
         <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-2">
-            </div>
+            <div class="flex items-center space-x-2"></div>
             <h2 class="text-xl" data-oob="invoices-title">File Storage</h2>
             <a class="btn btn-primary btn-sm"
                href="{% url 'file_storage:upload:dashboard' %}"
@@ -25,11 +24,11 @@
                     </li>
                 </ul>
             </div>
-
             <h1 class="text-3xl font-bold">myfolder4/</h1>
-
             <div class="flex flex-row gap-2 items-center">
-                <h2 class="text-xl font-bold mt-6 mr-5">Objects <span>(100)</span></h2>
+                <h2 class="text-xl font-bold mt-6 mr-5">
+                    Objects <span>(100)</span>
+                </h2>
                 <button class="btn btn-neutral btn-sm btn-outline">
                     <i class="fa fa-refresh"></i>
                 </button>
@@ -41,15 +40,16 @@
                     Open
                     <i class="fa fa-external-link"></i>
                 </a>
-                <button class="btn btn-neutral btn-sm btn-outline" disabled>
-                    Delete
-                </button>
+                <button class="btn btn-neutral btn-sm btn-outline" disabled>Delete</button>
                 <div class="dropdown">
-                    <div tabindex="0" role="button" class="btn btn-neutral btn-sm btn-outline font-bold">
+                    <div tabindex="0"
+                         role="button"
+                         class="btn btn-neutral btn-sm btn-outline font-bold">
                         Actions
                         <i class="fa fa-caret-down"></i>
                     </div>
-                    <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
+                    <ul tabindex="0"
+                        class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
                         <li>
                             <a>Copy</a>
                         </li>
@@ -64,54 +64,49 @@
                         </li>
                     </ul>
                 </div>
-
-                <a class="btn btn-neutral btn-sm btn-outline">
-                    Create folder
-                </a>
+                <a class="btn btn-neutral btn-sm btn-outline">Create folder</a>
                 <a class="btn btn-neutral btn-sm btn-outline" disabled>
                     <i class="fa fa-upload"></i>
                     Upload
                 </a>
             </div>
-
             <table class="table w-full mt-4">
                 <thead>
-                <tr>
-                    <th>Select</th>
-                    <th>Name</th>
-                    <th>Size</th>
-                    <th>Last Modified</th>
-                </tr>
+                    <tr>
+                        <th>Select</th>
+                        <th>Name</th>
+                        <th>Size</th>
+                        <th>Last Modified</th>
+                    </tr>
                 </thead>
                 <tbody id="file-list">
-                {% for file in files %}
-                    <tr class="file-row" data-file-url="{{ file.url }}">
-                        <td class="hover cursor-pointer" onclick="this.children[0].click();">
-                            <input type="checkbox" class="checkbox checkbox-primary" data-file-url="{{ file.url }}"
-                                   onclick="this.click();">
-                        </td>
-                        <td>
-                            <a href="#"
-                               class="link link-primary"
-                               hx-get="{% url 'file_storage:dashboard' %}?dir={{ directory|urlencode }}/{{ file.name }}"
-                               hx-target="#file-list"
-                               hx-swap="innerHTML">
-                                {{ file.name }}
-                            </a>
-                        </td>
-                        <td>{{ file.size }}</td>
-                        <td>{{ file.last_modified }}</td>
-                    </tr>
-                {% empty %}
-                    <tr>
-                        <td colspan="4" class="text-center">No files found.</td>
-                    </tr>
-                {% endfor %}
+                    {% for file in files %}
+                        <tr class="file-row" data-file-url="{{ file.url }}">
+                            <td class="hover cursor-pointer" onclick="this.children[0].click();">
+                                <input type="checkbox"
+                                       class="checkbox checkbox-primary"
+                                       data-file-url="{{ file.url }}"
+                                       onclick="this.click();">
+                            </td>
+                            <td>
+                                <a href="#"
+                                   class="link link-primary"
+                                   hx-get="{% url 'file_storage:dashboard' %}?dir={{ directory|urlencode }}/{{ file.name }}"
+                                   hx-target="#file-list"
+                                   hx-swap="innerHTML">{{ file.name }}</a>
+                            </td>
+                            <td>{{ file.size }}</td>
+                            <td>{{ file.last_modified }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center">No files found.</td>
+                        </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
-
     <script>
         document.getElementById('action-menu-toggle').addEventListener('click', function () {
             const menu = document.getElementById('action-menu');

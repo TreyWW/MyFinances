@@ -4,20 +4,21 @@
     {% load get_first_n_items from listfilters %}
     <div class="card bg-base-100 p-3 mb-2">
         <div class="grid grid-cols-3 items-center">
-            <div class="flex items-center space-x-2">
-            </div>
+            <div class="flex items-center space-x-2"></div>
             <h2 class="text-xl text-center">Billing</h2>
             <div class="dropdown dropdown-bottom">
-                <button id="billing-period" data-hx-swap="billing_period" class="btn btn-primary m-1 float-right">
+                <button id="billing-period"
+                        data-hx-swap="billing_period"
+                        class="btn btn-primary m-1 float-right">
                     Billing Period: {{ current_month.text }} 2024
                     <i class="fa fa-caret-down"></i>
                 </button>
-                <ul id="billing-period-menu" tabindex="0"
+                <ul id="billing-period-menu"
+                    tabindex="0"
                     class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow hidden float-right">
                     {% for month in months|get_first_n_items:current_month.int %}
                         <li>
-                            <button
-                                    hx-swap="outerHTML"
+                            <button hx-swap="outerHTML"
                                     hx-target='tbody[data-hx-swap="billing_table"]'
                                     hx-trigger="click"
                                     hx-get="{% url "api:billing:fetch" %}?month={{ forloop.counter }}&year={{ current_year }}">
@@ -30,7 +31,6 @@
             </div>
         </div>
     </div>
-
     <div id="billing-content" class="card bg-base-100 shadow-md">
         <div class="card-body">
             <h2 class="card-title">MyFinances charges by service</h2>
@@ -46,17 +46,15 @@
                     </div>
                 </div>
             </div>
-
             <div class="divider divider-primary px-3"></div>
-
             <table class="table w-full">
                 <!-- Table Head -->
                 <thead>
-                <tr>
-                    <th class="w-1/2">Description</th>
-                    <th class="w-1/4">Quantity</th>
-                    <th class="w-1/4 text-right">Price in GBP</th>
-                </tr>
+                    <tr>
+                        <th class="w-1/2">Description</th>
+                        <th class="w-1/4">Quantity</th>
+                        <th class="w-1/4 text-right">Price in GBP</th>
+                    </tr>
                 </thead>
                 <tbody data-hx-swap="billing_table"
                        hx-swap="outerHTML"
@@ -66,7 +64,6 @@
             </table>
         </div>
     </div>
-
     <script>
         function toggleCollapse(group, element) {
             const rows = Array.from(document.querySelectorAll(`tr[data-groups*="${group}"]`));

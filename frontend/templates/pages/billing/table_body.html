@@ -1,59 +1,55 @@
 <tbody data-hx-swap="billing_table">
-{% for group in billing.groups %}
-    <!-- Group Row -->
-    <tr class="hover">
-        <td>
-            <div class="flex items-center">
-                <button class="w-7 h-7 flex items-center justify-center border rounded cursor-pointer"
-                        onclick="toggleCollapse('{{ forloop.counter0 }}', this)">
-                    <span class="collapse-icon fa fa-caret-down text-lg"></span>
-                </button>
-                <span class="ml-4 whitespace-normal">{{ group.group_name | title }}</span>
-            </div>
-        </td>
-        <td></td>
-        <td class="text-right"></td>
-    </tr>
-
-    {% for service in group.services %}
-    <!-- Service Row -->
-        <tr data-groups="{{ forloop.parentloop.counter0 }}" class="hidden">
+    {% for group in billing.groups %}
+        <!-- Group Row -->
+        <tr class="hover">
             <td>
                 <div class="flex items-center">
-                    <button class="w-7 h-7 flex items-center justify-center border rounded cursor-pointer ml-2"
-                            onclick="toggleCollapse('{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}', this)">
+                    <button class="w-7 h-7 flex items-center justify-center border rounded cursor-pointer"
+                            onclick="toggleCollapse('{{ forloop.counter0 }}', this)">
                         <span class="collapse-icon fa fa-caret-down text-lg"></span>
                     </button>
-                    <div class="border-l-2 h-full border-gray-300 mr-2 ml-2"></div>
-                    <span class="ml-4 whitespace-normal">{{ service.service_name }}</span>
+                    <span class="ml-4 whitespace-normal">{{ group.group_name | title }}</span>
                 </div>
             </td>
             <td></td>
             <td class="text-right"></td>
         </tr>
-
-        {% for detail in service.details %}
-    <!-- Detail Row -->
-            <tr data-groups="{{ forloop.parentloop.parentloop.counter0 }}-{{ forloop.parentloop.counter0 }}"
-                class="hidden">
+        {% for service in group.services %}
+            <!-- Service Row -->
+            <tr data-groups="{{ forloop.parentloop.counter0 }}" class="hidden">
                 <td>
-                    <div class="flex items-center ml-10">
-                        <div class="border-l-2 h-full border-gray-300 mr-2"></div>
-                        <span class="ml-4 whitespace-normal">{{ detail.description }}</span>
+                    <div class="flex items-center">
+                        <button class="w-7 h-7 flex items-center justify-center border rounded cursor-pointer ml-2"
+                                onclick="toggleCollapse('{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}', this)">
+                            <span class="collapse-icon fa fa-caret-down text-lg"></span>
+                        </button>
+                        <div class="border-l-2 h-full border-gray-300 mr-2 ml-2"></div>
+                        <span class="ml-4 whitespace-normal">{{ service.service_name }}</span>
                     </div>
                 </td>
-                <td>{{ detail.quantity }}</td>
-                <td class="text-right">{{ detail.cost }}</td>
+                <td></td>
+                <td class="text-right"></td>
             </tr>
+            {% for detail in service.details %}
+                <!-- Detail Row -->
+                <tr data-groups="{{ forloop.parentloop.parentloop.counter0 }}-{{ forloop.parentloop.counter0 }}"
+                    class="hidden">
+                    <td>
+                        <div class="flex items-center ml-10">
+                            <div class="border-l-2 h-full border-gray-300 mr-2"></div>
+                            <span class="ml-4 whitespace-normal">{{ detail.description }}</span>
+                        </div>
+                    </td>
+                    <td>{{ detail.quantity }}</td>
+                    <td class="text-right">{{ detail.cost }}</td>
+                </tr>
+            {% endfor %}
         {% endfor %}
+    {% empty %}
+        <tr>
+            <td class="font-bold" colspan="100%">There are no used services for this month</td>
+        </tr>
     {% endfor %}
-{% empty %}
-    <tr>
-        <td class="font-bold" colspan="100%">
-            There are no used services for this month
-        </td>
-    </tr>
-{% endfor %}
 </tbody>
 <div hx-swap-oob='innerHTML:button[data-hx-swap="billing_period"]'>
     Billing Period: {{ selected_month.text }} {{ current_year }}
