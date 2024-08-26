@@ -1,60 +1,45 @@
 {% extends base|default:"base/base.html" %}
 {% block content %}
     <div class="card bg-base-100 p-3 mb-2">
-        <div class="flex items-center justify-between">
+        <div class="grid grid-cols-3 items-center">
             <div class="flex items-center space-x-2">
             </div>
-            <h2 class="text-xl" data-oob="invoices-title">Billing</h2>
-            <div class="dropdown">
-                <div tabindex="0" role="button" class="btn btn-primary m-1">
+            <h2 class="text-xl text-center">Billing</h2>
+            <div class="dropdown dropdown-bottom">
+                <button id="billing-period" class="btn btn-primary m-1 float-right">
                     Billing Period: August 2024
                     <i class="fa fa-caret-down"></i>
-                </div>
-                <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
+                </button>
+                <ul id="billing-period-menu" tabindex="0"
+                    class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow hidden float-right">
                     <li>
-                        <button>August 2024</button>
+                        <a href="#" hx-get="{% url 'billing:dashboard' %}?month=2024-08" hx-target="#billing-content"
+                           hx-swap="innerHTML">August 2024
+                        </a>
                     </li>
+                    <!-- Add more months/years here as needed -->
                 </ul>
             </div>
         </div>
     </div>
-    <div class="card bg-base-100 shadow-md">
-        <div class="card-title">
-            <h2 class="text-lg">MyFinances charges by service</h2>
-        </div>
+
+    <div id="billing-content" class="card bg-base-100 shadow-md">
         <div class="card-body">
-            <div class="breadcrumbs text-lg">
-                <ul>
-                    <li>
-                        <a class="link link-primary">myfolder/</a>
-                    </li>
-                    <li>
-                        <a class="link link-primary">folder2/</a>
-                    </li>
-                </ul>
+            <h2 class="card-title">MyFinances charges by service</h2>
+            <div class="p-4 my-4">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <span class="text-base">Total Services</span>
+                        <div class="text-xl font-bold">{{ billing.total_services }}</div>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-base">Total Cost</span>
+                        <div class="text-xl font-bold">${{ billing.total_cost }}</div>
+                    </div>
+                </div>
             </div>
 
-            <h1 class="text-3xl font-bold">myfolder4/</h1>
-
-            <div class="flex flex-row gap-2 items-center">
-                <h2 class="text-xl font-bold mt-6 mr-5">Objects <span>(100)</span></h2>
-                <button class="btn btn-neutral btn-sm btn-outline">
-                    <i class="fa fa-refresh"></i>
-                </button>
-                <button class="btn btn-neutral btn-sm btn-outline" disabled>
-                    <i class="fa fa-download"></i>
-                    Download
-                </button>
-                <a class="btn btn-neutral btn-sm btn-outline" disabled>
-                    Open
-                    <i class="fa fa-external-link"></i>
-                </a>
-                <button class="btn btn-neutral btn-sm btn-outline" disabled>
-                    Delete
-                </button>
-
-            </div>
-
+            <div class="divider divider-primary px-3"></div>
 
             <table class="table w-full">
                 <!-- Table Head -->
@@ -62,91 +47,91 @@
                 <tr>
                     <th class="w-1/2">Description</th>
                     <th class="w-1/4">Quantity</th>
-                    <th class="w-1/4 text-right">Price in USD</th> <!-- Fixed width for the last column -->
+                    <th class="w-1/4 text-right">Price in USD</th>
                 </tr>
                 </thead>
                 <tbody>
-                <!-- First collapsible row (Invoices) -->
-                <tr class="hover">
-                    <td>
-                        <div class="flex items-center">
-                            <button class="w-7 h-7 flex items-center justify-center border rounded cursor-pointer"
-                                    onclick="toggleCollapse('invoices', this)">
-                                <span class="collapse-icon fa fa-caret-down text-lg"></span>
-                            </button>
-                            <span class="ml-4 whitespace-normal">Invoices</span> <!-- Allow text wrapping -->
-                        </div>
-                    </td>
-                    <td></td>
-                    <td class="text-right"></td>
-                </tr>
+                {% for group in billing.groups %}
+                    <!-- Group Row -->
+                    <tr class="hover">
+                        <td>
+                            <div class="flex items-center">
+                                <button class="w-7 h-7 flex items-center justify-center border rounded cursor-pointer"
+                                        onclick="toggleCollapse('{{ forloop.counter0 }}', this)">
+                                    <span class="collapse-icon fa fa-caret-down text-lg"></span>
+                                </button>
+                                <span class="ml-4 whitespace-normal">{{ group.group_name }}</span>
+                            </div>
+                        </td>
+                        <td></td>
+                        <td class="text-right"></td>
+                    </tr>
 
-                <!-- Collapsible rows under 'Invoices' (Initially hidden) -->
-                <tr data-groups="invoices" class="invoices hidden">
-                    <td>
-                        <div class="flex items-center">
-                            <button class="w-7 h-7 flex items-center justify-center border rounded cursor-pointer ml-2"
-                                    onclick="toggleCollapse('invoices-created', this)">
-                                <span class="collapse-icon fa fa-caret-down text-lg"></span>
-                            </button>
-                            <div class="border-l-2 h-full border-gray-300 mr-2 ml-2"></div> <!-- Vertical line for hierarchy -->
-                            <span class="ml-4 whitespace-normal">Invoices Created</span> <!-- Allow text wrapping -->
-                        </div>
-                    </td>
-                    <td></td>
-                    <td class="text-right"></td>
-                </tr>
+                    {% for service in group.services %}
+                    <!-- Service Row -->
+                        <tr data-groups="{{ forloop.parentloop.counter0 }}" class="hidden">
+                            <td>
+                                <div class="flex items-center">
+                                    <button class="w-7 h-7 flex items-center justify-center border rounded cursor-pointer ml-2"
+                                            onclick="toggleCollapse('{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}', this)">
+                                        <span class="collapse-icon fa fa-caret-down text-lg"></span>
+                                    </button>
+                                    <div class="border-l-2 h-full border-gray-300 mr-2 ml-2"></div>
+                                    <span class="ml-4 whitespace-normal">{{ service.service_name }}</span>
+                                </div>
+                            </td>
+                            <td></td>
+                            <td class="text-right"></td>
+                        </tr>
 
-                <!-- Collapsible rows under 'Invoices Created' (Initially hidden) -->
-                <tr data-groups="invoices,invoices-created" class="invoices-created hidden">
-                    <td>
-                        <div class="flex items-center ml-10">
-                            <div class="border-l-2 h-full border-gray-300 mr-2"></div> <!-- Vertical line for hierarchy -->
-                            <span class="ml-4 whitespace-normal">$0.00 for 10 invocations (Free tier)</span>
-                                                                                       <!-- Allow text wrapping -->
-                        </div>
-                    </td>
-                    <td>10</td>
-                    <td class="text-right">$0.00</td>
-                </tr>
-                <tr data-groups="invoices,invoices-created" class="invoices-created hidden">
-                    <td>
-                        <div class="flex items-center ml-10">
-                            <div class="border-l-2 h-full border-gray-300 mr-2"></div> <!-- Vertical line for hierarchy -->
-                            <span class="ml-4 whitespace-normal">$0.05 per 1.0 invocations</span> <!-- Allow text wrapping -->
-                        </div>
-                    </td>
-                    <td>10</td>
-                    <td class="text-right">$0.50</td>
-                </tr>
+                        {% for detail in service.details %}
+                    <!-- Detail Row -->
+                            <tr data-groups="{{ forloop.parentloop.parentloop.counter0 }}-{{ forloop.parentloop.counter0 }}"
+                                class="hidden">
+                                <td>
+                                    <div class="flex items-center ml-10">
+                                        <div class="border-l-2 h-full border-gray-300 mr-2"></div>
+                                        <span class="ml-4 whitespace-normal">{{ detail.description }}</span>
+                                    </div>
+                                </td>
+                                <td>{{ detail.quantity }}</td>
+                                <td class="text-right">{{ detail.cost }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endfor %}
+                {% endfor %}
                 </tbody>
             </table>
-
-            <script>
-                function toggleCollapse(group, element) {
-                    const rows = Array.from(document.querySelectorAll(`tr[data-groups*="${group}"]`));
-                    const isExpanded = !rows[0].classList.contains('hidden');
-
-                    // Toggle the visibility of rows based on the group
-                    rows.forEach(row => {
-                        if (row.dataset.groups.includes(group)) {
-                            row.classList.toggle('hidden', isExpanded);
-                        }
-                    });
-
-                    // Toggle the icon
-                    const icon = element.querySelector('.collapse-icon');
-                    if (icon) {
-                        if (icon.classList.contains('fa-caret-down')) {
-                            icon.classList.remove('fa-caret-down');
-                            icon.classList.add('fa-caret-up');
-                        } else {
-                            icon.classList.remove('fa-caret-up');
-                            icon.classList.add('fa-caret-down');
-                        }
-                    }
-                }
-            </script>
         </div>
     </div>
+
+    <script>
+        function toggleCollapse(group, element) {
+            const rows = Array.from(document.querySelectorAll(`tr[data-groups*="${group}"]`));
+            const isExpanded = !rows[0].classList.contains('hidden');
+
+            // Toggle the visibility of rows based on the group
+            rows.forEach(row => {
+                row.classList.toggle('hidden', isExpanded);
+            });
+
+            // Toggle the icon
+            const icon = element.querySelector('.collapse-icon');
+            if (icon) {
+                if (icon.classList.contains('fa-caret-down')) {
+                    icon.classList.remove('fa-caret-down');
+                    icon.classList.add('fa-caret-up');
+                } else {
+                    icon.classList.remove('fa-caret-up');
+                    icon.classList.add('fa-caret-down');
+                }
+            }
+        }
+
+        // Toggle the visibility of the dropdown menu
+        document.getElementById('billing-period').addEventListener('click', function () {
+            const menu = document.getElementById('billing-period-menu');
+            menu.classList.toggle('hidden');
+        });
+    </script>
 {% endblock %}
