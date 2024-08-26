@@ -1079,6 +1079,10 @@ class MultiFileUpload(OwnerBase):
 
 # region New usage based billing
 class Usage(OwnerBase):
+    """
+    Actual users usage of a plan. e.g. "emails sent". When they did it, how much they did (e.g. bulk email)
+    """
+
     feature = models.CharField(max_length=50)  # E.g., 'email', 'storage', 'events'
     quantity = models.FloatField()  # E.g., GB for storage, count for emails
     unit = models.CharField(max_length=20)  # E.g., 'GB', 'emails', 'invocations'
@@ -1090,6 +1094,11 @@ class Usage(OwnerBase):
 
 
 class PlanFeature(models.Model):
+    """
+    Details related to certain features. E.g. "emails sent", we can allow site admins to change prices, units, and customise their
+    billing
+    """
+
     feature = models.CharField(max_length=50)  # E.g., 'email', 'storage', 'events'
     free_tier_limit = models.FloatField(default=0)  # Free units per month (e.g., 1000 emails)
     free_period_in_months = models.IntegerField(null=True, blank=True)  # First N months free
@@ -1106,6 +1115,11 @@ class PlanFeature(models.Model):
 
 
 class UserPlan(OwnerBase):
+    """
+    When a user first uses a plan, we log it here. So for example we can calculate a free period. E.g. 1000 invoices/mo free for the
+    first 6 months
+    """
+
     plan = models.ForeignKey(PlanFeature, on_delete=models.CASCADE)  # Link to PlanFeature for the specific feature
     start_date = models.DateField()  # For calculating free periods
     is_active = models.BooleanField(default=True)
