@@ -1,5 +1,7 @@
 {% extends base|default:"base/base.html" %}
+{% load listfilters %}
 {% block content %}
+    {% load get_first_n_items from listfilters %}
     <div class="card bg-base-100 p-3 mb-2">
         <div class="grid grid-cols-3 items-center">
             <div class="flex items-center space-x-2">
@@ -12,11 +14,17 @@
                 </button>
                 <ul id="billing-period-menu" tabindex="0"
                     class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow hidden float-right">
-                    <li>
-                        <a href="#" hx-get="{% url 'billing:dashboard' %}?month=2024-08" hx-target="#billing-content"
-                           hx-swap="innerHTML">August 2024
-                        </a>
-                    </li>
+                    {% for month in months|get_first_n_items:current_month %}
+                        <li>
+                            <button data-hx-swap="billing_table"
+                                    hx-swap="outerHTML"
+                                    hx-target='tbody[data-hx-swap="billing_table"]'
+                                    hx-trigger="click"
+                                    hx-get="{% url "api:billing:fetch" %}?month={{ forloop.counter }}&year={{ current_year }}">
+                                {{ month }}
+                            </button>
+                        </li>
+                    {% endfor %}
                     <!-- Add more months/years here as needed -->
                 </ul>
             </div>
@@ -29,12 +37,12 @@
             <div class="p-4 my-4">
                 <div class="flex justify-between items-center">
                     <div>
-                        <span class="text-base">Total Services</span>
+                        <span class="text-base">Total Active Services</span>
                         <div class="text-xl font-bold">{{ billing.total_services }}</div>
                     </div>
                     <div class="text-right">
-                        <span class="text-base">Total Cost</span>
-                        <div class="text-xl font-bold">${{ billing.total_cost }}</div>
+                        <span class="text-base">Total Cost (in GBP)</span>
+                        <div class="text-xl font-bold">£{{ billing.total_cost }}</div>
                     </div>
                 </div>
             </div>
@@ -47,59 +55,13 @@
                 <tr>
                     <th class="w-1/2">Description</th>
                     <th class="w-1/4">Quantity</th>
-                    <th class="w-1/4 text-right">Price in USD</th>
+                    <th class="w-1/4 text-right">Price in GBP</th>
                 </tr>
                 </thead>
-                <tbody>
-                {% for group in billing.groups %}
-                    <!-- Group Row -->
-                    <tr class="hover">
-                        <td>
-                            <div class="flex items-center">
-                                <button class="w-7 h-7 flex items-center justify-center border rounded cursor-pointer"
-                                        onclick="toggleCollapse('{{ forloop.counter0 }}', this)">
-                                    <span class="collapse-icon fa fa-caret-down text-lg"></span>
-                                </button>
-                                <span class="ml-4 whitespace-normal">{{ group.group_name }}</span>
-                            </div>
-                        </td>
-                        <td></td>
-                        <td class="text-right"></td>
-                    </tr>
-
-                    {% for service in group.services %}
-                    <!-- Service Row -->
-                        <tr data-groups="{{ forloop.parentloop.counter0 }}" class="hidden">
-                            <td>
-                                <div class="flex items-center">
-                                    <button class="w-7 h-7 flex items-center justify-center border rounded cursor-pointer ml-2"
-                                            onclick="toggleCollapse('{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}', this)">
-                                        <span class="collapse-icon fa fa-caret-down text-lg"></span>
-                                    </button>
-                                    <div class="border-l-2 h-full border-gray-300 mr-2 ml-2"></div>
-                                    <span class="ml-4 whitespace-normal">{{ service.service_name }}</span>
-                                </div>
-                            </td>
-                            <td></td>
-                            <td class="text-right"></td>
-                        </tr>
-
-                        {% for detail in service.details %}
-                    <!-- Detail Row -->
-                            <tr data-groups="{{ forloop.parentloop.parentloop.counter0 }}-{{ forloop.parentloop.counter0 }}"
-                                class="hidden">
-                                <td>
-                                    <div class="flex items-center ml-10">
-                                        <div class="border-l-2 h-full border-gray-300 mr-2"></div>
-                                        <span class="ml-4 whitespace-normal">{{ detail.description }}</span>
-                                    </div>
-                                </td>
-                                <td>{{ detail.quantity }}</td>
-                                <td class="text-right">{{ detail.cost }}</td>
-                            </tr>
-                        {% endfor %}
-                    {% endfor %}
-                {% endfor %}
+                <tbody data-hx-swap="billing_table"
+                       hx-swap="outerHTML"
+                       hx-trigger="load"
+                       hx-get="{% url "api:billing:fetch" %}">
                 </tbody>
             </table>
         </div>
