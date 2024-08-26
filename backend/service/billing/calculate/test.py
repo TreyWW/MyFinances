@@ -34,7 +34,7 @@ def generate_monthly_billing_summary(user, month, year):
         total_quantity = Decimal(feature_usage["total_quantity"])
 
         try:
-            user_plan = UserPlan.objects.get(user=user, plan__feature__slug=feature_name)
+            user_plan = UserPlan.objects.get(user=user, plan__slug=feature_name)
             plan = user_plan.plan
         except UserPlan.DoesNotExist:
             print(f"No plan found for feature {feature_name}")
