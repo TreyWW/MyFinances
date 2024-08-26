@@ -32,6 +32,9 @@ from backend.models import (
     EmailSendStatus,
     InvoiceReminder,
     InvoiceRecurringProfile,
+    Usage,
+    UserPlan,
+    PlanFeature,
     FileStorageFile,
     MultiFileUpload,
 )
@@ -65,6 +68,9 @@ admin.site.register(
         InvoiceReminder,
         APIAuthToken,
         InvoiceRecurringProfile,
+        Usage,
+        UserPlan,
+        PlanFeature,
         FileStorageFile,
         MultiFileUpload,
     ]
