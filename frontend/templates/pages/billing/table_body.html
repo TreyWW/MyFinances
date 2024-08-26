@@ -55,3 +55,9 @@
     </tr>
 {% endfor %}
 </tbody>
+<div hx-swap-oob='innerHTML:button[data-hx-swap="billing_period"]'>
+    Billing Period: {{ selected_month.text }} {{ current_year }}
+    <i class="fa fa-caret-down"></i>
+</div>
+<div hx-swap-oob='innerHTML:div[data-hx-swap="total_services"]'>{{ billing.total_services }}</div>
+<div hx-swap-oob='innerHTML:div[data-hx-swap="total_cost"]'>£{{ billing.total_cost }}</div>
