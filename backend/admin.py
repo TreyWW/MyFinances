@@ -37,6 +37,8 @@ from backend.models import (
     PlanFeature,
     FileStorageFile,
     MultiFileUpload,
+    PlanFeatureVersion,
+    PlanFeatureGroup,
 )
 
 from backend.api.public.models import APIAuthToken
@@ -73,6 +75,8 @@ admin.site.register(
         PlanFeature,
         FileStorageFile,
         MultiFileUpload,
+        PlanFeatureVersion,
+        PlanFeatureGroup,
     ]
 )
 

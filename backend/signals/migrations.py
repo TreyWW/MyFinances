@@ -7,8 +7,8 @@ from django.dispatch import receiver
 
 from backend.data.default_feature_flags import default_feature_flags
 from backend.data.default_quota_limits import default_quota_limits
-from backend.models import FeatureFlags
-from backend.models import QuotaLimit
+from backend.data.default_usage_plans import default_usage_plans, Feature
+from backend.models import FeatureFlags, QuotaLimit, PlanFeature, PlanFeatureVersion, PlanFeatureGroup
 
 
 @receiver(post_migrate)
@@ -70,3 +70,40 @@ def update_quota_limits(**kwargs):
                     limit_type=item.period,
                 )
                 logging.info(f"Added QuotaLimit {item.name}")
+
+
+@receiver(post_migrate)
+def update_usage_plans(**kwargs):
+    for group in default_usage_plans:
+        group_obj, created = PlanFeatureGroup.objects.get_or_create(name=group.name)
+
+        if created:
+            logging.info(f"Created group {group.name}")
+
+        item: Feature
+        for item in group.items:
+            existing: PlanFeature = PlanFeature.objects.filter(slug=item.slug).first()
+
+            if existing:
+                name, description = (existing.name, existing.description)
+
+                existing.name = item.name
+                existing.description = item.description
+
+                if item.name != name or item.description != description:
+                    existing.save()
+                    logging.info(f"Updated PlanFeature name/description {item.name}")
+            else:
+                existing = PlanFeature.objects.create(group=group_obj, name=item.name, description=item.description, slug=item.slug)
+
+                PlanFeatureVersion.objects.create(
+                    plan_feature=existing,
+                    free_tier_limit=item.free_tier_limit,
+                    free_period_in_months=item.free_period_in_months,
+                    unit=item.unit,
+                    cost_per_unit=item.cost_per_unit,
+                    minimum_billable_size=item.minimum_billable_size,
+                )
+                logging.info(f"Added PlanFeature {item.name}")
+
+            existing_plan_version: PlanFeatureVersion = PlanFeatureVersion.objects.filter(plan_feature=existing).order_by("version").last()

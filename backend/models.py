@@ -12,7 +12,7 @@ from django.contrib.auth.models import AbstractUser, UserManager
 from django.contrib.contenttypes.models import ContentType
 from django.core.files.storage import storages, FileSystemStorage
 from django.core.validators import MaxValueValidator
-from django.db import models
+from django.db import models, transaction
 from django.db.models import Count, QuerySet
 from django.utils import timezone
 from django.utils.crypto import get_random_string
@@ -1093,25 +1093,64 @@ class Usage(OwnerBase):
         return f"{self.user} - {self.feature}: {self.quantity} {self.unit}"
 
 
+class PlanFeatureGroup(models.Model):
+    name = models.CharField(max_length=50)  # E.g. 'invoices'
+
+
 class PlanFeature(models.Model):
     """
     Details related to certain features. E.g. "emails sent", we can allow site admins to change prices, units, and customise their
     billing
     """
 
-    feature = models.CharField(max_length=50)  # E.g., 'email', 'storage', 'events'
-    free_tier_limit = models.FloatField(default=0)  # Free units per month (e.g., 1000 emails)
-    free_period_in_months = models.IntegerField(null=True, blank=True)  # First N months free
-    cost_per_unit = models.DecimalField(max_digits=10, decimal_places=6)  # E.g., cost per unit (e.g., GB or emails)
-    units_per_cost = models.FloatField(default=1)  # E.g., cost applies to how many units? (1000 emails or 1 GB)
-    unit = models.CharField(max_length=20)  # E.g., 'GB', 'emails', 'invocations'
+    slug = models.CharField(max_length=100, unique=True, editable=False)
+    name = models.CharField(max_length=100, editable=False)
+    description = models.TextField(max_length=500, null=True, blank=True)
 
-    # Storage-specific fields
-    minimum_billable_size = models.FloatField(null=True, blank=True)  # Minimum billable size in units (e.g., MB)
-    transfer_cost_per_unit = models.DecimalField(max_digits=10, decimal_places=6, null=True, blank=True)  # Transfer cost
+    group = models.ForeignKey(PlanFeatureGroup, on_delete=models.CASCADE, related_name="features")
 
     def __str__(self):
-        return f"{self.feature} - {self.cost_per_unit}/{self.units_per_cost} {self.unit}, Free: {self.free_tier_limit}"
+        return f"{self.name}"
+
+
+class PlanFeatureVersion(models.Model):
+    plan_feature = models.ForeignKey(PlanFeature, on_delete=models.CASCADE)
+    version = models.IntegerField(editable=False)  # Incremented version number
+
+    free_tier_limit = models.FloatField(default=0)  # Free units per month (e.g., 1000 emails)
+    free_period_in_months = models.IntegerField(null=True, blank=True)  # First N months free
+
+    unit = models.CharField(max_length=20)  # E.g., 'GB', 'emails', 'invocations'
+
+    cost_per_unit = models.DecimalField(max_digits=10, decimal_places=6)  # E.g., cost per unit (e.g., GB or emails)
+    units_per_cost = models.FloatField(default=1)  # E.g., cost applies to how many units? (1000 emails or 1 GB)
+
+    minimum_billable_size = models.FloatField(null=True, blank=True)  # Minimum billable size in units (e.g., MB)
+    # Storage-specific fields
+    # transfer_cost_per_unit = models.DecimalField(max_digits=10, decimal_places=6, null=True, blank=True)  # Transfer cost
+
+    valid_from = models.DateTimeField(auto_now_add=True)  # When this version became active
+    valid_to = models.DateTimeField(null=True, blank=True)  # When it expired (null if still active)
+
+    def __str__(self):
+        return f"{self.plan_feature.name} - v{self.version}"
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            # Wrap version assignment and save in a transaction to prevent race conditions
+            with transaction.atomic():
+                self.version = self.get_next_version()
+                super().save(*args, **kwargs)
+        else:
+            super().save(*args, **kwargs)
+
+    def get_next_version(self):
+        """
+        Get the next version number for this PlanFeature. It auto-increments based on the max version.
+        """
+        latest_version = PlanFeatureVersion.objects.filter(plan_feature=self.plan_feature).aggregate(models.Max("version"))
+        next_version = (latest_version["version__max"] or 0) + 1
+        return next_version
 
 
 class UserPlan(OwnerBase):
