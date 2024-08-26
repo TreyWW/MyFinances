@@ -10,6 +10,7 @@ class Feature:
     slug: str
     description: str
     name: str
+    subscription_plan: SubscriptionPlan
     free_tier_limit: float
     free_period_in_months: int
     unit: str
@@ -23,6 +24,41 @@ class FeatureGroup:
     name: str
     items: list[Feature]
 
+
+@dataclass
+class SubscriptionPlan:
+    name: str
+    price_per_month: Decimal
+    description: str
+    maximum_duration_months: int
+
+
+default_subscription_plans: list[SubscriptionPlan] = [
+    SubscriptionPlan(
+        name="free trial",
+        price_per_month=Decimal(0.00),
+        description="Try out MyFinances",
+        maximum_duration_months=1,
+    ),
+    SubscriptionPlan(
+        name="starter",
+        price_per_month=Decimal(5),
+        description="For small businesses that need limited features",
+        maximum_duration_months=0,
+    ),
+    SubscriptionPlan(
+        name="growth",
+        price_per_month=Decimal(10),
+        description="For growing businesses that need a little extra",
+        maximum_duration_months=0,
+    ),
+    SubscriptionPlan(
+        name="enterprise",
+        price_per_month=Decimal(-1),
+        description="For additional customisation for your ideal business",
+        maximum_duration_months=0,
+    ),
+]
 
 default_usage_plans: list[FeatureGroup] = [
     FeatureGroup(
@@ -42,3 +78,5 @@ default_usage_plans: list[FeatureGroup] = [
         ],
     ),
 ]
+
+default

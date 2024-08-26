@@ -1078,6 +1078,43 @@ class MultiFileUpload(OwnerBase):
 
 
 # region New usage based billing
+
+
+class SubscriptionPlan(models.Model):
+    """
+    Subscription plans available for users.
+    """
+
+    PLAN_CHOICES = [
+        ("free", "Free Plan"),
+        ("basic", "Basic Plan"),
+        ("standard", "Standard Plan"),
+        ("enterprise", "Enterprise Plan"),
+    ]
+
+    name = models.CharField(max_length=50, choices=PLAN_CHOICES, unique=True)
+    price_per_month = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    description = models.TextField(max_length=500, null=True, blank=True)
+    maximum_duration_months = models.IntegerField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.name} - {self.price_per_month or 'Custom Pricing'}"
+
+
+class UserSubscription(OwnerBase):
+    """
+    Track which subscription plan a user is currently subscribed to.
+    """
+
+    subscription_plan = models.ForeignKey(SubscriptionPlan, on_delete=models.SET_NULL, null=True)
+    custom_subscription_price_per_month = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    start_date = models.DateField()  # When the subscription started
+    end_date = models.DateField(null=True, blank=True)  # When the subscription ends (for recurring)
+
+    def __str__(self):
+        return f"{self.user} - {self.subscription_plan.name}"
+
+
 class Usage(OwnerBase):
     """
     Actual users usage of a plan. e.g. "emails sent". When they did it, how much they did (e.g. bulk email)
@@ -1107,6 +1144,7 @@ class PlanFeature(models.Model):
     name = models.CharField(max_length=100, editable=False)
     description = models.TextField(max_length=500, null=True, blank=True)
 
+    subscription_plan = models.ForeignKey(SubscriptionPlan, on_delete=models.CASCADE, related_name="features")
     group = models.ForeignKey(PlanFeatureGroup, on_delete=models.CASCADE, related_name="features")
 
     def __str__(self):
@@ -1163,12 +1201,12 @@ class UserPlan(OwnerBase):
     start_date = models.DateField()  # For calculating free periods
     is_active = models.BooleanField(default=True)
 
-    def is_in_free_period(self):
-        """Check if the user is still in the free period."""
-        if self.plan.free_period_in_months:
-            free_period_end = self.start_date + relativedelta(months=self.plan.free_period_in_months)
-            return timezone.now().date() <= free_period_end
-        return False
+    # def is_in_free_period(self):
+    #     """Check if the user is still in the free period."""
+    #     if self.plan.free_period_in_months:
+    #         free_period_end = self.start_date + relativedelta(months=self.plan.free_period_in_months)
+    #         return timezone.now().date() <= free_period_end
+    #     return False
 
 
 # endregion
