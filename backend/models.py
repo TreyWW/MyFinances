@@ -1053,3 +1053,14 @@ class FileStorageFile(OwnerBase):
     last_edited_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, editable=False, related_name="files_edited")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+
+class MultiFileUpload(OwnerBase):
+    files = models.ManyToManyField(FileStorageFile, related_name="multi_file_uploads")
+    started_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    finished_at = models.DateTimeField(null=True, blank=True, editable=False)
+    uuid = models.UUIDField(default=uuid4, editable=False, unique=True)
+
+    def is_finished(self):
+        return self.finished_at is not None

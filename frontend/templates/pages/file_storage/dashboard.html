@@ -6,7 +6,7 @@
             </div>
             <h2 class="text-xl" data-oob="invoices-title">File Storage</h2>
             <a class="btn btn-primary btn-sm"
-               href="{% url 'file_storage:upload' %}"
+               href="{% url 'file_storage:upload:dashboard' %}"
                hx-boost="true">
                 <i class="fa-solid fa-upload"></i>
                 Upload
@@ -87,7 +87,8 @@
                 {% for file in files %}
                     <tr class="file-row" data-file-url="{{ file.url }}">
                         <td class="hover cursor-pointer" onclick="this.children[0].click();">
-                            <input type="checkbox" class="checkbox checkbox-primary" data-file-url="{{ file.url }}" onclick="this.click();">
+                            <input type="checkbox" class="checkbox checkbox-primary" data-file-url="{{ file.url }}"
+                                   onclick="this.click();">
                         </td>
                         <td>
                             <a href="#"
