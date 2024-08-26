@@ -9,13 +9,14 @@ from uuid import uuid4
 from django.contrib.auth.hashers import check_password, make_password
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.contrib.contenttypes.models import ContentType
-from django.core.files.storage import storages
+from django.core.files.storage import storages, FileSystemStorage
 from django.core.validators import MaxValueValidator
 from django.db import models
 from django.db.models import Count, QuerySet
 from django.utils import timezone
 from django.utils.crypto import get_random_string
 from shortuuid.django_fields import ShortUUIDField
+from storages.backends.s3 import S3Storage
 
 from backend.managers import InvoiceRecurringProfile_WithItemsManager
 
@@ -24,7 +25,7 @@ def _public_storage():
     return storages["public_media"]
 
 
-def _private_storage():
+def _private_storage() -> FileSystemStorage | S3Storage:
     return storages["private_media"]
 
 
@@ -36,12 +37,21 @@ def RandomAPICode(length=89):
     return get_random_string(length=length).lower()
 
 
-def upload_to_user_separate_folder(instance, filename):
+def upload_to_user_separate_folder(instance, filename, optional_actor=None):
     instance_name = instance._meta.verbose_name.replace(" ", "-")
 
-    if hasattr(instance, "user") and instance.user:
+    print(instance, filename)
+
+    if optional_actor:
+        if isinstance(optional_actor, User):
+            return f"{instance_name}/users/{optional_actor.id}/{filename}"
+        elif isinstance(optional_actor, Organization):
+            return f"{instance_name}/orgs/{optional_actor.id}/{filename}"
+        return f"{instance_name}/global/{filename}"
+
+    if hasattr(instance, "user") and hasattr(instance.user, "id"):
         return f"{instance_name}/users/{instance.user.id}/{filename}"
-    elif hasattr(instance, "organization") and instance.organization:
+    elif hasattr(instance, "organization") and hasattr(instance.organization, "id"):
         return f"{instance_name}/orgs/{instance.organization.id}/{filename}"
     return f"{instance_name}/global/{filename}"
 

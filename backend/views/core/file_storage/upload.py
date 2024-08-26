@@ -2,13 +2,14 @@ import json
 import os
 
 from django.contrib import messages
+from django.core.files.base import ContentFile
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods
 
 from backend.types.requests import WebRequest
-from backend.models import FileStorageFile, MultiFileUpload
+from backend.models import FileStorageFile, MultiFileUpload, _private_storage, upload_to_user_separate_folder
 
 from backend.service.file_storage.create import parse_files_for_creation
 
@@ -90,18 +91,21 @@ def upload_file_via_batch_endpoint(request: WebRequest):
     file_dir = request.POST.get("file_dir", "")
 
     if file_dir:
-        full_file_path = os.path.join(file_dir, file.name)
+        full_file_path = upload_to_user_separate_folder(FileStorageFile, os.path.join(file_dir, file.name), optional_actor=request.actor)
     else:
-        full_file_path = file.name
+        full_file_path = upload_to_user_separate_folder(FileStorageFile, file.name, optional_actor=request.actor)
 
     if not file:
         return JsonResponse({"error": "File not found"}, status=404)
 
+    saved_path = _private_storage().save(full_file_path, ContentFile(file.read()))
+
     saved_file = FileStorageFile.objects.create(
-        file=file,
+        file=saved_path,
         owner=request.actor,
-        # path=full_file_path
     )
+
+    batch_obj.files.add(saved_file)
     return JsonResponse({"success": True})
 
 
