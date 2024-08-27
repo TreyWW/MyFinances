@@ -3,7 +3,7 @@ import os
 
 from django.contrib import messages
 from django.core.files.base import ContentFile
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, QueryDict
 from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods
