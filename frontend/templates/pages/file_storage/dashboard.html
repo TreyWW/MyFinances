@@ -29,7 +29,8 @@
                 <h2 class="text-xl font-bold mt-6 mr-5">
                     Objects <span>(100)</span>
                 </h2>
-                <button data-hx-indicator="refresh" class="btn btn-neutral btn-sm btn-outline loading-htmx"
+                <button data-hx-indicator="refresh"
+                        class="btn btn-neutral btn-sm btn-outline loading-htmx"
                         onclick="htmx.trigger(document.body, 'reload_filestorage_table');">
                     <span class="loading-htmx-text">
                         <i class="fa fa-solid fa-refresh"></i>
@@ -48,9 +49,7 @@
                 <button class="btn btn-neutral btn-sm btn-outline"
                         hx-include="#file-details"
                         hx-target='tbody[data-hx-swap="filestorage_files_table"]'
-                        hx-delete="{% url 'api:file_storage:delete' %}">
-                    Delete
-                </button>
+                        hx-delete="{% url 'api:file_storage:delete' %}">Delete</button>
                 <div class="dropdown">
                     <div tabindex="0"
                          role="button"
@@ -81,18 +80,19 @@
                 </a>
             </div>
             <form id="file-details">
-                <table class="table w-full mt-4" hx-swap="outerHTML"
+                <table class="table w-full mt-4"
+                       hx-swap="outerHTML"
                        hx-trigger="load, reload_filestorage_table from:body"
                        hx-target='tbody[data-hx-swap="filestorage_files_table"]'
                        hx-indicator='button[data-hx-indicator="refresh"]'
                        hx-get="{% url "api:file_storage:fetch" %}">
                     <thead>
-                    <tr>
-                        <th>Select</th>
-                        <th>Name</th>
-                        <th>Size</th>
-                        <th>Last Modified</th>
-                    </tr>
+                        <tr>
+                            <th>Select</th>
+                            <th>Name</th>
+                            <th>Size</th>
+                            <th>Last Modified</th>
+                        </tr>
                     </thead>
                     <tbody data-hx-swap="filestorage_files_table">
                     </tbody>

@@ -12,7 +12,15 @@
                 </div>
             </td>
             <td></td>
-            <td class="text-right"></td>
+            <td class="text-right">
+                <strong>
+                    {% if group.total_cost == group.total_cost|floatformat:2 %}
+                        {{ group.total_cost|floatformat:"2g" }}
+                    {% else %}
+                        {{ group.total_cost|floatformat:"g" }}
+                    {% endif %}
+                </strong>
+            </td>
         </tr>
         {% for service in group.services %}
             <!-- Service Row -->
@@ -28,7 +36,14 @@
                     </div>
                 </td>
                 <td></td>
-                <td class="text-right"></td>
+                <td class="text-right">
+                    {# this basically checks if it ends in zeros, to strip it down if we dont need to display them #}
+                    {% if service.total_cost == service.total_cost|floatformat:0 %}
+                        {{ service.total_cost|floatformat:2 }}
+                    {% else %}
+                        {{ service.total_cost }}
+                    {% endif %}
+                </td>
             </tr>
             {% for detail in service.details %}
                 <!-- Detail Row -->
@@ -41,7 +56,10 @@
                         </div>
                     </td>
                     <td>{{ detail.quantity }}</td>
-                    <td class="text-right">{{ detail.cost }}</td>
+                    <td class="text-right">
+                        {# this basically checks if it ends in zeros, to strip it down if we dont need to display them #}
+                        {{ detail.cost|floatformat:"2g" }}
+                    </td>
                 </tr>
             {% endfor %}
         {% endfor %}
@@ -56,4 +74,14 @@
     <i class="fa fa-caret-down"></i>
 </div>
 <div hx-swap-oob='innerHTML:div[data-hx-swap="total_services"]'>{{ billing.total_services }}</div>
-<div hx-swap-oob='innerHTML:div[data-hx-swap="total_cost"]'>£{{ billing.total_cost }}</div>
+<div hx-swap-oob='innerHTML:div[data-hx-swap="total_cost"]'>
+    <span class="tooltip tooltip-primary tooltip-left underline underline-offset-4 decoration-dotted"
+          data-tip="Raw total: £{{ billing.total_cost }}">
+        £
+        {% if billing.total_cost == billing.total_cost|floatformat:2 %}
+            {{ billing.total_cost|floatformat:"2g" }}
+        {% else %}
+            {{ billing.total_cost|floatformat:"g" }}
+        {% endif %}
+    </span>
+</div>

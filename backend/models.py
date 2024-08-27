@@ -1086,20 +1086,13 @@ class SubscriptionPlan(models.Model):
     Subscription plans available for users.
     """
 
-    PLAN_CHOICES = [
-        ("free", "Free Plan"),
-        ("basic", "Basic Plan"),
-        ("standard", "Standard Plan"),
-        ("enterprise", "Enterprise Plan"),
-    ]
-
-    name = models.CharField(max_length=50, choices=PLAN_CHOICES, unique=True)
+    name = models.CharField(max_length=50, unique=True)
     price_per_month = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     description = models.TextField(max_length=500, null=True, blank=True)
     maximum_duration_months = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
-        return f"{self.name} - {self.price_per_month or 'Custom Pricing'}"
+        return f"{self.name} - {self.price_per_month or 'free' if self.price_per_month != -1 else 'custom'}"
 
 
 class UserSubscription(OwnerBase):
@@ -1109,11 +1102,15 @@ class UserSubscription(OwnerBase):
 
     subscription_plan = models.ForeignKey(SubscriptionPlan, on_delete=models.SET_NULL, null=True)
     custom_subscription_price_per_month = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    start_date = models.DateField()  # When the subscription started
-    end_date = models.DateField(null=True, blank=True)  # When the subscription ends (for recurring)
+    start_date = models.DateTimeField(auto_now_add=True)  # When the subscription started
+    end_date = models.DateTimeField(null=True, blank=True)  # When the subscription ends (for recurring)
 
     def __str__(self):
-        return f"{self.user} - {self.subscription_plan.name}"
+        return f"{self.user} - {self.subscription_plan.name} ({self.start_date} to {self.end_date or 'ongoing'})"
+
+    @property
+    def get_price(self):
+        return self.custom_subscription_price_per_month or self.subscription_plan.price_per_month or "0.00"
 
 
 class Usage(OwnerBase):
@@ -1126,6 +1123,7 @@ class Usage(OwnerBase):
     unit = models.CharField(max_length=20)  # E.g., 'GB', 'emails', 'invocations'
     timestamp = models.DateTimeField(auto_now_add=True)  # When the usage occurred
     end_time = models.DateTimeField(null=True, blank=True)  # Storage end time for time-based billing (for storage)
+    instance_id = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
         return f"{self.user} - {self.feature}: {self.quantity} {self.unit}"
@@ -1141,15 +1139,15 @@ class PlanFeature(models.Model):
     billing
     """
 
-    slug = models.CharField(max_length=100, unique=True, editable=False)
-    name = models.CharField(max_length=100, editable=False)
+    slug = models.CharField(max_length=100, editable=False)
+    name = models.CharField(max_length=100)
     description = models.TextField(max_length=500, null=True, blank=True)
 
     subscription_plan = models.ForeignKey(SubscriptionPlan, on_delete=models.CASCADE, related_name="features")
     group = models.ForeignKey(PlanFeatureGroup, on_delete=models.CASCADE, related_name="features")
 
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.name} - subscription: {self.subscription_plan_id}"
 
 
 class PlanFeatureVersion(models.Model):
@@ -1190,24 +1188,6 @@ class PlanFeatureVersion(models.Model):
         latest_version = PlanFeatureVersion.objects.filter(plan_feature=self.plan_feature).aggregate(models.Max("version"))
         next_version = (latest_version["version__max"] or 0) + 1
         return next_version
-
-
-class UserPlan(OwnerBase):
-    """
-    When a user first uses a plan, we log it here. So for example we can calculate a free period. E.g. 1000 invoices/mo free for the
-    first 6 months
-    """
-
-    plan = models.ForeignKey(PlanFeature, on_delete=models.CASCADE)  # Link to PlanFeature for the specific feature
-    start_date = models.DateField()  # For calculating free periods
-    is_active = models.BooleanField(default=True)
-
-    # def is_in_free_period(self):
-    #     """Check if the user is still in the free period."""
-    #     if self.plan.free_period_in_months:
-    #         free_period_end = self.start_date + relativedelta(months=self.plan.free_period_in_months)
-    #         return timezone.now().date() <= free_period_end
-    #     return False
 
 
 # endregion

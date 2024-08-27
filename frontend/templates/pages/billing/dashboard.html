@@ -31,6 +31,39 @@
             </div>
         </div>
     </div>
+    <div class="card bg-base-100 mb-2">
+        <div class="card-body">
+            <div class="card-title">Current Subscription Plan</div>
+            {% if not active_subscription %}
+                You are currently not subscribed to any plan
+            {% else %}
+                <div>
+                    You are currently subscribed to
+                    <strong>{{ active_subscription.subscription_plan.name | title }}</strong>
+                    for
+                    <strong>£{{ active_subscription.get_price }}</strong>/month
+                </div>
+            {% endif %}
+            {# temporary #}
+            <div class="divider">Change plan</div>
+            <form hx-post="{% url 'api:billing:change_plan' %}" hx-swap="none">
+                <select class="select select-bordered select-sm" name="plan_id">
+                    {% for option in all_subscription_plans %}
+                        <option value="{{ option.id }}">
+                            {{ option.name | title }} -
+                            {% if option.price_per_month != -1 %}
+                                £{{ option.price_per_month }}
+                            {% else %}
+                                Custom Price
+                            {% endif %}
+                            {% if option.maximum_duration_months %}({{ option.maximum_duration_months }} month max){% endif %}
+                        </option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="btn btn-secondary btn-sm">submit</button>
+            </form>
+        </div>
+    </div>
     <div id="billing-content" class="card bg-base-100 shadow-md">
         <div class="card-body">
             <h2 class="card-title">MyFinances charges by service</h2>
@@ -42,7 +75,19 @@
                     </div>
                     <div class="text-right">
                         <span class="text-base">Total Cost (in GBP)</span>
-                        <div class="text-xl font-bold" data-hx-swap="total_cost">£{{ billing.total_cost }}</div>
+                        <br>
+                        <div class="text-xl font-bold underline underline-offset-4 decoration-dotted"
+                             data-hx-swap="total_cost">
+                            <span class="tooltip tooltip-primary underline underline-offset-4 decoration-dotted"
+                                  data-tip="Raw total: £{{ billing.total_cost }}">
+                                £
+                                {% if billing.total_cost == billing.total_cost|floatformat:2 %}
+                                    {{ billing.total_cost|floatformat:"2g" }}
+                                {% else %}
+                                    {{ billing.total_cost|floatformat:"g" }}
+                                {% endif %}
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>

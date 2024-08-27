@@ -7,9 +7,9 @@ from typing import Literal
 
 @dataclass
 class Feature:
-    slug: str
-    description: str
+    slug: str  # Consistent slug across plans
     name: str
+    description: str
     subscription_plan: SubscriptionPlanItem
     free_tier_limit: float
     free_period_in_months: int
@@ -33,6 +33,7 @@ class SubscriptionPlanItem:
     maximum_duration_months: int
 
 
+# Default subscription plans
 free_plan = SubscriptionPlanItem(
     name="free trial",
     price_per_month=Decimal(0.00),
@@ -57,100 +58,89 @@ growth_plan = SubscriptionPlanItem(
 enterprise_plan = SubscriptionPlanItem(
     name="enterprise",
     price_per_month=Decimal(-1),
-    description="Additional customisation for your ideal business",
+    description="Additional customization for your ideal business",
     maximum_duration_months=0,
 )
 
 default_subscription_plans: list[SubscriptionPlanItem] = [free_plan, starter_plan, growth_plan, enterprise_plan]
 
+# Default usage plans
 default_usage_plans: list[FeatureGroup] = [
     FeatureGroup(
         "invoices",
         [
-            # region invoices-created-free-plan
             Feature(
-                slug="invoices-created-free-plan",
+                slug="invoices-created",
                 name="Invoices Created (free plan)",
                 description="Amount of invoices created per month",
                 free_tier_limit=10,
                 free_period_in_months=1,
                 unit="invocations",
-                cost_per_unit=Decimal(0.05),
-                units_per_cost=1,
+                cost_per_unit=Decimal(1),
+                units_per_cost=0,
                 minimum_billable_size=1,
                 subscription_plan=free_plan,
             ),
-            # endregion
-            # region invoices-created-starter-plan
             Feature(
-                slug="invoices-created-starter-plan",
-                name="Invoices Created (starter plan)",
-                description="Amount of invoices created per month",
+                slug="invoices-created",
+                name="Invoices Created",
+                description="Amount of invoices created per month (starter plan)",
                 free_tier_limit=100,
                 free_period_in_months=3,
                 unit="invocations",
-                cost_per_unit=Decimal(0.50),
+                cost_per_unit=Decimal(1),
                 units_per_cost=1000,
                 minimum_billable_size=1,
                 subscription_plan=starter_plan,
             ),
-            # endregion
-            # region invoices-created-growth-plan
             Feature(
-                slug="invoices-created-growth-plan",
+                slug="invoices-created",
                 name="Invoices Created (growth plan)",
                 description="Amount of invoices created per month",
                 free_tier_limit=300,
                 free_period_in_months=12,
                 unit="invocations",
-                cost_per_unit=Decimal(0.10),
+                cost_per_unit=Decimal(0.90),
                 units_per_cost=1000,
                 minimum_billable_size=1,
                 subscription_plan=growth_plan,
             ),
-            # endregion
-            # region invoices-sent-via-schedule-free-plan
             Feature(
-                slug="invoices-sent-via-schedule-free-plan",
+                slug="invoices-sent-via-schedule",
                 name="Invoices Sent from Schedule (free plan)",
                 description="Amount of invoices sent from a schedule per month",
                 free_tier_limit=1,
                 free_period_in_months=1,
                 unit="invoice(s)",
-                cost_per_unit=Decimal(0.01),
+                cost_per_unit=Decimal(0.10),
                 units_per_cost=1,
                 minimum_billable_size=1,
                 subscription_plan=free_plan,
             ),
-            # endregion
-            # region invoices-sent-via-schedule-starter-plan
             Feature(
-                slug="invoices-sent-via-schedule-starter-plan",
-                name="Invoices Sent from schedule (starter plan)",
+                slug="invoices-sent-via-schedule",
+                name="Invoices Sent from Schedule (starter plan)",
                 description="Amount of invoices sent from a schedule per month",
                 free_tier_limit=10,
                 free_period_in_months=3,
                 unit="invoice(s)",
-                cost_per_unit=Decimal(1.00),
+                cost_per_unit=Decimal(0.10),
                 units_per_cost=1000,
                 minimum_billable_size=1,
                 subscription_plan=starter_plan,
             ),
-            # endregion
-            # region invoices-sent-via-schedule-growth-plan
             Feature(
-                slug="invoices-sent-via-schedule-growth-plan",
-                name="Invoices Sent from schedule (growth plan)",
+                slug="invoices-sent-via-schedule",
+                name="Invoices Sent from Schedule (growth plan)",
                 description="Amount of invoices sent from a schedule per month",
                 free_tier_limit=75,
                 free_period_in_months=12,
                 unit="invoice(s)",
-                cost_per_unit=Decimal(1.00),
+                cost_per_unit=Decimal(0.10),
                 units_per_cost=1000,
                 minimum_billable_size=1,
                 subscription_plan=growth_plan,
             ),
-            # endregion
         ],
     ),
 ]

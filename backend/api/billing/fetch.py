@@ -4,7 +4,7 @@ from django.utils import timezone
 from django.views.decorators.http import require_GET
 
 from backend.decorators import htmx_only
-from backend.service.billing.calculate.test import generate_monthly_billing_summary
+from backend.service.billing.calculate.summary import generate_monthly_billing_summary
 from backend.types.requests import WebRequest
 
 from django.shortcuts import render
@@ -28,7 +28,11 @@ def fetch_bill_table_by_month_endpoint(request: WebRequest):
         messages.error(request, "Invalid month or year")
         return render(request, "base/toast.html")
 
-    billing_dict: dict = generate_monthly_billing_summary(request.user, month, year)
+    billing_response = generate_monthly_billing_summary(request.user, month, year)
+
+    if billing_response.failed:
+        messages.error(request, billing_response.error)
+        return render(request, "base/toast.html")
 
     months = get_months_text()
 
@@ -36,7 +40,7 @@ def fetch_bill_table_by_month_endpoint(request: WebRequest):
         request,
         "pages/billing/table_body.html",
         {
-            "billing": billing_dict,
+            "billing": billing_response.response,
             "current_month": {"text": months[timezone_now().month], "int": timezone_now().month},
             "current_year": timezone_now().year,
             "selected_month": {"text": months[month - 1], "int": month},

@@ -33,12 +33,13 @@ from backend.models import (
     InvoiceReminder,
     InvoiceRecurringProfile,
     Usage,
-    UserPlan,
     PlanFeature,
     FileStorageFile,
     MultiFileUpload,
     PlanFeatureVersion,
     PlanFeatureGroup,
+    SubscriptionPlan,
+    UserSubscription,
 )
 
 from backend.api.public.models import APIAuthToken
@@ -71,12 +72,13 @@ admin.site.register(
         APIAuthToken,
         InvoiceRecurringProfile,
         Usage,
-        UserPlan,
         PlanFeature,
         FileStorageFile,
         MultiFileUpload,
         PlanFeatureVersion,
         PlanFeatureGroup,
+        SubscriptionPlan,
+        UserSubscription,
     ]
 )
 

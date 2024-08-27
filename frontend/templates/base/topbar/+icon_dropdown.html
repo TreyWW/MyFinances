@@ -14,6 +14,13 @@
             <span class="badge">New</span>
         </a>
     </li>
+    <li hx-boost="true">
+        <a {% if request.resolver_match.view_name == "billing:dashboard" %}class="active btn-disabled"{% endif %}
+           href="{% url 'billing:dashboard' %}">
+            Billing Dashboard
+            <span class="badge">New</span>
+        </a>
+    </li>
     <li>
         <label for="logout_modal">
             <i class="fa fa-solid fa-right-from-bracket"></i>
