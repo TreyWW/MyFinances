@@ -1,5 +1,6 @@
 import json
 import os
+from typing import LiteralString
 
 from django.contrib import messages
 from django.core.files.base import ContentFile
@@ -90,20 +91,21 @@ def upload_file_via_batch_endpoint(request: WebRequest):
     file = request.FILES.get("file")
     file_dir = request.POST.get("file_dir", "")
 
+    relative_path: LiteralString | str | bytes
+
     if file_dir:
-        full_file_path = upload_to_user_separate_folder(FileStorageFile, os.path.join(file_dir, file.name), optional_actor=request.actor)
+        relative_path = os.path.join(file_dir, file.name)
+        full_file_path = upload_to_user_separate_folder(FileStorageFile, relative_path, optional_actor=request.actor)
     else:
-        full_file_path = upload_to_user_separate_folder(FileStorageFile, file.name, optional_actor=request.actor)
+        relative_path = file.name
+        full_file_path = upload_to_user_separate_folder(FileStorageFile, relative_path, optional_actor=request.actor)
 
     if not file:
         return JsonResponse({"error": "File not found"}, status=404)
 
     saved_path = _private_storage().save(full_file_path, ContentFile(file.read()))
 
-    saved_file = FileStorageFile.objects.create(
-        file=saved_path,
-        owner=request.actor,
-    )
+    saved_file = FileStorageFile.objects.create(file=saved_path, owner=request.actor, file_uri_path=relative_path)
 
     batch_obj.files.add(saved_file)
     return JsonResponse({"success": True})

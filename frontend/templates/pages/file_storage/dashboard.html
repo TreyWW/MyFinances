@@ -29,8 +29,13 @@
                 <h2 class="text-xl font-bold mt-6 mr-5">
                     Objects <span>(100)</span>
                 </h2>
-                <button class="btn btn-neutral btn-sm btn-outline">
-                    <i class="fa fa-refresh"></i>
+                <button data-hx-indicator="refresh" class="btn btn-neutral btn-sm btn-outline loading-htmx"
+                        onclick="htmx.trigger(document.body, 'reload_filestorage_table');">
+                    <span class="loading-htmx-text">
+                        <i class="fa fa-solid fa-refresh"></i>
+                    </span>
+                    <span id="currency_save_loading"
+                          class="loading loading-spinner loading-htmx-loader"></span>
                 </button>
                 <button class="btn btn-neutral btn-sm btn-outline" disabled>
                     <i class="fa fa-download"></i>
@@ -40,11 +45,12 @@
                     Open
                     <i class="fa fa-external-link"></i>
                 </a>
-                <button class="btn btn-neutral btn-sm btn-outline" 
+                <button class="btn btn-neutral btn-sm btn-outline"
                         hx-include="#file-details"
-                        hx-target="#file-list"
-                        hx-delete="{% url 'file_storage:delete:delete_file' %}">
-                    Delete</button>
+                        hx-target='tbody[data-hx-swap="filestorage_files_table"]'
+                        hx-delete="{% url 'api:file_storage:delete' %}">
+                    Delete
+                </button>
                 <div class="dropdown">
                     <div tabindex="0"
                          role="button"
@@ -74,44 +80,23 @@
                     Upload
                 </a>
             </div>
-            <form id ="file-details">
-            <table class="table w-full mt-4">
-                <thead>
+            <form id="file-details">
+                <table class="table w-full mt-4" hx-swap="outerHTML"
+                       hx-trigger="load, reload_filestorage_table from:body"
+                       hx-target='tbody[data-hx-swap="filestorage_files_table"]'
+                       hx-indicator='button[data-hx-indicator="refresh"]'
+                       hx-get="{% url "api:file_storage:fetch" %}">
+                    <thead>
                     <tr>
                         <th>Select</th>
                         <th>Name</th>
                         <th>Size</th>
                         <th>Last Modified</th>
                     </tr>
-                </thead>
-                <tbody id="file-list">
-                    {% for file in files %}
-                        <tr class="file-row" data-file-url="{{ file.url }}">
-                            <td class="hover cursor-pointer" onclick="this.children[0].click();">
-                                <input type="checkbox"
-                                       class="checkbox checkbox-primary"
-                                       name="file-checkboxes"
-                                       value="{{ file.url }}"
-                                       data-file-url="{{ file.url }}"
-                                       onclick="this.click();">
-                            </td>
-                            <td>
-                                <a href="#"
-                                   class="link link-primary"
-                                   hx-get="{% url 'file_storage:dashboard' %}?dir={{ directory|urlencode }}/{{ file.name }}"
-                                   hx-target="#file-list"
-                                   hx-swap="innerHTML">{{ file.name }}</a>
-                            </td>
-                            <td>{{ file.size }}</td>
-                            <td>{{ file.last_modified }}</td>
-                        </tr>
-                    {% empty %}
-                        <tr>
-                            <td colspan="4" class="text-center">No files found.</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody data-hx-swap="filestorage_files_table">
+                    </tbody>
+                </table>
             </form>
         </div>
     </div>
@@ -124,7 +109,7 @@
         document.querySelectorAll('.file-checkbox').forEach(checkbox => {
             checkbox.addEventListener('change', function () {
                 this.closest('tr').classList.toggle('selected', this.checked);
-                console.log('checked',this.checked)
+                console.log('checked', this.checked)
             });
         });
 

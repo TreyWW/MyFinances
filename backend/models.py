@@ -1061,6 +1061,7 @@ class EmailSendStatus(OwnerBase):
 
 class FileStorageFile(OwnerBase):
     file = models.FileField(upload_to=upload_to_user_separate_folder, storage=_private_storage)
+    file_uri_path = models.CharField(max_length=500)  # relative path not including user folder/media
     last_edited_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, editable=False, related_name="files_edited")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

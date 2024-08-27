@@ -15,13 +15,11 @@ def file_storage_dashboard_endpoint(request: WebRequest):
         {
             "name": file.file.name.split("/")[-1],
             "url": file.file.url,
+            "file_uri_path": file.file_uri_path,
             "size": format_file_size(file.file.size),
             "last_modified": file.updated_at,
         }
         for file in files
     ]
-
-    print(files)
-    print(files_with_names)
 
     return render(request, "pages/file_storage/dashboard.html", {"files": files_with_names, "directory": escape(directory)})
