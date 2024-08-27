@@ -40,7 +40,11 @@
                     Open
                     <i class="fa fa-external-link"></i>
                 </a>
-                <button class="btn btn-neutral btn-sm btn-outline" disabled>Delete</button>
+                <button class="btn btn-neutral btn-sm btn-outline" 
+                        hx-include="#file-details"
+                        hx-target="#file-list"
+                        hx-delete="{% url 'file_storage:delete:delete_file' %}">
+                    Delete</button>
                 <div class="dropdown">
                     <div tabindex="0"
                          role="button"
@@ -70,6 +74,7 @@
                     Upload
                 </a>
             </div>
+            <form id ="file-details">
             <table class="table w-full mt-4">
                 <thead>
                     <tr>
@@ -85,6 +90,8 @@
                             <td class="hover cursor-pointer" onclick="this.children[0].click();">
                                 <input type="checkbox"
                                        class="checkbox checkbox-primary"
+                                       name="file-checkboxes"
+                                       value="{{ file.url }}"
                                        data-file-url="{{ file.url }}"
                                        onclick="this.click();">
                             </td>
@@ -105,6 +112,7 @@
                     {% endfor %}
                 </tbody>
             </table>
+            </form>
         </div>
     </div>
     <script>
@@ -116,6 +124,7 @@
         document.querySelectorAll('.file-checkbox').forEach(checkbox => {
             checkbox.addEventListener('change', function () {
                 this.closest('tr').classList.toggle('selected', this.checked);
+                console.log('checked',this.checked)
             });
         });
 
