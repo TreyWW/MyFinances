@@ -69,6 +69,7 @@ default_usage_plans: list[FeatureGroup] = [
     FeatureGroup(
         "invoices",
         [
+            # region "invoices-created"
             Feature(
                 slug="invoices-created",
                 name="Invoices Created (free plan)",
@@ -105,6 +106,8 @@ default_usage_plans: list[FeatureGroup] = [
                 minimum_billable_size=1,
                 subscription_plan=growth_plan,
             ),
+            # endregion "invoices-created"
+            # region "invoices-sent-via-schedule"
             Feature(
                 slug="invoices-sent-via-schedule",
                 name="Invoices Sent from Schedule (free plan)",
@@ -141,6 +144,50 @@ default_usage_plans: list[FeatureGroup] = [
                 minimum_billable_size=1,
                 subscription_plan=growth_plan,
             ),
+            # endregion "invoices-sent-via-schedule"
+        ],
+    ),
+    FeatureGroup(
+        "teams",
+        [
+            # region "organization-access"
+            # Feature(
+            #     slug="organization-access",
+            #     name="Organization Access ()",
+            #     description="Amount of invoices created per month",
+            #     free_tier_limit=10,
+            #     free_period_in_months=1,
+            #     unit="invocations",
+            #     cost_per_unit=Decimal(1),
+            #     units_per_cost=0,
+            #     minimum_billable_size=1,
+            #     subscription_plan=free_plan,
+            # ),
+            Feature(
+                slug="organization-access",
+                name="Organization Access ()",
+                description="Amount of invoices created per month (starter plan)",
+                free_tier_limit=0,
+                free_period_in_months=0,
+                unit="team access (unlimited /pm)",
+                cost_per_unit=Decimal(3),
+                units_per_cost=1,
+                minimum_billable_size=1,
+                subscription_plan=starter_plan,
+            ),
+            Feature(
+                slug="organization-access",
+                name="Organization Access ()",
+                description="Amount of invoices created per month",
+                free_tier_limit=0,
+                free_period_in_months=0,
+                unit="team access (unlimited /pm)",
+                cost_per_unit=Decimal(3),
+                units_per_cost=1,
+                minimum_billable_size=1,
+                subscription_plan=growth_plan,
+            ),
+            # endregion "organization-access"
         ],
     ),
 ]

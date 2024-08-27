@@ -29,6 +29,8 @@ def parse_files_for_creation(actor: User | Organization, uploaded_files: list[Te
     if total_size_in_bytes > max_limit:
         return CreateFileServiceResponse(error_message="Total file size exceeds the maximum limit of 30GB.", status_code=400)
 
+    # Todo: WARNING - bulk create bypasses signals so this will need to be changed when we add usage based pricing for this
+
     django_uploaded_files = FileStorageFile.objects.bulk_create(file_objects, batch_size=100)
 
     return CreateFileServiceResponse(True, response=django_uploaded_files)
