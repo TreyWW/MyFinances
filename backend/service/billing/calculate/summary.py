@@ -3,6 +3,8 @@ from backend.utils.dataclasses import BaseServiceResponse
 from collections import defaultdict
 from decimal import Decimal
 from typing import Dict, List, Tuple
+
+from .file_storage import calculate_storage_cost, calculate_transfer_cost
 from .utils import round_currency, calculate_free_tier_cost, calculate_chargeable_cost
 from .subscription import get_user_subscriptions, get_highest_subscription_cost
 from backend.models import Usage, PlanFeature, PlanFeatureVersion, UserSubscription
@@ -144,10 +146,47 @@ def process_feature_usage(usage_data: List[Usage], subscriptions: List[UserSubsc
 
 def generate_monthly_billing_summary(user, month: int, year: int) -> GenerateBillingServiceResponse:
     """Main entry function to generate the billing summary."""
+    total_cost: Decimal = Decimal(0)
+
     subscriptions = get_user_subscriptions(user, month, year)
     usage_data = Usage.objects.filter(user=user, timestamp__month=month, timestamp__year=year)
 
     groups, usage_total_cost = process_feature_usage(usage_data, subscriptions)
+    total_cost += usage_total_cost
+
+    # storage pricing
+
+    storage_costs = calculate_storage_cost(user, month, year, subscriptions)
+    transfer_costs = calculate_transfer_cost(user, month, year, subscriptions)
+
+    print(storage_costs)
+
+    # Add dynamic storage costs under appropriate groups
+    for service_name, data in storage_costs.items():
+        total_cost += data["cost"]
+        group_name = "Strelix File Storage" if "Strelix" in service_name else "Receipts"
+        if group_name not in groups:
+            groups[group_name] = {"total_cost": Decimal("0.00"), "services": {}}
+
+        groups[group_name]["total_cost"] += data["cost"]
+        groups[group_name]["services"][service_name] = {
+            "total_cost": data["cost"],
+            "details": [{"description": service_name, "quantity": data["quantity"], "cost": data["cost"]}],
+        }
+
+    # Add dynamic transfer costs under the Data Transfer group
+    for service_name, data in transfer_costs.items():
+        total_cost += data["cost"]
+        if "Data Transfer" not in groups:
+            groups["Data Transfer"] = {"total_cost": Decimal("0.00"), "services": {}}
+
+        groups["Data Transfer"]["total_cost"] += data["cost"]
+        groups["Data Transfer"]["services"][service_name] = {
+            "total_cost": data["cost"],
+            "details": [{"description": service_name, "quantity": data["quantity"], "cost": data["cost"]}],
+        }
+
+    # # subscription pricing
 
     highest_subscription_object, highest_subscription_cost = get_highest_subscription_cost(subscriptions)
 

@@ -38,7 +38,7 @@ def RandomAPICode(length=89):
     return get_random_string(length=length).lower()
 
 
-def upload_to_user_separate_folder(instance, filename, optional_actor=None):
+def upload_to_user_separate_folder(instance, filename, optional_actor=None) -> str:
     instance_name = instance._meta.verbose_name.replace(" ", "-")
 
     print(instance, filename)
@@ -1066,6 +1066,24 @@ class FileStorageFile(OwnerBase):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    __original_file = None
+    __original_file_uri_path = None
+
+    def __init__(self, *args, **kwargs):
+        super(FileStorageFile, self).__init__(*args, **kwargs)
+        self.__original_file = self.file
+        self.__original_file_uri_path = self.file_uri_path
+
+    def find_existing_usage(self, feature: str | PlanFeature, file_path: str = None) -> StorageUsage | None:
+        feature_obj: PlanFeature
+        if isinstance(feature, str):
+            feature_obj = PlanFeature.objects.get(slug=feature)
+        return (
+            StorageUsage.filter_by_owner(self.owner)
+            .filter(feature=feature_obj, file_uri_path=file_path or self.file_uri_path, end_time__isnull=True)
+            .first()
+        )
+
 
 class MultiFileUpload(OwnerBase):
     files = models.ManyToManyField(FileStorageFile, related_name="multi_file_uploads")
@@ -1111,22 +1129,6 @@ class UserSubscription(OwnerBase):
     @property
     def get_price(self):
         return self.custom_subscription_price_per_month or self.subscription_plan.price_per_month or "0.00"
-
-
-class Usage(OwnerBase):
-    """
-    Actual users usage of a plan. e.g. "emails sent". When they did it, how much they did (e.g. bulk email)
-    """
-
-    feature = models.CharField(max_length=50)  # E.g., 'email', 'storage', 'events'
-    quantity = models.FloatField()  # E.g., GB for storage, count for emails
-    unit = models.CharField(max_length=20)  # E.g., 'GB', 'emails', 'invocations'
-    timestamp = models.DateTimeField(auto_now_add=True)  # When the usage occurred
-    end_time = models.DateTimeField(null=True, blank=True)  # Storage end time for time-based billing (for storage)
-    instance_id = models.CharField(max_length=100, null=True, blank=True)
-
-    def __str__(self):
-        return f"{self.user} - {self.feature}: {self.quantity} {self.unit}"
 
 
 class PlanFeatureGroup(models.Model):
@@ -1188,6 +1190,44 @@ class PlanFeatureVersion(models.Model):
         latest_version = PlanFeatureVersion.objects.filter(plan_feature=self.plan_feature).aggregate(models.Max("version"))
         next_version = (latest_version["version__max"] or 0) + 1
         return next_version
+
+
+class StorageUsage(OwnerBase):
+    feature = models.ForeignKey(PlanFeature, on_delete=models.CASCADE)  # e.g., "Strelix File Storage"
+    file_uri_path = models.CharField(max_length=255)  # Identifier for the file
+    size_in_MB = models.DecimalField(max_digits=10, decimal_places=8)  # Size in MB
+    start_time = models.DateTimeField(auto_now_add=True)
+    end_time = models.DateTimeField(null=True, blank=True)  # When the file was deleted or updated
+
+    def has_ended(self):
+        return self.end_time is not None
+
+    def end_now(self) -> typing.Self:
+        self.end_time = timezone.now()
+        return self
+
+
+class TransferUsage(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    feature = models.ForeignKey(PlanFeature, on_delete=models.CASCADE)  # e.g., "Outbound Transfer"
+    amount_in_MB = models.DecimalField(max_digits=10, decimal_places=2)  # Transfer amount in MB
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+
+class Usage(OwnerBase):
+    """
+    Actual users usage of a plan. e.g. "emails sent". When they did it, how much they did (e.g. bulk email)
+    """
+
+    feature = models.CharField(max_length=50)  # E.g., 'email', 'storage', 'events'
+    quantity = models.FloatField()  # E.g., GB for storage, count for emails
+    unit = models.CharField(max_length=20)  # E.g., 'GB', 'emails', 'invocations'
+    timestamp = models.DateTimeField(auto_now_add=True)  # When the usage occurred
+    end_time = models.DateTimeField(null=True, blank=True)  # Storage end time for time-based billing (for storage)
+    instance_id = models.CharField(max_length=100, null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.user} - {self.feature}: {self.quantity} {self.unit}"
 
 
 # endregion

@@ -103,6 +103,18 @@ def upload_file_via_batch_endpoint(request: WebRequest):
     if not file:
         return JsonResponse({"error": "File not found"}, status=404)
 
+    existing_file_under_path: FileStorageFile | None = (
+        FileStorageFile.filter_by_owner(request.actor).filter(file_uri_path=relative_path).first()
+    )
+
+    if existing_file_under_path:
+        # existing_usage = existing_file_under_path.find_existing_usage("storage")
+        # if existing_usage:
+        #     existing_usage.end_now().save(updated_fields=["end_at"])
+        _private_storage().delete(full_file_path)  # WILL OVERRIDE IT RATHER THAN USE NEW NAME
+        existing_file_under_path.delete()
+        # todo add an option to not override
+
     saved_path = _private_storage().save(full_file_path, ContentFile(file.read()))
 
     saved_file = FileStorageFile.objects.create(file=saved_path, owner=request.actor, file_uri_path=relative_path)

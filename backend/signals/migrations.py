@@ -126,6 +126,7 @@ def update_usage_plans(**kwargs):
                     free_period_in_months=item.free_period_in_months,
                     unit=item.unit,
                     cost_per_unit=item.cost_per_unit,
+                    units_per_cost=item.units_per_cost,
                     minimum_billable_size=item.minimum_billable_size,
                 )
                 logging.info(f"Added PlanFeature {item.name}")

@@ -190,4 +190,38 @@ default_usage_plans: list[FeatureGroup] = [
             # endregion "organization-access"
         ],
     ),
+    FeatureGroup(
+        "Data Transfer",
+        [
+            Feature(
+                slug="data-transfer",
+                name="Data Transfer",
+                description="Amount of data transferred per month",
+                free_tier_limit=5,
+                free_period_in_months=-1,
+                unit="GB",
+                cost_per_unit=Decimal("0.10"),
+                units_per_cost=1,  # Cost applies to each full GB
+                minimum_billable_size=0.125,  # Minimum billable size is 128 (not raw MB)
+                subscription_plan=starter_plan,
+            )
+        ],
+    ),
+    FeatureGroup(
+        "File Storage",
+        [
+            Feature(
+                slug="storage",
+                name="Storage",
+                description="Storage usage charged per GB per month",
+                free_tier_limit=10,  # Free 10 GB per month
+                free_period_in_months=-1,  # Infinite (always 10 GB/pm free)
+                unit="GB",
+                cost_per_unit=Decimal("0.02"),  # Cost per GB per month
+                units_per_cost=1,  # Cost applies to 1 GB
+                minimum_billable_size=0.125,  # Minimum 128 MB (not raw MB)
+                subscription_plan=starter_plan,
+            )
+        ],
+    ),
 ]

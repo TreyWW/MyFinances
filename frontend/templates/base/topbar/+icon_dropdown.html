@@ -18,7 +18,6 @@
         <a {% if request.resolver_match.view_name == "billing:dashboard" %}class="active btn-disabled"{% endif %}
            href="{% url 'billing:dashboard' %}">
             Billing Dashboard
-            <span class="badge">New</span>
         </a>
     </li>
     <li>
