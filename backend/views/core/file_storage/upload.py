@@ -110,7 +110,7 @@ def upload_file_via_batch_endpoint(request: WebRequest):
     if existing_file_under_path:
         # existing_usage = existing_file_under_path.find_existing_usage("storage")
         # if existing_usage:
-        #     existing_usage.end_now().save(updated_fields=["end_at"])
+        #     existing_usage.end_now().save(update_fields=["end_at"])
         _private_storage().delete(full_file_path)  # WILL OVERRIDE IT RATHER THAN USE NEW NAME
         existing_file_under_path.delete()
         # todo add an option to not override

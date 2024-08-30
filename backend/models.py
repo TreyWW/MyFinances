@@ -81,6 +81,7 @@ class User(AbstractUser):
     objects: CustomUserManager = CustomUserManager()  # type: ignore
 
     logged_in_as_team = models.ForeignKey("Organization", on_delete=models.SET_NULL, null=True, blank=True)
+    stripe_customer_id = models.CharField(max_length=255, null=True, blank=True)
     awaiting_email_verification = models.BooleanField(default=True)
 
     class Role(models.TextChoices):
@@ -243,8 +244,8 @@ class TeamInvitation(models.Model):
 
 
 class OwnerBase(models.Model):
-    user = models.ForeignKey("User", on_delete=models.CASCADE, null=True, blank=True)
-    organization = models.ForeignKey("Organization", on_delete=models.CASCADE, null=True, blank=True)
+    user = models.ForeignKey("backend.User", on_delete=models.CASCADE, null=True, blank=True)
+    organization = models.ForeignKey("backend.Organization", on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         abstract = True
@@ -1074,15 +1075,15 @@ class FileStorageFile(OwnerBase):
         self.__original_file = self.file
         self.__original_file_uri_path = self.file_uri_path
 
-    def find_existing_usage(self, feature: str | PlanFeature, file_path: str = None) -> StorageUsage | None:
-        feature_obj: PlanFeature
-        if isinstance(feature, str):
-            feature_obj = PlanFeature.objects.get(slug=feature)
-        return (
-            StorageUsage.filter_by_owner(self.owner)
-            .filter(feature=feature_obj, file_uri_path=file_path or self.file_uri_path, end_time__isnull=True)
-            .first()
-        )
+    # def find_existing_usage(self, feature: str | PlanFeature, file_path: str = None) -> StorageUsage | None:
+    #     feature_obj: PlanFeature
+    #     if isinstance(feature, str):
+    #         feature_obj = PlanFeature.objects.get(slug=feature)
+    #     return (
+    #         StorageUsage.filter_by_owner(self.owner)
+    #         .filter(feature=feature_obj, file_uri_path=file_path or self.file_uri_path, end_time__isnull=True)
+    #         .first()
+    #     )
 
 
 class MultiFileUpload(OwnerBase):
@@ -1094,140 +1095,3 @@ class MultiFileUpload(OwnerBase):
 
     def is_finished(self):
         return self.finished_at is not None
-
-
-# region New usage based billing
-
-
-class SubscriptionPlan(models.Model):
-    """
-    Subscription plans available for users.
-    """
-
-    name = models.CharField(max_length=50, unique=True)
-    price_per_month = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    description = models.TextField(max_length=500, null=True, blank=True)
-    maximum_duration_months = models.IntegerField(null=True, blank=True)
-
-    def __str__(self):
-        return f"{self.name} - {self.price_per_month or 'free' if self.price_per_month != -1 else 'custom'}"
-
-
-class UserSubscription(OwnerBase):
-    """
-    Track which subscription plan a user is currently subscribed to.
-    """
-
-    subscription_plan = models.ForeignKey(SubscriptionPlan, on_delete=models.SET_NULL, null=True)
-    custom_subscription_price_per_month = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    start_date = models.DateTimeField(auto_now_add=True)  # When the subscription started
-    end_date = models.DateTimeField(null=True, blank=True)  # When the subscription ends (for recurring)
-
-    def __str__(self):
-        return f"{self.user} - {self.subscription_plan.name} ({self.start_date} to {self.end_date or 'ongoing'})"
-
-    @property
-    def get_price(self):
-        return self.custom_subscription_price_per_month or self.subscription_plan.price_per_month or "0.00"
-
-
-class PlanFeatureGroup(models.Model):
-    name = models.CharField(max_length=50)  # E.g. 'invoices'
-
-
-class PlanFeature(models.Model):
-    """
-    Details related to certain features. E.g. "emails sent", we can allow site admins to change prices, units, and customise their
-    billing
-    """
-
-    slug = models.CharField(max_length=100, editable=False)
-    name = models.CharField(max_length=100)
-    description = models.TextField(max_length=500, null=True, blank=True)
-
-    subscription_plan = models.ForeignKey(SubscriptionPlan, on_delete=models.CASCADE, related_name="features")
-    group = models.ForeignKey(PlanFeatureGroup, on_delete=models.CASCADE, related_name="features")
-
-    def __str__(self):
-        return f"{self.name} - subscription: {self.subscription_plan_id}"
-
-
-class PlanFeatureVersion(models.Model):
-    plan_feature = models.ForeignKey(PlanFeature, on_delete=models.CASCADE)
-    version = models.IntegerField(editable=False)  # Incremented version number
-
-    free_tier_limit = models.FloatField(default=0)  # Free units per month (e.g., 1000 emails)
-    free_period_in_months = models.IntegerField(null=True, blank=True)  # First N months free
-
-    unit = models.CharField(max_length=20)  # E.g., 'GB', 'emails', 'invocations'
-
-    cost_per_unit = models.DecimalField(max_digits=10, decimal_places=6)  # E.g., cost per unit (e.g., GB or emails)
-    units_per_cost = models.FloatField(default=1)  # E.g., cost applies to how many units? (1000 emails or 1 GB)
-
-    minimum_billable_size = models.FloatField(null=True, blank=True)  # Minimum billable size in units (e.g., MB)
-    # Storage-specific fields
-    # transfer_cost_per_unit = models.DecimalField(max_digits=10, decimal_places=6, null=True, blank=True)  # Transfer cost
-
-    valid_from = models.DateTimeField(auto_now_add=True)  # When this version became active
-    valid_to = models.DateTimeField(null=True, blank=True)  # When it expired (null if still active)
-
-    def __str__(self):
-        return f"{self.plan_feature.name} - v{self.version}"
-
-    def save(self, *args, **kwargs):
-        if not self.pk:
-            # Wrap version assignment and save in a transaction to prevent race conditions
-            with transaction.atomic():
-                self.version = self.get_next_version()
-                super().save(*args, **kwargs)
-        else:
-            super().save(*args, **kwargs)
-
-    def get_next_version(self):
-        """
-        Get the next version number for this PlanFeature. It auto-increments based on the max version.
-        """
-        latest_version = PlanFeatureVersion.objects.filter(plan_feature=self.plan_feature).aggregate(models.Max("version"))
-        next_version = (latest_version["version__max"] or 0) + 1
-        return next_version
-
-
-class StorageUsage(OwnerBase):
-    feature = models.ForeignKey(PlanFeature, on_delete=models.CASCADE)  # e.g., "Strelix File Storage"
-    file_uri_path = models.CharField(max_length=255)  # Identifier for the file
-    size_in_MB = models.DecimalField(max_digits=10, decimal_places=8)  # Size in MB
-    start_time = models.DateTimeField(auto_now_add=True)
-    end_time = models.DateTimeField(null=True, blank=True)  # When the file was deleted or updated
-
-    def has_ended(self):
-        return self.end_time is not None
-
-    def end_now(self) -> typing.Self:
-        self.end_time = timezone.now()
-        return self
-
-
-class TransferUsage(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    feature = models.ForeignKey(PlanFeature, on_delete=models.CASCADE)  # e.g., "Outbound Transfer"
-    amount_in_MB = models.DecimalField(max_digits=10, decimal_places=2)  # Transfer amount in MB
-    timestamp = models.DateTimeField(auto_now_add=True)
-
-
-class Usage(OwnerBase):
-    """
-    Actual users usage of a plan. e.g. "emails sent". When they did it, how much they did (e.g. bulk email)
-    """
-
-    feature = models.CharField(max_length=50)  # E.g., 'email', 'storage', 'events'
-    quantity = models.FloatField()  # E.g., GB for storage, count for emails
-    unit = models.CharField(max_length=20)  # E.g., 'GB', 'emails', 'invocations'
-    timestamp = models.DateTimeField(auto_now_add=True)  # When the usage occurred
-    end_time = models.DateTimeField(null=True, blank=True)  # Storage end time for time-based billing (for storage)
-    instance_id = models.CharField(max_length=100, null=True, blank=True)
-
-    def __str__(self):
-        return f"{self.user} - {self.feature}: {self.quantity} {self.unit}"
-
-
-# endregion

@@ -4,7 +4,8 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 
 from backend.decorators import htmx_only
-from backend.models import SubscriptionPlan, UserSubscription
+
+# from backend.models import SubscriptionPlan, UserSubscription
 from backend.types.requests import WebRequest
 from backend.utils.calendar import timezone_now
 

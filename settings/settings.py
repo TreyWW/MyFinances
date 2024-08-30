@@ -6,6 +6,7 @@ import os
 import sys
 from pathlib import Path
 
+import stripe
 from django.contrib.messages import constants as messages
 from django.contrib.staticfiles.storage import FileSystemStorage  # type: ignore
 from storages.backends.s3 import S3Storage
@@ -296,6 +297,17 @@ USE_TZ = True
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 ANALYTICS = get_var("ANALYTICS_SCRIPT")
+
+# region "Billing"
+
+BILLING_ENABLED = get_var("BILLING_ENABLED")
+
+if BILLING_ENABLED:
+    print("BILLING MODULE IS ENABLED")
+    INSTALLED_APPS.append("billing")
+    MIDDLEWARE.extend(["billing.middleware.CheckUserSubScriptionMiddleware"])
+
+# endregion "Billing"
 
 SOCIAL_AUTH_GITHUB_SCOPE = ["user:email"]
 SOCIAL_AUTH_GITHUB_KEY = get_var("GITHUB_KEY")

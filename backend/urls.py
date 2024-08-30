@@ -11,13 +11,13 @@ from django.views.static import serve
 
 from backend.api.public.swagger_ui import get_swagger_ui, get_swagger_endpoints
 from backend.views.core import receipts
-from backend.views.core.invoices.single.overview import manage_invoice
 from backend.views.core.invoices.single.view import view_invoice_with_uuid_endpoint
 from backend.views.core.other.index import dashboard
 from backend.views.core.other.index import index
 from backend.views.core.quotas.view import quotas_list
 from backend.views.core.quotas.view import quotas_page
 from backend.views.core.quotas.view import view_quota_increase_requests
+from settings.settings import BILLING_ENABLED
 
 url(
     r"^frontend/static/(?P<path>.*)$",
@@ -38,7 +38,6 @@ urlpatterns = [
     path("dashboard/emails/", include("backend.views.core.emails.urls")),
     path("dashboard/admin/quota_requests/", view_quota_increase_requests, name="admin quota increase requests"),
     path("dashboard/file_storage/", include("backend.views.core.file_storage.urls")),
-    path("dashboard/billing/", include("backend.views.core.billing.urls")),
     path("favicon.ico", RedirectView.as_view(url=settings.STATIC_URL + "favicon.ico")),
     path(
         "dashboard/receipts/",
@@ -62,6 +61,9 @@ if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     # may not need to be in debug
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
+
+if BILLING_ENABLED:
+    urlpatterns.append(path("", include("billing.urls")))
 
 schema_view = get_swagger_ui()
 urlpatterns += get_swagger_endpoints(settings.DEBUG)

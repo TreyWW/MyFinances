@@ -32,17 +32,12 @@ from backend.models import (
     EmailSendStatus,
     InvoiceReminder,
     InvoiceRecurringProfile,
-    Usage,
-    PlanFeature,
     FileStorageFile,
     MultiFileUpload,
-    PlanFeatureVersion,
-    PlanFeatureGroup,
-    SubscriptionPlan,
-    UserSubscription,
 )
 
 from backend.api.public.models import APIAuthToken
+from settings.settings import BILLING_ENABLED
 
 # from django.contrib.auth.models imp/ort User
 # admin.register(Invoice)
@@ -71,16 +66,15 @@ admin.site.register(
         InvoiceReminder,
         APIAuthToken,
         InvoiceRecurringProfile,
-        Usage,
-        PlanFeature,
         FileStorageFile,
         MultiFileUpload,
-        PlanFeatureVersion,
-        PlanFeatureGroup,
-        SubscriptionPlan,
-        UserSubscription,
     ]
 )
+
+if BILLING_ENABLED:
+    from billing.models import PlanFeature, PlanFeatureGroup, SubscriptionPlan, UserSubscription
+
+    admin.site.register([PlanFeature, PlanFeatureGroup, SubscriptionPlan, UserSubscription])
 
 
 class QuotaLimitAdmin(admin.ModelAdmin):

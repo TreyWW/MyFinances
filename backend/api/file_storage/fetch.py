@@ -6,7 +6,8 @@ from django.views.decorators.http import require_GET
 
 from backend.decorators import htmx_only
 from backend.models import FileStorageFile
-from backend.service.billing.calculate.test import generate_monthly_billing_summary
+
+# from backend.service.billing.calculate.test import generate_monthly_billing_summary
 from backend.service.file_storage.utils import format_file_size
 from backend.types.requests import WebRequest
 

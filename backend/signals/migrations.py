@@ -7,8 +7,7 @@ from django.dispatch import receiver
 
 from backend.data.default_feature_flags import default_feature_flags
 from backend.data.default_quota_limits import default_quota_limits
-from backend.data.default_usage_plans import default_usage_plans, default_subscription_plans, Feature, SubscriptionPlanItem
-from backend.models import FeatureFlags, QuotaLimit, PlanFeature, PlanFeatureVersion, PlanFeatureGroup, SubscriptionPlan
+from backend.models import FeatureFlags, QuotaLimit
 
 
 @receiver(post_migrate)
@@ -70,63 +69,3 @@ def update_quota_limits(**kwargs):
                     limit_type=item.period,
                 )
                 logging.info(f"Added QuotaLimit {item.name}")
-
-
-@receiver(post_migrate)
-def update_usage_plans(**kwargs):
-    subscription_plans: dict = {}
-
-    subscription_plan: SubscriptionPlanItem
-
-    for subscription_plan in default_subscription_plans:
-        if plan := SubscriptionPlan.objects.filter(name=subscription_plan.name).first():
-            subscription_plans[plan.name] = plan
-        else:
-            subscription_plans[subscription_plan.name] = SubscriptionPlan.objects.create(
-                name=subscription_plan.name,
-                description=subscription_plan.description,
-                price_per_month=subscription_plan.price_per_month,
-                maximum_duration_months=subscription_plan.maximum_duration_months,
-            )
-            logging.info(f"Added SubscriptionPlan {subscription_plan.name}")
-
-    for group in default_usage_plans:
-        group_obj, created = PlanFeatureGroup.objects.get_or_create(name=group.name)
-
-        if created:
-            logging.info(f"Created group {group.name}")
-
-        item: Feature
-        for item in group.items:
-            existing: PlanFeature = PlanFeature.objects.filter(
-                slug=item.slug, subscription_plan=SubscriptionPlan.objects.get(name=item.subscription_plan.name)
-            ).first()
-
-            if existing:
-                name, description, old_subscription_plan = (existing.name, existing.description, existing.subscription_plan)
-
-                existing.name = item.name
-                existing.description = item.description
-
-                if existing.name != name or existing.description != description:
-                    existing.save()
-                    logging.info(f"Updated PlanFeature name/description {item.name}")
-            else:
-                existing = PlanFeature.objects.create(
-                    group=group_obj,
-                    name=item.name,
-                    description=item.description,
-                    slug=item.slug,
-                    subscription_plan=SubscriptionPlan.objects.get(name=item.subscription_plan.name),
-                )
-
-                PlanFeatureVersion.objects.create(
-                    plan_feature=existing,
-                    free_tier_limit=item.free_tier_limit,
-                    free_period_in_months=item.free_period_in_months,
-                    unit=item.unit,
-                    cost_per_unit=item.cost_per_unit,
-                    units_per_cost=item.units_per_cost,
-                    minimum_billable_size=item.minimum_billable_size,
-                )
-                logging.info(f"Added PlanFeature {item.name}")
