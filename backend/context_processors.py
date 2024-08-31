@@ -10,7 +10,7 @@ from backend.service.base.breadcrumbs import get_breadcrumbs
 from settings.helpers import get_var
 
 from backend import __version__
-from settings.settings import BASE_DIR
+from settings.settings import BASE_DIR, DEBUG
 
 
 ## Context processors need to be put in SETTINGS TEMPLATES to be recognized
@@ -35,7 +35,16 @@ def extras(request: HttpRequest):
     import pathlib
 
     def get_git_revision(base_path):
+        if not DEBUG:
+            return "prod"
+
         git_dir = pathlib.Path(base_path) / ".git"
+
+        # check file exists
+
+        if not git_dir.exists() or not git_dir.is_dir() or not (git_dir / "HEAD").exists():
+            return "commit not found"
+
         with (git_dir / "HEAD").open("r") as head:
             ref = head.readline().split(" ")[-1].strip()
 
