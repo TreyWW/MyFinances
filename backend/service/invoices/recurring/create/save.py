@@ -53,12 +53,13 @@ def save_invoice(request: WebRequest, invoice_items) -> SaveInvoiceServiceRespon
 
     if frequency_validate_response.failed:
         messages.error(request, frequency_validate_response.error_message)
+        return SaveInvoiceServiceResponse(error_message="There's at least one invalid input; please check the above error messages")
 
     try:
         invoice_profile.full_clean()
 
         if frequency_validate_response.failed:
-            raise ValidationError(frequency_validate_response.error)
+            raise ValidationError({"Frequency": frequency_validate_response.error})
     except ValidationError as validation_errors:
         for field, error in validation_errors.error_dict.items():
             for e in error:

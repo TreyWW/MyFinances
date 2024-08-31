@@ -1,5 +1,5 @@
 {% load at_index from listfilters %}
-{% load day_to_number month_to_number from strfilters %}
+{% load day_to_number_monday month_to_number from strfilters %}
 <div class="input_card">
     <div class="card-body">
         <div class="form-control w-full">
@@ -26,9 +26,9 @@
             <select required
                     name="frequency_day_of_week"
                     class="peer select-bordered select">
-                {% for day in day_names_sunday_first %}
-                    <option value="{{ day|day_to_number }}"
-                            {% if day_of_week == day|day_to_number %}selected{% endif %}>
+                {% for day in day_names_monday_first %}
+                    <option value="{{ day|day_to_number_monday }}"
+                            {% if day_of_week == day|day_to_number_monday %}selected{% endif %}>
                         {{ day|title }}
                     </option>
                 {% endfor %}

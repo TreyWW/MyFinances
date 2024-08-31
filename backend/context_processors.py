@@ -49,6 +49,7 @@ def extras(request: HttpRequest):
     data["analytics"] = get_var("ANALYTICS_STRING")
     data["calendar_util"] = calendar
     data["day_names_sunday_first"] = [calendar.day_name[(i + 6) % 7] for i in range(7)]
+    data["day_names_monday_first"] = [day for day in calendar.day_name]
 
     if hasattr(request, "htmx") and request.htmx.boosted:
         data["base"] = "base/htmx.html"
