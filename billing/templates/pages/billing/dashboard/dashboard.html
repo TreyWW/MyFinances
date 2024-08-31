@@ -1,0 +1,15 @@
+{% extends base|default:"base/base.html" %}
+{% load listfilters %}
+{% block content %}
+    {% load get_first_n_items from listfilters %}
+    <div class="card bg-base-100 p-3 mb-2">
+        <div class="grid grid-cols-3 items-center">
+            <div class="flex items-center space-x-2"></div>
+            <h2 class="text-xl text-center">Billing</h2>
+            <div class="dropdown dropdown-bottom">
+            </div>
+        </div>
+    </div>
+    {% include "pages/billing/dashboard/choose_plan_section.html" %}
+    {% include "pages/billing/dashboard/all_subscriptions.html" %}
+{% endblock %}

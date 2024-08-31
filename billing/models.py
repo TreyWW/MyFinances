@@ -90,3 +90,26 @@ class StripeCheckoutSession(OwnerBase):
     stripe_session_id = models.CharField(max_length=100, unique=True, blank=True, null=True)
     plan = models.ForeignKey(SubscriptionPlan, on_delete=models.CASCADE, related_name="checkout_sessions")
     features = models.ManyToManyField(PlanFeature, related_name="checkout_sessions")
+
+
+class BillingUsage(OwnerBase):
+    EVENT_TYPES = (
+        ("usage", "Metered Usage"),
+        # ("storage", "Storage"),
+    )
+
+    event_name = models.CharField(max_length=100)  # e.g. 'invoices-created'
+    event_type = models.CharField(max_length=20, choices=EVENT_TYPES, default="usage")
+    quantity = models.PositiveSmallIntegerField(default=1)  # e.g. 1
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    processed_at = models.DateTimeField(null=True, blank=True)
+    processed = models.BooleanField(default=False)
+    stripe_unique_usage_identifier = models.CharField(max_length=100, null=True, blank=True)
+
+    def set_processed(self, processed_time):
+        self.processed = True
+        self.processed_at = processed_time or timezone_now()
+        self.save()
+        return self

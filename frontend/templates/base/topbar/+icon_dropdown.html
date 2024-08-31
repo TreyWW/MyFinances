@@ -16,9 +16,7 @@
     </li>
     <li hx-boost="true">
         <a {% if request.resolver_match.view_name == "billing:dashboard" %}class="active btn-disabled"{% endif %}
-           href="{% url 'billing:dashboard' %}">
-            Billing Dashboard
-        </a>
+           href="{% url 'billing:dashboard' %}">Billing Dashboard</a>
     </li>
     <li>
         <label for="logout_modal">

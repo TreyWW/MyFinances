@@ -22,6 +22,8 @@ def completed_with_session_object(stripe_session_obj: StripeCheckoutSession, eve
         if current_plan.subscription_plan_id == STRIPE_META_DJ_SUBSCRIPTION_PLAN_ID:
             continue
 
+        stripe.Subscription.cancel(current_plan.stripe_subscription_id)
+
         current_plan.end_date = timezone_now()
         current_plan.save()
 

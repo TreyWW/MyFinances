@@ -306,6 +306,8 @@ if BILLING_ENABLED:
     print("BILLING MODULE IS ENABLED")
     INSTALLED_APPS.append("billing")
     MIDDLEWARE.extend(["billing.middleware.CheckUserSubScriptionMiddleware"])
+    # TEMPLATES[0]["DIRS"].append(BASE_DIR / "billing/templates")
+    print(TEMPLATES)
 
 # endregion "Billing"
 

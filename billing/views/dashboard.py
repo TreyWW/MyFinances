@@ -25,6 +25,6 @@ def billing_dashboard_endpoint(request: WebRequest):
 
     return render(
         request,
-        "pages/billing/dashboard.html",
+        "pages/billing/dashboard/dashboard.html",
         context,
     )
