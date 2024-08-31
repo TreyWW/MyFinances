@@ -422,6 +422,9 @@ else:
     STATIC_URL = f"/static/"
     STATIC_ROOT = os.path.join(BASE_DIR, "static")
     STATICFILES_STORAGE = "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
+    STORAGES["staticfiles"] = {
+        "BACKEND": "settings.settings.CustomStaticStorage",
+    }
     logging.info(f"{STATIC_URL=} | {STATIC_ROOT=} | {STATICFILES_STORAGE=}")
 
 AWS_MEDIA_PUBLIC_ENABLED = get_var("AWS_MEDIA_PUBLIC_ENABLED", default="False").lower() == "true"
