@@ -375,8 +375,8 @@ class CustomStaticStorage(S3Storage):
     custom_domain = get_var("AWS_STATIC_CUSTOM_DOMAIN")
     region_name = get_var("AWS_STATIC_REGION_NAME") or get_var("AWS_REGION_NAME")
 
-    access_key = get_var("AWS_STATIC_ACCESS_KEY_ID")
-    secret_key = get_var("AWS_STATIC_ACCESS_KEY")
+    # access_key = get_var("AWS_STATIC_ACCESS_KEY_ID")
+    # secret_key = get_var("AWS_STATIC_ACCESS_KEY")
 
 
 class CustomPublicMediaStorage(S3Storage):
@@ -388,8 +388,8 @@ class CustomPublicMediaStorage(S3Storage):
 
     region_name = get_var("AWS_MEDIA_PUBLIC_REGION_NAME") or get_var("AWS_REGION_NAME")
 
-    access_key = get_var("AWS_MEDIA_PUBLIC_ACCESS_KEY_ID")
-    secret_key = get_var("AWS_MEDIA_PUBLIC_ACCESS_KEY")
+    # access_key = get_var("AWS_MEDIA_PUBLIC_ACCESS_KEY_ID")
+    # secret_key = get_var("AWS_MEDIA_PUBLIC_ACCESS_KEY")
 
 
 class CustomPrivateMediaStorage(S3Storage):
@@ -402,14 +402,14 @@ class CustomPrivateMediaStorage(S3Storage):
 
     region_name = get_var("AWS_MEDIA_PRIVATE_REGION_NAME")
 
-    access_key = get_var("AWS_MEDIA_PRIVATE_ACCESS_KEY_ID")
-    secret_key = get_var("AWS_MEDIA_PRIVATE_ACCESS_KEY")
+    # access_key = get_var("AWS_MEDIA_PRIVATE_ACCESS_KEY_ID")
+    # secret_key = get_var("AWS_MEDIA_PRIVATE_ACCESS_KEY")
 
     cloudfront_key_id = get_var("AWS_MEDIA_PRIVATE_CLOUDFRONT_PUBLIC_KEY_ID")
     cloudfront_key = base64.b64decode(get_var("AWS_MEDIA_PRIVATE_CLOUDFRONT_PRIVATE_KEY"))
 
 
-AWS_STATIC_ENABLED = get_var("AWS_STATIC_ENABLED", default=False).lower() == "true"
+AWS_STATIC_ENABLED = get_var("AWS_STATIC_ENABLED", default="False").lower() == "true"
 AWS_STATIC_CDN_TYPE = get_var("AWS_STATIC_CDN_TYPE")
 
 logging.info(f"{AWS_STATIC_ENABLED=} | {AWS_STATIC_CDN_TYPE=}")
@@ -424,7 +424,7 @@ else:
     STATICFILES_STORAGE = "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
     logging.info(f"{STATIC_URL=} | {STATIC_ROOT=} | {STATICFILES_STORAGE=}")
 
-AWS_MEDIA_PUBLIC_ENABLED = get_var("AWS_MEDIA_PUBLIC_ENABLED", default=False).lower() == "true"
+AWS_MEDIA_PUBLIC_ENABLED = get_var("AWS_MEDIA_PUBLIC_ENABLED", default="False").lower() == "true"
 
 if AWS_MEDIA_PUBLIC_ENABLED:
     DEFAULT_FILE_STORAGE = "settings.settings.CustomPublicMediaStorage"
@@ -440,7 +440,7 @@ else:
         ...
 
 
-AWS_MEDIA_PRIVATE_ENABLED = get_var("AWS_MEDIA_PRIVATE_ENABLED", default=False).lower() == "true"
+AWS_MEDIA_PRIVATE_ENABLED = get_var("AWS_MEDIA_PRIVATE_ENABLED", default="False").lower() == "true"
 
 if AWS_MEDIA_PRIVATE_ENABLED:
     PRIVATE_FILE_STORAGE = "settings.settings.CustomPrivateMediaStorage"

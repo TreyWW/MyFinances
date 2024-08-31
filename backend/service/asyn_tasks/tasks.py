@@ -19,8 +19,8 @@ class Task:
         if self.queue_url:
             self.sqs_client = boto3.client(
                 "sqs",
-                aws_access_key_id=self.aws_access_key_id,
-                aws_secret_access_key=self.aws_secret_access_key,
+                # aws_access_key_id=self.aws_access_key_id,
+                # aws_secret_access_key=self.aws_secret_access_key,
                 region_name=self.region_name,
             )
         else:

@@ -38,7 +38,9 @@ class Boto3Handler:
         self._boto3_config = Config(region_name=self.region_name, signature_version="v4", retries={"max_attempts": 10, "mode": "standard"})
 
         self._boto3_session = boto3.Session(
-            aws_access_key_id=self.aws_access_key_id, aws_secret_access_key=self.aws_access_key_secret, region_name=self.region_name
+            # aws_access_key_id=self.aws_access_key_id,
+            # aws_secret_access_key=self.aws_access_key_secret,
+            region_name=self.region_name
         )
 
         if DEBUG_LEVEL == "debug":
@@ -54,7 +56,7 @@ class Boto3Handler:
         self._initiate_session()
 
         try:
-            if not self.aws_access_key_id or not self.aws_access_key_secret and not self._boto3_session.client("sts").get_caller_identity():
+            if not self._boto3_session.client("sts").get_caller_identity():
                 logger.info("No AWS Credentials found, not initiating clients.")
                 return
         except (NoCredentialsError, PartialCredentialsError) as error:
