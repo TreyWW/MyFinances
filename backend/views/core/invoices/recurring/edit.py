@@ -74,7 +74,7 @@ def invoice_edit_page_endpoint(request, invoice_profile_id):
     invoice_profile: InvoiceRecurringProfile = get_response.response
 
     # use to populate fields with existing data in edit_from_destination.html AND edit_to_destination.html
-    data_to_populate = invoice_get_existing_data(invoice_profile) | {"InvoiceRecurringSet": InvoiceRecurringProfile}
+    data_to_populate = invoice_get_existing_data(invoice_profile) | {"InvoiceRecurringProfile": InvoiceRecurringProfile}
 
     print(data_to_populate)
 

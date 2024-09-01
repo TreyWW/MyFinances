@@ -8,7 +8,7 @@
                 <span class="required_star">*</span>
             </label>
             <select required name="frequency" class="peer select-bordered select">
-                {% for option in InvoiceRecurringSet.Frequencies.choices %}
+                {% for option in InvoiceRecurringProfile.Frequencies.choices %}
                     <option value="{{ option.0 }}"
                             {% if frequency|lower == option.0 %}selected{% endif %}>{{ option.1 }}</option>
                 {% endfor %}
