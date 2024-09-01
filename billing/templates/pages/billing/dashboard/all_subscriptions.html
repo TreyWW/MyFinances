@@ -25,7 +25,13 @@
                         {% endif %}
                     </td>
                     <td>{{ subscription.subscription_plan.name }}</td>
-                    <td>{{ subscription.subscription_plan.price_per_month }}</td>
+                    <td>
+                        {% if subscription.subscription_plan.price_per_month == -1 %}
+                            {{ subscription.custom_subscription_price_per_month }}
+                        {% else %}
+                            {{ subscription.subscription_plan.price_per_month }}
+                        {% endif %}
+                    </td>
                     <td>{{ subscription.start_date }}</td>
                     {% if subscription.has_ended %}
                         <td>{{ subscription.end_date | default_if_none:"" }}</td>
