@@ -1,5 +1,6 @@
 from django.utils import timezone
 
+from backend.api.public import APIAuthToken
 from backend.models import APIKey
 from backend.types.requests import WebRequest
 from backend.utils.dataclasses import BaseServiceResponse
@@ -11,36 +12,23 @@ class APIAuthenticationServiceResponse(BaseServiceResponse[None]):
 
 
 def authenticate_api_key(request: WebRequest) -> APIAuthenticationServiceResponse:
-    token = request.headers.get("Authorization", "").split()
-    print(token)
+    auth_header = request.headers.get("Authorization")
 
-    if not token or token[0].lower() != "bearer":
+    if not (auth_header and auth_header.startswith("Bearer ")):
         return APIAuthenticationServiceResponse(error_message="Unauthorized", status_code=401)
 
-    if len(token) == 1:
-        return APIAuthenticationServiceResponse(error_message="Token not found", status_code=400)
-
-    if len(token) > 2:
-        return APIAuthenticationServiceResponse(error_message="Invalid token. Token should not contain spaces.", status_code=400)
+    token_key = auth_header.split(" ")[1]
 
     try:
-        key_id = token[1].split(":")[0]
-        key_str = token[1].split(":")[1]
-        print(key_id)
-        apikey = APIKey.objects.get(id=key_id)
-        print(apikey)
+        token = APIAuthToken.objects.get(
+            key=token_key, active=True, administrator_service_type=APIAuthToken.AdministratorServiceTypes.AWS_API_DESTINATION
+        )
 
-        correct = apikey.verify(token[1])
-        print(correct)
-    except APIKey.DoesNotExist:
-        return APIAuthenticationServiceResponse(error_message="Token not found", status_code=400)
-    except ValueError:
-        return APIAuthenticationServiceResponse(error_message="Invalid token", status_code=400)
-
-    if not correct:
+        if token.has_expired():
+            return APIAuthenticationServiceResponse(error_message="Token expired", status_code=400)
+    except APIAuthToken.DoesNotExist:
         return APIAuthenticationServiceResponse(error_message="Token not found", status_code=400)
 
-    apikey.last_used = timezone.now()
-    apikey.save()
+    token.update_last_used()
 
     return APIAuthenticationServiceResponse(True, None, status_code=200)
