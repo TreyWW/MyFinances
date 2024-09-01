@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
-from backend.decorators import web_require_scopes
+from backend.decorators import web_require_scopes, has_entitlements
 from backend.models import InvoiceRecurringProfile
 from backend.service.invoices.recurring.create.get_page import get_invoice_context
 from backend.service.invoices.recurring.get import get_invoice_profile, GetRecurringSetServiceResponse
@@ -63,6 +63,7 @@ def invoice_get_existing_data(invoice_obj: InvoiceRecurringProfile):
 
 # gets invoice object from invoice id, convert obj to dict, and renders edit.html while passing the stored invoice values to frontend
 @require_http_methods(["GET"])
+@has_entitlements("invoice-schedules")
 @web_require_scopes("invoices:write", False, False, "invoices:recurring:dashboard")
 def invoice_edit_page_endpoint(request, invoice_profile_id):
     get_response = get_invoice_profile(request, invoice_profile_id)

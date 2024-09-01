@@ -52,4 +52,10 @@ def created_invoice(sender, instance: Invoice, created, **kwargs):
         owner=instance.owner,
         event_name="invoices_created",
     )
+
+    if instance.invoice_recurring_profile:
+        BillingUsage.objects.create(
+            owner=instance.owner,
+            event_name="invoice_schedule_invocations",
+        )
     return

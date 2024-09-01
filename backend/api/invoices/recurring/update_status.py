@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib import messages
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
@@ -14,6 +15,8 @@ from backend.types.requests import WebRequest
 from datetime import timedelta, datetime
 from typing import Optional
 
+from billing.service.entitlements import has_entitlement
+
 
 @require_POST
 @web_require_scopes("invoices:write", True, True)
@@ -25,6 +28,11 @@ def recurring_profile_change_status_endpoint(request: WebRequest, invoice_profil
 
     if status not in ["pause", "unpause", "refresh"]:
         return return_message(request, "Invalid status. Please choose from: paused, ongoing, refresh")
+
+    if settings.BILLING_ENABLED and not has_entitlement(request.user, "invoice-schedules") and status == "unpause":
+        return return_message(
+            request, "Your plan unfortunately doesn't include invoice schedules so you cannot unpause existing " "schedules."
+        )
 
     try:
         invoice_profile: InvoiceRecurringProfile = InvoiceRecurringProfile.objects.get(pk=invoice_profile_id, active=True)

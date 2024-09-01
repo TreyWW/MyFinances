@@ -36,7 +36,7 @@ class Task:
             raise ValueError("func must be a callable or a string representing the function name.")
 
         # If SQS is not configured, execute the function directly
-        if not self.queue_url or not self.aws_access_key_id or not self.aws_secret_access_key or not self.region_name:
+        if not self.queue_url or not self.region_name:
             return self.execute_now(func_name, *args, **kwargs)
 
         print("TASK 3 - call _send_message to SQS")

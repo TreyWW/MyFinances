@@ -82,6 +82,7 @@ class User(AbstractUser):
 
     logged_in_as_team = models.ForeignKey("Organization", on_delete=models.SET_NULL, null=True, blank=True)
     stripe_customer_id = models.CharField(max_length=255, null=True, blank=True)
+    entitlements = models.JSONField(null=True, blank=True, default=list)  # list of strings e.g. ["invoices"]
     awaiting_email_verification = models.BooleanField(default=True)
 
     class Role(models.TextChoices):

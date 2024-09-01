@@ -3,7 +3,7 @@ import os
 import stripe
 from django.contrib import messages
 from django.http import HttpResponseRedirect
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.urls import reverse, resolve
 
 from backend.types.requests import WebRequest
@@ -34,36 +34,25 @@ class CheckUserSubScriptionMiddleware:
 
         view_name = resolver_match.view_name
 
-        if view_name in ["billing:dashboard", "billing:stripe_customer_portal", "billing:change_plan"] or request.path.startswith("/admin"):
+        if view_name in [
+            "billing:dashboard",
+            "billing:stripe_customer_portal",
+            "billing:change_plan",
+            "billing:refetch_subscriptions",
+        ] or request.path.startswith("/admin"):
             return self.get_response(request)
 
         if not subscription:
-            print("[BILLING] [MIDDLEWARE] User doesn't have an active subscription. Checking stripe.")
+            print("[BILLING] [MIDDLEWARE] User doesn't have an active subscription.")
+            messages.warning(
+                request,
+                """
+                You currently are not subscribed to a plan. If you think this is a mistake scroll down and
+                press "Refetch" or contact support at
+                <a href="mailto:support@strelix.org" class="link link-primary font-extrabold">support@strelix.org</a>.""",
+            )
 
-            if not request.user.stripe_customer_id:
-                request.user.stripe_customer_id = stripe.Customer.create(
-                    name=request.user.get_full_name(), email=request.user.email, metadata={"dj_user_id": str(request.user.id)}
-                ).id
-                request.user.save(update_fields=["stripe_customer_id"])
-
-            customer_stripe_subscriptions = stripe.Subscription.list(customer=request.user.stripe_customer_id)
-
-            has_existing_stripe_subscription = len(customer_stripe_subscriptions.data) > 0
-
-            if has_existing_stripe_subscription:
-                stripe_product_id = customer_stripe_subscriptions.data[0]["items"].data[0].plan.product
-
-                plan = SubscriptionPlan.objects.filter(stripe_product_id=stripe_product_id).first()
-
-                if not plan:
-                    print(f"{stripe_product_id} not found in SubscriptionPlans!")
-                    return self.get_response(request)
-
-                request.users_subscription = UserSubscription.objects.create(
-                    owner=request.user, subscription_plan=plan, stripe_subscription_id=customer_stripe_subscriptions.data[0].id
-                )
-                return self.get_response(request)
-
-            messages.warning(request, "You currently are not subscribed to a plan. Get started today!")
+            if request.htmx:
+                return render(request, "base/toast.html", {"autohide": False})
             return redirect("billing:dashboard")
         return self.get_response(request)
