@@ -21,7 +21,7 @@ def safe_url(view_name, *args, **kwargs):
     try:
         return reverse(view_name, args=args, kwargs=kwargs)
     except NoReverseMatch:
-        return None
+        return ""
 
 
 @register.simple_tag
