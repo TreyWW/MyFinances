@@ -21,7 +21,9 @@ def authenticate_api_key(request: WebRequest) -> APIAuthenticationServiceRespons
 
     try:
         token = APIAuthToken.objects.get(
-            key=token_key, active=True, administrator_service_type=APIAuthToken.AdministratorServiceTypes.AWS_API_DESTINATION
+            hashed_key=APIAuthToken.hash_raw_key(token_key),
+            active=True,
+            administrator_service_type=APIAuthToken.AdministratorServiceTypes.AWS_API_DESTINATION,
         )
 
         if token.has_expired():
