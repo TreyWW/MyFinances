@@ -23,7 +23,7 @@ def authenticate_api_key(request: WebRequest) -> APIAuthenticationServiceRespons
         token = APIAuthToken.objects.get(
             hashed_key=APIAuthToken.hash_raw_key(token_key),
             active=True,
-            administrator_service_type=APIAuthToken.AdministratorServiceTypes.AWS_API_DESTINATION,
+            administrator_service_type=APIAuthToken.AdministratorServiceTypes.AWS_WEBHOOK_CALLBACK,
         )
 
         if token.has_expired():
