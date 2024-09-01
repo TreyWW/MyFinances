@@ -11,10 +11,10 @@ class APIAuthenticationServiceResponse(BaseServiceResponse[None]):
 
 
 def authenticate_api_key(request: WebRequest) -> APIAuthenticationServiceResponse:
-    token = request.META.get("HTTP_AUTHORIZATION", "").split()
+    token = request.headers.get("Authorization", "").split()
     print(token)
 
-    if not token or token[0].lower() != "token":
+    if not token or token[0].lower() != "bearer":
         return APIAuthenticationServiceResponse(error_message="Unauthorized", status_code=401)
 
     if len(token) == 1:
