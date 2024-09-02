@@ -28,7 +28,7 @@ def update_user_entitlements(user: User) -> list[str]:
     if not user.stripe_customer_id:
         return []
 
-    entitlements = stripe.entitlements.ActiveEntitlement.list(customer=user.stripe_customer_id).data
+    entitlements = stripe.entitlements.ActiveEntitlement.list(customer=user.stripe_customer_id, limit=25).data
 
     entitlement_names = [entitlement.lookup_key for entitlement in entitlements]
 
