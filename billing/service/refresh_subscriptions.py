@@ -57,8 +57,8 @@ def update_existing_subscriptions(user_subscriptions: QuerySet[UserSubscription]
 def create_missing_subscriptions(actor: User | Organization, active_subscriptions_by_id: dict[str, stripe.Subscription]):
     """Create user subscriptions in the database for active Stripe subscriptions not already tracked."""
     for subscription_id, subscription_active in active_subscriptions_by_id.items():
-        if hasattr(subscription_active, "items") and getattr(subscription_active.items, "data", None):
-            stripe_product_id = subscription_active.items.data[0].plan.product
+        if hasattr(subscription_active, "items") and getattr(subscription_active["items"], "data", None):
+            stripe_product_id = subscription_active["items"].data[0].plan.product
 
             plan = SubscriptionPlan.objects.filter(stripe_product_id=stripe_product_id).first()
 

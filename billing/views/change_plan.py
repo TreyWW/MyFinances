@@ -64,7 +64,7 @@ def change_plan_endpoint(request: WebRequest):
     checkout_session_django_object = (
         StripeCheckoutSession.objects.create(user=request.actor, plan=plan)
         if isinstance(request.actor, User)
-        else StripeCheckoutSession.objects.create(leader=request.actor, plan=plan)
+        else StripeCheckoutSession.objects.create(organization=request.actor, plan=plan)
     )
 
     for feature in plan.features.all():
