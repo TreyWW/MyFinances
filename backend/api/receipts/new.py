@@ -4,14 +4,14 @@ from django.http import HttpResponseBadRequest
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
 
-from backend.decorators import quota_usage_check, web_require_scopes, has_entitlements
+from backend.decorators import web_require_scopes, has_entitlements
 from backend.models import Receipt, QuotaUsage
 from backend.types.requests import WebRequest
 
 
 @require_http_methods(["POST"])
 @has_entitlements("receipts")
-@quota_usage_check("receipts-count", api=True, htmx=True)
+# @quota_usage_check("receipts-count", api=True, htmx=True)
 @login_required
 @web_require_scopes("receipts:write", True, True)
 def receipt_create(request: WebRequest):

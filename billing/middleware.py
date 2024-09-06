@@ -2,11 +2,12 @@ import os
 
 import stripe
 from django.contrib import messages
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse, resolve
 
 from backend.types.requests import WebRequest
+from billing.billing_settings import NO_SUBSCRIPTION_PLAN_DENY_VIEW_NAMES
 from billing.models import UserSubscription, SubscriptionPlan
 
 
@@ -34,12 +35,7 @@ class CheckUserSubScriptionMiddleware:
 
         view_name = resolver_match.view_name
 
-        if view_name in [
-            "billing:dashboard",
-            "billing:stripe_customer_portal",
-            "billing:change_plan",
-            "billing:refetch_subscriptions",
-        ] or request.path.startswith("/admin"):
+        if view_name not in NO_SUBSCRIPTION_PLAN_DENY_VIEW_NAMES:
             return self.get_response(request)
 
         if not subscription:

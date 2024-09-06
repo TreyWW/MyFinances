@@ -9,7 +9,9 @@ from django.views.decorators.http import require_http_methods
 from backend.decorators import superuser_only
 from backend.models import QuotaIncreaseRequest, QuotaLimit, QuotaUsage, QuotaOverrides
 from backend.types.htmx import HtmxHttpRequest
-from backend.utils.quota_limit_ops import quota_usage_check_under
+
+
+# from backend.utils.quota_limit_ops import quota_usage_check_under
 
 
 def submit_request(request: HtmxHttpRequest, slug) -> HttpResponse:
@@ -24,16 +26,16 @@ def submit_request(request: HtmxHttpRequest, slug) -> HttpResponse:
     except QuotaLimit.DoesNotExist:
         return error(request, "Failed to get the quota limit type")
 
-    usage_per_item = quota_usage_check_under(request, "quota_increase-request", extra_data=quota_limit.id, api=True, htmx=True)
-    usage_per_month = quota_usage_check_under(
-        request, "quota_increase-requests_per_month_per_quota", extra_data=quota_limit.id, api=True, htmx=True
-    )
+    # usage_per_item = quota_usage_check_under(request, "quota_increase-request", extra_data=quota_limit.id, api=True, htmx=True)
+    # usage_per_month = quota_usage_check_under(
+    #     request, "quota_increase-requests_per_month_per_quota", extra_data=quota_limit.id, api=True, htmx=True
+    # )
 
-    if not isinstance(usage_per_item, bool):
-        return usage_per_item
+    # if not isinstance(usage_per_item, bool):
+    #     return usage_per_item
 
-    if not isinstance(usage_per_month, bool):
-        return usage_per_month
+    # if not isinstance(usage_per_month, bool):
+    #     return usage_per_month
 
     current = quota_limit.get_quota_limit(request.user)
 

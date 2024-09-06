@@ -14,7 +14,9 @@ from backend.models import UserSettings
 from backend.types.htmx import HtmxHttpRequest
 from backend.types.requests import WebRequest
 from backend.utils.feature_flags import get_feature_status
-from backend.utils.quota_limit_ops import quota_usage_check_under
+
+
+# from backend.utils.quota_limit_ops import quota_usage_check_under
 
 
 # Still working on
@@ -120,10 +122,10 @@ def open_modal(request: WebRequest, modal_name, context_type=None, context_value
                     messages.error(request, "You don't have access to this invoice")
                     return render(request, "base/toasts.html")
 
-                above_quota_usage = quota_usage_check_under(request, "invoices-schedules", api=True, htmx=True)
+                # above_quota_usage = False  # quota_usage_check_under(request, "invoices-schedules", api=True, htmx=True)
 
-                if not isinstance(above_quota_usage, bool):
-                    context["above_quota_usage"] = True
+                # if not isinstance(above_quota_usage, bool):
+                #     context["above_quota_usage"] = True
 
             else:
                 context[context_type] = context_value

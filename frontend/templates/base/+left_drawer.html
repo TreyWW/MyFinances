@@ -57,14 +57,14 @@
                 {% endwith %}
             </li>
         {% endif %}
-        <li>
-            {% with i_url="quotas" %}
-                <a href="{% url i_url %}"
-                   {% if request.resolver_match.view_name == i_url %}class="active"{% endif %}>
-                    Service Quotas
-                </a>
-            {% endwith %}
-        </li>
+        {#        <li>#}
+        {#            {% with i_url="quotas" %}#}
+        {#                <a href="{% url i_url %}"#}
+        {#                   {% if request.resolver_match.view_name == i_url %}class="active"{% endif %}>#}
+        {#                    Service Quotas#}
+        {#                </a>#}
+        {#            {% endwith %}#}
+        {#        </li>#}
         {% if are_user_emails_allowed and feature_enabled_emails %}
             <li>
                 {% with i_url="emails:dashboard" %}
