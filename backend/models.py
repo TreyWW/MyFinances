@@ -187,6 +187,9 @@ class Organization(models.Model):
     leader = models.ForeignKey(User, on_delete=models.CASCADE, related_name="teams_leader_of")
     members = models.ManyToManyField(User, related_name="teams_joined")
 
+    stripe_customer_id = models.CharField(max_length=255, null=True, blank=True)
+    entitlements = models.JSONField(null=True, blank=True, default=list)  # list of strings e.g. ["invoices"]
+
     def is_owner(self, user: User) -> bool:
         return self.leader == user
 
@@ -244,9 +247,33 @@ class TeamInvitation(models.Model):
         verbose_name_plural = "Team Invitations"
 
 
+class OwnerBaseManager(models.Manager):
+    def create(self, **kwargs):
+        # Handle the 'owner' argument dynamically in `create()`
+        owner = kwargs.pop("owner", None)
+        if isinstance(owner, User):
+            kwargs["user"] = owner
+            kwargs["organization"] = None
+        elif isinstance(owner, Organization):
+            kwargs["organization"] = owner
+            kwargs["user"] = None
+        return super().create(**kwargs)
+
+    def filter(self, *args, **kwargs):
+        # Handle the 'owner' argument dynamically in `filter()`
+        owner = kwargs.pop("owner", None)
+        if isinstance(owner, User):
+            kwargs["user"] = owner
+        elif isinstance(owner, Organization):
+            kwargs["organization"] = owner
+        return super().filter(*args, **kwargs)
+
+
 class OwnerBase(models.Model):
     user = models.ForeignKey("backend.User", on_delete=models.CASCADE, null=True, blank=True)
     organization = models.ForeignKey("backend.Organization", on_delete=models.CASCADE, null=True, blank=True)
+
+    objects = OwnerBaseManager()
 
     class Meta:
         abstract = True
@@ -609,7 +636,6 @@ class Invoice(InvoiceBase):
 
 
 class InvoiceRecurringProfile(InvoiceBase, BotoSchedule):
-    objects = models.Manager()
     with_items = InvoiceRecurringProfile_WithItemsManager()
 
     class Frequencies(models.TextChoices):
@@ -1075,16 +1101,6 @@ class FileStorageFile(OwnerBase):
         super(FileStorageFile, self).__init__(*args, **kwargs)
         self.__original_file = self.file
         self.__original_file_uri_path = self.file_uri_path
-
-    # def find_existing_usage(self, feature: str | PlanFeature, file_path: str = None) -> StorageUsage | None:
-    #     feature_obj: PlanFeature
-    #     if isinstance(feature, str):
-    #         feature_obj = PlanFeature.objects.get(slug=feature)
-    #     return (
-    #         StorageUsage.filter_by_owner(self.owner)
-    #         .filter(feature=feature_obj, file_uri_path=file_path or self.file_uri_path, end_time__isnull=True)
-    #         .first()
-    #     )
 
 
 class MultiFileUpload(OwnerBase):

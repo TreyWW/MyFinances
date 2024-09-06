@@ -9,8 +9,6 @@ from django.utils.timezone import make_aware
 from backend.models import Invoice, User
 from billing.models import BillingUsage
 
-# from backend.models import FileStorageFile, MultiFileUpload, _private_storage, StorageUsage, PlanFeature
-
 logger = logging.getLogger(__name__)
 
 
@@ -22,18 +20,18 @@ def usage_occurred(sender, instance: BillingUsage, created, **kwargs):
     if instance.event_type != "usage":
         return  # may add storage at a later point
 
-    if not instance.user:
+    if not instance.owner:
         print("CANNOT HANDLE ORGS AT THE MOMENT!")
         return  # todo: cannot handle organisations at the moment
 
-    stripe_customer_id = instance.user.stripe_customer_id
+    stripe_customer_id = instance.owner.stripe_customer_id
 
     if not stripe_customer_id:
-        print(f"No stripe customer id for user {instance.user.id}")
+        print(f"No stripe customer id for actor #{'usr_' if isinstance(instance.owner, User) else 'org_'}{instance.owner.id}")
         return  # todo
 
     meter_event = stripe.billing.MeterEvent.create(
-        event_name=instance.event_name, payload={"value": instance.quantity, f"stripe_customer_id": stripe_customer_id}
+        event_name=instance.event_name, payload={"value": str(instance.quantity), f"stripe_customer_id": stripe_customer_id}
     )
 
     if meter_event.created:

@@ -23,7 +23,7 @@ def stripe_listener_webhook_endpoint(request: Request):
     except ValueError as error:
         print(f"Error parsing payload: {error}")
         return Response(status=400)
-    except stripe.error.SignatureVerificationError as error:
+    except stripe.SignatureVerificationError as error:
         print(f"Error verifying webhook signature: {error}")
         return Response(status=400)
 

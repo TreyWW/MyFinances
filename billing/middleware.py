@@ -25,7 +25,7 @@ class CheckUserSubScriptionMiddleware:
             # todo: handle organization billing
             return self.get_response(request)
 
-        subscription: UserSubscription = (
+        subscription: UserSubscription | None = (
             UserSubscription.filter_by_owner(request.actor).filter(end_date__isnull=True).prefetch_related("subscription_plan").first()
         )
         request.users_subscription = subscription

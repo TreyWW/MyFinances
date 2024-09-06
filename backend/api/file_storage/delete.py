@@ -30,7 +30,7 @@ def recursive_file_delete_endpoint(request: WebRequest) -> HttpResponse:
         file_obj.delete()
 
     if failed_files:
-        messages.error(request, f"Failed to delete: {', '.join([file.file_uri_path for file in failed_files])}")
+        messages.error(request, f"Failed to delete: {', '.join([file for file in failed_files])}")
         resp = render(request, "base/toast.html")
     else:
         resp = HttpResponse(status=200)

@@ -1,9 +1,7 @@
 import stripe
-from django.db.models import Q
 
-from backend.models import User, USER_OR_ORGANIZATION_CONSTRAINT
-from backend.utils.calendar import timezone_now
-from billing.models import StripeCheckoutSession, StripeWebhookEvent, PlanFeature, UserSubscription, SubscriptionPlan
+from backend.models import User
+from billing.models import StripeWebhookEvent, UserSubscription
 
 
 def subscription_ended(webhook_event: StripeWebhookEvent):

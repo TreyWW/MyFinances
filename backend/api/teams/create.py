@@ -1,11 +1,14 @@
+from django.contrib import messages
+from django.shortcuts import render
 from django.views.decorators.http import require_POST
 
-from backend.decorators import *
+from backend.decorators import has_entitlements, quota_usage_check
 from backend.models import Organization, QuotaUsage
 from backend.types.htmx import HtmxHttpRequest
 
 
 @require_POST
+@has_entitlements("organizations")
 @quota_usage_check("teams-count", api=True, htmx=True)
 def create_team(request: HtmxHttpRequest):
     name = request.POST.get("name")

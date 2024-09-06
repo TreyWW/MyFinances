@@ -1,62 +1,91 @@
 from datetime import datetime
-
 import stripe
 from django.db.models import QuerySet
-
-from backend.models import User
-from backend.types.requests import WebRequest
+from backend.models import User, Organization
 from billing.models import UserSubscription, SubscriptionPlan
+from billing.service.entitlements import update_user_entitlements
+from billing.service.stripe_customer import get_or_create_customer_id
 
 
-def refresh_user_subscriptions(user: User):
-    customer_id = user.stripe_customer_id
+def retrieve_stripe_subscription(subscription_id: str) -> stripe.Subscription | None:
+    """Retrieve a Stripe subscription given its ID."""
+    try:
+        return stripe.Subscription.retrieve(subscription_id)
+    except stripe.InvalidRequestError:
+        return None
 
-    user_subscriptions: QuerySet[UserSubscription] = UserSubscription.filter_by_owner(user).select_related("subscription_plan")
 
-    # Just to get the customer_id
-    if not customer_id and user_subscriptions.exists():
-        for subscription in user_subscriptions.all():
-            try:
-                s: stripe.Subscription = stripe.Subscription.retrieve(subscription.stripe_subscription_id)
+def find_customer_id(user_subscriptions: QuerySet[UserSubscription], actor: User | Organization) -> str | None:
+    """Find or retrieve the Stripe customer ID from user subscriptions."""
+    for subscription in user_subscriptions:
+        if not subscription.stripe_subscription_id:
+            continue
 
-                customer_id = s.customer
-                user.stripe_customer_id = customer_id
-                user.save()
-            except stripe.error.InvalidRequestError:
-                continue
-        if not customer_id:
-            return
+        stripe_subscription = retrieve_stripe_subscription(subscription.stripe_subscription_id)
+        if stripe_subscription:
+            stripe_customer = stripe_subscription.customer if isinstance(stripe_subscription.customer, str) else None
+            actor.stripe_customer_id = stripe_customer
+            actor.save()
+            return stripe_customer
 
-    all_active_subscriptions = stripe.Subscription.list(customer=customer_id, status="active").data
+    return None
 
-    all_subscriptions = stripe.Subscription.list(customer=customer_id).data
 
-    active_subscriptions_by_id: dict[str, stripe._subscription.Subscription] = {
-        subscription.id: subscription for subscription in all_active_subscriptions
-    }
+def get_active_stripe_subscriptions(customer_id: str) -> dict[str, stripe.Subscription]:
+    """Retrieve all active Stripe subscriptions for a customer."""
+    return {subscription.id: subscription for subscription in stripe.Subscription.list(customer=customer_id, status="active").data}
 
-    all_subscriptions_by_id = {subscription.id: subscription for subscription in all_subscriptions}
 
+def get_all_stripe_subscriptions(customer_id: str) -> dict[str, stripe.Subscription]:
+    """Retrieve all Stripe subscriptions for a customer."""
+    return {subscription.id: subscription for subscription in stripe.Subscription.list(customer=customer_id).data}
+
+
+def update_existing_subscriptions(user_subscriptions: QuerySet[UserSubscription], all_subscriptions_by_id: dict[str, stripe.Subscription]):
+    """Update user subscriptions based on existing Stripe data."""
     for subscription in user_subscriptions.filter(end_date__isnull=True):
-        if active_subscriptions_by_id.get(subscription.stripe_subscription_id):
-            del active_subscriptions_by_id[subscription.stripe_subscription_id]  # don't worry about it as it is active
-        elif all_subscriptions_by_id.get(subscription.stripe_subscription_id):
-            subscription.end_date = datetime.fromtimestamp(all_subscriptions_by_id[subscription.stripe_subscription_id].current_period_end)
+        stripe_subscription = (
+            all_subscriptions_by_id.get(subscription.stripe_subscription_id) if subscription.stripe_subscription_id else None
+        )
+        if stripe_subscription:
+            subscription.end_date = datetime.fromtimestamp(stripe_subscription.current_period_end)
             subscription.save()
         else:
             subscription.end_now()
 
-    for subscription_id, subscription in active_subscriptions_by_id.items():
-        plan: SubscriptionPlan = SubscriptionPlan.objects.filter(stripe_product_id=subscription.plan.product).first()
 
-        if not plan:
-            continue
+def create_missing_subscriptions(actor: User | Organization, active_subscriptions_by_id: dict[str, stripe.Subscription]):
+    """Create user subscriptions in the database for active Stripe subscriptions not already tracked."""
+    for subscription_id, subscription_active in active_subscriptions_by_id.items():
+        if hasattr(subscription_active, "items") and getattr(subscription_active.items, "data", None):
+            stripe_product_id = subscription_active.items.data[0].plan.product
 
-        UserSubscription.objects.create(
-            owner=user,
-            subscription_plan=plan,
-            stripe_subscription_id=subscription_id,
-            start_date=subscription.current_period_start,
-        )
+            plan = SubscriptionPlan.objects.filter(stripe_product_id=stripe_product_id).first()
 
-    return
+            if plan:
+                UserSubscription.objects.create(
+                    owner=actor,
+                    subscription_plan=plan,
+                    stripe_subscription_id=subscription_id,
+                )
+
+
+def refresh_actor_subscriptions(actor: User | Organization):
+    """Refresh subscriptions for an actor by syncing with Stripe."""
+    customer_id = get_or_create_customer_id(actor)
+    if not customer_id:
+        return  # Exit if no valid customer ID found
+
+    user_subscriptions = UserSubscription.filter_by_owner(actor).select_related("subscription_plan")
+
+    active_subscriptions_by_id = get_active_stripe_subscriptions(customer_id)
+    all_subscriptions_by_id = get_all_stripe_subscriptions(customer_id)
+
+    # Update or close existing subscriptions
+    update_existing_subscriptions(user_subscriptions, all_subscriptions_by_id)
+
+    # Create new subscriptions for active Stripe subscriptions not in the database
+    create_missing_subscriptions(actor, active_subscriptions_by_id)
+
+    # Update user entitlements after syncing subscriptions
+    update_user_entitlements(actor)

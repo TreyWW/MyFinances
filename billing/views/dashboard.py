@@ -1,10 +1,12 @@
 from django.shortcuts import render
 
+from backend.decorators import web_require_scopes
 from billing.models import UserSubscription, SubscriptionPlan
 from backend.types.requests import WebRequest
 from backend.utils.calendar import get_months_text, timezone_now
 
 
+@web_require_scopes("billing:manage", api=True, htmx=True)
 def billing_dashboard_endpoint(request: WebRequest):
     context: dict = {}
     months = get_months_text()

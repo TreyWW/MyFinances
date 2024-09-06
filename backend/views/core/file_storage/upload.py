@@ -4,6 +4,7 @@ from typing import LiteralString
 
 from django.contrib import messages
 from django.core.files.base import ContentFile
+from django.core.files.uploadedfile import UploadedFile
 from django.http import HttpResponse, JsonResponse, QueryDict
 from django.shortcuts import render, redirect
 from django.utils import timezone
@@ -78,7 +79,7 @@ def end_file_upload_batch_endpoint(request):
 
 @require_http_methods(["POST"])
 def upload_file_via_batch_endpoint(request: WebRequest):
-    batch = request.POST.get("batch")
+    batch = request.POST.get("batch", "")
 
     batch_obj = MultiFileUpload.objects.filter(uuid=batch, user=request.user).first()
 
@@ -88,8 +89,14 @@ def upload_file_via_batch_endpoint(request: WebRequest):
     if batch_obj.is_finished():
         return JsonResponse({"error": "Batch already finished"}, status=400)
 
-    file = request.FILES.get("file")
-    file_dir = request.POST.get("file_dir", "")
+    file: UploadedFile | None = request.FILES.get("file")
+    file_dir: str = request.POST.get("file_dir", "")
+
+    if not file:
+        return JsonResponse({"error": "File not found"}, status=404)
+
+    if not file.name:
+        return JsonResponse({"error": "File name not found"}, status=400)
 
     relative_path: LiteralString | str | bytes
 
@@ -99,9 +106,6 @@ def upload_file_via_batch_endpoint(request: WebRequest):
     else:
         relative_path = file.name
         full_file_path = upload_to_user_separate_folder(FileStorageFile, relative_path, optional_actor=request.actor)
-
-    if not file:
-        return JsonResponse({"error": "File not found"}, status=404)
 
     existing_file_under_path: FileStorageFile | None = (
         FileStorageFile.filter_by_owner(request.actor).filter(file_uri_path=relative_path).first()

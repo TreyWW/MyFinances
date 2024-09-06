@@ -1,6 +1,5 @@
 {% load has_module safe_url from feature_enabled %}
 {% has_module "billing" as billing_enabled %}
-
 <div data-layout="icon_dropdown_items">
     <li hx-boost="true">
         <a {% if request.resolver_match.view_name == "settings:dashboard" %}class="active btn-disabled"{% endif %}
@@ -17,12 +16,12 @@
             <span class="badge">New</span>
         </a>
     </li>
-{#    {% if billing_enabled %}#}
-        <li hx-boost="true">
-            <a {% if request.resolver_match.view_name == "billing:dashboard" %}class="active btn-disabled"{% endif %}
-               href="{% safe_url 'billing:dashboard' %}">Billing Dashboard</a>
-        </li>
-{#    {% endif %}#}
+    {#    {% if billing_enabled %}#}
+    <li hx-boost="true">
+        <a {% if request.resolver_match.view_name == "billing:dashboard" %}class="active btn-disabled"{% endif %}
+           href="{% safe_url 'billing:dashboard' %}">Billing Dashboard</a>
+    </li>
+    {#    {% endif %}#}
     <li>
         <label for="logout_modal">
             <i class="fa fa-solid fa-right-from-bracket"></i>

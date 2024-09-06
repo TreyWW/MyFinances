@@ -255,7 +255,7 @@ def web_require_scopes(scopes: str | list[str], htmx=False, api=False, redirect_
 from django.conf import settings
 
 
-def has_entitlements(entitlements: list[str] | str):
+def has_entitlements(entitlements: list[str] | str, htmx_api: bool = False):
     def decorator(view_func):
         @wraps(view_func)
         def wrapper(request, *args, **kwargs):
@@ -263,7 +263,7 @@ def has_entitlements(entitlements: list[str] | str):
                 from billing.decorators import has_entitlements_called_from_backend_handler
 
                 wrapped_view_func = has_entitlements_called_from_backend_handler(
-                    entitlements if isinstance(entitlements, list) else [entitlements]
+                    entitlements if isinstance(entitlements, list) else [entitlements], htmx_api
                 )(view_func)
                 return wrapped_view_func(request, *args, **kwargs)
             return view_func(request, *args, **kwargs)

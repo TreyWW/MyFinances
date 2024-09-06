@@ -20,5 +20,5 @@ def get_months_text() -> list[str]:
     ]
 
 
-def timezone_now() -> datetime:
+def timezone_now() -> datetime.datetime:
     return timezone.now()

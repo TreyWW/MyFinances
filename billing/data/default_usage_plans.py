@@ -132,25 +132,4 @@ default_usage_plans: list[DefaultFeatureGroup] = [
             # endregion "organization-access"
         ],
     ),
-    # DefaultFeatureGroup(
-    #     "Data Transfer",
-    #     [
-    #         DefaultFeature(
-    #             slug="data-transfer",
-    #             description="Amount of data transferred per month",
-    #             max_limit_per_month=500, # MB
-    #             subscription_plan=starter_plan,
-    #         )
-    #     ],
-    # ),
-    # DefaultFeatureGroup(
-    #     "File Storage",
-    #     [
-    #         DefaultFeature(
-    #             slug="storage",
-    #             description="Storage usage charged per GB per month",
-    #             subscription_plan=starter_plan,
-    #         )
-    #     ],
-    # ),
 ]

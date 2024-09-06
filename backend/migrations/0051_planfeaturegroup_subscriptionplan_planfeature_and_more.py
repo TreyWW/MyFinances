@@ -96,7 +96,7 @@ class Migration(migrations.Migration):
                 "abstract": False,
                 "constraints": [
                     models.CheckConstraint(
-                        condition=models.Q(
+                        check=models.Q(
                             models.Q(("organization__isnull", False), ("user__isnull", True)),
                             models.Q(("organization__isnull", True), ("user__isnull", False)),
                             _connector="OR",
@@ -126,7 +126,7 @@ class Migration(migrations.Migration):
                 "abstract": False,
                 "constraints": [
                     models.CheckConstraint(
-                        condition=models.Q(
+                        check=models.Q(
                             models.Q(("organization__isnull", False), ("user__isnull", True)),
                             models.Q(("organization__isnull", True), ("user__isnull", False)),
                             _connector="OR",
@@ -160,7 +160,7 @@ class Migration(migrations.Migration):
                 "abstract": False,
                 "constraints": [
                     models.CheckConstraint(
-                        condition=models.Q(
+                        check=models.Q(
                             models.Q(("organization__isnull", False), ("user__isnull", True)),
                             models.Q(("organization__isnull", True), ("user__isnull", False)),
                             _connector="OR",

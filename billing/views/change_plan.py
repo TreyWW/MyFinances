@@ -7,14 +7,18 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
 
-from backend.decorators import htmx_only
+from backend.api.public.decorators import require_scopes
+from backend.decorators import htmx_only, web_require_scopes
+from backend.models import User
 from backend.types.requests import WebRequest
 from backend.utils.calendar import timezone_now
 from billing.models import SubscriptionPlan, UserSubscription, StripeCheckoutSession
+from billing.service.stripe_customer import get_or_create_customer_id
 
 logger = logging.getLogger(__name__)
 
 
+@web_require_scopes("billing:manage", api=True, htmx=True)
 @htmx_only("billing:dashboard")
 def change_plan_endpoint(request: WebRequest):
 
@@ -55,9 +59,13 @@ def change_plan_endpoint(request: WebRequest):
     #         active_plan.end_date = timezone_now()
     #         active_plan.save()
 
-    line_items = [{"adjustable_quantity": {"enabled": False}, "quantity": 1, "price": plan.stripe_price_id}]
+    line_items = [{"adjustable_quantity": {"enabled": False}, "quantity": 1, "price": plan.stripe_price_id}]  # type: ignore
 
-    checkout_session_django_object = StripeCheckoutSession.objects.create(user=request.user, plan=plan)
+    checkout_session_django_object = (
+        StripeCheckoutSession.objects.create(user=request.actor, plan=plan)
+        if isinstance(request.actor, User)
+        else StripeCheckoutSession.objects.create(leader=request.actor, plan=plan)
+    )
 
     for feature in plan.features.all():
         if not feature.stripe_price_id:
@@ -75,10 +83,17 @@ def change_plan_endpoint(request: WebRequest):
             }
         )
 
+    customer_id = get_or_create_customer_id(request.actor)
+
+    if isinstance(request.actor, User):
+        customer_email = request.actor.email
+    else:
+        customer_email = request.actor.leader.email
+
     checkout_session = stripe.checkout.Session.create(
-        customer=request.user.stripe_customer_id,
-        customer_email=request.user.email if not request.user.stripe_customer_id else None,
-        line_items=line_items,
+        customer=customer_id,
+        customer_email=customer_email if not customer_email else None,  # type: ignore[arg-type]
+        line_items=line_items,  # type: ignore[arg-type]
         mode="subscription",
         # return_url="http://127.0.0.1:8000" + reverse("billing:stripe_checkout_failed_response"),
         cancel_url=request.build_absolute_uri(reverse("billing:dashboard")),
@@ -94,5 +109,5 @@ def change_plan_endpoint(request: WebRequest):
     # UserSubscription.objects.create(owner=request.actor, subscription_plan=plan)
     messages.success(request, "Great! Redirecting you to stripe now!")
     r = HttpResponse(status=200)
-    r["HX-Redirect"] = checkout_session.url
+    r["HX-Redirect"] = str(checkout_session.url)
     return r
