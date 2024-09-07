@@ -37,9 +37,16 @@ def teams_dashboard(request: WebRequest):
             .prefetch_related("members", "permissions")
             .get(id=users_team.id)
         )
-        user_permissions = {
-            member: list(team.permissions.filter(user=member).values_list("scopes", flat=True))[0] for member in team.members.all()
-        }
+
+        user_permissions: dict[str, list] = {}
+
+        for member in team.members.all():
+            member_perms = list(team.permissions.filter(user=member).values_list("scopes", flat=True))
+
+            if len(member_perms) > 0:
+                user_permissions[member] = member_perms[0]
+            else:
+                user_permissions[member] = []
 
     except Organization.DoesNotExist:
         user_with_counts = User.objects.prefetch_related("teams_joined", "teams_leader_of").get(pk=request.user.pk)
