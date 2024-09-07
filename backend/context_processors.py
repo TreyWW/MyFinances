@@ -48,6 +48,9 @@ def extras(request: HttpRequest):
         with (git_dir / "HEAD").open("r") as head:
             ref = head.readline().split(" ")[-1].strip()
 
+        if not (git_dir / ref).exists():
+            return "commit not found"
+
         with (git_dir / ref).open("r") as git_hash:
             return git_hash.readline().strip()
 
