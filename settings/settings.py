@@ -5,6 +5,7 @@ import mimetypes
 import os
 import sys
 from pathlib import Path
+from unittest.mock import MagicMock
 
 import stripe
 from django.contrib.messages import constants as messages
@@ -300,7 +301,7 @@ ANALYTICS = get_var("ANALYTICS_SCRIPT")
 
 # region "Billing"
 
-BILLING_ENABLED = get_var("BILLING_ENABLED")
+BILLING_ENABLED = get_var("BILLING_ENABLED", "").lower() == "true"
 
 if BILLING_ENABLED:
     print("BILLING MODULE IS ENABLED")
@@ -467,4 +468,6 @@ if "test" in sys.argv[1:]:
         }
     }
     logging.disable(logging.ERROR)
-    # check if the app is running from a manage.py test command, if so then use SQLITE with memory, faster than xampp
+    sys.modules["billing"] = MagicMock()
+    sys.modules["billing.signals"] = MagicMock()
+    sys.modules["billing.models"] = MagicMock()
