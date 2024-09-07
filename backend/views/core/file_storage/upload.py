@@ -1,7 +1,5 @@
 import json
 import os
-from typing import LiteralString
-
 from django.contrib import messages
 from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import UploadedFile
@@ -97,8 +95,6 @@ def upload_file_via_batch_endpoint(request: WebRequest):
 
     if not file.name:
         return JsonResponse({"error": "File name not found"}, status=400)
-
-    relative_path: LiteralString | str | bytes
 
     if file_dir:
         relative_path = os.path.join(file_dir, file.name)
