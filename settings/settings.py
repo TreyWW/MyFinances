@@ -5,6 +5,7 @@ import mimetypes
 import os
 import sys
 from pathlib import Path
+from typing import TYPE_CHECKING
 from unittest.mock import MagicMock
 
 import stripe
@@ -303,7 +304,7 @@ ANALYTICS = get_var("ANALYTICS_SCRIPT")
 
 BILLING_ENABLED = get_var("BILLING_ENABLED", "").lower() == "true"
 
-if BILLING_ENABLED:
+if BILLING_ENABLED or TYPE_CHECKING:
     print("BILLING MODULE IS ENABLED")
     INSTALLED_APPS.append("billing")
     MIDDLEWARE.extend(["billing.middleware.CheckUserSubScriptionMiddleware"])

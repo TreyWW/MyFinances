@@ -15,7 +15,7 @@ def subscription_ended(webhook_event: StripeWebhookEvent):
     if not user:
         plan: UserSubscription | None = UserSubscription.objects.filter(
             stripe_subscription_id=event_data.id, stripe_subscription_id__isnull=False
-        ).first()
+        ).first()  # type: ignore[misc]
 
         if plan:
             user_subscription_plan = plan

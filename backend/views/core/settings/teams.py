@@ -38,7 +38,7 @@ def teams_dashboard(request: WebRequest):
             .get(id=users_team.id)
         )
 
-        user_permissions: dict[str, list] = {}
+        user_permissions: dict[User, list] = {}
 
         for member in team.members.all():
             member_perms = list(team.permissions.filter(user=member).values_list("scopes", flat=True))

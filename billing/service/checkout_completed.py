@@ -9,14 +9,14 @@ def checkout_completed(webhook_event: StripeWebhookEvent):
 
     stripe_session_obj = StripeCheckoutSession.objects.filter(
         uuid=event_data.metadata.get("dj_checkout_uuid", "doesn't_exist") if event_data.metadata else "doesn't_exist"
-    ).first()
+    ).first()  # type: ignore[misc]
 
     if stripe_session_obj:
         completed_with_session_object(stripe_session_obj, event_data)
 
 
 def completed_with_session_object(stripe_session_obj: StripeCheckoutSession, event_data: stripe.checkout.Session):
-    USER_CURRENT_PLANS = UserSubscription.objects.filter(user=stripe_session_obj.user, end_date__isnull=True).all()
+    USER_CURRENT_PLANS = UserSubscription.objects.filter(user=stripe_session_obj.user, end_date__isnull=True).all()  # type: ignore[misc]
 
     STRIPE_META_DJ_SUBSCRIPTION_PLAN_ID = (
         event_data.metadata.get("dj_subscription_plan_id", "doesn't_exist") if event_data.metadata else "doesn't_exist"
