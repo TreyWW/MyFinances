@@ -3,10 +3,12 @@ import json
 import logging
 from uuid import uuid4, UUID
 
+from django.urls import reverse
+
 from backend.models import InvoiceRecurringProfile
 from backend.service.boto3.handler import BOTO3_HANDLER
 from backend.service.invoices.recurring.schedules.date_handlers import get_schedule_cron, CronServiceResponse
-from backend.service.webhooks.get_url import get_global_webhook_response_url
+from settings.helpers import get_var
 
 logger = logging.getLogger(__name__)
 
@@ -61,7 +63,7 @@ def create_boto_schedule(instance_id: int | str | InvoiceRecurringProfile):
 
     EXCEPTIONS = BOTO3_HANDLER._schedule_client.exceptions
 
-    SITE_URL = get_global_webhook_response_url()
+    SITE_URL = get_var("SITE_URL") + reverse("webhooks:receive_recurring_invoices")
 
     end_date: datetime.date | None = instance.end_date
     end_datetime: datetime.datetime | str = datetime.datetime.combine(end_date, datetime.datetime.now().time()) if end_date else ""

@@ -10,6 +10,7 @@ urlpatterns = [
     path("invoices/", include("backend.api.invoices.urls")),
     path("clients/", include("backend.api.clients.urls")),
     path("settings/", include("backend.api.settings.urls")),
+    path("file_storage/", include("backend.api.file_storage.urls")),
     path("products/", include("backend.api.products.urls")),
     path("quotas/", include("backend.api.quotas.urls")),
     path("emails/", include("backend.api.emails.urls")),

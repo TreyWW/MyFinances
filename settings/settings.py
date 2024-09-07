@@ -5,7 +5,10 @@ import mimetypes
 import os
 import sys
 from pathlib import Path
+from typing import TYPE_CHECKING
+from unittest.mock import MagicMock
 
+import stripe
 from django.contrib.messages import constants as messages
 from django.contrib.staticfiles.storage import FileSystemStorage  # type: ignore
 from storages.backends.s3 import S3Storage
@@ -297,6 +300,19 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 ANALYTICS = get_var("ANALYTICS_SCRIPT")
 
+# region "Billing"
+
+BILLING_ENABLED = get_var("BILLING_ENABLED", "").lower() == "true"
+
+if BILLING_ENABLED or TYPE_CHECKING:
+    print("BILLING MODULE IS ENABLED")
+    INSTALLED_APPS.append("billing")
+    MIDDLEWARE.extend(["billing.middleware.CheckUserSubScriptionMiddleware"])
+    # TEMPLATES[0]["DIRS"].append(BASE_DIR / "billing/templates")
+    print(TEMPLATES)
+
+# endregion "Billing"
+
 SOCIAL_AUTH_GITHUB_SCOPE = ["user:email"]
 SOCIAL_AUTH_GITHUB_KEY = get_var("GITHUB_KEY")
 SOCIAL_AUTH_GITHUB_SECRET = get_var("GITHUB_SECRET")
@@ -361,8 +377,8 @@ class CustomStaticStorage(S3Storage):
     custom_domain = get_var("AWS_STATIC_CUSTOM_DOMAIN")
     region_name = get_var("AWS_STATIC_REGION_NAME") or get_var("AWS_REGION_NAME")
 
-    access_key = get_var("AWS_STATIC_ACCESS_KEY_ID")
-    secret_key = get_var("AWS_STATIC_ACCESS_KEY")
+    # access_key = get_var("AWS_STATIC_ACCESS_KEY_ID")
+    # secret_key = get_var("AWS_STATIC_ACCESS_KEY")
 
 
 class CustomPublicMediaStorage(S3Storage):
@@ -374,8 +390,8 @@ class CustomPublicMediaStorage(S3Storage):
 
     region_name = get_var("AWS_MEDIA_PUBLIC_REGION_NAME") or get_var("AWS_REGION_NAME")
 
-    access_key = get_var("AWS_MEDIA_PUBLIC_ACCESS_KEY_ID")
-    secret_key = get_var("AWS_MEDIA_PUBLIC_ACCESS_KEY")
+    # access_key = get_var("AWS_MEDIA_PUBLIC_ACCESS_KEY_ID")
+    # secret_key = get_var("AWS_MEDIA_PUBLIC_ACCESS_KEY")
 
 
 class CustomPrivateMediaStorage(S3Storage):
@@ -388,14 +404,14 @@ class CustomPrivateMediaStorage(S3Storage):
 
     region_name = get_var("AWS_MEDIA_PRIVATE_REGION_NAME")
 
-    access_key = get_var("AWS_MEDIA_PRIVATE_ACCESS_KEY_ID")
-    secret_key = get_var("AWS_MEDIA_PRIVATE_ACCESS_KEY")
+    # access_key = get_var("AWS_MEDIA_PRIVATE_ACCESS_KEY_ID")
+    # secret_key = get_var("AWS_MEDIA_PRIVATE_ACCESS_KEY")
 
     cloudfront_key_id = get_var("AWS_MEDIA_PRIVATE_CLOUDFRONT_PUBLIC_KEY_ID")
     cloudfront_key = base64.b64decode(get_var("AWS_MEDIA_PRIVATE_CLOUDFRONT_PRIVATE_KEY"))
 
 
-AWS_STATIC_ENABLED = get_var("AWS_STATIC_ENABLED", default=False).lower() == "true"
+AWS_STATIC_ENABLED = get_var("AWS_STATIC_ENABLED", default="False").lower() == "true"
 AWS_STATIC_CDN_TYPE = get_var("AWS_STATIC_CDN_TYPE")
 
 logging.info(f"{AWS_STATIC_ENABLED=} | {AWS_STATIC_CDN_TYPE=}")
@@ -403,6 +419,9 @@ logging.info(f"{AWS_STATIC_ENABLED=} | {AWS_STATIC_CDN_TYPE=}")
 if AWS_STATIC_ENABLED or AWS_STATIC_CDN_TYPE.lower() == "aws":
     STATICFILES_STORAGE = "settings.settings.CustomStaticStorage"
     STATIC_LOCATION = get_var("AWS_STATIC_LOCATION", default="static")
+    STORAGES["staticfiles"] = {
+        "BACKEND": "settings.settings.CustomStaticStorage",
+    }
     logging.info(f"{STATIC_LOCATION=} | {STATICFILES_STORAGE=}")
 else:
     STATIC_URL = f"/static/"
@@ -410,7 +429,7 @@ else:
     STATICFILES_STORAGE = "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
     logging.info(f"{STATIC_URL=} | {STATIC_ROOT=} | {STATICFILES_STORAGE=}")
 
-AWS_MEDIA_PUBLIC_ENABLED = get_var("AWS_MEDIA_PUBLIC_ENABLED", default=False).lower() == "true"
+AWS_MEDIA_PUBLIC_ENABLED = get_var("AWS_MEDIA_PUBLIC_ENABLED", default="False").lower() == "true"
 
 if AWS_MEDIA_PUBLIC_ENABLED:
     DEFAULT_FILE_STORAGE = "settings.settings.CustomPublicMediaStorage"
@@ -426,7 +445,7 @@ else:
         ...
 
 
-AWS_MEDIA_PRIVATE_ENABLED = get_var("AWS_MEDIA_PRIVATE_ENABLED", default=False).lower() == "true"
+AWS_MEDIA_PRIVATE_ENABLED = get_var("AWS_MEDIA_PRIVATE_ENABLED", default="False").lower() == "true"
 
 if AWS_MEDIA_PRIVATE_ENABLED:
     PRIVATE_FILE_STORAGE = "settings.settings.CustomPrivateMediaStorage"
@@ -450,4 +469,6 @@ if "test" in sys.argv[1:]:
         }
     }
     logging.disable(logging.ERROR)
-    # check if the app is running from a manage.py test command, if so then use SQLITE with memory, faster than xampp
+    sys.modules["billing"] = MagicMock()
+    sys.modules["billing.signals"] = MagicMock()
+    sys.modules["billing.models"] = MagicMock()

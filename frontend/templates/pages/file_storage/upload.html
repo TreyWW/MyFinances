@@ -1,0 +1,276 @@
+{% extends base|default:"base/base.html" %}
+{% block content %}
+    <div class="card bg-base-100 p-3 mb-2 py-4">
+        <div class="flex items-center justify-between">
+            <a class="btn btn-neutral btn-outline btn-sm"
+               href="{% url 'file_storage:dashboard' %}">Go back</a>
+            <h2 class="text-xl" data-oob="invoices-title">File Storage - Upload Files</h2>
+            <div></div>
+        </div>
+    </div>
+    <!-- File Upload and Directory Upload Buttons -->
+    <div class="flex justify-end space-x-4 my-4">
+        <input type="file" id="singleFileInput" class="hidden" />
+        <button type="button" id="singleFileButton" class="btn btn-sm btn-outline">Upload File</button>
+        <input type="file"
+               id="directoryInput"
+               class="hidden"
+               multiple
+               webkitdirectory
+               directory />
+        <button type="button" id="directoryButton" class="btn btn-sm btn-outline">Upload Folder</button>
+    </div>
+    <div id="dropZone"
+         class="w-full border-2 border-dashed border-primary p-6 text-center bg-base-100 rounded-lg hover:bg-base-200 transition-colors cursor-pointer">
+        <span class="text-primary">Drag files or folders anywhere on the page</span>
+    </div>
+    <div class="overflow-x-auto mt-6">
+        <div class="card bg-base-100 shadow-lg p-4">
+            <h2 class="text-xl">
+                Objects to upload <span id="file_count" class="text-neutral-content font-bold">(0)</span>
+            </h2>
+            <table class="table w-full">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Directory</th>
+                        <th>Size</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="fileList">
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="flex justify-end mt-6">
+        <button type="button"
+                id="submitAllButton"
+                class="btn btn-primary btn-sm"
+                disabled>Submit All</button>
+    </div>
+    <script>const dropZone = document.getElementById('dropZone');
+    const fileList = document.getElementById('fileList');
+    const fileCount = document.getElementById('file_count');
+    const submitAllButton = document.getElementById('submitAllButton');
+    const singleFileButton = document.getElementById('singleFileButton');
+    const directoryButton = document.getElementById('directoryButton');
+    const singleFileInput = document.getElementById('singleFileInput');
+    const directoryInput = document.getElementById('directoryInput');
+    let filesToUpload = [];
+
+
+    // Helper to format file size dynamically (KB, MB, GB)
+    function formatSize(size) {
+        const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+        let index = 0;
+        while (size >= 1024 && index < units.length - 1) {
+            size /= 1024;
+            index++;
+        }
+        return `${size.toFixed(2)} ${units[index]}`;
+    }
+
+    // Helper to extract directory (exclude the file name)
+    function extractDirectory(path) {
+        const lastSlashIndex = path.lastIndexOf('/');
+        return lastSlashIndex > 0 ? path.slice(0, lastSlashIndex) : '/';
+    }
+
+    // Add file to the file list, override if file with the same name exists
+    function addFile(file) {
+        // Find the file based on both name and directory
+        const existingIndex = filesToUpload.findIndex(f => f.name === file.name && f.webkitRelativePath === file.webkitRelativePath);
+
+        if (existingIndex !== -1) {
+            // Override existing file with the same name and directory
+            filesToUpload[existingIndex] = file;
+        } else {
+            // Add new file
+            filesToUpload.push(file);
+        }
+
+        renderFileList();
+    }
+
+    // Remove file from the list
+    function removeFile(index) {
+        filesToUpload.splice(index, 1);
+        renderFileList();
+    }
+
+    // Render file list as a table
+    function renderFileList() {
+        fileList.innerHTML = '';
+        fileCount.innerHTML = `(${filesToUpload.length})`;
+
+        if (filesToUpload.length > 0) {
+            submitAllButton.removeAttribute('disabled');
+        } else {
+            submitAllButton.setAttribute('disabled', '');
+        }
+        filesToUpload.forEach((file, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                    <td>${file.name}</td>
+                    <td>${file.webkitRelativePath ? extractDirectory(file.webkitRelativePath) : '/'}</td>
+                    <td>${formatSize(file.size)}</td>
+                    <td><button class="btn btn-error btn-sm" onclick="removeFile(${index})">Remove</button></td>
+                `;
+            fileList.appendChild(row);
+        });
+    }
+
+    // Single file selection via input button
+    singleFileButton.addEventListener('click', () => {
+        singleFileInput.click();
+    });
+
+    singleFileInput.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            addFile(file);
+        }
+    });
+
+    // Directory selection via input button
+    directoryButton.addEventListener('click', () => {
+        directoryInput.click();
+    });
+
+    directoryInput.addEventListener('change', (event) => {
+        const selectedFiles = event.target.files;
+        for (const file of selectedFiles) {
+            addFile(file);
+        }
+    });
+
+    // Global drag-and-drop behavior (files can be dropped anywhere)
+    ['dragenter', 'dragover'].forEach(eventName => {
+        document.addEventListener(eventName, (e) => {
+            e.preventDefault();
+            document.body.classList.add('dragging-border');
+            dropZone.classList.add('border-accent', 'bg-base-200');
+        });
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        document.addEventListener(eventName, (e) => {
+            e.preventDefault();
+            document.body.classList.remove('dragging-border');
+            dropZone.classList.remove('border-accent', 'bg-base-200');
+        });
+    });
+
+    document.addEventListener('drop', (e) => {
+        e.preventDefault();
+        const items = e.dataTransfer.items;
+
+        for (const item of items) {
+            const entry = item.webkitGetAsEntry();
+            if (entry.isFile) {
+                const file = item.getAsFile();
+                addFile(file);
+            } else if (entry.isDirectory) {
+                traverseFileTree(entry);
+            }
+        }
+    });
+
+    // Recursive directory traversal
+    function traverseFileTree(item, path = '') {
+        if (item.isFile) {
+            item.file((file) => {
+                file.relativePath = path + file.name;
+                addFile(file);
+            });
+        } else if (item.isDirectory) {
+            const dirReader = item.createReader();
+            dirReader.readEntries((entries) => {
+                for (const entry of entries) {
+                    traverseFileTree(entry, path + item.name + "/");
+                }
+            });
+        }
+    }
+
+    // Handle submit all button click
+    submitAllButton.addEventListener('click', async () => {
+        try {
+            // Start the batch
+            const startBatchResponse = await fetch(
+                "{% url 'file_storage:upload:start_batch' %}",
+                {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                    },
+                }
+            );
+
+            // Parse the response as JSON
+            const startBatchData = await startBatchResponse.json();
+            const batchId = startBatchData.batch;  // The UUID for the batch
+
+            // Check if the batchId is valid
+            if (!batchId) {
+                alert("Something went wrong while starting the batch");
+                return;
+            }
+
+            console.log(`Start Batch Resp: ${batchId}`);
+
+            // Now upload all files to the batch
+            for (const file of filesToUpload) {
+                const formData = new FormData();
+                formData.append('batch', batchId);  // Add batch ID to the request
+                formData.append('file', file);  // Add the file to the request
+
+                // Use webkitRelativePath to get the directory information
+                const fileDir = file.webkitRelativePath ? file.webkitRelativePath.substring(0, file.webkitRelativePath.lastIndexOf('/')) : '';
+                formData.append('file_dir', fileDir);  // Add the directory path to the request
+
+                // Upload each file
+                const addToBatchResponse = await fetch(
+                    "{% url 'file_storage:upload:add_to_batch' %}",
+                    {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': '{{ csrf_token }}',
+                        },
+                        body: formData  // Send as form data
+                    }
+                );
+
+                // Parse the response for each file upload
+                const addToBatchData = await addToBatchResponse.json();
+                console.log(`File uploaded: ${addToBatchData}`);
+            }
+
+            // End the batch after all files are uploaded
+            const endBatchResponse = await fetch(
+                "{% url 'file_storage:upload:end_batch' %}",
+                {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                        'Content-Type': 'application/json'  // Set content type to JSON
+                    },
+                    body: JSON.stringify({'batch': batchId})  // Send the batch ID as JSON
+                }
+            );
+
+            // Parse the end batch response
+            const endBatchData = await endBatchResponse.json();
+            console.log(`Batch ended: ${endBatchData}`);
+
+            alert("Files uploaded and batch ended successfully!");
+
+        } catch (error) {
+            console.error('Error occurred during batch upload:', error);
+            alert("Something went wrong during the upload process.");
+        }
+    });
+
+    </script>
+{% endblock %}

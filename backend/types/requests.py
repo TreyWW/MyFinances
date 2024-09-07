@@ -1,3 +1,5 @@
+from typing import Any
+
 from django.contrib.auth.models import AnonymousUser
 from django.http import HttpRequest
 from django_htmx.middleware import HtmxDetails
@@ -10,6 +12,8 @@ class WebRequest(HttpRequest):
     team: Organization | None
     team_id: int | None
     actor: User | Organization
+
+    users_subscription: Any | None
 
     htmx: HtmxDetails
     no_retarget: bool | None

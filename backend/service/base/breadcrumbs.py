@@ -70,7 +70,7 @@ def generate_breadcrumbs(*breadcrumb_list: str, request=None) -> list[dict[Any, 
 
 
 def get_breadcrumbs(*, request: HttpRequest | None = None, url: str | None = None):
-    current_url_name: str | Any = request.resolver_match.view_name if request else None  # type: ignore[union-attr]
+    current_url_name: str | Any = request.resolver_match.view_name if request and request.resolver_match else None  # type: ignore[ union-attr]
     if url:
         try:
             current_url_name = resolve(url).view_name

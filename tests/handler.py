@@ -42,7 +42,13 @@ def create_mock_image():
 @override_settings(STATICFILES_STORAGE="django.contrib.staticfiles.storage.StaticFilesStorage")
 class ViewTestCase(TestCase):
     def setUp(self):
-        self.log_in_user = User.objects.create_user(username="user@example.com", password="user", email="user@example.com")
+        self.log_in_user: User = User.objects.create_user(
+            username="user@example.com",
+            password="user",
+            email="user@example.com",
+            entitlements=["customers", "invoices", "emails", "api-access", "organizations", "file-storage", "receipts"],
+        )
+
         self.created_team = Organization.objects.create(name="Testing", leader=self.log_in_user)
         self.created_team.members.add(self.log_in_user)
         self.htmx_headers = {"HTTP_HX-Request": "true"}

@@ -29,7 +29,7 @@ def create_invoice_page_endpoint(request: WebRequest):
         messages.error(request, "Something went wrong with the recurring service, please try again later or contact an administrator.")
         response = redirect("invoices:recurring:dashboard")
         return response
-    context = get_invoice_context(request) | {"InvoiceRecurringSet": InvoiceRecurringProfile}
+    context = get_invoice_context(request) | {"InvoiceRecurringProfile": InvoiceRecurringProfile}
     return invoices_core_handler(request, "pages/invoices/create/create_recurring.html", context)
 
 

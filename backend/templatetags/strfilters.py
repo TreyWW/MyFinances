@@ -23,7 +23,7 @@ def contains(value, arg):
     return arg in str(value)
 
 
-def day_to_number(day: str) -> int:
+def day_to_number_sunday(day: str) -> int:
     """
     Converts a day of the week to a number with Sunday as the first day.
 
@@ -42,6 +42,10 @@ def day_to_number(day: str) -> int:
     return sunday_first_day_number
 
 
+def day_to_number_monday(day: str) -> int:
+    return time.strptime(day, "%A").tm_wday + 1
+
+
 def month_to_number(month: str) -> int:
     return time.strptime(month, "%B").tm_mon
 
@@ -50,5 +54,6 @@ register.filter("split", split)
 register.filter("dashify", dashify)
 register.filter("contains", contains)
 register.filter("to_list", to_list)
-register.filter("day_to_number", day_to_number)
+register.filter("day_to_number_monday", day_to_number_monday)
+register.filter("day_to_number_sunday", day_to_number_sunday)
 register.filter("month_to_number", month_to_number)

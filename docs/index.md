@@ -1,6 +1,16 @@
 # MyFinances
 
-MyFinances is a web application that can help you as an individual or team, manage your finances! Simple as that :)
+MyFinances is an open-source web application designed to empower individuals and teams to efficiently manage their finances.
+Whether you're managing client invoices, onboarding new clients or storing business files, MyFinances provides a
+user-friendly platform to streamline these tasks.
+
+## User Guide
+---
+
+
+
+## Developer Guide
+---
 
 <div class="grid cards" markdown>
 
