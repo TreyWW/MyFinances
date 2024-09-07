@@ -2,7 +2,7 @@ from django.urls import path
 
 from . import change_name, profile_picture, preferences
 from .api_keys import generate_api_key_endpoint, revoke_api_key_endpoint
-from .defaults import handle_client_defaults_endpoints
+from .defaults import handle_client_defaults_endpoints, remove_client_default_logo_endpoint
 
 urlpatterns = [
     path(
@@ -20,6 +20,8 @@ urlpatterns = [
     path("api_keys/revoke/<str:key_id>/", revoke_api_key_endpoint, name="api_keys revoke"),
     path("client_defaults/<int:client_id>/", handle_client_defaults_endpoints, name="client_defaults"),
     path("client_defaults/", handle_client_defaults_endpoints, name="client_defaults without client"),
+    path("client_defaults/remove_default_logo/", remove_client_default_logo_endpoint, name="client_defaults remove logo without client"),
+    path("client_defaults/remove_default_logo/<int:client_id>", remove_client_default_logo_endpoint, name="client_defaults remove logo"),
 ]
 
 app_name = "settings"

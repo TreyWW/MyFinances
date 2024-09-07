@@ -65,3 +65,30 @@ def change_client_defaults_endpoint(request: WebRequest, client_id: int | None =
 
     messages.success(request, "Successfully updated client defaults")
     return render(request, "base/toast.html")
+
+
+@require_http_methods(["DELETE"])
+def remove_client_default_logo_endpoint(request: WebRequest, client_id: int | None = None):
+    context: dict = {}
+
+    if client_id:
+        try:
+            client = validate_client(request, client_id, get_defaults=True)
+        except (ValidationError, Client.DoesNotExist):
+            return HttpResponse("Something went wrong")
+
+        defaults = get_account_defaults(request.actor, client)
+        context |= {"client": client}
+    else:
+        defaults = get_account_defaults(request.actor)
+
+    if not defaults.default_invoice_logo:
+        messages.error(request, "No default logo to remove")
+        return render(request, "base/toast.html")
+
+    defaults.default_invoice_logo.delete()
+
+    messages.success(request, "Successfully updated client defaults")
+    resp = render(request, "base/toast.html")
+    resp["HX-Refresh"] = "true"
+    return resp
