@@ -1,0 +1,37 @@
+{% extends base|default:"base/base.html" %}
+{% block content %}
+    <div class="card w-full p-6 bg-base-100 shadow-xl mt-2">
+        <h2 class="text-xl">Reports</h2>
+        <div class="divider"></div>
+        <div class="mb-4">
+            <button onclick="modal_generate_report.showModal();"
+                    class="btn btn-primary mb-4 float-right"
+                    hx-trigger="click once"
+                    hx-swap="beforeend"
+                    hx-target="#modal_container"
+                    hx-get="{% url "api:base:modal retrieve" modal_name="generate_report" %}">
+                <i class="fa-solid fa-plus pe-1"></i>
+                Create Report
+            </button>
+                <form method="post" onsubmit="return false">
+                    {% csrf_token %}
+                    <input class="input input-bordered input-block my-3 loading-htmx"
+                           type="text"
+                           name="search"
+                           placeholder="🔎 Search"
+                           hx-target="#items"
+                           hx-get="/api/clients/fetch"
+                           hx-trigger="keyup changed delay:500ms"
+                           hx-indicator="#search_loading">
+                    <span id="search_loading"
+                          class="loading loading-spinner loading-htmx-loader-individual"></span>
+                </form>
+        </div>
+        <div hx-swap="outerHTML"
+             hx-trigger="load"
+             id="items"
+             hx-get="{% url 'api:clients:fetch' %}">
+            {% include 'components/table/skeleton_table.html' %}
+        </div>
+    </div>
+{% endblock content %}

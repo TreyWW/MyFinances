@@ -1,0 +1,79 @@
+{% component_block "modal" id="modal_generate_report" start_open="true" title="Generate Report" %}
+    {% fill "content" %}
+        <form class="py-4"
+              id="modal_generate_report-form"
+              hx-post="{% url 'api:teams:create' %}"
+              hx-swap="none">
+            {% csrf_token %}
+            <div class="form-control w-full">
+                <label class="label">
+                    Descriptive Name
+                </label>
+                <input id="modal_input-name"
+                       name="name"
+                       type="text"
+                       class="input input-block input-bordered">
+            </div>
+            <div class="form-control w-full">
+                <label class="label justify-start">
+                    Start Date
+                    <span class="required_star">*</span>
+                </label>
+                <input name="start"
+                       type="date"
+                       class="input input-block input-bordered">
+            </div>
+            <div class="form-control w-full">
+                <label class="label justify-start">
+                    End Date
+                    <span class="required_star">*</span>
+                </label>
+                <input name="end"
+                       type="date"
+                       class="input input-block input-bordered">
+            </div>
+            <div class="modal-action">
+                <button type="submit" id="modal_generate_report-submit" class="btn btn-primary">Create Team</button>
+                <button type="button"
+                        _="on click call #modal_generate_report.close()"
+                        class="btn">Cancel
+                </button>
+            </div>
+        </form>
+        <script>
+            const start_date_input = document.querySelector('input[name="start"]');
+            const end_date_input = document.querySelector('input[name="end"]');
+
+            const today = new Date();
+
+            function getLastDayOfMonth(year, month) {
+                return new Date(year, month + 1, 0).getDate(); // Month + 1, and date 0 gives the last day of the previous month
+            }
+
+            const isLastDayOfMonth = today.getDate() === getLastDayOfMonth(today.getFullYear(), today.getMonth());
+
+            let startDate, endDate;
+
+            if (isLastDayOfMonth) {
+                startDate = new Date(today.getFullYear(), today.getMonth(), 1);
+                endDate = new Date(today.getFullYear(), today.getMonth(), getLastDayOfMonth(today.getFullYear(), today.getMonth()));
+            } else {
+                const prevMonth = today.getMonth() - 1;
+                const year = prevMonth < 0 ? today.getFullYear() - 1 : today.getFullYear(); // Adjust for January
+
+                startDate = new Date(year, prevMonth < 0 ? 11 : prevMonth, 1); // 11 is December if prevMonth is -1
+                endDate = new Date(year, prevMonth < 0 ? 11 : prevMonth, getLastDayOfMonth(year, prevMonth));
+            }
+
+            function formatDateToInput(date) {
+                const year = date.getFullYear();
+                const month = ('0' + (date.getMonth() + 1)).slice(-2); // months are zero-indexed
+                const day = ('0' + date.getDate()).slice(-2);
+                return `${year}-${month}-${day}`;
+            }
+
+            start_date_input.value = formatDateToInput(startDate);
+            end_date_input.value = formatDateToInput(endDate);
+        </script>
+    {% endfill %}
+{% endcomponent_block %}
