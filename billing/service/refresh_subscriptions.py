@@ -41,17 +41,24 @@ def get_all_stripe_subscriptions(customer_id: str) -> dict[str, stripe.Subscript
     return {subscription.id: subscription for subscription in stripe.Subscription.list(customer=customer_id).data}
 
 
-def update_existing_subscriptions(user_subscriptions: QuerySet[UserSubscription], all_subscriptions_by_id: dict[str, stripe.Subscription]):
+def update_existing_subscriptions(
+    user_subscriptions: QuerySet[UserSubscription],
+    all_subscriptions_by_id: dict[str, stripe.Subscription],
+    active_subscriptions_by_id: dict[str, stripe.Subscription],
+):
     """Update user subscriptions based on existing Stripe data."""
     for subscription in user_subscriptions.filter(end_date__isnull=True):
         stripe_subscription = (
             all_subscriptions_by_id.get(subscription.stripe_subscription_id) if subscription.stripe_subscription_id else None
         )
+
         if stripe_subscription:
-            subscription.end_date = datetime.fromtimestamp(stripe_subscription.current_period_end)
-            subscription.save()
+            # If isn't active, end
+            if not active_subscriptions_by_id.get(subscription.stripe_subscription_id, None) or stripe_subscription.ended_at:
+                subscription.end_date = datetime.fromtimestamp(stripe_subscription.current_period_end)
+                subscription.save()
         else:
-            subscription.end_now()
+            subscription.end_date = datetime.now()  # due to no stripe record
 
 
 def create_missing_subscriptions(actor: User | Organization, active_subscriptions_by_id: dict[str, stripe.Subscription]):
@@ -59,6 +66,11 @@ def create_missing_subscriptions(actor: User | Organization, active_subscription
     for subscription_id, subscription_active in active_subscriptions_by_id.items():
         if hasattr(subscription_active, "items") and getattr(subscription_active["items"], "data", None):
             stripe_product_id = subscription_active["items"].data[0].plan.product
+
+            existing_user_plan = UserSubscription.objects.filter(stripe_subscription_id=subscription_id).exists()
+
+            if existing_user_plan:
+                continue
 
             plan = SubscriptionPlan.objects.filter(stripe_product_id=stripe_product_id).first()
 
@@ -82,7 +94,7 @@ def refresh_actor_subscriptions(actor: User | Organization):
     all_subscriptions_by_id = get_all_stripe_subscriptions(customer_id)
 
     # Update or close existing subscriptions
-    update_existing_subscriptions(user_subscriptions, all_subscriptions_by_id)
+    update_existing_subscriptions(user_subscriptions, all_subscriptions_by_id, active_subscriptions_by_id)
 
     # Create new subscriptions for active Stripe subscriptions not in the database
     create_missing_subscriptions(actor, active_subscriptions_by_id)
