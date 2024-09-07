@@ -27,7 +27,8 @@ from backend.types.emails import (
     BulkEmailErrorResponse,
     BulkTemplatedEmailInput,
 )
-from backend.utils.quota_limit_ops import quota_usage_check_under
+
+# from backend.utils.quota_limit_ops import quota_usage_check_under
 from settings.helpers import send_email, send_templated_bulk_email
 from backend.types.htmx import HtmxHttpRequest
 
@@ -46,9 +47,9 @@ class Invalid:
 @feature_flag_check("areUserEmailsAllowed", status=True, api=True, htmx=True)
 @web_require_scopes("emails:send", False, False, "emails:dashboard")
 def send_single_email_view(request: HtmxHttpRequest) -> HttpResponse:
-    check_usage = quota_usage_check_under(request, "emails-single-count", api=True, htmx=True)
-    if not isinstance(check_usage, bool):
-        return check_usage
+    # check_usage = False  # quota_usage_check_under(request, "emails-single-count", api=True, htmx=True)
+    # if not isinstance(check_usage, bool):
+    #     return check_usage
 
     return _send_single_email_view(request)
 
@@ -58,11 +59,11 @@ def send_single_email_view(request: HtmxHttpRequest) -> HttpResponse:
 @feature_flag_check("areUserEmailsAllowed", status=True, api=True, htmx=True)
 @web_require_scopes("emails:send", False, False, "emails:dashboard")
 def send_bulk_email_view(request: HtmxHttpRequest) -> HttpResponse:
-    email_count = len(request.POST.getlist("emails")) - 1
+    # email_count = len(request.POST.getlist("emails")) - 1
 
-    check_usage = quota_usage_check_under(request, "emails-single-count", add=email_count, api=True, htmx=True)
-    if not isinstance(check_usage, bool):
-        return check_usage
+    # check_usage = quota_usage_check_under(request, "emails-single-count", add=email_count, api=True, htmx=True)
+    # if not isinstance(check_usage, bool):
+    #     return check_usage
     return _send_bulk_email_view(request)
 
 

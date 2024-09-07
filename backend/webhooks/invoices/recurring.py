@@ -36,6 +36,7 @@ def handle_recurring_invoice_webhook_endpoint(request: WebRequest):
     api_auth_response = authenticate_api_key(request)
 
     if api_auth_response.failed:
+        logger.info(f"Webhook auth failed: {api_auth_response.error}")
         return JsonResponse({"message": api_auth_response.error, "success": False}, status=api_auth_response.status_code or 400)
 
     try:
@@ -51,6 +52,7 @@ def handle_recurring_invoice_webhook_endpoint(request: WebRequest):
     svc_resp = generate_next_invoice_service(invoice_recurring_profile=invoice_recurring_profile, issue_date=DATE_TODAY)
 
     if svc_resp.success:
+        logger.info("Successfully generated next invoice")
         return JsonResponse({"message": "Invoice generated", "success": True})
     else:
         logger.info(svc_resp.error)

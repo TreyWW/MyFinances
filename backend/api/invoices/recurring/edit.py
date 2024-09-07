@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
-from backend.decorators import web_require_scopes
+from backend.decorators import web_require_scopes, has_entitlements
 from backend.models import InvoiceRecurringProfile
 from backend.service.invoices.recurring.get import get_invoice_profile
 from backend.service.invoices.recurring.validate.frequencies import validate_and_update_frequency
@@ -13,6 +13,7 @@ from backend.types.requests import WebRequest
 
 
 @require_http_methods(["POST"])
+@has_entitlements("invoice-schedules")
 @web_require_scopes("invoices:write", True, True)
 def edit_invoice_recurring_profile_endpoint(request: WebRequest, invoice_profile_id):
     invoice_profile_response = get_invoice_profile(request, invoice_profile_id)

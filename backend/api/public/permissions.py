@@ -1,7 +1,6 @@
-from typing import Sequence, TypedDict
-
 from rest_framework.permissions import BasePermission
 from rest_framework.request import Request
+from django.conf import settings
 
 SCOPES = {
     "clients:read",
@@ -47,6 +46,11 @@ SCOPE_DESCRIPTIONS = {
     "team_permissions": {"description": "Access team permissions", "options": {"read": "Read only", "write": "Read and write"}},
     "team": {"description": "Invite team members", "options": {"invite": "Invite members"}},
 }
+
+if settings.BILLING_ENABLED:
+    SCOPES.add("billing:manage")
+    SCOPES_TREE["billing:manage"] = {"billing:manage"}
+    SCOPE_DESCRIPTIONS["billing"] = {"description": "Access billing details + stripe", "options": {"manage": "Manage billing"}}
 
 
 class IsSuperuser(BasePermission):

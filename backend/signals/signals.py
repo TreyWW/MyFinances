@@ -59,11 +59,6 @@ def user_account_create_make_usersettings(sender, instance, created, **kwargs):
             UserSettings.objects.create(user=instance)
 
 
-@receiver(post_delete, sender=Receipt)
-def delete_receipt_image_on_delete(sender, instance: Receipt, **kwargs):
-    instance.image.delete(False)
-
-
 @receiver(post_save, sender=FeatureFlags)
 def refresh_feature_cache(sender, instance: FeatureFlags, **kwargs):
     feature = instance.name

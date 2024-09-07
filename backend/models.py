@@ -6,16 +6,18 @@ from decimal import Decimal
 from typing import Literal, Union
 from uuid import uuid4
 
+from dateutil.relativedelta import relativedelta
 from django.contrib.auth.hashers import check_password, make_password
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.contrib.contenttypes.models import ContentType
-from django.core.files.storage import storages
+from django.core.files.storage import storages, FileSystemStorage
 from django.core.validators import MaxValueValidator
-from django.db import models
+from django.db import models, transaction
 from django.db.models import Count, QuerySet
 from django.utils import timezone
 from django.utils.crypto import get_random_string
 from shortuuid.django_fields import ShortUUIDField
+from storages.backends.s3 import S3Storage
 
 from backend.managers import InvoiceRecurringProfile_WithItemsManager
 
@@ -24,7 +26,7 @@ def _public_storage():
     return storages["public_media"]
 
 
-def _private_storage():
+def _private_storage() -> FileSystemStorage | S3Storage:
     return storages["private_media"]
 
 
@@ -34,6 +36,25 @@ def RandomCode(length=6):
 
 def RandomAPICode(length=89):
     return get_random_string(length=length).lower()
+
+
+def upload_to_user_separate_folder(instance, filename, optional_actor=None) -> str:
+    instance_name = instance._meta.verbose_name.replace(" ", "-")
+
+    print(instance, filename)
+
+    if optional_actor:
+        if isinstance(optional_actor, User):
+            return f"{instance_name}/users/{optional_actor.id}/{filename}"
+        elif isinstance(optional_actor, Organization):
+            return f"{instance_name}/orgs/{optional_actor.id}/{filename}"
+        return f"{instance_name}/global/{filename}"
+
+    if hasattr(instance, "user") and hasattr(instance.user, "id"):
+        return f"{instance_name}/users/{instance.user.id}/{filename}"
+    elif hasattr(instance, "organization") and hasattr(instance.organization, "id"):
+        return f"{instance_name}/orgs/{instance.organization.id}/{filename}"
+    return f"{instance_name}/global/{filename}"
 
 
 def USER_OR_ORGANIZATION_CONSTRAINT():
@@ -60,6 +81,8 @@ class User(AbstractUser):
     objects: CustomUserManager = CustomUserManager()  # type: ignore
 
     logged_in_as_team = models.ForeignKey("Organization", on_delete=models.SET_NULL, null=True, blank=True)
+    stripe_customer_id = models.CharField(max_length=255, null=True, blank=True)
+    entitlements = models.JSONField(null=True, blank=True, default=list)  # list of strings e.g. ["invoices"]
     awaiting_email_verification = models.BooleanField(default=True)
 
     class Role(models.TextChoices):
@@ -164,6 +187,9 @@ class Organization(models.Model):
     leader = models.ForeignKey(User, on_delete=models.CASCADE, related_name="teams_leader_of")
     members = models.ManyToManyField(User, related_name="teams_joined")
 
+    stripe_customer_id = models.CharField(max_length=255, null=True, blank=True)
+    entitlements = models.JSONField(null=True, blank=True, default=list)  # list of strings e.g. ["invoices"]
+
     def is_owner(self, user: User) -> bool:
         return self.leader == user
 
@@ -221,9 +247,33 @@ class TeamInvitation(models.Model):
         verbose_name_plural = "Team Invitations"
 
 
+class OwnerBaseManager(models.Manager):
+    def create(self, **kwargs):
+        # Handle the 'owner' argument dynamically in `create()`
+        owner = kwargs.pop("owner", None)
+        if isinstance(owner, User):
+            kwargs["user"] = owner
+            kwargs["organization"] = None
+        elif isinstance(owner, Organization):
+            kwargs["organization"] = owner
+            kwargs["user"] = None
+        return super().create(**kwargs)
+
+    def filter(self, *args, **kwargs):
+        # Handle the 'owner' argument dynamically in `filter()`
+        owner = kwargs.pop("owner", None)
+        if isinstance(owner, User):
+            kwargs["user"] = owner
+        elif isinstance(owner, Organization):
+            kwargs["organization"] = owner
+        return super().filter(*args, **kwargs)
+
+
 class OwnerBase(models.Model):
-    user = models.ForeignKey("User", on_delete=models.CASCADE, null=True, blank=True)
-    organization = models.ForeignKey("Organization", on_delete=models.CASCADE, null=True, blank=True)
+    user = models.ForeignKey("backend.User", on_delete=models.CASCADE, null=True, blank=True)
+    organization = models.ForeignKey("backend.Organization", on_delete=models.CASCADE, null=True, blank=True)
+
+    objects = OwnerBaseManager()
 
     class Meta:
         abstract = True
@@ -586,7 +636,6 @@ class Invoice(InvoiceBase):
 
 
 class InvoiceRecurringProfile(InvoiceBase, BotoSchedule):
-    objects = models.Manager()
     with_items = InvoiceRecurringProfile_WithItemsManager()
 
     class Frequencies(models.TextChoices):
@@ -1036,3 +1085,30 @@ class EmailSendStatus(OwnerBase):
 
     class Meta:
         constraints = [USER_OR_ORGANIZATION_CONSTRAINT()]
+
+
+class FileStorageFile(OwnerBase):
+    file = models.FileField(upload_to=upload_to_user_separate_folder, storage=_private_storage)
+    file_uri_path = models.CharField(max_length=500)  # relative path not including user folder/media
+    last_edited_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, editable=False, related_name="files_edited")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    __original_file = None
+    __original_file_uri_path = None
+
+    def __init__(self, *args, **kwargs):
+        super(FileStorageFile, self).__init__(*args, **kwargs)
+        self.__original_file = self.file
+        self.__original_file_uri_path = self.file_uri_path
+
+
+class MultiFileUpload(OwnerBase):
+    files = models.ManyToManyField(FileStorageFile, related_name="multi_file_uploads")
+    started_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    finished_at = models.DateTimeField(null=True, blank=True, editable=False)
+    uuid = models.UUIDField(default=uuid4, editable=False, unique=True)
+
+    def is_finished(self):
+        return self.finished_at is not None

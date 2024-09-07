@@ -163,3 +163,7 @@ infrastructure/aws/pulumi/Pulumi.staging.yaml
 Pulumi.*.yaml
 Pulumi.*.yaml.bak
 .pulumi/
+
+
+# Closed Source features
+./billing

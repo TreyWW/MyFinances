@@ -2,10 +2,9 @@ from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 
-from backend.decorators import quota_usage_check, web_require_scopes
-from backend.models import Invoice, InvoiceURL, QuotaUsage, QuotaLimit
+from backend.decorators import web_require_scopes
+from backend.models import Invoice, InvoiceURL, QuotaLimit
 from backend.types.htmx import HtmxHttpRequest
-from backend.utils.quota_limit_ops import quota_usage_check_under
 
 
 @web_require_scopes("invoices:write", False, False, "invoices:single:dashboard")

@@ -111,6 +111,9 @@ nav:
       - Motivation: contributing/motivation.md
       - Development Progression: contributing/development-progression.md
       - Taking on a lead position: contributing/lead-position.md
+  - User Guide:
+      - user-guide/index.md
+      - Pricing: user-guide/pricing/index.md
   - Changelog:
       - changelog/index.md
 

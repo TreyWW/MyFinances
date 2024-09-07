@@ -31,7 +31,7 @@ def delete_invoice_recurring_profile_endpoint(request: WebRequest):
 
     # QuotaLimit.delete_quota_usage("invoices-count", request.user, invoice.id, invoice.date_created)
 
-    Task().queue_task(delete_boto_schedule, "InvoiceRecurringSet", invoice_profile.id)
+    Task().queue_task(delete_boto_schedule, "InvoiceRecurringProfile", invoice_profile.id)
 
     invoice_profile.active = False
     invoice_profile.save()

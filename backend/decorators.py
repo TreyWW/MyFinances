@@ -248,3 +248,26 @@ def web_require_scopes(scopes: str | list[str], htmx=False, api=False, redirect_
             return HttpResponseRedirect(reverse("dashboard"))
 
     return decorator
+
+
+# wrapper around billing has_entitlements only load
+
+from django.conf import settings
+
+
+def has_entitlements(entitlements: list[str] | str, htmx_api: bool = False):
+    def decorator(view_func):
+        @wraps(view_func)
+        def wrapper(request, *args, **kwargs):
+            if settings.BILLING_ENABLED:
+                from billing.decorators import has_entitlements_called_from_backend_handler
+
+                wrapped_view_func = has_entitlements_called_from_backend_handler(
+                    entitlements if isinstance(entitlements, list) else [entitlements], htmx_api
+                )(view_func)
+                return wrapped_view_func(request, *args, **kwargs)
+            return view_func(request, *args, **kwargs)
+
+        return wrapper
+
+    return decorator
