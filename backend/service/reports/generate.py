@@ -12,10 +12,12 @@ class GenerateReportServiceResponse(BaseServiceResponse[MonthlyReport]): ...
 
 
 @transaction.atomic
-def generate_report(actor: User | Organization, start_date: date, end_date: date, name: str | None = None) -> GenerateReportServiceResponse:
+def generate_report(
+    actor: User | Organization, start_date: date | str, end_date: date | str, name: str | None = None
+) -> GenerateReportServiceResponse:
     all_invoices = Invoice.filter_by_owner(actor).filter(date_issued__gte=start_date, date_issued__lte=end_date).all()
 
-    created_report = MonthlyReport.objects.create(owner=actor, start_date=start_date, end_date=end_date, name=name)
+    created_report = MonthlyReport.objects.create(owner=actor, start_date=start_date, end_date=end_date, name=name)  # type: ignore[misc]
 
     report_items = []
 
