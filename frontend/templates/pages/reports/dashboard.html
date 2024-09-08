@@ -13,25 +13,46 @@
                 <i class="fa-solid fa-plus pe-1"></i>
                 Create Report
             </button>
-                <form method="post" onsubmit="return false">
-                    {% csrf_token %}
-                    <input class="input input-bordered input-block my-3 loading-htmx"
-                           type="text"
-                           name="search"
-                           placeholder="🔎 Search"
-                           hx-target="#items"
-                           hx-get="/api/clients/fetch"
-                           hx-trigger="keyup changed delay:500ms"
-                           hx-indicator="#search_loading">
-                    <span id="search_loading"
-                          class="loading loading-spinner loading-htmx-loader-individual"></span>
-                </form>
+            <form method="post" onsubmit="return false">
+                {% csrf_token %}
+                <input class="input input-bordered input-block my-3 loading-htmx"
+                       type="text"
+                       name="search"
+                       placeholder="🔎 Search"
+                       hx-swap="outerHTML"
+                       hx-target="#table_body"
+                       hx-get="{% url 'api:reports:fetch' %}"
+                       hx-trigger="keyup changed delay:500ms"
+                       hx-indicator="#search_loading">
+                <span id="search_loading"
+                      class="loading loading-spinner loading-htmx-loader-individual"></span>
+            </form>
         </div>
-        <div hx-swap="outerHTML"
-             hx-trigger="load"
-             id="items"
-             hx-get="{% url 'api:clients:fetch' %}">
-            {% include 'components/table/skeleton_table.html' %}
+        {% if delete %}
+            {% component "messages_list" %}
+        {% endif %}
+        <div class="flex w-full overflow-x-auto overflow-y-hidden" id="items">
+            <table class="table"
+                   hx-swap="outerHTML"
+                   hx-trigger="load, refresh_reports_table from:body"
+                   hx-target="#table_body"
+                   hx-get="{% url 'api:reports:fetch' %}">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Profit</th>
+                        <th>Invoices Sent</th>
+                        <th>Payments In</th>
+                        <th>Payments Out</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="table_body">
+                    {% include 'components/table/skeleton_rows.html' with rows=3 cols=8 %}
+                </tbody>
+            </table>
         </div>
     </div>
 {% endblock content %}

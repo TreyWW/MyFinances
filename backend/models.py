@@ -755,6 +755,46 @@ class InvoiceReminder(BotoSchedule):
         return f"({self.id}) Reminder for (#{self.invoice_id}) {days} {self.reminder_type}"
 
 
+class MonthlyReportRow(models.Model):
+    date = models.DateField()
+    reference_number = models.CharField(max_length=100)
+    item_type = models.CharField(max_length=100)
+
+    client_name = models.CharField(max_length=64, blank=True, null=True)
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, blank=True, null=True)
+
+    paid_in = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    paid_out = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+
+
+class MonthlyReport(OwnerBase):
+    uuid = models.UUIDField(default=uuid4, editable=False, unique=True)
+    name = models.CharField(max_length=100, blank=True, null=True)
+    items = models.ManyToManyField(MonthlyReportRow, blank=True)
+
+    profit = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    invoices_sent = models.PositiveIntegerField(default=0)
+
+    start_date = models.DateField()
+    end_date = models.DateField()
+
+    recurring_customers = models.PositiveIntegerField(default=0)
+    payments_in = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    payments_out = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+
+    currency = models.CharField(
+        max_length=3,
+        default="GBP",
+        choices=[(code, info["name"]) for code, info in UserSettings.CURRENCIES.items()],
+    )
+
+    def __str__(self):
+        return self.name or str(self.uuid)[:8]
+
+    def get_currency_symbol(self):
+        return UserSettings.CURRENCIES.get(self.currency, {}).get("symbol", "$")
+
+
 class APIKey(models.Model):
     class ServiceTypes(models.TextChoices):
         AWS_API_DESTINATION = "aws_api_destination"

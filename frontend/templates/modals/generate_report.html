@@ -1,48 +1,48 @@
 {% component_block "modal" id="modal_generate_report" start_open="true" title="Generate Report" %}
-    {% fill "content" %}
-        <form class="py-4"
-              id="modal_generate_report-form"
-              hx-post="{% url 'api:teams:create' %}"
-              hx-swap="none">
-            {% csrf_token %}
-            <div class="form-control w-full">
-                <label class="label">
-                    Descriptive Name
-                </label>
-                <input id="modal_input-name"
-                       name="name"
-                       type="text"
-                       class="input input-block input-bordered">
-            </div>
-            <div class="form-control w-full">
-                <label class="label justify-start">
-                    Start Date
-                    <span class="required_star">*</span>
-                </label>
-                <input name="start"
-                       type="date"
-                       class="input input-block input-bordered">
-            </div>
-            <div class="form-control w-full">
-                <label class="label justify-start">
-                    End Date
-                    <span class="required_star">*</span>
-                </label>
-                <input name="end"
-                       type="date"
-                       class="input input-block input-bordered">
-            </div>
-            <div class="modal-action">
-                <button type="submit" id="modal_generate_report-submit" class="btn btn-primary">Create Team</button>
-                <button type="button"
-                        _="on click call #modal_generate_report.close()"
-                        class="btn">Cancel
-                </button>
-            </div>
-        </form>
-        <script>
-            const start_date_input = document.querySelector('input[name="start"]');
-            const end_date_input = document.querySelector('input[name="end"]');
+{% fill "content" %}
+<form class="py-4"
+      id="modal_generate_report-form"
+      hx-post="{% url 'api:reports:generate' %}"
+      hx-swap="none">
+    {% csrf_token %}
+    <div class="form-control w-full">
+        <label class="label">Descriptive Name</label>
+        <input id="modal_input-name"
+               name="name"
+               type="text"
+               class="input input-block input-bordered">
+    </div>
+    <div class="form-control w-full">
+        <label class="label justify-start">
+            Start Date
+            <span class="required_star">*</span>
+        </label>
+        <input name="start_date"
+               type="date"
+               class="input input-block input-bordered">
+    </div>
+    <div class="form-control w-full">
+        <label class="label justify-start">
+            End Date
+            <span class="required_star">*</span>
+        </label>
+        <input name="end_date" type="date" class="input input-block input-bordered">
+    </div>
+    <div class="modal-action">
+        <button type="submit"
+                id="modal_generate_report-submit"
+                class="btn btn-primary"
+                _="on click if #modal_generate_report-form.checkValidity() call #modal_generate_report.close() end">
+            Create Report
+        </button>
+        <button type="button"
+                _="on click call #modal_generate_report.close()"
+                class="btn">Cancel</button>
+    </div>
+</form>
+<script>
+            const start_date_input = document.querySelector('input[name="start_date"]');
+            const end_date_input = document.querySelector('input[name="end_date"]');
 
             const today = new Date();
 
@@ -74,6 +74,6 @@
 
             start_date_input.value = formatDateToInput(startDate);
             end_date_input.value = formatDateToInput(endDate);
-        </script>
-    {% endfill %}
+</script>
+{% endfill %}
 {% endcomponent_block %}

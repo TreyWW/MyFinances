@@ -1,0 +1,37 @@
+<tbody id="table_body">
+    {% for report in reports %}
+        {% csrf_token %}
+        <tr>
+            <td>
+                <a href="{% url 'reports:view' uuid=report.uuid %}"
+                   class="link link-primary">{{ report }}</a>
+            </td>
+            <td>{{ report.start_date }}</td>
+            <td>{{ report.end_date }}</td>
+            <td>{{ report.get_currency_symbol }}{{ report.profit }}</td>
+            <td>{{ report.invoices_sent }}</td>
+            <td>{{ report.get_currency_symbol }}{{ report.payments_in }}</td>
+            <td>{{ report.get_currency_symbol }}{{ report.payments_out }}</td>
+            <td>
+                <div class="flex flex-wrap gap-2">
+                    <div class="tooltip" data-tip="View Report">
+                        <a href="{% url 'reports:view' uuid=report.uuid %}"
+                           class="btn btn-outline btn-sm">
+                            <i class="fa fa-solid fa-eye"></i>
+                        </a>
+                    </div>
+                    {#                                <div class="tooltip" data-tip="Delete Report">#}
+                    {#                                    <button class="btn btn-outline btn-error btn-sm"#}
+                    {#                                            hx-delete="{% url 'api:clients:delete' id=10 %}"#}
+                    {#                                            hx-target="closest tr"#}
+                    {#                                            hx-confirm="Are you sure you would like to delete this client?">#}
+                    {#                                        <i class="fa fa-solid fa-trash"></i>#}
+                    {#                                    </button>#}
+                    {#                                </div>#}
+                </div>
+            </td>
+        </tr>
+    {% empty %}
+        <td colspan="100%" class="text-center">No reports found.</td>
+    {% endfor %}
+</tbody>
