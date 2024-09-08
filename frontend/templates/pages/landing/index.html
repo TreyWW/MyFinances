@@ -1,0 +1,115 @@
+{% extends "pages/landing/landing_base.html" %}
+{% block content %}
+    {% load static %}
+    <section class="bg-base-200">
+        <div class="grid max-w-screen-xl px-8 pt-20 pb-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12 lg:pt-16">
+            <div class="mr-auto place-self-center lg:col-span-7">
+                <h1 class="max-w-2xl mb-4 text-3xl font-extrabold leading-none tracking-tight md:text-4xl xl:text-5xl">
+                    Simplify Your Workflow,
+                    <br>
+                    Empower Your Business
+                </h1>
+                <p class="max-w-2xl mb-6 font-light lg:mb-8 md:text-lg lg:text-xl">
+                    Automate invoicing, streamline customer onboarding, and manage your documents — all in one place.
+                </p>
+                <div class="space-y-4 sm:flex sm:space-y-0 sm:space-x-4">
+                    <a class="btn btn-primary"
+                       href="{% url 'auth:login create_account manual' %}">Start Today – Free for 30 Days</a>
+                </div>
+            </div>
+            <div class="hidden lg:mt-0 lg:col-span-5 lg:flex">
+                {#                <img src="{% static 'img/invoices.svg' %}" alt="Invoicing Illustration">#}
+                <img src="{% static 'img/brainstorming_finance.png' %}"
+                     alt="Finance Illustration">
+            </div>
+        </div>
+    </section>
+    <section class="bg-secondary py-16">
+        <div class="max-w-screen-xl px-4 mx-auto text-center">
+            <h2 class="mb-8 text-4xl font-semibold text-base-content">Why Choose My Finances?</h2>
+            <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+                <div class="text-center">
+                    <i class="fa-solid fa-file-invoice text-secondary text-6xl mb-4"></i>
+                    <h3 class="text-2xl font-semibold mb-2 text-base-content">Automated Invoicing</h3>
+                    <p class="text-base-content">Send recurring invoices effortlessly and get paid on time.</p>
+                </div>
+                <div class="text-center">
+                    <i class="fa-solid fa-user-check text-secondary text-6xl mb-4"></i>
+                    <h3 class="text-2xl font-semibold mb-2 text-base-content">Customer Onboarding</h3>
+                    <p class="text-base-content">Streamline bookings, form submissions, and approvals.</p>
+                </div>
+                <div class="text-center">
+                    <i class="fa-solid fa-folder text-secondary text-6xl mb-4"></i>
+                    <h3 class="text-2xl font-semibold mb-2 text-base-content">Receipt & File Storage</h3>
+                    <p class="text-base-content">Store important documents securely and access them anywhere.</p>
+                </div>
+                <div class="text-center">
+                    <i class="fa-solid fa-chart-line text-secondary text-6xl mb-4"></i>
+                    <h3 class="text-2xl font-semibold mb-2 text-base-content">Monthly Reports</h3>
+                    <p class="text-base-content">Get insights into your business performance with detailed reports.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="bg-accent py-16">
+        <div class="max-w-screen-xl px-4 mx-auto text-center lg:py-24 lg:px-6">
+            <div class="max-w-screen-md mx-auto mb-8 lg:mb-12">
+                <h2 class="mb-4 text-4xl font-semibold tracking-tight text-base-content">
+                    Built for founders like <strong>you</strong>
+                </h2>
+                <p class="mb-5 text-xl">
+                    Whether you're a freelancer, entrepreneur, small business, or community center, My Finances helps you
+                    streamline your financial processes and focus on what really matters.
+                </p>
+            </div>
+            <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+                <div class="p-6 bg-white rounded-lg shadow-lg text-center">
+                    <i class="fa-solid fa-laptop-code text-secondary text-5xl mb-4"></i>
+                    <h3 class="text-2xl font-semibold mb-2 text-base-content">Freelancers</h3>
+                    <p class="text-base-content">
+                        Automate your invoicing and never chase payments again. Focus on your craft while
+                        we handle the paperwork.
+                    </p>
+                </div>
+                <div class="p-6 bg-white rounded-lg shadow-lg text-center">
+                    <i class="fa-solid fa-briefcase text-secondary text-5xl mb-4"></i>
+                    <h3 class="text-2xl font-semibold mb-2 text-base-content">Self-Employed Entrepreneurs</h3>
+                    <p class="text-base-content">
+                        Manage your customer onboarding and approvals effortlessly, so you can scale your
+                        business faster.
+                    </p>
+                </div>
+                <div class="p-6 bg-white rounded-lg shadow-lg text-center">
+                    <i class="fa-solid fa-users text-secondary text-5xl mb-4"></i>
+                    <h3 class="text-2xl font-semibold mb-2 text-base-content">Small Team Businesses</h3>
+                    <p class="text-base-content">
+                        Simplify financial operations for your team with automated workflows, from
+                        invoicing to monthly reporting.
+                    </p>
+                </div>
+                <div class="p-6 bg-white rounded-lg shadow-lg text-center">
+                    <i class="fa-solid fa-building text-secondary text-5xl mb-4"></i>
+                    <h3 class="text-2xl font-semibold mb-2 text-base-content">Community Centers</h3>
+                    <p class="text-base-content">
+                        Streamline booking processes and manage long-term contracts with ease, ensuring
+                        smooth operations.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="bg-base-200">
+        <div class="max-w-screen-xl px-4 py-8 mx-auto lg:py-16 lg:px-6">
+            <div class="max-w-screen-sm mx-auto text-center">
+                <h2 class="mb-4 text-3xl font-extrabold leading-tight tracking-tight text-base-content">
+                    Get your quote today
+                </h2>
+                <p class="mb-6 font-light text-base-content md:text-lg">
+                    Speak to our founder and get a quote that best fits your business
+                </p>
+                <a href="mailto:enquiry@myfinances.cloud" class="link link-primary">Send us an email</a>
+            </div>
+        </div>
+    </section>
+    <!-- End block -->
+{% endblock content %}

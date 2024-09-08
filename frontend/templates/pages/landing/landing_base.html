@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html :class="{ 'theme-dark': dark }" x-data="data()" lang="en">
+<html x-data="data()" lang="en" class="overflow-hidden"  data-theme="light">
     {% include 'base/_head.html' %}
     <body>
         <div class="navbar bg-base-100 p-4">
@@ -11,10 +11,14 @@
                             <img src="{% static 'img/logo_single.png' %}" class="h-10">
                         </a>
                         <div class="grow">
-                            <a class="md:text-xl text-gray-800 font-semibold dark:text-gray-200"
-                               href="/">My Finances</a>
+                            <a class="md:text-xl font-bold text-base-content" href="/">My Finances</a>
                         </div>
                     </div>
+                </div>
+            </div>
+            <div class="navbar-center">
+                <div class="text-start">
+                    <a class="" href="{% url 'pricing' %}">Pricing</a>
                 </div>
             </div>
             <div class="navbar-end">
@@ -23,21 +27,19 @@
                         <a class="btn btn-primary rounded-full" href="{% url "dashboard" %}">Dashboard</a>
                         <a class="btn btn-outline rounded-full" href="{% url 'auth:logout' %}">Logout</a>
                     {% else %}
+                        <a class="link link-hover" href="{% url 'auth:login' %}">Login</a>
                         <a class="btn btn-primary rounded-full"
-                           href="{% url 'auth:login create_account' %}">Register</a>
-                        <a class="btn btn-outline rounded-full " href="{% url 'auth:login' %}">Login</a>
+                           href="{% url 'auth:login create_account' %}">Get started</a>
                     {% endif %}
                 </div>
             </div>
         </div>
-        <div class="flex h-screen w-full bg-base-200"
+        <div class="flex h-screen w-full bg-base-100"
              :class="{ 'overflow-hidden': isSideMenuOpen}">
             <main class="h-full w-full overflow-y-auto pb-16">
                 <div class="navbar-sticky">
-                    <div class="text-4xl center text-center mt-8">
-                        <p>We're still in development!</p>
-                        <a class="btn btn-lg btn-primary mt-3" href="/dashboard/">Go to dashboard</a>
-                    </div>
+                    {% block content %}
+                    {% endblock content %}
                 </div>
             </main>
         </div>
