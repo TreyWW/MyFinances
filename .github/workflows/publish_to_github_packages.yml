@@ -65,7 +65,7 @@ jobs:
       - name: Build, tag, and push image to GitHub Packages
         id: build-image
         env:
-          IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/myfinances
+          IMAGE_NAME: ghcr.io/treyww/myfinances
           IMAGE_TAG: ${{ steps.set_version.outputs.version }}
         run: |
           cp infrastructure/backend/Dockerfile ./Dockerfile
