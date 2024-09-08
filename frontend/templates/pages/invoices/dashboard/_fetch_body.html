@@ -54,7 +54,9 @@
                             </a>
                         </li>
                         <li>
-                            <a href="{% url "invoices:single:preview" invoice_id=invoice.id %}">
+                            <a target="_blank"
+                               rel="noopener noreferrer"
+                               href="{% url 'invoices:single:preview' invoice_id=invoice.id %}">
                                 <i class="fa-solid fa-file-pdf"></i>
                                 Preview
                             </a>

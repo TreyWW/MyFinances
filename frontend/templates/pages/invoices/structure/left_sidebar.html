@@ -42,6 +42,17 @@
                     New
                 </a>
             </li>
+            <div class="divider hidden lg:flex">
+                <i class="fa fa-solid fa-coins"></i>
+                Reports
+            </div>
+            <li class="hidden lg:block">
+                <a href="{% url 'reports:dashboard' %}"
+                   hx-replace-url="{% url 'reports:dashboard' %}">
+                    <i class="fa fa-solid fa-list-ol"></i>
+                    Dashboard
+                </a>
+            </li>
             {# SMALL #}
             <div class="divider flex lg:hidden mb-8">
                 <i class="fa fa-solid fa-file-invoice"></i>
@@ -76,6 +87,17 @@
                 <a href="{% url 'invoices:single:dashboard' %}"
                    hx-replace-url="{% url 'invoices:single:dashboard' %}">
                     <i class="fa fa-solid fa-plus"></i>
+                </a>
+            </li>
+            <div class="divider flex lg:hidden"></div>
+            <div class="divider mb-8 flex lg:hidden">
+                <i class="fa fa-solid fa-coins"></i>
+            </div>
+            <li class="lg:hidden tooltip tooltip-right tooltip-secondary"
+                data-tip="View finance reports">
+                <a href="{% url 'reports:dashboard' %}"
+                   hx-replace-url="{% url 'reports:dashboard' %}">
+                    <i class="fa fa-solid fa-list-ol"></i>
                 </a>
             </li>
         </ul>
