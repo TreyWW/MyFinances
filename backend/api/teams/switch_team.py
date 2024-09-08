@@ -1,5 +1,4 @@
 from django.contrib import messages
-from django.contrib.auth.models import AnonymousUser
 from django.http import HttpResponse
 from django.shortcuts import render
 
@@ -7,7 +6,11 @@ from backend.models import Organization
 from backend.types.htmx import HtmxHttpRequest
 
 
-def switch_team(request: HtmxHttpRequest, team_id):
+def switch_team(request: HtmxHttpRequest, team_id: str | int | None = None):
+
+    if not team_id:
+        team_id = request.POST.get("join_team", None)
+
     if not team_id:
         if not request.user.logged_in_as_team:
             messages.error(request, "You are not logged into an organization")

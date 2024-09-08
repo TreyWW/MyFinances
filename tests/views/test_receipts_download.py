@@ -12,14 +12,14 @@ from backend.models import Receipt, ReceiptDownloadToken, User
 class ReceiptDownloadEndpointsTest(TestCase):
     @classmethod
     def tearDownClass(cls):
-        directory = "media/receipts"
+        directory = "media/private/receipts"
         try:
             shutil.rmtree(directory)
             os.mkdir(directory)
         except PermissionError:
             print(
                 '"ReceiptDownloadEndpointsTest" tearDownClass() failed due to random PermissionError '
-                "(only on Windows). Files in /media/receipts have not been deleted. Run tests again to delete files."
+                "(only on Windows). Files in /media/private/receipts have not been deleted. Run tests again to delete files."
             )
         super().tearDownClass()
 

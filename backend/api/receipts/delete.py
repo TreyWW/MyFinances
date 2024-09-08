@@ -4,12 +4,14 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
+from backend.decorators import web_require_scopes
 from backend.models import Receipt
 from backend.types.requests import WebRequest
 
 
 @require_http_methods(["DELETE"])
 @login_required
+@web_require_scopes("receipts:write", True, True)
 def receipt_delete(request: WebRequest, id: int):
     try:
         receipt = Receipt.objects.get(id=id)

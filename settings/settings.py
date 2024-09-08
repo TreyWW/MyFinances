@@ -5,7 +5,10 @@ import mimetypes
 import os
 import sys
 from pathlib import Path
+from typing import TYPE_CHECKING
+from unittest.mock import MagicMock
 
+import stripe
 from django.contrib.messages import constants as messages
 from django.contrib.staticfiles.storage import FileSystemStorage  # type: ignore
 from storages.backends.s3 import S3Storage
@@ -20,6 +23,13 @@ SITE_URL = get_var("SITE_URL", default="http://127.0.0.1:8000")
 SITE_NAME = get_var("SITE_NAME", default="myfinances")
 SITE_NAME_FRIENDLY = get_var("SITE_NAME_FRIENDLY", default="MyFinances")
 SITE_ABUSE_EMAIL = get_var("SITE_ABUSE_EMAIL", default="abuse@strelix.org")
+
+CELERY_BROKER_URL = "redis://localhost:6379"
+CELERY_RESULT_BACKEND = "redis://localhost:6379"
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TIMEZONE = "UTC"
 
 if not SITE_URL.startswith("http"):
     exit("[BACKEND] SITE_URL must start with http:// or https://")
@@ -54,11 +64,12 @@ INSTALLED_APPS = [
     "drf_yasg",
     "tz_detect",
     "webpack_loader",
+    # "django_minify_html",
 ]
 
 if DEBUG:
     INSTALLED_APPS.append("silk")
-    SILKY_PYTHON_PROFILER = True
+    SILKY_PYTHON_PROFILER = False
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
@@ -251,14 +262,22 @@ else:
         }
     }
 
-# STORAGES = {
-#     "default": {
-#         "BACKEND": "django.core.files.storage.FileSystemStorage",
-#     },
-#     "staticfiles": {
-#         "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
-#     },
-# }
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+    "public_media": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+        "OPTIONS": {"location": "media/public", "base_url": "/media/public/"},
+    },
+    "private_media": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+        "OPTIONS": {"location": "media/private", "base_url": "/media/private/"},
+    },
+}
 
 MARKDOWNIFY = {
     "default": {
@@ -280,6 +299,19 @@ USE_TZ = True
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 ANALYTICS = get_var("ANALYTICS_SCRIPT")
+
+# region "Billing"
+
+BILLING_ENABLED = get_var("BILLING_ENABLED", "").lower() == "true"
+
+if BILLING_ENABLED or TYPE_CHECKING:
+    print("BILLING MODULE IS ENABLED")
+    INSTALLED_APPS.append("billing")
+    MIDDLEWARE.extend(["billing.middleware.CheckUserSubScriptionMiddleware"])
+    # TEMPLATES[0]["DIRS"].append(BASE_DIR / "billing/templates")
+    print(TEMPLATES)
+
+# endregion "Billing"
 
 SOCIAL_AUTH_GITHUB_SCOPE = ["user:email"]
 SOCIAL_AUTH_GITHUB_KEY = get_var("GITHUB_KEY")
@@ -343,10 +375,10 @@ class CustomStaticStorage(S3Storage):
     default_acl = None
     bucket_name = get_var("AWS_STATIC_BUCKET_NAME")
     custom_domain = get_var("AWS_STATIC_CUSTOM_DOMAIN")
-    region_name = get_var("AWS_STATIC_REGION_NAME")
+    region_name = get_var("AWS_STATIC_REGION_NAME") or get_var("AWS_REGION_NAME")
 
-    access_key = get_var("AWS_STATIC_ACCESS_KEY_ID")
-    secret_key = get_var("AWS_STATIC_ACCESS_KEY")
+    # access_key = get_var("AWS_STATIC_ACCESS_KEY_ID")
+    # secret_key = get_var("AWS_STATIC_ACCESS_KEY")
 
 
 class CustomPublicMediaStorage(S3Storage):
@@ -356,8 +388,10 @@ class CustomPublicMediaStorage(S3Storage):
     custom_domain = get_var("AWS_MEDIA_PUBLIC_CUSTOM_DOMAIN")
     querystring_auth = False  # Removes auth from URL in case of shared media
 
-    access_key = get_var("AWS_MEDIA_PUBLIC_ACCESS_KEY_ID")
-    secret_key = get_var("AWS_MEDIA_PUBLIC_ACCESS_KEY")
+    region_name = get_var("AWS_MEDIA_PUBLIC_REGION_NAME") or get_var("AWS_REGION_NAME")
+
+    # access_key = get_var("AWS_MEDIA_PUBLIC_ACCESS_KEY_ID")
+    # secret_key = get_var("AWS_MEDIA_PUBLIC_ACCESS_KEY")
 
 
 class CustomPrivateMediaStorage(S3Storage):
@@ -370,14 +404,14 @@ class CustomPrivateMediaStorage(S3Storage):
 
     region_name = get_var("AWS_MEDIA_PRIVATE_REGION_NAME")
 
-    access_key = get_var("AWS_MEDIA_PRIVATE_ACCESS_KEY_ID")
-    secret_key = get_var("AWS_MEDIA_PRIVATE_ACCESS_KEY")
+    # access_key = get_var("AWS_MEDIA_PRIVATE_ACCESS_KEY_ID")
+    # secret_key = get_var("AWS_MEDIA_PRIVATE_ACCESS_KEY")
 
     cloudfront_key_id = get_var("AWS_MEDIA_PRIVATE_CLOUDFRONT_PUBLIC_KEY_ID")
     cloudfront_key = base64.b64decode(get_var("AWS_MEDIA_PRIVATE_CLOUDFRONT_PRIVATE_KEY"))
 
 
-AWS_STATIC_ENABLED = get_var("AWS_STATIC_ENABLED", default=False).lower() == "true"
+AWS_STATIC_ENABLED = get_var("AWS_STATIC_ENABLED", default="False").lower() == "true"
 AWS_STATIC_CDN_TYPE = get_var("AWS_STATIC_CDN_TYPE")
 
 logging.info(f"{AWS_STATIC_ENABLED=} | {AWS_STATIC_CDN_TYPE=}")
@@ -385,6 +419,9 @@ logging.info(f"{AWS_STATIC_ENABLED=} | {AWS_STATIC_CDN_TYPE=}")
 if AWS_STATIC_ENABLED or AWS_STATIC_CDN_TYPE.lower() == "aws":
     STATICFILES_STORAGE = "settings.settings.CustomStaticStorage"
     STATIC_LOCATION = get_var("AWS_STATIC_LOCATION", default="static")
+    STORAGES["staticfiles"] = {
+        "BACKEND": "settings.settings.CustomStaticStorage",
+    }
     logging.info(f"{STATIC_LOCATION=} | {STATICFILES_STORAGE=}")
 else:
     STATIC_URL = f"/static/"
@@ -392,10 +429,13 @@ else:
     STATICFILES_STORAGE = "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
     logging.info(f"{STATIC_URL=} | {STATIC_ROOT=} | {STATICFILES_STORAGE=}")
 
-AWS_MEDIA_PUBLIC_ENABLED = get_var("AWS_MEDIA_PUBLIC_ENABLED", default=False).lower() == "true"
+AWS_MEDIA_PUBLIC_ENABLED = get_var("AWS_MEDIA_PUBLIC_ENABLED", default="False").lower() == "true"
 
 if AWS_MEDIA_PUBLIC_ENABLED:
     DEFAULT_FILE_STORAGE = "settings.settings.CustomPublicMediaStorage"
+    STORAGES["public_media"] = {
+        "BACKEND": "settings.settings.CustomPublicMediaStorage",
+    }
 else:
     MEDIA_URL = "/media/"
     MEDIA_ROOT = os.path.join(BASE_DIR, "media")
@@ -405,10 +445,13 @@ else:
         ...
 
 
-AWS_MEDIA_PRIVATE_ENABLED = get_var("AWS_MEDIA_PRIVATE_ENABLED", default=False).lower() == "true"
+AWS_MEDIA_PRIVATE_ENABLED = get_var("AWS_MEDIA_PRIVATE_ENABLED", default="False").lower() == "true"
 
 if AWS_MEDIA_PRIVATE_ENABLED:
     PRIVATE_FILE_STORAGE = "settings.settings.CustomPrivateMediaStorage"
+    STORAGES["private_media"] = {
+        "BACKEND": "settings.settings.CustomPrivateMediaStorage",
+    }
 else:
 
     class CustomPrivateMediaStorage(FileSystemStorage):  # type: ignore # This overrides the AWS version
@@ -417,7 +460,6 @@ else:
     PRIVATE_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 
 # SENDGRID_SANDBOX_MODE_IN_DEBUG = True
-
 if "test" in sys.argv[1:]:
     print("[BACKEND] Using sqlite3 database due to a test being ran", flush=True)
     DATABASES = {
@@ -427,4 +469,6 @@ if "test" in sys.argv[1:]:
         }
     }
     logging.disable(logging.ERROR)
-    # check if the app is running from a manage.py test command, if so then use SQLITE with memory, faster than xampp
+    sys.modules["billing"] = MagicMock()
+    sys.modules["billing.signals"] = MagicMock()
+    sys.modules["billing.models"] = MagicMock()

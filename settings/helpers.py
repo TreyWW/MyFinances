@@ -57,8 +57,8 @@ def increment_rate_limit(request, group):
 EMAIL_CLIENT: SESV2Client = boto3.client(
     "sesv2",
     region_name="eu-west-2",
-    aws_access_key_id=get_var("AWS_SES_ACCESS_KEY_ID"),
-    aws_secret_access_key=get_var("AWS_SES_SECRET_ACCESS_KEY"),
+    # aws_access_key_id=get_var("AWS_SES_ACCESS_KEY_ID"),
+    # aws_secret_access_key=get_var("AWS_SES_SECRET_ACCESS_KEY"),
 )
 
 AWS_SES_ACCESS_KEY_ID = get_var("AWS_SES_ACCESS_KEY_ID")

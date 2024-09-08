@@ -1,0 +1,134 @@
+{% extends base|default:"base/base.html" %}
+{% block content %}
+    <div class="card bg-base-100 p-3 mb-2">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2"></div>
+            <h2 class="text-xl" data-oob="invoices-title">File Storage</h2>
+            <a class="btn btn-primary btn-sm"
+               href="{% url 'file_storage:upload:dashboard' %}"
+               hx-boost="true">
+                <i class="fa-solid fa-upload"></i>
+                Upload
+            </a>
+        </div>
+    </div>
+    <div class="card bg-base-100 shadow-md">
+        <div class="card-body">
+            <div class="breadcrumbs text-lg">
+                <ul>
+                    <li>
+                        <a class="link link-primary">myfolder/</a>
+                    </li>
+                    <li>
+                        <a class="link link-primary">folder2/</a>
+                    </li>
+                </ul>
+            </div>
+            <h1 class="text-3xl font-bold">myfolder4/</h1>
+            <div class="flex flex-row gap-2 items-center">
+                <h2 class="text-xl font-bold mt-6 mr-5">
+                    Objects <span>(100)</span>
+                </h2>
+                <button data-hx-indicator="refresh"
+                        class="btn btn-neutral btn-sm btn-outline loading-htmx"
+                        onclick="htmx.trigger(document.body, 'reload_filestorage_table');">
+                    <span class="loading-htmx-text">
+                        <i class="fa fa-solid fa-refresh"></i>
+                    </span>
+                    <span id="currency_save_loading"
+                          class="loading loading-spinner loading-htmx-loader"></span>
+                </button>
+                <button class="btn btn-neutral btn-sm btn-outline" disabled>
+                    <i class="fa fa-download"></i>
+                    Download
+                </button>
+                <a class="btn btn-neutral btn-sm btn-outline" disabled>
+                    Open
+                    <i class="fa fa-external-link"></i>
+                </a>
+                <button class="btn btn-neutral btn-sm btn-outline"
+                        hx-include="#file-details"
+                        hx-target='tbody[data-hx-swap="filestorage_files_table"]'
+                        hx-delete="{% url 'api:file_storage:delete' %}">Delete</button>
+                <div class="dropdown">
+                    <div tabindex="0"
+                         role="button"
+                         class="btn btn-neutral btn-sm btn-outline font-bold">
+                        Actions
+                        <i class="fa fa-caret-down"></i>
+                    </div>
+                    <ul tabindex="0"
+                        class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
+                        <li>
+                            <a>Copy</a>
+                        </li>
+                        <li>
+                            <a>Move</a>
+                        </li>
+                        <li>
+                            <a>Rename</a>
+                        </li>
+                        <li>
+                            <a>Share</a>
+                        </li>
+                    </ul>
+                </div>
+                <a class="btn btn-neutral btn-sm btn-outline">Create folder</a>
+                <a class="btn btn-neutral btn-sm btn-outline" disabled>
+                    <i class="fa fa-upload"></i>
+                    Upload
+                </a>
+            </div>
+            <form id="file-details">
+                <table class="table w-full mt-4"
+                       hx-swap="outerHTML"
+                       hx-trigger="load, reload_filestorage_table from:body"
+                       hx-target='tbody[data-hx-swap="filestorage_files_table"]'
+                       hx-indicator='button[data-hx-indicator="refresh"]'
+                       hx-get="{% url "api:file_storage:fetch" %}">
+                    <thead>
+                        <tr>
+                            <th>Select</th>
+                            <th>Name</th>
+                            <th>Size</th>
+                            <th>Last Modified</th>
+                        </tr>
+                    </thead>
+                    <tbody data-hx-swap="filestorage_files_table">
+                    </tbody>
+                </table>
+            </form>
+        </div>
+    </div>
+    <script>
+        document.getElementById('action-menu-toggle').addEventListener('click', function () {
+            const menu = document.getElementById('action-menu');
+            menu.style.display = (menu.style.display === 'none') ? 'block' : 'none';
+        });
+
+        document.querySelectorAll('.file-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('change', function () {
+                this.closest('tr').classList.toggle('selected', this.checked);
+                console.log('checked', this.checked)
+            });
+        });
+
+        document.getElementById('rename-btn').addEventListener('click', function () {
+            const selectedFiles = Array.from(document.querySelectorAll('.file-checkbox:checked'))
+                .map(checkbox => checkbox.getAttribute('data-file-url'));
+            alert('Rename files: ' + selectedFiles.join(', '));
+        });
+
+        document.getElementById('delete-btn').addEventListener('click', function () {
+            const selectedFiles = Array.from(document.querySelectorAll('.file-checkbox:checked'))
+                .map(checkbox => checkbox.getAttribute('data-file-url'));
+            alert('Delete files: ' + selectedFiles.join(', '));
+        });
+
+        document.getElementById('open-btn').addEventListener('click', function () {
+            const selectedFiles = Array.from(document.querySelectorAll('.file-checkbox:checked'))
+                .map(checkbox => checkbox.getAttribute('data-file-url'));
+            alert('Open files: ' + selectedFiles.join(', '));
+        });
+    </script>
+{% endblock %}

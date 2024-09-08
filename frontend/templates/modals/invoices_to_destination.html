@@ -20,7 +20,7 @@
                 value="true"
                 hx-swap="innerHTML"
                 hx-target="#to_destination"
-                hx-post="{% url "api:invoices:set_destination to" %}"
+                hx-post="{% url "api:invoices:create:set_destination to" %}"
                 class="mt-3 btn btn-primary">Use existing client</button>
     </div>
     <div class="divider">OR</div>
@@ -86,7 +86,7 @@
                 onclick="document.getElementById('modal_invoices_to_destination').close();"
                 id="modal_invoices_to_destination-action-btn"
                 class="btn btn-primary"
-                hx-post="{% url 'api:invoices:set_destination to' %}"
+                hx-post="{% url 'api:invoices:create:set_destination to' %}"
                 hx-swap="innerHTML"
                 hx-target="#to_destination">Save</button>
         <button type="reset" class="btn btn-error">Reset</button>

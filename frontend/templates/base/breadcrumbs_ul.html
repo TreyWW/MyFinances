@@ -1,0 +1,11 @@
+<ul>
+    {% for item in breadcrumb %}
+        <li>
+            <a {% if item.url %}href="{{ item.url }}"{% endif %}
+               {% if forloop.last %}class="text-base-content dark:text-gray-200"{% endif %}>
+                {% if item.icon %}<i class="fa-solid fa-{{ item.icon }} me-2"></i>{% endif %}
+                {{ item.name }}
+            </a>
+        </li>
+    {% endfor %}
+</ul>

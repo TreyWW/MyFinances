@@ -1,9 +1,11 @@
 <form class="py-4"
       method="POST"
-      hx-put="{% url 'clients:detail defaults' id=client.id %}"
+      {% if client %} hx-post="{% url 'api:settings:client_defaults' client_id=client.id %}" {% else %} hx-post="{% url 'api:settings:client_defaults without client' %}" {% endif %}
       hx-target="this"
       hx-indicator='button[data-hx-loading="save"]'
-      hx-swap="none">
+      hx-swap="none"
+      enctype="multipart/form-data"
+      hx-encoding="multipart/form-data">
     {% csrf_token %}
     <div class="form-control mb-4">
         <label class="label justify-start" for="due_date_value">
@@ -76,6 +78,37 @@
                     </option>
                 {% endwith %}
             </select>
+        </div>
+    </div>
+    <div class="mb-4">
+        <label class="label justify-start">Default logo for client's invoices</label>
+        <div class="flex flex-row w-full gap-2">
+            {% if defaults.default_invoice_logo %}
+                <div class="bg-base-100 flex align-center items-center rounded-lg border-opacity-20 p-2">
+                    <img class="w-24"
+                         src="{{ defaults.default_invoice_logo.url }}"
+                         alt="Current Image">
+                </div>
+            {% else %}
+                <div class="bg-base-100 flex w-1/3 align-center items-center rounded-lg border-opacity-20 ps-4">
+                    Currently empty
+                </div>
+            {% endif %}
+            <div class="flex flex-col gap-2">
+                <input type="file"
+                       name="logo"
+                       hx-encoding="multipart/form-data"
+                       class="file-input file-input-bordered"
+                       accept="image/jpeg,image/png,image/jpg"
+                       value="{{ defaults.default_invoice_logo }}" />
+                {% if defaults.default_invoice_logo %}
+                    <button class="btn btn-error w-48"
+                            hx-swap="none"
+                            {% if client %} hx-delete="{% url 'api:settings:client_defaults remove logo' client_id=client.id %}" {% else %} hx-delete="{% url 'api:settings:client_defaults remove logo without client' %}" {% endif %}>
+                        Remove current image
+                    </button>
+                {% endif %}
+            </div>
         </div>
     </div>
     <button class="btn btn-primary loading-htmx"

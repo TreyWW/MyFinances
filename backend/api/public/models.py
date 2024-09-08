@@ -23,6 +23,12 @@ class APIAuthToken(OwnerBase):
     active = models.BooleanField("Active", default=True, help_text="If the key is active")
     scopes = models.JSONField("Scopes", default=list, help_text="List of permitted scopes")
 
+    class AdministratorServiceTypes(models.TextChoices):
+        AWS_WEBHOOK_CALLBACK = "aws_webhook_callback", "AWS Webhook Callback"
+        AWS_API_DESTINATION = "aws_api_destination", "AWS API Destination"
+
+    administrator_service_type = models.CharField("Administrator Service Type", max_length=64, blank=True, null=True)
+
     class Meta:
         verbose_name = "API Key"
         verbose_name_plural = "API Keys"

@@ -1,0 +1,24 @@
+<div class="my-4 max-w-screen-xl border border-gray-700 card dark:border-gray-700">
+    <div class="flex h-full flex-col card-body">
+        <div class="flex-grow card-title">Default Options</div>
+        <div class="flex flex-grow flex-col">
+            <div class="text-content2">
+                These options will automatically be picked for all future items for each new customer.
+                <div class="w-full align-content-start align-items-center gap-1 text-start border-2 rounded-lg border-info p-3 mt-3">
+                    <mark class="rounded pb-1 bg-info pt-0.5 px-1">Note:</mark>
+                    this will only apply for <b>new clients</b>, for existing customers you can fine tune their
+                    future invoices in the client settings
+                </div>
+            </div>
+            <div class="divide-y divide-gray-200 dark:divide-gray-700"
+                 hx-trigger="load"
+                 hx-target='find  div[data-htmx="details_container"]'
+                 hx-swap="innerHTML"
+                 hx-get="{% url 'api:settings:client_defaults without client' %}">
+                <div data-htmx="details_container">
+                    <span class="loading loading-spinner loading-htmx-loader mt-4"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

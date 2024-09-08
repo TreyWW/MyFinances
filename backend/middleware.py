@@ -7,6 +7,7 @@ from django.http import HttpResponse
 from backend.models import User, Organization
 from backend.types.htmx import HtmxAnyHttpRequest
 from backend.types.requests import WebRequest
+import re
 
 
 class HealthCheckMiddleware:
@@ -31,12 +32,15 @@ class HTMXPartialLoadMiddleware:
         self.get_response = get_response
 
     def __call__(self, request: HtmxAnyHttpRequest):
-        response = self.get_response(request)
+        response: HttpResponse = self.get_response(request)
 
         if hasattr(response, "retarget"):
             response.headers["HX-Retarget"] = response.retarget
         elif request.htmx.boosted and not response.headers.get("HX-Retarget") and not hasattr(response, "no_retarget"):
             response.headers["HX-Retarget"] = "#main_content"
+            response.headers["HX-Reswap"] = "innerHTML"
+            # if 'data-layout="breadcrumbs"' not in str(response.content):
+            response.headers["HX-Trigger"] = "update_breadcrumbs"
         return response
 
 
@@ -62,8 +66,9 @@ class CustomUserMiddleware(MiddlewareMixin):
         # Replace request.user with CustomUser instance if authenticated
         if user.is_authenticated:
             request.user = User.objects.get(pk=user.pk)
-
-            request.actor = request.user.logged_in_as_team or request.user
+            request.team = request.user.logged_in_as_team or None
+            request.team_id = request.team.id if request.team else None
+            request.actor = request.team or request.user
         else:
             # If user is not authenticated, set request.user to AnonymousUser
             request.user = AnonymousUser()  # type: ignore[assignment]

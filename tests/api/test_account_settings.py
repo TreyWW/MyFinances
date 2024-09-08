@@ -8,9 +8,9 @@ class CurrencyAPIChange(ViewTestCase):
     # Setting up common data for tests
     def setUp(self):
         super().setUp()
-        self.url_path = "/api/settings/change_currency/"
-        self.url_name = "api:settings:change_currency"
-        self.view_function_path = "backend.api.settings.currency.update_currency_view"
+        self.url_path = "/api/settings/account_preferences/"
+        self.url_name = "api:settings:account_preferences"
+        self.view_function_path = "backend.api.settings.preferences.update_account_preferences"
 
     # Test that the URL resolves to the correct view function
     def test_url_matches_api(self):
@@ -51,7 +51,7 @@ class CurrencyAPIChange(ViewTestCase):
         self.assertEqual(response.status_code, 200)
         messages = self.get_all_messages(response)
         self.assertEqual(len(messages), 1)
-        self.assertEqual(str(messages[0]), "You are already using this currency, no change was made")
+        self.assertEqual(str(messages[0]), "Successfully updated preferences")
 
     # Test that the user's currency is updated successfully
     def test_currency_is_updated(self):
@@ -60,7 +60,7 @@ class CurrencyAPIChange(ViewTestCase):
         self.assertEqual(response.status_code, 200)
         messages = self.get_all_messages(response)
         self.assertEqual(len(messages), 1)
-        self.assertEqual(str(messages[0]), "Successfully updated currency")
+        self.assertEqual(str(messages[0]), "Successfully updated preferences")
         user_settings = UserSettings.objects.get(user=self.log_in_user)
         self.assertEqual(user_settings.currency, "EUR")
 

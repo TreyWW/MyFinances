@@ -1,11 +1,20 @@
 from backend.api.public.models import APIAuthToken
 from backend.api.public.permissions import SCOPE_DESCRIPTIONS, SCOPES
 from backend.models import User, Organization
+from backend.service.permissions.scopes import validate_scopes
 from backend.types.htmx import HtmxHttpRequest
 
 
 def generate_public_api_key(
-    request, owner: User | Organization, api_key_name: str | None, permissions: list, *, expires=None, description=None
+    request,
+    owner: User | Organization,
+    api_key_name: str | None,
+    permissions: list,
+    *,
+    expires=None,
+    description=None,
+    administrator_toggle: bool = False,
+    administrator_type: str | None = None
 ) -> tuple[APIAuthToken | None, str]:
     if not validate_name(api_key_name):
         return None, "Invalid key name"
@@ -19,10 +28,24 @@ def generate_public_api_key(
     if api_key_exists_under_name(owner, api_key_name):
         return None, "A key with this name already exists in your account"
 
-    if not validate_scopes(permissions) or not has_permission_to_create(request, owner):
+    if validate_scopes(permissions).failed or not has_permission_to_create(request, owner):
         return None, "Invalid permissions"
 
-    token = APIAuthToken(name=api_key_name, description=description, expires=expires, scopes=permissions)  # type: ignore[arg-type, misc]
+    administrator_service_type = None
+
+    if request.user.is_superuser:
+        if administrator_toggle:
+            if administrator_type not in [option[0] for option in APIAuthToken.AdministratorServiceTypes.choices]:
+                return None, "Invalid administration type"
+            administrator_service_type = administrator_type
+
+    token = APIAuthToken(
+        name=api_key_name,
+        description=description,
+        expires=expires,
+        scopes=permissions,
+        administrator_service_type=administrator_service_type,
+    )  # type: ignore[arg-type, misc]
 
     raw_key: str = token.generate_key()
 
@@ -34,31 +57,6 @@ def generate_public_api_key(
     token.save()
 
     return token, raw_key
-
-
-def get_permissions_from_request(request: HtmxHttpRequest) -> list:
-    scopes = [
-        f"{group}:{perm}"
-        for group, items in SCOPE_DESCRIPTIONS.items()
-        if (perm := request.POST.get(f"permission_{group}")) in items["options"]
-    ]
-
-    scopes.extend(f"{group}:read" for group, items in SCOPE_DESCRIPTIONS.items() if request.POST.get(f"permission_{group}") == "write")
-
-    return scopes
-
-
-def validate_scopes(permissions: list[str]) -> bool:
-    """
-    Validate permissions are valid
-    """
-    if not permissions:
-        return False
-
-    for permission in permissions:
-        if permission not in SCOPES:
-            return False
-    return True
 
 
 def validate_name(name: str | None) -> bool:

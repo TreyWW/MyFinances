@@ -1,0 +1,44 @@
+{% extends base|default:"base/base.html" %}
+{% block content %}
+    {% load has_entitlement from feature_enabled %}
+    {% has_entitlement request.user "organizations" as can_create_teams %}
+    <div class="card w-full p-6 bg-base-100 shadow-xl mt-2">
+        {% if can_create_teams %}
+            <button onclick="modal_create_team.showModal();"
+                    class="btn btn-primary w-40"
+                    hx-get="{% url "api:base:modal retrieve" modal_name="create_team" %}"
+                    hx-trigger="click once"
+                    hx-swap="beforeend"
+                    hx-target="#modal_container">
+                <i class="fa-solid fa-plus pe-2"></i>
+                Create Team
+            </button>
+        {% else %}
+            <div>
+                <div class="tooltip tooltip-primary tooltip-right"
+                     data-tip="Your plan currently doesn't support creating organizations. Add the package as an addon or speak to our support team!">
+                    <button class="btn btn-primary w-40 btn-outline btn-disabled">Create team</button>
+                </div>
+            </div>
+        {% endif %}
+        <div class="text-center">
+            <h1 class="text-2xl">You aren't logged into an organisation.</h1>
+            {#            <br>#}
+            <h2 class="text-xl my-4">
+                You are in <strong>{{ team_list.count }}</strong> team{{ team_list.count | pluralize }}.
+            </h2>
+            <br>
+            <form id="modal_create_reminder-form"
+                hx-post="{% url 'api:teams:switch_team input' %}"
+                {#                  hx-include='input[name="invoice_id"]'#}
+                {#                  hx-target='tbody[data-hx-swap="reminders"]'#}
+                {#                  hx-swap="beforeend">#}
+                >
+                <select class="select select-bordered" name="join_team">
+                    {% for team in team_list %}<option value="{{ team.id }}">{{ team.name }}</option>{% endfor %}
+                </select>
+                <button class="btn btn-secondary">Switch to team</button>
+            </form>
+        </div>
+    </div>
+{% endblock content %}

@@ -7,7 +7,6 @@ from collections.abc import Iterator
 
 from django.contrib import messages
 from django.core.exceptions import ValidationError
-from django.core.handlers.wsgi import WSGIRequest
 from django.core.validators import validate_email
 from django.db.models import QuerySet
 from django.http import HttpResponse
@@ -15,7 +14,7 @@ from django.shortcuts import render
 from django.views.decorators.http import require_POST
 from mypy_boto3_sesv2.type_defs import BulkEmailEntryResultTypeDef
 
-from backend.decorators import feature_flag_check
+from backend.decorators import feature_flag_check, web_require_scopes
 from backend.decorators import htmx_only
 from backend.models import Client
 from backend.models import EmailSendStatus
@@ -28,7 +27,8 @@ from backend.types.emails import (
     BulkEmailErrorResponse,
     BulkTemplatedEmailInput,
 )
-from backend.utils.quota_limit_ops import quota_usage_check_under
+
+# from backend.utils.quota_limit_ops import quota_usage_check_under
 from settings.helpers import send_email, send_templated_bulk_email
 from backend.types.htmx import HtmxHttpRequest
 
@@ -45,10 +45,11 @@ class Invalid:
 @require_POST
 @htmx_only("emails:dashboard")
 @feature_flag_check("areUserEmailsAllowed", status=True, api=True, htmx=True)
+@web_require_scopes("emails:send", False, False, "emails:dashboard")
 def send_single_email_view(request: HtmxHttpRequest) -> HttpResponse:
-    check_usage = quota_usage_check_under(request, "emails-single-count", api=True, htmx=True)
-    if not isinstance(check_usage, bool):
-        return check_usage
+    # check_usage = False  # quota_usage_check_under(request, "emails-single-count", api=True, htmx=True)
+    # if not isinstance(check_usage, bool):
+    #     return check_usage
 
     return _send_single_email_view(request)
 
@@ -56,12 +57,13 @@ def send_single_email_view(request: HtmxHttpRequest) -> HttpResponse:
 @require_POST
 @htmx_only("emails:dashboard")
 @feature_flag_check("areUserEmailsAllowed", status=True, api=True, htmx=True)
+@web_require_scopes("emails:send", False, False, "emails:dashboard")
 def send_bulk_email_view(request: HtmxHttpRequest) -> HttpResponse:
-    email_count = len(request.POST.getlist("emails")) - 1
+    # email_count = len(request.POST.getlist("emails")) - 1
 
-    check_usage = quota_usage_check_under(request, "emails-single-count", add=email_count, api=True, htmx=True)
-    if not isinstance(check_usage, bool):
-        return check_usage
+    # check_usage = quota_usage_check_under(request, "emails-single-count", add=email_count, api=True, htmx=True)
+    # if not isinstance(check_usage, bool):
+    #     return check_usage
     return _send_bulk_email_view(request)
 
 

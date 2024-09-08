@@ -3,6 +3,7 @@ module.exports = {
   mode: 'jit',
   content: [
     './frontend/templates/**/*.html',
+    './billing/templates/**/*.html',
     './components/**/*.html',
     './frontend/templates/base/base.html',
     './backend/**/views/*.py',

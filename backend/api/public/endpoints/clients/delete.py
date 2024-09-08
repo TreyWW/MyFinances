@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from backend.api.public.decorators import require_scopes
 from backend.api.public.swagger_ui import TEAM_PARAMETER
 from backend.api.public.types import APIRequest
-from backend.service.clients.delete import delete_client
+from backend.service.clients.delete import delete_client, DeleteClientServiceResponse
 
 
 @swagger_auto_schema(
@@ -60,8 +60,8 @@ from backend.service.clients.delete import delete_client
 @api_view(["DELETE"])
 @require_scopes(["clients:write"])
 def client_delete_endpoint(request: APIRequest, id: str):
-    response: str | Literal[True] = delete_client(request, id)
+    response: DeleteClientServiceResponse = delete_client(request, id)
 
-    if isinstance(response, str):
-        return Response({"success": False, "message": response}, status=403 if "do not have permission" in response else 404)
+    if response.failed:
+        return Response({"success": False, "message": response.error}, status=403 if "do not have permission" in response.error else 404)
     return Response({"success": True, "client_id": id}, status=200)

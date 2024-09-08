@@ -1,4 +1,8 @@
 {% load static %}
+{% load feature_enabled %}
+{% personal_feature_enabled request.user "invoices" as feature_enabled_invoices %}
+{% personal_feature_enabled request.user "receipts" as feature_enabled_receipts %}
+{% personal_feature_enabled request.user "email_sending" as feature_enabled_emails %}
 <div class="navbar bg-base-100">
     <div class="navbar-start">
         <div class="dropdown">
@@ -26,7 +30,7 @@
     </div>
     <div class="navbar-center hidden lg:flex z-50">
         <!-- Topbar Dropdown (LARGE ONLY) -->
-        <ul class="menu menu-horizontal px-1" hx-boost="true">
+        <ul class="menu menu-horizontal px-1 gap-1" hx-boost="true">
             <li>
                 <a href="/dashboard/" hx-boost="true" hx-swap="innerHTML show:no-scroll">My Dashboard</a>
             </li>
@@ -43,16 +47,20 @@
             {#                    </ul>#}
             {#                </details>#}
             {#            </li>#}
-            <li>
-                <a href="{% url "receipts dashboard" %}"
-                   hx-boost="true"
-                   hx-swap="innerHTML show:no-scroll">My Receipts</a>
-            </li>
-            <li>
-                <a href="{% url "invoices:dashboard" %}"
-                   hx-boost="true"
-                   hx-swap="innerHTML show:no-scroll">My Invoices</a>
-            </li>
+            {% if feature_enabled_receipts %}
+                <li>
+                    <a href="{% url "receipts dashboard" %}"
+                       hx-boost="true"
+                       hx-swap="innerHTML show:no-scroll">My Receipts</a>
+                </li>
+            {% endif %}
+            {% if feature_enabled_invoices %}
+                <li>
+                    <a href="{% url "invoices:single:dashboard" %}"
+                       hx-boost="true"
+                       hx-swap="innerHTML show:no-scroll">My Invoices</a>
+                </li>
+            {% endif %}
             <li>
                 <a href="{% url "clients:dashboard" %}"
                    hx-boost="true"
@@ -67,9 +75,9 @@
         <details class="dropdown dropdown-end mr-3">
             <summary class="btn btn-ghost"
                      hx-get="{% url "api:base:notifications get" %}"
-                     hx-target='[data-notifications="container"]'
+                     hx-target='ul[data-notifications="container"]'
                      hx-swap="innerHTML"
-                     hx-trigger="click ">
+                     hx-trigger="click">
                 <i class="fa-solid fa-bell"></i>
                 {% include "base/topbar/_notification_count.html" %}
             </summary>

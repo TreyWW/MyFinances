@@ -2,9 +2,11 @@ from django.contrib import messages
 from django.http import HttpRequest
 from django.shortcuts import redirect
 
+from backend.decorators import web_require_scopes
 from backend.models import User, Organization
 
 
+@web_require_scopes("team:kick", True, True)
 def kick_user(request: HttpRequest, user_id):
     user: User | None = User.objects.filter(id=user_id).first()
     confirmation_text = request.POST.get("confirmation_text")

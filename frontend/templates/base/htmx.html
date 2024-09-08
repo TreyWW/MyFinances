@@ -1,4 +1,4 @@
-<div hx-swap="innerHTML">
+<div hx-swap="innerHTML" class="w-full">
     {% block content %}
     {% endblock content %}
 </div>
@@ -8,3 +8,4 @@
 </div>
 {% include "base/+left_drawer.html" with swap=True %}
 {% include "base/breadcrumbs.html" with swap=True %}
+{% include "base/toasts.html" %}

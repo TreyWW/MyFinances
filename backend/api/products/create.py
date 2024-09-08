@@ -1,10 +1,12 @@
 from django.contrib import messages
 
 from backend.api.products.fetch import fetch_products
+from backend.decorators import web_require_scopes
 from backend.models import InvoiceProduct
 from backend.types.htmx import HtmxHttpRequest
 
 
+@web_require_scopes("invoices:write", True, True)
 def create_product(request: HtmxHttpRequest):
     try:
         quantity = int(request.POST.get("post_quantity", ""))

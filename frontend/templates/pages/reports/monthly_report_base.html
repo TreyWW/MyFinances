@@ -1,0 +1,152 @@
+{% load markdownify %}
+{% load dashify contains from strfilters %}
+<!DOCTYPE html>
+<html lang="en">
+    {% include "base/_head.html" %}
+    <body class="bg-gray-50 text-gray-900 font-sans antialiased">
+        <div class="max-w-4xl mx-auto p-8 bg-white shadow-lg print:hidden">
+            <div class="flex justify-between items-center mb-8">
+                {% if request.user.is_authenticated %}
+                    <a href="{% url 'reports:dashboard' %}" class="btn btn-secondary">Back to list</a>
+                {% endif %}
+                <button onclick="window.print()" class="btn btn-primary">Print Invoice</button>
+            </div>
+        </div>
+        <div class="max-w-4xl mx-auto p-8 bg-white shadow-lg print:relative">
+            <!-- Header Section -->
+            <div class="flex justify-between items-center mb-8">
+                <div class="flex items-center space-x-6">
+                    {% if report.logo %}
+                        <img src="{{ report.logo.url }}" alt="Company logo" class="h-20">
+                    {% else %}
+                        <img src="https://raw.githubusercontent.com/TreyWW/MyFinances/main/frontend/static/img/logo_single.png"
+                             alt="Company logo"
+                             class="h-20">
+                    {% endif %}
+                    <div>
+                        <h1 class="text-2xl font-semibold">{{ report.company_name }}</h1>
+                        <p>{{ report.phone_number }}</p>
+                        {% if report.vat_number %}<p>VAT: {{ report.vat_number }}</p>{% endif %}
+                    </div>
+                </div>
+                <section class="text-right">
+                    <h2 class="text-3xl font-bold">Monthly Report</h2>
+                </section>
+            </div>
+            <!-- Account Summary -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Account Summary</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-sm text-gray-500 uppercase tracking-wide">Profit</p>
+                        <p class="text-lg font-semibold">{{ report.profit }}</p>
+                    </div>
+                    {#            <div>#}
+                    {#                <p class="text-sm text-gray-500 uppercase tracking-wide">Total Bookings</p>#}
+                    {#                <p class="text-lg font-semibold">{{ report.total_bookings }}</p>#}
+                    {#            </div>#}
+                    <div>
+                        <p class="text-sm text-gray-500 uppercase tracking-wide">Invoices Sent</p>
+                        <p class="text-lg font-semibold">{{ report.invoices_sent }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500 uppercase tracking-wide">Recurring Customers</p>
+                        <p class="text-lg font-semibold">{{ report.recurring_customers }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500 uppercase tracking-wide">Payments In</p>
+                        <p class="text-lg font-semibold">{{ report.payments_in }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500 uppercase tracking-wide">Payments Out</p>
+                        <p class="text-lg font-semibold">{{ report.payments_out }}</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Date Range -->
+            <div class="mb-8">
+                <h3 class="text-4xl font-bold text-center">{{ report.date_range }}</h3>
+            </div>
+            <!-- Transaction Table -->
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-t border-b my-8">
+                    <thead class="bg-gray-100 text-sm uppercase">
+                        <tr>
+                            <th class="py-3 px-4">Date</th>
+                            <th class="py-3 px-4">Reference No.</th>
+                            <th class="py-3 px-4">Type</th>
+                            <th class="py-3 px-4">Client</th>
+                            <th class="py-3 px-4 text-right">Paid Out</th>
+                            <th class="py-3 px-4 text-right">Paid In</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y">
+                        {% for transaction in report.items.all %}
+                            <tr>
+                                <td class="py-3 px-4">{{ transaction.date|date:"d/m/Y" }}</td>
+                                <td class="py-3 px-4">{{ transaction.reference_number }}</td>
+                                <td class="py-3 px-4">{{ transaction.item_type | title }}</td>
+                                {% if transaction.client and transaction.client.name %}
+                                    <td class="py-3 px-4">{{ transaction.client.name }}</td>
+                                {% else %}
+                                    <td class="py-3 px-4">{{ transaction.client_name | default_if_none:"No Name" }}</td>
+                                {% endif %}
+                                <td class="py-3 px-4 text-right">{{ report.get_currency_symbol }}{{ transaction.paid_out }}</td>
+                                <td class="py-3 px-4 text-right">{{ report.get_currency_symbol }}{{ transaction.paid_in }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- Tailwind print styles -->
+        <style>
+    @media print {
+        /* Avoid large gaps before tables */
+        .print\:page-break-before\:always {
+            page-break-before: auto;
+        }
+
+        /* Keep table rows together and include footers */
+        table, tbody, tr {
+            page-break-inside: auto;
+        }
+
+        tfoot {
+            display: table-footer-group;
+        }
+
+        /* Ensure that footer rows are visible on each page */
+        tfoot tr {
+            page-break-inside: avoid;
+        }
+
+        /* Hide elements not needed during print */
+        .print\\:hidden {
+            display: none !important;
+        }
+
+        /* Ensure no extra margins or padding */
+        body {
+            font-size: 12px;
+            margin: 0;
+        }
+
+        /* Remove shadows */
+        .shadow-lg {
+            box-shadow: none;
+        }
+
+        /* Footer section */
+        .fixed {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: white;
+            border-top: 1px solid #ddd;
+            padding: 10px;
+        }
+    }
+        </style>
+    </body>
+</html>
