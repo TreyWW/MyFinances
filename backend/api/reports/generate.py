@@ -9,9 +9,9 @@ from backend.types.requests import WebRequest
 
 @web_require_scopes("invoices:write", True, True)
 def generate_report_endpoint(request: WebRequest):
-    start_date = request.POST.get("start_date")
-    end_date = request.POST.get("end_date")
-    name = request.POST.get("name")
+    start_date: str = request.POST.get("start_date", "")
+    end_date: str = request.POST.get("end_date", "")
+    name: str = request.POST.get("name", "")
 
     generated_report = generate_report(request.actor, start_date, end_date, name)
 
