@@ -3,7 +3,6 @@ from django.shortcuts import render
 from login_required import login_not_required
 
 
-@login_not_required
 def index(request: HttpRequest):
     return render(request, "pages/landing/index.html")
 

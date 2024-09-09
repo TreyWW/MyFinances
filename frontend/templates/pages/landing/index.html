@@ -24,34 +24,101 @@
             </div>
         </div>
     </section>
-    <section class="bg-secondary py-16">
-        <div class="max-w-screen-xl px-4 mx-auto text-center">
-            <h2 class="mb-8 text-4xl font-semibold text-base-content">Why Choose My Finances?</h2>
-            <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-                <div class="text-center">
-                    <i class="fa-solid fa-file-invoice text-secondary text-6xl mb-4"></i>
-                    <h3 class="text-2xl font-semibold mb-2 text-base-content">Automated Invoicing</h3>
-                    <p class="text-base-content">Send recurring invoices effortlessly and get paid on time.</p>
+    <section class="py-16 px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-2 md:gap-2 lg:gap-4">
+        <h2 class="text-4xl font-semibold tracking-tight text-base-content text-center mb-8 block md:hidden">
+            Track customer invoices
+        </h2>
+        <div class="">
+            <div class="py-4 px-4 shadow-lg rounded-xl flex flex-row items-center justify-between bg-base-200">
+                <div class="flex items-center space-x-2">
+                    <button class="btn btn-outline btn-square btn-sm">
+                        <i class="fa fa-filter"></i>
+                    </button>
+                    <button class="btn btn-square btn-outline btn-sm">
+                        <i class="fa fa-sort"></i>
+                    </button>
                 </div>
-                <div class="text-center">
-                    <i class="fa-solid fa-user-check text-secondary text-6xl mb-4"></i>
-                    <h3 class="text-2xl font-semibold mb-2 text-base-content">Customer Onboarding</h3>
-                    <p class="text-base-content">Streamline bookings, form submissions, and approvals.</p>
+                <h2 class="text-xl" data-oob="invoices-title">Invoices</h2>
+                <button class="btn btn-secondary btn-sm">
+                    <i class="fa-solid fa-file-invoice"></i>
+                    Create Invoice
+                </button>
+            </div>
+            <div class="py-6 px-4 shadow-2xl rounded-xl bg-base-200 mt-2">
+                <div class="flex h-full overflow-x-auto overflow-y-auto">
+                    <table class="table h-fit">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Due Date</th>
+                                <th>Client Name</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% include 'components/table/skeleton_rows.html' with rows=1 cols=6 %}
+                            <tr>
+                                <td class="text-primary font-bold">02</td>
+                                <td class="">05/09/2024</td>
+                                <td class="font-bold">John Doe</td>
+                                <td class="">£234</td>
+                                <td class="">
+                                    <span class="badge badge-outline rounded p-3 badge-error drop-shadow-glow_red">Overdue</span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-outline btn-primary btn-sm">
+                                        <i class="fa fa-ellipsis"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            {% include 'components/table/skeleton_rows.html' with rows=2 cols=6 %}
+                            <tr>
+                                <td class="text-primary font-bold">05</td>
+                                <td class="">09/09/2024</td>
+                                <td class="font-bold">Bob Smith</td>
+                                <td class="">£499</td>
+                                <td class="">
+                                    <span class="badge badge-outline rounded p-3 badge-accent">Pending</span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-outline btn-primary btn-sm">
+                                        <i class="fa fa-ellipsis"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            {% include 'components/table/skeleton_rows.html' with rows=1 cols=6 %}
+                        </tbody>
+                    </table>
                 </div>
-                <div class="text-center">
-                    <i class="fa-solid fa-folder text-secondary text-6xl mb-4"></i>
-                    <h3 class="text-2xl font-semibold mb-2 text-base-content">Receipt & File Storage</h3>
-                    <p class="text-base-content">Store important documents securely and access them anywhere.</p>
+            </div>
+        </div>
+        <div class="flex flex-col ps-16 pe-8">
+            <h2 class="text-4xl font-semibold tracking-tight text-base-content text-center mb-8 hidden md:block">
+                Track customer invoices
+            </h2>
+            <div class="flex flex-col gap-8 text-2xl">
+                <div class="flex items-center">
+                    <i class="fa fa-rotate me-4"></i>
+                    Never forget to create an invoice with our recurring invoice feature
                 </div>
-                <div class="text-center">
-                    <i class="fa-solid fa-chart-line text-secondary text-6xl mb-4"></i>
-                    <h3 class="text-2xl font-semibold mb-2 text-base-content">Monthly Reports</h3>
-                    <p class="text-base-content">Get insights into your business performance with detailed reports.</p>
+                <div class="flex items-center">
+                    <i class="fa fa-bell me-4"></i>
+                    Get alerted when your customer exceeds deadlines
+                </div>
+                <div class="flex items-center">
+                    <i class="fa fa-magnifying-glass-chart me-4"></i>
+                    View monthly reports to see how well you are progressing
+                </div>
+                <div>
+                    <a class="btn btn-primary"
+                       href="{% url 'auth:login create_account manual' %}">Start today</a>
                 </div>
             </div>
         </div>
     </section>
-    <section class="bg-accent py-16">
+    <section class="bg-base-200 py-16">
         <div class="max-w-screen-xl px-4 mx-auto text-center lg:py-24 lg:px-6">
             <div class="max-w-screen-md mx-auto mb-8 lg:mb-12">
                 <h2 class="mb-4 text-4xl font-semibold tracking-tight text-base-content">
@@ -98,7 +165,7 @@
             </div>
         </div>
     </section>
-    <section class="bg-base-200">
+    <section class="bg-base-300">
         <div class="max-w-screen-xl px-4 py-8 mx-auto lg:py-16 lg:px-6">
             <div class="max-w-screen-sm mx-auto text-center">
                 <h2 class="mb-4 text-3xl font-extrabold leading-tight tracking-tight text-base-content">
