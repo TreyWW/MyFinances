@@ -42,7 +42,7 @@
                 {# Use dropdown on top if these: #}
                 {# - is last item           (and not first item) (and more than 4 items) #}
                 {% with invoices.count as invoices_count %}
-                    {% with invoices_count|subtract:3 as invoices_count_minus %}
+                    {% with invoices_count|sub:3 as invoices_count_minus %}
                         <!-- Only last two invoices need a dropup -->
                         <div class="dropdown dropdown-left {% if forloop.counter0 > invoices_count_minus %}dropdown-top{% endif %}">
                             <label tabindex="0" class="btn btn-primary btn-outline btn-sm">
