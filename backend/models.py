@@ -84,6 +84,7 @@ class User(AbstractUser):
     stripe_customer_id = models.CharField(max_length=255, null=True, blank=True)
     entitlements = models.JSONField(null=True, blank=True, default=list)  # list of strings e.g. ["invoices"]
     awaiting_email_verification = models.BooleanField(default=True)
+    require_change_password = models.BooleanField(default=False)  # does user need to change password upon next login
 
     class Role(models.TextChoices):
         #        NAME     DJANGO ADMIN NAME

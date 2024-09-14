@@ -5,7 +5,8 @@
     <div class=" text-3xl w-full grid grid-cols-4">
         <div hx-boost="true">
             <a href="{% url "invoices:single:dashboard" %}"
-               class="btn btn-sm btn-outline btn-secondary me-3 float-left">Back to list</a>
+               class="btn btn-sm btn-outline btn-secondary me-3 float-left">Back to list
+            </a>
         </div>
         <h1 class="text-center col-span-2">Invoice #{{ invoice.id }}</h1>
         <div>
@@ -57,7 +58,7 @@
             </div>
             <!-- Mark As Button -->
             <div class="dropdown dropdown-right dropdown-hover">
-                <div class="m-1 btn btn-primary" tabindex="0" role="button">
+                <div class="m-1 btn btn-primary btn-outline" tabindex="0" role="button">
                     <i class="fa-solid fa-flag"></i>
                     Mark As
                 </div>
@@ -86,7 +87,7 @@
                     </li>
                 </ul>
             </div>
-            <button class="btn btn-secondary"
+            <button class="btn btn-secondary btn-outline"
                     hx-trigger="click once"
                     hx-swap="beforeend"
                     hx-target="#modal_container"

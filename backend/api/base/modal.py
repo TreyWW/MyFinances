@@ -142,8 +142,7 @@ def open_modal(request: WebRequest, modal_name, context_type=None, context_value
         elif modal_name == "invoices_to_destination":
             if existing_client := request.GET.get("client"):
                 context["existing_client_id"] = existing_client
-        elif modal_name == "generate_api_key" or modal_name == "edit_team_member_permissions":
-            permissions = SCOPE_DESCRIPTIONS
+        elif modal_name in ["generate_api_key", "edit_team_member_permissions", "team_create_user"]:
             # example
             # "clients": {
             #     "description": "Access customer details",

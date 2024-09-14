@@ -1,0 +1,27 @@
+{% load strfilters %}
+<div class="collapse collapse-arrow border select-bordered mt-4">
+    <input type="checkbox" />
+    <div class="collapse-title text-xl font-medium">Permissions</div>
+    <div class="collapse-content">
+        <ul class="block">
+            {% for group in permissions %}
+                <li class="border-t-2 mt-2 p-2 flex items-center">
+                    <div class="flex-auto">
+                        <strong>{{ group.name | title | split:"_" | join:" " }}</strong>
+                        <div class="text text-sm">{{ group.description }}</div>
+                    </div>
+                    <select class="select select-bordered inline-block position-relative"
+                            name="permission_{{ group.name }}">
+                        <option value="none">No Access</option>
+                        {% for item, readable in group.options.items %}
+                            <option value="{{ item }}"
+                                    {% if group.name|add:":"|add:item in user_current_scopes %}selected{% endif %}>
+                                {{ readable }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
