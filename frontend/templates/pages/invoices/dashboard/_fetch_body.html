@@ -41,8 +41,6 @@
                 {# The if statement for dropdown top goes as follows #}
                 {# Use dropdown on top if these: #}
                 {# - is last item           (and not first item) (and more than 4 items) #}
-                <!-- Using Custom Filters -->
-                {% load custom_filters %}
                 {% with invoices.count as invoices_count %}
                     {% with invoices_count|subtract:3 as invoices_count_minus %}
                         <!-- Only last two invoices need a dropup -->
