@@ -1,0 +1,23 @@
+<div class="my-4 card border border-gray-700 dark:border-gray-70 w-full"
+     data-hx-container="api_keys">
+    <div class="card-body">
+        <div class="flex justify-between">
+            <div class="text-xl mb-2">
+                <i class="fa fa-solid fa-lock me-2"></i>
+                Account Security
+                <span class="ml-2 badge badge-success badge-outline py-3 px-4 rounded-lg">NEW</span>
+            </div>
+            {#            <button onclick="modal_generate_api_key.showModal();"#}
+            {#                    class="btn btn-primary btn-sm"#}
+            {#                    hx-trigger="click once"#}
+            {#                    hx-swap="beforeend"#}
+            {#                    hx-target="#modal_container"#}
+            {#                    hx-get="{% url "api:base:modal retrieve" modal_name="generate_api_key" %}">#}
+            {#                Generate new token#}
+            {#            </button>#}
+        </div>
+        <div class="divider"></div>
+        <a class="btn btn-primary btn-outline w-52"
+           href="{% url 'settings:change_password' %}">Change account password</a>
+    </div>
+</div>

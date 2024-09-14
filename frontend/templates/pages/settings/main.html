@@ -37,6 +37,13 @@
                         API Keys
                     </a>
                 </li>
+                <li>
+                    <a href="{% url 'settings:dashboard with page' page='account_security' %}"
+                       hx-replace-url="{% url 'settings:dashboard with page' page='account_security' %}">
+                        <i class="fa fa-solid fa-shield"></i>
+                        Account Security
+                    </a>
+                </li>
             </ul>
         </div>
         <div class="col-span-6" data-hx-swap="content">

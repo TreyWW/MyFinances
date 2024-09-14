@@ -7,7 +7,7 @@
     {% else %}
         <h2 class="text-xl mb-1">Personal</h2>
         <h2 class="text-md">
-            Logged in as <strong>{{ request.user.first_name }}</strong>
+            Logged in as <strong>{{ request.user.first_name | default_if_none:"You" }}</strong>
         </h2>
     {% endif %}
 </div>
