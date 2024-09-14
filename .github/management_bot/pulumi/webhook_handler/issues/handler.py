@@ -19,8 +19,8 @@ else:
 
 
 def title_handler(context_dicts: _types.Context, context_objs: _types.Objects) -> list[str]:
-    if not re.match(r"^(bug|idea|implement|cleanup):\s*\S.*", context_objs.issue.title) and context_objs.sender.type == "User":
-        logger.info(f"Regex title doesn't match. {context_objs.issue.title} doesnt start with bug|idea|implement|cleanup:")
+    if not re.match(r"^(bug|idea|implement|cleanup|progress):\s*\S.*", context_objs.issue.title) and context_objs.sender.type == "User":
+        logger.info(f"Regex title doesn't match. {context_objs.issue.title} doesnt start with bug|idea|implement|cleanup|progress:")
         logger.info(f"Commenting on {context_objs.issue.html_url}")
         context_objs.issue.create_comment(
             dedent(
@@ -28,7 +28,7 @@ def title_handler(context_dicts: _types.Context, context_objs: _types.Objects) -
                     Hi @{context_objs.sender.login},
 
                     You have chosen a title that is slightly different to our title standards. Please, if possible, use the format:
-                    (bug, idea, implement or cleanup) : Title
+                    (progress, bug, idea, implement or cleanup) : Title
 
                     e.g. "bug: xyz page doesn't work"
 
