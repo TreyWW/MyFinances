@@ -76,11 +76,15 @@ def login_manual(request: HtmxAnyHttpRequest):  # HTMX POST
 
     response = HttpResponse(status=200)
 
-    try:
-        resolve(redirect_url)
-        response["HX-Redirect"] = redirect_url
-    except Resolver404:
-        response["HX-Redirect"] = "/dashboard/"
+    if user.require_change_password:  # type: ignore[attr-defined]
+        messages.warning(request, "You have been requested by an administrator to change your account password.")
+        response["HX-Redirect"] = reverse("settings:change_password")
+    else:
+        try:
+            resolve(redirect_url)
+            response["HX-Redirect"] = redirect_url
+        except Resolver404:
+            response["HX-Redirect"] = "/dashboard/"
 
     return response
 

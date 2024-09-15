@@ -4,16 +4,25 @@
     {% load listfilters %}
     <div class="card w-full p-6 bg-base-100 shadow-xl mt-2">
         <div class="flex items-center justify-between">
-            <div>
+            <div class="flex items-center align-center gap-2">
                 {% if team.is_leader %}
                     <button x-on:click="modal_invite_user.showModal();"
-                            class="btn btn-primary"
+                            class="btn btn-primary btn-outline"
                             hx-get="{% url "api:base:modal retrieve with context" modal_name="invite_user" context_type="team_id" context_value=team.id %}"
                             hx-trigger="click once"
                             hx-swap="beforeend"
                             hx-target="#modal_container">
                         <i class="fa-solid fa-plus pe-2"></i>
                         Invite User
+                    </button>
+                    <button x-on:click="modal_team_create_user.showModal();"
+                            class="btn btn-primary btn-outline"
+                            hx-get="{% url "api:base:modal retrieve with context" modal_name="team_create_user" context_type="team_id" context_value=team.id %}"
+                            hx-trigger="click once"
+                            hx-swap="beforeend"
+                            hx-target="#modal_container">
+                        <i class="fa-solid fa-plus pe-2"></i>
+                        Create user
                     </button>
                 {% endif %}
             </div>

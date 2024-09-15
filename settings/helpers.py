@@ -92,6 +92,11 @@ def send_email(data: SingleEmailInput) -> SingleEmailSuccessResponse | SingleEma
     subject (str): The subject of the email.
     message (str): The content of the email.
     """
+
+    if get_var("DEBUG", "").lower() == "true":
+        print(data)
+        return SingleEmailSuccessResponse({}, True)  # type: ignore[typeddict-item]
+
     if EMAIL_SERVICE == "SES":
         if not isinstance(data.destination, list):
             data.destination = [data.destination]
