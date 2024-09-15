@@ -95,7 +95,7 @@ def send_email(data: SingleEmailInput) -> SingleEmailSuccessResponse | SingleEma
 
     if get_var("DEBUG", "").lower() == "true":
         print(data)
-        return SingleEmailSuccessResponse({}, True)
+        return SingleEmailSuccessResponse({}, True)  # type: ignore[typeddict-item]
 
     if EMAIL_SERVICE == "SES":
         if not isinstance(data.destination, list):

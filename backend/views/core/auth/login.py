@@ -64,7 +64,7 @@ def login_manual(request: HtmxAnyHttpRequest):  # HTMX POST
     if not password:
         return render_error_toast_message(request, "Please enter a password")
 
-    user = authenticate(request, username=email, password=password)
+    user: User | None = authenticate(request, username=email, password=password)
 
     if not user:
         return render_error_toast_message(request, "Incorrect email or password")
