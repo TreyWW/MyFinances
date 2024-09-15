@@ -39,7 +39,7 @@
     <li>
         <span>Current Version: {{ version }}</span>
     </li>
-    {% if git_version %}
+    {% if git_version and git_version != "prod" %}
         <li>
             <span class="text-center">{{ git_version | slice:7 }}</span>
         </li>

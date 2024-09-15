@@ -46,54 +46,54 @@
         <div class="card w-full p-6 bg-base-100 shadow-xl mt-2">
             <table class="w-full table mt-3">
                 <thead>
-                <tr>
-                    <th>Name</th>
-                    {% if team.is_leader %}
-                        <th>Permissions</th>
-                        <th>Actions</th>
-                    {% endif %}
-                </tr>
-                </thead>
-                <tbody>
-                {% for user in team.members.all %}
                     <tr>
-                        <td>{{ user.username }}</td>
+                        <th>Name</th>
                         {% if team.is_leader %}
-                            <td>
-                                {% with user_permissions|dict_get:user as perms %}
-                                    {% for perm_group in perms|list_item_prefix_distinct %}
-                                        <p data-tip="{{ perms|lookup_separator_perms:perm_group|join:", " }}"
-                                           class="hover:underline tooltip">
-                                            {{ perm_group }}
-                                            {% if not forloop.last %},{% endif %}
-                                        </p>
-                                    {% endfor %}
-                                {% endwith %}
-                            </td>
-                            <td>
-                                <div class="flex flex-wrap gap-2">
-                                    <div class="tooltip" data-tip="Edit Permissions">
-                                        <button class="btn btn-success btn-outline btn-sm"
-                                                x-on:click="modal_edit_team_member_permissions.showModal();"
-                                                class="btn btn-primary"
-                                                hx-get="{% url "api:base:modal retrieve with context" modal_name="edit_team_member_permissions" context_type="user_id" context_value=user.id %}"
-                                                hx-trigger="click once"
-                                                hx-swap="beforeend"
-                                                hx-target="#modal_container">
-                                            <i class="fa-solid fa-hammer"></i>
-                                        </button>
-                                    </div>
-                                    <div class="tooltip" data-tip="Kick User">
-                                        <button class="btn btn-error btn-outline btn-sm"
-                                                onclick="team_kick_user_{{ user.id }} .showModal ();">
-                                            <i class="fa-solid fa-ban"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </td>
+                            <th>Permissions</th>
+                            <th>Actions</th>
                         {% endif %}
                     </tr>
-                {% endfor %}
+                </thead>
+                <tbody>
+                    {% for user in team.members.all %}
+                        <tr>
+                            <td>{{ user.username }}</td>
+                            {% if team.is_leader %}
+                                <td>
+                                    {% with user_permissions|dict_get:user as perms %}
+                                        {% for perm_group in perms|list_item_prefix_distinct %}
+                                            <p data-tip="{{ perms|lookup_separator_perms:perm_group|join:", " }}"
+                                               class="hover:underline tooltip">
+                                                {{ perm_group }}
+                                                {% if not forloop.last %},{% endif %}
+                                            </p>
+                                        {% endfor %}
+                                    {% endwith %}
+                                </td>
+                                <td>
+                                    <div class="flex flex-wrap gap-2">
+                                        <div class="tooltip" data-tip="Edit Permissions">
+                                            <button class="btn btn-success btn-outline btn-sm"
+                                                    x-on:click="modal_edit_team_member_permissions.showModal();"
+                                                    class="btn btn-primary"
+                                                    hx-get="{% url "api:base:modal retrieve with context" modal_name="edit_team_member_permissions" context_type="user_id" context_value=user.id %}"
+                                                    hx-trigger="click once"
+                                                    hx-swap="beforeend"
+                                                    hx-target="#modal_container">
+                                                <i class="fa-solid fa-hammer"></i>
+                                            </button>
+                                        </div>
+                                        <div class="tooltip" data-tip="Kick User">
+                                            <button class="btn btn-error btn-outline btn-sm"
+                                                    onclick="team_kick_user_{{ user.id }} .showModal ();">
+                                                <i class="fa-solid fa-ban"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
