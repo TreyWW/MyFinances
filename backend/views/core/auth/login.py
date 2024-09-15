@@ -64,7 +64,7 @@ def login_manual(request: HtmxAnyHttpRequest):  # HTMX POST
     if not password:
         return render_error_toast_message(request, "Please enter a password")
 
-    user: User | None = authenticate(request, username=email, password=password)
+    user = authenticate(request, username=email, password=password)
 
     if not user:
         return render_error_toast_message(request, "Incorrect email or password")
@@ -76,7 +76,7 @@ def login_manual(request: HtmxAnyHttpRequest):  # HTMX POST
 
     response = HttpResponse(status=200)
 
-    if user.require_change_password:
+    if user.require_change_password:  # type: ignore[attr-defined]
         messages.warning(request, "You have been requested by an administrator to change your account password.")
         response["HX-Redirect"] = reverse("settings:change_password")
     else:
