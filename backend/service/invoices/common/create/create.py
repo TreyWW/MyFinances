@@ -55,7 +55,7 @@ def save_invoice_common(request: WebRequest, invoice_items, invoice: Invoice | I
     if request.FILES.get("logo") is not None:
         invoice.logo = request.FILES.get("logo")
     else:
-        if invoice.client_to is not None:
+        if invoice.client_to is not None and invoice.client_to.default_values.default_invoice_logo:
             invoice.logo = invoice.client_to.default_values.default_invoice_logo
         else:
             defaults: DefaultValues = get_account_defaults(request.actor)

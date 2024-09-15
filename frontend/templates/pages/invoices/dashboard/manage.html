@@ -21,8 +21,8 @@
     </div>
 </div>
 <div class="card bg-base-100 shadow-xl w-full p-6 flex-col gap-y-4">
-    <div class="flex flex-wrap gap-y-4">
-        <a class="btn btn-md btn-outline btn-default grow loading-htmx mr-4"
+    <div class="flex flex-wrap gap-2 items-center flex-start">
+        <a class="btn btn-md btn-outline btn-default grow loading-htmx"
            target="_blank"
            rel="noopener noreferrer"
            href="{% url 'invoices:single:preview' invoice_id=invoice.id %}">
@@ -33,12 +33,12 @@
             <span class="loading loading-spinner loading-htmx-loader"></span>
         </a>
         <a href="{% url "invoices:single:edit" invoice_id=invoice.id %}"
-           class="btn btn-md btn-outline btn-default grow mr-4">
+           class="btn btn-md btn-outline btn-default grow">
             <i class="fa-solid fa-edit"></i>
             Edit Invoice
         </a>
         <a href="{% url "invoices:single:manage_access" invoice_id=invoice.id %}"
-           class="btn btn-md btn-outline btn-default grow mr-4">
+           class="btn btn-md btn-outline btn-default grow">
             <i class="fa-solid fa-share-nodes"></i>
             Send Invoice
         </a>
@@ -48,58 +48,55 @@
                 Schedule Invoice
             </a>
         {% endif %}
-    </div>
-    <div class="mt-2">
-        <div class="flex items-center space-x-2">
-            <!-- Icon and Text for Current Status -->
-            <div data-oob="status">
-                {% component "pages:invoices:dashboard:payment_status_badge" status=invoice.payment_status inv_id=invoice_id design="default" %}
-            </div>
-            <!-- Mark As Button -->
-            <div class="dropdown dropdown-right dropdown-hover">
-                <div class="m-1 btn btn-primary btn-outline" tabindex="0" role="button">
-                    <i class="fa-solid fa-flag"></i>
-                    Mark As
-                </div>
-                <ul tabindex="0"
-                    class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
-                    <li>
-                        <button hx-swap="none"
-                                hx-post="{% url "api:invoices:single:edit status" invoice_id=invoice.id status='pending' %}">
-                            <i class="fa-solid fa-hourglass-half"></i>
-                            Pending
-                        </button>
-                    </li>
-                    <li>
-                        <button hx-swap="none"
-                                hx-post="{% url "api:invoices:single:edit status" invoice_id=invoice.id status='paid' %}">
-                            <i class="fa-solid fa-circle-check"></i>
-                            Paid
-                        </button>
-                    </li>
-                    <li>
-                        <button hx-swap="none"
-                                hx-post="{% url "api:invoices:single:edit status" invoice_id=invoice.id status='overdue' %}">
-                            <i class="fa-solid fa-exclamation-triangle"></i>
-                            Overdue
-                        </button>
-                    </li>
-                </ul>
-            </div>
-            <button class="btn btn-secondary btn-outline"
-                    hx-trigger="click once"
-                    hx-swap="beforeend"
-                    hx-target="#modal_container"
-                    _="on click call modal_invoices_edit_discount.showModal()"
-                    hx-get="{% url "api:base:modal retrieve with context" context_type="invoice" context_value=invoice.id modal_name="invoices_edit_discount" %}">
-                <i class="fa fa-solid fa-pound-sign mr-2"></i>
-                Edit Discount
-            </button>
-            <a class="btn btn-outline" href="{{ clone_as_recurring_url }}">
-                <i class="fa fa-clone"></i>
-                Clone to Recurring Profile
-            </a>
+        <div class="basis-[100%] h-0"></div>
+        <!-- Icon and Text for Current Status -->
+        <div data-oob="status">
+            {% component "pages:invoices:dashboard:payment_status_badge" status=invoice.payment_status inv_id=invoice_id design="default" %}
         </div>
+        <!-- Mark As Button -->
+        <div class="dropdown dropdown-right dropdown-hover grow flex">
+            <div class="btn btn-primary btn-outline grow" tabindex="0" role="button">
+                <i class="fa-solid fa-flag"></i>
+                Mark As
+            </div>
+            <ul tabindex="0"
+                class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
+                <li>
+                    <button hx-swap="none"
+                            hx-post="{% url "api:invoices:single:edit status" invoice_id=invoice.id status='pending' %}">
+                        <i class="fa-solid fa-hourglass-half"></i>
+                        Pending
+                    </button>
+                </li>
+                <li>
+                    <button hx-swap="none"
+                            hx-post="{% url "api:invoices:single:edit status" invoice_id=invoice.id status='paid' %}">
+                        <i class="fa-solid fa-circle-check"></i>
+                        Paid
+                    </button>
+                </li>
+                <li>
+                    <button hx-swap="none"
+                            hx-post="{% url "api:invoices:single:edit status" invoice_id=invoice.id status='overdue' %}">
+                        <i class="fa-solid fa-exclamation-triangle"></i>
+                        Overdue
+                    </button>
+                </li>
+            </ul>
+        </div>
+        <button class="btn btn-secondary btn-outline grow"
+                hx-trigger="click once"
+                hx-swap="beforeend"
+                hx-target="#modal_container"
+                _="on click call modal_invoices_edit_discount.showModal()"
+                hx-get="{% url "api:base:modal retrieve with context" context_type="invoice" context_value=invoice.id modal_name="invoices_edit_discount" %}">
+            <i class="fa fa-solid fa-pound-sign mr-2"></i>
+            Edit Discount
+        </button>
+        <a class="btn btn-outline grow" href="{{ clone_as_recurring_url }}">
+            <i class="fa fa-clone"></i>
+            Clone to Recurring Profile
+        </a>
     </div>
 </div>
 {#    <div class="collapse collapse-arrow card bg-base-100 shadow-xl w-full p-6 flex-row gap-x-4 mt-4">#}
