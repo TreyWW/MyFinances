@@ -1,3 +1,5 @@
+from textwrap import dedent
+
 from django.urls import reverse
 from django.utils.crypto import get_random_string
 
@@ -35,7 +37,8 @@ def create_user_service(
         SingleEmailInput(
             destination=email,
             subject="MyFinances | You have been invited to join an organization",
-            content=f"""
+            content=dedent(
+                f"""
                 Hi {user.first_name or "User"},
 
                 You have been invited by {request.user.email} to join the organization {team.name}.
@@ -53,7 +56,8 @@ def create_user_service(
 
                 Didn't give permission to be added to this organization? You can safely ignore the email, no actions can be done on
                 behalf of you without your permission.
-            """,
+            """
+            ),
         )
     )
 

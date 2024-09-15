@@ -1,3 +1,5 @@
+from textwrap import dedent
+
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password
 from django.shortcuts import redirect
@@ -7,6 +9,7 @@ from django.views.decorators.http import require_POST
 from django_ratelimit.decorators import ratelimit
 
 from backend.models import VerificationCodes, User, TracebackError
+from backend.types.emails import SingleEmailInput
 from settings import settings
 from settings.helpers import send_email, ARE_EMAILS_ENABLED
 
@@ -72,17 +75,21 @@ def resend_verification_code(request):
     magic_link_url = settings.SITE_URL + reverse("auth:login create_account verify", kwargs={"uuid": magic_link.uuid, "token": token_plain})
 
     send_email(
-        destination=email,
-        subject="Verify your email",
-        message=f"""
-        Hi {user.first_name if user.first_name else "User"},
+        SingleEmailInput(
+            destination=email,
+            subject="Verify your email",
+            content=dedent(
+                f"""
+                Hi {user.first_name if user.first_name else "User"},
 
-        Verification for your email has been requested to link this email to your MyFinances account.
-        If this wasn't you, you can simply ignore this email.
+                Verification for your email has been requested to link this email to your MyFinances account.
+                If this wasn't you, you can simply ignore this email.
 
-        If it was you, you can complete the verification by clicking the link below.
-        Verify Link: {magic_link_url}
-    """,
+                If it was you, you can complete the verification by clicking the link below.
+                Verify Link: {magic_link_url}
+            """
+            ),
+        )
     )
 
     messages.success(request, "Verification email sent, check your inbox or spam!")

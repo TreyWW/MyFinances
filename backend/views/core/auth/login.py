@@ -1,3 +1,5 @@
+from textwrap import dedent
+
 import django_ratelimit
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.hashers import check_password
@@ -144,14 +146,16 @@ class MagicLinkRequestView(View):
         email: SingleEmailInput = SingleEmailInput(
             destination=user.email,
             subject="Login Request",
-            content=f"""
+            content=dedent(
+                f"""
             Hi {user.first_name if user.first_name else "User"},
 
             A login request was made on your MyFinances account. If this was not you, please ignore
             this email.
 
             If you would like to login, please use the following link: \n {magic_link_url}
-        """,
+        """
+            ),
         )
         send_email(email)
 
