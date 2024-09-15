@@ -61,23 +61,24 @@ EMAIL_CLIENT: SESV2Client = boto3.client(
     # aws_secret_access_key=get_var("AWS_SES_SECRET_ACCESS_KEY"),
 )
 
-AWS_SES_ACCESS_KEY_ID = get_var("AWS_SES_ACCESS_KEY_ID")
-AWS_SES_SECRET_ACCESS_KEY = get_var("AWS_SES_SECRET_ACCESS_KEY")
-ARE_AWS_EMAILS_ENABLED = True if AWS_SES_ACCESS_KEY_ID and AWS_SES_SECRET_ACCESS_KEY else False
+# AWS_SES_ACCESS_KEY_ID = get_var("AWS_SES_ACCESS_KEY_ID")
+# AWS_SES_SECRET_ACCESS_KEY = get_var("AWS_SES_SECRET_ACCESS_KEY")
+AWS_SES_FROM_ADDRESS = get_var("AWS_SES_FROM_ADDRESS")
+ARE_AWS_EMAILS_ENABLED = (True if get_var("AWS_SES_ENABLED", "").lower() == "true" else False) and AWS_SES_FROM_ADDRESS
 
-SENDGRID_TEMPLATE = get_var("SENDGRID_TEMPLATE")
+# SENDGRID_TEMPLATE = get_var("SENDGRID_TEMPLATE")
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 # EMAIL_BACKEND = "sendgrid_backend.SendgridBackend"
 # EMAIL_BACKEND = "sendgrid_backend.SendgridBackend"
-EMAIL_HOST = "smtp.sendgrid.net"
-EMAIL_HOST_USER = "apikey"
-EMAIL_FROM_ADDRESS = get_var("SENDGRID_FROM_ADDRESS")
-EMAIL_HOST_PASSWORD = get_var("SENDGRID_API_KEY")
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_SERVER_ENABLED = True if EMAIL_HOST_PASSWORD else False
+# EMAIL_HOST = "smtp.sendgrid.net"
+# EMAIL_HOST_USER = "apikey"
+# EMAIL_FROM_ADDRESS = get_var("SENDGRID_FROM_ADDRESS")
+# EMAIL_HOST_PASSWORD = get_var("SENDGRID_API_KEY")
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_SERVER_ENABLED = True if EMAIL_HOST_PASSWORD else False
 
-EMAIL_SERVICE = "SES" if ARE_AWS_EMAILS_ENABLED else "SendGrid" if EMAIL_SERVER_ENABLED else None
+EMAIL_SERVICE = "SES" if ARE_AWS_EMAILS_ENABLED else None
 ARE_EMAILS_ENABLED = True if EMAIL_SERVICE else False
 
 if "test" in sys.argv[1:]:
@@ -112,7 +113,7 @@ def send_email(data: SingleEmailInput) -> SingleEmailSuccessResponse | SingleEma
                 )
 
                 from_email_address: str = str(data.from_address_name_prefix) if data.from_address_name_prefix else ""
-                from_email_address += str(data.from_address or get_var("AWS_SES_FROM_ADDRESS"))
+                from_email_address += str(data.from_address or AWS_SES_FROM_ADDRESS)
 
                 response = EMAIL_CLIENT.send_email(
                     FromEmailAddress=from_email_address,
@@ -122,7 +123,7 @@ def send_email(data: SingleEmailInput) -> SingleEmailSuccessResponse | SingleEma
                 )
             else:
                 from_email_address = str(data.from_address_name_prefix) if data.from_address_name_prefix else ""
-                from_email_address += str(data.from_address or get_var("AWS_SES_FROM_ADDRESS"))
+                from_email_address += str(data.from_address or AWS_SES_FROM_ADDRESS)
 
                 response = EMAIL_CLIENT.send_email(
                     FromEmailAddress=from_email_address,
@@ -166,7 +167,7 @@ def send_templated_bulk_email(data: BulkTemplatedEmailInput) -> BulkEmailSuccess
     try:
         data_str = data.default_template_data if isinstance(data.default_template_data, str) else json.dumps(data.default_template_data)
         from_email_address: str = str(data.from_address_name_prefix) if data.from_address_name_prefix else ""
-        from_email_address += str(data.from_address or get_var("AWS_SES_FROM_ADDRESS"))
+        from_email_address += str(data.from_address or AWS_SES_FROM_ADDRESS)
 
         response: SendBulkEmailResponseTypeDef = EMAIL_CLIENT.send_bulk_email(
             FromEmailAddress=from_email_address,
