@@ -14,6 +14,7 @@ urlpatterns = [
     path("products/", include("backend.api.products.urls")),
     path("quotas/", include("backend.api.quotas.urls")),
     path("emails/", include("backend.api.emails.urls")),
+    path("reports/", include("backend.api.reports.urls")),
     path("hc/", include("backend.api.healthcheck.urls")),
     path("public/", include("backend.api.public.urls")),
 ]

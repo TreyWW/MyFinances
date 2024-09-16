@@ -1,6 +1,7 @@
 from django.urls import path
 
 from . import kick, switch_team, invites, leave, create, edit_permissions
+from .create_user import create_user_endpoint
 
 urlpatterns = [
     path("edit_permissions/", edit_permissions.edit_user_permissions_endpoint, name="edit_permissions"),
@@ -18,6 +19,11 @@ urlpatterns = [
         "switch_team/",
         switch_team.switch_team,
         name="switch_team input",
+    ),
+    path(
+        "create_user/",
+        create_user_endpoint,
+        name="create_user",
     ),
     # INVITES #
     path(

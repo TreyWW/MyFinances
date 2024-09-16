@@ -1,0 +1,98 @@
+<div class="space-y-8 lg:grid lg:grid-cols-3 sm:gap-6 xl:gap-10 lg:space-y-0">
+    {# Free #}
+    {#    <div#}
+    {#        class="flex flex-col h-fit max-w-lg p-6 mx-auto text-center text-gray-900 bg-white border border-gray-100#}
+    {#                    rounded-lg shadow dark:border-gray-600 xl:p-8 dark:bg-gray-800 dark:text-white">#}
+    {#        <h3 class="mb-4 text-2xl font-semibold">Free</h3>#}
+    {#        <p class="font-light text-gray-500 sm:text-lg dark:text-gray-400">#}
+    {#            Give us a go before purchasing a plan#}
+    {#        </p>#}
+    {#        <div class="flex items-baseline justify-center my-8">#}
+    {#            <span class="mr-2 text-5xl font-extrabold">£0</span>#}
+    {#            <span class="text-gray-500 dark:text-gray-400">for 1 month</span>#}
+    {#        </div>#}
+    {#        <ul role="list" class="mb-8 space-y-4 text-left">#}
+    {#            {% include 'pages/landing/pricing_feature.html' with feature='Basic Invoicing' %}#}
+    {#            {% include 'pages/landing/pricing_feature.html' with feature='Create up to 10 invoices' %}#}
+    {#            {% include 'pages/landing/pricing_feature.html' with feature='Store up to 5 customers' %}#}
+    {#        </ul>#}
+    {#    </div>#}
+    {# Starter #}
+    <div class="flex flex-col max-w-lg p-6 mx-auto text-center bg-white border border-gray-100 rounded-lg shadow xl:p-8">
+        <h3 class="mb-4 text-2xl font-semibold">Starter</h3>
+        <p class="font-light sm:text-lg">For startups or small businesses looking to accelerate invoicing</p>
+        <div class="flex items-baseline justify-center my-8">
+            <span class="mr-2 text-5xl font-extrabold">£5</span>
+            <span class="">per month</span>
+        </div>
+        <ul role="list" class="mb-8 space-y-4 text-left">
+            {% include 'pages/landing/pricing_feature.html' with feature='Unlimited customers' %}
+            <li class="flex items-center space-x-3">
+                <i class="flex-shrink-0 w-5 h-5 fa fa-check text-success"></i>
+                <span class="tooltip tooltip-primary tooltip-bottom"
+                      data-tip="Terms and extra charges may apply for higher usage, check below!">
+                    Unlimited Invoices (first 10 on us!)
+                    <strong class="font-bold text-primary">*</strong>
+                </span>
+            </li>
+            {% include 'pages/landing/pricing_feature.html' with feature='Basic customer onboarding' %}
+            {% include 'pages/landing/pricing_feature.html' with feature='Emailing (automated, normal & bulk)' %}
+            {% include 'pages/landing/pricing_feature.html' with feature='File Storage (10GB included!)' %}
+            <li class="flex items-center space-x-3">
+                <i class="flex-shrink-0 w-5 h-5 fa fa-check text-success"></i>
+                <span class="tooltip tooltip-primary tooltip-bottom"
+                      data-tip="We charge for excess above your plans tier, however we do not cap the amount you use on any plan!">
+                    No Limits <strong class="font-bold text-primary">*</strong>
+                </span>
+            </li>
+        </ul>
+        <a href="{% url 'dashboard' %}" class="btn btn-primary">Sign up</a>
+    </div>
+    {# Growth #}
+    <div class="flex flex-col max-w-lg p-6 mx-auto text-center bg-white border border-base-300 rounded-lg shadow xl:p-8">
+        <h3 class="mb-4 text-2xl font-semibold">Growth</h3>
+        <p class="font-light sm:text-lg">For growing businesses looking to spend less time with manual invoices</p>
+        <div class="flex items-baseline justify-center my-8">
+            <span class="mr-2 text-5xl font-extrabold">£15</span>
+            <span class="">per month</span>
+        </div>
+        <!-- List -->
+        <ul role="list" class="mb-8 space-y-4 text-left">
+            <li class="font-semibold">Everything in Starter, plus:</li>
+            {% include 'pages/landing/pricing_feature.html' with feature='Automated invoice reminders' %}
+            {% include 'pages/landing/pricing_feature.html' with feature='Advanced customer onboarding' %}
+            {% include 'pages/landing/pricing_feature.html' with feature='API Access' %}
+            {% include 'pages/landing/pricing_feature.html' with feature='File storage (50GB included!)' %}
+            <li class="flex items-center space-x-3">
+                <i class="flex-shrink-0 w-5 h-5 fa fa-check text-success"></i>
+                <span class="tooltip tooltip-primary tooltip-bottom"
+                      data-tip="We charge for excess above your plans tier, however we do not cap the amount you use on any plan!">
+                    No Limits <strong class="font-bold text-primary">*</strong>
+                </span>
+            </li>
+        </ul>
+        <a href="{% url 'dashboard' %}" class="btn btn-primary">Sign up</a>
+    </div>
+    {# Enterprise #}
+    <div class="flex flex-col max-w-lg p-6 mx-auto text-center bg-white border border-base-300 rounded-lg shadow xl:p-8">
+        <h3 class="mb-4 text-2xl font-semibold">Enterprise</h3>
+        <p class="font-light">
+            For larger businesses that want more
+            <i class="text-secondary font-bold">customisation</i>
+        </p>
+        <div class="flex items-baseline justify-center my-8">
+            <span class="mr-2 text-5xl font-extrabold">Enquire</span>
+        </div>
+        <!-- List -->
+        <ul role="list" class="mb-8 space-y-4 text-left">
+            {% include 'pages/landing/pricing_feature.html' with feature='Choose a price that best fits you' %}
+            {% include 'pages/landing/pricing_feature.html' with feature='Organization mode' %}
+            {% include 'pages/landing/pricing_feature.html' with feature='Dedicated customer success' %}
+            {% include 'pages/landing/pricing_feature.html' with feature='SLA can be discussed' %}
+            {% include 'pages/landing/pricing_feature.html' with feature='Analytics and live updates' %}
+            {% include 'pages/landing/pricing_feature.html' with feature='Pre-release notifications' %}
+        </ul>
+        <a href="mailto:Strelix%20Limited<enterprise@strelix.org>?subject=MyFinances Enterprise Plan"
+           class="btn btn-primary">Contact us</a>
+    </div>
+</div>

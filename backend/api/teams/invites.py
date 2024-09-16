@@ -1,6 +1,10 @@
+from textwrap import dedent
+
 from backend.decorators import *
 from backend.models import Notification, Organization, TeamInvitation, User
+from backend.types.emails import SingleEmailInput
 from backend.types.htmx import HtmxHttpRequest
+from settings.helpers import send_email
 
 
 def delete_notification(user: User, code: TeamInvitation):
@@ -44,7 +48,7 @@ def check_team_invitation_is_valid(request, invitation: TeamInvitation, code=Non
 def send_user_team_invite(request: HtmxHttpRequest):
     user_email = request.POST.get("email")
     team_id = request.POST.get("team_id", "")
-    team = Organization.objects.filter(leader=request.user, id=team_id).first()
+    team: Organization | None = Organization.objects.filter(leader=request.user, id=team_id).first()
 
     def return_error_notif(request: HtmxHttpRequest, message: str, autohide=None):
         messages.error(request, message)
@@ -62,7 +66,7 @@ def send_user_team_invite(request: HtmxHttpRequest):
     user: User | None = User.objects.filter(email=user_email).first()
 
     if not user:
-        return return_error_notif(request, "User not found")
+        return return_error_notif(request, 'User not found. Either ask them to create an account or press "Create User"')
 
     if user.teams_joined.filter(pk=team_id).exists():
         return return_error_notif(request, "User already is in this team")
@@ -81,21 +85,6 @@ def send_user_team_invite(request: HtmxHttpRequest):
 
     invitation = TeamInvitation.objects.create(team=team, user=user, invited_by=request.user)
 
-    # if EMAIL_SERVER_ENABLED and EMAIL_FROM_ADDRESS:
-    #     SEND_SENDGRID_EMAIL(
-    #         user.email,
-    #         "You have been invited to join a team",
-    #         f"""
-    #         You have been invited to join the team {team.name}
-    #
-    #         Invited by: {request.user}
-    #
-    #         Click the link below to join:
-    #         {request.build_absolute_uri(reverse("api:teams:join accept", kwargs={"code": invitation.code}))}
-    #         """,
-    #         from_email=EMAIL_FROM_ADDRESS,
-    #     )
-
     Notification.objects.create(
         user=user,
         message=f"New Organization Invite",
@@ -105,7 +94,26 @@ def send_user_team_invite(request: HtmxHttpRequest):
         extra_value=invitation.code,
     )
 
-    print(f"Invitation: {request.build_absolute_uri(reverse('api:teams:join accept', kwargs={'code': invitation.code}))}")
+    send_email(
+        SingleEmailInput(
+            destination=user.email,
+            subject="New Organization Invite",
+            content=dedent(
+                f"""
+                Hi {user.first_name or "User"},
+
+                {request.user.first_name or f"User {request.user.email}"} has invited you to join the organization \"{team.name}\" (#{team.id})
+
+
+                Click the url below to accept the invite!
+                {request.build_absolute_uri(reverse("api:teams:join accept", kwargs={"code": invitation.code}))}
+
+                Didn't give permission to be added to this organization? You can safely ignore the email, no actions can be done on
+                behalf of you without your action.
+            """
+            ),
+        )
+    )
 
     messages.success(request, "Invitation successfully sent")
     response = HttpResponse(status=200)

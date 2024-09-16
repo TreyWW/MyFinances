@@ -7,7 +7,7 @@ from backend.types.requests import WebRequest
 
 
 def validate_page(page: str | None) -> bool:
-    return not page or page in ["profile", "account", "api_keys", "account_defaults"]
+    return not page or page in ["profile", "account", "api_keys", "account_defaults", "account_security"]
 
 
 def get_user_profile(request: WebRequest) -> UserSettings:

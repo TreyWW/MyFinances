@@ -1,3 +1,5 @@
+from textwrap import dedent
+
 import django_ratelimit
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.hashers import check_password
@@ -76,11 +78,15 @@ def login_manual(request: HtmxAnyHttpRequest):  # HTMX POST
 
     response = HttpResponse(status=200)
 
-    try:
-        resolve(redirect_url)
-        response["HX-Redirect"] = redirect_url
-    except Resolver404:
-        response["HX-Redirect"] = "/dashboard/"
+    if user.require_change_password:  # type: ignore[attr-defined]
+        messages.warning(request, "You have been requested by an administrator to change your account password.")
+        response["HX-Redirect"] = reverse("settings:change_password")
+    else:
+        try:
+            resolve(redirect_url)
+            response["HX-Redirect"] = redirect_url
+        except Resolver404:
+            response["HX-Redirect"] = "/dashboard/"
 
     return response
 
@@ -140,14 +146,16 @@ class MagicLinkRequestView(View):
         email: SingleEmailInput = SingleEmailInput(
             destination=user.email,
             subject="Login Request",
-            content=f"""
+            content=dedent(
+                f"""
             Hi {user.first_name if user.first_name else "User"},
 
             A login request was made on your MyFinances account. If this was not you, please ignore
             this email.
 
             If you would like to login, please use the following link: \n {magic_link_url}
-        """,
+        """
+            ),
         )
         send_email(email)
 

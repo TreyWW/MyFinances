@@ -13,13 +13,15 @@
            href="{% url "teams:dashboard" %}">
             <i class="fa fa-solid fa-users"></i>
             Manage Team
-            <span class="badge">New</span>
         </a>
     </li>
     {#    {% if billing_enabled %}#}
     <li hx-boost="true">
         <a {% if request.resolver_match.view_name == "billing:dashboard" %}class="active btn-disabled"{% endif %}
-           href="{% safe_url 'billing:dashboard' %}">Billing Dashboard</a>
+           href="{% safe_url 'billing:dashboard' %}">
+            <i class="fa fa-coins"></i>
+            Billing Dashboard
+        </a>
     </li>
     {#    {% endif %}#}
     <li>
@@ -37,7 +39,7 @@
     <li>
         <span>Current Version: {{ version }}</span>
     </li>
-    {% if git_version %}
+    {% if git_version and git_version != "prod" %}
         <li>
             <span class="text-center">{{ git_version | slice:7 }}</span>
         </li>

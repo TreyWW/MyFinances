@@ -108,6 +108,45 @@
                                     </details>
                                 </li>
                                 {% if schedule_invoices_enabled %}
+                <div class="dropdown dropdown-left {% if forloop.last and invoices.count > 4 %}dropdown-top{% endif %}">
+                    <label tabindex="0" class="btn btn-primary btn-outline btn-sm">
+                        <i class="fa-solid fa-ellipsis-vertical"></i>
+                    </label>
+                    <ul tabindex="0"
+                        class="dropdown-content z-[1] menu wp-2 shadow-2xl bg-base-200 rounded-box w-52">
+                        <li hx-boost="true">
+                            <a href="{% url "invoices:single:overview" invoice_id=invoice.id %}">
+                                <i class="fa-solid fa-eye"></i>
+                                Overview
+                            </a>
+                        </li>
+                        <li>
+                            <a target="_blank"
+                               rel="noopener noreferrer"
+                               href="{% url 'invoices:single:preview' invoice_id=invoice.id %}">
+                                <i class="fa-solid fa-file-pdf"></i>
+                                Preview
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url "invoices:single:manage_access" invoice_id=invoice.id %}">
+                                <i class="fa-solid fa-key"></i>
+                                Manage Access
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url "invoices:single:edit" invoice_id=invoice.id %}">
+                                <i class="fa-solid fa-pencil"></i>
+                                Edit
+                            </a>
+                        </li>
+                        <li>
+                            <details>
+                                <summary>
+                                    <i class="fa-solid fa-flag"></i>
+                                    Mark As
+                                </summary>
+                                <ul>
                                     <li>
                                         <a>
                                             <i class="fa-solid fa-clock"></i>

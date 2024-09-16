@@ -21,7 +21,7 @@
                 integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
                 crossorigin="anonymous"></script>
         <!-- Tailwind & DaisyUI -->
-        <link rel="stylesheet" href="{% static 'src/output.css' %}">
+        <link rel="stylesheet" href="{% static 'src/output.css' %}?v={{ version }}">
         {#    <script src="https://cdn.tailwindcss.com"></script>#}
         <!-- FontAwesome -->
         <link rel="stylesheet"
@@ -56,7 +56,7 @@
         {% render_bundle 'htmx' 'js' %}
         {% render_bundle 'font_awesome' 'js' %}
         <!-- Tailwind & DaisyUI -->
-        <link rel="stylesheet" href="{% static 'src/output.css' %}">
+        <link rel="stylesheet" href="{% static 'src/output.css' %}?v={{ version }}">
     {% endif %}
     {% render_bundle 'receipt_downloads' 'js' %}
     {{ analytics|safe }}

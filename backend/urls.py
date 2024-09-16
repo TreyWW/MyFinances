@@ -13,7 +13,7 @@ from backend.api.public.swagger_ui import get_swagger_ui, get_swagger_endpoints
 from backend.views.core import receipts
 from backend.views.core.invoices.single.view import view_invoice_with_uuid_endpoint
 from backend.views.core.other.index import dashboard
-from backend.views.core.other.index import index
+from backend.views.core.other.index import index, pricing
 from backend.views.core.quotas.view import quotas_list
 from backend.views.core.quotas.view import quotas_page
 from backend.views.core.quotas.view import view_quota_increase_requests
@@ -29,6 +29,7 @@ urlpatterns = [
     path("api/", include("backend.api.urls")),
     path("webhooks/", include("backend.webhooks.urls")),
     path("", index, name="index"),
+    path("pricing", pricing, name="pricing"),
     path("dashboard/", dashboard, name="dashboard"),
     path("dashboard/settings/", include("backend.views.core.settings.urls")),
     path("dashboard/teams/", include("backend.views.core.teams.urls")),
@@ -37,6 +38,7 @@ urlpatterns = [
     path("dashboard/quotas/", RedirectView.as_view(url="/dashboard"), name="quotas"),
     path("dashboard/quotas/<str:group>/", quotas_list, name="quotas group"),
     path("dashboard/emails/", include("backend.views.core.emails.urls")),
+    path("dashboard/reports/", include("backend.views.core.reports.urls")),
     path("dashboard/admin/quota_requests/", view_quota_increase_requests, name="admin quota increase requests"),
     path("dashboard/file_storage/", include("backend.views.core.file_storage.urls")),
     path("favicon.ico", RedirectView.as_view(url=settings.STATIC_URL + "favicon.ico")),
