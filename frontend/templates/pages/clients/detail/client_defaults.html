@@ -1,3 +1,4 @@
+{% load render_bundle from webpack_loader %}
 <form class="py-4"
       method="POST"
       {% if client %} hx-post="{% url 'api:settings:client_defaults' client_id=client.id %}" {% else %} hx-post="{% url 'api:settings:client_defaults without client' %}" {% endif %}
@@ -187,6 +188,36 @@
                            class="input input-block input-bordered">
                 </div>
             </div>
+            <h2 class="text-xl font-semibold">Payment Details</h2>
+            <div class="w-full flex flex-row gap-4 mt-4">
+                <div class="form-control mb-4">
+                    <label class="label justify-start" for="invoice_account_holder_name">Account Holder Name</label>
+                    <input name="invoice_account_holder_name"
+                           type="text"
+                           value="{{ defaults.invoice_account_holder_name | default_if_none:'' }}"
+                           placeholder="Mr John Doe"
+                           class="input input-block input-bordered">
+                </div>
+                <div class="form-control mb-4">
+                    <label class="label justify-start" for="invoice_account_number">Account Number</label>
+                    <input name="invoice_account_number"
+                           type="text"
+                           value="{{ defaults.invoice_account_number | default_if_none:'' }}"
+                           placeholder="12345678"
+                           onkeyup="this.value = validate_account_number(this.value);"
+                           class="input input-block input-bordered">
+                </div>
+                <div class="form-control mb-4">
+                    <label class="label justify-start" for="invoice_sort_code">Sort Code</label>
+                    <input name="invoice_sort_code"
+                           onkeyup="this.value = validate_sort_code(this.value);"
+                           pattern="[0-9]{2}-[0-9]{2}-[0-9]{2}"
+                           type="text"
+                           value="{{ defaults.invoice_sort_code | default_if_none:'' }}"
+                           placeholder="12-34-56"
+                           class="input input-block input-bordered">
+                </div>
+            </div>
         </div>
     </div>
     <button class="btn btn-primary loading-htmx mt-4"
@@ -197,3 +228,4 @@
               class="loading loading-spinner loading-htmx-loader"></span>
     </button>
 </form>
+{% render_bundle 'validate_payment_details' 'js' %}

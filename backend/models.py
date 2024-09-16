@@ -407,6 +407,10 @@ class DefaultValues(OwnerBase):
     invoice_from_county = models.CharField(max_length=100, null=True, blank=True)
     invoice_from_country = models.CharField(max_length=100, null=True, blank=True)
 
+    invoice_account_number = models.CharField(max_length=100, null=True, blank=True)
+    invoice_sort_code = models.CharField(max_length=100, null=True, blank=True)
+    invoice_account_holder_name = models.CharField(max_length=100, null=True, blank=True)
+
     def get_issue_and_due_dates(self, issue_date: date | str | None = None) -> tuple[str, str]:
         due: date
         issue: date
