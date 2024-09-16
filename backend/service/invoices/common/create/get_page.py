@@ -37,7 +37,7 @@ def global_get_invoice_context(request: WebRequest) -> CreateInvoiceContextServi
         defaults = get_account_defaults(request.actor, client=None)
 
     for item in ["name", "company", "address", "city", "county", "country"]:
-        context[f"{item}"] = request.GET.get(f"from_{item}", "")
+        context[f"from_{item}"] = request.GET.get(f"from_{item}", "")
 
     if issue_date := request.GET.get("issue_date"):
         try:
@@ -72,4 +72,17 @@ def global_get_invoice_context(request: WebRequest) -> CreateInvoiceContextServi
     if account_number := request.GET.get("account_number"):
         context["account_number"] = account_number
 
+    details_from = ["name", "company", "address", "city", "county", "country"]
+
+    print(context)
+
+    for detail in details_from:
+        detail_value = request.GET.get(f"from_{detail}", "")
+
+        if not detail_value:
+            detail_value = getattr(defaults, f"invoice_from_{detail}")
+
+        context[f"from_{detail}"] = detail_value
+
+    print(context)
     return CreateInvoiceContextServiceResponse(True, CreateInvoiceContextTuple(defaults, context))

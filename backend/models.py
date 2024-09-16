@@ -400,6 +400,13 @@ class DefaultValues(OwnerBase):
     invoice_date_value = models.PositiveSmallIntegerField(default=15, null=False, blank=False)
     invoice_date_type = models.CharField(max_length=20, choices=InvoiceDateType.choices, default=InvoiceDateType.day_of_month)
 
+    invoice_from_name = models.CharField(max_length=100, null=True, blank=True)
+    invoice_from_company = models.CharField(max_length=100, null=True, blank=True)
+    invoice_from_address = models.CharField(max_length=100, null=True, blank=True)
+    invoice_from_city = models.CharField(max_length=100, null=True, blank=True)
+    invoice_from_county = models.CharField(max_length=100, null=True, blank=True)
+    invoice_from_country = models.CharField(max_length=100, null=True, blank=True)
+
     def get_issue_and_due_dates(self, issue_date: date | str | None = None) -> tuple[str, str]:
         due: date
         issue: date

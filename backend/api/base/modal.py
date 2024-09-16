@@ -14,6 +14,7 @@ from backend.models import UserSettings
 from backend.types.htmx import HtmxHttpRequest
 from backend.types.requests import WebRequest
 from backend.utils.feature_flags import get_feature_status
+from backend.service.defaults.get import get_account_defaults
 
 
 # from backend.utils.quota_limit_ops import quota_usage_check_under
@@ -91,6 +92,15 @@ def open_modal(request: WebRequest, modal_name, context_type=None, context_value
                 context["from_city"] = invoice.self_city
                 context["from_county"] = invoice.self_county
                 context["from_country"] = invoice.self_country
+            elif context_type == "create_invoice_from":
+                defaults = get_account_defaults(request.actor)
+
+                context["from_name"] = getattr(defaults, f"invoice_from_name")
+                context["from_company"] = getattr(defaults, f"invoice_from_company")
+                context["from_address"] = getattr(defaults, f"invoice_from_address")
+                context["from_city"] = getattr(defaults, f"invoice_from_city")
+                context["from_county"] = getattr(defaults, f"invoice_from_county")
+                context["from_country"] = getattr(defaults, f"invoice_from_country")
             elif context_type == "invoice":
                 try:
                     invoice = Invoice.objects.get(id=context_value)

@@ -25,12 +25,12 @@
                 representative
             </p>
         {% else %}
-            <p class="text-md">{{ name | default:"No Name" }}</p>
-            <p class="text-sm">{{ company | default:"No Company" }}</p>
-            <p class="text-sm">{{ address | default:"No address" }}</p>
-            <p class="text-sm">{{ city | default:"No city" }}</p>
-            <p class="text-sm">{{ county | default:"No county" }}</p>
-            <p class="text-sm">{{ country | default:"No country" }}</p>
+            <p class="text-md">{{ to_name | default:"No Name" }}</p>
+            <p class="text-sm">{{ to_company | default:"No Company" }}</p>
+            <p class="text-sm">{{ to_address | default:"No address" }}</p>
+            <p class="text-sm">{{ to_city | default:"No city" }}</p>
+            <p class="text-sm">{{ to_county | default:"No county" }}</p>
+            <p class="text-sm">{{ to_country | default:"No country" }}</p>
             <p class="text-sm">
                 {% if is_representative == "on" %}
                     Is a
@@ -41,12 +41,12 @@
             </p>
         {% endif %}
     </div>
-    <input type="hidden" name="to_name" value="{{ name | default:"" }}">
-    <input type="hidden" name="to_company" value="{{ company | default:"" }}">
-    <input type="hidden" name="to_address" value="{{ address | default:"" }}">
-    <input type="hidden" name="to_city" value="{{ city | default:"" }}">
-    <input type="hidden" name="to_county" value="{{ county | default:"" }}">
-    <input type="hidden" name="to_country" value="{{ country | default:"" }}">
+    <input type="hidden" name="to_name" value="{{ to_name | default:"" }}">
+    <input type="hidden" name="to_company" value="{{ to_company | default:"" }}">
+    <input type="hidden" name="to_address" value="{{ to_address | default:"" }}">
+    <input type="hidden" name="to_city" value="{{ to_city | default:"" }}">
+    <input type="hidden" name="to_county" value="{{ to_county | default:"" }}">
+    <input type="hidden" name="to_country" value="{{ to_country | default:"" }}">
     <input type="hidden" name="selected_client" value="{{ existing_client.id }}">
     <input type="hidden"
            name="is_representative"
