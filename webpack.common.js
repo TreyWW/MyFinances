@@ -14,6 +14,9 @@ module.exports = {
     },
     font_awesome: {
       import: './assets/scripts/font_awesome.js'
+    },
+    validate_payment_details: {
+      import: './assets/scripts/validate_payment_details.js'
     }
   },
   output: {

@@ -12,7 +12,7 @@ to_get = ["name", "address", "city", "country", "company", "is_representative"]
 def set_destination_to(request: HtmxHttpRequest):
     context: dict = {"swapping": True}
 
-    context.update({key: request.POST.get(key, "") for key in to_get})
+    context.update({f"to_{key}": request.POST.get(key, "") for key in to_get})
 
     use_existing = True if request.POST.get("use_existing") == "true" else False
     selected_client = request.POST.get("selected_client") if use_existing else None
@@ -31,6 +31,6 @@ def set_destination_to(request: HtmxHttpRequest):
 def set_destination_from(request: HtmxHttpRequest):
     context: dict = {"swapping": True}
 
-    context.update({key: request.POST.get(key, "") for key in to_get})
+    context.update({f"from_{key}": request.POST.get(key, "") for key in to_get})
 
     return render(request, "pages/invoices/create/destinations/_from_destination.html", context)

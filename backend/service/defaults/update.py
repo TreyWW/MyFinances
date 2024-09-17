@@ -44,6 +44,39 @@ def change_client_defaults(request: WebRequest, defaults: DefaultValues) -> Clie
         else:
             return ClientDefaultsServiceResponse(error_message=logo_ok)
 
+    DETAIL_INPUTS = {
+        "name": {"max_len": 100},
+        "company": {"max_len": 100},
+        "address": {"max_len": 100},
+        "city": {"max_len": 100},
+        "county": {"max_len": 100},
+        "country": {"max_len": 100},
+    }
+
+    for detail, value_dict in DETAIL_INPUTS.items():
+        input_post = request.POST.get(f"invoice_from_{detail}", "")
+
+        if len(input_post) > value_dict["max_len"]:
+            return ClientDefaultsServiceResponse(
+                error_message=f"Details - From {detail} is too long, max length is {value_dict['max_len']}"
+            )
+
+        setattr(defaults, f"invoice_from_{detail}", input_post)
+
+    PAYMENT_INPUTS = {
+        "account_number": {"max_len": 100},
+        "sort_code": {"max_len": 100},
+        "account_holder_name": {"max_len": 100},
+    }
+
+    for detail, value_dict in PAYMENT_INPUTS.items():
+        input_post = request.POST.get(f"invoice_{detail}", "")
+
+        if len(input_post) > value_dict["max_len"]:
+            return ClientDefaultsServiceResponse(error_message=f"Payment - {detail} is too long, max length is {value_dict['max_len']}")
+
+        setattr(defaults, f"invoice_{detail}", input_post)
+
     defaults.save()
     return ClientDefaultsServiceResponse(True)
 

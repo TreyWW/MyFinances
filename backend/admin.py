@@ -114,7 +114,17 @@ admin.site.register(EmailSendStatus, EmailSendStatusAdmin)
 fields = list(UserAdmin.fieldsets)  # type: ignore[arg-type]
 fields[0] = (
     None,
-    {"fields": ("username", "password", "logged_in_as_team", "awaiting_email_verification", "stripe_customer_id", "entitlements")},
+    {
+        "fields": (
+            "username",
+            "password",
+            "logged_in_as_team",
+            "awaiting_email_verification",
+            "stripe_customer_id",
+            "entitlements",
+            "require_change_password",
+        )
+    },
 )
 UserAdmin.fieldsets = tuple(fields)
 admin.site.register(User, UserAdmin)

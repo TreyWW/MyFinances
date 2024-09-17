@@ -49,8 +49,12 @@ class Boto3Handler:
             boto3.set_stream_logger("", level=logging.INFO)
 
     def _initiate_clients(self):
-        if get_var("AWS_DISABLED"):
+        if get_var("AWS_DISABLED", "").lower() == "true":
             logger.info("The variable AWS_DISABLED is present, not initiating boto3")
+            return
+
+        if not get_var("AWS_ENABLED"):
+            logger.error("The variable AWS_ENABLED is not present, not initiating boto3")
             return
 
         self._initiate_session()
