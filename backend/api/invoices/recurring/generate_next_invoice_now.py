@@ -48,7 +48,13 @@ def generate_next_invoice_now_endpoint(request: WebRequest, invoice_profile_id):
         )
 
         return render(
-            request, "pages/invoices/recurring/manage/next_invoice_block.html", {"invoiceProfile": invoice_recurring_profile} | context
+            request,
+            "pages/invoices/recurring/manage/next_invoice_block.html",
+            {
+                "invoiceProfile": invoice_recurring_profile,
+                "swap": True,
+            }
+            | context,
         )
     else:
         logger.info(svc_resp.error)
