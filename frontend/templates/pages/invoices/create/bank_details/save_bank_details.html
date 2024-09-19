@@ -13,12 +13,16 @@
                 Save for Future Use
             </div>
             <div class="dropdown w-2/3">
-                <button class="btn btn-primary w-full">Choose From Saved Details</button>
-                <ul tabindex="0"
+                <div tabindex="0" role="button" class="btn btn-primary w-full" 
+                    hx-get="{% url 'api:invoices:get_bank_details' %}" 
+                    hx-trigger="click"
+                    hx-target="#bank-details-dropdown"
+                    hx-swap="none">
+                    Choose From Saved Details
+                </div>
+                <ul id="bank-details-dropdown" tabindex="0"
                     class="dropdown-content z-[1] menu p-8 shadow bg-base-200 rounded-box w-full min-w-full">
-                    <!-- Add your dropdown items here -->
-                    <li><a href="#">Bank Account 1</a></li>
-                    <li><a href="#">Bank Account 2</a></li>
+
                 </ul>
             </div>
         </div>
@@ -26,6 +30,63 @@
 </div>
 
 <script>
+    document.addEventListener('htmx:afterRequest', function (event) {
+        const targetId = event.detail.target.id;
+        if (targetId === 'bank-details-dropdown') {
+            // Get the JSON response
+            const response = JSON.parse(event.detail.xhr.responseText);
+
+            // Clear the dropdown content first
+            const dropdown = document.getElementById('bank-details-dropdown');
+            dropdown.innerHTML = '';
+
+            // Check if the response is successful and contains bank details
+            if (response.status === 'success' && response.bank_details.length > 0) {
+                response.bank_details.forEach(function (bank_detail) {
+                    // Create a new list item for each bank detail
+                    const li = document.createElement('li');
+                    li.classList.add('p-2', 'hover:bg-gray-200', 'flex', 'flex-col', 'items-start', 'cursor-pointer');
+
+                    // Set the bank detail as data attributes
+                    li.setAttribute('data-account-holder-name', bank_detail.account_holder_name);
+                    li.setAttribute('data-account-number', bank_detail.account_number);
+                    li.setAttribute('data-sort-code', bank_detail.sort_code);
+
+                    // Set the inner HTML with bank details
+                    li.innerHTML = `
+                        <span class="font-semibold">${bank_detail.account_holder_name}</span>
+                        <span class="text-sm text-gray-500">Account: ${bank_detail.account_number}</span>
+                        <span class="text-sm text-gray-500">Sort Code: ${bank_detail.sort_code}</span>
+                    `;
+
+                    // Add an event listener to populate form fields when clicked
+                    li.addEventListener('click', function () {
+                        document.querySelector('input[name="account_holder_name"]').value = bank_detail.account_holder_name;
+                        document.querySelector('input[name="account_number"]').value = bank_detail.account_number;
+                        document.querySelector('input[name="sort_code"]').value = bank_detail.sort_code;
+
+                        // Recheck the fields to enable/disable the save button
+                        checkFieldsFilled();
+
+                        dropdown.classList.add('opacity-0');
+                        setTimeout(() => {
+                            dropdown.style.display = 'none';
+                        }, 0); 
+                    });
+
+                    // Append the new list item to the dropdown
+                    dropdown.appendChild(li);
+                });
+
+                dropdown.style.display = 'block';
+                dropdown.classList.remove('opacity-0');
+            } else {
+                // Show a message if no bank details are available
+                dropdown.innerHTML = '<li class="p-2">No saved bank details found</li>';
+            }
+        }
+    });
+
     // Get references to the input fields and the save button
     const accountHolderNameInput = document.querySelector('input[name="account_holder_name"]');
     const accountNumberInput = document.querySelector('input[name="account_number"]');
