@@ -40,20 +40,10 @@ def login_initial_page(request: HttpRequest):
 
 @not_authenticated
 @require_POST
-def login_manual(request: HtmxAnyHttpRequest):  # HTMX POST
-    if not request.htmx:
-        return redirect("auth:login")
+def login_manual(request: HttpRequest):
     email = request.POST.get("email")
     password = request.POST.get("password")
-    page = str(request.POST.get("page"))
     redirect_url = request.POST.get("next", "")
-
-    if not page or page == "1":
-        return render(
-            request,
-            "pages/auth/login.html",
-            context={"email": email, "next": redirect_url, "magic_links_enabled": ARE_EMAILS_ENABLED},
-        )
 
     if not email:
         return render_error_toast_message(request, "Please enter an email")
