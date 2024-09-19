@@ -84,7 +84,7 @@
         // Remove any non-numeric characters
         value = value.replace(/\D/g, '');
 
-        // Ensure the value is no longer than 16 characters (1234-1234-1234-1234)
+        // Ensure the value is no longer than 8 characters (12345678)
         if (value.length > 8) {
             value = value.slice(0, 8);
         }
