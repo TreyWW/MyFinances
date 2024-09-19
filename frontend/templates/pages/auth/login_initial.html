@@ -65,13 +65,18 @@
             color: inherit;
         }
 
+        .btn-loading {
+            background: url(https://raw.githubusercontent.com/n3r4zzurr0/svg-spinners/main/preview/90-ring-with-bg-white-36.svg) no repeat 50% 50%;
+        }
 
     </style>
     <form method="post"
           class="slide-transition"
           hx-swap="none"
           hx-post="{% url 'auth:login manual' %}"
-          action="{% url 'auth:login manual' %}">
+          action="{% url 'auth:login manual' %}"
+          hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+          hx-indicator='button[data-hx-loading="save"]'>
         {% csrf_token %}
         <noscript>
             <div data-theme="dim"
@@ -90,29 +95,50 @@
                 </div>
             </div>
         </noscript>
-        <div data-swap="form_fields">
-            <div class="form-control w-full mt-4">
-                <label class="label">
-                    <span class="label-text text-base-content undefined">Email Address</span>
-                </label>
-                <input required
-                       type="email"
-                       name="email"
-                       pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
-                       placeholder="jsmith@example.com"
-                       class="peer input input-bordered w-full"
-                       value="{{ attempted_email|default_if_none:'' }}">
-                <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden">
-                    <span class="label-text-alt text-error">Please enter a valid email.</span>
-                </label>
-                <input type="hidden" name="page" value="1">
-                <input type="hidden" name="next" value="{{ request.GET.next }}">
-            </div>
-            <button hx-swap="none" hx-target="form" class="btn mt-6 w-full btn-primary">
-                Next
-                <i class="fa-solid fa-arrow-right"></i>
-            </button>
+        <div class="form-control w-full mt-4">
+            <label class="label">
+                <span class="label-text text-base-content undefined">Email Address</span>
+            </label>
+            <input required
+                   type="email"
+                   name="email"
+                   pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
+                   placeholder="jsmith@example.com"
+                   class="peer input input-bordered w-full"
+                   value="{{ attempted_email|default_if_none:'' }}">
+            <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden">
+                <span class="label-text-alt text-error">Please enter a valid email.</span>
+            </label>
+            <input type="hidden" name="next" value="{{ request.GET.next }}">
         </div>
+        <div class="form-control w-full mt-4">
+            <label class="label">
+                <span class="label-text text-base-content undefined">Password</span>
+            </label>
+            <input required
+                   autofocus
+                   type="password"
+                   name="password"
+                   placeholder="********"
+                   class="input input-bordered w-full">
+        </div>
+        <button class="btn btn-primary loading-htmx mt-5 w-full"
+                data-hx-loading="save"
+                type="submit">
+            Login
+            <span id="currency_save_loading"
+                  class="loading loading-spinner loading-htmx-loader"></span>
+        </button>
+        <div class="divider mt-8">OR</div>
+        {% if magic_links_enabled %}
+            <button type="button"
+                    hx-post="{% url 'auth:login magic_link request' %}"
+                    hx-vals='{"email": "{{ email }}", "next": "{{ next }}"}'
+                    class="btn-large-card flex flex-col items-center">
+                <span>Login with email magic link</span>
+                <span class="text-xs text-center">This sends an email to your address, all you need to do is press the link and you're in!</span>
+            </button>
+        {% endif %}
         <div class="text-center mt-3">
             Don't have an account yet?
             <a href="{% url 'auth:login create_account' %}"
