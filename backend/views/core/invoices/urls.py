@@ -1,6 +1,7 @@
 from django.urls import path
 from django.urls.conf import include
 
+from . import save_bank_details
 from .recurring.create import create_recurring_invoice_endpoint_handler
 from .recurring.dashboard import invoices_recurring_dashboard_endpoint
 from .recurring.edit import invoice_edit_page_endpoint
@@ -73,6 +74,7 @@ urlpatterns = [
     path("single/", include((SINGLE_INVOICE_URLS, "single"), namespace="single")),
     path("recurring/", include((RECURRING_INVOICE_URLS, "recurring"), namespace="recurring")),
     path("", invoices_single_dashboard_endpoint),
+    path("save_bank_details/", save_bank_details.save_bank_details, name="save_bank_details"),
 ]
 
 app_name = "invoices"

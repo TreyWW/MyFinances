@@ -5,6 +5,7 @@ from django.contrib.auth.admin import UserAdmin
 
 from backend.models import (
     Client,
+    BankDetail,
     Invoice,
     InvoiceURL,
     InvoiceItem,
@@ -45,6 +46,7 @@ admin.site.register(
     [
         UserSettings,
         Client,
+        BankDetail,
         Invoice,
         InvoiceURL,
         InvoiceItem,
