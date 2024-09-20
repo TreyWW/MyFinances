@@ -97,8 +97,6 @@ def send_welcome_email(sender, instance: User, created, **kwargs):
                 Verify Link: {magic_link_url}
             """
 
-            email_input = SingleEmailInput(destination=instance.email, subject="Welcome to MyFinances", content=email_message)
-
-            email = send_email(email_input)
+            email = send_email(destination=instance.email, subject="Welcome to MyFinances", content=email_message)
 
         #     User.send_welcome_email(instance)

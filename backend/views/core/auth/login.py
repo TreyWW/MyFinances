@@ -143,7 +143,7 @@ class MagicLinkRequestView(View):
     def send_magic_link_email(self, request: HttpRequest, user: User, uuid: str, plain_token: str) -> None:
         magic_link_url = request.build_absolute_uri(reverse("auth:login magic_link verify", kwargs={"uuid": uuid, "token": plain_token}))
 
-        email: SingleEmailInput = SingleEmailInput(
+        send_email(
             destination=user.email,
             subject="Login Request",
             content=dedent(
@@ -157,7 +157,6 @@ class MagicLinkRequestView(View):
         """
             ),
         )
-        send_email(email)
 
 
 class MagicLinkWaitingView(View):
