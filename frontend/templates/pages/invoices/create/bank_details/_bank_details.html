@@ -1,0 +1,8 @@
+<div class="my-4 flex w-full flex-col">
+    <div class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-2 lg:gap-4">
+        {% include "pages/invoices/create/bank_details/holder_name.html" %}
+        {% include "pages/invoices/create/bank_details/account_number.html" %}
+        {% include "pages/invoices/create/bank_details/sort_code.html" %}
+    </div>
+    {% include "pages/invoices/create/bank_details/_save_bank_details.html" with button_text=button_text dropdown_text=dropdown_text %}
+</div>

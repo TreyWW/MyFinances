@@ -188,36 +188,16 @@
                            class="input input-block input-bordered">
                 </div>
             </div>
-            <h2 class="text-xl font-semibold">Payment Details</h2>
-            <div class="w-full flex flex-row gap-4 mt-4">
-                <div class="form-control mb-4">
-                    <label class="label justify-start" for="invoice_account_holder_name">Account Holder Name</label>
-                    <input name="invoice_account_holder_name"
-                           type="text"
-                           value="{{ defaults.invoice_account_holder_name | default_if_none:'' }}"
-                           placeholder="Mr John Doe"
-                           class="input input-block input-bordered">
-                </div>
-                <div class="form-control mb-4">
-                    <label class="label justify-start" for="invoice_account_number">Account Number</label>
-                    <input name="invoice_account_number"
-                           type="text"
-                           value="{{ defaults.invoice_account_number | default_if_none:'' }}"
-                           placeholder="12345678"
-                           onkeyup="this.value = validate_account_number(this.value);"
-                           class="input input-block input-bordered">
-                </div>
-                <div class="form-control mb-4">
-                    <label class="label justify-start" for="invoice_sort_code">Sort Code</label>
-                    <input name="invoice_sort_code"
-                           onkeyup="this.value = validate_sort_code(this.value);"
-                           pattern="[0-9]{2}-[0-9]{2}-[0-9]{2}"
-                           type="text"
-                           value="{{ defaults.invoice_sort_code | default_if_none:'' }}"
-                           placeholder="12-34-56"
-                           class="input input-block input-bordered">
-                </div>
-            </div>
+        </div>
+        <input type="radio"
+               name="my_tabs_2"
+               role="tab"
+               class="tab"
+               aria-label="Payment"
+               checked="checked" />
+        <div role="tabpanel"
+             class="tab-content bg-base-100 border-base-300 rounded-box p-6">
+             {% include "pages/invoices/create/bank_details/_bank_details.html" with button_text="Add" dropdown_text="Manage Saved Payment Details" %}
         </div>
     </div>
     <button class="btn btn-primary loading-htmx mt-4"
@@ -229,3 +209,4 @@
     </button>
 </form>
 {% render_bundle 'validate_payment_details' 'js' %}
+{% render_bundle 'bank_details_dropdown' 'js' %}

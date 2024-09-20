@@ -1,6 +1,6 @@
 from django.http import JsonResponse
-from django.views.decorators.http import require_GET
-from backend.models import DefaultValues
+from django.views.decorators.http import require_GET, require_http_methods
+from backend.models import DefaultValues, BankDetail
 
 @require_GET
 def get_bank_details(request):
@@ -21,3 +21,14 @@ def get_bank_details(request):
         return JsonResponse({'status': 'success', 'bank_details': bank_details_list})
     except DefaultValues.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'No saved bank details found'}, status=404)
+
+@require_http_methods(["DELETE"])
+def delete_bank_detail(request, bank_detail_id):
+    try:
+        bank_detail = BankDetail.objects.get(id=bank_detail_id)
+        bank_detail.delete()
+        return JsonResponse({'status': 'success'})
+    except BankDetail.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Bank detail not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=500)

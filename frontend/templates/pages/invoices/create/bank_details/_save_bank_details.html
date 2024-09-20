@@ -1,0 +1,67 @@
+{% load render_bundle from webpack_loader %}
+<div class="input_card max-w-full min-w-full mt-6">
+    <div class="card-body">
+        <div class="flex py-4 gap-x-3">
+            <div role="button"
+                 class="btn btn-primary w-1/3" 
+                 id="save-for-future-btn" 
+                 hx-post="{% url 'invoices:save_bank_details' %}" 
+                 hx-include="[name='account_holder_name'], [name='account_number'], [name='sort_code']"
+                 hx-trigger="click"
+                 hx-swap="none" 
+                 hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                 disabled>
+                {{ button_text|default:"Save for Future Use" }}
+            </div>
+            <div class="dropdown w-2/3">
+                <div tabindex="0" role="button" class="btn btn-primary w-full" 
+                    hx-get="{% url 'api:invoices:get_bank_details' %}" 
+                    hx-trigger="click"
+                    hx-target="#bank-details-dropdown"
+                    hx-swap="none">
+                    {{ dropdown_text|default:"Choose From Saved Details" }}
+                </div>
+                <ul id="bank-details-dropdown" tabindex="0"
+                    class="dropdown-content z-[1] menu p-8 shadow bg-base-200 rounded-box w-full min-w-full"
+                    style="max-height: 250px; overflow-y: auto;">
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% render_bundle 'bank_details_dropdown' 'js' %}
+
+<script>
+    document.addEventListener('htmx:afterRequest', handleBankDetailsDropdown);
+
+    // Get references to the input fields and the save button
+    const accountHolderNameInput = document.querySelector('input[name="account_holder_name"]');
+    const accountNumberInput = document.querySelector('input[name="account_number"]');
+    const sortCodeInput = document.querySelector('input[name="sort_code"]');
+    const saveButton = document.getElementById("save-for-future-btn");
+
+    // Function to check if all fields are filled and enable/disable the button
+    function checkFieldsFilled() {
+        if (accountHolderNameInput.value && accountNumberInput.value.length === 8 && sortCodeInput.value.length === 8) {
+            saveButton.removeAttribute("disabled");  // Enable button
+        } else {
+            saveButton.setAttribute("disabled", "true");  // Disable button
+        }
+    }
+
+    // Attach the event listeners to each input field to check the fields as user types
+    accountHolderNameInput.addEventListener("input", checkFieldsFilled);
+    accountNumberInput.addEventListener("input", checkFieldsFilled);
+    sortCodeInput.addEventListener("input", checkFieldsFilled);
+
+    // Initial check on page load
+    checkFieldsFilled();
+</script>
+
+<style>
+    ul#bank-details-dropdown li:hover {
+        background-color: #e0e0e0;
+        color: #000000;
+    }
+</style>

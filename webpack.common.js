@@ -17,6 +17,9 @@ module.exports = {
     },
     validate_payment_details: {
       import: './assets/scripts/validate_payment_details.js'
+    },
+    bank_details_dropdown: {
+      import: './assets/scripts/bank_details_dropdown.js'
     }
   },
   output: {

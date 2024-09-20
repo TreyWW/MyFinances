@@ -1,6 +1,6 @@
 from django.urls import path, include
 
-from . import fetch, delete, edit, manage, get_bank_details
+from . import bank_details, fetch, delete, edit, manage
 from .create import set_destination
 from .create.services import add_service
 from .recurring.delete import delete_invoice_recurring_profile_endpoint
@@ -58,7 +58,8 @@ urlpatterns = [
     path("single/", include((SINGLE_INVOICE_URLS, "single"), namespace="single")),
     path("recurring/", include((RECURRING_INVOICE_URLS, "recurring"), namespace="recurring")),
     path("create/", include((CREATE_INVOICE_URLS, "create"), namespace="create")),
-    path("get_bank_details/", get_bank_details.get_bank_details, name="get_bank_details"),
+    path("get_bank_details/", bank_details.get_bank_details, name="get_bank_details"),
+    path("delete_bank_detail/<int:bank_detail_id>/", bank_details.delete_bank_detail, name='delete_bank_detail')
 ]
 
 app_name = "invoices"
