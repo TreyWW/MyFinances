@@ -70,13 +70,9 @@
         }
 
     </style>
-    <form method="post"
-          class="slide-transition"
-          hx-swap="none"
-          hx-post="{% url 'auth:login manual' %}"
-          action="{% url 'auth:login manual' %}"
-          hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-          hx-indicator='button[data-hx-loading="save"]'>
+    <form id="login-form"
+          method="post"
+          action="{% url 'auth:login manual' %}">
         {% csrf_token %}
         <noscript>
             <div data-theme="dim"
@@ -105,7 +101,7 @@
                    pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
                    placeholder="jsmith@example.com"
                    class="peer input input-bordered w-full"
-                   value="{{ attempted_email|default_if_none:'' }}">
+                   value="{{ request.GET.email|default_if_none:'' }}">
             <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden">
                 <span class="label-text-alt text-error">Please enter a valid email.</span>
             </label>
@@ -122,10 +118,10 @@
                    placeholder="********"
                    class="input input-bordered w-full">
         </div>
-        <button class="btn btn-primary loading-htmx mt-5 w-full"
+        <button id="login-btn" class="btn btn-primary loading-htmx mt-5 w-full"
                 data-hx-loading="save"
                 type="submit">
-            Login
+            <span class="loading-htmx-text">Login</span>
             <span id="currency_save_loading"
                   class="loading loading-spinner loading-htmx-loader"></span>
         </button>
@@ -162,4 +158,14 @@
             </a>
         {% endif %}
     </form>
+    <script>
+        // Displays loader and disables button when form is submitted
+        const form = document.getElementById("login-form");
+        form.addEventListener("submit", (event) => {
+            const button = document.getElementById("login-btn");
+            const loader = document.getElementById("currency_save_loading");
+            button.setAttribute("disabled", "");
+            loader.style.display = "inline-block";
+        })
+    </script>
 {% endblock %}

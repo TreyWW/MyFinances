@@ -46,39 +46,43 @@ def login_manual(request: HttpRequest):
     redirect_url = request.POST.get("next", "")
 
     if not email:
-        return render_error_toast_message(request, "Please enter an email")
+        messages.error(request, "Please enter an email")
+        return redirect_to_login(email, redirect_url)
 
     try:
         validate_email(email)
     except ValidationError:
-        return render_error_toast_message(request, "Please enter a valid email")
+        messages.error(request, "Please enter a valid email")
+        return redirect_to_login(email, redirect_url)
 
     if not password:
-        return render_error_toast_message(request, "Please enter a password")
+        messages.error(request, "Please enter a password")
+        return redirect_to_login(email, redirect_url)
 
     user = authenticate(request, username=email, password=password)
 
     if not user:
-        return render_error_toast_message(request, "Incorrect email or password")
+        messages.error(request, "Incorrect email or password")
+        return redirect_to_login(email, redirect_url)
 
     if user.awaiting_email_verification and ARE_EMAILS_ENABLED:  # type: ignore[attr-defined]
-        return render_error_toast_message(request, "You must verify your email before logging in.")
+        messages.error(request, "You must verify your email before logging in.")
+        return redirect_to_login(email, redirect_url)
 
     login(request, user)
 
-    response = HttpResponse(status=200)
-
     if user.require_change_password:  # type: ignore[attr-defined]
         messages.warning(request, "You have been requested by an administrator to change your account password.")
-        response["HX-Redirect"] = reverse("settings:change_password")
-    else:
-        try:
-            resolve(redirect_url)
-            response["HX-Redirect"] = redirect_url
-        except Resolver404:
-            response["HX-Redirect"] = "/dashboard/"
+        return redirect("settings:change_password")
+    
+    try:
+        resolve(redirect_url)
+        return redirect(redirect_url)
+    except Resolver404:
+        return redirect("dashboard")
 
-    return response
+def redirect_to_login(email: str, redirect_url: str):
+    return redirect(f"{reverse('auth:login')}?email={email}&next={redirect_url}")
 
 
 def render_error_toast_message(request: HttpRequest, message: str) -> HttpResponse:
