@@ -47,13 +47,13 @@ def login_manual(request: HttpRequest):
 
     if not email:
         messages.error(request, "Please enter an email")
-        return redirect_to_login(email, redirect_url)
+        return redirect_to_login("", redirect_url)
 
     try:
         validate_email(email)
     except ValidationError:
         messages.error(request, "Please enter a valid email")
-        return redirect_to_login(email, redirect_url)
+        return redirect_to_login("", redirect_url)
 
     if not password:
         messages.error(request, "Please enter a password")
@@ -74,12 +74,13 @@ def login_manual(request: HttpRequest):
     if user.require_change_password:  # type: ignore[attr-defined]
         messages.warning(request, "You have been requested by an administrator to change your account password.")
         return redirect("settings:change_password")
-    
+
     try:
         resolve(redirect_url)
         return redirect(redirect_url)
     except Resolver404:
         return redirect("dashboard")
+
 
 def redirect_to_login(email: str, redirect_url: str):
     return redirect(f"{reverse('auth:login')}?email={email}&next={redirect_url}")
