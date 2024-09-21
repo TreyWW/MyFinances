@@ -1,0 +1,45 @@
+{% extends 'base/auth.html' %}
+{% load feature_enabled %}
+{% load static %}
+{% block image %}
+    {% static 'img/mobile_login.svg' %}
+{% endblock image %}
+{% block title %}
+    Sign in to
+    <a href="/" class="link link-hover">MyFinances</a>
+{% endblock title %}
+{% block top-r-top %}New to MyFinances?{% endblock %}
+{% block top-r-bottom %}
+    <a href="{% url 'auth:login create_account' %}" class="font-semibold link link-primary link-hover">Create an account</a>{% endblock %}
+{% block content %}
+    {% feature_enabled "areMagicLinkLoginsAllowed" as magic_links_enabled %}
+    <form id="login-form" method="post" action="{% url 'auth:login manual' %}" class="flex flex-col gap-7">
+        {% csrf_token %}
+        <div class="form-control w-full mt-4">
+            <label class="label">
+                <span class="label-text text-base-content undefined">Email Address</span>
+            </label>
+            <input required
+                   type="email"
+                   name="email"
+                   pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
+                   placeholder="jsmith@example.com"
+                   class="peer input input-bordered w-full"
+                   value="{{ request.GET.email|default_if_none:'' }}">
+            <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden">
+                <span class="label-text-alt text-error">Please enter a valid email.</span>
+            </label>
+            <input type="hidden" name="next" value="{{ request.GET.next }}">
+        </div>
+        <button class="btn btn-primary loading-htmx w-full"
+                data-hx-loading="login"
+                type="submit">
+            <span class="loading-htmx-text">Sign in with email</span>
+            <span id="login_loading" class="loading loading-spinner loading-htmx-loader"></span>
+        </button>
+        <div class="bg-base-200 py-4 px-8 text-md text-base-content rounded-lg">
+            We’ll email you a magic code to login, or you can
+            <a href="{% url 'auth:login manual initial' %}" class="link-primary link-hover font-semibold">log in manually</a> with your password.
+        </div>
+    </form>
+{% endblock %}

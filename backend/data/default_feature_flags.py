@@ -23,4 +23,9 @@ default_feature_flags: list[FeatureFlag] = [
         description="Invoice Reminders allow for clients to be reminded to pay an invoice.",
         default=False,
     ),
+    FeatureFlag(
+        name="areMagicLinkLoginsAllowed",
+        description="Magic Link Logins allow for users to login without a password just by clicking a link in their email",
+        default=True,
+    ),
 ]

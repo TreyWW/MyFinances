@@ -15,6 +15,7 @@ from django_ratelimit.decorators import ratelimit
 
 from backend.decorators import *
 from backend.models import LoginLog, User, VerificationCodes, AuditLog
+from backend.templatetags.feature_enabled import feature_enabled
 from backend.types.emails import SingleEmailInput
 from backend.views.core.auth.verify import create_magic_link
 from backend.types.htmx import HtmxAnyHttpRequest
@@ -33,14 +34,26 @@ def login_initial_page(request: HttpRequest):
 
     return render(
         request,
-        "pages/auth/login_initial.html",
-        {"github_enabled": SOCIAL_AUTH_GITHUB_ENABLED, "next": redirect_url, "google_enabled": SOCIAL_AUTH_GOOGLE_OAUTH2_ENABLED},
+        "pages/auth/login/login_email_magic_link.html",
+        {"next": redirect_url},
+    )
+
+
+@require_GET
+@not_authenticated
+def login_manual_initial_page(request: HttpRequest):
+    redirect_url = request.GET.get("next")
+
+    return render(
+        request,
+        "pages/auth/login/login_email_password.html",
+        {"next": redirect_url},
     )
 
 
 @not_authenticated
 @require_POST
-def login_manual(request: HttpRequest):
+def login_manual(request: WebRequest):
     email = request.POST.get("email")
     password = request.POST.get("password")
     redirect_url = request.POST.get("next", "")
@@ -80,6 +93,13 @@ def login_manual(request: HttpRequest):
         return redirect(redirect_url)
     except Resolver404:
         return redirect("dashboard")
+
+
+@not_authenticated
+@require_POST
+def login_magic_link(request: WebRequest):
+    email = request.POST.get("email")
+    redirect_url = request.POST.get("next", "")
 
 
 def redirect_to_login(email: str, redirect_url: str):

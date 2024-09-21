@@ -1,4 +1,5 @@
 {% extends 'base/auth.html' %}
+{% load feature_enabled %}
 {% load static %}
 {% block image %}
     {% static 'img/mobile_login.svg' %}
@@ -7,6 +8,7 @@
     Login
 {% endblock title %}
 {% block content %}
+    {% feature_enabled "areMagicLinkLoginsAllowed" as magic_links_enabled %}
     <style>
         @keyframes fade-in {
             from {
