@@ -156,6 +156,30 @@ Thank you for your contributions!
                 </td>
                 </td><td>
                 <td align="center">
+                    <a href="https://github.com/Domejko" title="Domejko">
+                        <img title="Development & CI & Bug Fixing" src="https://github.com/Domejko.png" width="100px;" alt="" />
+                        <br />
+                        <sub>
+                            <b>Slawek Bierwiaczonek</b>
+                        </sub>
+                    </a>
+                    <br />
+                    <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3ADomejko" title="Backend">🖥</a><a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3ADomejko" title="Bug Fixes">🐞</a><a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3ADomejko" title="Added Tests">🧪</a>
+                </td>
+                </td><td>
+                <td align="center">
+                    <a href="https://github.com/introkun" title="introkun">
+                        <img title="Development & CI" src="https://github.com/introkun.png" width="100px;" alt="" />
+                        <br />
+                        <sub>
+                            <b>Sergey G</b>
+                        </sub>
+                    </a>
+                    <br />
+                    <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Aintrokun" title="Backend">🖥</a><a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Aintrokun" title="Frontend">🎨</a><a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Aintrokun" title="Added Tests">🧪</a><a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Aintrokun" title="Refactored Files">♻</a>
+                </td>
+                </td><td>
+                <td align="center">
                     <a href="https://github.com/Z3nKrypt" title="Z3nKrypt">
                         <img title="Documentation" src="https://github.com/Z3nKrypt.png" width="100px;" alt="" />
                         <br />
@@ -178,7 +202,7 @@ Thank you for your contributions!
                     <br />
                     <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Atomkinane" title="Frontend">🎨</a>
                 </td>
-                </td><td>
+                </td></tr><tr><td>
                 <td align="center">
                     <a href="https://github.com/SharonAliyas5573" title="SharonAliyas5573">
                         <img title="Development" src="https://github.com/SharonAliyas5573.png" width="100px;" alt="" />
@@ -202,7 +226,7 @@ Thank you for your contributions!
                     <br />
                     <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Aromana-la" title="Documentation">📖</a>
                 </td>
-                </td></tr><tr><td>
+                </td><td>
                 <td align="center">
                     <a href="https://github.com/flyingdev" title="flyingdev">
                         <img title="CI" src="https://github.com/flyingdev.png" width="100px;" alt="" />
@@ -238,7 +262,7 @@ Thank you for your contributions!
                     <br />
                     <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Abermr" title="Added Tests">🧪</a>
                 </td>
-                </td><td>
+                </td></tr><tr><td>
                 <td align="center">
                     <a href="https://github.com/PhilipZara" title="PhilipZara">
                         <img title="Design" src="https://github.com/PhilipZara.png" width="100px;" alt="" />
@@ -262,7 +286,7 @@ Thank you for your contributions!
                     <br />
                     <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3ATianrui-Luo" title="Backend">🖥</a>
                 </td>
-                </td></tr><tr><td>
+                </td><td>
                 <td align="center">
                     <a href="https://github.com/HarryHuCodes" title="HarryHuCodes">
                         <img title="Development" src="https://github.com/HarryHuCodes.png" width="100px;" alt="" />
@@ -298,7 +322,7 @@ Thank you for your contributions!
                     <br />
                     <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3AHessTaha" title="Docker">🐳</a>
                 </td>
-                </td><td>
+                </td></tr><tr><td>
                 <td align="center">
                     <a href="https://github.com/wnm210" title="wnm210">
                         <img title="Design" src="https://github.com/wnm210.png" width="100px;" alt="" />
@@ -322,7 +346,7 @@ Thank you for your contributions!
                     <br />
                     <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Amatthewjuarez1" title="Backend">🖥</a><a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Amatthewjuarez1" title="Frontend">🎨</a>
                 </td>
-                </td></tr><tr><td>
+                </td><td>
                 <td align="center">
                     <a href="https://github.com/SBMOYO" title="SBMOYO">
                         <img title="CI" src="https://github.com/SBMOYO.png" width="100px;" alt="" />
@@ -357,30 +381,6 @@ Thank you for your contributions!
                     </a>
                     <br />
                     <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3AHappyLife2" title="Frontend">🎨</a>
-                </td>
-                </td><td>
-                <td align="center">
-                    <a href="https://github.com/Domejko" title="Domejko">
-                        <img title="CI" src="https://github.com/Domejko.png" width="100px;" alt="" />
-                        <br />
-                        <sub>
-                            <b>Slawek Bierwiaczonek</b>
-                        </sub>
-                    </a>
-                    <br />
-                    <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3ADomejko" title="Added Tests">🧪</a>
-                </td>
-                </td><td>
-                <td align="center">
-                    <a href="https://github.com/introkun" title="introkun">
-                        <img title="Development & CI" src="https://github.com/introkun.png" width="100px;" alt="" />
-                        <br />
-                        <sub>
-                            <b>Sergey G</b>
-                        </sub>
-                    </a>
-                    <br />
-                    <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Aintrokun" title="Backend">🖥</a><a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Aintrokun" title="Frontend">🎨</a><a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Aintrokun" title="Added Tests">🧪</a><a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Aintrokun" title="Refactored Files">♻</a>
                 </td>
                 </td></tr><tr><td>
                 <td align="center">
@@ -477,6 +477,54 @@ Thank you for your contributions!
                     </a>
                     <br />
                     <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Aartkolpakov" title="Bug Fixes">🐞</a>
+                </td>
+                </td><td>
+                <td align="center">
+                    <a href="https://github.com/Yadu-M" title="Yadu-M">
+                        <img title="Development" src="https://github.com/Yadu-M.png" width="100px;" alt="" />
+                        <br />
+                        <sub>
+                            <b>Yadu</b>
+                        </sub>
+                    </a>
+                    <br />
+                    <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3AYadu-M" title="Backend">🖥</a>
+                </td>
+                </td><td>
+                <td align="center">
+                    <a href="https://github.com/vatsaaaal" title="vatsaaaal">
+                        <img title="Development" src="https://github.com/vatsaaaal.png" width="100px;" alt="" />
+                        <br />
+                        <sub>
+                            <b>Vatsal</b>
+                        </sub>
+                    </a>
+                    <br />
+                    <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Avatsaaaal" title="Backend">🖥</a>
+                </td>
+                </td></tr><tr><td>
+                <td align="center">
+                    <a href="https://github.com/hussein-mamane" title="hussein-mamane">
+                        <img title="Development" src="https://github.com/hussein-mamane.png" width="100px;" alt="" />
+                        <br />
+                        <sub>
+                            <b>Hussein</b>
+                        </sub>
+                    </a>
+                    <br />
+                    <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Ahussein-mamane" title="Backend">🖥</a>
+                </td>
+                </td><td>
+                <td align="center">
+                    <a href="https://github.com/pvvramakrishnarao234" title="pvvramakrishnarao234">
+                        <img title="Development" src="https://github.com/pvvramakrishnarao234.png" width="100px;" alt="" />
+                        <br />
+                        <sub>
+                            <b>pvvramakrishnarao234</b>
+                        </sub>
+                    </a>
+                    <br />
+                    <a href="https://github.com/TreyWW/MyFinances/pulls?q=is%3Apr+author%3Apvvramakrishnarao234" title="Backend">🖥</a>
                 </td>
                 </td></tr></table>
 <!-- CONTRIBUTORS TABLE END -->
