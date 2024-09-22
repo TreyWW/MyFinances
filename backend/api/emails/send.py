@@ -21,14 +21,9 @@ from backend.models import EmailSendStatus
 from backend.models import QuotaLimit
 from backend.models import QuotaUsage
 from backend.types.emails import (
-    SingleEmailInput,
     BulkEmailEmailItem,
-    BulkEmailSuccessResponse,
-    BulkEmailErrorResponse,
-    BulkTemplatedEmailInput,
 )
 
-# from backend.utils.quota_limit_ops import quota_usage_check_under
 from settings.helpers import send_email, send_templated_bulk_email
 from backend.types.htmx import HtmxHttpRequest
 
@@ -100,7 +95,7 @@ def _send_bulk_email_view(request: HtmxHttpRequest) -> HttpResponse:
             )
         )
 
-    EMAIL_DATA = BulkTemplatedEmailInput(
+    EMAIL_SENT = send_templated_bulk_email(
         email_list=email_list,
         template_name="user_send_client_email",
         default_template_data={
@@ -110,14 +105,14 @@ def _send_bulk_email_view(request: HtmxHttpRequest) -> HttpResponse:
         },
     )
 
-    EMAIL_SENT: BulkEmailSuccessResponse | BulkEmailErrorResponse = send_templated_bulk_email(data=EMAIL_DATA)
-
-    if isinstance(EMAIL_SENT, BulkEmailErrorResponse):
-        messages.error(request, EMAIL_SENT.message)
+    if EMAIL_SENT.failed:
+        messages.error(request, EMAIL_SENT.error)
         return render(request, "base/toast.html")
 
+    # todo - fix
+
     EMAIL_RESPONSES: Iterator[tuple[BulkEmailEmailItem, BulkEmailEntryResultTypeDef]] = zip(
-        EMAIL_DATA.email_list, EMAIL_SENT.response.get("BulkEmailEntryResults")  # type: ignore[arg-type]
+        email_list, EMAIL_SENT.response.get("BulkEmailEntryResults")  # type: ignore[arg-type]
     )
 
     if request.user.logged_in_as_team:
@@ -183,7 +178,7 @@ def _send_single_email_view(request: HtmxHttpRequest) -> HttpResponse:
 
     message_single_line_html = message.replace("\r\n", "<br>").replace("\n", "<br>")
 
-    EMAIL_DATA = SingleEmailInput(
+    EMAIL_SENT = send_email(
         destination=email,
         subject=subject,
         content={
@@ -198,8 +193,6 @@ def _send_single_email_view(request: HtmxHttpRequest) -> HttpResponse:
         },
     )
 
-    EMAIL_SENT = send_email(data=EMAIL_DATA)
-
     aws_message_id = None
     if EMAIL_SENT.response is not None:
         aws_message_id = EMAIL_SENT.response.get("MessageId")
@@ -211,7 +204,7 @@ def _send_single_email_view(request: HtmxHttpRequest) -> HttpResponse:
         status_object.status = "pending"
     else:
         status_object.status = "failed_to_send"
-        messages.error(request, f"Failed to send the email. Error: {EMAIL_SENT.message}")
+        messages.error(request, f"Failed to send the email. Error: {EMAIL_SENT.error}")
 
     if request.user.logged_in_as_team:
         status_object.organization = request.user.logged_in_as_team

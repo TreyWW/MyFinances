@@ -13,16 +13,15 @@ from mypy_boto3_sesv2.type_defs import (
     SendEmailResponseTypeDef,
     BulkEmailEntryTypeDef,
     SendBulkEmailResponseTypeDef,
-    BulkEmailEntryResultTypeDef,
 )
 
 from backend.types.emails import (
     SingleEmailInput,
-    SingleEmailSuccessResponse,
-    SingleEmailErrorResponse,
-    BulkEmailErrorResponse,
-    BulkEmailSuccessResponse,
     BulkTemplatedEmailInput,
+    SingleTemplatedEmailContent,
+    SingleEmailSendServiceResponse,
+    BulkEmailSendServiceResponse,
+    BulkEmailEmailItem,
 )
 
 # NEEDS REFACTOR
@@ -85,7 +84,14 @@ if "test" in sys.argv[1:]:
     ARE_EMAILS_ENABLED = False
 
 
-def send_email(data: SingleEmailInput) -> SingleEmailSuccessResponse | SingleEmailErrorResponse:
+def send_email(
+    destination: str | list[str],
+    subject: str | None,
+    content: str | SingleTemplatedEmailContent,
+    ConfigurationSetName: str | None = None,
+    from_address: str | None = None,
+    from_address_name_prefix: str | None = None,
+) -> SingleEmailSendServiceResponse:
     """
     Args:
     destination (email addr or list of email addr): The email address or list of email addresses to send the
@@ -94,9 +100,18 @@ def send_email(data: SingleEmailInput) -> SingleEmailSuccessResponse | SingleEma
     message (str): The content of the email.
     """
 
+    data = SingleEmailInput(
+        destination=destination,
+        subject=subject,
+        content=content,
+        ConfigurationSetName=ConfigurationSetName,
+        from_address=from_address,
+        from_address_name_prefix=from_address_name_prefix,
+    )
+
     if get_var("DEBUG", "").lower() == "true":
         print(data)
-        return SingleEmailSuccessResponse({}, True)  # type: ignore[typeddict-item]
+        return SingleEmailSendServiceResponse(True, response=None)
 
     if EMAIL_SERVICE == "SES":
         if not isinstance(data.destination, list):
@@ -133,23 +148,40 @@ def send_email(data: SingleEmailInput) -> SingleEmailSuccessResponse | SingleEma
                     },
                     ConfigurationSetName=data.ConfigurationSetName or "",
                 )
-            return SingleEmailSuccessResponse(response)
+            return SingleEmailSendServiceResponse(True, response=response)
         except EMAIL_CLIENT.exceptions.MessageRejected:
-            return SingleEmailErrorResponse(message="Email rejected", response=response)
+            return SingleEmailSendServiceResponse(error_message="Email rejected", response=response)
 
         except EMAIL_CLIENT.exceptions.AccountSuspendedException:
-            return SingleEmailErrorResponse(message="Email account suspended", response=response)
+            return SingleEmailSendServiceResponse(error_message="Email account suspended", response=response)
 
         except EMAIL_CLIENT.exceptions.SendingPausedException:
-            return SingleEmailErrorResponse(message="Email sending paused", response=response)
+            return SingleEmailSendServiceResponse(error_message="Email sending paused", response=response)
 
         except Exception as error:
             exception(f"Unexpected error occurred: {error}")
-            return SingleEmailErrorResponse(message="Email service error", response=response)
-    return SingleEmailErrorResponse(message="No email service configured", response=None)
+            return SingleEmailSendServiceResponse(error_message="Email service error", response=response)
+    return SingleEmailSendServiceResponse(error_message="No email service configured")
 
 
-def send_templated_bulk_email(data: BulkTemplatedEmailInput) -> BulkEmailSuccessResponse | BulkEmailErrorResponse:
+def send_templated_bulk_email(
+    email_list: list[BulkEmailEmailItem],
+    template_name: str,
+    default_template_data: dict | str,
+    ConfigurationSetName: str | None = None,
+    from_address: str | None = None,
+    from_address_name_prefix: str | None = None,
+) -> BulkEmailSendServiceResponse:
+
+    data = BulkTemplatedEmailInput(
+        email_list=email_list,
+        template_name=template_name,
+        default_template_data=default_template_data,
+        ConfigurationSetName=ConfigurationSetName,
+        from_address=from_address,
+        from_address_name_prefix=from_address_name_prefix,
+    )
+
     entries: list[BulkEmailEntryTypeDef] = []
 
     for entry in data.email_list:
@@ -175,19 +207,19 @@ def send_templated_bulk_email(data: BulkTemplatedEmailInput) -> BulkEmailSuccess
             ConfigurationSetName=data.ConfigurationSetName or "",
             DefaultContent={"Template": {"TemplateName": data.template_name, "TemplateData": data_str}},
         )
-        return BulkEmailSuccessResponse(response)
+        return BulkEmailSendServiceResponse(True, response=response)
     except EMAIL_CLIENT.exceptions.MessageRejected:
-        return BulkEmailErrorResponse(message="Email rejected", response=locals().get("response", None))
+        return BulkEmailSendServiceResponse(error_message="Email rejected", response=locals().get("response", None))
 
     except EMAIL_CLIENT.exceptions.AccountSuspendedException:
-        return BulkEmailErrorResponse(message="Email account suspended", response=locals().get("response", None))
+        return BulkEmailSendServiceResponse(error_message="Email account suspended", response=locals().get("response", None))
 
     except EMAIL_CLIENT.exceptions.SendingPausedException:
-        return BulkEmailErrorResponse(message="Email sending paused", response=locals().get("response", None))
+        return BulkEmailSendServiceResponse(error_message="Email sending paused", response=locals().get("response", None))
 
     except Exception as error:
         exception(f"Unexpected error occurred: {error}")
-        return BulkEmailErrorResponse(message="Email service error", response=locals().get("response", None))
+        return BulkEmailSendServiceResponse(error_message="Email service error", response=locals().get("response", None))
 
 
 if not any(arg in sys.argv[1:] for arg in ["test", "migrate", "makemigrations"]):

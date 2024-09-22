@@ -41,7 +41,8 @@
                 {# The if statement for dropdown top goes as follows #}
                 {# Use dropdown on top if these: #}
                 {# - is last item           (and not first item) (and more than 4 items) #}
-                <div class="dropdown dropdown-left {% if forloop.last and invoices.count > 4 %}dropdown-top{% endif %}">
+                <!-- Only last two invoices need a dropup -->
+                <div class="dropdown dropdown-left {% if forloop.counter0 > 3 %}dropdown-top{% endif %}">
                     <label tabindex="0" class="btn btn-primary btn-outline btn-sm">
                         <i class="fa-solid fa-ellipsis-vertical"></i>
                     </label>
@@ -105,72 +106,111 @@
                             </details>
                         </li>
                         {% if schedule_invoices_enabled %}
-                            <li>
-                                <a>
-                                    <i class="fa-solid fa-clock"></i>
-                                    Schedule
-                                </a>
-                            </li>
-                        {% endif %}
-                        <li>
-                            <button hx-delete="{% url 'api:invoices:single:delete' %}"
-                                    hx-target="closest tr"
-                                    hx-confirm="Are you sure you would like to delete invoice #{{ invoice.id }}?"
-                                    hx-vals='{"invoice": "{{ invoice.id }}" }'>
-                                <i class="fa-solid fa-trash"></i>
-                                Delete
-                            </button>
-                        </li>
-                    </ul>
-                </div>
-            </td>
-        </tr>
-    {% empty %}
-        <td colspan="100%" class="text-center">No Invoices Found</td>
-    {% endfor %}
-</tbody>
-{% for option in all_sort_options %}
-    <div hx-swap-oob="innerHTML:li[data-sort='{{ option }}'] button">
-        {% if sort == option or sort == "-"|add:option %}<i class="fa fa-solid fa-sort"></i>{% endif %}
-        {% if option == "payment_status" %}
-            Payment Status
-        {% elif option == "date_due" %}
-            Date
-        {% elif option == "amount" %}
-            Amount
-        {% else %}
-            ID
-        {% endif %}
-    </div>
-{% endfor %}
-{% for filter_type, inner_filters in all_filters.items %}
-    {% for filter in inner_filters %}
-        <div hx-swap-oob="innerHTML:div[data-filter-type='{{ filter_type }}'] ul li[data-filter-by='{{ filter }}'] button">
-            {% if filter in selected_filters %}<i class="fa fa-solid fa-check text-success"></i>{% endif %}
-            {{ filter | title }}
-        </div>
-    {% endfor %}
-{% endfor %}
-<div hx-swap-oob="innerHTML:#filter_list_storage">
-    <input type="hidden"
-           name="payment_status_paid"
-           value="{% if 'paid' in selected_filters %}true{% endif %}">
-    <input type="hidden"
-           name="payment_status_pending"
-           value="{% if 'pending' in selected_filters %}true{% endif %}">
-    <input type="hidden"
-           name="payment_status_overdue"
-           value="{% if 'overdue' in selected_filters %}true{% endif %}">
-    <input type="hidden"
-           name="amount_20+"
-           value="{% if '20+' in selected_filters %}true{% endif %}">
-    <input type="hidden"
-           name="amount_50+"
-           value="{% if '50+' in selected_filters %}true{% endif %}">
-    <input type="hidden"
-           name="amount_100+"
-           value="{% if '100+' in selected_filters %}true{% endif %}">
-</div>
-<div hx-swap-oob="innerHTML:#sort_direction_storage">
-    <input type="hidden" name="sort_direction" value="{{ sort_direction }}">
-</div>
+                            <div class="dropdown dropdown-left {% if forloop.last and invoices.count > 4 %}dropdown-top{% endif %}">
+                                <label tabindex="0" class="btn btn-primary btn-outline btn-sm">
+                                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                                </label>
+                                <ul tabindex="0"
+                                    class="dropdown-content z-[1] menu wp-2 shadow-2xl bg-base-200 rounded-box w-52">
+                                    <li hx-boost="true">
+                                        <a href="{% url "invoices:single:overview" invoice_id=invoice.id %}">
+                                            <i class="fa-solid fa-eye"></i>
+                                            Overview
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a target="_blank"
+                                           rel="noopener noreferrer"
+                                           href="{% url 'invoices:single:preview' invoice_id=invoice.id %}">
+                                            <i class="fa-solid fa-file-pdf"></i>
+                                            Preview
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url "invoices:single:manage_access" invoice_id=invoice.id %}">
+                                            <i class="fa-solid fa-key"></i>
+                                            Manage Access
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url "invoices:single:edit" invoice_id=invoice.id %}">
+                                            <i class="fa-solid fa-pencil"></i>
+                                            Edit
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <details>
+                                            <summary>
+                                                <i class="fa-solid fa-flag"></i>
+                                                Mark As
+                                            </summary>
+                                            <ul>
+                                                <li>
+                                                    <a>
+                                                        <i class="fa-solid fa-clock"></i>
+                                                        Schedule
+                                                    </a>
+                                                </li>
+                                            {% endif %}
+                                            <li>
+                                                <button hx-delete="{% url 'api:invoices:single:delete' %}"
+                                                        hx-target="closest tr"
+                                                        hx-confirm="Are you sure you would like to delete invoice #{{ invoice.id }}?"
+                                                        hx-vals='{"invoice": "{{ invoice.id }}" }'>
+                                                    <i class="fa-solid fa-trash"></i>
+                                                    Delete
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <td colspan="100%" class="text-center">No Invoices Found</td>
+                        {% endfor %}
+                    </tbody>
+                    {% for option in all_sort_options %}
+                        <div hx-swap-oob="innerHTML:li[data-sort='{{ option }}'] button">
+                            {% if sort == option or sort == "-"|add:option %}<i class="fa fa-solid fa-sort"></i>{% endif %}
+                            {% if option == "payment_status" %}
+                                Payment Status
+                            {% elif option == "date_due" %}
+                                Date
+                            {% elif option == "amount" %}
+                                Amount
+                            {% else %}
+                                ID
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                    {% for filter_type, inner_filters in all_filters.items %}
+                        {% for filter in inner_filters %}
+                            <div hx-swap-oob="innerHTML:div[data-filter-type='{{ filter_type }}'] ul li[data-filter-by='{{ filter }}'] button">
+                                {% if filter in selected_filters %}<i class="fa fa-solid fa-check text-success"></i>{% endif %}
+                                {{ filter | title }}
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                    <div hx-swap-oob="innerHTML:#filter_list_storage">
+                        <input type="hidden"
+                               name="payment_status_paid"
+                               value="{% if 'paid' in selected_filters %}true{% endif %}">
+                        <input type="hidden"
+                               name="payment_status_pending"
+                               value="{% if 'pending' in selected_filters %}true{% endif %}">
+                        <input type="hidden"
+                               name="payment_status_overdue"
+                               value="{% if 'overdue' in selected_filters %}true{% endif %}">
+                        <input type="hidden"
+                               name="amount_20+"
+                               value="{% if '20+' in selected_filters %}true{% endif %}">
+                        <input type="hidden"
+                               name="amount_50+"
+                               value="{% if '50+' in selected_filters %}true{% endif %}">
+                        <input type="hidden"
+                               name="amount_100+"
+                               value="{% if '100+' in selected_filters %}true{% endif %}">
+                    </div>
+                    <div hx-swap-oob="innerHTML:#sort_direction_storage">
+                        <input type="hidden" name="sort_direction" value="{{ sort_direction }}">
+                    </div>

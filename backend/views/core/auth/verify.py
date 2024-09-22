@@ -75,11 +75,10 @@ def resend_verification_code(request):
     magic_link_url = settings.SITE_URL + reverse("auth:login create_account verify", kwargs={"uuid": magic_link.uuid, "token": token_plain})
 
     send_email(
-        SingleEmailInput(
-            destination=email,
-            subject="Verify your email",
-            content=dedent(
-                f"""
+        destination=email,
+        subject="Verify your email",
+        content=dedent(
+            f"""
                 Hi {user.first_name if user.first_name else "User"},
 
                 Verification for your email has been requested to link this email to your MyFinances account.
@@ -88,8 +87,7 @@ def resend_verification_code(request):
                 If it was you, you can complete the verification by clicking the link below.
                 Verify Link: {magic_link_url}
             """
-            ),
-        )
+        ),
     )
 
     messages.success(request, "Verification email sent, check your inbox or spam!")

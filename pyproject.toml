@@ -1,21 +1,19 @@
 [tool.poetry]
 name = "MyFinances"
-version = "0.6.6"
+version = "0.7.0"
 description = "github.com/TreyWW/MyFinances"
 authors = ["TreyWW"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.10,<4.0"
-bleach = "6.1.0"
-oauthlib = "3.2.2"
-boto3 = "1.34.76"
-django-storages = "1.14.2"
-pillow = "10.3.0"
-tblib = "^3.0.0"
+bleach = "6.1.0"  # used for HTML sanitation
+boto3 = "1.34.76"  # AWS
+django-storages = "1.14.2"  # AWS S3
+pillow = "10.3.0"  # Images
+tblib = "^3.0.0"  # Exceptions and Tracebacks
 django = "^5.0.7"
 django-mathfilters = "^1.0.0"
-sample-helper-aws-appconfig = "^2.1.0"
 redis = { extras = ["hiredis"], version = "^5.0.1" }
 django-webpack-loader = "^3.1.0"
 django-silk = "^5.1.0"
@@ -56,7 +54,6 @@ types-six = "^1.16.21.20240513"
 Django = "^5.0.7"
 gunicorn = "22.0.0"
 social-auth-app-django = "5.4.1"
-django-sendgrid-v5 = "1.2.3"
 django-environ = "0.11.2"
 django-extensions = "3.2.3"
 python-dateutil = "2.9.0"
@@ -107,7 +104,7 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.bumpversion]
-current_version = "0.6.6"
+current_version = "0.7.0"
 commit = true
 commit_args = "-s"
 tag = true

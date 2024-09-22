@@ -34,11 +34,10 @@ def create_user_service(
     user.save()
 
     send_email(
-        SingleEmailInput(
-            destination=email,
-            subject="MyFinances | You have been invited to join an organization",
-            content=dedent(
-                f"""
+        destination=email,
+        subject="MyFinances | You have been invited to join an organization",
+        content=dedent(
+            f"""
                 Hi {user.first_name or "User"},
 
                 You have been invited by {request.user.email} to join the organization {team.name}.
@@ -57,8 +56,7 @@ def create_user_service(
                 Didn't give permission to be added to this organization? You can safely ignore the email, no actions can be done on
                 behalf of you without your permission.
             """
-            ),
-        )
+        ),
     )
 
     team.members.add(user)

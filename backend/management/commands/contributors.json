@@ -1,232 +1,266 @@
 [
-    {
-        "name": "Trey",
-        "username": "TreyWW",
-        "role": "Project Lead",
-        "tags": [
-            "👑",
-            "🖥"
-        ]
-    },
-    {
-        "name": "Jacob",
-        "username": "Z3nKrypt",
-        "role": "Documentation",
-        "tags": [
-            "📖"
-        ]
-    },
-    {
-        "name": "Tom",
-        "username": "tomkinane",
-        "role": "Design",
-        "tags": [
-            "🎨"
-        ]
-    },
-    {
-        "name": "SharonAliyas5573",
-        "username": "SharonAliyas5573",
-        "role": "Development",
-        "tags": [
-            "🖥"
-        ]
-    },
-    {
-        "name": "romana-la",
-        "username": "romana-la",
-        "role": "Documentation",
-        "tags": [
-            "📖"
-        ]
-    },
-    {
-        "name": "flyingdev",
-        "username": "flyingdev",
-        "role": "CI",
-        "tags": [
-            "🧪"
-        ]
-    },
-    {
-        "name": "chavi362",
-        "username": "chavi362",
-        "role": "Documentation",
-        "tags": [
-            "📖"
-        ]
-    },
-    {
-        "name": "bermr",
-        "username": "bermr",
-        "role": "CI",
-        "tags": [
-            "🧪"
-        ]
-    },
-    {
-        "name": "PhilipZara",
-        "username": "PhilipZara",
-        "role": "Design",
-        "tags": [
-            "🎨"
-        ]
-    },
-    {
-        "name": "Tianrui-Luo",
-        "username": "Tianrui-Luo",
-        "role": "Development",
-        "tags": [
-            "🖥"
-        ]
-    },
-    {
-        "name": "HarryHuCodes",
-        "username": "HarryHuCodes",
-        "role": "Development",
-        "tags": [
-            "🖥"
-        ]
-    },
-    {
-        "name": "Nuova",
-        "username": "Nuovaxu",
-        "role": "Development",
-        "tags": [
-            "🖥"
-        ]
-    },
-    {
-        "name": "HessTaha",
-        "username": "HessTaha",
-        "role": "CI-CD",
-        "tags": [
-            "🐳"
-        ]
-    },
-    {
-        "name": "wnm210",
-        "username": "wnm210",
-        "role": "Design",
-        "tags": [
-            "🎨"
-        ]
-    },
-    {
-        "name": "Matt",
-        "username": "matthewjuarez1",
-        "role": "Full Stack",
-        "tags": [
-            "🖥",
-            "🎨"
-        ]
-    },
-    {
-        "name": "SBMOYO",
-        "username": "SBMOYO",
-        "role": "CI",
-        "tags": [
-            "🧪"
-        ]
-    },
-    {
-        "name": "Kevin Liu",
-        "username": "kliu6151",
-        "role": "Development",
-        "tags": [
-            "🖥"
-        ]
-    },
-    {
-        "name": "Jehad Altoutou",
-        "username": "HappyLife2",
-        "role": "Design",
-        "tags": [
-            "🎨"
-        ]
-    },
-    {
-        "name": "Slawek Bierwiaczonek",
-        "username": "Domejko",
-        "role": "CI",
-        "tags": [
-            "🧪"
-        ]
-    },
-    {
-        "name": "Sergey G",
-        "username": "introkun",
-        "role": "Development & CI",
-        "tags": [
-            "♻",
-            "🧪",
-            "🖥",
-            "🎨"
-        ]
-    },
-    {
-        "name": "Samuel P",
-        "username": "spalominor",
-        "role": "Design",
-        "tags": [
-            "🎨"
-        ]
-    },
-    {
-        "name": "Sabari Ragavendra CK",
-        "username": "CKsabari2001",
-        "role": "Layout",
-        "tags": [
-            "🎨"
-        ]
-    },
-    {
-        "name": "atulanand25",
-        "username": "atulanand25",
-        "role": "Full Stack",
-        "tags": [
-            "🎨",
-            "🖥",
-            "🐞"
-        ]
-    },
-    {
-        "name": "ryansurf",
-        "username": "ryansurf",
-        "role": "Bug Fixes",
-        "tags": [
-            "🐞"
-        ]
-    },
-    {
-        "name": "David",
-        "username": "blocage",
-        "role": "Refactoring",
-        "tags": "♻"
-    },
-    {
-        "name": "Guillermo",
-        "username": "glizondo",
-        "role": "Bug Fixes",
-        "tags": [
-            "🐞"
-        ]
-    },
-    {
-        "name": "Marvin Lopez",
-        "username": "marvinl803",
-        "role": "Full Stack",
-        "tags": [
-            "🎨",
-            "🖥"
-        ]
-    },
-    {
-        "name": "Artem Kolpakov",
-        "username": "artkolpakov",
-        "role": "Bug Fixes",
-        "tags": [
-            "🐞"
-        ]
-    }
+  {
+    "name": "Trey",
+    "username": "TreyWW",
+    "role": "Project Lead",
+    "tags": [
+      "👑",
+      "🖥"
+    ]
+  },
+  {
+    "name": "Slawek Bierwiaczonek",
+    "username": "Domejko",
+    "role": "Development & CI & Bug Fixing",
+    "tags": [
+      "🧪",
+      "🖥",
+      "🐞"
+    ]
+  },
+  {
+    "name": "Sergey G",
+    "username": "introkun",
+    "role": "Development & CI",
+    "tags": [
+      "♻",
+      "🧪",
+      "🖥",
+      "🎨"
+    ]
+  },
+  {
+    "name": "Jacob",
+    "username": "Z3nKrypt",
+    "role": "Documentation",
+    "tags": [
+      "📖"
+    ]
+  },
+  {
+    "name": "Tom",
+    "username": "tomkinane",
+    "role": "Design",
+    "tags": [
+      "🎨"
+    ]
+  },
+  {
+    "name": "SharonAliyas5573",
+    "username": "SharonAliyas5573",
+    "role": "Development",
+    "tags": [
+      "🖥"
+    ]
+  },
+  {
+    "name": "romana-la",
+    "username": "romana-la",
+    "role": "Documentation",
+    "tags": [
+      "📖"
+    ]
+  },
+  {
+    "name": "flyingdev",
+    "username": "flyingdev",
+    "role": "CI",
+    "tags": [
+      "🧪"
+    ]
+  },
+  {
+    "name": "chavi362",
+    "username": "chavi362",
+    "role": "Documentation",
+    "tags": [
+      "📖"
+    ]
+  },
+  {
+    "name": "bermr",
+    "username": "bermr",
+    "role": "CI",
+    "tags": [
+      "🧪"
+    ]
+  },
+  {
+    "name": "PhilipZara",
+    "username": "PhilipZara",
+    "role": "Design",
+    "tags": [
+      "🎨"
+    ]
+  },
+  {
+    "name": "Tianrui-Luo",
+    "username": "Tianrui-Luo",
+    "role": "Development",
+    "tags": [
+      "🖥"
+    ]
+  },
+  {
+    "name": "HarryHuCodes",
+    "username": "HarryHuCodes",
+    "role": "Development",
+    "tags": [
+      "🖥"
+    ]
+  },
+  {
+    "name": "Nuova",
+    "username": "Nuovaxu",
+    "role": "Development",
+    "tags": [
+      "🖥"
+    ]
+  },
+  {
+    "name": "HessTaha",
+    "username": "HessTaha",
+    "role": "CI-CD",
+    "tags": [
+      "🐳"
+    ]
+  },
+  {
+    "name": "wnm210",
+    "username": "wnm210",
+    "role": "Design",
+    "tags": [
+      "🎨"
+    ]
+  },
+  {
+    "name": "Matt",
+    "username": "matthewjuarez1",
+    "role": "Full Stack",
+    "tags": [
+      "🖥",
+      "🎨"
+    ]
+  },
+  {
+    "name": "SBMOYO",
+    "username": "SBMOYO",
+    "role": "CI",
+    "tags": [
+      "🧪"
+    ]
+  },
+  {
+    "name": "Kevin Liu",
+    "username": "kliu6151",
+    "role": "Development",
+    "tags": [
+      "🖥"
+    ]
+  },
+  {
+    "name": "Jehad Altoutou",
+    "username": "HappyLife2",
+    "role": "Design",
+    "tags": [
+      "🎨"
+    ]
+  },
+  {
+    "name": "Samuel P",
+    "username": "spalominor",
+    "role": "Design",
+    "tags": [
+      "🎨"
+    ]
+  },
+  {
+    "name": "Sabari Ragavendra CK",
+    "username": "CKsabari2001",
+    "role": "Layout",
+    "tags": [
+      "🎨"
+    ]
+  },
+  {
+    "name": "atulanand25",
+    "username": "atulanand25",
+    "role": "Full Stack",
+    "tags": [
+      "🎨",
+      "🖥",
+      "🐞"
+    ]
+  },
+  {
+    "name": "ryansurf",
+    "username": "ryansurf",
+    "role": "Bug Fixes",
+    "tags": [
+      "🐞"
+    ]
+  },
+  {
+    "name": "David",
+    "username": "blocage",
+    "role": "Refactoring",
+    "tags": "♻"
+  },
+  {
+    "name": "Guillermo",
+    "username": "glizondo",
+    "role": "Bug Fixes",
+    "tags": [
+      "🐞"
+    ]
+  },
+  {
+    "name": "Marvin Lopez",
+    "username": "marvinl803",
+    "role": "Full Stack",
+    "tags": [
+      "🎨",
+      "🖥"
+    ]
+  },
+  {
+    "name": "Artem Kolpakov",
+    "username": "artkolpakov",
+    "role": "Bug Fixes",
+    "tags": [
+      "🐞"
+    ]
+  },
+  {
+    "name": "Yadu",
+    "username": "Yadu-M",
+    "role": "Development",
+    "tags": [
+      "🖥"
+    ]
+  },
+  {
+    "name": "Vatsal",
+    "username": "vatsaaaal",
+    "role": "Development",
+    "tags": [
+      "🖥"
+    ]
+  },
+  {
+    "name": "Hussein",
+    "username": "hussein-mamane",
+    "role": "Development",
+    "tags": [
+      "🖥"
+    ]
+  },
+  {
+    "name": "pvvramakrishnarao234",
+    "username": "pvvramakrishnarao234",
+    "role": "Development",
+    "tags": [
+      "🖥"
+    ]
+  }
 ]

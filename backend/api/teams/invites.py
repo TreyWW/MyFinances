@@ -95,11 +95,10 @@ def send_user_team_invite(request: HtmxHttpRequest):
     )
 
     send_email(
-        SingleEmailInput(
-            destination=user.email,
-            subject="New Organization Invite",
-            content=dedent(
-                f"""
+        destination=user.email,
+        subject="New Organization Invite",
+        content=dedent(
+            f"""
                 Hi {user.first_name or "User"},
 
                 {request.user.first_name or f"User {request.user.email}"} has invited you to join the organization \"{team.name}\" (#{team.id})
@@ -111,8 +110,7 @@ def send_user_team_invite(request: HtmxHttpRequest):
                 Didn't give permission to be added to this organization? You can safely ignore the email, no actions can be done on
                 behalf of you without your action.
             """
-            ),
-        )
+        ),
     )
 
     messages.success(request, "Invitation successfully sent")
