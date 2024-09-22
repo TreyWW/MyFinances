@@ -16,3 +16,4 @@ def retry_handler(function: Callable[..., T], *args, retry_max_attempts: int = 3
                 return response
             continue
         return response
+    return response

@@ -60,3 +60,5 @@ def on_create_invoice_service(users_email: str, invoice: Invoice) -> OnCreateInv
         recipient=users_email,
         aws_message_id=email_svc_response.response.get("MessageId"),
     )
+
+    return OnCreateInvoiceEmailServiceResponse(True, response="Email sent successfully")
