@@ -16,6 +16,9 @@ def generate_next_invoice_service(
     issue_date: date = date.today(),
     account_defaults: DefaultValues | None = None,
 ) -> GenerateNextInvoiceServiceResponse:
+    """
+    This will generate the next single invoice based on the invoice recurring profile
+    """
 
     if not invoice_recurring_profile:
         return GenerateNextInvoiceServiceResponse(error_message="Invoice recurring profile not found")
