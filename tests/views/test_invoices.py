@@ -49,6 +49,7 @@ class InvoicesCreateTestCase(ViewTestCase):
             "date_issued": "2021-12-01",
             "to_name": "Client Name",
             "to_company": "Client Company",
+            "to_email": "Client Email",
             "to_address": "Client Address",
             "to_city": "Client City",
             "to_county": "Client County",

@@ -4,57 +4,48 @@ from django.shortcuts import redirect, render
 
 from backend.decorators import web_require_scopes
 from backend.models import Invoice, InvoiceURL, QuotaLimit
+from backend.service.invoices.single.get_invoice import get_invoice_by_actor
 from backend.types.htmx import HtmxHttpRequest
+from backend.types.requests import WebRequest
 
 
 @web_require_scopes("invoices:write", False, False, "invoices:single:dashboard")
-def manage_access(request: HtmxHttpRequest, invoice_id):
-    try:
-        invoice = Invoice.objects.prefetch_related("invoice_urls").get(id=invoice_id, user=request.user)
-    except Invoice.DoesNotExist:
+def manage_access(request: WebRequest, invoice_id):
+    invoice_resp = get_invoice_by_actor(request.actor, invoice_id, ["invoice_urls"])
+    if invoice_resp.failed:
         messages.error(request, "Invoice not found")
         return redirect("invoices:single:dashboard")
 
-    all_access_codes = invoice.invoice_urls.values_list("uuid", "created_on").order_by("-created_on")
+    all_access_codes = invoice_resp.response.invoice_urls.values_list("uuid", "created_on").order_by("-created_on")
 
     return render(
         request,
         "pages/invoices/single/manage_access/manage_access.html",
-        {"all_codes": all_access_codes, "invoice": invoice},
+        {"all_codes": all_access_codes, "invoice": invoice_resp.response},
     )
 
 
 @web_require_scopes("invoices:write", False, False, "invoices:single:dashboard")
-def create_code(request: HtmxHttpRequest, invoice_id):
+def create_code(request: WebRequest, invoice_id):
     if not request.htmx:
         return redirect("invoices:single:dashboard")
 
     if request.method != "POST":
         return HttpResponse("Invalid request", status=400)
 
-    try:
-        invoice = Invoice.objects.get(id=invoice_id, user=request.user)
-    except Invoice.DoesNotExist:
-        return HttpResponse("Invoice not found", status=400)
+    invoice_resp = get_invoice_by_actor(request.actor, invoice_id, ["invoice_urls"])
+    if invoice_resp.failed:
+        messages.error(request, "Invoice not found")
+        return redirect("invoices:single:dashboard")
 
-    limit = QuotaLimit.objects.get(slug="invoices-access_codes").get_quota_limit(user=request.user)
-
-    current_amount = InvoiceURL.objects.filter(invoice_id=invoice_id).count()
-
-    if current_amount >= limit:
-        messages.error(request, f"You have reached the quota limit for this service 'access_codes'")
-        return render(request, "partials/messages_list.html", {"autohide": False})
-
-    code = InvoiceURL.objects.create(invoice=invoice, created_by=request.user)
+    code = InvoiceURL.objects.create(invoice=invoice_resp.response, created_by=request.user)
 
     messages.success(request, "Successfully created code")
-
-    # QuotaUsage.create_str(request.user, "invoices-access_codes", invoice_id)
 
     return render(
         request,
         "pages/invoices/single/manage_access/_table_row.html",
-        {"code": code.uuid, "created_on": code.created_on, "added": True},
+        {"code": code.uuid, "created_on": code.created_on, "created_by": code.get_created_by, "added": True},
     )
 
 
@@ -68,6 +59,10 @@ def delete_code(request: HtmxHttpRequest, code):
         invoice = Invoice.objects.get(id=code_obj.invoice.id)
         if not invoice.has_access(request.user):
             raise Invoice.DoesNotExist
+
+        # url was created by system | user cannot delete
+        if not code_obj.created_by:
+            raise InvoiceURL.DoesNotExist
     except (Invoice.DoesNotExist, InvoiceURL.DoesNotExist):
         messages.error(request, "Invalid URL")
         return render(request, "base/toasts.html")

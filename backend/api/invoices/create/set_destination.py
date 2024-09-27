@@ -5,7 +5,7 @@ from django.views.decorators.http import require_http_methods
 from backend.models import Client
 from backend.types.htmx import HtmxHttpRequest
 
-to_get = ["name", "address", "city", "country", "company", "is_representative"]
+to_get = ["name", "address", "city", "country", "company", "is_representative", "email"]
 
 
 @require_http_methods(["POST"])

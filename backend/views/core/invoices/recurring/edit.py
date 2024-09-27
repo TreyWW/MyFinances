@@ -41,6 +41,7 @@ def invoice_get_existing_data(invoice_obj: InvoiceRecurringProfile):
     if invoice_obj.client_to:
         stored_data["to_name"] = invoice_obj.client_to.name
         stored_data["to_company"] = invoice_obj.client_to.company
+        stored_data["to_email"] = invoice_obj.client_to.email
         stored_data["is_representative"] = invoice_obj.client_to.is_representative
         # stored_data["to_address"] = invoice_obj.client_to.address
         # stored_data["to_city"] = invoice_obj.client_to.city
@@ -49,6 +50,7 @@ def invoice_get_existing_data(invoice_obj: InvoiceRecurringProfile):
     else:
         stored_data["to_name"] = invoice_obj.client_name
         stored_data["to_company"] = invoice_obj.client_company
+        stored_data["to_email"] = invoice_obj.client_email
         stored_data["to_address"] = invoice_obj.client_address
         stored_data["to_city"] = invoice_obj.client_city
         stored_data["to_county"] = invoice_obj.client_county

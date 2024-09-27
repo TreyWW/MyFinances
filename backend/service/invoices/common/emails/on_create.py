@@ -1,34 +1,37 @@
 from string import Template
 from textwrap import dedent
 
-from backend.models import Invoice, InvoiceRecurringProfile, User, EmailSendStatus
+from django.urls import reverse
+
+from backend.data.default_email_templates import email_footer
+from backend.models import Invoice, InvoiceRecurringProfile, User, EmailSendStatus, InvoiceURL
+from backend.service.defaults.get import get_account_defaults
+from backend.service.invoices.single.create_url import create_invoice_url
 from backend.utils.dataclasses import BaseServiceResponse
 from backend.utils.service_retry import retry_handler
-from settings.helpers import send_email
+from settings.helpers import send_email, get_var
+
+"""
+DOCS: https://docs.myfinances.cloud/user-guide/emails/templates/
+(please update if any variables are changed)
+"""
 
 
-class OnCreateInvoiceEmailServiceResponse(BaseServiceResponse[str]): ...
+class OnCreateInvoiceEmailServiceResponse(BaseServiceResponse[EmailSendStatus]): ...
 
 
-def on_create_invoice_service(users_email: str, invoice: Invoice) -> OnCreateInvoiceEmailServiceResponse:
+def on_create_invoice_email_service(users_email: str, invoice: Invoice) -> OnCreateInvoiceEmailServiceResponse:
     if not users_email:
         return OnCreateInvoiceEmailServiceResponse(error_message="User email not found")
 
     if not invoice:
         return OnCreateInvoiceEmailServiceResponse(error_message="Invoice not found")
 
-    email_message = dedent(
-        """
-        Hi $first_name,
+    defaults = get_account_defaults(invoice.owner, invoice.client_to)
 
-        The invoice #$invoice_id has been created for you to pay, due on the $due_date. Please pay at your earliest convenience.
+    email_message: str = defaults.email_template_recurring_invoices_invoice_created + email_footer()
 
-        Balance Due: $currency_symbol$amount_due $currency
-
-        Many thanks,
-        $company_name
-    """
-    )
+    invoice_url: InvoiceURL = create_invoice_url(invoice).response
 
     user_data = {
         "first_name": invoice.client_to.name.split(" ")[0] if invoice.client_to else invoice.client_name,
@@ -39,7 +42,8 @@ def on_create_invoice_service(users_email: str, invoice: Invoice) -> OnCreateInv
         "currency": invoice.currency,
         "currency_symbol": invoice.get_currency_symbol(),
         "product_list": [],  # todo
-        "company_name": invoice.self_company or invoice.self_name,
+        "company_name": invoice.self_company or invoice.self_name or "MyFinances Customer",
+        "invoice_link": get_var("SITE_URL") + reverse("invoices view invoice", kwargs={"uuid": str(invoice_url.uuid)}),
     }
 
     output: str = Template(email_message).substitute(user_data)
@@ -54,11 +58,11 @@ def on_create_invoice_service(users_email: str, invoice: Invoice) -> OnCreateInv
     if email_svc_response.failed:
         return OnCreateInvoiceEmailServiceResponse(False, error_message="Failed to send email")
 
-    EmailSendStatus.objects.create(
+    email_status_obj = EmailSendStatus.objects.create(
         status="send",
         owner=invoice.owner,
         recipient=users_email,
         aws_message_id=email_svc_response.response.get("MessageId"),
     )
 
-    return OnCreateInvoiceEmailServiceResponse(True, response="Email sent successfully")
+    return OnCreateInvoiceEmailServiceResponse(True, response=email_status_obj)

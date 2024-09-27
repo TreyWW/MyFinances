@@ -23,12 +23,13 @@
                 <tr>
                     <th>Code</th>
                     <th>Date Created</th>
+                    <th>Created By</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody id="tbody">
                 {% for url in invoice.invoice_urls.all %}
-                    {% with code=url.uuid created_on=url.created_on %}
+                    {% with code=url.uuid created_on=url.created_on created_by=url.get_created_by %}
                         {% include 'pages/invoices/single/manage_access/_table_row.html' %}
                     {% endwith %}
                 {% endfor %}

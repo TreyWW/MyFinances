@@ -5,6 +5,7 @@
                class="link link-secondary link-underline">{{ code }}</a>
         </td>
         <td>{{ created_on }}</td>
+        <td>{{ created_by }}</td>
         <td>
             <span class="tooltip tooltip-top" data-tip="Copy URL">
                 <button class="btn btn-primary btn-outline btn-sm"
@@ -13,12 +14,16 @@
                 </button>
             </span>
             <span class="tooltip tooltip-top tooltip-" data-tip="Delete Code">
-                <button class="btn btn-error btn-outline btn-sm"
-                        hx-delete="{% url 'invoices:single:manage_access delete' code=code %}"
-                        hx-target="closest tr"
-                        hx-swap="outerHTML">
-                    <i class="fa-solid fa-trash"></i>
-                </button>
+                    <button class="btn btn-error btn-outline btn-sm"
+                            hx-delete="{% url 'invoices:single:manage_access delete' code=code %}"
+                            hx-target="closest tr"
+                            hx-swap="outerHTML"
+                        {% if created_by == "SYSTEM" %}
+                            disabled
+                        {% endif %}
+                    >
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
             </span>
         </td>
     </tr>

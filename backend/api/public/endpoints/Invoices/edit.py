@@ -36,6 +36,7 @@ def edit_invoice_endpoint(request: APIRequest):
         "date_issued": request.POST.get("date_issued"),
         "client_name": request.POST.get("to_name"),
         "client_company": request.POST.get("to_company"),
+        "client_email": request.POST.get("to_email"),
         "client_address": request.POST.get("to_address"),
         "client_city": request.POST.get("to_city"),
         "client_county": request.POST.get("to_county"),

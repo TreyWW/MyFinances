@@ -67,6 +67,7 @@ def open_modal(request: WebRequest, modal_name, context_type=None, context_value
                 if invoice.client_to:
                     context["to_name"] = invoice.client_to.name
                     context["to_company"] = invoice.client_to.company
+                    context["to_email"] = invoice.client_to.email
                     context["to_address"] = invoice.client_to.address
                     context["existing_client_id"] = invoice.client_to.id
                     # context["to_city"] = invoice.client_to.city
@@ -75,6 +76,7 @@ def open_modal(request: WebRequest, modal_name, context_type=None, context_value
                 else:
                     context["to_name"] = invoice.client_name
                     context["to_company"] = invoice.client_company
+                    context["to_email"] = invoice.client_email
                     context["to_address"] = invoice.client_address
                     # context["to_city"] = invoice.client_city
                     # context["to_county"] = invoice.client_county

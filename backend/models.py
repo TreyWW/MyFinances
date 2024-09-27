@@ -19,6 +19,12 @@ from django.utils.crypto import get_random_string
 from shortuuid.django_fields import ShortUUIDField
 from storages.backends.s3 import S3Storage
 
+from backend.data.default_email_templates import (
+    recurring_invoices_invoice_created_default_email_template,
+    recurring_invoices_invoice_overdue_default_email_template,
+    recurring_invoices_invoice_cancelled_default_email_template,
+)
+
 from backend.managers import InvoiceRecurringProfile_WithItemsManager
 
 
@@ -411,6 +417,12 @@ class DefaultValues(OwnerBase):
     invoice_sort_code = models.CharField(max_length=100, null=True, blank=True)
     invoice_account_holder_name = models.CharField(max_length=100, null=True, blank=True)
 
+    email_template_recurring_invoices_invoice_created = models.TextField(default=recurring_invoices_invoice_created_default_email_template)
+    email_template_recurring_invoices_invoice_overdue = models.TextField(default=recurring_invoices_invoice_overdue_default_email_template)
+    email_template_recurring_invoices_invoice_cancelled = models.TextField(
+        default=recurring_invoices_invoice_cancelled_default_email_template
+    )
+
     def get_issue_and_due_dates(self, issue_date: date | str | None = None) -> tuple[str, str]:
         due: date
         issue: date
@@ -606,10 +618,7 @@ class Invoice(InvoiceBase):
         if self.client_to:
             return "client", self.client_to
         else:
-            return "manual", {
-                "name": self.client_name,
-                "company": self.client_company,
-            }
+            return "manual", {"name": self.client_name, "company": self.client_company, "email": self.client_email}
 
     def get_subtotal(self) -> Decimal:
         subtotal = 0
@@ -722,6 +731,13 @@ class InvoiceURL(models.Model):
     expires = models.DateTimeField(null=True, blank=True)
     never_expire = models.BooleanField(default=False)
     active = models.BooleanField(default=True)
+
+    @property
+    def get_created_by(self):
+        if self.created_by:
+            return self.created_by.first_name or f"USR #{self.created_by.id}"
+        else:
+            return "SYSTEM"
 
     def is_active(self):
         if not self.active:
