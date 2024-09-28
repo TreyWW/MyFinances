@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import TypedDict
 
 from mypy_boto3_sesv2.type_defs import SendEmailResponseTypeDef, SendBulkEmailResponseTypeDef, BulkEmailEntryResultTypeDef
@@ -31,6 +31,8 @@ class SingleEmailInput:
 class BulkEmailEmailItem:
     destination: str
     template_data: dict | str
+    cc: list[str] = field(default_factory=list)
+    bcc: list[str] = field(default_factory=list)
 
 
 @dataclass(frozen=False)

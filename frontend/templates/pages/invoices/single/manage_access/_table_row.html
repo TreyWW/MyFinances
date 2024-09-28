@@ -5,6 +5,7 @@
                class="link link-secondary link-underline">{{ code }}</a>
         </td>
         <td>{{ created_on }}</td>
+        <td>{{ created_by }}</td>
         <td>
             <span class="tooltip tooltip-top" data-tip="Copy URL">
                 <button class="btn btn-primary btn-outline btn-sm"
@@ -12,11 +13,22 @@
                     <i class="fa fa-paperclip"></i>
                 </button>
             </span>
+            <span class="tooltip tooltip-top" data-tip="Send Invoice">
+                <button class="btn btn-primary btn-outline btn-sm"
+                        onclick="modal_send_bulk_email.showModal();"
+                        hx-trigger="from:#single_send_button, click once"
+                        hx-swap="beforeend"
+                        hx-target="#modal_container"
+                        hx-get="{% url "api:base:modal retrieve with context" modal_name='send_bulk_email' context_value=code context_type='invoice_code_send' %}">
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </span>
             <span class="tooltip tooltip-top tooltip-" data-tip="Delete Code">
                 <button class="btn btn-error btn-outline btn-sm"
                         hx-delete="{% url 'invoices:single:manage_access delete' code=code %}"
                         hx-target="closest tr"
-                        hx-swap="outerHTML">
+                        hx-swap="outerHTML"
+                        {% if created_by == "SYSTEM" %}disabled{% endif %}>
                     <i class="fa-solid fa-trash"></i>
                 </button>
             </span>

@@ -37,6 +37,7 @@ def save_invoice_common(request: WebRequest, invoice_items, invoice: Invoice | I
     else:
         invoice.client_name = request.POST.get("to_name")
         invoice.client_company = request.POST.get("to_company")
+        invoice.client_email = request.POST.get("to_email")
         invoice.client_address = request.POST.get("to_address")
         invoice.client_city = request.POST.get("to_city")
         invoice.client_county = request.POST.get("to_county")

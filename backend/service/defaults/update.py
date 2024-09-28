@@ -46,6 +46,7 @@ def change_client_defaults(request: WebRequest, defaults: DefaultValues) -> Clie
 
     DETAIL_INPUTS = {
         "name": {"max_len": 100},
+        "email": {"max_len": 100},
         "company": {"max_len": 100},
         "address": {"max_len": 100},
         "city": {"max_len": 100},

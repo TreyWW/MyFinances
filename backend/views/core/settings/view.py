@@ -5,7 +5,15 @@ from django.shortcuts import redirect
 from django.shortcuts import render
 
 from backend.service.defaults.get import get_account_defaults
-from backend.service.settings.view import validate_page, get_user_profile, get_api_keys
+from backend.service.settings.view import (
+    validate_page,
+    get_user_profile,
+    get_api_keys,
+    account_page_context,
+    api_keys_page_context,
+    account_defaults_context,
+    email_templates_context,
+)
 from backend.types.requests import WebRequest
 
 
@@ -21,13 +29,13 @@ def view_settings_page_endpoint(request: WebRequest, page: str | None = None):
 
     match page:
         case "account":
-            user_profile = get_user_profile(request)
-            context.update({"currency_signs": user_profile.CURRENCIES, "currency": user_profile.currency})
+            account_page_context(request, context)
         case "api_keys":
-            api_keys = get_api_keys(request)
-            context.update({"api_keys": api_keys})
+            api_keys_page_context(request, context)
         case "account_defaults":
-            context.update({"account_defaults": get_account_defaults(request.actor)})
+            account_defaults_context(request, context)
+        case "email_templates":
+            email_templates_context(request, context)
 
     template = f"pages/settings/pages/{page or 'profile'}.html"
 

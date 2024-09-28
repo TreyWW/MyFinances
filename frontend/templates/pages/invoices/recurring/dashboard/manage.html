@@ -10,7 +10,7 @@
                class="btn btn-sm btn-outline btn-secondary me-3 float-left">Back to list</a>
         </div>
         <h1 class="text-center col-span-2 text-xl">Invoice Recurring Profile (#{{ invoiceProfile.id }})</h1>
-        <div>
+        <div class="flex flex-row gap-2 justify-end">
             <button hx-delete="{% url 'api:invoices:recurring:delete' %}"
                     hx-swap="none"
                     hx-confirm="Are you sure you would like to delete the recurring profile #{{ invoiceProfile.id }}?"

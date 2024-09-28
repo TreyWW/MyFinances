@@ -8,7 +8,7 @@ from login_required import login_not_required
 from backend.decorators import feature_flag_check
 from backend.models import InvoiceRecurringProfile, Invoice, DefaultValues, AuditLog
 from backend.service.defaults.get import get_account_defaults
-from backend.service.invoices.recurring.generation.next_invoice import generate_next_invoice_service
+from backend.service.invoices.recurring.generation.next_invoice import safe_generate_next_invoice_service
 from backend.service.invoices.recurring.webhooks.webhook_apikey_auth import authenticate_api_key
 
 import logging
@@ -49,7 +49,7 @@ def handle_recurring_invoice_webhook_endpoint(request: WebRequest):
 
     DATE_TODAY = datetime.now().date()
 
-    svc_resp = generate_next_invoice_service(invoice_recurring_profile=invoice_recurring_profile, issue_date=DATE_TODAY)
+    svc_resp = safe_generate_next_invoice_service(invoice_recurring_profile=invoice_recurring_profile, issue_date=DATE_TODAY)
 
     if svc_resp.success:
         logger.info("Successfully generated next invoice")

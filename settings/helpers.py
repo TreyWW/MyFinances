@@ -111,7 +111,19 @@ def send_email(
 
     if get_var("DEBUG", "").lower() == "true":
         print(data)
-        return SingleEmailSendServiceResponse(True, response=None)
+        return SingleEmailSendServiceResponse(
+            True,
+            response=SendEmailResponseTypeDef(
+                MessageId="",
+                ResponseMetadata={
+                    "RequestId": "",
+                    "HTTPStatusCode": 200,
+                    "HTTPHeaders": {},
+                    "RetryAttempts": 0,
+                    "HostId": "",
+                },
+            ),
+        )
 
     if EMAIL_SERVICE == "SES":
         if not isinstance(data.destination, list):
@@ -164,6 +176,46 @@ def send_email(
     return SingleEmailSendServiceResponse(error_message="No email service configured")
 
 
+def send_bulk_email(
+    email_list: list[BulkEmailEmailItem],
+    ConfigurationSetName: str | None = None,
+    from_address: str | None = None,
+) -> BulkEmailSendServiceResponse:
+
+    entries: list[BulkEmailEntryTypeDef] = [
+        {
+            "Destination": {
+                "ToAddresses": [entry.destination] if not isinstance(entry.destination, list) else entry.destination,
+                "CcAddresses": entry.cc,
+                "BccAddresses": entry.bcc,
+            }
+        }
+        for entry in email_list
+    ]
+
+    try:
+        response: SendBulkEmailResponseTypeDef = EMAIL_CLIENT.send_bulk_email(
+            FromEmailAddress=from_address or AWS_SES_FROM_ADDRESS,
+            BulkEmailEntries=entries,
+            ConfigurationSetName=ConfigurationSetName or "",
+            DefaultContent={},
+        )
+
+        return BulkEmailSendServiceResponse(True, response=response)
+    except EMAIL_CLIENT.exceptions.MessageRejected:
+        return BulkEmailSendServiceResponse(error_message="Email rejected", response=locals().get("response", None))
+
+    except EMAIL_CLIENT.exceptions.AccountSuspendedException:
+        return BulkEmailSendServiceResponse(error_message="Email account suspended", response=locals().get("response", None))
+
+    except EMAIL_CLIENT.exceptions.SendingPausedException:
+        return BulkEmailSendServiceResponse(error_message="Email sending paused", response=locals().get("response", None))
+
+    except Exception as error:
+        exception(f"Unexpected error occurred: {error}")
+        return BulkEmailSendServiceResponse(error_message="Email service error", response=locals().get("response", None))
+
+
 def send_templated_bulk_email(
     email_list: list[BulkEmailEmailItem],
     template_name: str,
@@ -191,7 +243,7 @@ def send_templated_bulk_email(
 
         entries.append(
             {
-                "Destination": {"ToAddresses": destination},
+                "Destination": {"ToAddresses": destination, "CcAddresses": entry.cc, "BccAddresses": entry.bcc},
                 "ReplacementEmailContent": {"ReplacementTemplate": {"ReplacementTemplateData": data_str}},
             }
         )

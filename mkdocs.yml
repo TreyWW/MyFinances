@@ -114,6 +114,8 @@ nav:
   - User Guide:
       - user-guide/index.md
       - Pricing: user-guide/pricing/index.md
+      - Email Templates:
+          - Home: user-guide/emails/templates/index.md
   - Changelog:
       - changelog/index.md
 

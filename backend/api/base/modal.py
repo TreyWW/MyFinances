@@ -6,7 +6,7 @@ from django.shortcuts import render
 
 from backend.api.public.permissions import SCOPE_DESCRIPTIONS
 from backend.api.public.models import APIAuthToken
-from backend.models import Client, Receipt, User
+from backend.models import Client, Receipt, User, InvoiceURL
 from backend.models import Invoice
 from backend.models import QuotaLimit
 from backend.models import Organization
@@ -67,18 +67,18 @@ def open_modal(request: WebRequest, modal_name, context_type=None, context_value
                 if invoice.client_to:
                     context["to_name"] = invoice.client_to.name
                     context["to_company"] = invoice.client_to.company
+                    context["to_email"] = invoice.client_to.email
                     context["to_address"] = invoice.client_to.address
-                    context["existing_client_id"] = invoice.client_to.id
-                    # context["to_city"] = invoice.client_to.city
-                    # context["to_county"] = invoice.client_to.county
-                    # context["to_country"] = invoice.client_to.country
+                    context["existing_client_id"] = (
+                        invoice.client_to.id
+                    )  # context["to_city"] = invoice.client_to.city  # context["to_county"] = invoice.client_to.county  # context["to_country"] = invoice.client_to.country
                 else:
                     context["to_name"] = invoice.client_name
                     context["to_company"] = invoice.client_company
-                    context["to_address"] = invoice.client_address
-                    # context["to_city"] = invoice.client_city
-                    # context["to_county"] = invoice.client_county
-                    # context["to_country"] = invoice.client_country
+                    context["to_email"] = invoice.client_email
+                    context["to_address"] = (
+                        invoice.client_address
+                    )  # context["to_city"] = invoice.client_city  # context["to_county"] = invoice.client_county  # context["to_country"] = invoice.client_country
             elif context_type == "edit_invoice_from":
                 invoice = context_value
                 try:
@@ -134,8 +134,7 @@ def open_modal(request: WebRequest, modal_name, context_type=None, context_value
 
                 # above_quota_usage = False  # quota_usage_check_under(request, "invoices-schedules", api=True, htmx=True)
 
-                # if not isinstance(above_quota_usage, bool):
-                #     context["above_quota_usage"] = True
+                # if not isinstance(above_quota_usage, bool):  #     context["above_quota_usage"] = True
 
             else:
                 context[context_type] = context_value
@@ -147,8 +146,26 @@ def open_modal(request: WebRequest, modal_name, context_type=None, context_value
             context["content_min_length"] = 64
             quota = QuotaLimit.objects.prefetch_related("quota_overrides").get(slug="emails-email_character_count")
             context["content_max_length"] = quota.get_quota_limit(user=request.user, quota_limit=quota)
-            clients = Client.filter_by_owner(owner=request.actor).filter(email__isnull=False)
-            context["email_list"] = clients
+            context["email_list"] = Client.filter_by_owner(owner=request.actor).filter(email__isnull=False).values_list("email", flat=True)
+
+            if context_type == "invoice_code_send":
+                invoice_url: InvoiceURL | None = InvoiceURL.objects.filter(uuid=context_value).prefetch_related("invoice").first()
+
+                if not invoice_url or not invoice_url.invoice.has_access(request.user):
+                    messages.error(request, "You don't have access to this invoice")
+                    return render(request, "base/toast.html", {"autohide": False})
+
+                context["invoice"] = invoice_url.invoice
+                context["selected_clients"] = [
+                    invoice_url.invoice.client_to.email if invoice_url.invoice.client_to else invoice_url.invoice.client_email
+                    for value in [
+                        invoice_url.invoice.client_to.email if invoice_url.invoice.client_to else invoice_url.invoice.client_email
+                    ]
+                    if value is not None
+                ]
+
+                context["email_list"] = list(context["email_list"]) + context["selected_clients"]
+
         elif modal_name == "invoices_to_destination":
             if existing_client := request.GET.get("client"):
                 context["existing_client_id"] = existing_client

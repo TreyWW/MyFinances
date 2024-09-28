@@ -1,6 +1,10 @@
 from datetime import datetime, date, timedelta
+
+from django.db import transaction, IntegrityError
+
 from backend.models import Invoice, InvoiceRecurringProfile, DefaultValues, AuditLog
 from backend.service.defaults.get import get_account_defaults
+from backend.service.invoices.common.emails.on_create import on_create_invoice_email_service
 from backend.utils.dataclasses import BaseServiceResponse
 
 import logging
@@ -11,6 +15,7 @@ logger = logging.getLogger(__name__)
 class GenerateNextInvoiceServiceResponse(BaseServiceResponse[Invoice]): ...
 
 
+@transaction.atomic
 def generate_next_invoice_service(
     invoice_recurring_profile: InvoiceRecurringProfile,
     issue_date: date = date.today(),
@@ -76,10 +81,48 @@ def generate_next_invoice_service(
 
     logger.info(f"Invoice generated with the ID of {generated_invoice.pk}")
 
+    users_email: str = (
+        invoice_recurring_profile.client_to.email if invoice_recurring_profile.client_to else invoice_recurring_profile.client_email
+    ) or ""
+
+    invoice_email_response = on_create_invoice_email_service(users_email=users_email, invoice=generated_invoice)
+
+    if invoice_email_response.failed:
+        print("here bef fail")
+        raise IntegrityError(f"Failed to send invoice #{generated_invoice.pk} to {users_email}: {invoice_email_response.error}")
+
     AuditLog.objects.create(
         action=f"[SYSTEM] Generated invoice #{generated_invoice.pk} from the recurring profile #{invoice_recurring_profile.pk}",
         user=invoice_recurring_profile.user,
         organization=invoice_recurring_profile.organization,
     )
 
-    return GenerateNextInvoiceServiceResponse(True, generated_invoice)
+    return GenerateNextInvoiceServiceResponse(True, response=generated_invoice)
+
+
+def handle_invoice_generation_failure(invoice_recurring_profile, error_message):
+    """
+    Function to handle invoice generation failure and log it in AuditLog.
+    This runs outside the atomic transaction to avoid rollback.
+    """
+    AuditLog.objects.create(
+        action=f"[SYSTEM] Failed to generate invoice for recurring profile #{invoice_recurring_profile.pk}. Error: {error_message}",
+    )
+    logger.error(f"Failed to generate invoice for profile {invoice_recurring_profile.pk}: {error_message}")
+
+
+def safe_generate_next_invoice_service(
+    invoice_recurring_profile: InvoiceRecurringProfile,
+    issue_date: date = date.today(),
+    account_defaults: DefaultValues | None = None,
+) -> GenerateNextInvoiceServiceResponse:
+    """
+    Safe wrapper to generate the next invoice with transaction rollback and error logging.
+    """
+    try:
+        # Call the main service function wrapped with @transaction.atomic
+        return generate_next_invoice_service(invoice_recurring_profile, issue_date, account_defaults)
+    except Exception as e:
+        # Handle the error and ensure the failure is logged
+        handle_invoice_generation_failure(invoice_recurring_profile, str(e))
+        return GenerateNextInvoiceServiceResponse(False, error_message=str(e))

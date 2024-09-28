@@ -9,21 +9,30 @@
                 hx-vals='{"on_main": "True"}'>
                 <li>
                     <a href="{% url 'settings:dashboard with page' page='profile' %}"
-                       hx-replace-url="/dashboard/settings/profile/">
+                       hx-replace-url="{% url 'settings:dashboard with page' page='profile' %}">
                         <i class="fa fa-solid fa-user"></i>
                         Public Profile
                     </a>
                 </li>
                 <li>
                     <a href="{% url 'settings:dashboard with page' page='account' %}"
-                       hx-replace-url="/dashboard/settings/account/">
+                       hx-replace-url="{% url 'settings:dashboard with page' page='account' %}">
                         <i class="fa fa-solid fa-gear"></i>
                         Account
                     </a>
                 </li>
+                <div class="divider"></div>
+                <h2 class="pl-3 text-neutral-content">Invoice Preferences</h2>
+                <li>
+                    <a href="{% url 'settings:dashboard with page' page='email_templates' %}"
+                       hx-replace-url="{% url 'settings:dashboard with page' page='email_templates' %}">
+                        <i class="fa fa-solid fa-envelope"></i>
+                        Email Templates
+                    </a>
+                </li>
                 <li>
                     <a href="{% url 'settings:dashboard with page' page='account_defaults' %}"
-                       hx-replace-url="/dashboard/settings/account_defaults/">
+                       hx-replace-url="{% url 'settings:dashboard with page' page='account_defaults' %}">
                         <i class="fa fa-solid fa-toolbox"></i>
                         Account defaults
                     </a>
@@ -32,7 +41,7 @@
                 <h2 class="pl-3 text-neutral-content">Access</h2>
                 <li>
                     <a href="{% url 'settings:dashboard with page' page='api_keys' %}"
-                       hx-replace-url="/dashboard/settings/api_keys/">
+                       hx-replace-url="{% url 'settings:dashboard with page' page='api_keys' %}">
                         <i class="fa fa-solid fa-code"></i>
                         API Keys
                     </a>

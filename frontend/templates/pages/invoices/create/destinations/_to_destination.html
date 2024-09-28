@@ -27,6 +27,7 @@
         {% else %}
             <p class="text-md">{{ to_name | default:"No Name" }}</p>
             <p class="text-sm">{{ to_company | default:"No Company" }}</p>
+            <p class="text-sm">{{ to_email | default:"No Email Associated" }}</p>
             <p class="text-sm">{{ to_address | default:"No address" }}</p>
             <p class="text-sm">{{ to_city | default:"No city" }}</p>
             <p class="text-sm">{{ to_county | default:"No county" }}</p>
@@ -43,6 +44,7 @@
     </div>
     <input type="hidden" name="to_name" value="{{ to_name | default:"" }}">
     <input type="hidden" name="to_company" value="{{ to_company | default:"" }}">
+    <input type="hidden" name="to_email" value="{{ to_email | default:"" }}">
     <input type="hidden" name="to_address" value="{{ to_address | default:"" }}">
     <input type="hidden" name="to_city" value="{{ to_city | default:"" }}">
     <input type="hidden" name="to_county" value="{{ to_county | default:"" }}">

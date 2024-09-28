@@ -21,6 +21,8 @@ SCOPES = {
     "team_permissions:write",
     "team:invite",
     "team:kick",
+    "email_templates:read",
+    "email_templates:write",
 }
 
 SCOPES_TREE = {
@@ -36,6 +38,8 @@ SCOPES_TREE = {
     "team_permissions:write": {"team_permissions:read", "team_permissions:write"},
     "team:invite": {"team:invite"},
     "team:kick": {"team:kick", "team:invite"},
+    "email_templates:read": {"email_templates:read"},
+    "email_templates:write": {"email_templates:read", "email_templates:write"},
 }
 
 SCOPE_DESCRIPTIONS = {
@@ -45,6 +49,7 @@ SCOPE_DESCRIPTIONS = {
     "api_keys": {"description": "Access API keys", "options": {"read": "Read only", "write": "Read and write"}},
     "team_permissions": {"description": "Access team permissions", "options": {"read": "Read only", "write": "Read and write"}},
     "team": {"description": "Invite team members", "options": {"invite": "Invite members"}},
+    "email_templates": {"description": "Access email templates", "options": {"read": "Read only", "write": "Read and write"}},
 }
 
 if settings.BILLING_ENABLED:
