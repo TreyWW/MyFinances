@@ -111,7 +111,19 @@ def send_email(
 
     if get_var("DEBUG", "").lower() == "true":
         print(data)
-        return SingleEmailSendServiceResponse(True, response=SendEmailResponseTypeDef())
+        return SingleEmailSendServiceResponse(
+            True,
+            response=SendEmailResponseTypeDef(
+                MessageId="",
+                ResponseMetadata={
+                    "RequestId": "",
+                    "HTTPStatusCode": 200,
+                    "HTTPHeaders": {},
+                    "RetryAttempts": 0,
+                    "HostId": "",
+                },
+            ),
+        )
 
     if EMAIL_SERVICE == "SES":
         if not isinstance(data.destination, list):
