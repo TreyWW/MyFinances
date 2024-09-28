@@ -44,7 +44,7 @@ class Invalid:
 @htmx_only("emails:dashboard")
 @feature_flag_check("areUserEmailsAllowed", status=True, api=True, htmx=True)
 @web_require_scopes("emails:send", False, False, "emails:dashboard")
-def send_single_email_view(request: HtmxHttpRequest) -> HttpResponse:
+def send_single_email_view(request: WebRequest) -> HttpResponse:
     # check_usage = False  # quota_usage_check_under(request, "emails-single-count", api=True, htmx=True)
     # if not isinstance(check_usage, bool):
     #     return check_usage

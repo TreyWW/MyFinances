@@ -81,9 +81,9 @@ def generate_next_invoice_service(
 
     logger.info(f"Invoice generated with the ID of {generated_invoice.pk}")
 
-    users_email = (
+    users_email: str = (
         invoice_recurring_profile.client_to.email if invoice_recurring_profile.client_to else invoice_recurring_profile.client_email
-    )
+    ) or ""
 
     invoice_email_response = on_create_invoice_email_service(users_email=users_email, invoice=generated_invoice)
 

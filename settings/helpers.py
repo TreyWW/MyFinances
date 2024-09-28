@@ -111,7 +111,7 @@ def send_email(
 
     if get_var("DEBUG", "").lower() == "true":
         print(data)
-        return SingleEmailSendServiceResponse(True, response={})
+        return SingleEmailSendServiceResponse(True, response=SendEmailResponseTypeDef())
 
     if EMAIL_SERVICE == "SES":
         if not isinstance(data.destination, list):

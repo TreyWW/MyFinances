@@ -416,6 +416,7 @@ class DefaultValues(OwnerBase):
     invoice_from_city = models.CharField(max_length=100, null=True, blank=True)
     invoice_from_county = models.CharField(max_length=100, null=True, blank=True)
     invoice_from_country = models.CharField(max_length=100, null=True, blank=True)
+    invoice_from_email = models.CharField(max_length=100, null=True, blank=True)
 
     invoice_account_number = models.CharField(max_length=100, null=True, blank=True)
     invoice_sort_code = models.CharField(max_length=100, null=True, blank=True)

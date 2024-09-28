@@ -149,7 +149,7 @@ def open_modal(request: WebRequest, modal_name, context_type=None, context_value
             context["email_list"] = Client.filter_by_owner(owner=request.actor).filter(email__isnull=False).values_list("email", flat=True)
 
             if context_type == "invoice_code_send":
-                invoice_url: InvoiceURL = InvoiceURL.objects.filter(uuid=context_value).prefetch_related("invoice").first()
+                invoice_url: InvoiceURL | None = InvoiceURL.objects.filter(uuid=context_value).prefetch_related("invoice").first()
 
                 if not invoice_url or not invoice_url.invoice.has_access(request.user):
                     messages.error(request, "You don't have access to this invoice")
