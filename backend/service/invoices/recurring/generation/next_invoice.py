@@ -88,6 +88,7 @@ def generate_next_invoice_service(
     invoice_email_response = on_create_invoice_email_service(users_email=users_email, invoice=generated_invoice)
 
     if invoice_email_response.failed:
+        print("here bef fail")
         raise IntegrityError(f"Failed to send invoice #{generated_invoice.pk} to {users_email}: {invoice_email_response.error}")
 
     AuditLog.objects.create(

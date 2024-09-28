@@ -101,6 +101,10 @@ class User(AbstractUser):
 
     role = models.CharField(max_length=10, choices=Role.choices, default=Role.USER)
 
+    @property
+    def name(self):
+        return self.first_name
+
 
 def add_3hrs_from_now():
     return timezone.now() + timezone.timedelta(hours=3)

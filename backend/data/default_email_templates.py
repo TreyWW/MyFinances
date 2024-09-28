@@ -51,10 +51,10 @@ def email_footer() -> str:
         "\n"
         + dedent(
             """
-    Note: This is an automated email sent out by MyFinances on behalf of '$company_name'.
+Note: This is an automated email sent out by MyFinances on behalf of '$company_name'.
 
-    If you believe this is spam or fraudulent please report it to us at report@myfinances.cloud and DO NOT pay the invoice. Once a report
-    has been made you will have a case opened. Eligible reports may receive a reward, decided on a case by case basis.
-    """
+If you believe this is spam or fraudulent please report it to us at report@myfinances.cloud and DO NOT pay the invoice.
+Once a report has been made you will have a case opened. Eligible reports may receive a reward, decided on a case by case basis.
+"""
         ).strip()
     )

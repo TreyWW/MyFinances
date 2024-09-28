@@ -31,6 +31,8 @@ class SingleEmailInput:
 class BulkEmailEmailItem:
     destination: str
     template_data: dict | str
+    cc: list[str] = None
+    bcc: list[str] = None
 
 
 @dataclass(frozen=False)
