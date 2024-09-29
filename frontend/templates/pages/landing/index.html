@@ -4,12 +4,13 @@
     <section class="bg-base-200">
         <div class="grid max-w-screen-xl px-8 pt-20 pb-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12 lg:pt-16">
             <div class="mr-auto place-self-center lg:col-span-7">
-                <h1 class="max-w-2xl mb-4 text-3xl font-extrabold leading-none tracking-tight md:text-4xl xl:text-5xl">
+                <h1 class="max-w-2xl mb-4 text-3xl font-extrabold leading-none tracking-tight md:text-4xl xl:text-5xl scroll-mt-16"
+                    id="title_text">
                     Simplify Your Workflow,
                     <br>
                     Empower Your Business
                 </h1>
-                <p class="max-w-2xl mb-6 font-light lg:mb-8 md:text-lg lg:text-xl">
+                <p class="max-w-2xl mb-6 font-light lg:mb-8 md:text-lg lg:text-xl scroll-mt-16">
                     Automate invoicing, streamline customer onboarding, and manage your documents — all in one place.
                 </p>
                 <p class="mb-3">Join the early access club for free!</p>
@@ -121,13 +122,12 @@
                     <i class="fa fa-bell me-4"></i>
                     Get alerted when your customer exceeds deadlines
                 </div>
-                <div class="flex items-center">
+                <div class="flex items-center" id="AA">
                     <i class="fa fa-magnifying-glass-chart me-4"></i>
                     View monthly reports to see how well you are progressing
                 </div>
                 <div>
-                    <a class="btn btn-primary"
-                       href="{% url 'auth:login create_account manual' %}">Start today</a>
+                    <a class="btn btn-primary" href="#title_text">Join waitlist</a>
                 </div>
             </div>
         </div>
