@@ -1,80 +1,6 @@
 <div class="card bg-base-100 p-3 mb-2">
     <div class="flex items-center justify-between">
         <div class="flex items-center space-x-2">
-            <div class="dropdown">
-                <div class="btn btn-square btn-sm btn-outline loading-htmx"
-                     data-indicator="filter"
-                     role="button"
-                     tabindex="0">
-                    <i class="fa fa-filter loading-htmx-text"></i>
-                    <span id="currency_save_loading"
-                          class="loading loading-spinner loading-htmx-loader h-3 w-3"></span>
-                </div>
-                <ul tabindex="0"
-                    class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
-                    <h2 class="menu-title">Filter by</h2>
-                    <li>
-                        <details>
-                            <summary>Above Amount</summary>
-                            <ul>
-                                <li>
-                                    <input class="input input-sm input-bordered w-full mt-1"
-                                           placeholder="20"
-                                           value="{{ previous_amount_filter }}"
-                                           data-filter-type="amount"
-                                           hx-vals='{"filter_type": "amount"}'
-                                           hx-swap="outerHTML"
-                                           hx-target="#table_body"
-                                           hx-indicator='div[data-indicator="filter"]'
-                                           hx-get="{% url 'api:invoices:recurring:fetch' %}"
-                                           hx-trigger="keyup changed delay:500ms"
-                                           name="filter"
-                                           hx-include='#filter_list_storage, #sort_direction_storage, [name="sort"]' />
-                                </li>
-                            </ul>
-                        </details>
-                    </li>
-                    <li data-filter-type="status">
-                        <details>
-                            <summary>Status</summary>
-                            <ul hx-vals='{"filter_type": "status"}'
-                                data-filter-type="status"
-                                hx-swap="outerHTML"
-                                hx-target="#table_body"
-                                hx-indicator='div[data-indicator="filter"]'
-                                hx-include='#filter_list_storage, #sort_direction_storage, [name="sort"], #amount_storage'>
-                                <li data-filter-by="ongoing">
-                                    <button class="dropdown-item text-sm border-none"
-                                            name="filter"
-                                            value="ongoing"
-                                            hx-get="{% url 'api:invoices:recurring:fetch' %}">
-                                        <span><i class="fa fa-check text-success hidden"></i></span>
-                                        Ongoing
-                                    </button>
-                                </li>
-                                <li data-filter-by="paused">
-                                    <button class="dropdown-item text-sm border-none"
-                                            name="filter"
-                                            value="paused"
-                                            hx-get="{% url 'api:invoices:recurring:fetch' %}">
-                                        <span><i class="fa fa-check text-success hidden"></i></span>
-                                        Paused
-                                    </button>
-                                </li>
-                                <li data-filter-by="cancelled">
-                                    <button class="dropdown-item text-sm border-none"
-                                            name="filter"
-                                            value="cancelled"
-                                            hx-get="{% url 'api:invoices:recurring:fetch' %}">
-                                        <span><i class="fa fa-check text-success hidden"></i></span>
-                                        Cancelled
-                                    </button>
-                                </li>
-                            </ul>
-                        </details>
-                    </li>
-                </ul>
-            </div>
             <div class="dropdown dropdown-right w-14">
                 <div tabindex="0"
                      role="button"
@@ -86,31 +12,25 @@
                 </div>
                 <ul class="dropdown-content menu z-[1] w-52 rounded-box bg-base-200 p-2 shadow"
                     tabindex="0"
-                    hx-swap="outerHTML"
-                    hx-target="#table_body"
-                    hx-include="#sort_direction_storage"
-                    hx-indicator="#sort-indicator">
+                    mft-id="single_invoices_list_table">
                     <h2 class="menu-title">Sort by</h2>
                     <li data-sort="id">
-                        <button class="dropdown-item"
-                                hx-get="{% url 'api:invoices:recurring:fetch' %}"
-                                name="sort"
-                                value="id">
+                        <button class="dropdown-item" mft-sort-by="id">
                             <i class="fa-solid fa-sort"></i>
                             ID
                         </button>
                     </li>
                     <li data-sort="status">
-                        <button class="dropdown-item"
-                                hx-get="{% url 'api:invoices:recurring:fetch' %}"
-                                name="sort"
-                                value="status">Payment Status</button>
+                        <button class="dropdown-item" mft-sort-by="status">
+                            <i class="fa-solid fa-sort"></i>
+                            Status
+                        </button>
                     </li>
                     <li data-sort="date_due">
-                        <button class="dropdown-item"
-                                hx-get="{% url 'api:invoices:recurring:fetch' %}"
-                                name="sort"
-                                value="date_due">Date</button>
+                        <button class="dropdown-item" mft-sort-by="end_date">
+                            <i class="fa-solid fa-sort"></i>
+                            Date
+                        </button>
                     </li>
                 </ul>
             </div>
@@ -130,25 +50,19 @@
     </div>
 </div>
 <div class="card bg-base-100 p-6 h-screen">
-    <form id="filter_list_storage">
-    </form>
-    <form id="sort_direction_storage">
-    </form>
     <form id="page_storage">
     </form>
-    <form id="amount_storage">
-    </form>
-    <div class="w-full overflow-x-auto">
-        <table class="table">
+    <div class="flex w-full h-full overflow-x-auto overflow-y-auto">
+        <table class="table h-fit" id="recurring_invoices_list_table">
             <thead>
-                <tr hx-swap="outerHTML"
-                    hx-target="#table_body"
-                    hx-include="#filter_list_storage">
-                    <th>Profile ID</th>
-                    <th>End Date</th>
-                    <th>Client Name</th>
-                    <th>Amount</th>
-                    <th>Status</th>
+                <tr>
+                    <th mft-col-name="id" mft-filter-type="searchable-amount">Profile ID</th>
+                    <th mft-col-name="end_date" mft-filter-type="searchable">End Date</th>
+                    <th mft-col-name="client_name" mft-filter-type="searchable">Client Name</th>
+                    <th mft-col-name="amount" mft-filter-type="searchable-amount">Amount</th>
+                    <th mft-col-name="status"
+                        mft-filter-type="normal"
+                        mft-filters="paused,ongoing">Status</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -159,6 +73,7 @@
                 {% include 'components/table/skeleton_rows.html' with rows=3 cols=6 %}
             </tbody>
         </table>
+        <script>new Tableify('#recurring_invoices_list_table');</script>
     </div>
 </div>
 {% component "messages_list" %}

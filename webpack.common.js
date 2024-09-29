@@ -9,6 +9,10 @@ module.exports = {
       import: './assets/scripts/htmx.js',
       dependOn: 'init'
     },
+    tableify: {
+      import: './assets/scripts/tableify.js',
+      dependOn: 'init'
+    },
     receipt_downloads: {
       import: './assets/scripts/receipt_downloads.js'
     },

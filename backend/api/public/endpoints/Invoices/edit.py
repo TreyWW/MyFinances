@@ -82,22 +82,14 @@ def change_status_endpoint(request, invoice_id: int, invoice_status: str):
     if request.user.logged_in_as_team and request.user.logged_in_as_team != invoice.organization or request.user != invoice.user:
         return Response({"error": "You do not have permission to edit this invoice"}, status=status.HTTP_403_FORBIDDEN)
 
-    if invoice_status not in ["paid", "overdue", "pending"]:
-        return Response({"error": "Invalid status. Please choose from: pending, paid, overdue"}, status=status.HTTP_400_BAD_REQUEST)
+    if invoice_status not in ["paid", "draft", "pending"]:
+        return Response({"error": "Invalid status. Please choose from: pending, paid, draft"}, status=status.HTTP_400_BAD_REQUEST)
 
-    if invoice.payment_status == invoice_status:
+    if invoice.status == invoice_status:
         return Response({"error": f"Invoice status is already {invoice_status}"}, status=status.HTTP_400_BAD_REQUEST)
 
-    invoice.payment_status = invoice_status
+    invoice.status = invoice_status
     invoice.save()
-
-    dps = invoice.dynamic_payment_status
-    if (invoice_status == "overdue" and dps == "pending") or (invoice_status == "pending" and dps == "overdue"):
-        message = f"""
-            The invoice status was automatically changed from <strong>{invoice_status}</strong> to <strong>{dps}</strong>
-            as the invoice dates override the manual status.
-        """
-        return Response({"error": message}, status=status.HTTP_400_BAD_REQUEST)
 
     return Response({"message": f"Invoice status been changed to <strong>{invoice_status}</strong>"}, status=status.HTTP_200_OK)
 

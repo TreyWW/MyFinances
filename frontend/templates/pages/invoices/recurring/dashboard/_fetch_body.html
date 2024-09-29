@@ -17,23 +17,23 @@
                 <a href="{% url "invoices:recurring:overview" invoice_profile_id=invoiceProfile.id %}">{{ invoiceProfile.id }}</a>
             </td>
             <td>{{ invoiceProfile.end_date | date:"d/m/Y" | default:"never" }}</td>
-            <td>
-                <div class="flex items-center text-sm">
-                    <div>
-                        {% with cli_name=invoiceProfile.client_to.name|default:invoiceProfile.client_name %}
+            {% with cli_name=invoiceProfile.client_to.name|default:invoiceProfile.client_name %}
+                <td td-value="{{ cli_name | default_if_none:'No Client' }}">
+                    <div class="flex items-center text-sm">
+                        <div>
                             {% if cli_name %}
                                 <p class="font-semibold">{{ cli_name }}</p>
                             {% else %}
                                 <p class="font-thin">No Client</p>
                             {% endif %}
-                        {% endwith %}
+                        </div>
                     </div>
-                </div>
-            </td>
-            <td>
+                </td>
+            {% endwith %}
+            <td td-value="{{ invoiceProfile.get_total_price | default_if_none:0 }}">
                 {{ invoiceProfile.get_currency_symbol }}{{ invoiceProfile.get_total_price | default_if_none:0 | floatformat:2 | intcomma }}
             </td>
-            <td>
+            <td td-value="{{ invoiceProfile.status }}">
                 {% include "pages/invoices/recurring/dashboard/_status_badge.html" with status=invoiceProfile.status inv_id=invoiceProfile.id %}
             </td>
             <td colspan="2"
@@ -47,7 +47,7 @@
                         <i class="fa-solid fa-ellipsis-vertical"></i>
                     </label>
                     <ul tabindex="0"
-                        class="dropdown-content z-[1] menu wp-2 shadow-2xl bg-base-200 rounded-box w-52">
+                        class="dropdown-content z-[1] menu wp-2 shadow-2xl bg-base-200 border border-base-300 rounded-box w-52">
                         <li hx-boost="true">
                             <a href="{% url "invoices:recurring:overview" invoice_profile_id=invoiceProfile.id %}">
                                 <i class="fa-solid fa-eye"></i>
@@ -97,7 +97,6 @@
                                 hx-swap="outerHTML"
                                 hx-target="#table_body"
                                 hx-indicator=""
-                                hx-include='#filter_list_storage, #sort_direction_storage, [name="sort"]'
                                 hx-get="{% url "api:invoices:recurring:fetch" %}?page={{ page.previous_page_number }}">
                             «
                         </button>
@@ -112,7 +111,6 @@
                                 hx-swap="outerHTML"
                                 hx-target="#table_body"
                                 hx-indicator=""
-                                hx-include='#filter_list_storage, #sort_direction_storage, [name="sort"]'
                                 hx-get="{% url "api:invoices:recurring:fetch" %}?page={{ page.next_page_number }}">
                             »
                         </button>
@@ -140,72 +138,6 @@
         {% endif %}
     </div>
 {% endfor %}
-{% for option in all_sort_options %}
-    <div hx-swap-oob="innerHTML:li[data-sort='{{ option }}'] button">
-        {% if sort == option or sort == "-"|add:option %}<i class="fa fa-solid fa-sort"></i>{% endif %}
-        {% if option == "status" %}
-            Status
-        {% elif option == "end_date" %}
-            Date
-        {% elif option == "amount" %}
-            Amount
-        {% else %}
-            ID
-        {% endif %}
-    </div>
-{% endfor %}
-{% for filter_type, inner_filters in all_filters.items %}
-    {% for filter in inner_filters %}
-        {% comment %}
-            This will set the checkmarks for each selected filter
-        {% endcomment %}
-        <div hx-swap-oob='innerHTML:ul[data-filter-type="{{ filter_type }}"] li[data-filter-by="{{ filter }}"] span'>
-            {% if filter in selected_filters %}
-                <i class="fa fa-check text-success"></i>
-            {% else %}
-                <i class="fa fa-check text-success hidden"></i>
-            {% endif %}
-        </div>
-        {% comment %}
-            This will set the little in brackets (x) number for how many filters are applied
-        {% endcomment %}
-        <div hx-swap-oob='innerHTML:li[data-filter-type="{{ filter_type }}"] details summary'>
-            {% with FILTER_COUNT=inner_filters|common_children_filter:selected_filters|length %}
-                {{ filter_type | title }}
-                {% if FILTER_COUNT %}({{ FILTER_COUNT }}){% endif %}
-            {% endwith %}
-        </div>
-    {% endfor %}
-{% endfor %}
-<div hx-swap-oob="innerHTML:#filter_list_storage">
-    <input type="hidden"
-           name="status_cancelled"
-           value="{% if 'cancelled' in selected_filters %}true{% endif %}">
-    <input type="hidden"
-           name="status_paused"
-           value="{% if 'paused' in selected_filters %}true{% endif %}">
-    <input type="hidden"
-           name="status_ongoing"
-           value="{% if 'ongoing' in selected_filters %}true{% endif %}">
-    <input type="hidden"
-           name="amount_20+"
-           value="{% if '20+' in selected_filters %}true{% endif %}">
-    <input type="hidden"
-           name="amount_50+"
-           value="{% if '50+' in selected_filters %}true{% endif %}">
-    <input type="hidden"
-           name="amount_100+"
-           value="{% if '100+' in selected_filters %}true{% endif %}">
-</div>
-<div hx-swap-oob="innerHTML:#sort_direction_storage">
-    <input type="hidden" name="sort_direction" value="{{ sort_direction }}">
-</div>
-<div hx-swap-oob="innerHTML:#sort_direction_storage">
-    <input type="hidden" name="sort_direction" value="{{ sort_direction }}">
-</div>
-<div hx-swap-oob="innerHTML:#amount_storage">
-    <input type="hidden" name="amount_filter" value="{{ amount_filter }}">
-</div>
 <div hx-swap-oob="innerHTML:#page_storage">
     <input type="hidden" name="page" value="{{ page.number }}">
 </div>

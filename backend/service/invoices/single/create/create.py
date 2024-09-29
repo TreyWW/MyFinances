@@ -86,8 +86,6 @@ def save_invoice(request: WebRequest, invoice_items):
 
     save_invoice_common(request, invoice_items, invoice)
 
-    invoice.payment_status = invoice.dynamic_payment_status
-
     try:
         invoice.full_clean()
     except ValidationError as validation_errors:

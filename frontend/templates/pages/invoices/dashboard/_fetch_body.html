@@ -12,28 +12,28 @@
             hx-vals='{"invoice_structure_main": "True"}'
             hx-push-url="{% url "invoices:single:overview" invoice_id=invoice.id %}"
             hx-get="{% url "invoices:single:overview" invoice_id=invoice.id %}">
-            <td class="link link-primary no-underline">
+            <td class="link link-primary no-underline" td-value="{{ invoice.id }}">
                 <a href="{% url "invoices:single:overview" invoice_id=invoice.id %}">{{ invoice.id }}</a>
             </td>
             <td>{{ invoice.date_due | date:"d/m/Y" }}</td>
-            <td>
-                <div class="flex items-center text-sm">
-                    <div>
-                        {% with cli_name=invoice.client_to.name|default:invoice.client_name %}
+            {% with cli_name=invoice.client_to.name|default:invoice.client_name %}
+                <td td-value="{{ cli_name|default_if_none:"No Client" }}">
+                    <div class="flex items-center text-sm">
+                        <div>
                             {% if cli_name %}
                                 <p class="font-semibold">{{ cli_name }}</p>
                             {% else %}
                                 <p class="font-thin">No Client</p>
                             {% endif %}
-                        {% endwith %}
+                        </div>
                     </div>
-                </div>
-            </td>
-            <td>
+                </td>
+            {% endwith %}
+            <td td-value="{{ invoice.get_total_price | default_if_none:0 }}">
                 {{ invoice.get_currency_symbol }}{{ invoice.get_total_price | default_if_none:0 | floatformat:2 | intcomma }}
             </td>
-            <td>
-                {% component "pages:invoices:dashboard:payment_status_badge" status=invoice.payment_status inv_id=invoice.id %}
+            <td td-value="{{ invoice.dynamic_status }}">
+                {% component "pages:invoices:dashboard:payment_status_badge" status=invoice.dynamic_status inv_id=invoice.id %}
             </td>
             <td colspan="2"
                 onclick="const e = arguments[0] || window.event; e.stopPropagation();"
@@ -173,48 +173,3 @@
                         <td colspan="100%" class="text-center">No Invoices Found</td>
                     {% endfor %}
                 </tbody>
-                {% for option in all_sort_options %}
-                    <div hx-swap-oob="innerHTML:li[data-sort='{{ option }}'] button">
-                        {% if sort == option or sort == "-"|add:option %}<i class="fa fa-solid fa-sort"></i>{% endif %}
-                        {% if option == "payment_status" %}
-                            Payment Status
-                        {% elif option == "date_due" %}
-                            Date
-                        {% elif option == "amount" %}
-                            Amount
-                        {% else %}
-                            ID
-                        {% endif %}
-                    </div>
-                {% endfor %}
-                {% for filter_type, inner_filters in all_filters.items %}
-                    {% for filter in inner_filters %}
-                        <div hx-swap-oob="innerHTML:div[data-filter-type='{{ filter_type }}'] ul li[data-filter-by='{{ filter }}'] button">
-                            {% if filter in selected_filters %}<i class="fa fa-solid fa-check text-success"></i>{% endif %}
-                            {{ filter | title }}
-                        </div>
-                    {% endfor %}
-                {% endfor %}
-                <div hx-swap-oob="innerHTML:#filter_list_storage">
-                    <input type="hidden"
-                           name="payment_status_paid"
-                           value="{% if 'paid' in selected_filters %}true{% endif %}">
-                    <input type="hidden"
-                           name="payment_status_pending"
-                           value="{% if 'pending' in selected_filters %}true{% endif %}">
-                    <input type="hidden"
-                           name="payment_status_overdue"
-                           value="{% if 'overdue' in selected_filters %}true{% endif %}">
-                    <input type="hidden"
-                           name="amount_20+"
-                           value="{% if '20+' in selected_filters %}true{% endif %}">
-                    <input type="hidden"
-                           name="amount_50+"
-                           value="{% if '50+' in selected_filters %}true{% endif %}">
-                    <input type="hidden"
-                           name="amount_100+"
-                           value="{% if '100+' in selected_filters %}true{% endif %}">
-                </div>
-                <div hx-swap-oob="innerHTML:#sort_direction_storage">
-                    <input type="hidden" name="sort_direction" value="{{ sort_direction }}">
-                </div>

@@ -583,14 +583,15 @@ class Invoice(InvoiceBase):
     # objects = InvoiceManager()
 
     STATUS_CHOICES = (
+        ("draft", "Draft"),
+        # ("ready", "Ready"),
         ("pending", "Pending"),
         ("paid", "Paid"),
-        ("overdue", "Overdue"),
     )
 
     invoice_id = models.IntegerField(unique=True, blank=True, null=True)  # todo: add
     date_due = models.DateField()
-    payment_status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="pending")
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="draft")
     invoice_recurring_profile = models.ForeignKey(
         "InvoiceRecurringProfile", related_name="generated_invoices", on_delete=models.SET_NULL, blank=True, null=True
     )
@@ -607,11 +608,15 @@ class Invoice(InvoiceBase):
         return f"Invoice #{invoice_id} for {client}"
 
     @property
-    def dynamic_payment_status(self):
-        if self.date_due and timezone.now().date() > self.date_due and self.payment_status == "pending":
+    def dynamic_status(self):
+        if self.status == "pending" and self.is_overdue:
             return "overdue"
         else:
-            return self.payment_status
+            return self.status
+
+    @property
+    def is_overdue(self):
+        return self.date_due and timezone.now().date() > self.date_due
 
     @property
     def get_to_details(self) -> tuple[str, dict[str, str | None]] | tuple[str, Client]:
