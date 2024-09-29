@@ -8,6 +8,7 @@ module.exports = {
     './frontend/templates/base/base.html',
     './backend/**/views/*.py',
     './backend/views/core/**/*.py',
+    './assets/scripts/tableify.js'
   ],
   safelist: [
     'alert',
