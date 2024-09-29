@@ -63,6 +63,13 @@
                 class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
                 <li>
                     <button hx-swap="none"
+                            hx-post="{% url "api:invoices:single:edit status" invoice_id=invoice.id status='draft' %}">
+                        <i class="fa-solid fa-note-sticky"></i>
+                        Draft
+                    </button>
+                </li>
+                <li>
+                    <button hx-swap="none"
                             hx-post="{% url "api:invoices:single:edit status" invoice_id=invoice.id status='pending' %}">
                         <i class="fa-solid fa-hourglass-half"></i>
                         Pending
@@ -73,13 +80,6 @@
                             hx-post="{% url "api:invoices:single:edit status" invoice_id=invoice.id status='paid' %}">
                         <i class="fa-solid fa-circle-check"></i>
                         Paid
-                    </button>
-                </li>
-                <li>
-                    <button hx-swap="none"
-                            hx-post="{% url "api:invoices:single:edit status" invoice_id=invoice.id status='overdue' %}">
-                        <i class="fa-solid fa-exclamation-triangle"></i>
-                        Overdue
                     </button>
                 </li>
             </ul>

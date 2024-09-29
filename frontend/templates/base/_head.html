@@ -58,11 +58,6 @@
         {% render_bundle 'font_awesome' 'js' %}
         <!-- Tailwind & DaisyUI -->
         <link rel="stylesheet" href="{% static 'src/output.css' %}?v={{ version }}">
-        <!-- DataTables -->
-        <script src="https://cdn.datatables.net/2.1.7/js/dataTables.js"></script>
-        <script src="https://cdn.datatables.net/2.1.7/js/dataTables.tailwindcss.js"></script>
-        {#        <link rel="stylesheet"
-              href="https://cdn.datatables.net/2.1.7/css/dataTables.tailwindcss.css">#}
     {% endif %}
     {% render_bundle 'receipt_downloads' 'js' %}
     {{ analytics|safe }}
