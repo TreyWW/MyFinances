@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+import botocore.client
 from botocore.config import Config
 from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 
@@ -22,6 +22,8 @@ class Boto3Handler:
         self.scheduler_lambda_arn: str = get_var("SCHEDULER_LAMBDA_ARN")
         self.scheduler_lambda_access_role_arn: str = get_var("SCHEDULER_LAMBDA_ACCESS_ROLE_ARN")
         self.scheduler_invoices_group_name: str = get_var("SCHEDULER_INVOICES_GROUP_NAME")
+        self.dynamodb_client = None
+        self.scheduler_client = None
 
         print(f"Region: {self.region_name}")
         print("| has aws access key id" if self.aws_access_key_id else "X no aws access key id")
@@ -68,7 +70,12 @@ class Boto3Handler:
             return None
 
         self._schedule_client = self._boto3_session.client("scheduler")
+        self.schedule_client = self._schedule_client
+        self._dynamodb_client = self._boto3_session.client("dynamodb")
+        self.dynamodb_client = self._dynamodb_client
+
         self.SCHEDULE_EXCEPTIONS = self._schedule_client.exceptions
+        self.DYNAMO_EXCEPTIONS = self._dynamodb_client.exceptions
         self.initiated = True
 
         logger.info("Boto3Handler has been initiated!")

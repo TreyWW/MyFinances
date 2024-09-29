@@ -12,9 +12,23 @@
                 <p class="max-w-2xl mb-6 font-light lg:mb-8 md:text-lg lg:text-xl">
                     Automate invoicing, streamline customer onboarding, and manage your documents — all in one place.
                 </p>
+                <p class="mb-3">Join the early access club for free!</p>
                 <div class="space-y-4 sm:flex sm:space-y-0 sm:space-x-4">
-                    <a class="btn btn-primary"
-                       href="{% url 'auth:login create_account manual' %}">Start Today – Free for 30 Days</a>
+                    {#                    <a class="btn btn-primary"#}
+                    {#                       href="{% url 'auth:login create_account manual' %}">Start Today – Free for 30 Days</a>#}
+                    <form class="join" hx-post="{% url 'api:landing_page:join_waitlist' %}">
+                        {% csrf_token %}
+                        <input type="text"
+                               name="name"
+                               placeholder="Name"
+                               class="input input-bordered join-item">
+                        <input type="email"
+                               name="email"
+                               placeholder="Email Address"
+                               required
+                               class="input input-bordered join-item">
+                        <button class="btn btn-primary join-item">Join the Hype</button>
+                    </form>
                 </div>
             </div>
             <div class="hidden lg:mt-0 lg:col-span-5 lg:flex">
