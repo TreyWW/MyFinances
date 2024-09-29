@@ -51,7 +51,7 @@
         <div class="basis-[100%] h-0"></div>
         <!-- Icon and Text for Current Status -->
         <div data-oob="status">
-            {% component "pages:invoices:dashboard:payment_status_badge" status=invoice.payment_status inv_id=invoice_id design="default" %}
+            {% component "pages:invoices:dashboard:payment_status_badge" status=invoice.dynamic_status inv_id=invoice_id design="default" %}
         </div>
         <!-- Mark As Button -->
         <div class="dropdown dropdown-right dropdown-hover grow flex">
@@ -61,6 +61,13 @@
             </div>
             <ul tabindex="0"
                 class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
+                <li>
+                    <button hx-swap="none"
+                            hx-post="{% url "api:invoices:single:edit status" invoice_id=invoice.id status='draft' %}">
+                        <i class="fa-solid fa-note-sticky"></i>
+                        Draft
+                    </button>
+                </li>
                 <li>
                     <button hx-swap="none"
                             hx-post="{% url "api:invoices:single:edit status" invoice_id=invoice.id status='pending' %}">
@@ -73,13 +80,6 @@
                             hx-post="{% url "api:invoices:single:edit status" invoice_id=invoice.id status='paid' %}">
                         <i class="fa-solid fa-circle-check"></i>
                         Paid
-                    </button>
-                </li>
-                <li>
-                    <button hx-swap="none"
-                            hx-post="{% url "api:invoices:single:edit status" invoice_id=invoice.id status='overdue' %}">
-                        <i class="fa-solid fa-exclamation-triangle"></i>
-                        Overdue
                     </button>
                 </li>
             </ul>

@@ -30,7 +30,7 @@
               data-invoice-id="{{ inv_id }}">Overdue</span>
     {% else %}
         <span class="rounded p-3 badge badge-outline badge-info"
-              data-status="{{ invoice.payment_status | lower }}"
-              data-invoice-id="{{ inv_id }}">{{ status | default:"sent" | title }}</span>
+              data-status="{{ invoice.status | lower }}"
+              data-invoice-id="{{ inv_id }}">{{ status | default:"draft" | title }}</span>
     {% endif %}
 {% endif %}

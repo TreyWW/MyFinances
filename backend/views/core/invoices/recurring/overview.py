@@ -36,7 +36,7 @@ def manage_recurring_invoice_profile_endpoint(request: WebRequest, invoice_profi
     context["total_paid"] = 0
 
     for invoice in invoice_profile.generated_invoices.all():
-        if invoice.payment_status == "paid":
+        if invoice.status == "paid":
             context["total_paid"] += 1
         context["total_amt"] += invoice.get_total_price()
 
