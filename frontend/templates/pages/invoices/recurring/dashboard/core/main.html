@@ -1,11 +1,9 @@
 {% extends base|default:"base/base.html" %}
 {% block content %}
-    <div class="grid grid-cols-1 md:grid-cols-10 gap-4">
-        {% include "pages/invoices/structure/toggler.html" %}
-        <div class="col-span-9 lg:col-span-8" data-hx-swap="content">
-            {% if page_template %}
-                {% include page_template %}
-            {% endif %}
-        </div>
+    {% include "pages/invoices/structure/toggler.html" %}
+    <div data-hx-swap="content">
+        {% if page_template %}
+            {% include page_template %}
+        {% endif %}
     </div>
 {% endblock content %}
