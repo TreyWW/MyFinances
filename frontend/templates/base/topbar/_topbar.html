@@ -3,6 +3,7 @@
 {% personal_feature_enabled request.user "invoices" as feature_enabled_invoices %}
 {% personal_feature_enabled request.user "receipts" as feature_enabled_receipts %}
 {% personal_feature_enabled request.user "email_sending" as feature_enabled_emails %}
+{% personal_feature_enabled request.user "monthly_reports" as feature_enabled_monthly_reports %}
 <div class="navbar bg-base-100">
     <div class="navbar-start">
         <div class="dropdown">
@@ -30,9 +31,12 @@
     </div>
     <div class="z-50 hidden navbar-center lg:flex">
         <!-- Topbar Dropdown (LARGE ONLY) -->
-        <ul class="gap-1 px-1 menu menu-horizontal" hx-boost="true">
+        <ul class="px-1 menu menu-horizontal" hx-boost="true">
             <li>
-                <a href="/dashboard/" hx-boost="true" hx-swap="innerHTML show:no-scroll">My Dashboard</a>
+                <a href="/dashboard/" hx-boost="true" hx-swap="innerHTML show:no-scroll">
+                    <i class="fa fa-house"></i>
+                    Dashboard
+                </a>
             </li>
             {#            <li class="z-[50]">#}
             {#                <details>#}
@@ -48,71 +52,91 @@
             {#                </details>#}
             {#            </li>#}
             {% if feature_enabled_receipts %}
+                <div class="divider divider-horizontal mx-1"></div>
                 <li>
                     <a href="{% url "receipts dashboard" %}"
                        hx-boost="true"
-                       hx-swap="innerHTML show:no-scroll">My Receipts</a>
+                       hx-swap="innerHTML show:no-scroll">
+                        <i class="fa fa-receipt"></i>
+                        Receipts
+                    </a>
                 </li>
             {% endif %}
             {% if feature_enabled_invoices %}
+                <div class="divider divider-horizontal mx-1"></div>
                 <li>
-                    <a href="{% url "invoices:single:dashboard" %}"
-                       hx-boost="true"
-                       hx-swap="innerHTML show:no-scroll">My Invoices</a>
-                </li>
-            {% endif %}
-            <li>
-                <a href="{% url "clients:dashboard" %}"
+                <a href="{% url "invoices:single:dashboard" %}"
                    hx-boost="true"
-                   hx-swap="innerHTML show:no-scroll">My Clients</a>
-            </li>
+                   hx-swap="innerHTML show:no-scroll"><i class="fa fa-file-invoice"></i>
+                Invoices
+            </a>
+        </li>
+    {% endif %}
+    <div class="divider divider-horizontal mx-1"></div>
+    <li>
+        <a href="{% url "clients:dashboard" %}"
+           hx-boost="true"
+           hx-swap="innerHTML show:no-scroll"><i class="fa fa-user"></i> Clients
+        </a>
+    </li>
+    {% if feature_enabled_monthly_reports %}
+        <div class="divider divider-horizontal mx-1"></div>
+        <li>
+            <a href="{% url "reports:dashboard" %}"
+               hx-boost="true"
+               hx-swap="innerHTML show:no-scroll">
+                <i class="fa fa-chart-line"></i>
+                Monthly Reports
+            </a>
+        </li>
+    {% endif %}
+</ul>
+</div>
+<div class="navbar-end">
+    {# Right Icons #}
+    {#        <div class="flex">#}
+    {# Profile Picture  #}
+    <details class="mr-3 dropdown dropdown-end">
+        <summary class="btn btn-ghost"
+                 hx-get="{% url "api:base:notifications get" %}"
+                 hx-target='ul[data-notifications="container"]'
+                 hx-swap="innerHTML"
+                 hx-trigger="click">
+            <i class="fa-solid fa-bell"></i>
+            {% include "base/topbar/_notification_count.html" %}
+        </summary>
+        <ul class="border menu menu-sm dropdown-content border-primary"
+            data-notifications="container">
+            {% include "base/topbar/_notification_dropdown_items.html" with initial_load=True %}
+        </ul>
+    </details>
+    <div class="dropdown dropdown-end">
+        <label tabindex="0" class="btn btn-ghost btn-circle">
+            {% component "profile_picture" image_type="small" extra_classes="max-w-12 max-h-12 w-12 h-12 avatar-img-ring" url=request.user.user_profile.profile_picture_url %}
+        </label>
+        <ul tabindex="0"
+            class="border menu menu-sm dropdown-content border-primary">
+            <details class="flex flex-col dropdown dropdown-left">
+                <summary class="block h-full max-h-full p-2 text-left btn"
+                         data-htmx-swap="logged_in_for"
+                         hx-trigger="click"
+                         hx-target='[data-htmx-swap="organization_dropdown_list"]'
+                         hx-get="{% url "api:teams:get_dropdown" %}"
+                         hx-swap="innerHTML">{% component "components:logged_in_for" %}</summary>
+                <ul class="border menu menu-sm dropdown-content border-primary gap-1"
+                    data-htmx-swap="organization_dropdown_list">
+                    <div class="flex items-center justify-center gap-2">
+                        <i class="loading"></i>
+                        Loading
+                    </div>
+                </ul>
+            </details>
+            <div class="mt-0 mb-0 divider"></div>
+            {% component "base:topbar:icon_dropdown" %}
         </ul>
     </div>
-    <div class="navbar-end">
-        {# Right Icons #}
-        {#        <div class="flex">#}
-        {# Profile Picture  #}
-        <details class="mr-3 dropdown dropdown-end">
-            <summary class="btn btn-ghost"
-                     hx-get="{% url "api:base:notifications get" %}"
-                     hx-target='ul[data-notifications="container"]'
-                     hx-swap="innerHTML"
-                     hx-trigger="click">
-                <i class="fa-solid fa-bell"></i>
-                {% include "base/topbar/_notification_count.html" %}
-            </summary>
-            <ul class="border menu menu-sm dropdown-content border-primary"
-                data-notifications="container">
-                {% include "base/topbar/_notification_dropdown_items.html" with initial_load=True %}
-            </ul>
-        </details>
-        <div class="dropdown dropdown-end">
-            <label tabindex="0" class="btn btn-ghost btn-circle">
-                {% component "profile_picture" image_type="small" extra_classes="max-w-12 max-h-12 w-12 h-12 avatar-img-ring" url=request.user.user_profile.profile_picture_url %}
-            </label>
-            <ul tabindex="0"
-                class="border menu menu-sm dropdown-content border-primary">
-                <details class="flex flex-col dropdown dropdown-left">
-                    <summary class="block h-full max-h-full p-2 text-left btn"
-                             data-htmx-swap="logged_in_for"
-                             hx-trigger="click"
-                             hx-target='[data-htmx-swap="organization_dropdown_list"]'
-                             hx-get="{% url "api:teams:get_dropdown" %}"
-                             hx-swap="innerHTML">{% component "components:logged_in_for" %}</summary>
-                    <ul class="border menu menu-sm dropdown-content border-primary gap-1"
-                        data-htmx-swap="organization_dropdown_list">
-                        <div class="flex items-center justify-center gap-2">
-                            <i class="loading"></i>
-                            Loading
-                        </div>
-                    </ul>
-                </details>
-                <div class="mt-0 mb-0 divider"></div>
-                {% component "base:topbar:icon_dropdown" %}
-            </ul>
-        </div>
-        {# End of Profile Picture #}
-        {#        </div>#}
-        {# End of Right Icons #}
-    </div>
+    {# End of Profile Picture #}
+    {#        </div>#}
+    {# End of Right Icons #}
+</div>
 </div>

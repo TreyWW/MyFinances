@@ -14,6 +14,11 @@
             <i class="mr-1 fa-solid fa-check text-success"></i>
             <span>Paid</span>
         </span>
+    {% elif status == "draft" %}
+        <span class="p-3 border-2 rounded-lg shadow-2xl text-neutral-content border-neutral-content">
+            <i class="fa-solid fa-note-sticky mr-1"></i>
+            <span>Draft</span>
+        </span>
     {% else %}
         <span class="rounded-lg border-2 p-3 shadow-2xl">
             <span>{{ status }}</span>

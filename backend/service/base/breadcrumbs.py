@@ -9,6 +9,7 @@ ALL_ITEMS: dict[str, tuple[str, Optional[str], Optional[str]]] = {
     "invoices:dashboard": ("Invoices", "invoices:single:dashboard", "file-invoice"),
     "invoices:single:dashboard": ("Single", "invoices:single:dashboard", "file-invoice"),
     "invoices:single:create": ("Create (single)", "invoices:single:create", None),
+    "invoices:recurring:dashboard": ("Recurring", "invoices:recurring:dashboard", "refresh"),
     "invoices:recurring:create": ("Create (recurring)", "invoices:recurring:create", None),
     "invoices:single:edit": ("Edit", None, "pencil"),
     "receipts dashboard": ("Receipts", "receipts dashboard", "file-invoice"),
@@ -16,6 +17,7 @@ ALL_ITEMS: dict[str, tuple[str, Optional[str], Optional[str]]] = {
     "settings:dashboard": ("Settings", "settings:dashboard", "gear"),
     "clients:dashboard": ("Clients", "clients:dashboard", "users"),
     "clients:create": ("Create", "clients:create", None),
+    "reports:dashboard": ("Monthly Reports", "reports:dashboard", "chart-line"),
 }
 
 ALL_BREADCRUMBS: dict[str, str | tuple] = {
@@ -24,11 +26,13 @@ ALL_BREADCRUMBS: dict[str, str | tuple] = {
     "receipts dashboard": ("dashboard", "receipts dashboard"),
     "invoices:single:dashboard": ("dashboard", "invoices:dashboard", "invoices:single:dashboard"),
     "invoices:single:create": ("dashboard", "invoices:dashboard", "invoices:single:create"),
+    "invoices:recurring:dashboard": ("dashboard", "invoices:dashboard", "invoices:recurring:dashboard"),
     "invoices:recurring:create": ("dashboard", "invoices:dashboard", "invoices:recurring:create"),
     "invoices:single:edit": ("dashboard", "invoices:dashboard", "invoices:single:edit"),
     "clients:dashboard": ("dashboard", "clients:dashboard"),
     "clients:create": ("dashboard", "clients:dashboard", "clients:create"),
     "settings:dashboard": ("dashboard", "settings:dashboard"),
+    "reports:dashboard": ("dashboard", "reports:dashboard"),
 }
 
 

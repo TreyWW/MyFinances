@@ -1,8 +1,8 @@
 {% load feature_enabled %}
 {% feature_enabled "areUserEmailsAllowed" as are_user_emails_allowed %}
-{% personal_feature_enabled request.user "invoices" as feature_enabled_invoices %}
-{% personal_feature_enabled request.user "receipts" as feature_enabled_receipts %}
-{% personal_feature_enabled request.user "email_sending" as feature_enabled_emails %}
+{#{% personal_feature_enabled request.user "invoices" as feature_enabled_invoices %}#}
+{#{% personal_feature_enabled request.user "receipts" as feature_enabled_receipts %}#}
+{#{% personal_feature_enabled request.user "email_sending" as feature_enabled_emails %}#}
 <div class="drawer-side sm:z-[60] lg:z-[55]"
      data-layout="left_sliding_sidebar"
      {% if swap %}hx-swap-oob='innerHTML:div[data-layout="left_sliding_sidebar"]'{% endif %}>
@@ -29,34 +29,32 @@
                    {% if request.resolver_match.view_name == i_url %}class="active"{% endif %}>Clients</a>
             {% endwith %}
         </li>
-        {% if feature_enabled_invoices %}
-            <li>
-                {% with i_url="invoices:single:dashboard" %}
-                    <a href="{% url i_url %}"
-                       {% if request.resolver_match.view_name == i_url %}class="active"{% endif %}>
-                        Single Invoices
-                    </a>
-                {% endwith %}
-            </li>
-            <li>
-                {% with i_url="invoices:recurring:dashboard" %}
-                    <a href="{% url i_url %}"
-                       {% if request.resolver_match.view_name == i_url %}class="active"{% endif %}>
-                        Recurring Invoices
-                    </a>
-                {% endwith %}
-            </li>
-        {% endif %}
-        {% if feature_enabled_receipts %}
-            <li>
-                {% with i_url="receipts dashboard" %}
-                    <a href="{% url i_url %}"
-                       {% if request.resolver_match.view_name == i_url %}class="active"{% endif %}>
-                        Receipts
-                    </a>
-                {% endwith %}
-            </li>
-        {% endif %}
+        {#        {% if feature_enabled_invoices %}#}
+        <li>
+            {% with i_url="invoices:single:dashboard" %}
+                <a href="{% url i_url %}"
+                   {% if request.resolver_match.view_name == i_url %}class="active"{% endif %}>
+                    Single Invoices
+                </a>
+            {% endwith %}
+        </li>
+        <li>
+            {% with i_url="invoices:recurring:dashboard" %}
+                <a href="{% url i_url %}"
+                   {% if request.resolver_match.view_name == i_url %}class="active"{% endif %}>
+                    Recurring Invoices
+                </a>
+            {% endwith %}
+        </li>
+        {#        {% endif %}#}
+        {#        {% if feature_enabled_receipts %}#}
+        <li>
+            {% with i_url="receipts dashboard" %}
+                <a href="{% url i_url %}"
+                   {% if request.resolver_match.view_name == i_url %}class="active"{% endif %}>Receipts</a>
+            {% endwith %}
+        </li>
+        {#        {% endif %}#}
         {#        <li>#}
         {#            {% with i_url="quotas" %}#}
         {#                <a href="{% url i_url %}"#}
@@ -65,7 +63,8 @@
         {#                </a>#}
         {#            {% endwith %}#}
         {#        </li>#}
-        {% if are_user_emails_allowed and feature_enabled_emails %}
+        {% if are_user_emails_allowed %}
+            {# and feature_enabled_emails %} #}
             <li>
                 {% with i_url="emails:dashboard" %}
                     <a href="{% url i_url %}"

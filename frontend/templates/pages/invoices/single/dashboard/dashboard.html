@@ -1,14 +1,13 @@
 <div class="card bg-base-100 p-3 mb-2">
     <div class="flex items-center justify-between">
-        <div class="flex items-center space-x-2">
-            <div class="dropdown dropdown-right w-14">
+        <div class="flex items-start flex-row justify-start gap-x-2">
+            <div class="dropdown dropdown-right">
                 <div tabindex="0"
                      role="button"
                      class="btn btn-square btn-sm btn-outline loading-htmx"
                      id="sort-indicator">
                     <span class="loading-htmx-text"><i class="fa fa-solid fa-sort"></i></span>
-                    <span id="currency_save_loading"
-                          class="loading loading-spinner loading-htmx-loader"></span>
+                    <span class="loading loading-spinner loading-htmx-loader"></span>
                 </div>
                 <ul class="dropdown-content menu z-[1] w-52 rounded-box bg-base-200 p-2 shadow"
                     tabindex="0">
@@ -24,15 +23,33 @@
                     <li data-sort="status">
                         <button class="dropdown-item"
                                 mft-id="single_invoices_list_table"
-                                mft-sort-by="status">Status</button>
+                                mft-sort-by="status">
+                            <i class="fa-solid fa-sort"></i>
+                            Status
+                        </button>
                     </li>
                     <li data-sort="date_due">
                         <button class="dropdown-item"
                                 mft-id="single_invoices_list_table"
-                                mft-sort-by="due_date">Date</button>
+                                mft-sort-by="due_date">
+                            <i class="fa-solid fa-sort"></i>
+                            Date
+                        </button>
                     </li>
                 </ul>
             </div>
+            <button class="btn btn-square btn-outline btn-sm loading-htmx"
+                    id="refresh_btn"
+                    hx-swap="outerHTML"
+                    hx-trigger="click"
+                    hx-indicator="#refresh_btn"
+                    hx-target="#table_body"
+                    hx-get="{% url 'api:invoices:single:fetch' %}">
+                <span class="loading-htmx-text">
+                    <i class="fa-refresh fa"></i>
+                </span>
+                <span class="loading loading-spinner loading-htmx-loader"></span>
+            </button>
         </div>
         <h2 class="text-xl" data-oob="invoices-title">Invoices</h2>
         <a class="btn btn-primary btn-sm"
@@ -45,7 +62,13 @@
 </div>
 <div class="card bg-base-100 p-6 h-screen">
     <div class="flex w-full h-full overflow-x-auto overflow-y-auto">
-        <table class="table h-fit" id="single_invoices_list_table">
+        <table class="table h-fit"
+               id="single_invoices_list_table"
+               hx-swap="outerHTML"
+               hx-trigger="load,single_invoices_refresh"
+               hx-target="#table_body"
+               hx-indicator="#refresh_btn"
+               hx-get="{% url 'api:invoices:single:fetch' %}">
             <thead>
                 <tr>
                     <th mft-col-name="invoice-id" mft-filter-type="searchable-amount">Invoice ID</th>
@@ -58,10 +81,7 @@
                     <th>Actions</th>
                 </tr>
             </thead>
-            <tbody id="table_body"
-                   hx-swap="outerHTML"
-                   hx-trigger="load"
-                   hx-get="{% url 'api:invoices:single:fetch' %}">
+            <tbody id="table_body">
                 {% include 'components/table/skeleton_rows.html' with rows=3 cols=6 %}
             </tbody>
         </table>

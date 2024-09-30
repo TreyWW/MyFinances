@@ -1,0 +1,8 @@
+<div class="flex flex-row w-full gap-x-4 tabs tabs-boxed mb-2 bg-base-100 p-2">
+    <a {% if request.resolver_match.view_name == 'invoices:single:dashboard' %} class="w-full rounded-lg py-1 shrink btn btn-primary btn-sm shadow align-center" {% else %} class="w-full rounded-lg py-1 shadow-xl text-center align-center" {% endif %}
+       href="{% url 'invoices:single:dashboard' %}"
+       hx-replace-url="{% url 'invoices:single:dashboard' %}">Normal Invoices</a>
+    <a {% if request.resolver_match.view_name == 'invoices:recurring:dashboard' %} class="w-full rounded-lg py-1 shrink btn btn-primary btn-sm shadow align-center" {% else %} class="w-full rounded-lg py-1 shadow-xl text-center align-center" {% endif %}
+       href="{% url 'invoices:recurring:dashboard' %}"
+       hx-replace-url="{% url 'invoices:recurring:dashboard' %}">Recurring Invoice Profiles</a>
+</div>

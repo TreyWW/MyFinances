@@ -60,7 +60,7 @@
                 Mark As
             </div>
             <ul tabindex="0"
-                class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
+                class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52 border border-base-300">
                 <li>
                     <button hx-swap="none"
                             hx-post="{% url "api:invoices:single:edit status" invoice_id=invoice.id status='draft' %}">

@@ -147,6 +147,7 @@ class UserSettings(models.Model):
         INVOICES = "invoices", "Invoices"
         RECEIPTS = "receipts", "Receipts"
         EMAIL_SENDING = "email_sending", "Email Sending"
+        MONTHLY_REPORTS = "monthly_reports", "Monthly Reports"
 
     CURRENCIES = {
         "GBP": {"name": "British Pound Sterling", "symbol": "£"},
