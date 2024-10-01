@@ -113,6 +113,18 @@
                                             </th>
                                         </tr>
                                     {% endif %}
+                                    {% if invoice.discount_amount %}
+                                        <tr>
+                                            <th class="py-3 px-4"></th>
+                                            <th class="py-3 px-4"></th>
+                                            <th class="py-3 font-semibold px-4 text-right">
+                                                Discount ({{ invoice.get_currency_symbol }}{{ invoice.discount_amount }}):
+                                            </th>
+                                            <th class="py-3 font-semibold px-4 text-right">
+                                                -{{ invoice.get_currency_symbol }}{{ invoice.discount_amount }}
+                                            </th>
+                                        </tr>
+                                    {% endif %}
                                     <tr>
                                         <th class="py-3 px-4"></th>
                                         <th class="py-3 px-4"></th>
