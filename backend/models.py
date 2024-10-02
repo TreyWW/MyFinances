@@ -110,6 +110,59 @@ def add_3hrs_from_now():
     return timezone.now() + timezone.timedelta(hours=3)
 
 
+class ActiveManager(models.Manager):
+    """Manager to return only active objects."""
+
+    def get_queryset(self):
+        return super().get_queryset().filter(active=True)
+
+
+class ExpiredManager(models.Manager):
+    """Manager to return only expired (inactive) objects."""
+
+    def get_queryset(self):
+        now = timezone.now()
+        return super().get_queryset().filter(expires__isnull=False, expires__lte=now)
+
+
+class ExpiresBase(models.Model):
+    """Base model for handling expiration logic."""
+
+    expires = models.DateTimeField("Expires", null=True, blank=True, help_text="When the item will expire")
+    active = models.BooleanField(default=True)
+
+    # Default manager that returns only active items
+    objects = ActiveManager()
+
+    # Custom manager to get expired/inactive objects
+    expired_objects = ExpiredManager()
+
+    # Fallback All objects
+    all_objects = models.Manager()
+
+    def deactivate(self) -> None:
+        """Manually deactivate the object."""
+        self.active = False
+        self.save()
+
+    def delete_if_expired_for(self, days: int = 14) -> bool:
+        """Delete the object if it has been expired for a certain number of days."""
+        if self.expires and self.expires <= timezone.now() - timedelta(days=days):
+            self.delete()
+            return True
+        return False
+
+    @property
+    def remaining_active_time(self):
+        """Return the remaining time until expiration, or None if already expired or no expiration set."""
+        if self.expires and self.expires > timezone.now():
+            return self.expires - timezone.now()
+        return None
+
+    class Meta:
+        abstract = True
+
+
 class VerificationCodes(models.Model):
     class ServiceTypes(models.TextChoices):
         CREATE_ACCOUNT = "create_account", "Create Account"
@@ -226,29 +279,22 @@ class TeamMemberPermission(models.Model):
         unique_together = ("team", "user")
 
 
-class TeamInvitation(models.Model):
+class TeamInvitation(ExpiresBase):
     code = models.CharField(max_length=10)
     team = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name="team_invitations")
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="team_invitations")
     invited_by = models.ForeignKey(User, on_delete=models.CASCADE)
-    expires = models.DateTimeField(null=True, blank=True)
-    active = models.BooleanField(default=True)
 
     def is_active(self):
-        if not self.active:
-            return False
-        if timezone.now() > self.expires:
-            self.active = False
-            self.save()
-            return False
-        return True
+        return self.active
 
     def set_expires(self):
-        self.expires = timezone.now() + timezone.timedelta(days=7)
+        self.expires = timezone.now() + timezone.timedelta(days=14)
 
     def save(self, *args, **kwargs):
-        self.set_expires()
-        self.code = RandomCode(10)
+        if not self.code:
+            self.code = RandomCode(10)
+            self.set_expires()
         super().save()
 
     def __str__(self):
@@ -733,15 +779,12 @@ class InvoiceRecurringProfile(InvoiceBase, BotoSchedule):
                 return from_date + timedelta(days=7)
 
 
-class InvoiceURL(models.Model):
+class InvoiceURL(ExpiresBase):
     uuid = ShortUUIDField(length=8, primary_key=True)
     invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE, related_name="invoice_urls")
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     system_created = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
-    expires = models.DateTimeField(null=True, blank=True)
-    never_expire = models.BooleanField(default=False)
-    active = models.BooleanField(default=True)
 
     @property
     def get_created_by(self):
@@ -750,22 +793,8 @@ class InvoiceURL(models.Model):
         else:
             return "SYSTEM"
 
-    def is_active(self):
-        if not self.active:
-            return False
-        if timezone.now() > self.expires:
-            self.active = False
-            self.save()
-            return False
-        return True
-
     def set_expires(self):
         self.expires = timezone.now() + timezone.timedelta(days=7)
-
-    def save(self, *args, **kwargs):
-        if not self.never_expire:
-            self.set_expires()
-        super().save()
 
     def __str__(self):
         return str(self.invoice.id)
@@ -857,10 +886,9 @@ class APIKey(models.Model):
         self.save()
 
 
-class PasswordSecret(models.Model):
+class PasswordSecret(ExpiresBase):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="password_secrets")
     secret = models.TextField(max_length=300)
-    expires = models.DateTimeField(null=True, blank=True)
 
 
 class Notification(models.Model):
