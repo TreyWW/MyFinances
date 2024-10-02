@@ -26,9 +26,7 @@ def expire_and_cleanup_objects() -> str:
 
     for model in model_list:
         # Delete objects that have been inactive and expired for more than 14 days
-        over_14_days_expired: QuerySet[models.Model] = model.all_objects.filter(
-            expires__lte=now - timedelta(days=14)
-        )  # type: ignore[attr-defined]
+        over_14_days_expired = model.all_objects.filter(expires__lte=now - timedelta(days=14))  # type: ignore[attr-defined]
         deleted_items += over_14_days_expired.count()
         over_14_days_expired.delete()
 
