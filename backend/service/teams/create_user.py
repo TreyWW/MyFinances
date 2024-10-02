@@ -35,12 +35,12 @@ def create_user_service(
 
     send_email(
         destination=email,
-        subject="MyFinances | You have been invited to join an organization",
+        subject="You have been invited to join an organization",
         content=dedent(
             f"""
                 Hi {user.first_name or "User"},
 
-                You have been invited by {request.user.email} to join the organization {team.name}.
+                You have been invited by {request.user.email} to join the organization '{team.name}'.
 
                 Your account email is: {email}
                 Your temporary password is: {temporary_password}
