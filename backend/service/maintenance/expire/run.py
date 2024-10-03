@@ -12,7 +12,6 @@ from django.utils import timezone
 Every model MUST have the field "expires" as:
 
 expires = models.DateTimeField(null=True, blank=True)
-
 """
 
 

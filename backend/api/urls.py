@@ -15,7 +15,7 @@ urlpatterns = [
     path("quotas/", include("backend.api.quotas.urls")),
     path("emails/", include("backend.api.emails.urls")),
     path("reports/", include("backend.api.reports.urls")),
-    path("hc/", include("backend.api.healthcheck.urls")),
+    path("maintenance/", include("backend.api.maintenance.urls")),
     path("landing_page/", include("backend.api.landing_page.urls")),
     path("public/", include("backend.api.public.urls")),
 ]
