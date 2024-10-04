@@ -9,6 +9,8 @@ from backend.types.requests import WebRequest
 
 from django.http import HttpResponse
 
+from settings.helpers import send_email
+
 
 @login_not_required
 def join_waitlist_endpoint(request: WebRequest):
@@ -28,5 +30,22 @@ def join_waitlist_endpoint(request: WebRequest):
             Successfully registered! Expect some discounts and updates as we progress in our journey :)
         </div>
     """
+
+    send_email(
+        destination=email_address,
+        subject="Welcome aboard",
+        content=dedent(
+            f"""
+                Thank you for joining our waitlist!
+
+                We're excited to have you on board and will be in touch with more updates as we progress in our journey.
+
+                Stay tuned for discounts, updates and personal direct emails from our founder!
+
+                Best regards,
+                The MyFinances Team
+            """
+        ).strip(),
+    )
 
     return HttpResponse(status=200, content=dedent(content).strip())

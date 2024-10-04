@@ -21,10 +21,10 @@ def add(request: APIRequest | HtmxHttpRequest):
     list_of_current_rows = [row for row in zip(list_hours, list_service_name, list_service_description, list_price_per_hour)]
 
     if not existing_service:
-        hours = int(request.POST.get("post_hours", "0"))
+        hours = float(request.POST.get("post_hours", "0"))  # todo add error handling rather than just plain float
         service_name = request.POST.get("post_service_name")
         service_description = request.POST.get("post_service_description")
-        price_per_hour = int(request.POST.get("post_rate", "0"))
+        price_per_hour = float(request.POST.get("post_rate", "0"))  # todo add error handling rather than just plain float
 
         if not hours:
             return JsonResponse(

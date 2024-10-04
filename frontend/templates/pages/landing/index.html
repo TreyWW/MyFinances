@@ -14,28 +14,30 @@
                     Automate invoicing, streamline customer onboarding, and manage your documents — all in one place.
                 </p>
                 <p class="mb-3">Join the early access club for free!</p>
-                <div class="space-y-4 sm:flex sm:space-y-0 sm:space-x-4">
+                <div class="w-full flex items-start">
                     {#                    <a class="btn btn-primary"#}
                     {#                       href="{% url 'auth:login create_account manual' %}">Start Today – Free for 30 Days</a>#}
-                    <form class="join" hx-post="{% url 'api:landing_page:join_waitlist' %}">
+                    <form hx-post="{% url 'api:landing_page:join_waitlist' %}"
+                          class="w-full flex flex-row gap-2 flex-wrap">
                         {% csrf_token %}
                         <input type="text"
                                name="name"
                                placeholder="Name"
-                               class="input input-bordered join-item">
+                               class="input input-bordered grow">
                         <input type="email"
                                name="email"
                                placeholder="Email Address"
                                required
-                               class="input input-bordered join-item">
-                        <button class="btn btn-primary join-item">Join the Hype</button>
+                               class="input input-bordered grow">
+                        <button class="btn btn-primary grow">Join the Hype</button>
                     </form>
                 </div>
             </div>
             <div class="hidden lg:mt-0 lg:col-span-5 lg:flex">
-                {#                <img src="{% static 'img/invoices.svg' %}" alt="Invoicing Illustration">#}
-                <img src="{% static 'img/brainstorming_finance.png' %}"
-                     alt="Finance Illustration">
+                <img src="{% static 'img/dashboard_invoices_page.png' %}"
+                     alt="Invoice Page"
+                     decoding="async"
+                     class="rounded-lg w-full h-full">
             </div>
         </div>
     </section>
@@ -133,31 +135,23 @@
         </div>
     </section>
     <section class="bg-base-200 py-16">
-        <div class="max-w-screen-xl px-4 mx-auto text-center lg:py-24 lg:px-6">
+        <div class="max-w-screen-xl px-4 mx-auto text-center lg:py-8 lg:px-6">
             <div class="max-w-screen-md mx-auto mb-8 lg:mb-12">
                 <h2 class="mb-4 text-4xl font-semibold tracking-tight text-base-content">
                     Built for founders like <strong>you</strong>
                 </h2>
                 <p class="mb-5 text-xl">
-                    Whether you're a freelancer, entrepreneur, small business, or community center, My Finances helps you
+                    Whether you're a freelancer, entrepreneur, small business, or community center, we
                     streamline your financial processes and focus on what really matters.
                 </p>
             </div>
-            <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+            <div class="grid grid-cols-1 gap-8 sm:grid-cols-3 lg:grid-cols-3">
                 <div class="p-6 bg-white rounded-lg shadow-lg text-center">
                     <i class="fa-solid fa-laptop-code text-secondary text-5xl mb-4"></i>
                     <h3 class="text-2xl font-semibold mb-2 text-base-content">Freelancers</h3>
                     <p class="text-base-content">
                         Automate your invoicing and never chase payments again. Focus on your craft while
                         we handle the paperwork.
-                    </p>
-                </div>
-                <div class="p-6 bg-white rounded-lg shadow-lg text-center">
-                    <i class="fa-solid fa-briefcase text-secondary text-5xl mb-4"></i>
-                    <h3 class="text-2xl font-semibold mb-2 text-base-content">Self-Employed Entrepreneurs</h3>
-                    <p class="text-base-content">
-                        Manage your customer onboarding and approvals effortlessly, so you can scale your
-                        business faster.
                     </p>
                 </div>
                 <div class="p-6 bg-white rounded-lg shadow-lg text-center">
@@ -172,9 +166,45 @@
                     <i class="fa-solid fa-building text-secondary text-5xl mb-4"></i>
                     <h3 class="text-2xl font-semibold mb-2 text-base-content">Community Centers</h3>
                     <p class="text-base-content">
-                        Streamline booking processes and manage long-term contracts with ease, ensuring
-                        smooth operations.
+                        Streamline booking processes and manage long-term groups with ease, ensuring
+                        smooth operations and saving staff time.
                     </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="bg-base-100 py-16">
+        <div class="max-w-screen-xl px-4 mx-auto text-center">
+            <h2 class="mb-4 text-4xl font-semibold tracking-tight text-base-content">How Does It Work</h2>
+            <p class="mb-8 text-lg font-light text-base-content">
+                Simplify your invoicing and customer onboarding in just a few easy steps!
+            </p>
+            <div class="grid gap-12 md:grid-cols-2">
+                <!-- Invoicing Process -->
+                <div class="p-6 bg-white rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-semibold text-base-content mb-4">Invoicing Made Easy</h3>
+                    <p class="mb-4">Transform your booking process:</p>
+                    <ol class="list-decimal list-inside text-left">
+                        <li class="mb-2">Create draft invoice and fill out details.</li>
+                        <li class="mb-2">
+                            Set invoice status to <strong>"Pending"</strong> (awaiting payment).
+                        </li>
+                        <li class="mb-2">Send invoice to customer.</li>
+                        <li class="mb-2">Customer pays online.</li>
+                    </ol>
+                </div>
+                <!-- Customer Onboarding Process -->
+                <div class="p-6 bg-white rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-semibold text-base-content mb-4 text-center">Streamlined Customer Onboarding</h3>
+                    <blockquote class="italic text-base-content mb-4 text-center">
+                        "MyFinances <span class="underline">transformed</span> the way we onboard customers!"
+                    </blockquote>
+                    <ol class="list-decimal list-inside text-left">
+                        <li class="mb-2">User visits your personalized dashboard to manage bookings.</li>
+                        <li class="mb-2">User fills out necessary forms and pays online.</li>
+                        <li class="mb-2">You receive updates on every step. Hold / cancel bookings at any time.</li>
+                        <li class="mb-2">Booking is confirmed automatically upon payment.</li>
+                    </ol>
                 </div>
             </div>
         </div>
@@ -183,7 +213,7 @@
         <div class="max-w-screen-xl px-4 py-8 mx-auto lg:py-16 lg:px-6">
             <div class="max-w-screen-sm mx-auto text-center">
                 <h2 class="mb-4 text-3xl font-extrabold leading-tight tracking-tight text-base-content">
-                    Get your quote today
+                    Get your custom quote today
                 </h2>
                 <p class="mb-6 font-light text-base-content md:text-lg">
                     Speak to our founder and get a quote that best fits your business
