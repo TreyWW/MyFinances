@@ -12,16 +12,15 @@ cache: RedisCacheClient = cache
 
 
 def entitlements_updated_via_stripe_webhook(webhook_event: StripeWebhookEvent) -> None:
-    data: stripe.entitlements.ActiveEntitlementSummary = webhook_event.data.object
-
-    actor = get_actor_from_stripe_customer(data.customer)
+    data: stripe.entitlements.ActiveEntitlementSummary = webhook_event.data["object"]
+    actor = get_actor_from_stripe_customer(data["customer"])
 
     if not actor:
+        print("No actor found for customer.")
         return
 
-    update_user_entitlements(actor)  # we fully re-fetch as the summary object contains a max of 10 items, so just in case we fetch ALL
-
-    return None
+    # Re-fetch and update the entitlements for the actor (User or Organization)
+    update_user_entitlements(actor)
 
 
 def update_user_entitlements(actor: User | Organization) -> list[str]:

@@ -2,13 +2,6 @@
     <div class="card-body">
         <div class="card-title mb-6 flex justify-between">
             All Subscriptions
-
-            <button class="btn btn-primary tooltip tooltip-primary tooltip-left"
-                    data-tip="Something not feel right? We can refresh your updated status incase something went wrong
-                    somewhere down the line."
-                    hx-get="{% url 'billing:refetch_subscriptions' %}" hx-swap="none">
-                Refetch
-            </button>
         </div>
         <table class="table table-striped">
             <thead>

@@ -17,12 +17,12 @@ class SubscriptionPlan(models.Model):
     name = models.CharField(max_length=50, unique=True)
     price_per_month = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     description = models.TextField(max_length=500, null=True, blank=True)
-    maximum_duration_months = models.IntegerField(null=True, blank=True)
     stripe_product_id = models.CharField(max_length=100, null=True, blank=True)
     stripe_price_id = models.CharField(max_length=100, null=True, blank=True)
 
-    def __str__(self):
-        return f"{self.name} - {self.price_per_month or 'free' if self.price_per_month != -1 else 'custom'}"
+
+def __str__(self):
+    return f"{self.name} - {self.price_per_month or 'free' if self.price_per_month != -1 else 'custom'}"
 
 
 class UserSubscription(OwnerBase):
@@ -33,9 +33,11 @@ class UserSubscription(OwnerBase):
     uuid = models.UUIDField(unique=True, default=uuid4)
     subscription_plan = models.ForeignKey(SubscriptionPlan, on_delete=models.SET_NULL, null=True)
     stripe_subscription_id = models.CharField(max_length=100, null=True, blank=True)
+    # Custom price only used for enterprise or negotiated plans
     custom_subscription_price_per_month = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    start_date = models.DateTimeField(auto_now_add=True)  # When the subscription started
-    end_date = models.DateTimeField(null=True, blank=True)  # When the subscription ends (for recurring)
+
+    start_date = models.DateTimeField(auto_now_add=True)
+    end_date = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.owner} - {self.subscription_plan.name} ({self.start_date} to {self.end_date or 'ongoing'})"

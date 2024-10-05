@@ -5,41 +5,45 @@ from billing.models import StripeCheckoutSession, StripeWebhookEvent, UserSubscr
 
 
 def checkout_completed(webhook_event: StripeWebhookEvent):
-    event_data: stripe.checkout.Session = webhook_event.data.object
+    event_data: stripe.checkout.Session = webhook_event.data["object"]
 
     stripe_session_obj = StripeCheckoutSession.objects.filter(
         uuid=event_data.metadata.get("dj_checkout_uuid", "doesn't_exist") if event_data.metadata else "doesn't_exist"
-    ).first()  # type: ignore[misc]
+    ).first()
 
-    if stripe_session_obj:
-        completed_with_session_object(stripe_session_obj, event_data)
+    if not stripe_session_obj:
+        print("No matching session object found.")
+        return
+
+    completed_with_session_object(stripe_session_obj, event_data)
 
 
 def completed_with_session_object(stripe_session_obj: StripeCheckoutSession, event_data: stripe.checkout.Session):
-    USER_CURRENT_PLANS = UserSubscription.objects.filter(user=stripe_session_obj.user, end_date__isnull=True).all()  # type: ignore[misc]
+    # Fetch current active subscriptions
+    user = stripe_session_obj.owner
+    user_current_plans = UserSubscription.objects.filter(owner=user, end_date__isnull=True)
 
-    STRIPE_META_DJ_SUBSCRIPTION_PLAN_ID = (
-        event_data.metadata.get("dj_subscription_plan_id", "doesn't_exist") if event_data.metadata else "doesn't_exist"
-    )
+    # Get plan ID from metadata
+    stripe_plan_id = event_data.metadata.get("dj_subscription_plan_id", None)
+    if not stripe_plan_id:
+        print("No subscription plan ID found in metadata.")
+        return
 
-    for current_plan in USER_CURRENT_PLANS:
-        if current_plan.subscription_plan_id == STRIPE_META_DJ_SUBSCRIPTION_PLAN_ID:
-            continue
+    # Cancel existing subscriptions except the one in the metadata
+    for current_plan in user_current_plans:
+        if current_plan.subscription_plan_id != stripe_plan_id:
+            stripe.Subscription.modify(current_plan.stripe_subscription_id, cancel_at_period_end=True)
+            current_plan.end_date = timezone_now()
+            current_plan.save()
 
-        stripe.Subscription.cancel(current_plan.stripe_subscription_id)
-
-        current_plan.end_date = timezone_now()
-        current_plan.save()
-
-    if not USER_CURRENT_PLANS.filter(subscription_plan_id=STRIPE_META_DJ_SUBSCRIPTION_PLAN_ID).exists():
-        new_plan = UserSubscription.objects.create(
-            user=stripe_session_obj.user,
-            subscription_plan_id=STRIPE_META_DJ_SUBSCRIPTION_PLAN_ID,
+    # Create new subscription if the user doesn't have it
+    if not user_current_plans.filter(subscription_plan_id=stripe_plan_id).exists():
+        UserSubscription.objects.create(
+            owner=stripe_session_obj.owner,
+            subscription_plan_id=stripe_plan_id,
             stripe_subscription_id=event_data.subscription,
         )
 
-    stripe.checkout.Session.expire(stripe_session_obj.stripe_session_id)  # type: ignore[arg-type]
-
+    # Expire the checkout session
+    stripe.checkout.Session.expire(stripe_session_obj.stripe_session_id)
     stripe_session_obj.delete()
-
-    return
