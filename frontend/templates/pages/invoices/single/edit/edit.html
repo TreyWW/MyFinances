@@ -62,12 +62,27 @@
             </div>
         </div>
         <div class="divider my-4">STEP 3 - SERVICES</div>
-        {% component_block "pages:invoices:create:services:services_table" %}
-    {% endcomponent_block %}
-    <div class="group-invalid:tooltip mt-4"
-         data-tip="Fill out all required details to save the invoice.">
-        <button class="btn btn-primary group-invalid:btn-disabled btn-block">Update Invoice</button>
-    </div>
-</form>
-<!-- still need to add SERVICE & PAYMENT INFORMATION fields for editing -->
+        {% component_block "pages:invoices:create:services:services_table" %}{% endcomponent_block %}
+        <div class="divider my-4">
+            STEP 4 - BANK DETAILS
+            <i class="text-neutral-content">[OPTIONAL]</i>
+        </div>
+        <div class="my-4 flex w-full flex-col">
+            <div class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-2 lg:gap-4">
+                {% include "pages/invoices/create/bank_details/holder_name.html" %}
+                {% include "pages/invoices/create/bank_details/account_number.html" %}
+                {% include "pages/invoices/create/bank_details/sort_code.html" %}
+            </div>
+        </div>
+        <div class="divider my-4">
+            STEP 5 - CUSTOM DESIGNS
+            <i class="text-neutral-content">[OPTIONAL]</i>
+        </div>
+        {% include "pages/invoices/create/custom_designs/logo.html" %}
+        <div class="group-invalid:tooltip mt-4"
+             data-tip="Fill out all required details to save the invoice.">
+            <button class="btn btn-primary group-invalid:btn-disabled btn-block">Update Invoice</button>
+        </div>
+    </form>
+    <!-- still need to add SERVICE & PAYMENT INFORMATION fields for editing -->
 {% endblock content %}

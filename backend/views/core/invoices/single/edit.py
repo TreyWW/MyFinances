@@ -30,6 +30,10 @@ def invoice_get_existing_data(invoice_obj):
         "invoice_object": invoice_obj,
         "currency_symbol": invoice_obj.get_currency_symbol(),
         "rows": invoice_obj.items.all(),
+        "account_holder_name": invoice_obj.account_holder_name,
+        "sort_code": invoice_obj.sort_code,
+        "account_number": invoice_obj.account_number,
+        "logo": invoice_obj.logo,
     }
     if invoice_obj.client_to:
         stored_data["to_name"] = invoice_obj.client_to.name
