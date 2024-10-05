@@ -10,7 +10,7 @@
                 <div class="flex-1 min-h-screen overflow-y-auto pt-8 px-6 pb-4 bg-base-200">
                     <div class="loading-bar"></div>
                     {% include 'base/breadcrumbs.html' with breadcrumb_first_load=True %}
-                    {% include 'base/toasts.html' %}
+                    <div id="messages_list">{% include 'base/toasts.html' %}</div>
                     <div id="modal_container">{# Leave here #}</div>
                     <div class="drawer">
                         <input id="service_list_drawer" type="checkbox" class="drawer-toggle" />

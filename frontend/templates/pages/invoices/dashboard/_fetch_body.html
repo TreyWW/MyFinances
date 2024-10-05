@@ -158,6 +158,7 @@
                                             <li>
                                                 <button hx-delete="{% url 'api:invoices:single:delete' %}"
                                                         hx-target="closest tr"
+                                                        hx-swap="delete"
                                                         hx-confirm="Are you sure you would like to delete invoice #{{ invoice.id }}?"
                                                         hx-vals='{"invoice": "{{ invoice.id }}" }'>
                                                     <i class="fa-solid fa-trash"></i>
