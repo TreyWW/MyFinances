@@ -9,7 +9,7 @@ def checkout_completed(webhook_event: StripeWebhookEvent):
 
     stripe_session_obj = StripeCheckoutSession.objects.filter(
         uuid=event_data.metadata.get("dj_checkout_uuid", "doesn't_exist") if event_data.metadata else "doesn't_exist"
-    ).first()
+    ).first()  # type: ignore[misc]
 
     if not stripe_session_obj:
         print("No matching session object found.")
@@ -20,11 +20,10 @@ def checkout_completed(webhook_event: StripeWebhookEvent):
 
 def completed_with_session_object(stripe_session_obj: StripeCheckoutSession, event_data: stripe.checkout.Session):
     # Fetch current active subscriptions
-    user = stripe_session_obj.owner
-    user_current_plans = UserSubscription.objects.filter(owner=user, end_date__isnull=True)
+    user_current_plans = UserSubscription.filter_by_owner(owner=stripe_session_obj.owner).filter(end_date__isnull=True)
 
     # Get plan ID from metadata
-    stripe_plan_id = event_data.metadata.get("dj_subscription_plan_id", None)
+    stripe_plan_id = event_data.metadata.get("dj_subscription_plan_id", None) if event_data.metadata else None
     if not stripe_plan_id:
         print("No subscription plan ID found in metadata.")
         return
@@ -45,5 +44,5 @@ def completed_with_session_object(stripe_session_obj: StripeCheckoutSession, eve
         )
 
     # Expire the checkout session
-    stripe.checkout.Session.expire(stripe_session_obj.stripe_session_id)
+    stripe.checkout.Session.expire(stripe_session_obj.stripe_session_id)  # type: ignore[arg-type]
     stripe_session_obj.delete()
