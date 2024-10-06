@@ -18,7 +18,9 @@ def subscription_ended(webhook_event: StripeWebhookEvent) -> None:
 
     if not actor:
         # If no user found, try to fetch the subscription plan using the stripe subscription ID
-        plan = UserSubscription.objects.filter(stripe_subscription_id=event_data.id, stripe_subscription_id__isnull=False).first()
+        plan = UserSubscription.objects.filter(
+            stripe_subscription_id=event_data.id, stripe_subscription_id__isnull=False
+        ).first()  # type: ignore[misc]
 
         if plan:
             actor_subscription_plan = plan

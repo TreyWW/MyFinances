@@ -18,8 +18,8 @@ def checkout_completed(webhook_event: StripeWebhookEvent):
     completed_with_session_object(stripe_session_obj, event_data)
 
 
-def completed_with_session_object(stripe_session_obj: StripeCheckoutSession, event_data: stripe.checkout.Session):
-    # Fetch current active subscriptions
+def completed_with_session_object(stripe_session_obj: StripeCheckoutSession, event_data: stripe.checkout.Session) -> None:
+    # Fetch current active subscriptions based on the owner (user or organization)
     user_current_plans = UserSubscription.filter_by_owner(owner=stripe_session_obj.owner).filter(end_date__isnull=True)
 
     # Get plan ID from metadata
@@ -30,13 +30,13 @@ def completed_with_session_object(stripe_session_obj: StripeCheckoutSession, eve
 
     # Cancel existing subscriptions except the one in the metadata
     for current_plan in user_current_plans:
-        if current_plan.subscription_plan_id != stripe_plan_id:
-            stripe.Subscription.modify(current_plan.stripe_subscription_id, cancel_at_period_end=True)
+        if current_plan.subscription_plan.id != stripe_plan_id:  # Fix: Using `subscription_plan.id`
+            stripe.Subscription.modify(current_plan.stripe_subscription_id, cancel_at_period_end=True)  # type: ignore[arg-type]
             current_plan.end_date = timezone_now()
             current_plan.save()
 
     # Create new subscription if the user doesn't have it
-    if not user_current_plans.filter(subscription_plan_id=stripe_plan_id).exists():
+    if not user_current_plans.filter(subscription_plan__id=stripe_plan_id).exists():  # Fix: Using `subscription_plan__id`
         UserSubscription.objects.create(
             owner=stripe_session_obj.owner,
             subscription_plan_id=stripe_plan_id,
