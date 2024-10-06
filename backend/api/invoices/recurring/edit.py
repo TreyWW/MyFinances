@@ -74,7 +74,7 @@ def edit_invoice_recurring_profile_endpoint(request: WebRequest, invoice_profile
     invoice_profile.save()
 
     if request.htmx:
-        messages.success(request, "Invoice edited")
+        messages.success(request, "Successfully saved profile!")
         return render(request, "base/toasts.html")
 
     return JsonResponse({"message": "Invoice successfully edited"}, status=200)
