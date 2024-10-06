@@ -1,0 +1,22 @@
+<div class="my-4 card border border-gray-700 dark:border-gray-70 w-full"
+     data-hx-container="api_keys">
+    <div class="card-body">
+        <div class="flex justify-between">
+            <div class="text-xl mb-2">
+                <i class="fa fa-solid fa-lock me-2"></i>
+                Email Templates
+                <span class="ml-2 badge badge-success badge-outline py-3 px-4 rounded-lg">NEW</span>
+            </div>
+            <div>
+                <a href="https://docs.myfinances.cloud/user-guide/emails/templates/"
+                   class="btn btn-info  btn-sm">View Docs</a>
+                <div class="tooltip tooltip-info tooltip-left"
+                     data-tip="View template variables and examples">
+                    <i class="fa fa-info-circle text-info fa-xl"></i>
+                </div>
+            </div>
+        </div>
+        <div class="divider"></div>
+        <div>{% include 'pages/settings/settings/email_templates/tabs.html' %}</div>
+    </div>
+</div>

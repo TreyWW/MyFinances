@@ -18,7 +18,8 @@
                 multiple>
             {% if email_list %}<option value="" disabled selected>Select a client email below</option>{% endif %}
             {% for email in email_list %}
-                <option value="{{ email.email }}">{{ email.email }}</option>
+                <option value="{{ email }}"
+                        {% if email in selected_clients %}selected{% endif %}>{{ email }}</option>
             {% empty %}
                 <option value="" disabled selected>There are currently no client emails stored.</option>
             {% endfor %}
@@ -41,6 +42,20 @@
             <span class="label-text-alt text-error">Please enter a valid subject between 8 and 64 characters.</span>
         </label>
     </div>
+    <div class="flex flex-row justify-start gap-8">
+        <div class="flex flex-col">
+            <label class="label">CC Yourself</label>
+            <input class="peer checkbox checkbox-bordered"
+                   type="checkbox"
+                   name="cc_yourself">
+        </div>
+        <div class="flex flex-col">
+            <label class="label">BCC Yourself</label>
+            <input class="peer checkbox checkbox-bordered"
+                   type="checkbox"
+                   name="bcc_yourself">
+        </div>
+    </div>
     <div class="form-control">
         <label class="label justify-start">
             Content
@@ -57,9 +72,11 @@
         <label class="label">
             <span class="label-text-alt select-text">
                 Note: You can use placeholders to individually fill in details PER user. For example you can use
-                <strong>{users_name}</strong> to fill in the users name.
+                <strong>$first_name</strong> to fill in the users name.
                 <br>
-                Available placeholders: {users_name}
+                <a href="https://docs.myfinances.cloud/user-guide/emails/templates/"
+                   class="link link-primary link-hover"
+                   target="_blank">View available placeholders</a>
             </span>
         </label>
     </div>

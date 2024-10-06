@@ -1,0 +1,107 @@
+{% load feature_enabled %}
+{% load at_index from listfilters %}
+{% load ordinal from cal_filters %}
+{% feature_enabled "isInvoiceSchedulingEnabled" as schedule_invoices_enabled %}
+<div data-oob="await_schedule_update_refresh"></div>
+<div class="card p-4 shadow-xl bg-base-100 mb-4">
+    <div class="w-full grid grid-cols-4">
+        <div hx-boost="true">
+            <a href="{% url 'invoices:recurring:dashboard' %}"
+               class="btn btn-sm btn-outline btn-secondary me-3 float-left">Back to list</a>
+        </div>
+        <h1 class="text-center col-span-2 text-xl">Invoice Recurring Profile (#{{ invoiceProfile.id }})</h1>
+        <div class="flex flex-row gap-2 justify-end">
+            <button hx-delete="{% url 'api:invoices:recurring:delete' %}"
+                    hx-swap="none"
+                    hx-confirm="Are you sure you would like to delete the recurring profile #{{ invoiceProfile.id }}?"
+                    hx-vals='{"invoice_profile": "{{ invoiceProfile.id }}", "redirect": "{% url 'invoices:recurring:dashboard' %}"}'
+                    class="btn btn-sm btn-outline btn-error me-3 float-right">
+                <i class="fa-solid fa-trash"></i>
+                Delete
+            </button>
+        </div>
+    </div>
+</div>
+<div role="tablist" class="card p-4 shadow-xl bg-base-100 mb-4">
+    <div role="tablist" class="tabs tabs-bordered">
+        <a role="tab" class="tab tab-active">Overview</a>
+        <a role="tab" class="tab tooltip line-through" data-tip="Coming soon">Generated Invoices</a>
+    </div>
+</div>
+<div class="card bg-base-100 shadow-xl w-full p-6 flex-col gap-y-4">
+    <div class="flex flex-wrap gap-4">
+        <a href="{% url 'invoices:recurring:edit' invoice_profile_id=invoiceProfile.id %}"
+           class="btn btn-md btn-outline btn-default grow mr-4 flex-1 min-w-[150px]">
+            <i class="fa-solid fa-edit mr-2"></i>
+            Edit Profile
+        </a>
+        <a href="{% url 'invoices:single:edit' invoice_id=invoiceProfile.id %}"
+           class="btn btn-md btn-outline btn-default grow mr-4 btn-disabled flex-1 min-w-[150px]">
+            <i class="fa-solid fa-clone mr-2"></i>
+            Clone Profile
+        </a>
+    </div>
+    <div class="mt-2">
+        <div class="flex flex-wrap items-center gap-2">
+            <!-- Icon and Text for Current Status -->
+            <div data-oob="status" class="flex-shrink-0">
+                {% include "pages/invoices/recurring/dashboard/_status_badge.html" with status=invoiceProfile.status inv_id=invoice_id design="default" %}
+            </div>
+            <button class="btn btn-outline btn-secondary btn-disabled flex-1 min-w-[150px]"
+                    hx-trigger="click once"
+                    hx-swap="beforeend"
+                    hx-target="#modal_container">
+                <i class="fa fa-solid fa-pound-sign mr-2"></i>
+                Edit Discount
+            </button>
+            <div data-oob="pause_refresh_button" class="flex-shrink-0">
+                {% include "pages/invoices/recurring/dashboard/_pause_button.html" %}
+            </div>
+            <button class="btn btn-outline flex-1 min-w-[200px]"
+                    hx-swap="none"
+                    data-tip="Something went wrong with the schedule. Refresh its status"
+                    hx-post="{% url "api:invoices:recurring:edit status" invoice_profile_id=invoiceProfile.id status='refresh' %}">
+                <i class="fa-solid fa-refresh mr-2"></i>
+                Refresh Schedule status
+            </button>
+        </div>
+    </div>
+</div>
+<div class="w-full grid grid-cols-1 md:grid-cols-2 gap-x-4">
+    <div class="card bg-base-100 shadow-xl p-10 flex-row gap-x-4 mt-4">
+        <div class="card-body p-0">
+            <h4 class="text-md text-neutral-content my-3">Customer</h4>
+            <h1 class="text-2xl font-bold">
+                {{ client_name | default:"Client - no name" }}
+                {% if client_is_representative %}(representative){% endif %}
+            </h1>
+            <h3>{{ client_email | default:"" }}</h3>
+            <h4 class="text-md text-neutral-content my-3">Total amount</h4>
+            <h1 class="text-2xl font-bold">{{ total_amt }}</h1>
+            <h4 class="text-md text-neutral-content my-3">Total paid invoices</h4>
+            <h1 class="text-2xl font-bold">{{ total_paid }}/{{ total_count }}</h1>
+        </div>
+    </div>
+    <div class="card bg-base-100 shadow-xl p-10 flex-row gap-x-4 mt-4">
+        <div class="card-body p-0">
+            <h4 class="text-md text-neutral-content my-3">Issue date</h4>
+            <h1 class="text-2xl font-bold">{{ invoiceProfile.date_issued | default:"No start date" }}</h1>
+            <h4 class="text-md text-neutral-content my-3">End date</h4>
+            <h1 class="text-2xl font-bold">{{ invoiceProfile.end_date | default:"Never" }}</h1>
+            <h4 class="text-md text-neutral-content my-3">Frequency</h4>
+            <h1 class="text-2xl font-bold">
+                {% if invoiceProfile.frequency == "weekly" %}
+                    Every {{ day_names_sunday_first | at_index:invoiceProfile.day_of_week }}
+                {% elif invoiceProfile.frequency == "monthly" %}
+                    Monthly on the {{ invoiceProfile.day_of_month | ordinal }}
+                {% elif invoiceProfile.frequency == "yearly" %}
+                    Yearly
+                {% else %}
+                    {{ invoiceProfile.frequency | title }}
+                {% endif %}
+            </h1>
+        </div>
+    </div>
+</div>
+{% include "pages/invoices/recurring/manage/next_invoice_block.html" %}
+{% component "messages_list" %}

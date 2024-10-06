@@ -96,22 +96,22 @@
 /***************************/
 
 /* width */
-::-webkit-scrollbar {
+.custom_scroll ::-webkit-scrollbar {
     @apply w-[10px];
 }
 
 /* Track */
-::-webkit-scrollbar-track {
+.custom_scroll ::-webkit-scrollbar-track {
 }
 
 /* Handle */
-::-webkit-scrollbar-thumb {
+.custom_scroll ::-webkit-scrollbar-thumb {
     background: #888;
     border-radius: 5px;
 }
 
 /* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
+.custom_scroll ::-webkit-scrollbar-thumb:hover {
     background: #555;
 }
 
@@ -179,6 +179,47 @@ button.loading-htmx.htmx-request {
 }
 
 
+/* *** CORE LOADER (TOP) ****/
+
+@layer components {
+    .loading-bar {
+        @apply fixed top-0 left-0 w-full h-1 opacity-0;
+        background: linear-gradient(90deg, transparent, #9375ff, transparent, rgba(149, 11, 183, 0.58), transparent);
+    }
+
+    .htmx-request.loading-bar {
+        @apply opacity-100;
+        animation: fadeIn 0.5s linear forwards, slide 2s ease-in-out infinite;
+    }
+
+    @keyframes fadeIn {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes slide {
+        0% {
+            transform: translateX(0);
+        }
+        25% {
+            transform: translateX(50%);
+        }
+        50% {
+            transform: translateX(100%);
+        }
+        75% {
+            transform: translateX(50%);
+        }
+        100% {
+            transform: translateX(0);
+        }
+    }
+}
+
 @keyframes hideLoading {
     0% {
         display: inline;
@@ -222,3 +263,5 @@ button.loading-htmx.htmx-request {
 .gradient_button {
     @apply bg-gradient-to-r from-[#6f26ff] to-[#db93db] hover:from-[#6874fc] hover:to-[#80e1ff] text-white;
 }
+
+

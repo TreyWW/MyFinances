@@ -4,63 +4,78 @@
 {% feature_enabled "isInvoiceSchedulingEnabled" as schedule_invoices_enabled %}
 <tbody id="table_body">
     {% for invoice in invoices %}
-        <tr>
-            <td class="link link-primary no-underline">
-                <a href="{% url "invoice overview" invoice_id=invoice.id %}">{{ invoice.id }}</a>
+        <tr class="hover cursor-pointer"
+            hx-trigger="click"
+            hx-boost="true"
+            hx-target='div[data-hx-swap="content"]'
+            hx-swap="innerHTML"
+            hx-vals='{"invoice_structure_main": "True"}'
+            hx-push-url="{% url "invoices:single:overview" invoice_id=invoice.id %}"
+            hx-get="{% url "invoices:single:overview" invoice_id=invoice.id %}">
+            <td class="link link-primary no-underline" td-value="{{ invoice.id }}">
+                <a href="{% url "invoices:single:overview" invoice_id=invoice.id %}">{{ invoice.id }}</a>
             </td>
             <td>{{ invoice.date_due | date:"d/m/Y" }}</td>
-            <td>
-                <div class="flex items-center text-sm">
-                    <div>
-                        {% with cli_name=invoice.client_to.name|default:invoice.client_name %}
+            {% with cli_name=invoice.client_to.name|default:invoice.client_name %}
+                <td td-value="{{ cli_name|default_if_none:"No Client" }}">
+                    <div class="flex items-center text-sm">
+                        <div>
                             {% if cli_name %}
                                 <p class="font-semibold">{{ cli_name }}</p>
                             {% else %}
                                 <p class="font-thin">No Client</p>
                             {% endif %}
-                        {% endwith %}
+                        </div>
                     </div>
-                </div>
+                </td>
+            {% endwith %}
+            <td td-value="{{ invoice.get_total_price | default_if_none:0 }}">
+                {{ invoice.get_currency_symbol }}{{ invoice.get_total_price | default_if_none:0 | floatformat:2 | intcomma }}
             </td>
-            <td>{{ invoice.get_currency_symbol }}{{ invoice.amount | default_if_none:0 | floatformat:2 | intcomma }}</td>
-            <td>
-                {% component "pages:invoices:dashboard:payment_status_badge" status=invoice.payment_status inv_id=invoice.id %}
+            <td td-value="{{ invoice.dynamic_status }}">
+                {% component "pages:invoices:dashboard:payment_status_badge" status=invoice.dynamic_status inv_id=invoice.id %}
             </td>
-            <td colspan="2">
+            <td colspan="2"
+                onclick="const e = arguments[0] || window.event; e.stopPropagation();"
+                class="cursor-default">
                 {# The if statement for dropdown top goes as follows #}
                 {# Use dropdown on top if these: #}
                 {# - is last item           (and not first item) (and more than 4 items) #}
-                <div class="dropdown dropdown-left {% if forloop.last and invoices.count > 4 %}dropdown-top{% endif %}">
+                <!-- Only last two invoices need a dropup -->
+                <div class="dropdown dropdown-left {% if forloop.counter0 > 3 %}dropdown-top{% endif %}">
                     <label tabindex="0" class="btn btn-primary btn-outline btn-sm">
                         <i class="fa-solid fa-ellipsis-vertical"></i>
                     </label>
                     <ul tabindex="0"
                         class="dropdown-content z-[1] menu wp-2 shadow-2xl bg-base-200 rounded-box w-52">
-                        <li hx-boost="true">
-                            <a href="{% url "invoice overview" invoice_id=invoice.id %}">
+                        <li hx-boost="true"
+                            hx-push-url="{% url 'invoices:single:overview' invoice_id=invoice.id %}">
+                            <a href="{% url 'invoices:single:overview' invoice_id=invoice.id %}">
                                 <i class="fa-solid fa-eye"></i>
                                 Overview
                             </a>
                         </li>
-                        <li>
-                            <a href="{% url "invoices:preview" invoice_id=invoice.id %}">
+                        <li hx-push-url="{% url 'invoices:single:preview' invoice_id=invoice.id %}">
+                            <a target="_blank"
+                               rel="noopener noreferrer"
+                               href="{% url 'invoices:single:preview' invoice_id=invoice.id %}">
                                 <i class="fa-solid fa-file-pdf"></i>
                                 Preview
                             </a>
                         </li>
-                        <li>
-                            <a href="{% url "invoices:manage_access" invoice_id=invoice.id %}">
+                        <li hx-push-url="{% url 'invoices:single:manage_access' invoice_id=invoice.id %}">
+                            <a href="{% url 'invoices:single:manage_access' invoice_id=invoice.id %}">
                                 <i class="fa-solid fa-key"></i>
                                 Manage Access
                             </a>
                         </li>
-                        <li>
-                            <a href="{% url "invoices:edit" invoice_id=invoice.id %}">
+                        <li hx-push-url="{% url 'invoices:single:edit' invoice_id=invoice.id %}">
+                            <a href="{% url 'invoices:single:edit' invoice_id=invoice.id %}">
                                 <i class="fa-solid fa-pencil"></i>
                                 Edit
                             </a>
                         </li>
-                        <li>
+                        <li hx-push-url="false">
                             <details>
                                 <summary>
                                     <i class="fa-solid fa-flag"></i>
@@ -69,39 +84,32 @@
                                 <ul>
                                     <li>
                                         <button hx-swap="none"
-                                                hx-post="{% url "api:invoices:edit status" invoice_id=invoice.id status='pending' %}">
+                                                hx-post="{% url "api:invoices:single:edit status" invoice_id=invoice.id status='draft' %}">
+                                            <i class="fa-solid fa-note-sticky"></i>
+                                            Draft
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button hx-swap="none"
+                                                hx-post="{% url "api:invoices:single:edit status" invoice_id=invoice.id status='pending' %}">
                                             <i class="fa-solid fa-hourglass-half"></i>
                                             Pending
                                         </button>
                                     </li>
                                     <li>
                                         <button hx-swap="none"
-                                                hx-post="{% url "api:invoices:edit status" invoice_id=invoice.id status='paid' %}">
+                                                hx-post="{% url "api:invoices:single:edit status" invoice_id=invoice.id status='paid' %}">
                                             <i class="fa-solid fa-circle-check"></i>
                                             Paid
-                                        </button>
-                                    </li>
-                                    <li>
-                                        <button hx-swap="none"
-                                                hx-post="{% url "api:invoices:edit status" invoice_id=invoice.id status='overdue' %}">
-                                            <i class="fa-solid fa-exclamation-triangle"></i>
-                                            Overdue
                                         </button>
                                     </li>
                                 </ul>
                             </details>
                         </li>
-                        {% if schedule_invoices_enabled %}
-                            <li>
-                                <a href="{% url "invoices:schedules view" invoice_id=invoice.id %}">
-                                    <i class="fa-solid fa-clock"></i>
-                                    Schedule
-                                </a>
-                            </li>
-                        {% endif %}
-                        <li>
-                            <button hx-delete="{% url 'api:invoices:delete' %}"
+                        <li hx-push-url="false">
+                            <button hx-delete="{% url 'api:invoices:single:delete' %}"
                                     hx-target="closest tr"
+                                    hx-swap="delete"
                                     hx-confirm="Are you sure you would like to delete invoice #{{ invoice.id }}?"
                                     hx-vals='{"invoice": "{{ invoice.id }}" }'>
                                 <i class="fa-solid fa-trash"></i>
@@ -116,48 +124,3 @@
         <td colspan="100%" class="text-center">No Invoices Found</td>
     {% endfor %}
 </tbody>
-{% for option in all_sort_options %}
-    <div hx-swap-oob="innerHTML:li[data-sort='{{ option }}'] button">
-        {% if sort == option or sort == "-"|add:option %}<i class="fa fa-solid fa-sort"></i>{% endif %}
-        {% if option == "payment_status" %}
-            Payment Status
-        {% elif option == "date_due" %}
-            Date
-        {% elif option == "amount" %}
-            Amount
-        {% else %}
-            ID
-        {% endif %}
-    </div>
-{% endfor %}
-{% for filter_type, inner_filters in all_filters.items %}
-    {% for filter in inner_filters %}
-        <div hx-swap-oob="innerHTML:div[data-filter-type='{{ filter_type }}'] ul li[data-filter-by='{{ filter }}'] button">
-            {% if filter in selected_filters %}<i class="fa fa-solid fa-check text-success"></i>{% endif %}
-            {{ filter | title }}
-        </div>
-    {% endfor %}
-{% endfor %}
-<div hx-swap-oob="innerHTML:#filter_list_storage">
-    <input type="hidden"
-           name="payment_status_paid"
-           value="{% if 'paid' in selected_filters %}true{% endif %}">
-    <input type="hidden"
-           name="payment_status_pending"
-           value="{% if 'pending' in selected_filters %}true{% endif %}">
-    <input type="hidden"
-           name="payment_status_overdue"
-           value="{% if 'overdue' in selected_filters %}true{% endif %}">
-    <input type="hidden"
-           name="amount_20+"
-           value="{% if '20+' in selected_filters %}true{% endif %}">
-    <input type="hidden"
-           name="amount_50+"
-           value="{% if '50+' in selected_filters %}true{% endif %}">
-    <input type="hidden"
-           name="amount_100+"
-           value="{% if '100+' in selected_filters %}true{% endif %}">
-</div>
-<div hx-swap-oob="innerHTML:#sort_direction_storage">
-    <input type="hidden" name="sort_direction" value="{{ sort_direction }}">
-</div>

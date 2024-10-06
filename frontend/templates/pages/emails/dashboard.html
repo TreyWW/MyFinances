@@ -1,7 +1,5 @@
 {% extends base|default:"base/base.html" %}
 {% block content %}
-    <form id="filter_list_storage">
-    </form>
     <div class="card bg-base-100 p-6 mb-4">
         <div class="flex gap-3 justify-between mb-3">
             <button tabindex="0"
@@ -73,33 +71,34 @@
                        hx-get="{% url 'api:emails:fetch' %}">
                     {% include 'components/table/skeleton_rows.html' with rows=3 cols=5 %}
                 </tbody>
-                <script>
-                    function htmx_resend(event) {
-                        let eventType;
-
-                        if (event.detail.requestConfig.triggeringEvent) {
-                            eventType = event.detail.requestConfig.triggeringEvent.type
-                        } else {
-                            eventType = "retry"
-                        }
-
-                        let timeout;
-
-                        if (event.detail.error.startsWith("Response Status Error Code 429")) {
-                            timeout = 4000;
-                        } else {
-                            timeout = 2000;
-                        }
-
-                        setTimeout(function () {
-                            console.log("Sending HTMX retry event")
-                            htmx.trigger(event.detail.elt, eventType);
-                        }, timeout);
-                    }
-
-                    document.body.addEventListener("htmx:sendError", htmx_resend);
-                    document.body.addEventListener("htmx:responseError", htmx_resend);
-                </script>
+                {#                <script>#}
+                {#                    function htmx_resend(event) {#}
+                {#                        let eventType;#}
+                {##}
+                {#                        if (event.detail.requestConfig.triggeringEvent) {#}
+                {#                            eventType = event.detail.requestConfig.triggeringEvent.type#}
+                {#                        } else {#}
+                {#                            eventType = "retry"#}
+                {#                        }#}
+                {##}
+                {#                        let timeout;#}
+                {##}
+                {#                        if (event.detail.error.startsWith("Response Status Error Code 429")) {#}
+                {#                            timeout = 4000;#}
+                {#                        } else {#}
+                {#                            timeout = 2000;#}
+                {#                        }#}
+                {##}
+                {#                        setTimeout(function () {#}
+                {#                            console.log("Sending HTMX retry event")#}
+                {#                            htmx.trigger(event.detail.elt, eventType);#}
+                {#                        }, timeout);#}
+                {#                    }#}
+                {##}
+                {#                    document.body.addEventListener("htmx:sendError", htmx_resend);#}
+                {#                    document.body.addEventListener("htmx:responseError", htmx_resend);#}
+                {#                </script>#}
+                {# todo: sort out HTMX retry  #}
             </table>
         </div>
     </div>

@@ -1,23 +1,22 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect
 
-from backend.models import Client
-from backend.types.htmx import HtmxHttpRequest
-from backend.service.clients.create import create_client
+from backend.decorators import web_require_scopes
+from backend.service.clients.create import create_client, CreateClientServiceResponse
+from backend.types.requests import WebRequest
 
 
-def create_client_endpoint(request: HtmxHttpRequest):
+@web_require_scopes("clients:write", False, False, "clients:dashboard")
+def create_client_endpoint(request: WebRequest):
     if request.method == "GET":
         return render(request, "pages/clients/create/create.html")
 
-    client_or_error: Client | str = create_client(request)
+    client_response: CreateClientServiceResponse = create_client(request)
 
-    if isinstance(client_or_error, str):
-        messages.error(request, client_or_error)
+    if client_response.failed:
+        messages.error(request, client_response.error)
         return redirect("clients:create")
 
-    if client_or_error:
-        messages.success(request, f"Client created successfully (#{client_or_error.id})")
-    else:
-        messages.error(request, "Failed to create client - an unknown error occurred")
+    messages.success(request, f"Client created successfully (#{client_response.response.id})")
+
     return redirect("clients:dashboard")

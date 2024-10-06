@@ -3,10 +3,12 @@ module.exports = {
   mode: 'jit',
   content: [
     './frontend/templates/**/*.html',
+    './billing/templates/**/*.html',
     './components/**/*.html',
     './frontend/templates/base/base.html',
     './backend/**/views/*.py',
     './backend/views/core/**/*.py',
+    './assets/scripts/tableify.js'
   ],
   safelist: [
     'alert',
@@ -28,48 +30,41 @@ module.exports = {
       {
         light: {
           "color-scheme": "dark",
-          "primary": "#8B45BA",
-          "secondary": "#6a74ec",
-          "secondary-content": "#c5c5c5",
-          "error": "#e6949e",
-          "accent": "#5B62E1",
+          "primary": "#8620a2",
+          "primary-content": "#faebf2",
+          "secondary": "#e983a0",
+          "secondary-content": "#1a0c1d",
+          "error": "#f58493",
+          "accent": "#b7c2be",
+          "accent-content": "#1a0c1d",
           "neutral": "#2B3440",
           "neutral-content": "#D7DDE4",
-          "base-100": "oklch(100% 0 0)",
-          "base-200": "#F2F2F2",
-          "base-300": "#E5E6E6",
-          "base-content": "#1f2937",
+          "base-100": "#faf5fa",
+          "base-200": "#eeeaee",
+          "base-300": "#d7d4d7",
+          "base-content": "#1a0c1d",
           "placeholderColor": "#0051ff",
         },
-        dark:
-          {
-            "color-scheme":
-              "dark",
-            "primary":
-              "#9376e1",
-            "secondary":
-              "#9498E6",
-            "error":
-              "#e6949e",
-            "success": "#94e6a4",
-            "success-content": "#2a323c",
-            "accent":
-              "#5B62E1",
-            "neutral":
-              "#2a323c",
-            "neutral-content":
-              "#A6ADBB",
-            "base-100":
-              "#2b343d",
-            "base-200":
-              "#1D232A",
-            "base-300":
-              "#191d25",
-            "base-content":
-              "#BFBFBF",
-            "placeholderColor":
-              "#0051ff",
-          }
+        dark: {
+          "color-scheme": "dark",
+          "primary": "#9376e1",
+          "primary-content": "#1a0f1e",
+          "secondary": "#4BA3A4",
+          "secondary-content": "#252929",
+          "error": "#e6949e",
+          "success": "#74D98A",
+          "success-content": "#2a323c",
+          "info": "#57c7aa",
+          "accent": "#3d4844",
+          "accent-content": "#e5d0ed",
+          "neutral": "#2a323c",
+          "neutral-content": "#B0B7C3",
+          "base-100": "#2B2F33",
+          "base-200": "#21262A",
+          "base-300": "#15181B",
+          "base-content": "#f0e2f3",
+          "placeholderColor": "#7FAFFF",
+        }
       }
     ],
     darkTheme:
@@ -90,9 +85,19 @@ module.exports = {
         '60': '60'
       },
       animation: {
-        // 'pulse-slow': 'pulse 4s linear infinite',
-      }
-      ,
+        'infinite-scroll': 'infinite-scroll 40s linear infinite',
+        'infinite-scroll-replay': 'infinite-scroll-replay 40s linear infinite'
+      },
+      keyframes: {
+        'infinite-scroll': {
+          '0%': {transform: 'translateX(0)'},
+          '100%': {transform: 'translateX(-100%)'},
+        },
+        'infinite-scroll-replay': {
+          '0%': {transform: 'translateX(100%)'},
+          '100%': {transform: 'translateX(0)'},
+        }
+      },
       dropShadow: {
         glow: [
           "0 0px 20px rgba(255,255, 255, 0.35)",

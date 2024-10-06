@@ -1,0 +1,71 @@
+<div class="card bg-base-100 mb-2" data-hx-swap="all_subscriptions">
+    <div class="card-body">
+        <div class="card-title mb-6 flex justify-between">
+            All Subscriptions
+            <button class="btn btn-square btn-outline btn-sm loading-htmx"
+                    hx-get="{% url 'billing:all_subscriptions' %}"
+                    hx-swap="outerHTML"
+                    hx-disabled-elt="this"
+                    hx-indicator="this"
+                    hx-target='div[data-hx-swap="all_subscriptions"]'>
+                <span class="loading-htmx-text">
+                    <i class="fa fa-solid fa-refresh"></i>
+                </span>
+                <span id="currency_save_loading"
+                      class="loading loading-spinner loading-htmx-loader"></span>
+            </button>
+        </div>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Status</th>
+                <th>Plan Name</th>
+                <th>Price</th>
+                <th>Started</th>
+                <th>Ended</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for subscription in all_user_subscriptions|dictsortreversed:"start_date" %}
+                <tr>
+                    <td>
+                        {% if subscription.has_ended %}
+                            <span class="badge badge-error badge-outline py-3 border-2 font-bold">Ended</span>
+                        {% else %}
+                            <span class="badge badge-success badge-outline py-3 border-2 font-bold">Ongoing</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ subscription.subscription_plan.name }}</td>
+                    <td>
+                        {% if subscription.subscription_plan.price_per_month == -1 %}
+                            {{ subscription.custom_subscription_price_per_month }}
+                        {% else %}
+                            {{ subscription.subscription_plan.price_per_month }}
+                        {% endif %}
+                    </td>
+                    <td>{{ subscription.start_date }}</td>
+                    {% if subscription.has_ended %}
+                        <td>{{ subscription.end_date | default_if_none:"" }}</td>
+                    {% else %}
+                        <td>
+                            <span class="block w-4 border-0 border-t-[2px]"></span>
+                        </td>
+                        <td>
+                            <button class="btn btn-error btn-sm loading-htmx"
+                                    hx-get="{% url 'billing:stripe_customer_portal' %}?back=/dashboard/billing/"
+                                    hx-indicator="this"
+                            >
+                            <span class="loading-htmx-text">
+                                Cancel
+                            </span>
+                                <span class="loading loading-spinner loading-htmx-loader"></span>
+                            </button>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

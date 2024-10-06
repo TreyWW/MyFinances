@@ -1,0 +1,40 @@
+{% if design == "default" %}
+    {% if status == "cancelled" %}
+        <span class="p-3 border-2 rounded-lg shadow-2xl drop-shadow-glow_red text-error border-error">
+            <i class="fa-solid fa-exclamation-triangle mr-1"></i>
+            <span>Cancelled</span>
+        </span>
+    {% elif status == "paused" %}
+        <span class="p-3 border-2 rounded-lg shadow-2xl text-base-400 border-base-400">
+            <i class="fa-solid fa-hourglass-half mr-1"></i>
+            <span>Paused</span>
+        </span>
+    {% elif status == "ongoing" %}
+        <span class="p-3 border-2 rounded-lg shadow-2xl text-success border-success">
+            <i class="fa-solid fa-check text-success mr-1"></i>
+            <span>Ongoing</span>
+        </span>
+    {% elif status == "loading" %}
+        <span class="p-3 border-2 rounded-lg shadow-2xl">
+            <span class="loading loading-spinner w-4"></span>
+        </span>
+    {% else %}
+        <span class="p-3 border-2 rounded-lg shadow-2xl">
+            <span>{{ status }}</span>
+        </span>
+    {% endif %}
+{% else %}
+    {% if status == "ongoing" %}
+        <span class="badge badge-outline rounded p-3 badge-success"
+              data-status="ongoing"
+              data-invoice-set-id="{{ inv_id }}">Ongoing</span>
+    {% elif status == "cancelled" %}
+        <span class="badge badge-outline rounded p-3 badge-error drop-shadow-glow_red"
+              data-status="cancelled"
+              data-invoice-set-id="{{ inv_id }}">Cancelled</span>
+    {% else %}
+        <span class="badge badge-outline rounded p-3 badge-info"
+              data-status="{{ invoiceProfile.status | lower }}"
+              data-invoice-set-id="{{ inv_id }}">{{ status | default:"paused" | title }}</span>
+    {% endif %}
+{% endif %}

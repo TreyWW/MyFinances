@@ -1,9 +1,11 @@
+{% load has_module safe_url from feature_enabled %}
+{% has_module "billing" as billing_enabled %}
 <div data-layout="icon_dropdown_items">
     <li hx-boost="true">
         <a {% if request.resolver_match.view_name == "settings:dashboard" %}class="active btn-disabled"{% endif %}
            href="{% url 'settings:dashboard' %}">
             <i class="fa fa-solid fa-cog"></i>
-            Account Settings
+            Settings
         </a>
     </li>
     <li hx-boost="true">
@@ -11,9 +13,17 @@
            href="{% url "teams:dashboard" %}">
             <i class="fa fa-solid fa-users"></i>
             Manage Team
-            <span class="badge">New</span>
         </a>
     </li>
+    {#    {% if billing_enabled %}#}
+    <li hx-boost="true">
+        <a {% if request.resolver_match.view_name == "billing:dashboard" %}class="active btn-disabled"{% endif %}
+           href="{% safe_url 'billing:dashboard' %}">
+            <i class="fa fa-coins"></i>
+            Billing Dashboard
+        </a>
+    </li>
+    {#    {% endif %}#}
     <li>
         <label for="logout_modal">
             <i class="fa fa-solid fa-right-from-bracket"></i>
@@ -29,4 +39,9 @@
     <li>
         <span>Current Version: {{ version }}</span>
     </li>
+    {% if git_version and git_version != "prod" %}
+        <li>
+            <span class="text-center">{{ git_version | slice:7 }}</span>
+        </li>
+    {% endif %}
 </div>

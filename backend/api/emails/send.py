@@ -4,10 +4,10 @@ import re
 from dataclasses import dataclass
 
 from collections.abc import Iterator
+from string import Template
 
 from django.contrib import messages
 from django.core.exceptions import ValidationError
-from django.core.handlers.wsgi import WSGIRequest
 from django.core.validators import validate_email
 from django.db.models import QuerySet
 from django.http import HttpResponse
@@ -15,21 +15,19 @@ from django.shortcuts import render
 from django.views.decorators.http import require_POST
 from mypy_boto3_sesv2.type_defs import BulkEmailEntryResultTypeDef
 
-from backend.decorators import feature_flag_check
+from backend.data.default_email_templates import email_footer
+from backend.decorators import feature_flag_check, web_require_scopes
 from backend.decorators import htmx_only
 from backend.models import Client
 from backend.models import EmailSendStatus
 from backend.models import QuotaLimit
 from backend.models import QuotaUsage
 from backend.types.emails import (
-    SingleEmailInput,
     BulkEmailEmailItem,
-    BulkEmailSuccessResponse,
-    BulkEmailErrorResponse,
-    BulkTemplatedEmailInput,
 )
-from backend.utils.quota_limit_ops import quota_usage_check_under
-from settings.helpers import send_email, send_templated_bulk_email
+from backend.types.requests import WebRequest
+
+from settings.helpers import send_email, send_templated_bulk_email, get_var
 from backend.types.htmx import HtmxHttpRequest
 
 
@@ -45,10 +43,11 @@ class Invalid:
 @require_POST
 @htmx_only("emails:dashboard")
 @feature_flag_check("areUserEmailsAllowed", status=True, api=True, htmx=True)
-def send_single_email_view(request: HtmxHttpRequest) -> HttpResponse:
-    check_usage = quota_usage_check_under(request, "emails-single-count", api=True, htmx=True)
-    if not isinstance(check_usage, bool):
-        return check_usage
+@web_require_scopes("emails:send", False, False, "emails:dashboard")
+def send_single_email_view(request: WebRequest) -> HttpResponse:
+    # check_usage = False  # quota_usage_check_under(request, "emails-single-count", api=True, htmx=True)
+    # if not isinstance(check_usage, bool):
+    #     return check_usage
 
     return _send_single_email_view(request)
 
@@ -56,19 +55,22 @@ def send_single_email_view(request: HtmxHttpRequest) -> HttpResponse:
 @require_POST
 @htmx_only("emails:dashboard")
 @feature_flag_check("areUserEmailsAllowed", status=True, api=True, htmx=True)
-def send_bulk_email_view(request: HtmxHttpRequest) -> HttpResponse:
-    email_count = len(request.POST.getlist("emails")) - 1
+@web_require_scopes("emails:send", False, False, "emails:dashboard")
+def send_bulk_email_view(request: WebRequest) -> HttpResponse:
+    # email_count = len(request.POST.getlist("emails")) - 1
 
-    check_usage = quota_usage_check_under(request, "emails-single-count", add=email_count, api=True, htmx=True)
-    if not isinstance(check_usage, bool):
-        return check_usage
+    # check_usage = quota_usage_check_under(request, "emails-single-count", add=email_count, api=True, htmx=True)
+    # if not isinstance(check_usage, bool):
+    #     return check_usage
     return _send_bulk_email_view(request)
 
 
-def _send_bulk_email_view(request: HtmxHttpRequest) -> HttpResponse:
+def _send_bulk_email_view(request: WebRequest) -> HttpResponse:
     emails: list[str] = request.POST.getlist("emails")
     subject: str = request.POST.get("subject", "")
     message: str = request.POST.get("content", "")
+    cc_yourself = True if request.POST.get("cc_yourself") else False
+    bcc_yourself = True if request.POST.get("bcc_yourself") else False
 
     if request.user.logged_in_as_team:
         clients = Client.objects.filter(organization=request.user.logged_in_as_team, email__in=emails)
@@ -81,24 +83,49 @@ def _send_bulk_email_view(request: HtmxHttpRequest) -> HttpResponse:
         messages.error(request, validated_bulk)
         return render(request, "base/toast.html")
 
+    message += email_footer()
     message_single_line_html = message.replace("\r\n", "<br>").replace("\n", "<br>")
 
     email_list: list[BulkEmailEmailItem] = []
 
     for email in emails:
-        client = clients.get(email=email)
+        client = clients.filter(email=email).first()
+
+        email_data = {
+            "users_name": client.name.split()[0] if client else "User",
+            "first_name": client.name.split()[0] if client else "User",
+            "company_name": request.actor.name,
+        }  # todo: add all variables from https://docs.myfinances.cloud/user-guide/emails/templates/
+
         email_list.append(
             BulkEmailEmailItem(
                 destination=email,
+                cc=[request.user.email] if cc_yourself else [],
+                bcc=[request.user.email] if bcc_yourself else [],
                 template_data={
-                    "users_name": client.name.split()[0],
-                    "content_text": message.format(users_name=client.name.split()[0]),
-                    "content_html": message_single_line_html.format(users_name=client.name.split()[0]),
+                    "users_name": client.name.split()[0] if client else "User",
+                    "content_text": Template(message).substitute(email_data),
+                    "content_html": Template(message_single_line_html).substitute(email_data),
                 },
             )
         )
 
-    EMAIL_DATA = BulkTemplatedEmailInput(
+    if get_var("DEBUG", "").lower() == "true":
+        print(
+            {
+                "email_list": email_list,
+                "template_name": "user_send_client_email",
+                "default_template_data": {
+                    "sender_name": request.user.first_name or request.user.email,
+                    "sender_id": request.user.id,
+                    "subject": subject,
+                },
+            }
+        )
+        messages.success(request, f"Successfully emailed {len(email_list)} people.")
+        return render(request, "base/toast.html")
+
+    EMAIL_SENT = send_templated_bulk_email(
         email_list=email_list,
         template_name="user_send_client_email",
         default_template_data={
@@ -108,14 +135,14 @@ def _send_bulk_email_view(request: HtmxHttpRequest) -> HttpResponse:
         },
     )
 
-    EMAIL_SENT: BulkEmailSuccessResponse | BulkEmailErrorResponse = send_templated_bulk_email(data=EMAIL_DATA)
-
-    if isinstance(EMAIL_SENT, BulkEmailErrorResponse):
-        messages.error(request, EMAIL_SENT.message)
+    if EMAIL_SENT.failed:
+        messages.error(request, EMAIL_SENT.error)
         return render(request, "base/toast.html")
 
+    # todo - fix
+
     EMAIL_RESPONSES: Iterator[tuple[BulkEmailEmailItem, BulkEmailEntryResultTypeDef]] = zip(
-        EMAIL_DATA.email_list, EMAIL_SENT.response.get("BulkEmailEntryResults")  # type: ignore[arg-type]
+        email_list, EMAIL_SENT.response.get("BulkEmailEntryResults")  # type: ignore[arg-type]
     )
 
     if request.user.logged_in_as_team:
@@ -163,7 +190,7 @@ def _send_bulk_email_view(request: HtmxHttpRequest) -> HttpResponse:
     return render(request, "base/toast.html")
 
 
-def _send_single_email_view(request: HtmxHttpRequest) -> HttpResponse:
+def _send_single_email_view(request: WebRequest) -> HttpResponse:
     email: str = str(request.POST.get("email", "")).strip()
     subject: str = request.POST.get("subject", "")
     message: str = request.POST.get("content", "")
@@ -179,9 +206,12 @@ def _send_single_email_view(request: HtmxHttpRequest) -> HttpResponse:
         messages.error(request, validated_single)
         return render(request, "base/toast.html")
 
+    message += email_footer()
     message_single_line_html = message.replace("\r\n", "<br>").replace("\n", "<br>")
 
-    EMAIL_DATA = SingleEmailInput(
+    email_data = {"company_name": request.actor.name}
+
+    EMAIL_SENT = send_email(
         destination=email,
         subject=subject,
         content={
@@ -190,13 +220,11 @@ def _send_single_email_view(request: HtmxHttpRequest) -> HttpResponse:
                 "subject": subject,
                 "sender_name": request.user.first_name or request.user.email,
                 "sender_id": request.user.id,
-                "content_text": message,
-                "content_html": message_single_line_html,
+                "content_text": Template(message).substitute(email_data),
+                "content_html": Template(message_single_line_html).substitute(email_data),
             },
         },
     )
-
-    EMAIL_SENT = send_email(data=EMAIL_DATA)
 
     aws_message_id = None
     if EMAIL_SENT.response is not None:
@@ -209,7 +237,7 @@ def _send_single_email_view(request: HtmxHttpRequest) -> HttpResponse:
         status_object.status = "pending"
     else:
         status_object.status = "failed_to_send"
-        messages.error(request, f"Failed to send the email. Error: {EMAIL_SENT.message}")
+        messages.error(request, f"Failed to send the email. Error: {EMAIL_SENT.error}")
 
     if request.user.logged_in_as_team:
         status_object.organization = request.user.logged_in_as_team
@@ -227,7 +255,7 @@ def validate_bulk_inputs(*, request, emails, clients, message, subject) -> str |
     def run_validations():
         yield validate_bulk_quotas(request=request, emails=emails)
         yield validate_email_list(emails=emails)
-        yield validate_client_list(clients=clients, emails=emails)
+        # yield validate_client_list(clients=clients, emails=emails)
         yield validate_email_content(message=message, request=request)
         yield validate_email_subject(subject=subject)
 
@@ -311,8 +339,6 @@ def validate_email_list(emails: list[str]) -> str | None:
 def validate_client_list(clients: QuerySet[Client], emails: list[str]) -> str | None:
     for email in emails:
         if not clients.filter(email=email).exists():
-            # if not client.email_verified:
-            #     return f"Client {email} isn't yet verified so we can't send them an email yet!"
             return f"Could not find client object for {email}"
     return None
 

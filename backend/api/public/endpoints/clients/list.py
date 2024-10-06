@@ -9,7 +9,7 @@ from backend.api.public.serializers.clients import ClientSerializer
 from backend.api.public.swagger_ui import TEAM_PARAMETER
 from backend.api.public.types import APIRequest
 from backend.models import Client
-from backend.service.clients.get import fetch_clients
+from backend.service.clients.get import fetch_clients, FetchClientServiceResponse
 
 
 @swagger_auto_schema(
@@ -42,10 +42,10 @@ def list_clients_endpoint(request: APIRequest):
 
     search_text = request.data.get("search")
 
-    clients: QuerySet[Client] = fetch_clients(request, search_text=search_text, team=request.team)
+    clients: FetchClientServiceResponse = fetch_clients(request, search_text=search_text, team=request.team)
 
     # queryset = paginator.paginate_queryset(clients, request)
 
-    serializer = ClientSerializer(clients, many=True)
+    serializer = ClientSerializer(clients.response, many=True)
 
     return Response({"success": True, "clients": serializer.data})

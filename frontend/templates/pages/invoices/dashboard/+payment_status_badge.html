@@ -1,30 +1,41 @@
 {% if design == "default" %}
-    <span class="p-3 rounded border border-2 shadow-2xl {% if status == "overdue" %}drop-shadow drop-shadow-glow_red text-error border-error {% elif status == "pending" %}text-base-400 border-base-400 {% elif status == "paid" %}text-success border-success {% endif %}">
-        {% if status == "paid" %}
-            <i class="fa-solid fa-check text-success mr-1"></i>
-            <span>Paid</span>
-        {% elif status == "overdue" %}
-            <i class="fa-solid fa-exclamation-triangle mr-1"></i>
+    {% if status == "overdue" %}
+        <span class="flex flex-row items-center rounded-lg border-2 px-3 py-[0.75rem] shadow-2xl drop-shadow-glow_red text-error border-error">
+            <i class="mr-1 fa-solid fa-exclamation-triangle"></i>
             <span>Overdue</span>
-        {% elif status == "pending" %}
-            <i class="fa-solid fa-hourglass-half mr-1"></i>
+        </span>
+    {% elif status == "pending" %}
+        <span class="flex flex-row items-center rounded-lg border-[1.5px] px-3 py-[0.7rem] shadow-2xl text-base-400 border-base-400">
+            <i class="mr-1 fa-solid fa-hourglass-half"></i>
             <span>Pending</span>
-        {% else %}
+        </span>
+    {% elif status == "paid" %}
+        <span class="flex flex-row items-center rounded-lg border-[1.5px] px-3 py-[0.7rem] shadow-2xl text-success border-success">
+            <i class="mr-1 fa-solid fa-check text-success"></i>
+            <span>Paid</span>
+        </span>
+    {% elif status == "draft" %}
+        <span class="p-3 border-2 rounded-lg shadow-2xl text-neutral-content border-neutral-content">
+            <i class="fa-solid fa-note-sticky mr-1"></i>
+            <span>Draft</span>
+        </span>
+    {% else %}
+        <span class="rounded-lg border-2 p-3 shadow-2xl">
             <span>{{ status }}</span>
-        {% endif %}
-    </span>
+        </span>
+    {% endif %}
 {% else %}
     {% if status == "paid" %}
-        <span class="badge badge-outline rounded p-3 badge-success"
+        <span class="rounded p-3 badge badge-outline badge-success"
               data-status="paid"
               data-invoice-id="{{ inv_id }}">Paid</span>
     {% elif status == "overdue" %}
-        <span class="badge badge-outline rounded p-3 badge-error drop-shadow drop-shadow-glow_red"
+        <span class="rounded p-3 badge badge-outline badge-error drop-shadow-glow_red"
               data-status="overdue"
               data-invoice-id="{{ inv_id }}">Overdue</span>
     {% else %}
-        <span class="badge badge-outline rounded p-3 badge-info"
-              data-status="{{ invoice.payment_status | lower }}"
-              data-invoice-id="{{ inv_id }}">{{ status | default:"sent" | title }}</span>
+        <span class="rounded p-3 badge badge-outline badge-info"
+              data-status="{{ invoice.status | lower }}"
+              data-invoice-id="{{ inv_id }}">{{ status | default:"draft" | title }}</span>
     {% endif %}
 {% endif %}

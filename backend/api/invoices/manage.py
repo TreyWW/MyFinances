@@ -10,6 +10,7 @@ from django.shortcuts import redirect
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
+from backend.decorators import web_require_scopes
 from backend.models import Invoice
 from backend.types.htmx import HtmxHttpRequest
 
@@ -33,21 +34,7 @@ class ErrorResponse:
 
 
 @require_http_methods(["GET"])
-def tab_preview_invoice(request: HtmxHttpRequest, invoice_id):
-    # Redirect if not an HTMX request
-    if not request.htmx:
-        return redirect("invoices dashboard")  # Maybe should be 404?
-
-    prev_invoice = preview_invoice(request, invoice_id)
-
-    if prev_invoice.success:
-        return render(request, "pages/invoices/view/invoice.html", prev_invoice.context)
-
-    messages.error(request, prev_invoice.message)
-
-    return render(request, "base/toasts.html")
-
-
+@web_require_scopes("invoices:read", True, True)
 def preview_invoice(request: HtmxHttpRequest, invoice_id) -> SuccessResponse | ErrorResponse:
     context: dict[str, str | Invoice] = {"type": "preview"}
 
@@ -57,12 +44,8 @@ def preview_invoice(request: HtmxHttpRequest, invoice_id) -> SuccessResponse | E
     except Invoice.DoesNotExist:
         return ErrorResponse("Invoice not found")
 
-    if request.user.logged_in_as_team:
-        if invoice.organization != request.user.logged_in_as_team:
-            return ErrorResponse("You don't have access to this invoice")
-    else:
-        if invoice.user != request.user:
-            return ErrorResponse("You don't have access to this invoice")
+    if not invoice.has_access(request.user):
+        return ErrorResponse("You don't have access to this invoice")
 
     currency_symbol = invoice.get_currency_symbol()
 

@@ -9,6 +9,10 @@ module.exports = {
       import: './assets/scripts/htmx.js',
       dependOn: 'init'
     },
+    tableify: {
+      import: './assets/scripts/tableify.js',
+      dependOn: 'init'
+    },
     sortable_form_builder: {
       import: './assets/scripts/sortable_form_builder.js'
     },
@@ -17,6 +21,9 @@ module.exports = {
     },
     font_awesome: {
       import: './assets/scripts/font_awesome.js'
+    },
+    validate_payment_details: {
+      import: './assets/scripts/validate_payment_details.js'
     }
   },
   output: {

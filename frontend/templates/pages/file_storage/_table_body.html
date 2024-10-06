@@ -1,0 +1,27 @@
+<tbody data-hx-swap="filestorage_files_table">
+    {% for file in files %}
+        <tr class="file-row" data-file-url="{{ file.url }}">
+            <td class="hover cursor-pointer" onclick="this.children[0].click();">
+                <input type="checkbox"
+                       class="checkbox checkbox-primary"
+                       name="file-checkboxes"
+                       value="{{ file.file_uri_path }}"
+                       data-file-url="{{ file.url }}"
+                       onclick="this.click();">
+            </td>
+            <td>
+                <a href="#"
+                   class="link link-primary"
+                   hx-get="{% url 'file_storage:dashboard' %}?dir={{ directory|urlencode }}/{{ file.name }}"
+                   hx-target='tbody[data-hx-swap="filestorage_files_table"]'
+                   hx-swap="innerHTML">{{ file.name }}</a>
+            </td>
+            <td>{{ file.size }}</td>
+            <td>{{ file.last_modified }}</td>
+        </tr>
+    {% empty %}
+        <tr>
+            <td colspan="4" class="text-center">No files found.</td>
+        </tr>
+    {% endfor %}
+</tbody>

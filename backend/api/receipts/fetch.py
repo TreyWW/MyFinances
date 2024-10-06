@@ -1,10 +1,12 @@
 from django.db.models import Q, QuerySet
 from django.shortcuts import render, redirect
 
+from backend.decorators import web_require_scopes
 from backend.models import Receipt, User
 from backend.types.htmx import HtmxHttpRequest
 
 
+@web_require_scopes("receipts:read", True, True)
 def fetch_all_receipts(request: HtmxHttpRequest):
     context: dict[str, QuerySet | list[str] | dict[str, list[str]]] = {}
     if not request.htmx:

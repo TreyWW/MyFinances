@@ -1,0 +1,28 @@
+<div class="flex items-center mx-auto status-btn">
+    <p class="flex text-sm font-normal me-8">
+        {% with ps=invoice.status %}
+            {% if ps == "paid" %}
+                <span class="circle-tick bg-success text-neutral">
+                    <i class="fa-solid fa-check"></i>
+                </span>
+            {% elif ps == "pending" %}
+                <span class="circle-tick bg-gray-500 text-black">
+                    <i class="fa-solid fa-question"></i>
+                </span>
+            {% elif ps == "overdue" %}
+                <span class="circle-tick bg-error text-neutral drop-shadow drop-shadow-glow_red">
+                    <i class="fa-solid fa-x"></i>
+                </span>
+            {% endif %}
+            <span>
+                {% if ps == "paid" %}
+                    This invoice has been <strong>paid</strong>
+                {% elif ps == "pending" %}
+                    This invoice is <strong>pending</strong>
+                {% elif ps == "overdue" %}
+                    This invoice is <strong>overdue</strong>
+                {% endif %}
+            </span>
+        {% endwith %}
+    </p>
+</div>

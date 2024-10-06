@@ -7,8 +7,7 @@ from django.dispatch import receiver
 
 from backend.data.default_feature_flags import default_feature_flags
 from backend.data.default_quota_limits import default_quota_limits
-from backend.models import FeatureFlags
-from backend.models import QuotaLimit
+from backend.models import FeatureFlags, QuotaLimit
 
 
 @receiver(post_migrate)

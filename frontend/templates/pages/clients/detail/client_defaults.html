@@ -1,84 +1,226 @@
+{% load render_bundle from webpack_loader %}
 <form class="py-4"
       method="POST"
-      hx-put="{% url 'clients:detail defaults' id=client.id %}"
+      {% if client %} hx-post="{% url 'api:settings:client_defaults' client_id=client.id %}" {% else %} hx-post="{% url 'api:settings:client_defaults without client' %}" {% endif %}
       hx-target="this"
       hx-indicator='button[data-hx-loading="save"]'
-      hx-swap="none">
+      hx-swap="none"
+      enctype="multipart/form-data"
+      hx-encoding="multipart/form-data">
     {% csrf_token %}
-    <div class="form-control mb-4">
-        <label class="label justify-start" for="due_date_value">
-            Invoice send date
-            <div class="tooltip tooltip-primary cursor-help ml-2"
-                 data-tip="The calculated date of the next invoice">
-                <i class="fa fa-info-circle"></i>
+    <div role="tablist" class="tabs tabs-lifted  tabs-lg">
+        <input type="radio"
+               name="my_tabs_2"
+               role="tab"
+               class="tab"
+               aria-label="Dates" />
+        <div role="tabpanel"
+             class="tab-content bg-base-100 border-base-300 rounded-box p-6">
+            <div class="form-control mb-4">
+                <label class="label justify-start" for="due_date_value">
+                    Invoice send date
+                    <div class="tooltip tooltip-primary cursor-help ml-2"
+                         data-tip="The calculated date of the next invoice">
+                        <i class="fa fa-info-circle"></i>
+                    </div>
+                </label>
+                <div class="join">
+                    <input name="invoice_date_value"
+                           type="text"
+                           value="{{ defaults.invoice_date_value | default:7 }}"
+                           pattern="^(?:[1-9]|[1-8][0-9]|90)$"
+                           class="input input-block input-bordered join-item"
+                           required>
+                    <select name="invoice_date_option"
+                            class="select select-bordered select-block join-item"
+                            required>
+                        {% with type="day_of_month" %}
+                            <option value="{{ type }}"
+                                    {% if defaults.invoice_date_type == type %}selected{% endif %}>
+                                day of month
+                            </option>
+                        {% endwith %}
+                        {% with type="days_after" %}
+                            <option value="{{ type }}"
+                                    {% if defaults.invoice_date_type == type %}selected{% endif %}>
+                                days after last invoice
+                            </option>
+                        {% endwith %}
+                    </select>
+                </div>
             </div>
-        </label>
-        <div class="join">
-            <input name="invoice_date_value"
-                   type="text"
-                   value="{{ defaults.invoice_date_value | default:7 }}"
-                   pattern="^(?:[1-9]|[1-8][0-9]|90)$"
-                   class="input input-block input-bordered join-item"
-                   required>
-            <select name="invoice_date_option"
-                    class="select select-bordered select-block join-item"
-                    required>
-                {% with type="day_of_month" %}
-                    <option value="{{ type }}"
-                            {% if defaults.invoice_date_type == type %}selected{% endif %}>
-                        day of month
-                    </option>
-                {% endwith %}
-                {% with type="days_after" %}
-                    <option value="{{ type }}"
-                            {% if defaults.invoice_date_type == type %}selected{% endif %}>
-                        days after last invoice
-                    </option>
-                {% endwith %}
-            </select>
+            <div class="form-control mb-4">
+                <label class="label justify-start" for="due_date_value">
+                    Invoice due date
+                    <div class="tooltip tooltip-primary cursor-help ml-2"
+                         data-tip="How long the client has to pay an invoice by default">
+                        <i class="fa fa-info-circle"></i>
+                    </div>
+                </label>
+                <div class="join">
+                    <input name="invoice_due_date_value"
+                           type="text"
+                           value="{{ defaults.invoice_due_date_value | default:7 }}"
+                           pattern="^(?:[1-9]|[1-8][0-9]|90)$"
+                           class="input input-block input-bordered join-item"
+                           required>
+                    <select name="invoice_due_date_option"
+                            class="select select-bordered select-block join-item"
+                            required>
+                        {% with type="days_after" %}
+                            <option value="{{ type }}"
+                                    {% if defaults.invoice_due_date_type == type %}selected{% endif %}>
+                                days after send
+                            </option>
+                        {% endwith %}
+                        {% with type="date_following" %}
+                            <option value="{{ type }}"
+                                    {% if defaults.invoice_due_date_type == type %}selected{% endif %}>
+                                date following the invoice month
+                            </option>
+                        {% endwith %}
+                        {% with type="date_current" %}
+                            <option value="{{ type }}"
+                                    {% if defaults.invoice_due_date_type == type %}selected{% endif %}>
+                                date of the current
+                                month
+                            </option>
+                        {% endwith %}
+                    </select>
+                </div>
+            </div>
+        </div>
+        <input type="radio"
+               name="my_tabs_2"
+               role="tab"
+               class="tab"
+               aria-label="Design"
+               checked="checked" />
+        <div role="tabpanel"
+             class="tab-content bg-base-100 border-base-300 rounded-box p-6">
+            <div class="mb-4">
+                <label class="label justify-start">Default logo for client's invoices</label>
+                <div class="flex flex-row w-full gap-2">
+                    {% if defaults.default_invoice_logo %}
+                        <div class="bg-base-100 flex align-center items-center rounded-lg border-opacity-20 p-2">
+                            <img class="w-24"
+                                 src="{{ defaults.default_invoice_logo.url }}"
+                                 alt="Current Image">
+                        </div>
+                    {% else %}
+                        <div class="bg-base-300 flex w-1/4 align-center items-center rounded-lg border-opacity-20 ps-4">
+                            Currently empty
+                        </div>
+                    {% endif %}
+                    <div class="flex flex-col gap-2">
+                        <input type="file"
+                               name="logo"
+                               hx-encoding="multipart/form-data"
+                               class="file-input file-input-bordered"
+                               accept="image/jpeg,image/png,image/jpg"
+                               value="{{ defaults.default_invoice_logo }}" />
+                        {% if defaults.default_invoice_logo %}
+                            <button class="btn btn-error w-48"
+                                    hx-swap="none"
+                                    {% if client %} hx-delete="{% url 'api:settings:client_defaults remove logo' client_id=client.id %}" {% else %} hx-delete="{% url 'api:settings:client_defaults remove logo without client' %}" {% endif %}>
+                                Remove current image
+                            </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <input type="radio"
+               name="my_tabs_2"
+               role="tab"
+               class="tab"
+               aria-label="Details" />
+        <div role="tabpanel"
+             class="tab-content bg-base-100 border-base-300 rounded-box p-6">
+            <h2 class="text-xl font-semibold">FROM Details</h2>
+            <div class="w-full grid grid-cols-2 gap-4 mt-4">
+                <div class="form-control mb-4">
+                    <label class="label justify-start" for="invoice_from_name">Name</label>
+                    <input name="invoice_from_name"
+                           type="text"
+                           value="{{ defaults.invoice_from_name | default_if_none:'' }}"
+                           placeholder="John Smith"
+                           class="input input-block input-bordered">
+                </div>
+                <div class="form-control mb-4">
+                    <label class="label justify-start" for="invoice_from_company">Company</label>
+                    <input name="invoice_from_company"
+                           type="text"
+                           value="{{ defaults.invoice_from_company | default_if_none:'' }}"
+                           placeholder="Google"
+                           class="input input-block input-bordered">
+                </div>
+                <div class="form-control mb-4">
+                    <label class="label justify-start" for="invoice_from_address">Address</label>
+                    <input name="invoice_from_address"
+                           type="text"
+                           value="{{ defaults.invoice_from_address | default_if_none:'' }}"
+                           placeholder="Google"
+                           class="input input-block input-bordered">
+                </div>
+                <div class="form-control mb-4">
+                    <label class="label justify-start" for="invoice_from_city">City</label>
+                    <input name="invoice_from_city"
+                           type="text"
+                           value="{{ defaults.invoice_from_city | default_if_none:'' }}"
+                           placeholder="Oxford"
+                           class="input input-block input-bordered">
+                </div>
+                <div class="form-control mb-4">
+                    <label class="label justify-start" for="invoice_from_county">County</label>
+                    <input name="invoice_from_county"
+                           type="text"
+                           value="{{ defaults.invoice_from_county | default_if_none:'' }}"
+                           placeholder="Oxfordshire"
+                           class="input input-block input-bordered">
+                </div>
+                <div class="form-control mb-4">
+                    <label class="label justify-start" for="invoice_from_country">Country</label>
+                    <input name="invoice_from_country"
+                           type="text"
+                           value="{{ defaults.invoice_from_country | default_if_none:'' }}"
+                           placeholder="England"
+                           class="input input-block input-bordered">
+                </div>
+            </div>
+            <h2 class="text-xl font-semibold">Payment Details</h2>
+            <div class="w-full flex flex-row gap-4 mt-4">
+                <div class="form-control mb-4">
+                    <label class="label justify-start" for="invoice_account_holder_name">Account Holder Name</label>
+                    <input name="invoice_account_holder_name"
+                           type="text"
+                           value="{{ defaults.invoice_account_holder_name | default_if_none:'' }}"
+                           placeholder="Mr John Doe"
+                           class="input input-block input-bordered">
+                </div>
+                <div class="form-control mb-4">
+                    <label class="label justify-start" for="invoice_account_number">Account Number</label>
+                    <input name="invoice_account_number"
+                           type="text"
+                           value="{{ defaults.invoice_account_number | default_if_none:'' }}"
+                           placeholder="12345678"
+                           onkeyup="this.value = validate_account_number(this.value);"
+                           class="input input-block input-bordered">
+                </div>
+                <div class="form-control mb-4">
+                    <label class="label justify-start" for="invoice_sort_code">Sort Code</label>
+                    <input name="invoice_sort_code"
+                           onkeyup="this.value = validate_sort_code(this.value);"
+                           pattern="[0-9]{2}-[0-9]{2}-[0-9]{2}"
+                           type="text"
+                           value="{{ defaults.invoice_sort_code | default_if_none:'' }}"
+                           placeholder="12-34-56"
+                           class="input input-block input-bordered">
+                </div>
+            </div>
         </div>
     </div>
-    <div class="form-control mb-4">
-        <label class="label justify-start" for="due_date_value">
-            Invoice due date
-            <div class="tooltip tooltip-primary cursor-help ml-2"
-                 data-tip="How long the client has to pay an invoice by default">
-                <i class="fa fa-info-circle"></i>
-            </div>
-        </label>
-        <div class="join">
-            <input name="invoice_due_date_value"
-                   type="text"
-                   value="{{ defaults.invoice_due_date_value | default:7 }}"
-                   pattern="^(?:[1-9]|[1-8][0-9]|90)$"
-                   class="input input-block input-bordered join-item"
-                   required>
-            <select name="invoice_due_date_option"
-                    class="select select-bordered select-block join-item"
-                    required>
-                {% with type="days_after" %}
-                    <option value="{{ type }}"
-                            {% if defaults.invoice_due_date_type == type %}selected{% endif %}>
-                        days after send
-                    </option>
-                {% endwith %}
-                {% with type="date_following" %}
-                    <option value="{{ type }}"
-                            {% if defaults.invoice_due_date_type == type %}selected{% endif %}>
-                        date following the invoice month
-                    </option>
-                {% endwith %}
-                {% with type="date_current" %}
-                    <option value="{{ type }}"
-                            {% if defaults.invoice_due_date_type == type %}selected{% endif %}>
-                        date of the current
-                        month
-                    </option>
-                {% endwith %}
-            </select>
-        </div>
-    </div>
-    <button class="btn btn-primary loading-htmx"
+    <button class="btn btn-primary loading-htmx mt-4"
             data-hx-loading="save"
             type="submit">
         <span class="loading-htmx-text">Save</span>
@@ -86,3 +228,4 @@
               class="loading loading-spinner loading-htmx-loader"></span>
     </button>
 </form>
+{% render_bundle 'validate_payment_details' 'js' %}

@@ -1,0 +1,226 @@
+{% extends "pages/landing/landing_base.html" %}
+{% block content %}
+    {% load static %}
+    <section class="bg-base-200">
+        <div class="grid max-w-screen-xl px-8 pt-20 pb-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12 lg:pt-16">
+            <div class="mr-auto place-self-center lg:col-span-7">
+                <h1 class="max-w-2xl mb-4 text-3xl font-extrabold leading-none tracking-tight md:text-4xl xl:text-5xl scroll-mt-16"
+                    id="title_text">
+                    Simplify Your Workflow,
+                    <br>
+                    Empower Your Business
+                </h1>
+                <p class="max-w-2xl mb-6 font-light lg:mb-8 md:text-lg lg:text-xl scroll-mt-16">
+                    Automate invoicing, streamline customer onboarding, and manage your documents — all in one place.
+                </p>
+                <p class="mb-3">Join the early access club for free!</p>
+                <div class="w-full flex items-start">
+                    {#                    <a class="btn btn-primary"#}
+                    {#                       href="{% url 'auth:login create_account manual' %}">Start Today – Free for 30 Days</a>#}
+                    <form hx-post="{% url 'api:landing_page:join_waitlist' %}"
+                          class="w-full flex flex-row gap-2 flex-wrap">
+                        {% csrf_token %}
+                        <input type="text"
+                               name="name"
+                               placeholder="Name"
+                               class="input input-bordered grow">
+                        <input type="email"
+                               name="email"
+                               placeholder="Email Address"
+                               required
+                               class="input input-bordered grow">
+                        <button class="btn btn-primary grow">Join the Hype</button>
+                    </form>
+                </div>
+            </div>
+            <div class="hidden lg:mt-0 lg:col-span-5 lg:flex">
+                <img src="{% static 'img/dashboard_invoices_page.png' %}"
+                     alt="Invoice Page"
+                     decoding="async"
+                     class="rounded-lg w-full h-full">
+            </div>
+        </div>
+    </section>
+    <section class="py-16 px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-2 md:gap-2 lg:gap-4">
+        <h2 class="text-4xl font-semibold tracking-tight text-base-content text-center mb-8 block md:hidden">
+            Track customer invoices
+        </h2>
+        <div class="">
+            <div class="py-4 px-4 shadow-lg rounded-xl flex flex-row items-center justify-between bg-base-200">
+                <div class="flex items-center space-x-2">
+                    <button class="btn btn-outline btn-square btn-sm">
+                        <i class="fa fa-filter"></i>
+                    </button>
+                    <button class="btn btn-square btn-outline btn-sm">
+                        <i class="fa fa-sort"></i>
+                    </button>
+                </div>
+                <h2 class="text-xl" data-oob="invoices-title">Invoices</h2>
+                <button class="btn btn-secondary btn-sm">
+                    <i class="fa-solid fa-file-invoice"></i>
+                    Create Invoice
+                </button>
+            </div>
+            <div class="py-6 px-4 shadow-2xl rounded-xl bg-base-200 mt-2">
+                <div class="flex h-full overflow-x-auto overflow-y-auto">
+                    <table class="table h-fit">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Due Date</th>
+                                <th>Client Name</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% include 'components/table/skeleton_rows.html' with rows=1 cols=6 %}
+                            <tr>
+                                <td class="text-primary font-bold">02</td>
+                                <td class="">05/09/2024</td>
+                                <td class="font-bold">John Doe</td>
+                                <td class="">£234</td>
+                                <td class="">
+                                    <span class="badge badge-outline rounded p-3 badge-error drop-shadow-glow_red">Overdue</span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-outline btn-primary btn-sm">
+                                        <i class="fa fa-ellipsis"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            {% include 'components/table/skeleton_rows.html' with rows=2 cols=6 %}
+                            <tr>
+                                <td class="text-primary font-bold">05</td>
+                                <td class="">09/09/2024</td>
+                                <td class="font-bold">Bob Smith</td>
+                                <td class="">£499</td>
+                                <td class="">
+                                    <span class="badge badge-outline rounded p-3 badge-accent">Pending</span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-outline btn-primary btn-sm">
+                                        <i class="fa fa-ellipsis"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            {% include 'components/table/skeleton_rows.html' with rows=1 cols=6 %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="flex flex-col ps-16 pe-8">
+            <h2 class="text-4xl font-semibold tracking-tight text-base-content text-center mb-8 hidden md:block">
+                Track customer invoices
+            </h2>
+            <div class="flex flex-col gap-8 text-2xl">
+                <div class="flex items-center">
+                    <i class="fa fa-rotate me-4"></i>
+                    Never forget to create an invoice with our recurring invoice feature
+                </div>
+                <div class="flex items-center">
+                    <i class="fa fa-bell me-4"></i>
+                    Get alerted when your customer exceeds deadlines
+                </div>
+                <div class="flex items-center" id="AA">
+                    <i class="fa fa-magnifying-glass-chart me-4"></i>
+                    View monthly reports to see how well you are progressing
+                </div>
+                <div>
+                    <a class="btn btn-primary" href="#title_text">Join waitlist</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="bg-base-200 py-16">
+        <div class="max-w-screen-xl px-4 mx-auto text-center lg:py-8 lg:px-6">
+            <div class="max-w-screen-md mx-auto mb-8 lg:mb-12">
+                <h2 class="mb-4 text-4xl font-semibold tracking-tight text-base-content">
+                    Built for founders like <strong>you</strong>
+                </h2>
+                <p class="mb-5 text-xl">
+                    Whether you're a freelancer, entrepreneur, small business, or community center, we
+                    streamline your financial processes and focus on what really matters.
+                </p>
+            </div>
+            <div class="grid grid-cols-1 gap-8 sm:grid-cols-3 lg:grid-cols-3">
+                <div class="p-6 bg-white rounded-lg shadow-lg text-center">
+                    <i class="fa-solid fa-laptop-code text-secondary text-5xl mb-4"></i>
+                    <h3 class="text-2xl font-semibold mb-2 text-base-content">Freelancers</h3>
+                    <p class="text-base-content">
+                        Automate your invoicing and never chase payments again. Focus on your craft while
+                        we handle the paperwork.
+                    </p>
+                </div>
+                <div class="p-6 bg-white rounded-lg shadow-lg text-center">
+                    <i class="fa-solid fa-users text-secondary text-5xl mb-4"></i>
+                    <h3 class="text-2xl font-semibold mb-2 text-base-content">Small Team Businesses</h3>
+                    <p class="text-base-content">
+                        Simplify financial operations for your team with automated workflows, from
+                        invoicing to monthly reporting.
+                    </p>
+                </div>
+                <div class="p-6 bg-white rounded-lg shadow-lg text-center">
+                    <i class="fa-solid fa-building text-secondary text-5xl mb-4"></i>
+                    <h3 class="text-2xl font-semibold mb-2 text-base-content">Community Centers</h3>
+                    <p class="text-base-content">
+                        Streamline booking processes and manage long-term groups with ease, ensuring
+                        smooth operations and saving staff time.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="bg-base-100 py-16">
+        <div class="max-w-screen-xl px-4 mx-auto text-center">
+            <h2 class="mb-4 text-4xl font-semibold tracking-tight text-base-content">How Does It Work</h2>
+            <p class="mb-8 text-lg font-light text-base-content">
+                Simplify your invoicing and customer onboarding in just a few easy steps!
+            </p>
+            <div class="grid gap-12 md:grid-cols-2">
+                <!-- Invoicing Process -->
+                <div class="p-6 bg-white rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-semibold text-base-content mb-4">Invoicing Made Easy</h3>
+                    <p class="mb-4">Transform your booking process:</p>
+                    <ol class="list-decimal list-inside text-left">
+                        <li class="mb-2">Create draft invoice and fill out details.</li>
+                        <li class="mb-2">
+                            Set invoice status to <strong>"Pending"</strong> (awaiting payment).
+                        </li>
+                        <li class="mb-2">Send invoice to customer.</li>
+                        <li class="mb-2">Customer pays online.</li>
+                    </ol>
+                </div>
+                <!-- Customer Onboarding Process -->
+                <div class="p-6 bg-white rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-semibold text-base-content mb-4 text-center">Streamlined Customer Onboarding</h3>
+                    <blockquote class="italic text-base-content mb-4 text-center">
+                        "MyFinances <span class="underline">transformed</span> the way we onboard customers!"
+                    </blockquote>
+                    <ol class="list-decimal list-inside text-left">
+                        <li class="mb-2">User visits your personalized dashboard to manage bookings.</li>
+                        <li class="mb-2">User fills out necessary forms and pays online.</li>
+                        <li class="mb-2">You receive updates on every step. Hold / cancel bookings at any time.</li>
+                        <li class="mb-2">Booking is confirmed automatically upon payment.</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="bg-base-300">
+        <div class="max-w-screen-xl px-4 py-8 mx-auto lg:py-16 lg:px-6">
+            <div class="max-w-screen-sm mx-auto text-center">
+                <h2 class="mb-4 text-3xl font-extrabold leading-tight tracking-tight text-base-content">
+                    Get your custom quote today
+                </h2>
+                <p class="mb-6 font-light text-base-content md:text-lg">
+                    Speak to our founder and get a quote that best fits your business
+                </p>
+                <a href="mailto:enquiry@myfinances.cloud" class="link link-primary">Send us an email</a>
+            </div>
+        </div>
+    </section>
+    <!-- End block -->
+{% endblock content %}

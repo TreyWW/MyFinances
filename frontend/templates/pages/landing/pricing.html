@@ -1,0 +1,30 @@
+{% extends "pages/landing/landing_base.html" %}
+{% block content %}
+    {% load static %}
+    <!-- Start block -->
+    <section class="bg-accent">
+        <div class="max-w-screen-2xl min-w-screen-lg px-4 pt-4 pb-8 mx-auto lg:pt-16 lg:pb-24 lg:px-6">
+            <div class="max-w-screen-md mx-auto mb-8 text-center lg:mb-12">
+                <h2 class="mb-4 text-3xl font-extrabold tracking-tight">Pricing for MyFinances</h2>
+                <p class="mb-5 font-light sm:text-xl">Choose the pricing that best fits your business</p>
+            </div>
+            {% include 'pages/landing/pricing_cards.html' %}
+            {# Addons #}
+            {#            <div x-data="{}"#}
+            {#                 x-init="$nextTick(() => { let ul = $refs.addons; ul.insertAdjacentHTML('afterend', ul.outerHTML); ul.nextSibling.setAttribute('aria-hidden', 'true'); })"#}
+            {#                 class="relative w-full inline-flex flex-nowrap overflow-hidden mt-8 [mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-128px),transparent_100%)]">#}
+            {#                {% include "pages/landing/addons.html" %}#}
+            {#            </div>#}
+            {# End Addons #}
+            {# Usage Based Pricing #}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                <!-- Starter Plan -->
+                {% include "pages/billing/dashboard/starter_usages.html" %}
+                <!-- Growth Plan -->
+                {% include "pages/billing/dashboard/growth_usages.html" %}
+            </div>
+            {# End Usage Based Pricing #}
+        </div>
+    </section>
+    <!-- End block -->
+{% endblock content %}

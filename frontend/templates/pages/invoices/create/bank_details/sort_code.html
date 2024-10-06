@@ -1,0 +1,38 @@
+<div class="input_card col-span-1 md:col-span-2 lg:col-span-1">
+    <div class="card-body w-full">
+        <div class="form-control w-full">
+            <label class="label">Sort Code</label>
+            <input onkeyup="this.value = validate_sort_code(this.value);"
+                   pattern="[0-9]{2}-[0-9]{2}-[0-9]{2}"
+                   name="sort_code"
+                   placeholder="12-34-56"
+                   value="{{ sort_code | default_if_none:"" }}"
+                   type="text"
+                   class="peer input-bordered input input-block w-full">
+            <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden ">
+                <span class="label-text-alt text-error">Please enter a valid sort code.</span>
+            </label>
+        </div>
+    </div>
+</div>
+<script>
+    function validate_sort_code(value) {
+        // Remove any non-numeric characters
+        value = value.replace(/\D/g, '');
+
+        // Ensure the value is no longer than 9 characters (123-123-123)
+        if (value.length > 6) {
+            value = value.slice(0, 6);
+        }
+
+        // Format the value as "12-34-56"
+        if (value.length >= 2) {
+            value = value.slice(0, 2) + "-" + value.slice(2);
+        }
+        if (value.length >= 5) {
+            value = value.slice(0, 5) + "-" + value.slice(5);
+        }
+
+        return value;
+    }
+</script>

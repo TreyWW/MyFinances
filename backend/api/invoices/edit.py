@@ -5,11 +5,13 @@ from django.http import HttpRequest, JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods, require_POST
 
+from backend.decorators import web_require_scopes
 from backend.models import Invoice
 from backend.types.htmx import HtmxHttpRequest
 
 
 @require_http_methods(["POST"])
+@web_require_scopes("invoices:write", True, True)
 def edit_invoice(request: HtmxHttpRequest):
     try:
         invoice = Invoice.objects.get(id=request.POST.get("invoice_id", ""))
@@ -32,6 +34,7 @@ def edit_invoice(request: HtmxHttpRequest):
         "date_issued": request.POST.get("date_issued"),
         "client_name": request.POST.get("to_name"),
         "client_company": request.POST.get("to_company"),
+        "client_email": request.POST.get("to_email"),
         "client_address": request.POST.get("to_address"),
         "client_city": request.POST.get("to_city"),
         "client_county": request.POST.get("to_county"),
@@ -71,11 +74,12 @@ def edit_invoice(request: HtmxHttpRequest):
 
 
 @require_POST
+@web_require_scopes("invoices:write", True, True)
 def change_status(request: HtmxHttpRequest, invoice_id: int, status: str) -> HttpResponse:
     status = status.lower() if status else ""
 
     if not request.htmx:
-        return redirect("invoices:dashboard")
+        return redirect("invoices:single:dashboard")
 
     try:
         invoice = Invoice.objects.get(id=invoice_id)
@@ -85,22 +89,14 @@ def change_status(request: HtmxHttpRequest, invoice_id: int, status: str) -> Htt
     if request.user.logged_in_as_team and request.user.logged_in_as_team != invoice.organization or request.user != invoice.user:
         return return_message(request, "You don't have permission to make changes to this invoice.")
 
-    if status not in ["paid", "overdue", "pending"]:
-        return return_message(request, "Invalid status. Please choose from: pending, paid, overdue")
+    if status not in ["paid", "draft", "pending"]:
+        return return_message(request, "Invalid status. Please choose from: pending, paid, draft")
 
-    if invoice.payment_status == status:
+    if invoice.status == status:
         return return_message(request, f"Invoice status is already {status}")
 
-    invoice.payment_status = status
+    invoice.status = status
     invoice.save()
-
-    dps = invoice.dynamic_payment_status
-    if (status == "overdue" and dps == "pending") or (status == "pending" and dps == "overdue"):
-        message = f"""
-            The invoice status was automatically changed from <strong>{status}</strong> to <strong>{dps}</strong>
-            as the invoice dates override the manual status.
-        """
-        return return_message(request, message, success=False)
 
     send_message(request, f"Invoice status been changed to <strong>{status}</strong>", success=True)
 
@@ -108,13 +104,14 @@ def change_status(request: HtmxHttpRequest, invoice_id: int, status: str) -> Htt
 
 
 @require_POST
+@web_require_scopes("invoices:write", True, True)
 def edit_discount(request: HtmxHttpRequest, invoice_id: str):
     discount_type = "percentage" if request.POST.get("discount_type") == "on" else "amount"
     discount_amount_str: str = request.POST.get("discount_amount", "")
     percentage_amount_str: str = request.POST.get("percentage_amount", "")
 
     if not request.htmx:
-        return redirect("invoices:dashboard")
+        return redirect("invoices:single:dashboard")
 
     try:
         invoice: Invoice = Invoice.objects.get(id=invoice_id)

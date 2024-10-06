@@ -1,0 +1,36 @@
+{% load strfilters %}
+{% component_block "modal" id="modal_edit_team_member_permissions" start_open="true" title="Edit users permissions" %}
+{% fill "content" %}
+<form class="py-4"
+      id="modal_edit_team_member_permissions"
+      hx-post="{% url 'api:teams:edit_permissions' %}"
+      hx-swap="none">
+    {% csrf_token %}
+    <input type="hidden" name="user_id" value="{{ editing_user.id }}">
+    <div class="form-control w-full">
+        <label class="label justify-start">Editing user</label>
+        <input id="modal_input-name"
+               disabled
+               type="text"
+               value="{{ editing_user.get_full_name }}"
+               class="peer input input-block input-bordered invalid:[&:not(:placeholder-shown):not(:focus)]:input-error">
+        <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden">
+            <span class="label-text-alt text-error">Please enter a valid name for your key</span>
+        </label>
+    </div>
+    {% include "components/permissions/selector.html" %}
+    <div class="form-control"></div>
+    <div class="modal-action">
+        <button type="submit"
+                id="modal_edit_team_member_permissions-submit"
+                class="btn btn-primary"
+                _="on click if #modal_edit_team_member_permissions-form.checkValidity() call #modal_edit_team_member_permissions.close() end">
+            Save user permissions
+        </button>
+        <button type="button"
+                _="on click call #modal_edit_team_member_permissions.close()"
+                class="btn">Cancel</button>
+    </div>
+</form>
+{% endfill %}
+{% endcomponent_block %}

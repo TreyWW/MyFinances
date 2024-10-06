@@ -1,0 +1,60 @@
+{% load strfilters %}
+{% load dictfilters %}
+<div role="tablist" class="tabs tabs-lifted tabs-lg">
+    <input type="radio"
+           name="email_templates_tabs"
+           role="tab"
+           class="tab"
+           aria-label="Recurring Invoices"
+           checked="checked" />
+    <div role="tabpanel"
+         class="p-6 tab-content bg-base-100 border-base-300 rounded-box">
+        <div class="flex flex-row gap-4" x-data="{ activeTab: 'invoice_created' }">
+            <ul class="rounded-lg border menu menu-sm border-base-300">
+                <li>
+                    <button class="px-6 py-2"
+                            :class="{ 'active': activeTab === 'invoice_created'}"
+                            @click="activeTab = 'invoice_created'">Invoice Created</button>
+                </li>
+                <div class="my-1 px-4 divider"></div>
+                <li>
+                    <button class="px-6 py-2"
+                            :class="{ 'active': activeTab === 'invoice_overdue' }"
+                            @click="activeTab = 'invoice_overdue'">Invoice went Overdue</button>
+                </li>
+                <div class="my-1 px-4 divider"></div>
+                <li>
+                    <button class="px-6 py-2"
+                            :class="{ 'active': activeTab === 'invoice_cancelled' }"
+                            @click="activeTab = 'invoice_cancelled'">Invoice Cancelled</button>
+                </li>
+            </ul>
+            {% for template in 'invoice_created,invoice_overdue,invoice_cancelled'|split:"," %}
+                <div class="m-0 flex grow flex-col gap-y-2"
+                     :class="{ 'hidden': activeTab !== '{{ template }}'}">
+                    <p>{{ template|split:"_"|join:" "|title }}</p>
+                    {% spaceless %}
+                        <textarea class="m-0 h-full w-full textarea textarea-block textarea-bordered">
+                    {{ email_templates.recurring_invoices|dict_get:template }}
+                </textarea>
+                    {% endspaceless %}
+                    <button class="w-fit self-end px-4 btn btn-sm btn-primary">Save</button>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <input type="radio"
+           name="email_templates_tabs"
+           role="tab"
+           class="tab"
+           aria-label="Design" />
+    <div role="tabpanel"
+         class="p-6 tab-content bg-base-100 border-base-300 rounded-box"></div>
+    <input type="radio"
+           name="email_templates_tabs"
+           role="tab"
+           class="tab"
+           aria-label="Details" />
+    <div role="tabpanel"
+         class="p-6 tab-content bg-base-100 border-base-300 rounded-box"></div>
+</div>

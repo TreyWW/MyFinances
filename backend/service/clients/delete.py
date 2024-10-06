@@ -1,12 +1,18 @@
+from dataclasses import dataclass
 from typing import Literal
 
 from backend.service.clients.validate import validate_client
 from django.core.exceptions import ValidationError, PermissionDenied
 
 from backend.models import Client, AuditLog
+from backend.utils.dataclasses import BaseServiceResponse
 
 
-def delete_client(request, client_id) -> str | Literal[True]:
+class DeleteClientServiceResponse(BaseServiceResponse[None]):
+    response: None = None
+
+
+def delete_client(request, client_id) -> DeleteClientServiceResponse:
     """
 
     :param request:
@@ -16,13 +22,13 @@ def delete_client(request, client_id) -> str | Literal[True]:
     try:
         client: Client = validate_client(request, client_id)
     except Client.DoesNotExist:
-        return "This client does not exist"
+        return DeleteClientServiceResponse(False, error_message="This client does not exist")
     except ValidationError:
-        return "Invalid client id"
+        return DeleteClientServiceResponse(False, error_message="Invalid client id")
     except PermissionDenied:
-        return "You do not have permission to delete this client"
+        return DeleteClientServiceResponse(False, error_message="You do not have permission to delete this client")
 
     AuditLog.objects.create(user=request.user, action=f'Deleted the client "{client.name}" (#{client.id})')
 
     client.delete()
-    return True
+    return DeleteClientServiceResponse(True)

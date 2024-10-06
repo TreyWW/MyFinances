@@ -22,8 +22,6 @@ from backend.models import (
     InvoiceProduct,
     FeatureFlags,
     VerificationCodes,
-    APIKey,
-    InvoiceOnetimeSchedule,
     QuotaLimit,
     QuotaOverrides,
     QuotaUsage,
@@ -32,9 +30,13 @@ from backend.models import (
     ReceiptDownloadToken,
     EmailSendStatus,
     InvoiceReminder,
+    InvoiceRecurringProfile,
+    FileStorageFile,
+    MultiFileUpload,
 )
 
 from backend.api.public.models import APIAuthToken
+from settings.settings import BILLING_ENABLED
 
 # from django.contrib.auth.models imp/ort User
 # admin.register(Invoice)
@@ -57,14 +59,20 @@ admin.site.register(
         InvoiceProduct,
         FeatureFlags,
         VerificationCodes,
-        APIKey,
-        InvoiceOnetimeSchedule,
         Receipt,
         ReceiptDownloadToken,
         InvoiceReminder,
         APIAuthToken,
+        InvoiceRecurringProfile,
+        FileStorageFile,
+        MultiFileUpload,
     ]
 )
+
+if BILLING_ENABLED:
+    from billing.models import PlanFeature, PlanFeatureGroup, SubscriptionPlan, UserSubscription
+
+    admin.site.register([PlanFeature, PlanFeatureGroup, SubscriptionPlan, UserSubscription])
 
 
 class QuotaLimitAdmin(admin.ModelAdmin):
@@ -102,7 +110,20 @@ admin.site.register(EmailSendStatus, EmailSendStatusAdmin)
 
 # admin.site.unregister(User)
 fields = list(UserAdmin.fieldsets)  # type: ignore[arg-type]
-fields[0] = (None, {"fields": ("username", "password", "logged_in_as_team", "awaiting_email_verification")})
+fields[0] = (
+    None,
+    {
+        "fields": (
+            "username",
+            "password",
+            "logged_in_as_team",
+            "awaiting_email_verification",
+            "stripe_customer_id",
+            "entitlements",
+            "require_change_password",
+        )
+    },
+)
 UserAdmin.fieldsets = tuple(fields)
 admin.site.register(User, UserAdmin)
 

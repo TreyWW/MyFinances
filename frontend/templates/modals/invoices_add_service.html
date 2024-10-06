@@ -2,7 +2,7 @@
 {% fill "content" %}
 <form class="py-4"
       id="modal_invoices_add_service-form"
-      hx-post="{% url 'api:invoices:services add' %}"
+      hx-post="{% url 'api:invoices:create:services add' %}"
       hx-include="#services_table_body"
       hx-swap="innerHTML"
       hx-target="#services_table_body">
@@ -42,6 +42,7 @@
         </label>
         <input id="modal_input-price_per_hour"
                type="number"
+               step=".01"
                name="post_rate"
                class="input input-block input-bordered"
                required>

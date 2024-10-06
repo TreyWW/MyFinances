@@ -1,0 +1,67 @@
+{% component_block "modal" id="modal_team_create_user" start_open="true" title="Create User Account" %}
+{% fill "content" %}
+<form class="py-4"
+      id="modal_team_create_user-form"
+      hx-post="{% url 'api:teams:create_user' %}"
+      hx-swap="none">
+    {% csrf_token %}
+    <div class="form-control w-full">
+        <label class="label justify-start">
+            Users' Email
+            <span class="tooltip tooltip-right ml-2"
+                  data-tip="The email address of the user you are about to create">
+                <i class="fa fa-info-circle"></i>
+            </span>
+            <span class="required_star">*</span>
+        </label>
+        <input id="modal_input-email"
+               name="email"
+               type="email"
+               class="input input-block input-bordered"
+               required>
+    </div>
+    <div class="flex flex-row gap-4 w-full">
+        <div>
+            <label class="label justify-start">
+                Users' First Name
+                <span class="required_star">*</span>
+            </label>
+            <input id="modal_input-first_name"
+                   name="first_name"
+                   type="text"
+                   class="input input-block input-bordered"
+                   required>
+        </div>
+        <div>
+            <label class="label justify-start">
+                Users' Last Name
+                <span class="required_star">*</span>
+            </label>
+            <input id="modal_input-last_name"
+                   name="last_name"
+                   type="text"
+                   class="input input-block input-bordered"
+                   required>
+        </div>
+    </div>
+    <input type="hidden" name="team_id" value="{{ team_id }}">
+    {% include "components/permissions/selector.html" %}
+    <div class="w-full align-content-start align-items-center gap-1 text-start border-2 rounded-lg border-info p-3 mt-3">
+        <mark class="rounded pb-1 bg-info pt-0.5 px-1">Note:</mark>
+        this will send the user instructions on how to login, and they will be granted the permissions above in
+        your organization <strong>right away</strong>. Double-check the permissions, you can modify them at any point.
+    </div>
+    <div class="modal-action">
+        <button type="submit"
+                id="modal_team_create_user-submit"
+                class="btn btn-primary"
+                x-on:team_create_user_error.window="document.getElementById('modal_team_create_user').close()">
+            Create account
+        </button>
+        <button type="button"
+                _="on click call #modal_team_create_user.close()"
+                class="btn">Cancel</button>
+    </div>
+</form>
+{% endfill %}
+{% endcomponent_block %}

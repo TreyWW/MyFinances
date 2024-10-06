@@ -1,111 +1,107 @@
-{% extends base|default:"base/base.html" %}
-{% block content %}
-    {% load feature_enabled %}
-    {% feature_enabled "isInvoiceSchedulingEnabled" as schedule_invoices_enabled %}
-    <div class="card p-6 shadow-xl bg-base-100 mb-4">
-        <div class=" text-3xl w-full grid grid-cols-4">
-            <div hx-boost="true">
-                <a href="{% url "invoices:dashboard" %}"
-                   class="btn btn-sm btn-outline btn-secondary me-3 float-left">Back to list</a>
-            </div>
-            <h1 class="text-center col-span-2">Invoice #{{ invoice.id }}</h1>
-            <div>
-                <button hx-delete="{% url 'api:invoices:delete' %}"
-                        hx-swap="none"
-                        hx-confirm="Are you sure you would like to delete invoice #{{ invoice.id }}?"
-                        hx-vals='{"invoice": "{{ invoice.id }}", "redirect": "/dashboard/invoices/"}'
-                        class="btn btn-sm btn-outline btn-error me-3 float-right">
-                    <i class="fa-solid fa-trash"></i>
-                    Delete
-                </button>
-            </div>
+{% load feature_enabled %}
+{% feature_enabled "isInvoiceSchedulingEnabled" as schedule_invoices_enabled %}
+<style></style>
+<div class="card p-6 shadow-xl bg-base-100 mb-4">
+    <div class=" text-3xl w-full grid grid-cols-4">
+        <div hx-boost="true">
+            <a href="{% url "invoices:single:dashboard" %}"
+               class="btn btn-sm btn-outline btn-secondary me-3 float-left">Back to list</a>
         </div>
-    </div>
-    <div class="card bg-base-100 shadow-xl w-full p-6 flex-col gap-y-4">
-        <div class="flex flex-wrap gap-y-4">
-            <button class="btn btn-md btn-outline btn-default grow loading-htmx mr-4"
-                    data-htmx="preview-button"
-                    hx-target="#container"
-                    hx-get="{% url "api:invoices:tab preview" invoice_id=invoice.id %}"
-                    hx-swap="innerHTML"
-                    hx-trigger="load,click,update_invoice from:body,queue:last"
-                    hx-indicator="this">
-                <span class="loading-htmx-text">
-                    <i class="fa-solid fa-file-pdf"></i>
-                    Preview Invoice
-                </span>
-                <span class="loading loading-spinner loading-htmx-loader"></span>
+        <h1 class="text-center col-span-2">Invoice #{{ invoice.id }}</h1>
+        <div>
+            <button hx-delete="{% url 'api:invoices:single:delete' %}"
+                    hx-swap="none"
+                    hx-confirm="Are you sure you would like to delete invoice #{{ invoice.id }}?"
+                    hx-vals='{"invoice": "{{ invoice.id }}", "redirect": "/dashboard/invoices/"}'
+                    class="btn btn-sm btn-outline btn-error me-3 float-right">
+                <i class="fa-solid fa-trash"></i>
+                Delete
             </button>
-            <a href="{% url "invoices:edit" invoice_id=invoice.id %}"
-               class="btn btn-md btn-outline btn-default grow mr-4">
+        </div>
+    </div>
+</div>
+<div class="card bg-base-100 shadow-xl w-full p-6 flex-col gap-y-4">
+    <div class="flex flex-wrap gap-2 items-center flex-start">
+        <a class="btn btn-md btn-outline btn-default grow loading-htmx"
+           target="_blank"
+           rel="noopener noreferrer"
+           href="{% url 'invoices:single:preview' invoice_id=invoice.id %}">
+            <span class="loading-htmx-text">
                 <i class="fa-solid fa-up-right-from-square"></i>
-                Edit Invoice
+                Preview Invoice
+            </span>
+            <span class="loading loading-spinner loading-htmx-loader"></span>
+        </a>
+        <a href="{% url "invoices:single:edit" invoice_id=invoice.id %}"
+           class="btn btn-md btn-outline btn-default grow">
+            <i class="fa-solid fa-edit"></i>
+            Edit Invoice
+        </a>
+        <a href="{% url "invoices:single:manage_access" invoice_id=invoice.id %}"
+           class="btn btn-md btn-outline btn-default grow">
+            <i class="fa-solid fa-share-nodes"></i>
+            Send Invoice
+        </a>
+        {% if schedule_invoices_enabled %}
+            <a class="btn btn-outline btn-default grow mr-4">
+                <i class="fa-solid fa-clock"></i>
+                Schedule Invoice
             </a>
-            <a href="{% url "invoices:manage_access" invoice_id=invoice.id %}"
-               class="btn btn-md btn-outline btn-default grow mr-4">
-                <i class="fa-solid fa-share-nodes"></i>
-                Send Invoice
-            </a>
-            {% if schedule_invoices_enabled %}
-                <a href="{% url "invoices:schedules view" invoice_id=invoice.id %}"
-                   class="btn btn-outline btn-default grow mr-4">
-                    <i class="fa-solid fa-clock"></i>
-                    Schedule Invoice
-                </a>
-            {% endif %}
+        {% endif %}
+        <div class="basis-[100%] h-0"></div>
+        <!-- Icon and Text for Current Status -->
+        <div data-oob="status">
+            {% component "pages:invoices:dashboard:payment_status_badge" status=invoice.dynamic_status inv_id=invoice_id design="default" %}
         </div>
-        <div class="mt-2">
-            <div class="flex items-center space-x-2">
-                <!-- Icon and Text for Current Status -->
-                <div data-oob="status">
-                    {% component "pages:invoices:dashboard:payment_status_badge" status=invoice.payment_status inv_id=invoice_id design="default" %}
-                </div>
-                <!-- Mark As Button -->
-                <div class="dropdown dropdown-right dropdown-hover">
-                    <div class="m-1 btn btn-primary" tabindex="0" role="button">
-                        <i class="fa-solid fa-flag"></i>
-                        Mark As
-                    </div>
-                    <ul tabindex="0"
-                        class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
-                        <li>
-                            <button hx-swap="none"
-                                    hx-post="{% url "api:invoices:edit status" invoice_id=invoice.id status='pending' %}">
-                                <i class="fa-solid fa-hourglass-half"></i>
-                                Pending
-                            </button>
-                        </li>
-                        <li>
-                            <button hx-swap="none"
-                                    hx-post="{% url "api:invoices:edit status" invoice_id=invoice.id status='paid' %}">
-                                <i class="fa-solid fa-circle-check"></i>
-                                Paid
-                            </button>
-                        </li>
-                        <li>
-                            <button hx-swap="none"
-                                    hx-post="{% url "api:invoices:edit status" invoice_id=invoice.id status='overdue' %}">
-                                <i class="fa-solid fa-exclamation-triangle"></i>
-                                Overdue
-                            </button>
-                        </li>
-                    </ul>
-                </div>
-                <button class="btn btn-secondary"
-                        hx-trigger="click once"
-                        hx-swap="beforeend"
-                        hx-target="#modal_container"
-                        _="on click call modal_invoices_edit_discount.showModal()"
-                        hx-get="{% url "api:base:modal retrieve with context" context_type="invoice" context_value=invoice.id modal_name="invoices_edit_discount" %}">
-                    <i class="fa fa-solid fa-pound-sign mr-2"></i>
-                    Edit Discount
-                </button>
+        <!-- Mark As Button -->
+        <div class="dropdown dropdown-right dropdown-hover grow flex">
+            <div class="btn btn-primary btn-outline grow" tabindex="0" role="button">
+                <i class="fa-solid fa-flag"></i>
+                Mark As
             </div>
+            <ul tabindex="0"
+                class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52 border border-base-300">
+                <li>
+                    <button hx-swap="none"
+                            hx-post="{% url "api:invoices:single:edit status" invoice_id=invoice.id status='draft' %}">
+                        <i class="fa-solid fa-note-sticky"></i>
+                        Draft
+                    </button>
+                </li>
+                <li>
+                    <button hx-swap="none"
+                            hx-post="{% url "api:invoices:single:edit status" invoice_id=invoice.id status='pending' %}">
+                        <i class="fa-solid fa-hourglass-half"></i>
+                        Pending
+                    </button>
+                </li>
+                <li>
+                    <button hx-swap="none"
+                            hx-post="{% url "api:invoices:single:edit status" invoice_id=invoice.id status='paid' %}">
+                        <i class="fa-solid fa-circle-check"></i>
+                        Paid
+                    </button>
+                </li>
+            </ul>
         </div>
+        <button class="btn btn-secondary btn-outline grow"
+                hx-trigger="click once"
+                hx-swap="beforeend"
+                hx-target="#modal_container"
+                _="on click call modal_invoices_edit_discount.showModal()"
+                hx-get="{% url "api:base:modal retrieve with context" context_type="invoice" context_value=invoice.id modal_name="invoices_edit_discount" %}">
+            <i class="fa fa-solid fa-pound-sign mr-2"></i>
+            Edit Discount
+        </button>
+        <a class="btn btn-outline grow" href="{{ clone_as_recurring_url }}">
+            <i class="fa fa-clone"></i>
+            Clone to Recurring Profile
+        </a>
     </div>
-    <div class="collapse collapse-arrow card bg-base-100 shadow-xl w-full p-6 flex-row gap-x-4 mt-4">
-        <input type="checkbox" checked />
-        <div class="collapse-title text-xl font-medium">Manage Invoice Content</div>
-        <div id="container" class="collapse-content"></div>
-    </div>
-{% endblock content %}
+</div>
+{#    <div class="collapse collapse-arrow card bg-base-100 shadow-xl w-full p-6 flex-row gap-x-4 mt-4">#}
+{#        <input type="checkbox" checked />#}
+{#        <div class="collapse-title text-xl font-medium">Manage Invoice Content</div>#}
+{#        <div id="container" class="collapse-content"></div>#}
+{#    </div>#}
+{% component "messages_list" %}

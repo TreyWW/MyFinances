@@ -75,6 +75,11 @@ site_description: Documentation for MyFinances
 site_author: treyww
 
 nav:
+  - User Guide:
+      - user-guide/index.md
+      - Pricing: user-guide/pricing/index.md
+      - Email Templates: user-guide/emails/templates/index.md
+      - Invoices: user-guide/invoices/index.md
   - Developer Guide:
       - getting-started/index.md
       - Installation: getting-started/installation.md
@@ -97,8 +102,6 @@ nav:
       #            - Private Media Files: getting-started/settings/AWS/private-media.md
       - Common issues / debugging:
           - Poetry: debugging/python/poetry.md
-  #  - User Guide:
-  #      - user-guide/index.md
   - Contributing:
       - contributing/index.md
       - Setup project: contributing/setup.md
@@ -122,3 +125,6 @@ extra:
   status:
     new: Recently added
     deprecated: Deprecated
+
+extra_javascript:
+  - 'js/extra.js'

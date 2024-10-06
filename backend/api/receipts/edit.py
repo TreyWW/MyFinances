@@ -6,11 +6,14 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.http import HttpRequest, JsonResponse, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods, require_POST
+
+from backend.decorators import web_require_scopes
 from backend.models import Receipt
 
 
 @require_http_methods(["POST"])
 @login_required
+@web_require_scopes("receipts:read", True, True)
 def edit_receipt(request, receipt_id):
     # Fetch the receipt object from the database
     try:

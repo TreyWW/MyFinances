@@ -1,0 +1,199 @@
+<div class="card bg-base-100 mb-2">
+    <div class="card-body">
+        <div class="card-title justify-between flex mb-6">
+            Current Subscription Plan: {{ active_subscription.subscription_plan.name | default_if_none:"Not subscribed" }}
+            <div class="justify-end">
+                <button class="btn btn-primary float-right"
+                        hx-get="{% url 'billing:stripe_customer_portal' %}?back=/dashboard/billing/"
+                >
+                    Manage on the stripe dashboard
+                </button>
+            </div>
+        </div>
+
+        <div class="space-y-8 lg:grid lg:grid-cols-3 sm:gap-6 xl:gap-10 lg:space-y-0">
+            <div class="flex flex-col p-6 mx-auto max-w-lg text-center rounded-lg border bg-base-300 shadow xl:p-8
+                            dark:border-gray-600  border-gray-100 ">
+                <h3 class="mb-4 text-2xl font-bold">Starter</h3>
+                <p class="font-light text-gray-500 sm:text-lg dark:text-gray-400">
+                    For individual freelancers or small businesses with less recurring customers
+                </p>
+                <div class="flex justify-center items-baseline my-8">
+                    <span class="mr-2 text-5xl font-extrabold">£5</span>
+                    <span class="text-gray-500 dark:text-gray-400">/month</span>
+                </div>
+                <ul role="list" class="mb-8 space-y-4 text-left">
+                    <li class="flex items-center space-x-3">
+                        <i class="fa fa-check text-success"></i>
+                        <span>Unlimited Customers</span>
+                    </li>
+                    <li class="flex items-center space-x-3">
+                        <i class="fa fa-check text-success"></i>
+                        <span class="tooltip tooltip-primary tooltip-bottom"
+                              data-tip="Terms and extra charges may apply, check below!"
+                        >
+                                Unlimited Invoices (first 10 on us!)<strong class="font-bold text-primary">*</strong>
+                            </span>
+                    </li>
+                    <li class="flex items-center space-x-3">
+                        <i class="fa fa-check text-success"></i>
+                        <span>Basic Customer Onboarding</span>
+                    </li>
+                    <li class="flex items-center space-x-3">
+                        <i class="fa fa-check text-success"></i>
+                        <span>Emailing (automated, normal & bulk)</span>
+                    </li>
+                    <li class="flex items-center space-x-3">
+                        <i class="fa fa-check text-success"></i>
+                        <span>File Storage (10 GB included!)</span>
+                    </li>
+                    <li class="flex items-center space-x-3">
+                        <i class="fa fa-check text-success"></i>
+                        <span class="tooltip tooltip-primary tooltip-right"
+                              data-tip="We charge for excess, but we don't limit you on ANY plan!"
+                        >
+                                No Limits <strong class="font-bold text-primary">*</strong>
+                            </span>
+                    </li>
+                </ul>
+                {% if active_subscription and active_subscription.subscription_plan.name|lower == "starter" %}
+                    <a href="#" class="btn btn-primary btn-outline btn-disabled">
+                        Your active plan
+                    </a>
+                {% else %}
+                    <button class="btn btn-primary loading-htmx"
+                            hx-post="{% url 'billing:change_plan' %}"
+                            hx-vals='{"plan_name": "Starter"}'
+                            hx-indicator="this"
+                    >
+                                <span class="loading-htmx-text">
+                                    Change to plan
+                                </span>
+                        <span class="loading loading-spinner loading-htmx-loader"></span>
+                    </button>
+                {% endif %}
+            </div>
+            <div class="flex flex-col p-6 mx-auto max-w-lg text-center rounded-lg border bg-base-300 shadow xl:p-8
+                            dark:border-gray-600  border-gray-100 ">
+                <h3 class="mb-4 text-2xl font-bold">Growth</h3>
+                <p class="font-light text-gray-500 sm:text-lg dark:text-gray-400">
+                    For small-medium sized businesses that require more features or have a wider customer base
+                </p>
+                <div class="flex justify-center items-baseline my-8">
+                    <span class="mr-2 text-5xl font-extrabold">£15</span>
+                    <span class="text-gray-500 dark:text-gray-400">/month</span>
+                </div>
+                <ul role="list" class="mb-8 space-y-4 text-left">
+                    <li class="font-semibold text-gray-500 dark:text-gray-400">
+                        Everything in Starter, plus:
+                    </li>
+                    <li class="flex items-center space-x-3">
+                        <i class="fa fa-check text-success"></i>
+                        <span>Automated Invoice Reminders</span>
+                    </li>
+                    <li class="flex items-center space-x-3">
+                        <i class="fa fa-check text-success"></i>
+                        <span>Advanced Customer Onboarding</span>
+                    </li>
+                    <li class="flex items-center space-x-3">
+                        <i class="fa fa-check text-success"></i>
+                        <span>API Access</span>
+                    </li>
+                    <li class="flex items-center space-x-3">
+                        <i class="fa fa-check text-success"></i>
+                        <span>File Storage (50 GB included!)</span>
+                    </li>
+                    <li class="flex items-center space-x-3">
+                        <i class="fa fa-check text-success"></i>
+                        <span class="tooltip tooltip-primary tooltip-right"
+                              data-tip="We charge for excess, but we don't limit you on ANY plan!"
+                        >
+                                No Limits <strong class="font-bold text-primary">*</strong>
+                            </span>
+                    </li>
+                </ul>
+                {% if active_subscription and active_subscription.subscription_plan.name|lower == "growth" %}
+                    <a href="#" class="btn btn-primary btn-outline btn-disabled">
+                        Your active plan
+                    </a>
+                {% else %}
+                    <button class="btn btn-primary loading-htmx"
+                            hx-post="{% url 'billing:change_plan' %}"
+                            hx-vals='{"plan_name": "Growth"}'
+                            hx-indicator="this"
+                    >
+                                <span class="loading-htmx-text">
+                                    Change to plan
+                                </span>
+                        <span class="loading loading-spinner loading-htmx-loader"></span>
+                    </button>
+                {% endif %}
+            </div>
+            <div class="flex flex-col p-6 mx-auto max-w-lg text-center rounded-lg border bg-base-300 shadow xl:p-8
+                            dark:border-gray-600  border-gray-100">
+                <h3 class="mb-4 text-2xl font-bold">Enterprise</h3>
+                <p class="font-light text-gray-500 sm:text-lg dark:text-gray-400">
+                    For large businesses or if your business needs a bit more
+                    <span class="text-secondary font-bold"><i>customisation</i></span>
+                </p>
+                <div class="flex justify-center items-baseline my-8">
+                        <span class="mr-2 text-5xl font-extrabold">
+                            <span class="font-black">Custom</span>
+                        </span>
+                </div>
+                <ul role="list" class="mb-8 space-y-4 text-left">
+                    <li class="flex items-center space-x-3">
+                        <i class="fa fa-check text-success"></i>
+                        <span>Choose a price that fits your business</span>
+                    </li>
+                    <li class="flex items-center space-x-3">
+                        <i class="fa fa-check text-success"></i>
+                        <span>
+                                Organization Mode
+                                <span class="tooltip tooltip-primary"
+                                      data-tip="Create additional accounts with specific permissions! (unlimited users)"
+                                >
+                                    <i class="fa fa-info-circle"></i>
+                                </span>
+                            </span>
+                    </li>
+                    <li class="flex items-center space-x-3">
+                        <i class="fa fa-check text-success"></i>
+                        <span>Dedicated Customer Success</span>
+                    </li>
+                    <li class="flex items-center space-x-3">
+                        <i class="fa fa-check text-success"></i>
+                        <span>SLA can be discussed</span>
+                    </li>
+                    <li class="flex items-center space-x-3">
+                        <i class="fa fa-check text-success"></i>
+                        <span>
+                                Analytics and live updates
+                                <span class="tooltip tooltip-primary"
+                                      data-tip="Get live updates + insights as customers open and read documents!"
+                                >
+                                    <i class="fa fa-info-circle"></i>
+                                </span>
+                            </span>
+                    </li>
+                    <li class="flex items-center space-x-3">
+                        <i class="fa fa-check text-success"></i>
+                        <span>Pre-release notifications</span>
+                    </li>
+                </ul>
+                <a href="mailto:Strelix%20Limited<enterprise@strelix.org>?subject=MyFinances Enterprise Plan"
+                   class="btn btn-primary">
+                    Contact Us
+                </a>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Starter Plan -->
+            {% include "pages/billing/dashboard/starter_usages.html" %}
+
+            <!-- Growth Plan -->
+            {% include "pages/billing/dashboard/growth_usages.html" %}
+        </div>
+    </div>
+</div>

@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html x-data="data()" lang="en" class="overflow-hidden" data-theme="light">
+    {% include 'base/_head.html' %}
+    <body>
+        <div class="navbar bg-base-100 p-4 z-50">
+            <div class="navbar-start">
+                <div class="grid justify-center sm:grid-cols-2 sm:items-center gap-4">
+                    <div class="flex items-center gap-x-3 md:gap-x-5">
+                        <a href="/">
+                            <img src="{% static 'img/logo_single.png' %}" class="h-10">
+                        </a>
+                        <div class="grow">
+                            <a class="md:text-xl font-bold text-base-content" href="/">My Finances</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="navbar-center">
+                <div class="text-start">
+                    <a class="" href="{% url 'pricing' %}">Pricing</a>
+                </div>
+            </div>
+            <div class="navbar-end">
+                <div class="text-center sm:text-left flex sm:justify-end sm:items-center gap-x-3 md:gap-x-4">
+                    {% if request.user.is_authenticated %}
+                        <a class="btn btn-primary rounded-full" href="{% url "dashboard" %}">Dashboard</a>
+                        <a class="btn btn-outline rounded-full" href="{% url 'auth:logout' %}">Logout</a>
+                    {% else %}
+                        <a class="link link-hover" href="{% url 'auth:login' %}">Login</a>
+                        <a class="btn btn-primary rounded-full"
+                           href="{% url 'auth:login create_account' %}">Get started</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="flex h-[calc(100vh-5rem)] w-full bg-base-100"
+             :class="{ 'overflow-hidden': isSideMenuOpen}">
+            <main class="h-full w-full overflow-y-auto pb-16 md:pb-0">
+                <div class="navbar-sticky">
+                    {% block content %}
+                    {% endblock content %}
+                </div>
+            </main>
+        </div>
+    </body>
+</html>

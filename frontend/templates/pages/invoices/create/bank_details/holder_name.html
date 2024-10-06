@@ -1,0 +1,16 @@
+<div class="input_card">
+    <div class="card-body">
+        <div class="form-control w-full">
+            <label class="label">Account Holder Name</label>
+            <input name="account_holder_name"
+                   value="{{ account_holder_name | default_if_none:'' }}"
+                   placeholder="Mr John Doe"
+                   type="text"
+                   maxlength="70"
+                   class="peer input-bordered input input-block">
+            <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden ">
+                <span class="label-text-alt text-error">Please enter a valid account holder name.</span>
+            </label>
+        </div>
+    </div>
+</div>

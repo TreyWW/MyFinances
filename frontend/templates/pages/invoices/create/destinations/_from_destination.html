@@ -1,0 +1,32 @@
+{% if not swapping %}
+    <button onclick="modal_invoices_from_destination.showModal();"
+            id="from_destination"
+            class="input_card text-left"
+            hx-trigger="click once"
+            hx-swap="beforeend"
+            hx-target="#modal_container"
+            hx-get="{% url 'api:base:modal retrieve with context' modal_name="invoices_from_destination" context_type='create_invoice_from' context_value='b' %}">
+    {% endif %}
+    <div class="card-body">
+        <p class="text-md">{{ from_name | default:"No name" }}</p>
+        <p class="text-sm">{{ from_company | default:"No company" }}</p>
+        <p class="text-sm">{{ from_address | default:"No address" }}</p>
+        <p class="text-sm">{{ from_city | default:"No city" }}</p>
+        <p class="text-sm">{{ from_county | default:"No county" }}</p>
+        <p class="text-sm">{{ from_country | default:"No country" }}</p>
+    </div>
+    <input type="hidden" name="from_name" value="{{ from_name | default:"" }}">
+    <input type="hidden"
+           name="from_company"
+           value="{{ from_company | default:"" }}">
+    <input type="hidden"
+           name="from_address"
+           value="{{ from_address | default:"" }}">
+    <input type="hidden" name="from_city" value="{{ from_city | default:"" }}">
+    <input type="hidden"
+           name="from_county"
+           value="{{ from_county | default:"" }}">
+    <input type="hidden"
+           name="from_country"
+           value="{{ from_country | default:"" }}">
+    {% if not swapping %}</button>{% endif %}

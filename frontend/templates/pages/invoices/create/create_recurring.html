@@ -1,0 +1,140 @@
+{% load static %}
+{% load markdownify %}
+<form method="post"
+      class="card bg-base-100 p-6 group"
+      enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="divider">
+        STEP 1 - DESTINATIONS <span class="required_star">*</span>
+    </div>
+    <div class="my-4 flex w-full flex-col">
+        <div class="mb-2 grid grid-cols-2">
+            <h3 class="text-sm text-natural font-semibold ms-3">From</h3>
+            <h3 class="text-sm text-natural font-semibold hidden lg:block text-end me-6">To</h3>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full"
+             id="to_and_from_container">
+            {% include 'pages/invoices/create/destinations/_from_destination.html' %}
+            {% include 'pages/invoices/create/destinations/_to_destination.html' %}
+        </div>
+    </div>
+    <div class="divider my-4">
+        STEP 2 - DATES <span class="required_star">*</span>
+    </div>
+    <div class="alert alert-warning my-2 inline-block hidden"
+         id="before_due_date_alert">
+        <i class="fa fa-warning"></i>
+        The due date is currently set <b>before</b> the issue date, meaning the invoice will instantly be marked as "overdue"
+    </div>
+    <div class="my-4 flex w-full flex-col">
+        <div class="w-full gap-4 grid grid-cols-1 lg:grid-cols-2">
+            {% include "pages/invoices/create/dates/start.html" %}
+            {% include "pages/invoices/create/dates/end.html" %}
+            {% include "pages/invoices/create/dates/frequency.html" %}
+        </div>
+    </div>
+    <div class="divider my-4">STEP 3 - SERVICES</div>
+    {% component_block "pages:invoices:create:services:services_table" %}
+{% endcomponent_block %}
+<div class="divider my-4">
+    STEP 4 - BANK DETAILS
+    <i class="text-neutral-content">[OPTIONAL]</i>
+</div>
+<div class="my-4 flex w-full flex-col">
+    <div class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-2 lg:gap-4">
+        {% include "pages/invoices/create/bank_details/holder_name.html" %}
+        {% include "pages/invoices/create/bank_details/account_number.html" %}
+        {% include "pages/invoices/create/bank_details/sort_code.html" %}
+    </div>
+</div>
+<div class="divider my-4">
+    STEP 5 - CUSTOM DESIGNS
+    <i class="text-neutral-content">[OPTIONAL]</i>
+</div>
+{% include "pages/invoices/create/custom_designs/logo.html" %}
+{#    <div class="divider my-4">STEP 5 - NOTES [OPTIONAL]</div>#}
+{#    {% include "pages/invoices/create/notes/notes.html" %}#}
+<div class="group-invalid:tooltip"
+     data-tip="Fill out all required details to save the invoice.">
+    <button class="btn btn-primary group-invalid:btn-disabled btn-block">Create Recurring Profile</button>
+</div>
+</form>
+<script>
+    function validate_sort_code(value) {
+        // Remove any non-numeric characters
+        value = value.replace(/\D/g, '');
+
+        // Ensure the value is no longer than 9 characters (123-123-123)
+        if (value.length > 6) {
+            value = value.slice(0, 6);
+        }
+
+        // Format the value as "12-34-56"
+        if (value.length >= 2) {
+            value = value.slice(0, 2) + "-" + value.slice(2);
+        }
+        if (value.length >= 5) {
+            value = value.slice(0, 5) + "-" + value.slice(5);
+        }
+
+        return value;
+    }
+
+    function validate_account_number(value) {
+        // Remove any non-numeric characters
+        value = value.replace(/\D/g, '');
+
+        // Ensure the value is no longer than 16 characters (1234-1234-1234-1234)
+        if (value.length > 8) {
+            value = value.slice(0, 8);
+        }
+
+        return value;
+    }
+
+    function checkDueDate() {
+        const alertElement = document.getElementById('before_due_date_alert');
+        const issueDateInput = document.getElementById('dateIssued');
+        const dueDateInput = document.getElementById('dueDate');
+
+        if (!alertElement || !issueDateInput || !dueDateInput) {
+            console.error('Required elements not found on the page.');
+            return;
+        }
+
+        const issueDateValue = new Date(issueDateInput.value);
+        const dueDateValue = new Date(dueDateInput.value);
+
+        if (dueDateValue < issueDateValue) {
+            alertElement.classList.remove('hidden');
+        } else {
+            alertElement.classList.add('hidden');
+        }
+    }
+
+    checkDueDate();
+
+    document.body.addEventListener('htmx:afterOnLoad.htmx', function () {
+        const serviceNameInput = document.getElementById("modal_input-service_name");
+        const serviceDescriptionInput = document.getElementById("modal_input-service_description");
+        const hoursInput = document.getElementById("modal_input-hours");
+        const pricePerHourInput = document.getElementById("modal_input-price_per_hour");
+
+        if (serviceNameInput) {
+            serviceNameInput.value = "";
+        }
+
+        if (serviceDescriptionInput) {
+            serviceDescriptionInput.value = "";
+        }
+
+        if (hoursInput) {
+            hoursInput.value = "";
+        }
+
+        if (pricePerHourInput) {
+            pricePerHourInput.value = "";
+        }
+    });
+</script>
+{% component "messages_list" %}

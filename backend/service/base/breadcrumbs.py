@@ -6,9 +6,12 @@ from django.urls.exceptions import NoReverseMatch
 
 ALL_ITEMS: dict[str, tuple[str, Optional[str], Optional[str], bool]] = {
     "dashboard": ("Dashboard", "dashboard", "house"),
-    "invoices:dashboard": ("Invoices", "invoices:dashboard", "file-invoice"),
-    "invoices:create": ("Create", "invoices:create"),
-    "invoices:edit": ("Edit", None, "pencil"),
+    "invoices:dashboard": ("Invoices", "invoices:single:dashboard", "file-invoice"),
+    "invoices:single:dashboard": ("Single", "invoices:single:dashboard", "file-invoice"),
+    "invoices:single:create": ("Create (single)", "invoices:single:create", None),
+    "invoices:recurring:dashboard": ("Recurring", "invoices:recurring:dashboard", "refresh"),
+    "invoices:recurring:create": ("Create (recurring)", "invoices:recurring:create", None),
+    "invoices:single:edit": ("Edit", None, "pencil"),
     "receipts dashboard": ("Receipts", "receipts dashboard", "file-invoice"),
     "teams:dashboard": ("Teams", "teams:dashboard", "users"),
     "settings:dashboard": ("Settings", "settings:dashboard", "gear"),
@@ -19,15 +22,18 @@ ALL_ITEMS: dict[str, tuple[str, Optional[str], Optional[str], bool]] = {
     "onboarding:form_builder:dashboard": ("Form Builder", "onboarding:form_builder:dashboard", "table"),
     "onboarding:form_builder:edit": ("Edit", "onboarding:form_builder:edit", "pencil", {"onboarding:form_builder:edit": "form_uuid"}),
     "onboarding:form_builder:create": ("Create", "onboarding:form_builder:create", "plus"),
+    "reports:dashboard": ("Monthly Reports", "reports:dashboard", "chart-line"),
 }
 
-ALL_BREADCRUMBS: dict[str, str | tuple[str]] = {
+ALL_BREADCRUMBS: dict[str, str | tuple] = {
     "dashboard": "dashboard",
     "teams:dashboard": ("dashboard", "teams:dashboard"),
     "receipts dashboard": ("dashboard", "receipts dashboard"),
-    "invoices:dashboard": ("dashboard", "invoices:dashboard"),
-    "invoices:create": ("dashboard", "invoices:dashboard", "invoices:create"),
-    "invoices:edit": ("dashboard", "invoices:dashboard", "invoices:edit"),
+    "invoices:single:dashboard": ("dashboard", "invoices:dashboard", "invoices:single:dashboard"),
+    "invoices:single:create": ("dashboard", "invoices:dashboard", "invoices:single:create"),
+    "invoices:recurring:dashboard": ("dashboard", "invoices:dashboard", "invoices:recurring:dashboard"),
+    "invoices:recurring:create": ("dashboard", "invoices:dashboard", "invoices:recurring:create"),
+    "invoices:single:edit": ("dashboard", "invoices:dashboard", "invoices:single:edit"),
     "clients:dashboard": ("dashboard", "clients:dashboard"),
     "clients:create": ("dashboard", "clients:dashboard", "clients:create"),
     "settings:dashboard": ("dashboard", "settings:dashboard"),
@@ -37,11 +43,11 @@ ALL_BREADCRUMBS: dict[str, str | tuple[str]] = {
     "onboarding:form_builder:dashboard": ("onboarding:dashboard", "onboarding:form_builder:dashboard"),
     "onboarding:form_builder:edit": ("onboarding:dashboard", "onboarding:form_builder:dashboard", "onboarding:form_builder:edit"),
     "onboarding:form_builder:create": ("onboarding:dashboard", "onboarding:form_builder", "onboarding:form_builder:create"),
+    "reports:dashboard": ("dashboard", "reports:dashboard"),
 }
 
 
 def get_item(name: str, url_name: Optional[str] = None, icon: Optional[str] = None, kwargs: dict = {}, *, request=None) -> dict:
-    print(kwargs)
     """
     Create a breadcrumb item dictionary.
 

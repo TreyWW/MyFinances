@@ -1,0 +1,126 @@
+{% load at_index from listfilters %}
+{% load day_to_number_monday month_to_number from strfilters %}
+<div class="input_card">
+    <div class="card-body">
+        <div class="form-control w-full">
+            <label class="label justify-start">
+                Frequency
+                <span class="required_star">*</span>
+            </label>
+            <select required name="frequency" class="peer select-bordered select">
+                {% for option in InvoiceRecurringProfile.Frequencies.choices %}
+                    <option value="{{ option.0 }}"
+                            {% if frequency|lower == option.0 %}selected{% endif %}>{{ option.1 }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+</div>
+<div class="input_card">
+    <div class="card-body">
+        <div class="form-control w-full">
+            <label class="label justify-start">
+                Day of week
+                <span class="required_star">*</span>
+            </label>
+            <select required
+                    name="frequency_day_of_week"
+                    class="peer select-bordered select">
+                {% for day in day_names_monday_first %}
+                    <option value="{{ day|day_to_number_monday }}"
+                            {% if day_of_week == day|day_to_number_monday %}selected{% endif %}>
+                        {{ day|title }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+</div>
+<div class="input_card ">
+    <div class="card-body">
+        <div class="form-control w-full">
+            <label class="label justify-start">
+                Day of month
+                <span class="required_star">*</span>
+            </label>
+            <input type="text"
+                   required
+                   name="frequency_day_of_month"
+                   class="peer input-bordered input"
+                   pattern="^-1|0|[1-9]|1[0-9]|2[0-8]$"
+                   value="{{ day_of_month | default_if_none:"" }}"
+                   minlength="1"
+                   maxlength="2"
+                   placeholder="15" />
+            <label class="label peer-[:not(:focus):invalid]:block hidden ">
+                <span class="label-text-alt text-error">Please enter a valid day of month</span>
+            </label>
+        </div>
+    </div>
+</div>
+<div class="input_card">
+    <div class="card-body">
+        <div class="form-control w-full">
+            <label class="label justify-start">
+                Month of year
+                <span class="required_star">*</span>
+            </label>
+            <select name="frequency_month_of_year" class="peer select-bordered select">
+                {% for month in calendar_util.month_name|slice:"1:" %}
+                    <option value="{{ month|month_to_number }}">{{ month|title }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    // Monthly = day_of_month
+    // Weekly = day_of_week
+    // Yearly = day_of_month + month_of_year
+
+    function handle_frequency() {
+        const inp_frequency_type = document.querySelector('select[name="frequency"]');
+
+        const inp_day_of_week = document.querySelector('select[name="frequency_day_of_week"]');
+        const inp_day_of_month = document.querySelector('input[name="frequency_day_of_month"]');
+        const inp_month_of_year = document.querySelector('select[name="frequency_month_of_year"]');
+
+        const container_day_of_week = inp_day_of_week.parentElement.parentElement.parentElement;
+        const container_day_of_month = inp_day_of_month.parentElement.parentElement.parentElement;
+        const container_month_of_year = inp_month_of_year.parentElement.parentElement.parentElement;
+
+        function updateFrequencyFields() {
+            const frequency = inp_frequency_type.value;
+
+            // Hide all fields
+            container_day_of_week.classList.add('!hidden');
+            container_day_of_month.classList.add('!hidden');
+            container_month_of_year.classList.add('!hidden');
+            inp_day_of_week.required = false;
+            inp_day_of_month.required = false;
+            inp_month_of_year.required = false;
+
+            // Show relevant fields based on frequency type
+            if (frequency === 'weekly') {
+                container_day_of_week.classList.remove('!hidden');
+                inp_day_of_week.required = true;
+            } else if (frequency === 'monthly') {
+                container_day_of_month.classList.remove('!hidden');
+                inp_day_of_month.required = true;
+            } else if (frequency === 'yearly') {
+                container_month_of_year.classList.remove('!hidden');
+                container_day_of_month.classList.remove('!hidden');
+                inp_day_of_month.required = true;
+                container_month_of_year.classList.remove('!hidden');
+                inp_month_of_year.required = true;
+            }
+        }
+
+        inp_frequency_type.addEventListener('change', updateFrequencyFields);
+
+        // Initial call to set correct fields on page load
+        updateFrequencyFields();
+    }
+
+    handle_frequency();
+</script>

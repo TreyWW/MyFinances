@@ -10,7 +10,7 @@ class InvoicesViewTestCase(ViewTestCase):
     def setUp(self):
         super().setUp()
 
-        self._invoices_dashboard_url = reverse("invoices:dashboard")
+        self._invoices_dashboard_url = reverse("invoices:single:dashboard")
 
     def test_invoices_view_302_for_non_authenticated_users(self):
         response = self.client.get(self._invoices_dashboard_url)
@@ -27,20 +27,20 @@ class InvoicesViewTestCase(ViewTestCase):
     def test_invoices_view_match_with_template(self):
         self.login_user()
         response = self.client.get(self._invoices_dashboard_url)
-        self.assertTemplateUsed(response, "pages/invoices/dashboard/dashboard.html")
+        self.assertTemplateUsed(response, "pages/invoices/single/dashboard/dashboard.html")
 
     def test_invoices_view_matches_with_urls_view(self):
         func = resolve("/dashboard/invoices/").func
         func_name = f"{func.__module__}.{func.__name__}"
-        self.assertEqual("/dashboard/invoices/", self._invoices_dashboard_url)
-        self.assertEqual("backend.views.core.invoices.dashboard.invoices_dashboard", func_name)
+        self.assertEqual("/dashboard/invoices/single/", self._invoices_dashboard_url)
+        self.assertEqual("backend.views.core.invoices.single.dashboard.invoices_single_dashboard_endpoint", func_name)
 
 
 class InvoicesCreateTestCase(ViewTestCase):
     def setUp(self):
         super().setUp()
 
-        self._invoices_create_url = reverse("invoices:create")
+        self._invoices_create_url = reverse("invoices:single:create")
         self.data = {
             "service_name[]": ["Service 1", "Service 2"],
             "hours[]": [2, 3],
@@ -49,6 +49,7 @@ class InvoicesCreateTestCase(ViewTestCase):
             "date_issued": "2021-12-01",
             "to_name": "Client Name",
             "to_company": "Client Company",
+            "to_email": "Client Email",
             "to_address": "Client Address",
             "to_city": "Client City",
             "to_county": "Client County",
@@ -83,13 +84,13 @@ class InvoicesCreateTestCase(ViewTestCase):
     def test_invoices_create_match_with_template(self):
         self.login_user()
         response = self.client.get(self._invoices_create_url)
-        self.assertTemplateUsed(response, "pages/invoices/create/create.html")
+        self.assertTemplateUsed(response, "pages/invoices/create/create_single.html")
 
     def test_invoices_create_matches_with_urls_view(self):
-        func = resolve("/dashboard/invoices/create/").func
+        func = resolve("/dashboard/invoices/single/create/").func
         func_name = f"{func.__module__}.{func.__name__}"
-        self.assertEqual("/dashboard/invoices/create/", self._invoices_create_url)
-        self.assertEqual("backend.views.core.invoices.create.create_invoice_page", func_name)
+        self.assertEqual("/dashboard/invoices/single/create/", self._invoices_create_url)
+        self.assertEqual("backend.views.core.invoices.single.create.create_single_invoice_endpoint_handler", func_name)
 
     def test_invoices_create_invoice_from_post_data(self):
         self.login_user()
