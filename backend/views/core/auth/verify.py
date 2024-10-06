@@ -19,11 +19,11 @@ def create_account_verify(request, uuid, token):
 
     if not object:
         messages.error(request, "Invalid URL")  # Todo: add some way a user can resend code?
-        return redirect("auth:create_account")
+        return redirect("auth:login create_account")
 
-    if object.expiry < timezone.now():
+    if not object.is_active():
         messages.error(request, "This code has already expired")  # Todo: add some way a user can resend code?
-        return redirect("auth:create_account")
+        return redirect("auth:login create_account")
 
     if not object.user.awaiting_email_verification:
         messages.error(request, "Your email has already been verified. You can login.")
@@ -31,7 +31,7 @@ def create_account_verify(request, uuid, token):
 
     if not check_password(token, object.token):
         messages.error(request, "This verification token is invalid.")
-        return redirect("auth:create_account")
+        return redirect("auth:login create_account")
 
     user = object.user
     user.is_active = True
@@ -69,7 +69,7 @@ def resend_verification_code(request):
         user = User.objects.get(email=email)
     except User.DoesNotExist:
         messages.error(request, "Invalid resend verification request")
-        return redirect("auth:create_account")
+        return redirect("auth:login create_account")
     VerificationCodes.objects.filter(user=user, service="create_account").delete()
     magic_link = create_magic_link(user, "create_account")
     magic_link_url = settings.SITE_URL + reverse("auth:login create_account verify", kwargs={"uuid": magic_link.uuid, "token": token_plain})

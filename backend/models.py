@@ -159,11 +159,14 @@ class ExpiresBase(models.Model):
             return self.expires - timezone.now()
         return None
 
+    def is_active(self):
+        return self.active
+
     class Meta:
         abstract = True
 
 
-class VerificationCodes(models.Model):
+class VerificationCodes(ExpiresBase):
     class ServiceTypes(models.TextChoices):
         CREATE_ACCOUNT = "create_account", "Create Account"
         RESET_PASSWORD = "reset_password", "Reset Password"
@@ -173,17 +176,10 @@ class VerificationCodes(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
-    expiry = models.DateTimeField(default=add_3hrs_from_now)
     service = models.CharField(max_length=14, choices=ServiceTypes.choices)
 
     def __str__(self):
         return self.user.username
-
-    def is_expired(self):
-        if timezone.now() > self.expiry:
-            self.delete()
-            return True
-        return False
 
     def hash_token(self):
         self.token = make_password(self.token)

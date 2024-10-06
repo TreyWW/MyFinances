@@ -8,7 +8,7 @@ from settings.settings import AWS_TAGS_APP_NAME
 
 config = Config(connect_timeout=5, retries={"max_attempts": 2})
 
-DEBUG_LEVEL = get_var("AWS_PRINT_DEBUG_LEVEL", default="debug")
+DEBUG_LEVEL = get_var("AWS_PRINT_DEBUG_LEVEL", default="info")
 DEBUG_LEVEL = "debug" if DEBUG_LEVEL == "debug" else "info" if DEBUG_LEVEL == "info" else None
 
 if get_var("LOG_LEVEL", default="info") == "debug":

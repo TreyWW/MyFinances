@@ -76,27 +76,25 @@ def send_welcome_email(sender, instance: User, created, **kwargs):
         email_message = f"""
             Welcome to MyFinances{f", {instance.first_name}" if instance.first_name else ""}!
 
-            We're happy to have you join us. We are still in development and are still working on the core mechanics.
-            If you find any bugs with our software, create a bug report on our
-            Github Issues (https://github.com/TreyWW/MyFinances/issues/new?assignees=&labels=bug&projects=&template=bug-report.md&title=%5BBUG%5D+)
-            and we'll try to help debug the issue or squash the bug.
+            We're happy to have you join us. We are still in development and working on the core features.
 
-            Thank you for using MyFinances.
+            In app we have a live chat, so please drop us a message or email support@myfinances.cloud if you have any queries.
+
+            Thank you for using MyFinances!
         """
-        if ARE_EMAILS_ENABLED:
-            magic_link = VerificationCodes.objects.create(user=instance, service="create_account")
-            token_plain = magic_link.token
-            magic_link.hash_token()
-            magic_link_url = settings.settings.SITE_URL + reverse(
-                "auth:login create_account verify", kwargs={"uuid": magic_link.uuid, "token": token_plain}
-            )
-            email_message += f"""
-                To start with, you must first **verify this email** so that we can link your account to this email.
-                Click the link below to activate your account, no details are required, once pressed you're all set!
+        magic_link = VerificationCodes.objects.create(user=instance, service="create_account")
+        token_plain = magic_link.token
+        magic_link.hash_token()
+        magic_link_url = settings.settings.SITE_URL + reverse(
+            "auth:login create_account verify", kwargs={"uuid": magic_link.uuid, "token": token_plain}
+        )
+        email_message += f"""
+            To start with, you must first **verify this email** so that we can link your account to this email.
+            Click the link below to activate your account, no details are required, once pressed you're all set!
 
-                Verify Link: {magic_link_url}
-            """
+            Verify Link: {magic_link_url}
+        """
 
-            email = send_email(destination=instance.email, subject="Welcome to MyFinances", content=email_message)
+        email = send_email(destination=instance.email, subject="Welcome to MyFinances", content=email_message)
 
         #     User.send_welcome_email(instance)

@@ -236,7 +236,7 @@ def is_magiclink_valid(magic_link: VerificationCodes | None, token: str) -> tupl
     if not magic_link:
         return False, "Invalid magic link"
 
-    if magic_link.is_expired():
+    if not magic_link.is_active():
         return False, "This link has expired"
 
     if not check_password(token, magic_link.token):
