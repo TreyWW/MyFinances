@@ -110,7 +110,8 @@ def send_email(
     )
 
     if get_var("DEBUG", "").lower() == "true":
-        print(data)
+        if not "test" in sys.argv[1:]:
+            print(data)
         return SingleEmailSendServiceResponse(
             True,
             response=SendEmailResponseTypeDef(

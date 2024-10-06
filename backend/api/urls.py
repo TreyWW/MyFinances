@@ -13,7 +13,6 @@ urlpatterns = [
     path("file_storage/", include("backend.api.file_storage.urls")),
     path("products/", include("backend.api.products.urls")),
     path("onboarding/", include("backend.api.onboarding.urls")),
-    path("currency_converter/", include("backend.api.currency_converter.urls")),
     path("quotas/", include("backend.api.quotas.urls")),
     path("emails/", include("backend.api.emails.urls")),
     path("reports/", include("backend.api.reports.urls")),
