@@ -1,7 +1,19 @@
-<div class="card bg-base-100 mb-2">
+<div class="card bg-base-100 mb-2" data-hx-swap="all_subscriptions">
     <div class="card-body">
         <div class="card-title mb-6 flex justify-between">
             All Subscriptions
+            <button class="btn btn-square btn-outline btn-sm loading-htmx"
+                    hx-get="{% url 'billing:all_subscriptions' %}"
+                    hx-swap="outerHTML"
+                    hx-disabled-elt="this"
+                    hx-indicator="this"
+                    hx-target='div[data-hx-swap="all_subscriptions"]'>
+                <span class="loading-htmx-text">
+                    <i class="fa fa-solid fa-refresh"></i>
+                </span>
+                <span id="currency_save_loading"
+                      class="loading loading-spinner loading-htmx-loader"></span>
+            </button>
         </div>
         <table class="table table-striped">
             <thead>
