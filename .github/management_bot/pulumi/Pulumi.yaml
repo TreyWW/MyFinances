@@ -1,0 +1,12 @@
+name: myfinances
+main: .
+stackConfigDir: .
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: MyFinances Management Bot infrastructure
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: aws-python
