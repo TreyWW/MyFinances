@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import render
 
+from backend.models import Organization
 from backend.core.types.htmx import HtmxHttpRequest
 
 

@@ -5,7 +5,7 @@ from rest_framework.response import Response
 
 from backend.core.api.public.decorators import require_scopes
 from backend.core.api.public.types import APIRequest
-from backend.finance.models import Invoice, QuotaLimit
+from backend.models import Invoice, QuotaLimit
 
 
 @api_view(["DELETE"])
