@@ -4,12 +4,12 @@
 <div class="card p-6 shadow-xl bg-base-100 mb-4">
     <div class=" text-3xl w-full grid grid-cols-4">
         <div hx-boost="true">
-            <a href="{% url "invoices:single:dashboard" %}"
+            <a href="{% url "finance:invoices:single:dashboard" %}"
                class="btn btn-sm btn-outline btn-secondary me-3 float-left">Back to list</a>
         </div>
         <h1 class="text-center col-span-2">Invoice #{{ invoice.id }}</h1>
         <div>
-            <button hx-delete="{% url 'api:invoices:single:delete' %}"
+            <button hx-delete="{% url 'api:finance:invoices:single:delete' %}"
                     hx-swap="none"
                     hx-confirm="Are you sure you would like to delete invoice #{{ invoice.id }}?"
                     hx-vals='{"invoice": "{{ invoice.id }}", "redirect": "/dashboard/invoices/"}'
@@ -25,19 +25,19 @@
         <a class="btn btn-md btn-outline btn-default grow loading-htmx"
            target="_blank"
            rel="noopener noreferrer"
-           href="{% url 'invoices:single:preview' invoice_id=invoice.id %}">
+           href="{% url 'finance:invoices:single:preview' invoice_id=invoice.id %}">
             <span class="loading-htmx-text">
                 <i class="fa-solid fa-up-right-from-square"></i>
                 Preview Invoice
             </span>
             <span class="loading loading-spinner loading-htmx-loader"></span>
         </a>
-        <a href="{% url "invoices:single:edit" invoice_id=invoice.id %}"
+        <a href="{% url "finance:invoices:single:edit" invoice_id=invoice.id %}"
            class="btn btn-md btn-outline btn-default grow">
             <i class="fa-solid fa-edit"></i>
             Edit Invoice
         </a>
-        <a href="{% url "invoices:single:manage_access" invoice_id=invoice.id %}"
+        <a href="{% url "finance:invoices:single:manage_access" invoice_id=invoice.id %}"
            class="btn btn-md btn-outline btn-default grow">
             <i class="fa-solid fa-share-nodes"></i>
             Send Invoice
@@ -63,21 +63,21 @@
                 class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52 border border-base-300">
                 <li>
                     <button hx-swap="none"
-                            hx-post="{% url "api:invoices:single:edit status" invoice_id=invoice.id status='draft' %}">
+                            hx-post="{% url "api:finance:invoices:single:edit status" invoice_id=invoice.id status='draft' %}">
                         <i class="fa-solid fa-note-sticky"></i>
                         Draft
                     </button>
                 </li>
                 <li>
                     <button hx-swap="none"
-                            hx-post="{% url "api:invoices:single:edit status" invoice_id=invoice.id status='pending' %}">
+                            hx-post="{% url "api:finance:invoices:single:edit status" invoice_id=invoice.id status='pending' %}">
                         <i class="fa-solid fa-hourglass-half"></i>
                         Pending
                     </button>
                 </li>
                 <li>
                     <button hx-swap="none"
-                            hx-post="{% url "api:invoices:single:edit status" invoice_id=invoice.id status='paid' %}">
+                            hx-post="{% url "api:finance:invoices:single:edit status" invoice_id=invoice.id status='paid' %}">
                         <i class="fa-solid fa-circle-check"></i>
                         Paid
                     </button>

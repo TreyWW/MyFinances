@@ -2,7 +2,7 @@ from uuid import uuid4
 
 from django.db import models
 
-from backend.models import OwnerBase
+from backend.core.models import OwnerBase
 
 from django.utils import timezone
 

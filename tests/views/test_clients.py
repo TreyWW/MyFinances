@@ -24,7 +24,7 @@ class ClientsViewTestCase(ViewTestCase):
         func = resolve("/dashboard/clients/").func
         func_name = f"{func.__module__}.{func.__name__}"
         self.assertEqual("/dashboard/clients/", reverse("clients:dashboard"))
-        self.assertEqual("backend.views.core.clients.dashboard.clients_dashboard_endpoint", func_name)
+        self.assertEqual("backend.clients.views.dashboard.clients_dashboard_endpoint", func_name)
 
     def test_clients_view_doesnt_create_invalid_client_no_first_name(self):
         self.login_user()

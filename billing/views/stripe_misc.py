@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse, resolve, NoReverseMatch
 
 from backend.decorators import web_require_scopes
-from backend.types.requests import WebRequest
+from backend.core.types.requests import WebRequest
 
 from billing.service.stripe_customer import get_or_create_customer_id
 

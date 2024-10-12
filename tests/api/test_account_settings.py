@@ -10,7 +10,7 @@ class CurrencyAPIChange(ViewTestCase):
         super().setUp()
         self.url_path = "/api/settings/account_preferences/"
         self.url_name = "api:settings:account_preferences"
-        self.view_function_path = "backend.api.settings.preferences.update_account_preferences"
+        self.view_function_path = "backend.core.api.settings.preferences.update_account_preferences"
 
     # Test that the URL resolves to the correct view function
     def test_url_matches_api(self):

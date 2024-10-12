@@ -11,10 +11,10 @@
             hx-target='div[data-hx-swap="content"]'
             hx-swap="innerHTML"
             hx-vals='{"invoice_structure_main": "True"}'
-            hx-push-url="{% url "invoices:recurring:overview" invoice_profile_id=invoiceProfile.id %}"
-            hx-get="{% url "invoices:recurring:overview" invoice_profile_id=invoiceProfile.id %}">
+            hx-push-url="{% url "finance:invoices:recurring:overview" invoice_profile_id=invoiceProfile.id %}"
+            hx-get="{% url "finance:invoices:recurring:overview" invoice_profile_id=invoiceProfile.id %}">
             <td class="link link-primary no-underline">
-                <a href="{% url "invoices:recurring:overview" invoice_profile_id=invoiceProfile.id %}">{{ invoiceProfile.id }}</a>
+                <a href="{% url "finance:invoices:recurring:overview" invoice_profile_id=invoiceProfile.id %}">{{ invoiceProfile.id }}</a>
             </td>
             <td>{{ invoiceProfile.end_date | date:"d/m/Y" | default:"never" }}</td>
             {% with cli_name=invoiceProfile.client_to.name|default:invoiceProfile.client_name %}
@@ -49,31 +49,31 @@
                     <ul tabindex="0"
                         class="dropdown-content z-[1] menu wp-2 shadow-2xl bg-base-200 border border-base-300 rounded-box w-52">
                         <li hx-boost="true">
-                            <a href="{% url "invoices:recurring:overview" invoice_profile_id=invoiceProfile.id %}">
+                            <a href="{% url "finance:invoices:recurring:overview" invoice_profile_id=invoiceProfile.id %}">
                                 <i class="fa-solid fa-eye"></i>
                                 Overview
                             </a>
                         </li>
                         {#                    <li>#}
-                        {#                        <a href="{% url "invoices:single:preview" invoice_id=invoiceProfile.id %}">#}
+                        {#                        <a href="{% url "finance:invoices:single:preview" invoice_id=invoiceProfile.id %}">#}
                         {#                            <i class="fa-solid fa-file-pdf"></i>#}
                         {#                            Preview#}
                         {#                        </a>#}
                         {#                    </li>#}
                         {#                    <li>#}
-                        {#                        <a href="{% url "invoices:single:manage_access" invoice_id=invoiceProfile.id %}">#}
+                        {#                        <a href="{% url "finance:invoices:single:manage_access" invoice_id=invoiceProfile.id %}">#}
                         {#                            <i class="fa-solid fa-key"></i>#}
                         {#                            Manage Access#}
                         {#                        </a>#}
                         {#                    </li>#}
                         <li>
-                            <a href="{% url "invoices:recurring:edit" invoice_profile_id=invoiceProfile.id %}">
+                            <a href="{% url "finance:invoices:recurring:edit" invoice_profile_id=invoiceProfile.id %}">
                                 <i class="fa-solid fa-pencil"></i>
                                 Edit
                             </a>
                         </li>
                         <li>
-                            <button hx-delete="{% url 'api:invoices:recurring:delete' %}"
+                            <button hx-delete="{% url 'api:finance:invoices:recurring:delete' %}"
                                     hx-target="closest tr"
                                     hx-confirm="Are you sure you would like to delete invoice recurring profile #{{ invoiceProfile.id }}?"
                                     hx-vals='{"invoice_profile": "{{ invoiceProfile.id }}" }'>
@@ -97,7 +97,7 @@
                                 hx-swap="outerHTML"
                                 hx-target="#table_body"
                                 hx-indicator=""
-                                hx-get="{% url "api:invoices:recurring:fetch" %}?page={{ page.previous_page_number }}">
+                                hx-get="{% url "api:finance:invoices:recurring:fetch" %}?page={{ page.previous_page_number }}">
                             «
                         </button>
                     {% else %}
@@ -111,7 +111,7 @@
                                 hx-swap="outerHTML"
                                 hx-target="#table_body"
                                 hx-indicator=""
-                                hx-get="{% url "api:invoices:recurring:fetch" %}?page={{ page.next_page_number }}">
+                                hx-get="{% url "api:finance:invoices:recurring:fetch" %}?page={{ page.next_page_number }}">
                             »
                         </button>
                     {% else %}

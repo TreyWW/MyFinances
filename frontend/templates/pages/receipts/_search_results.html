@@ -24,19 +24,19 @@
                             <div class="divider -mt-2 -mb-1"></div>
                             <li data-filter-by="20+">
                                 <button class="dropdown-item text-sm border-none"
-                                        hx-get="{% url "api:receipts:fetch" %}"
+                                        hx-get="{% url "api:finance:receipts:fetch" %}"
                                         name="filter"
                                         value="20">20+</button>
                             </li>
                             <li data-filter-by="50+">
                                 <button class="dropdown-item text-sm border-none"
-                                        hx-get="{% url "api:receipts:fetch" %}"
+                                        hx-get="{% url "api:finance:receipts:fetch" %}"
                                         name="filter"
                                         value="50">50+</button>
                             </li>
                             <li data-filter-by="100+">
                                 <button class="dropdown-item text-sm border-none"
-                                        hx-get="{% url "api:receipts:fetch" %}"
+                                        hx-get="{% url "api:finance:receipts:fetch" %}"
                                         name="filter"
                                         value="100">100+</button>
                             </li>
@@ -80,12 +80,12 @@
                             <button type="button"
                                     class="btn btn-outline btn-success btn-sm tooltip"
                                     data-tip="Download Receipt"
-                                    onclick="download_file('{% url 'api:receipts:generate_download_link' receipt_id=row.id %}')">
+                                    onclick="download_file('{% url 'api:finance:receipts:generate_download_link' receipt_id=row.id %}')">
                                 <i class="fa fa-download"></i>
                             </button>
                             <button class="btn btn-error btn-sm tooltip"
                                     data-tip="Delete receipt"
-                                    hx-delete="{% url 'api:receipts:delete' id=row.id %}"
+                                    hx-delete="{% url 'api:finance:receipts:delete' id=row.id %}"
                                     hx-target="#items"
                                     hx-confirm="Are you sure you would like to delete the receipt?">
                                 <i class="fa fa-trash"></i>
@@ -115,7 +115,7 @@
                         <div class="flex gap-3">
                             <button type="button"
                                     class="btn btn-primary"
-                                    onclick="download_file('{% url 'api:receipts:generate_download_link' receipt_id=row.id %}')">
+                                    onclick="download_file('{% url 'api:finance:receipts:generate_download_link' receipt_id=row.id %}')">
                                 Download
                             </button>
                             <button class="btn" onclick="modal_receipt_{{ row.id }}.close();">Cancel</button>

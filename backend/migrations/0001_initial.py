@@ -114,7 +114,7 @@ class Migration(migrations.Migration):
                 "abstract": False,
             },
             managers=[
-                ("objects", backend.models.CustomUserManager()),
+                ("objects", backend.core.models.CustomUserManager()),
             ],
         ),
         migrations.CreateModel(

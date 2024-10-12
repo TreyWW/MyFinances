@@ -4,10 +4,9 @@ from django.contrib.auth import get_user
 from django.db import connection, OperationalError
 from django.http import HttpResponse
 
-from backend.models import User, Organization
-from backend.types.htmx import HtmxAnyHttpRequest
-from backend.types.requests import WebRequest
-import re
+from backend.models import User
+from backend.core.types.htmx import HtmxAnyHttpRequest
+from backend.core.types.requests import WebRequest
 
 
 class HealthCheckMiddleware:

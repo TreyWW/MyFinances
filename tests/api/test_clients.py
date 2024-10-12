@@ -12,7 +12,7 @@ class ClientsAPIFetch(ViewTestCase):
         super().setUp()
         self.url_path = "/api/clients/fetch/"
         self.url_name = "api:clients:fetch"
-        self.view_function_path = "backend.api.clients.fetch.fetch_all_clients"
+        self.view_function_path = "backend.clients.api.fetch.fetch_all_clients"
 
     def test_clients_view_302_for_all_normal_get_requests(self):
         # Ensure that non-HTMX GET requests are redirected to the login page
@@ -118,7 +118,7 @@ class ClientAPIDelete(ViewTestCase):
         self.id = 1
         self.url_path = f"/api/clients/delete/{self.id}/"
         self.url_name = "api:clients:delete"
-        self.view_function_path = "backend.api.clients.delete.client_delete"
+        self.view_function_path = "backend.core.api.clients.delete.client_delete"
 
     def test_client_delete_view_matches_with_urls_view(self):
         self.assertEqual(reverse(self.url_name, args=[self.id]), self.url_path)

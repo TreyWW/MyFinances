@@ -1,14 +1,10 @@
-import os
-
-import stripe
 from django.contrib import messages
-from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import redirect, render
-from django.urls import reverse, resolve
+from django.urls import resolve
 
-from backend.types.requests import WebRequest
+from backend.core.types.requests import WebRequest
 from billing.billing_settings import NO_SUBSCRIPTION_PLAN_DENY_VIEW_NAMES
-from billing.models import UserSubscription, SubscriptionPlan
+from billing.models import UserSubscription
 
 
 # middleware to check if user is subscribed to a plan yet

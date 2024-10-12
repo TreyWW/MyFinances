@@ -1,6 +1,6 @@
 from django.urls import reverse, resolve
 
-from backend.views.core.auth.login import logout_view
+from backend.core.views.auth.login import logout_view
 from tests.handler import ViewTestCase
 
 

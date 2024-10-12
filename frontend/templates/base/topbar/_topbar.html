@@ -65,7 +65,7 @@
             {% if feature_enabled_invoices %}
                 <div class="divider divider-horizontal mx-1"></div>
                 <li>
-                <a href="{% url "invoices:single:dashboard" %}"
+                <a href="{% url "finance:invoices:single:dashboard" %}"
                    hx-boost="true"
                    hx-swap="innerHTML show:no-scroll"><i class="fa fa-file-invoice"></i>
                 Invoices
@@ -74,7 +74,7 @@
     {% endif %}
     <div class="divider divider-horizontal mx-1"></div>
     <li>
-        <a href="{% url "clients:dashboard" %}"
+        <a href="{% url 'clients:dashboard' %}"
            hx-boost="true"
            hx-swap="innerHTML show:no-scroll"><i class="fa fa-user"></i> Clients
         </a>

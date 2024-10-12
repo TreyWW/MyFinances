@@ -10,8 +10,8 @@ class ReceiptsAPIFetch(ViewTestCase):
     def setUp(self):
         super().setUp()
         self.url_path = "/api/receipts/fetch/"
-        self.url_name = "api:receipts:fetch"
-        self.view_function_path = "backend.api.receipts.fetch.fetch_all_receipts"
+        self.url_name = "api:finance:receipts:fetch"
+        self.view_function_path = "backend.finance.api.receipts.fetch.fetch_all_receipts"
 
     def test_302_for_all_normal_get_requests(self):
         # Ensure that non-HTMX GET requests are redirected to the login page

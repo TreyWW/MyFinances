@@ -2,11 +2,11 @@ import logging
 from datetime import datetime
 
 import stripe
-from django.db.models.signals import pre_delete, post_save
+from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.utils.timezone import make_aware
 
-from backend.models import Invoice, User
+from backend.finance.models import Invoice
+from backend.core.models import User
 from billing.models import BillingUsage
 
 logger = logging.getLogger(__name__)

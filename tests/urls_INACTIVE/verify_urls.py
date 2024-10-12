@@ -4,7 +4,7 @@ import os
 from django.test import TestCase
 from django.urls import reverse
 
-from backend.models import *
+from backend.models import User
 
 
 class UrlTestCase(TestCase):

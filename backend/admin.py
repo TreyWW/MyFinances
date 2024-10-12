@@ -1,13 +1,8 @@
-from typing import Iterable, Any
-
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from backend.models import (
-    Client,
-    Invoice,
-    InvoiceURL,
-    InvoiceItem,
+from backend.core.api.public import APIAuthToken
+from backend.core.models import (
     PasswordSecret,
     AuditLog,
     LoginLog,
@@ -19,23 +14,30 @@ from backend.models import (
     TeamInvitation,
     TeamMemberPermission,
     User,
-    InvoiceProduct,
     FeatureFlags,
     VerificationCodes,
     QuotaLimit,
     QuotaOverrides,
     QuotaUsage,
     QuotaIncreaseRequest,
-    Receipt,
-    ReceiptDownloadToken,
     EmailSendStatus,
-    InvoiceReminder,
-    InvoiceRecurringProfile,
     FileStorageFile,
     MultiFileUpload,
 )
 
-from backend.api.public.models import APIAuthToken
+from backend.finance.models import (
+    Invoice,
+    InvoiceURL,
+    InvoiceItem,
+    InvoiceReminder,
+    InvoiceRecurringProfile,
+    InvoiceProduct,
+    Receipt,
+    ReceiptDownloadToken,
+)
+
+from backend.clients.models import Client
+
 from settings.settings import BILLING_ENABLED
 
 # from django.contrib.auth.models imp/ort User

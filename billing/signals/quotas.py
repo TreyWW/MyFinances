@@ -1,7 +1,7 @@
 # from django.db.models.signals import post_save
 # from django.dispatch import receiver
 #
-# from backend.models import Invoice, Usage
+# from backend.finance.models import Invoice, Usage
 #
 #
 # @receiver(post_save, sender=Invoice)

@@ -23,13 +23,13 @@
   "settings:change_password": [
     302
   ],
-  "invoices:single:dashboard": [
+  "finance:invoices:single:dashboard": [
     302
   ],
   "receipts dashboard": [
     302
   ],
-  "api:receipts:new": [
+  "api:finance:receipts:new": [
     405
   ]
 }

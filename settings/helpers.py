@@ -15,7 +15,7 @@ from mypy_boto3_sesv2.type_defs import (
     SendBulkEmailResponseTypeDef,
 )
 
-from backend.types.emails import (
+from backend.core.types.emails import (
     SingleEmailInput,
     BulkTemplatedEmailInput,
     SingleTemplatedEmailContent,
@@ -110,7 +110,8 @@ def send_email(
     )
 
     if get_var("DEBUG", "").lower() == "true":
-        print(data)
+        if not "test" in sys.argv[1:]:
+            print(data)
         return SingleEmailSendServiceResponse(
             True,
             response=SendEmailResponseTypeDef(

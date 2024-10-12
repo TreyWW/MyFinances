@@ -44,7 +44,7 @@
                     hx-trigger="click"
                     hx-indicator="#refresh_btn"
                     hx-target="#table_body"
-                    hx-get="{% url 'api:invoices:single:fetch' %}">
+                    hx-get="{% url 'api:finance:invoices:single:fetch' %}">
                 <span class="loading-htmx-text">
                     <i class="fa-refresh fa"></i>
                 </span>
@@ -53,7 +53,7 @@
         </div>
         <h2 class="text-xl" data-oob="invoices-title">Invoices</h2>
         <a class="btn btn-primary btn-sm"
-           href="{% url 'invoices:single:create' %}"
+           href="{% url 'finance:invoices:single:create' %}"
            hx-boost="true">
             <i class="fa-solid fa-file-invoice"></i>
             Create Invoice
@@ -68,7 +68,7 @@
                hx-trigger="load,single_invoices_refresh"
                hx-target="#table_body"
                hx-indicator="#refresh_btn"
-               hx-get="{% url 'api:invoices:single:fetch' %}">
+               hx-get="{% url 'api:finance:invoices:single:fetch' %}">
             <thead>
                 <tr>
                     <th mft-col-name="invoice-id" mft-filter-type="searchable-amount">Invoice ID</th>

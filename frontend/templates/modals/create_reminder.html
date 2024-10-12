@@ -2,7 +2,7 @@
 {% fill "content" %}
 <form class="py-4"
       id="modal_create_reminder-form"
-      hx-post="{% comment %}{% url 'api:invoices:single:reminders:create' %}{% endcomment %}"
+      hx-post="{% comment %}{% url 'api:finance:invoices:single:reminders:create' %}{% endcomment %}"
       hx-include='input[name="invoice_id"]'
       hx-target='tbody[data-hx-swap="reminders"]'
       hx-swap="beforeend">

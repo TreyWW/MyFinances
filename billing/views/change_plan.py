@@ -4,14 +4,12 @@ import stripe
 from django.contrib import messages
 from django.db.models import QuerySet
 from django.http import HttpResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import render
 from django.urls import reverse
 
-from backend.api.public.decorators import require_scopes
 from backend.decorators import htmx_only, web_require_scopes
-from backend.models import User
-from backend.types.requests import WebRequest
-from backend.utils.calendar import timezone_now
+from backend.core.models import User
+from backend.core.types.requests import WebRequest
 from billing.models import SubscriptionPlan, UserSubscription, StripeCheckoutSession
 from billing.service.stripe_customer import get_or_create_customer_id
 

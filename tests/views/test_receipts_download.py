@@ -32,8 +32,8 @@ class ReceiptDownloadEndpointsTest(TestCase):
             user=self.log_in_user, image=SimpleUploadedFile("mock_image.jpg", b"image_content", "image/jpeg")
         )
         self.token = ReceiptDownloadToken.objects.create(user=self.log_in_user, file=self.receipt)
-        self.download_receipt_url = reverse("api:receipts:download_receipt", args=[self.token.token])
-        self.generate_download_link_url = reverse("api:receipts:generate_download_link", args=[self.receipt.id])
+        self.download_receipt_url = reverse("api:finance:receipts:download_receipt", args=[self.token.token])
+        self.generate_download_link_url = reverse("api:finance:receipts:generate_download_link", args=[self.receipt.id])
 
     def test_download_receipt_valid_token(self):
         response = self.client.get(self.download_receipt_url)
@@ -42,7 +42,7 @@ class ReceiptDownloadEndpointsTest(TestCase):
 
     def test_download_receipt_invalid_token(self):
         invalid_token = uuid.uuid4()  # Generate a valid UUID
-        invalid_url = reverse("api:receipts:download_receipt", args=[invalid_token])
+        invalid_url = reverse("api:finance:receipts:download_receipt", args=[invalid_token])
         response = self.client.get(invalid_url)
         self.assertEqual(response.status_code, 404)  # Update expected status code
 
@@ -58,7 +58,7 @@ class ReceiptDownloadEndpointsTest(TestCase):
         self.client.logout()
 
     def test_generate_download_link_invalid_receipt(self):
-        invalid_url = reverse("api:receipts:generate_download_link", args=[9999])  # Assuming 9999 is an invalid receipt id
+        invalid_url = reverse("api:finance:receipts:generate_download_link", args=[9999])  # Assuming 9999 is an invalid receipt id
         response = self.client.get(invalid_url)
         self.assertEqual(response.status_code, 404)
         self.client.logout()
@@ -68,7 +68,7 @@ class ReceiptDownloadEndpointsTest(TestCase):
         another_token = ReceiptDownloadToken.objects.create(user=another_user, file=self.receipt)
         self.client.login(username="user@example.com", password="user")
 
-        download_receipt_url = reverse("api:receipts:download_receipt", args=[another_token.token])
+        download_receipt_url = reverse("api:finance:receipts:download_receipt", args=[another_token.token])
         response = self.client.get(download_receipt_url)
         self.assertEqual(response.status_code, 403)
         self.assertEqual(response.content, b"Forbidden")

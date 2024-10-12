@@ -74,7 +74,7 @@ if DEBUG:
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         # "rest_framework.authentication.TokenAuthentication",
-        "backend.api.public.authentication.CustomBearerAuthentication"  # also adds custom model
+        "backend.core.api.public.authentication.CustomBearerAuthentication"  # also adds custom model
     ],
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
@@ -88,7 +88,7 @@ REST_FRAMEWORK = {
 
 SWAGGER_SETTINGS = {
     "USE_SESSION_AUTH": False,
-    "DEFAULT_INFO": "backend.api.public.swagger_ui.INFO",
+    "DEFAULT_INFO": "backend.core.api.public.swagger_ui.INFO",
     "SECURITY_DEFINITIONS": {"Bearer": {"type": "apiKey", "name": "Authorization", "in": "header"}},
 }
 
@@ -233,8 +233,8 @@ MIDDLEWARE = [
     "social_django.middleware.SocialAuthExceptionMiddleware",
     "tz_detect.middleware.TimezoneMiddleware",
     "backend.middleware.HTMXPartialLoadMiddleware",
-    # "backend.api.public.middleware.AttachTokenMiddleware",
-    "backend.api.public.middleware.HandleTeamContextMiddleware",
+    # "backend.core.api.public.middleware.AttachTokenMiddleware",
+    "backend.core.api.public.middleware.HandleTeamContextMiddleware",
 ]
 
 if DEBUG:

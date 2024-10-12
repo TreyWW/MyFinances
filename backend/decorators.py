@@ -1,9 +1,8 @@
 from __future__ import annotations
 
 import logging
-from dataclasses import dataclass
 from functools import wraps
-from typing import Optional, TypedDict, List
+from typing import TypedDict
 
 from django.contrib import messages
 from django.http import HttpResponse
@@ -12,9 +11,9 @@ from django.shortcuts import redirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from backend.models import QuotaLimit, TeamMemberPermission
-from backend.types.requests import WebRequest
-from backend.utils.feature_flags import get_feature_status
+from backend.core.models import QuotaLimit, TeamMemberPermission
+from backend.core.types.requests import WebRequest
+from backend.core.utils.feature_flags import get_feature_status
 
 logger = logging.getLogger(__name__)
 

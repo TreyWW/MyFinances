@@ -2,7 +2,7 @@ from django import template
 from django.urls import NoReverseMatch
 
 from backend.models import User, Organization
-from backend.utils.feature_flags import get_feature_status
+from backend.core.utils.feature_flags import get_feature_status
 
 from django.conf import settings
 
