@@ -3,7 +3,7 @@
     <input type="text"
            placeholder="Search"
            class="input input-bordered input-block my-3"
-           hx-get="{% url 'api:receipts:fetch' %}"
+           hx-get="{% url 'api:finance:receipts:fetch' %}"
            hx-target="#items"
            hx-trigger="keyup changed delay:500ms"
            hx-indicator="#search_loading"

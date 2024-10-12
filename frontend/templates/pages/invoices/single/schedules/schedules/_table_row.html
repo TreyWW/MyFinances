@@ -35,7 +35,7 @@
             {% if schedule.status == schedule.StatusTypes.DELETING or schedule.status == schedule.StatusTypes.PENDING %}
                 <button class="btn btn-error btn-outline btn-sm"
                         {% if schedule.status == schedule.StatusTypes.DELETING %}disabled{% endif %}
-                        hx-post="{% url "api:invoices:single:single:schedules onetime cancel" schedule_id=schedule.id %}"
+                        hx-post="{% url "api:finance:invoices:single:single:schedules onetime cancel" schedule_id=schedule.id %}"
                         hx-target="closest tr"
                         hx-swap="outerHTML">
                     <i class="fa-solid fa-cancel"></i>

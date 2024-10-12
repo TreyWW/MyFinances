@@ -10,7 +10,7 @@
                                type="text"
                                name="search_existing_service"
                                class="input input-bordered w-full flex-1"
-                               hx-get="{% url 'api:products:fetch' %}"
+                               hx-get="{% url 'api:finance:products:fetch' %}"
                                hx-target="#search_existing_products_items"
                                hx-trigger="keyup changed delay:500ms,load"
                                hx-indicator="#search_loading">

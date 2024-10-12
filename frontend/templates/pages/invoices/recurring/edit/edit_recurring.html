@@ -2,16 +2,16 @@
 {% load markdownify %}
 <form method="post"
       class="card bg-base-100 p-6 group"
-      hx-post="{% url 'api:invoices:recurring:edit' invoice_profile_id=invoice_object.id %}"
+      hx-post="{% url 'api:finance:invoices:recurring:edit' invoice_profile_id=invoice_object.id %}"
       hx-swap="none"
       enctype="multipart/form-data">
     {% csrf_token %}
     <div class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         <a class="btn btn-outline btn-secondary btn-sm w-28"
-           href="{% url 'invoices:recurring:dashboard' %}">Back to list</a>
+           href="{% url 'finance:invoices:recurring:dashboard' %}">Back to list</a>
         <h2 class="text-xl">Editing recurring invoice recurring profile #{{ invoice_object.id }}</h2>
         <a class="btn btn-outline btn-primary btn-sm w-36 justify-self-end"
-           href="{% url 'invoices:recurring:overview' invoice_profile_id=invoice_object.id %}">
+           href="{% url 'finance:invoices:recurring:overview' invoice_profile_id=invoice_object.id %}">
             Back to overview
         </a>
     </div>

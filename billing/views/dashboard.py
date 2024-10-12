@@ -2,7 +2,7 @@ from django.shortcuts import render
 
 from backend.decorators import web_require_scopes
 from billing.models import UserSubscription, SubscriptionPlan
-from backend.types.requests import WebRequest
+from backend.core.types.requests import WebRequest
 
 
 @web_require_scopes("billing:manage", api=True, htmx=True)

@@ -31,7 +31,7 @@
         </li>
         {#        {% if feature_enabled_invoices %}#}
         <li>
-            {% with i_url="invoices:single:dashboard" %}
+            {% with i_url="finance:invoices:single:dashboard" %}
                 <a href="{% url i_url %}"
                    {% if request.resolver_match.view_name == i_url %}class="active"{% endif %}>
                     Single Invoices
@@ -39,7 +39,7 @@
             {% endwith %}
         </li>
         <li>
-            {% with i_url="invoices:recurring:dashboard" %}
+            {% with i_url="finance:invoices:recurring:dashboard" %}
                 <a href="{% url i_url %}"
                    {% if request.resolver_match.view_name == i_url %}class="active"{% endif %}>
                     Recurring Invoices

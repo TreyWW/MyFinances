@@ -17,7 +17,7 @@ def assert_url_matches_view(url_path, url_name, view_function_path):
     Args:
         url_path (str): The full URL path of the view. (e.g. api//clients/fetch/)
         url_name (str): The name of the URL to reverse. (e.g. api:clients:fetch)
-        view_function_path (str): The expected path of the view function (e.g., "backend.api.clients.fetch.fetch_all_clients").
+        view_function_path (str): The expected path of the view function (e.g., "backend.core.api.clients.fetch.fetch_all_clients").
     """
     resolved_func = resolve(url_path).func
     resolved_func_name = f"{resolved_func.__module__}.{resolved_func.__name__}"

@@ -18,7 +18,7 @@
                 <div class="divider"></div>
                 <button class="btn btn-success loading-htmx"
                         hx-swap="none"
-                        hx-post="{% url 'api:invoices:recurring:generate next invoice' invoice_profile_id=invoiceProfile.id %}">
+                        hx-post="{% url 'api:finance:invoices:recurring:generate next invoice' invoice_profile_id=invoiceProfile.id %}">
                     <span class="loading-htmx-text">Generate invoice now</span>
                     <span class="loading loading-spinner loading-htmx-loader"></span>
                 </button>

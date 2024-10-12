@@ -5,7 +5,7 @@ from django.urls import reverse
 
 import calendar
 
-from backend.service.base.breadcrumbs import get_breadcrumbs
+from backend.core.service.base.breadcrumbs import get_breadcrumbs
 
 from settings.helpers import get_var
 

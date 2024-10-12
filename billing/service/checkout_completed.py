@@ -1,6 +1,6 @@
 import stripe
 
-from backend.utils.calendar import timezone_now
+from backend.core.utils.calendar import timezone_now
 from billing.models import StripeCheckoutSession, StripeWebhookEvent, UserSubscription
 
 

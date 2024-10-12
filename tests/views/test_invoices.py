@@ -2,7 +2,7 @@ from datetime import date
 
 from django.urls import reverse, resolve
 
-from backend.models import Invoice
+from backend.finance.models import Invoice
 from tests.handler import ViewTestCase
 
 
@@ -10,7 +10,7 @@ class InvoicesViewTestCase(ViewTestCase):
     def setUp(self):
         super().setUp()
 
-        self._invoices_dashboard_url = reverse("invoices:single:dashboard")
+        self._invoices_dashboard_url = reverse("finance:invoices:single:dashboard")
 
     def test_invoices_view_302_for_non_authenticated_users(self):
         response = self.client.get(self._invoices_dashboard_url)
@@ -33,14 +33,14 @@ class InvoicesViewTestCase(ViewTestCase):
         func = resolve("/dashboard/invoices/").func
         func_name = f"{func.__module__}.{func.__name__}"
         self.assertEqual("/dashboard/invoices/single/", self._invoices_dashboard_url)
-        self.assertEqual("backend.views.core.invoices.single.dashboard.invoices_single_dashboard_endpoint", func_name)
+        self.assertEqual("backend.finance.views.invoices.single.dashboard.invoices_single_dashboard_endpoint", func_name)
 
 
 class InvoicesCreateTestCase(ViewTestCase):
     def setUp(self):
         super().setUp()
 
-        self._invoices_create_url = reverse("invoices:single:create")
+        self._invoices_create_url = reverse("finance:invoices:single:create")
         self.data = {
             "service_name[]": ["Service 1", "Service 2"],
             "hours[]": [2, 3],
@@ -90,7 +90,7 @@ class InvoicesCreateTestCase(ViewTestCase):
         func = resolve("/dashboard/invoices/single/create/").func
         func_name = f"{func.__module__}.{func.__name__}"
         self.assertEqual("/dashboard/invoices/single/create/", self._invoices_create_url)
-        self.assertEqual("backend.views.core.invoices.single.create.create_single_invoice_endpoint_handler", func_name)
+        self.assertEqual("backend.finance.views.invoices.single.create.create_single_invoice_endpoint_handler", func_name)
 
     def test_invoices_create_invoice_from_post_data(self):
         self.login_user()

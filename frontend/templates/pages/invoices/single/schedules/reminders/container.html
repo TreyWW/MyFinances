@@ -2,7 +2,7 @@
 <div class="w-full p-6 my-8 shadow-xl card bg-base-100">
     <div class="grid w-full grid-cols-3 text-xl font-medium">
         <div>
-            <a hx-get="{% comment %}{% url 'api:invoices:single:reminders:fetch' invoice_id=invoice.id %}{% endcomment %}"
+            <a hx-get="{% comment %}{% url 'api:finance:invoices:single:reminders:fetch' invoice_id=invoice.id %}{% endcomment %}"
                hx-trigger="click"
                hx-swap="outerHTML"
                hx-target='tbody[data-hx-swap="reminders"]'
@@ -48,19 +48,19 @@
                             <div class="-mt-2 -mb-1 divider"></div>
                             <li data-filter-by="before_due">
                                 <button class="border-none text-sm dropdown-item"
-                                        hx-get="{% comment %}{% url "api:invoices:single:reminders:fetch" invoice_id=invoice.id %}{% endcomment %}"
+                                        hx-get="{% comment %}{% url "api:finance:invoices:single:reminders:fetch" invoice_id=invoice.id %}{% endcomment %}"
                                         name="filter"
                                         value="before_due">Before Due</button>
                             </li>
                             <li data-filter-by="after_due">
                                 <button class="border-none text-sm dropdown-item"
-                                        hx-get="{% comment %}{% url "api:invoices:single:reminders:fetch" invoice_id=invoice.id %}{% endcomment %}"
+                                        hx-get="{% comment %}{% url "api:finance:invoices:single:reminders:fetch" invoice_id=invoice.id %}{% endcomment %}"
                                         name="filter"
                                         value="after_due">After Due</button>
                             </li>
                             <li data-filter-by="on_overdue">
                                 <button class="border-none text-sm dropdown-item"
-                                        hx-get="{% comment %}{% url "api:invoices:single:reminders:fetch" invoice_id=invoice.id %}{% endcomment %}"
+                                        hx-get="{% comment %}{% url "api:finance:invoices:single:reminders:fetch" invoice_id=invoice.id %}{% endcomment %}"
                                         name="filter"
                                         value="on_overdue">On overdue day</button>
                             </li>
@@ -74,7 +74,7 @@
         <tbody data-hx-swap="reminders"
                hx-swap="outerHTML"
                hx-trigger="load"
-               hx-get="{% comment %}{% url "api:invoices:single:reminders:fetch" invoice_id=invoice.id %}{% endcomment %}">
+               hx-get="{% comment %}{% url "api:finance:invoices:single:reminders:fetch" invoice_id=invoice.id %}{% endcomment %}">
         </tbody>
     </table>
 </div>

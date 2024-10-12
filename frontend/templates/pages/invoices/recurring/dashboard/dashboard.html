@@ -41,7 +41,7 @@
             {#                <i class="fa fa-refresh"></i>#}
             {#            </a>#}
             <a class="btn btn-primary btn-sm"
-               href="{% url 'invoices:recurring:create' %}"
+               href="{% url 'finance:invoices:recurring:create' %}"
                hx-boost="true">
                 <i class="fa-solid fa-file-invoice"></i>
                 Create Recurring Profile
@@ -69,7 +69,7 @@
             <tbody id="table_body"
                    hx-swap="outerHTML"
                    hx-trigger="load"
-                   hx-get="{% url 'api:invoices:recurring:fetch' %}?page={{ page.next_page_number }}">
+                   hx-get="{% url 'api:finance:invoices:recurring:fetch' %}?page={{ page.next_page_number }}">
                 {% include 'components/table/skeleton_rows.html' with rows=3 cols=6 %}
             </tbody>
         </table>

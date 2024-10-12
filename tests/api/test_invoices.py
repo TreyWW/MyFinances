@@ -3,7 +3,7 @@ import random
 from django.urls import reverse, resolve
 from model_bakery import baker
 
-from backend.models import Invoice
+from backend.finance.models import Invoice
 from tests.handler import ViewTestCase, assert_url_matches_view
 
 
@@ -11,8 +11,8 @@ class InvoicesAPIFetch(ViewTestCase):
     def setUp(self):
         super().setUp()
         self.url_path = "/api/invoices/single/fetch/"
-        self.url_name = "api:invoices:single:fetch"
-        self.view_function_path = "backend.api.invoices.fetch.fetch_all_invoices"
+        self.url_name = "api:finance:invoices:single:fetch"
+        self.view_function_path = "backend.finance.api.invoices.fetch.fetch_all_invoices"
 
     def test_302_for_all_normal_get_requests(self):
         # Ensure that non-HTMX GET requests are redirected to the login page
@@ -82,8 +82,8 @@ class InvoicesAPIDelete(ViewTestCase):
     def setUp(self):
         super().setUp()
         self.url_path = "/api/invoices/single/delete/"
-        self.url_name = "api:invoices:single:delete"
-        self.view_function_path = "backend.api.invoices.delete.delete_invoice"
+        self.url_name = "api:finance:invoices:single:delete"
+        self.view_function_path = "backend.finance.api.invoices.delete.delete_invoice"
 
     def test_302_for_all_normal_get_requests(self):
         # Ensure that non-HTMX GET requests are redirected to the login page
@@ -119,8 +119,8 @@ class InvoicesEditDiscount(ViewTestCase):
     def setUp(self):
         super().setUp()
         self.url_path = "/api/invoices/single/edit/discount/"
-        self.url_name = "api:invoices:single:edit discount"
-        self.view_function_path = "backend.api.invoices.edit.edit_discount"
+        self.url_name = "api:finance:invoices:single:edit discount"
+        self.view_function_path = "backend.finance.api.invoices.edit.edit_discount"
         self.invoice: Invoice = baker.make("backend.Invoice", user=self.log_in_user)
 
     def test_302_for_all_normal_get_requests(self):

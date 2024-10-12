@@ -25,7 +25,7 @@
             </span>
             <span class="tooltip tooltip-top tooltip-" data-tip="Delete Code">
                 <button class="btn btn-error btn-outline btn-sm"
-                        hx-delete="{% url 'invoices:single:manage_access delete' code=code %}"
+                        hx-delete="{% url 'finance:invoices:single:manage_access delete' code=code %}"
                         hx-target="closest tr"
                         hx-swap="outerHTML"
                         {% if created_by == "SYSTEM" %}disabled{% endif %}>

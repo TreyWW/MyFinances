@@ -2,7 +2,7 @@
 {% fill "content" %}
 <form class="py-4"
       id="modal_create_invoice_product-form"
-      hx-post="{% url 'api:products:create' %}"
+      hx-post="{% url 'api:finance:products:create' %}"
       hx-include="#services_table_body"
       hx-swap="innerHTML"
       hx-target="#search_existing_products_items">

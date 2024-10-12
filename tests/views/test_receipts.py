@@ -30,7 +30,7 @@ class ReceiptsViewTestCase(ViewTestCase):
         func = resolve("/dashboard/receipts/").func
         func_name = f"{func.__module__}.{func.__name__}"
         self.assertEqual("/dashboard/receipts/", self._receipts_dashboard_url)
-        self.assertEqual("backend.views.core.receipts.dashboard.receipts_dashboard", func_name)
+        self.assertEqual("backend.finance.views.receipts.dashboard.receipts_dashboard", func_name)
 
     def test_search_functionality(self):
         self.login_user()
@@ -47,7 +47,7 @@ class ReceiptsViewTestCase(ViewTestCase):
         receipts = [baker.make("backend.Receipt", user=self.log_in_user, **attrs) for attrs in receipt_attributes]
 
         # Define the URL with the search query parameter
-        url = reverse("api:receipts:fetch")
+        url = reverse("api:finance:receipts:fetch")
         headers = {"HTTP_HX-Request": "true"}
 
         # Define search queries to cover various edge cases
@@ -104,7 +104,7 @@ class ReceiptsAPITestCase(ViewTestCase):
         super().setUp()
 
         # Define URLs for the receipts API
-        self._receipts_api_create_url = reverse("api:receipts:new")
+        self._receipts_api_create_url = reverse("api:finance:receipts:new")
 
     def test_receipt_create_post_with_valid(self):
         # Test creating a receipt with valid data

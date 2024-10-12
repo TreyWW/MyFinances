@@ -10,7 +10,7 @@ class LoginTestCases(ViewTestCase):
         super().setUp()
         self.url_path = "/api/invoices/fetch/"
         self.url_name = "auth:login"
-        self.view_function_path = "backend.api.invoices.fetch.fetch_all_invoices"
+        self.view_function_path = "backend.finance.api.invoices.fetch.fetch_all_invoices"
         self.login_rev = reverse("auth:login")
 
     def test_login_redirects_for_auth_user(self):

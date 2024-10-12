@@ -1,6 +1,6 @@
 import stripe
 
-from backend.models import User, Organization
+from backend.core.models import User, Organization
 from billing.models import StripeWebhookEvent, UserSubscription
 
 

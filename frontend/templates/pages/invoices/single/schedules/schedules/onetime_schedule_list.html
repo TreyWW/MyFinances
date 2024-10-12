@@ -2,7 +2,7 @@
     <div class="grid w-full grid-cols-7 text-xl font-medium">
         <div class="col-span-2">
             <div>
-                <a hx-get="{% url 'api:invoices:single:single:schedules onetime fetch' invoice_id=invoice.id %}"
+                <a hx-get="{% url 'api:finance:invoices:single:single:schedules onetime fetch' invoice_id=invoice.id %}"
                    hx-trigger="click"
                    hx-swap="outerHTML"
                    hx-target='tbody[data-hx-swap="onetime_schedules"]'
@@ -17,7 +17,7 @@
         </div>
         <h1 class="text-center col-span-3">View scheduled invoices</h1>
         <div class="col-span-2">
-            <a hx-get="{% url 'api:invoices:single:single:schedules onetime fetch' invoice_id=invoice.id %}"
+            <a hx-get="{% url 'api:finance:invoices:single:single:schedules onetime fetch' invoice_id=invoice.id %}"
                hx-trigger="click"
                hx-swap="outerHTML"
                hx-target='tbody[data-hx-swap="onetime_schedules"]'
@@ -53,37 +53,37 @@
                             <div class="-mt-2 -mb-1 divider"></div>
                             <li data-filter-by="completed">
                                 <button class="border-none text-sm dropdown-item"
-                                        hx-get="{% url "api:invoices:single:single:schedules onetime fetch" invoice_id=invoice.id %}"
+                                        hx-get="{% url "api:finance:invoices:single:single:schedules onetime fetch" invoice_id=invoice.id %}"
                                         name="filter"
                                         value="completed">Completed</button>
                             </li>
                             <li data-filter-by="pending">
                                 <button class="border-none text-sm dropdown-item"
-                                        hx-get="{% url "api:invoices:single:single:schedules onetime fetch" invoice_id=invoice.id %}"
+                                        hx-get="{% url "api:finance:invoices:single:single:schedules onetime fetch" invoice_id=invoice.id %}"
                                         name="filter"
                                         value="pending">Pending</button>
                             </li>
                             <li data-filter-by="creating">
                                 <button class="border-none text-sm dropdown-item"
-                                        hx-get="{% url "api:invoices:single:single:schedules onetime fetch" invoice_id=invoice.id %}"
+                                        hx-get="{% url "api:finance:invoices:single:single:schedules onetime fetch" invoice_id=invoice.id %}"
                                         name="filter"
                                         value="creating">Creating</button>
                             </li>
                             <li data-filter-by="deleting">
                                 <button class="border-none text-sm dropdown-item"
-                                        hx-get="{% url "api:invoices:single:single:schedules onetime fetch" invoice_id=invoice.id %}"
+                                        hx-get="{% url "api:finance:invoices:single:single:schedules onetime fetch" invoice_id=invoice.id %}"
                                         name="filter"
                                         value="deleting">Deleting</button>
                             </li>
                             <li data-filter-by="cancelled">
                                 <button class="border-none text-sm dropdown-item"
-                                        hx-get="{% url "api:invoices:single:single:schedules onetime fetch" invoice_id=invoice.id %}"
+                                        hx-get="{% url "api:finance:invoices:single:single:schedules onetime fetch" invoice_id=invoice.id %}"
                                         name="filter"
                                         value="cancelled">Cancelled</button>
                             </li>
                             <li data-filter-by="failed">
                                 <button class="border-none text-sm dropdown-item"
-                                        hx-get="{% url "api:invoices:single:single:schedules onetime fetch" invoice_id=invoice.id %}"
+                                        hx-get="{% url "api:finance:invoices:single:single:schedules onetime fetch" invoice_id=invoice.id %}"
                                         name="filter"
                                         value="failed">Failed</button>
                             </li>
@@ -97,7 +97,7 @@
         <tbody data-hx-swap="onetime_schedules"
                hx-swap="outerHTML"
                hx-trigger="load"
-               hx-get="{% url "api:invoices:single:single:schedules onetime fetch" invoice_id=invoice.id %}">
+               hx-get="{% url "api:finance:invoices:single:single:schedules onetime fetch" invoice_id=invoice.id %}">
         </tbody>
     </table>
 </div>
