@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import itertools
 import typing
 from datetime import datetime, date, timedelta
 from typing import Literal, Union
@@ -91,6 +92,14 @@ class User(AbstractUser):
     @property
     def name(self):
         return self.first_name
+
+    @property
+    def teams_apart_of(self) -> set[QuerySet[Organization]]:
+        return set(itertools.chain(self.teams_joined.all(), self.teams_leader_of.all()))
+
+    @property
+    def is_org(self):
+        return False
 
 
 def add_3hrs_from_now():
@@ -249,7 +258,12 @@ class Organization(models.Model):
             return True
         return False
 
+    @property
     def is_authenticated(self):
+        return True
+
+    @property
+    def is_org(self):
         return True
 
 

@@ -7,17 +7,17 @@ from backend.core.types.htmx import HtmxHttpRequest
 
 
 def switch_team(request: HtmxHttpRequest, team_id: str | int | None = None):
-
     if not team_id:
         team_id = request.POST.get("join_team", None)
 
     if not team_id:
         if not request.user.logged_in_as_team:
-            messages.error(request, "You are not logged into an organization")
+            messages.warning(request, "You are not logged into an organization")
+        else:
+            messages.success(request, "You are now logged into your personal account")
 
         request.user.logged_in_as_team = None
         request.user.save()
-        messages.success(request, "You are now logged into your personal account")
         response = HttpResponse(status=200)
         response["HX-Refresh"] = "true"
         return response
@@ -36,7 +36,7 @@ def switch_team(request: HtmxHttpRequest, team_id: str | int | None = None):
         messages.error(request, "You are not a member of this team")
         return render(request, "partials/messages_list.html")
 
-    messages.success(request, f"Now signing in for {team.name}")
+    messages.success(request, f"Now signing into the organization '{team.name}'")
     request.user.logged_in_as_team = team
     request.user.save()
 

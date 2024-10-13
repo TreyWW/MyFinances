@@ -15,18 +15,7 @@
             </label>
         </div>
         <div class="flex items-center gap-x-0 gap-x-3 ms-4 md:gap-x-5">
-            <a href="/" class="hidden lg:block">
-                <label for="service_list_drawer"
-                       id="service_list_button"
-                       aria-label="close sidebar"
-                       class="flex items-center swap-rotate drawer-overlay swap">
-                    <input type="checkbox" id="logo_single_service_list_toggler" />
-                    <img src="{% static "img/logo_single.png" %}" class="h-10 swap-off">
-                    <i class="absolute flex items-center justify-center fa fa-solid fa-x swap-on"></i>
-                </label>
-            </a>
-            <a class="font-semibold text-base-content md:text-2xl"
-               href="/dashboard/">My Finances</a>
+            {% include 'base/topbar/team_selector/selector.html' %}
         </div>
     </div>
     <div class="z-50 hidden navbar-center lg:flex">
@@ -112,26 +101,10 @@
     </details>
     <div class="dropdown dropdown-end">
         <label tabindex="0" class="btn btn-ghost btn-circle">
-            {% component "profile_picture" image_type="small" extra_classes="max-w-12 max-h-12 w-12 h-12 avatar-img-ring" url=request.user.user_profile.profile_picture_url %}
+            {% component "profile_picture" image_type="small" extra_classes="max-w-8 max-h-8 w-8 h-8 avatar-img-ring" url=request.user.user_profile.profile_picture_url %}
         </label>
         <ul tabindex="0"
             class="border menu menu-sm dropdown-content border-primary">
-            <details class="flex flex-col dropdown dropdown-left">
-                <summary class="block h-full max-h-full p-2 text-left btn"
-                         data-htmx-swap="logged_in_for"
-                         hx-trigger="click"
-                         hx-target='[data-htmx-swap="organization_dropdown_list"]'
-                         hx-get="{% url "api:teams:get_dropdown" %}"
-                         hx-swap="innerHTML">{% component "components:logged_in_for" %}</summary>
-                <ul class="border menu menu-sm dropdown-content border-primary gap-1"
-                    data-htmx-swap="organization_dropdown_list">
-                    <div class="flex items-center justify-center gap-2">
-                        <i class="loading"></i>
-                        Loading
-                    </div>
-                </ul>
-            </details>
-            <div class="mt-0 mb-0 divider"></div>
             {% component "base:topbar:icon_dropdown" %}
         </ul>
     </div>
