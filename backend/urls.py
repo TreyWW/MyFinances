@@ -40,6 +40,7 @@ urlpatterns = [
     path("dashboard/admin/quota_requests/", view_quota_increase_requests, name="admin quota increase requests"),
     path("dashboard/file_storage/", include("backend.storage.views.urls")),
     path("dashboard/clients/", include("backend.clients.views.urls")),
+    path("dashboard/onboarding/", include("backend.onboarding.views.urls")),
     path("favicon.ico", RedirectView.as_view(url=settings.STATIC_URL + "favicon.ico")),
     path(
         "dashboard/receipts/",

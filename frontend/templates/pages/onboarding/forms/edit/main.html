@@ -1,0 +1,97 @@
+{% extends base|default:"base/base.html" %}
+{% block content %}
+    <div class="card w-full p-6 bg-base-100 shadow-xl mt-2">
+        <h2 class="text-xl pl-2">{{ form.title }}</h2>
+        <div class="divider"></div>
+    </div>
+    <div class="flex flex-row gap-4" x-data="{ activeTab: 'fields', openCard: null }">
+        <ul class="menu card w-48 p-6 bg-base-100 shadow-xl mt-2">
+            <li>
+                <button class="px-6 py-2"
+                        :class="{ 'active': activeTab === 'fields'}"
+                        @click="activeTab = 'fields'">Fields
+                </button>
+            </li>
+            <div class="my-1 px-4 divider"></div>
+            <li>
+                <button class="px-6 py-2"
+                        :class="{ 'active': activeTab === 'settings' }"
+                        @click="activeTab = 'settings'">Settings
+                </button>
+            </li>
+        </ul>
+        <div class="card w-full p-6 bg-base-100 shadow-xl mt-2" id="form-content">
+            <div id="fields" :class="{ 'hidden': activeTab !== 'fields'}">
+                <div class="grid-stack" id="inputs-grid">
+                    {% for field in form.fields.all %}
+                        <div class="card border border-gray-300 p-4 relative group"
+                             data-id="{{ field.order }}"
+                             data-field-uuid="{{ field.uuid }}"
+                             x-on:click="openCard = '{{ field.uuid }}'"
+                             x-bind:class="{ 'collapse collapse-open': openCard === '{{ field.uuid }}', 'collapse collapse-close': openCard !== '{{ field.uuid }}' }"
+                             tabindex="0">
+                            <input class="hidden" type="hidden" name="field_uuid" value="{{ field.uuid }}" />
+                            <div
+                                class="flex items-center justify-center absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-full p-1 opacity-0 group-hover:opacity-100">
+                                <i class="fas fa-grip-lines cursor-pointer" aria-hidden="true"></i>
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                <input class="input input-bordered flex-grow"
+                                       placeholder="Question"
+                                       hx-trigger="input changed delay:500ms"
+                                       name="field_label"
+                                       hx-swap="none"
+                                    {#                                   hx-post="{% url 'api:onboarding:form_builder:inputs:save' form_uuid=field.form.uuid field_uuid=field.uuid %}"#}
+                                       value="{{ field.label }}"
+                                       type="text"
+                                       x-bind:readonly="openCard !== '{{ field.uuid }}'" />
+                                <select class="select select-bordered flex-shrink-0"
+                                        name="field_type"
+                                        hx-trigger="input changed"
+                                        hx-swap="none"
+                                    {#                                    hx-post="{% url 'api:onboarding:form_builder:inputs:save' form_uuid=field.form.uuid field_uuid=field.uuid %}"#}
+                                        x-bind:class="{ 'hidden': openCard !== '{{ field.uuid }}' }">
+                                    {% for choice in field.FieldTypes.choices %}
+                                        <option value="{{ choice.0 }}"
+                                                {% if field.type == choice.0 %}selected{% endif %}>{{ choice.1 }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div x-bind:class="{ 'hidden': openCard !== '{{ field.uuid }}' }">
+                                {#                            {% include 'pages/onboarding/form_builder/edit/input_types/'|add:field.type|add:".html" %}#}
+                                <div class="divider"></div>
+                                <div class="flex justify-end items-center space-x-4 px-4">
+                                    <div class="flex items-center space-x-2">
+                                        <button class=""
+                                                hx-swap="outerHTML"
+                                                hx-target="closest .card"
+                                                title="Delete form field"
+                                                hx-confirm="Are you sure you would like to remove this form field?"
+                                            {#                                            hx-delete="{% url 'api:onboarding:form_builder:inputs:delete' form_uuid=field.form.uuid field_uuid=field.uuid %}"#}
+                                        >
+                                            <i class="fa fa-trash cursor-pointer"></i>
+                                        </button>
+                                        <div class="divider divider-horizontal divider-accent"></div>
+                                        <div class="form-control">
+                                            <div class="flex items-center space-x-2" title="Mark field as required">
+                                                <span class="label-text">Required</span>
+                                                <input name="field_required" type="checkbox" class="toggle toggle-primary"
+                                                    {#                                                   hx-post="{% url 'api:onboarding:form_builder:inputs:save' form_uuid=field.form.uuid field_uuid=field.uuid %}"#}
+                                                       hx-trigger="input"
+                                                       hx-include='input[name="changing_required_field"]'
+                                                       {% if field.required %}checked{% endif %}
+                                                       hx-swap="none"
+                                                       hx-target="this" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div id="settings" :class="{ 'hidden': activeTab !== 'settings'}">hi2</div>
+        </div>
+    </div>
+{% endblock content %}

@@ -1,0 +1,44 @@
+{% load humanize %}
+<tbody id="table_body">
+{% for form in forms %}
+    <tr>
+        <td>
+            <a class="link link-primary no-underline"
+               href="{% url 'onboarding:forms:edit' uuid=form.uuid %}">{{ form.title }}</a>
+        </td>
+        <td colspan="2">{{ form.name }}</td>
+        <td colspan="2">
+            <div class="flex flex-wrap gap-2">
+                <div class="tooltip" data-tip="Edit">
+                    <button class="btn btn-outline btn-success btn-sm btn-disabled">
+                        <i class="fa fa-solid fa-pencil"></i>
+                    </button>
+                </div>
+                <div class="tooltip" data-tip="View Form">
+                    <a class="btn btn-outline btn-sm">
+                        <i class="fa fa-solid fa-eye"></i>
+                    </a>
+                </div>
+                <div class="tooltip" data-tip="Delete Form">
+                    <button class="btn btn-outline btn-error btn-sm"
+                            hx-delete="{% url 'api:onboarding:forms:delete' uuid=form.uuid %}"
+                            hx-target="closest tr"
+                            hx-confirm="Are you sure you would like to delete this form?">
+                        <i class="fa fa-solid fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        </td>
+    </tr>
+{% empty %}
+    <td colspan="100%" class="text-center">
+        No forms found.
+        <br>
+        <button class="btn btn-sm btn-primary mt-3"
+                hx-post="{% url 'api:onboarding:forms:create' %}">
+            <i class="fa fa-plus"></i>
+            Create one
+        </button>
+    </td>
+{% endfor %}
+</tbody>

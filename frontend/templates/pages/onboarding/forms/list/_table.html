@@ -2,9 +2,7 @@
     {% component "messages_list" %}
 {% endif %}
 <div class="flex w-full overflow-x-auto overflow-y-hidden" id="items">
-    <table class="table"
-           hx-get=""
-            hx-trigger="load,single_invoices_refresh">
+    <table class="table">
         <thead>
             <tr>
                 <th>Client ID</th>

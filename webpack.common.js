@@ -2,6 +2,7 @@ const path = require('path')
 const webpack = require("webpack");
 const BundleTracker = require("webpack-bundle-tracker");
 
+
 module.exports = {
   entry: {
     init: './assets/scripts/init.js',
@@ -45,4 +46,14 @@ module.exports = {
   plugins: [
     new BundleTracker({path: __dirname, filename: "webpack-stats.json"}),
   ],
+  module: {
+    rules: [
+      // Add this rule for handling CSS files
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader'],
+      },
+      // You might have other rules here
+    ],
+  }
 }

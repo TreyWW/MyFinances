@@ -9,6 +9,7 @@ urlpatterns = [
     path("settings/", include("backend.core.api.settings.urls")),
     path("quotas/", include("backend.core.api.quotas.urls")),
     path("clients/", include("backend.clients.api.urls")),
+    path("onboarding/", include("backend.onboarding.api.urls")),
     path("emails/", include("backend.core.api.emails.urls")),
     path("maintenance/", include("backend.core.api.maintenance.urls")),
     path("landing_page/", include("backend.core.api.landing_page.urls")),

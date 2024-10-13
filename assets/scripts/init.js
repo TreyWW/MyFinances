@@ -1,5 +1,7 @@
 import Alpine from 'alpinejs'
 import $ from 'jquery'
+import 'gridstack/dist/gridstack.min.css';
+import {GridStack} from 'gridstack';
 
 window.Alpine = Alpine
 
@@ -7,6 +9,7 @@ Alpine.start()
 
 window.jQuery = $;
 window.$ = $;
+window.GridStack = GridStack;
 
 document.addEventListener("DOMContentLoaded", function () {
   const drawer = document.getElementById("service_list_drawer");

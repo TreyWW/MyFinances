@@ -1,0 +1,49 @@
+{% extends base|default:"base/base.html" %}
+{% block content %}
+    <div class="card w-full p-6 bg-base-100 shadow-xl mt-2">
+        <h2 class="text-xl">Onboarding Forms</h2>
+        <div class="divider"></div>
+        <div class="mb-4">
+            <a class="btn btn-primary mb-4 float-right"
+               href="{% url "api:onboarding:forms:create" %}"
+               hx-boost="true">
+                <i class="fa-solid fa-plus pe-1"></i>
+                Create Form
+            </a>
+            <form method="post" onsubmit="return false">
+                {% csrf_token %}
+                <input class="input input-bordered input-block my-3 loading-htmx"
+                       type="text"
+                       name="search"
+                       placeholder="🔎 Search"
+                       hx-target="#items"
+                       hx-get="/api/clients/fetch"
+                       hx-trigger="keyup changed delay:500ms"
+                       hx-indicator="#search_loading">
+                <span id="search_loading"
+                      class="loading loading-spinner loading-htmx-loader-individual"></span>
+            </form>
+        </div>
+        {% if delete %}
+            {% component "messages_list" %}
+        {% endif %}
+        <div class="flex w-full overflow-x-auto overflow-y-hidden">
+            <table class="table"
+                   hx-get="{% url 'api:onboarding:forms:list' %}"
+                   hx-swap="outerHTML"
+                   hx-target="#table_body"
+                   hx-trigger="load,onboarding_forms_list_refresh">
+                <thead>
+                <tr>
+                    <th>Form Name</th>
+                    <th colspan="2">Actions</th>
+                </tr>
+                </thead>
+                <tbody id="table_body">
+                    {% include 'components/table/skeleton_rows.html' with rows=3 cols=2 %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+{% endblock content %}

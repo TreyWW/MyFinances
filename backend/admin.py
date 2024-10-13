@@ -38,6 +38,8 @@ from backend.finance.models import (
 
 from backend.clients.models import Client
 
+from backend.onboarding.models import OnboardingForm, OnboardingField
+
 from settings.settings import BILLING_ENABLED
 
 # from django.contrib.auth.models imp/ort User
@@ -68,6 +70,8 @@ admin.site.register(
         InvoiceRecurringProfile,
         FileStorageFile,
         MultiFileUpload,
+        OnboardingForm,
+        OnboardingField,
     ]
 )
 
