@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import itertools
 import typing
-from datetime import datetime, date, timedelta
+from datetime import datetime, timedelta
 from typing import Literal, Union
 from uuid import uuid4
 
@@ -94,7 +94,7 @@ class User(AbstractUser):
         return self.first_name
 
     @property
-    def teams_apart_of(self) -> set[QuerySet[Organization]]:
+    def teams_apart_of(self):
         return set(itertools.chain(self.teams_joined.all(), self.teams_leader_of.all()))
 
     @property
