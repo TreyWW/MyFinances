@@ -4,14 +4,18 @@ from textwrap import dedent
 def recurring_invoices_invoice_created_default_email_template() -> str:
     return dedent(
         """
-    Hi $first_name,
+        Hi $first_name,
 
-    The invoice #$invoice_id has been created for you to pay, due on the $due_date. Please pay at your earliest convenience.
+        Your invoice #$invoice_id is now available and is due by $due_date. Please make your payment at your earliest convenience.
 
-    Balance Due: $currency_symbol$amount_due $currency
+        Balance Due: $currency_symbol$amount_due $currency
+        View or Pay Online: $invoice_link
+        If you are paying by standing order, no further action is required. Should you have any questions or concerns, feel free to reach out to us.
 
-    Many thanks,
-    $company_name
+        Thank you for your prompt attention to this matter.
+
+        Best regards,
+        $company_name
     """
     ).strip()
 
@@ -21,11 +25,18 @@ def recurring_invoices_invoice_overdue_default_email_template() -> str:
         """
     Hi $first_name,
 
-    The invoice #$invoice_id is now overdue. Please pay as soon as possible to avoid any interruptions in your service or late fees.
+    We wanted to remind you that invoice #$invoice_id is now overdue. Please arrange payment as soon as possible to ensure there’s no interruption in your service. If you’ve already made the payment, kindly disregard this message—our apologies for any confusion.
+
+    Here are the details for your convenience:
 
     Balance Due: $currency_symbol$amount_due $currency
+    Due Date: $due_date
 
-    Many thanks,
+    If you have any questions or concerns, we’re happy to help. Please don’t hesitate to reach out.
+
+    Thank you for your prompt attention to this matter.
+
+    Warm regards,
     $company_name
     """
     ).strip()
@@ -48,13 +59,13 @@ def recurring_invoices_invoice_cancelled_default_email_template() -> str:
 
 def email_footer() -> str:
     return (
-        "\n"
+        "\n\n"
         + dedent(
             """
-Note: This is an automated email sent out by MyFinances on behalf of '$company_name'.
+        Note: This is an automated email sent by MyFinances on behalf of '$company_name'.
 
-If you believe this is spam or fraudulent please report it to us at report@myfinances.cloud and DO NOT pay the invoice.
-Once a report has been made you will have a case opened. Eligible reports may receive a reward, decided on a case by case basis.
-"""
+        If you believe this email is spam or fraudulent, please do not pay the invoice and report it to us immediately at report@myfinances.cloud.
+        Once reported, we will open a case for investigation. In some cases, eligible reports may qualify for a reward, determined on a case-by-case basis.
+        """
         ).strip()
     )
