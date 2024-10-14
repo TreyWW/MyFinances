@@ -24,7 +24,6 @@ from backend.core.models import (
     FileStorageFile,
     MultiFileUpload,
 )
-
 from backend.finance.models import (
     Invoice,
     InvoiceURL,
@@ -36,7 +35,7 @@ from backend.finance.models import (
     ReceiptDownloadToken,
 )
 
-from backend.clients.models import Client
+from backend.clients.models import Client, DefaultValues
 
 from settings.settings import BILLING_ENABLED
 
@@ -68,6 +67,7 @@ admin.site.register(
         InvoiceRecurringProfile,
         FileStorageFile,
         MultiFileUpload,
+        DefaultValues,
     ]
 )
 
