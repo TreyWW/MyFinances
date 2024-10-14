@@ -33,10 +33,10 @@
                 <form class="m-0 flex grow flex-col gap-y-2"
                       hx-swap="none"
                       hx-post="{% url 'api:settings:email_template save' template=template %}"
-                     :class="{ 'hidden': activeTab !== '{{ template }}'}">
+                      :class="{ 'hidden': activeTab !== '{{ template }}'}">
                     <p>{{ template|split:"_"|join:" "|title }}</p>
-                    {% with text=email_templates.recurring_invoices|dict_get:template  %}
-                    <textarea class="m-0 h-full w-full textarea textarea-bordered" name="content">{{ text }}</textarea>
+                    {% with text=email_templates.recurring_invoices|dict_get:template %}
+                        <textarea class="m-0 h-full w-full textarea textarea-bordered" name="content">{{ text }}</textarea>
                     {% endwith %}
                     <button class="w-fit self-end px-4 btn btn-sm btn-primary">Save</button>
                 </form>
