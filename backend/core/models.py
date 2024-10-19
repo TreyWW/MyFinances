@@ -254,7 +254,7 @@ class Organization(models.Model):
         if isinstance(request.auth, User):
             return False
 
-        if request.auth and request.auth.team_id == self.id:
+        if request.auth and request.auth.organization_id == self.id:
             return True
         return False
 

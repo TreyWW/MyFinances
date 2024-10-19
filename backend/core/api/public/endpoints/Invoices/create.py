@@ -6,6 +6,7 @@ from rest_framework.response import Response
 
 from backend.clients.models import Client
 from backend.core.api.public.decorators import require_scopes
+from backend.core.api.public.helpers.response import APIResponse
 from backend.core.api.public.serializers.invoices import InvoiceSerializer
 from backend.core.api.public.swagger_ui import TEAM_PARAMETER
 from backend.core.api.public.types import APIRequest
@@ -101,25 +102,25 @@ def create_invoice_endpoint(request: APIRequest) -> Response:
     serializer = InvoiceSerializer(data=request.data)
 
     if not serializer.is_valid():
-        return Response({"success": False, "message": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        return APIResponse(False, serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     if "client_id" in request.data and request.data["client_id"]:
         try:
             client = get_client(request)
             serializer.validated_data["client_to"] = client
         except Client.DoesNotExist:
-            return Response({"success": False, "message": "Client not found"}, status=status.HTTP_400_BAD_REQUEST)
+            return APIResponse(False, "Client not found", status=status.HTTP_400_BAD_REQUEST)
 
     if "product_id" in request.data and request.data["product_id"]:
         try:
             items_data = get_products(request)
             serializer.validated_data["items"] = items_data
         except InvoiceProduct.DoesNotExist:
-            return Response({"success": False, "message": "InvoiceProduct not found"}, status=status.HTTP_400_BAD_REQUEST)
+            return APIResponse(False, "InvoiceProduct not found", status=status.HTTP_400_BAD_REQUEST)
 
     if request.team:
         invoice = serializer.save(organization=request.team)
     else:
         invoice = serializer.save(user=request.user)
 
-    return Response({"success": True, "invoice_id": invoice.id}, status=status.HTTP_201_CREATED)
+    return APIResponse(True, {"invoice_id": invoice.id}, status=status.HTTP_201_CREATED)

@@ -5,10 +5,13 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from backend.core.api.public.decorators import require_scopes
+from backend.core.api.public.helpers.response import APIResponse
 from backend.core.api.public.serializers.clients import ClientSerializer
 from backend.core.api.public.swagger_ui import TEAM_PARAMETER
 from backend.core.api.public.types import APIRequest
 from backend.core.service.clients.get import fetch_clients, FetchClientServiceResponse
+
+from backend.models import Organization
 
 
 @swagger_auto_schema(
@@ -41,10 +44,13 @@ def list_clients_endpoint(request: APIRequest):
 
     search_text = request.data.get("search")
 
+    if not request.team and isinstance(request.auth.owner, Organization):
+        return APIResponse(False, "When using a team API Key the team_id field must be provided.")
+
     clients: FetchClientServiceResponse = fetch_clients(request, search_text=search_text, team=request.team)
 
     # queryset = paginator.paginate_queryset(clients, request)
 
     serializer = ClientSerializer(clients.response, many=True)
 
-    return Response({"success": True, "clients": serializer.data})
+    return APIResponse(True, {"clients": serializer.data})
