@@ -26,7 +26,7 @@ def generate_public_api_key(
     if api_key_exists_under_name(owner, api_key_name):
         return None, "A key with this name already exists in your account"
 
-    if validate_scopes(permissions).failed or not has_permission_to_create(request, owner):
+    if validate_scopes(permissions).failed:  # or not has_permission_to_create(request, owner):
         return None, "Invalid permissions"
 
     administrator_service_type = None
@@ -105,6 +105,6 @@ def has_permission_to_create(request, owner: User | Organization) -> bool:
     if isinstance(owner, User):
         return True
 
-    if "api_keys:write" in owner.permissions.get(user=request.user).scopes:
+    if owner.permissions.filter(user=request.user).exists() and "api_keys:write" in owner.permissions.get(user=request.user).scopes:
         return True
     return False
