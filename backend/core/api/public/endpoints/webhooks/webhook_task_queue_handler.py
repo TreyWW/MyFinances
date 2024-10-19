@@ -1,5 +1,5 @@
 from rest_framework.response import Response
-
+import logging
 from backend.core.api.public import APIAuthToken
 from rest_framework.decorators import api_view
 
@@ -42,5 +42,5 @@ def webhook_task_queue_handler_view_endpoint(request):
         return Response({"status": "success", "result": result})
 
     except Exception as e:
-        print(f"Error executing webhook task: {str(e)}")
-        return Response({"status": "error", "message": str(e)}, status=500)
+        logging.error(f"Error executing webhook task: {str(e)}")
+        return Response({"status": "error", "message": "An internal error has occurred."}, status=500)
