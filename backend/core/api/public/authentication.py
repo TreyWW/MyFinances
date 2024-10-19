@@ -21,7 +21,7 @@ class CustomBearerAuthentication(TokenAuthentication):
         except model.DoesNotExist:
             raise AuthenticationFailed("Invalid token.")
 
-        if token.has_expired():
+        if token.has_expired:
             raise AuthenticationFailed("Token has expired.")
 
         # todo: make sure this is safe to set request.user = <Team> obj

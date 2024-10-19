@@ -6,10 +6,10 @@ import binascii
 import os
 from django.utils import timezone
 
-from backend.core.models import OwnerBase
+from backend.core.models import OwnerBase, ExpiresBase
 
 
-class APIAuthToken(OwnerBase):
+class APIAuthToken(OwnerBase, ExpiresBase):
     id = models.AutoField(primary_key=True)
 
     hashed_key = models.CharField("Key", max_length=128, unique=True)
@@ -18,9 +18,9 @@ class APIAuthToken(OwnerBase):
     description = models.TextField("Description", blank=True, null=True)
     created = models.DateTimeField("Created", auto_now_add=True)
     last_used = models.DateTimeField("Last Used", null=True, blank=True)
-    expires = models.DateTimeField("Expires", null=True, blank=True, help_text="Leave blank for no expiry")
-    expired = models.BooleanField("Expired", default=False, help_text="If the key has expired")
-    active = models.BooleanField("Active", default=True, help_text="If the key is active")
+    # expires = models.DateTimeField("Expires", null=True, blank=True, help_text="Leave blank for no expiry")
+    # expired = models.BooleanField("Expired", default=False, help_text="If the key has expired")
+    # active = models.BooleanField("Active", default=True, help_text="If the key is active")
     scopes = models.JSONField("Scopes", default=list, help_text="List of permitted scopes")
 
     class AdministratorServiceTypes(models.TextChoices):
@@ -35,11 +35,6 @@ class APIAuthToken(OwnerBase):
 
     def __str__(self):
         return self.name
-
-    def has_expired(self):
-        if not self.expires:
-            return False
-        return self.expires < timezone.now()
 
     def update_last_used(self):
         self.last_used = timezone.now()

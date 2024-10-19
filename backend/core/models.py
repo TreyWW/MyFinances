@@ -151,9 +151,13 @@ class ExpiresBase(models.Model):
     @property
     def remaining_active_time(self):
         """Return the remaining time until expiration, or None if already expired or no expiration set."""
-        if self.expires and self.expires > timezone.now():
+        if not self.has_expired:
             return self.expires - timezone.now()
         return None
+
+    @property
+    def has_expired(self):
+        return self.expires and self.expires <= timezone.now()
 
     def is_active(self):
         return self.active

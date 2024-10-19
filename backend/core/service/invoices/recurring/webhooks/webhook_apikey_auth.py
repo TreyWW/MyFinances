@@ -23,7 +23,7 @@ def authenticate_api_key(request: WebRequest) -> APIAuthenticationServiceRespons
             administrator_service_type=APIAuthToken.AdministratorServiceTypes.AWS_WEBHOOK_CALLBACK,
         )
 
-        if token.has_expired():
+        if token.has_expired:
             return APIAuthenticationServiceResponse(error_message="Token expired", status_code=400)
     except APIAuthToken.DoesNotExist:
         return APIAuthenticationServiceResponse(error_message="Token not found", status_code=400)

@@ -1,6 +1,8 @@
 <tr>
     <td>{{ key.name | default:"No name given" }}</td>
     <td>{{ key.last_used | default:"Never used" }}</td>
+    <td>{{ key.expires | date:"d M, Y" | default:"Never" }}</td>
+    <td>{{ key.created | date:"d M, Y H:iA" }}</td>
     <td>
         <button class="btn btn-error btn-sm"
                 hx-delete="{% url 'api:settings:api_keys revoke' key_id=key.id %}"

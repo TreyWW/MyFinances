@@ -23,21 +23,12 @@
     <div class="form-control">
         <label class="label justify-start">
             Expires
-            <span class="required_star">*</span>
             <span class="tooltip tooltip-primary tooltip-right ml-2"
-                  data-tip="When should this token expire? Set to 0 for no expiry.">
+                  data-tip="When should this token expire? Leave blank for no expiry.">
                 <i class="fa fa-info-circle"></i>
             </span>
         </label>
-        <input class="peer input input-bordered"
-               name="expires"
-               maxlength="3"
-               value="0"
-               pattern="^(?:[0-9]|[1-9][0-9]|[1-2][0-9]{2}|3[0-5][0-9]|36[0-5])$"
-               required>
-        <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden">
-            <span class="label-text-alt text-error">Please enter an expiry between 0 (no expiry) and 365 (364 days)</span>
-        </label>
+        <input class="peer input input-bordered" name="expires" type="date" required>
     </div>
     <div class="form-control">
         <label class="label justify-start">Key Description</label>

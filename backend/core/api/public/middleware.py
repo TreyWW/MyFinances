@@ -18,7 +18,7 @@ class AttachTokenMiddleware(MiddlewareMixin):
         token_key = auth_header.split(" ")[1]
         try:
             token = APIAuthToken.objects.get(key=token_key, active=True)
-            if not token.has_expired():
+            if not token.has_expired:
                 request.auth = token
                 request.api_token = token
         except APIAuthToken.DoesNotExist:
