@@ -86,7 +86,7 @@ def login_manual(request: HttpRequest):
 
 def redirect_to_login(email: str, redirect_url: str):
     if not url_has_allowed_host_and_scheme(redirect_url, allowed_hosts=None):
-        redirect_url = reverse('dashboard')
+        redirect_url = reverse("dashboard")
     return redirect(f"{reverse('auth:login')}?email={email}&next={redirect_url}")
 
 
