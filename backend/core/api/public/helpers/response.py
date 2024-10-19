@@ -14,6 +14,6 @@ def APIResponse(success: bool = True, data: str | dict | None = None, meta=None,
         status = 400
 
     if success:
-        return Response({"meta": {"success": True, **meta}, "data": {**data, **kwargs}}, status=status)
+        return Response({"meta": {"success": True, **meta}, "data": {**kwargs} | data if isinstance(data, dict) else {}}, status=status)
     else:
         return Response({"meta": {"success": False}, "error": data}, status=status)
