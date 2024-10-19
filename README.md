@@ -2,53 +2,37 @@
 
 <img src="https://github.com/TreyWW/MyFinances/assets/73353716/685b83f4-1495-4ce6-94c7-e24c2f14a6d1" width="400">
 
-![Code Formatter](https://github.com/TreyWW/MyFinances/actions/workflows/run_black_linter.yml/badge.svg)
-![Dependency Review](https://github.com/TreyWW/MyFinances/actions/workflows/dependancy_review.yml/badge.svg)
-![Test](https://github.com/TreyWW/MyFinances/actions/workflows/run_tests.yml/badge.svg)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-MyFinances is an open-source web application designed to empower individuals and teams to efficiently manage their finances.
-Whether you're tracking personal expenses, managing client invoices, or planning your financial goals, MyFinances provides a
-user-friendly platform to streamline these tasks.
+**MyFinances** is an open-source web-based application designed to simplify invoicing and financial management for individuals and teams. Whether you're a freelancer or a small business, MyFinances provides an intuitive platform to help you stay organized.
 
-| PLEASE NOTE: This project is still in development, and has only just started! So none of the key features or descriptions have been fully implemented. We are beginner friendly and looking for contributors! |
+| PLEASE NOTE: This project is under active development. We welcome contributors! |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 
 ## Key Features
 
-- **Expense Tracking:** Easily record and categorize your expenses, upload photos of receipts, and visualize spending patterns.
-
-- **Invoicing:** Generate professional invoices for clients, including options for hourly rates or fixed fees. Receive payments
-  directly through the integrated payment gateways.
-
-- **Financial Reports:** Gain insights into your financial health with customizable reports, income summaries, and expense
-  analyses.
-
-- **Receipt Management** Store your old receipts, to keep as future tax deductions, or just a financial log. You can preview,
-  download, or delete these receipts at any point! We also use parsing to auto-extract data from the receipt such as the total
-  price.
-
-- **Budgeting:** Set financial goals and track your progress. Keep an eye on your spending habits and make informed decisions.
+- **One-Time Invoices**: Create and send professional one-time invoices to your clients.
+- **Recurring Invoices**: Automate your invoicing with recurring invoices that can be scheduled and sent periodically.
+- **Invoice Reminders**: Ensure timely payments by sending reminder emails for outstanding invoices.
+- **Emailing**: Email invoices and payment reminders directly from the platform.
 
 ## Getting Started
 
 ### Prerequisites
 
-- Python 3.x
-- Django
-- Docker
-- Docker Compose
-- HTMX
-- HyperScript
+- Python 3.10+
 - Additional requirements can be found in the `pyproject.toml` file (or by using `poetry show`).
+
+Please be aware some features **require** AWS features such as Eventbridge, however you can host the site locally or any other
+usual hosting platform, we have a docker setup.
 
 ### Installation
 
-View our documentation to get started [https://docs.strelix.org/MyFinances](https://docs.strelix.org/MyFinances)
+For detailed setup instructions please refer to our documentation: [https://docs.strelix.org/MyFinances](https://docs.strelix.org/MyFinances)
 
 ## Contributing
 
-Thank you for considering contributing to the MyFinances project! Your contributions help make the project better for everyone.
+We appreciate your interest in contributing to MyFinances! Whether you're a seasoned developer or just getting started, we have something for you.
 
 ### Issue Tracker
 
@@ -56,12 +40,10 @@ Thank you for considering contributing to the MyFinances project! Your contribut
 
 Before submitting a new issue, please:
 
-- Check for existing related issues.
-- Check the issue tracker for a specific upstream project that may be more appropriate.
-- Check against supported versions of this project (i.e., the latest).
+- Search for existing issues that might cover your topic.
+- Ensure your issue pertains to the current version of the project.
 
-Use the Subscribe button to stay updated on discussions. Keep conversations on-topic and respect the opinions of others. For
-urgent issues or those involving confidential details, please report them directly to the maintainers.
+For urgent issues or those involving confidential details, please report them directly to us on the details below.
 
 #### Security Vulnerabilities
 
@@ -78,16 +60,25 @@ reproduce, and relevant environment details.
 We welcome feature requests! If you have an idea for a new feature or enhancement, open an issue on the issue tracker. Describe
 the feature, its potential benefits, and any relevant use cases.
 
+We have a step system for features:
+- idea: suggested
+- idea: deciding
+- idea: accepted
+
+Once an idea is accepted this can be worked on. Only if there is no assigned person to the issue, the issue is inactive or the
+issue is marked as "group issue"/"needs help" you may work on it.
+
+
 ### Pull Requests / Merge Requests
 
 To contribute code:
 
 1. Fork the repository.
-2. Install pre-commit hooks (do it once, whenever you clone the repository)
+2. Install pre-commit hooks (do it once, whenever you clone the repository) [optional but tests may fail without it]
    - `pre-commit install`
 3. Create a new branch for your changes.
-4. Make your changes, following the coding style guidelines.
-5. Test your changes thoroughly
+4. Implement your changes, following the coding standards.
+5. Run the test suite
     - `python3 manage.py test`
     - run the app (`python3 manage.py runserver`)
     - view any changed pages in browser (`http://127.0.0.1:8000`) and make sure the changes work as expected
@@ -99,10 +90,6 @@ We'll review your pull request, provide feedback, and work with you to get your 
 
 Adhere to the coding style guidelines of the Django project. Find the Django coding style
 guide [here](https://docs.djangoproject.com/en/4.2/internals/contributing/writing-code/coding-style/). Please install our pre-commit hooks using following command:
-
-```
-pre-commit install
-```
 
 We now also use the [python black formatter](https://black.readthedocs.io/). Code tests will be run before PRs can be merged, they
 will fail if you haven't ran the command below:
@@ -118,10 +105,6 @@ For static type checking we are using [mypy](https://mypy-lang.org/). Code tests
 mypy .
 ```
 
-### Version Control
-
-We use Git. Make sure your commits are clear, concise, and well-documented. Follow conventional commit message style.
-
 ### Development
 
 #### Prerequisites
@@ -130,7 +113,7 @@ Make sure you have the necessary prerequisites for development. These are detail
 
 #### Getting Started
 
-View our documentation to get started [https://docs.strelix.org/MyFinances](https://docs.strelix.org/MyFinances)
+View our documentation for further instruction [https://docs.strelix.org/MyFinances](https://docs.strelix.org/MyFinances)
 
 Thank you for your contributions!
 
