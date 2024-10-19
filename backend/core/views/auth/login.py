@@ -9,6 +9,7 @@ from django.core.validators import validate_email
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import resolve, reverse
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.urls.exceptions import Resolver404
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.decorators import method_decorator
@@ -88,6 +89,8 @@ def login_manual(request: HttpRequest):
 
 
 def redirect_to_login(email: str, redirect_url: str):
+    if not url_has_allowed_host_and_scheme(redirect_url, allowed_hosts=None):
+        redirect_url = reverse("dashboard")
     return redirect(f"{reverse('auth:login')}?email={email}&next={redirect_url}")
 
 
