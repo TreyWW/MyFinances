@@ -10,6 +10,7 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import resolve, reverse
 from django.urls.exceptions import Resolver404
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.http import require_GET, require_POST
@@ -76,10 +77,13 @@ def login_manual(request: HttpRequest):
         messages.warning(request, "You have been requested by an administrator to change your account password.")
         return redirect("settings:change_password")
 
-    try:
-        resolve(redirect_url)
-        return redirect(redirect_url)
-    except Resolver404:
+    if url_has_allowed_host_and_scheme(redirect_url, allowed_hosts=None):
+        try:
+            resolve(redirect_url)
+            return redirect(redirect_url)
+        except Resolver404:
+            return redirect("dashboard")
+    else:
         return redirect("dashboard")
 
 
