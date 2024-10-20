@@ -2,7 +2,6 @@ FROM python:3.12-alpine
 
 RUN pip install poetry==1.7.1
 
-# Set environment variables for Poetry
 ENV POETRY_NO_INTERACTION=1 \
     POETRY_VIRTUALENVS_IN_PROJECT=1 \
     POETRY_VIRTUALENVS_CREATE=false \
@@ -10,16 +9,15 @@ ENV POETRY_NO_INTERACTION=1 \
 
 WORKDIR /MyFinances
 
-# Install build dependencies
+# Install build dependencies including C++ compiler
 RUN apk add --no-cache --virtual .build-deps \
     gcc \
     g++ \
     musl-dev \
     libffi-dev \
-    mariadb-connector-c-dev \
+    mariadb-dev \
     postgresql-dev \
-    curl \
-    && apk add --no-cache mariadb-dev  # Include if MySQL is needed
+    curl
 
 # Copy only dependency files first for better caching
 COPY pyproject.toml poetry.lock ./
@@ -33,7 +31,6 @@ RUN if [ "${TESTING}" != "true" ] || [ "${DATABASE_TYPE}" = "postgres" ]; then \
         poetry install --only postgres; \
     fi
 
-# Clean up build dependencies
 RUN apk del .build-deps
 
 RUN poetry install --without dev,mysql,postgres --no-root && rm -rf $POETRY_CACHE_DIR
