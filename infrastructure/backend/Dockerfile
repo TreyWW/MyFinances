@@ -2,6 +2,7 @@ FROM python:3.12-alpine
 
 RUN pip install poetry==1.7.1
 
+# Set environment variables for Poetry
 ENV POETRY_NO_INTERACTION=1 \
     POETRY_VIRTUALENVS_IN_PROJECT=1 \
     POETRY_VIRTUALENVS_CREATE=false \
@@ -9,29 +10,26 @@ ENV POETRY_NO_INTERACTION=1 \
 
 WORKDIR /MyFinances
 
-#RUN #apk --no-cache --update add \
-#    mariadb-connector-c-dev \
-#    py-pip \
-#    musl-dev \
-#    gcc \
-#    mariadb-dev \
-#    libffi-dev
-
-
 # Install build dependencies
-RUN apk add --virtual .build-deps py-pip musl-dev gcc
+RUN apk add --no-cache --virtual .build-deps \
+    gcc \
+    g++ \
+    musl-dev \
+    libffi-dev \
+    mariadb-connector-c-dev \
+    postgresql-dev \
+    curl \
+    && apk add --no-cache mariadb-dev  # Include if MySQL is needed
 
+# Copy only dependency files first for better caching
 COPY pyproject.toml poetry.lock ./
 
-# Install MySQL dependencies and packages if DATABASE_TYPE is mysql
 RUN if [ "${DATABASE_TYPE}" = "mysql" ]; then \
-        apk add --no-cache mariadb-dev && \
         poetry install --only mysql; \
     fi
 
-# Install PostgreSQL dependencies and packages if TESTING is not true or DATABASE_TYPE is postgres
+# Install PostgreSQL dependencies if TESTING is not true or DATABASE_TYPE is postgres
 RUN if [ "${TESTING}" != "true" ] || [ "${DATABASE_TYPE}" = "postgres" ]; then \
-        apk add --no-cache postgresql-dev && \
         poetry install --only postgres; \
     fi
 
@@ -46,5 +44,4 @@ RUN chmod +x infrastructure/backend/scripts/*
 
 ENTRYPOINT ["sh", "infrastructure/backend/scripts/entrypoint.sh"]
 
-EXPOSE 10012
-EXPOSE 9012
+EXPOSE 10012 9012
