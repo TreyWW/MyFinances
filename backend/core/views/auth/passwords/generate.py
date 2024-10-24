@@ -7,6 +7,7 @@ from django.core.validators import validate_email
 from django.shortcuts import redirect
 from django.urls import reverse, resolve, NoReverseMatch
 from django.utils import timezone
+from django.utils.http import url_has_allowed_host_and_scheme
 
 from backend.models import User, PasswordSecret
 from backend.core.models import RandomCode
@@ -50,10 +51,13 @@ def set_password_generate(request: HtmxHttpRequest):
         f'Successfully created a code. <a href="{reverse("user set password", args=(CODE,))}">{CODE}</a>',
     )
 
-    try:
-        resolve(NEXT)
-        return redirect(NEXT)
-    except NoReverseMatch:
+    if url_has_allowed_host_and_scheme(NEXT, allowed_hosts=None):
+        try:
+            resolve(NEXT)
+            return redirect(NEXT)
+        except NoReverseMatch:
+            return redirect("dashboard")
+    else:
         return redirect("dashboard")
 
 
