@@ -4,12 +4,14 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
 
 from login_required import login_not_required
 
 from backend.decorators import web_require_scopes
 from backend.finance.models import Invoice, InvoiceURL
 from backend.core.types.htmx import HtmxHttpRequest
+from backend.finance.models import InvoiceHistory
 
 
 @web_require_scopes("invoices:read", False, False, "dashboard")
@@ -55,3 +57,10 @@ def view_invoice_with_uuid_endpoint(request, uuid):
         "pages/invoices/single/view/invoice_page.html",
         context,
     )
+def restore_invoice_version(request, invoice_id, version):
+    if request.method == "POST":
+        invoice = get_object_or_404(Invoice, id=invoice_id)
+
+        InvoiceHistory.restore_version(invoice, version)
+        messages.success(request, f"The invoice has been updated to version {version}.")
+    return redirect('finance:invoices:single:overview', invoice_id=invoice.id)
