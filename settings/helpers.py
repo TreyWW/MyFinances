@@ -26,7 +26,7 @@ from backend.core.types.emails import (
 
 # NEEDS REFACTOR
 
-env = environ.Env(DEBUG=(bool, False))
+#env = environ.Env(DEBUG=(bool, False))
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 env = environ.Env()
@@ -55,7 +55,7 @@ def increment_rate_limit(request, group):
 
 EMAIL_CLIENT: SESV2Client = boto3.client(
     "sesv2",
-    region_name="eu-west-2",
+    region_name="eu-west-2"
     # aws_access_key_id=get_var("AWS_SES_ACCESS_KEY_ID"),
     # aws_secret_access_key=get_var("AWS_SES_SECRET_ACCESS_KEY"),
 )
@@ -91,6 +91,8 @@ def send_email(
     ConfigurationSetName: str | None = None,
     from_address: str | None = None,
     from_address_name_prefix: str | None = None,
+    cc: list[str] | None = None,
+    bcc: list[str] | None = None
 ) -> SingleEmailSendServiceResponse:
     """
     Args:
@@ -107,6 +109,8 @@ def send_email(
         ConfigurationSetName=ConfigurationSetName,
         from_address=from_address,
         from_address_name_prefix=from_address_name_prefix,
+        cc=cc,
+        bcc=bcc
     )
 
     if get_var("DEBUG", "").lower() == "true":

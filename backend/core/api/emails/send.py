@@ -18,6 +18,7 @@ from mypy_boto3_sesv2.type_defs import BulkEmailEntryResultTypeDef
 from backend.core.data.default_email_templates import email_footer
 from backend.decorators import feature_flag_check, web_require_scopes
 from backend.decorators import htmx_only
+from backend.finance.models import Invoice, InvoiceURL
 from backend.models import Client
 from backend.models import EmailSendStatus
 from backend.models import QuotaLimit
@@ -63,6 +64,163 @@ def send_bulk_email_view(request: WebRequest) -> HttpResponse:
     # if not isinstance(check_usage, bool):
     #     return check_usage
     return _send_bulk_email_view(request)
+
+
+@require_POST
+@htmx_only("emails:dashboard")
+@feature_flag_check("areUserEmailsAllowed", status=True, api=True, htmx=True)
+@web_require_scopes("emails:send", False, False, "emails:dashboard")
+def send_invoice_email_view(request: WebRequest, uuid) -> HttpResponse:
+    # email_count = len(request.POST.getlist("emails")) - 1
+
+    # check_usage = quota_usage_check_under(request, "emails-single-count", add=email_count, api=True, htmx=True)
+    # if not isinstance(check_usage, bool):
+    #     return check_usage
+    return _send_invoice_email_view(request, uuid)
+
+
+def _send_invoice_email_view(request: WebRequest, uuid) -> HttpResponse:
+    emails: list[str] = request.POST.getlist("emails")
+    subject: str = request.POST.get("subject", "")
+    message: str = request.POST.get("content", "")
+    cc_emails = request.POST.get("cc_emails", "").split(",") if request.POST.get("cc_emails") else []
+    bcc_emails = request.POST.get("bcc_emails", "").split(",") if request.POST.get("bcc_emails") else []
+    invoiceurl_uuid = uuid
+    invoice_id = InvoiceURL.objects.filter(uuid=invoiceurl_uuid).values_list("invoice_id", flat=True).first()
+    invoice = Invoice.objects.filter(id=invoice_id).first()
+
+    if request.user.logged_in_as_team:
+        clients = Client.objects.filter(organization=request.user.logged_in_as_team, email__in=emails)
+    else:
+        clients = Client.objects.filter(user=request.user, email__in=emails)
+
+    validated_bulk = validate_bulk_inputs(request=request, emails=emails, clients=clients, message=message, subject=subject)
+
+    if validated_bulk:
+        messages.error(request, validated_bulk)
+        return render(request, "base/toast.html")
+
+    message += email_footer()
+    message_single_line_html = message.replace("\r\n", "<br>").replace("\n", "<br>")
+
+    email_list: list[BulkEmailEmailItem] = []
+
+    for email in emails:
+        client = clients.filter(email=email).first()
+
+        email_data = {
+            "first_name": invoice.client_name if invoice.client_name else "User",
+            "invoice_id": invoice.id,
+            "invoice_ref": invoice.reference or invoice.invoice_number or invoice.id,
+            "due_date": invoice.date_due.strftime("%A, %B %d, %Y"),
+            "amount_due": invoice.get_total_price(),
+            "currency": invoice.currency,
+            "currency_symbol": invoice.get_currency_symbol(),
+            "product_list": [],  # todo
+            "company_name": invoice.self_company or invoice.self_name or "MyFinances Customer",
+            "invoice_link": get_var("SITE_URL") + "/invoice/" + invoiceurl_uuid,
+        }
+
+        email_list.append(
+            BulkEmailEmailItem(
+                destination=email,
+                cc=cc_emails,
+                bcc=bcc_emails,
+                template_data={
+                    "users_name": client.name.split()[0] if client else "User",
+                    "content_text": Template(message).safe_substitute(email_data),
+                    "content_html": Template(message_single_line_html).safe_substitute(email_data),
+                },
+            )
+        )
+
+    if get_var("DEBUG", "").lower() == "true":
+        print(
+            {
+                "email_list": email_list,
+                "template_name": "user_send_client_email",
+                "default_template_data": {
+                    "sender_name": request.user.first_name or request.user.email,
+                    "sender_id": request.user.id,
+                    "subject": subject,
+                },
+            },
+        )
+        messages.success(request, f"Successfully emailed {len(email_list)} people.")
+        return render(request, "base/toast.html")
+
+    EMAIL_SENT = send_email(
+        destination=emails,
+        subject=subject,
+        content={
+            "template_name": "user_send_client_email",
+            "template_data": {
+                "subject": subject,
+                "sender_name": request.user.first_name or request.user.email,
+                "sender_id": request.user.id,
+                "content_text": Template(message).safe_substitute(email_data),
+                "content_html": Template(message_single_line_html).safe_substitute(email_data),
+            },
+        },
+        from_address=request.user.email,
+        cc=cc_emails,
+        bcc=bcc_emails
+    )
+
+    if EMAIL_SENT.failed:
+        messages.error(request, EMAIL_SENT.error)
+        return render(request, "base/toast.html")
+
+
+    # todo - fix
+
+    EMAIL_RESPONSES: Iterator[tuple[BulkEmailEmailItem, BulkEmailEntryResultTypeDef]] = zip(
+        email_list, EMAIL_SENT.response.get("BulkEmailEntryResults")  # type: ignore[arg-type]
+    )
+
+    if request.user.logged_in_as_team:
+        SEND_STATUS_OBJECTS: list[EmailSendStatus] = EmailSendStatus.objects.bulk_create(
+            [
+                EmailSendStatus(
+                    organization=request.user.logged_in_as_team,
+                    sent_by=request.user,
+                    recipient=response[0].destination,
+                    aws_message_id=response[1].get("MessageId"),
+                    status="pending",
+                )
+                for response in EMAIL_RESPONSES
+            ]
+        )
+    else:
+        SEND_STATUS_OBJECTS = EmailSendStatus.objects.bulk_create(
+            [
+                EmailSendStatus(
+                    user=request.user,
+                    sent_by=request.user,
+                    recipient=response[0].destination,
+                    aws_message_id=response[1].get("MessageId"),
+                    status="pending",
+                )
+                for response in EMAIL_RESPONSES
+            ]
+        )
+
+    messages.success(request, f"Successfully emailed {len(email_list)} people.")
+
+    try:
+        quota_limits = QuotaLimit.objects.filter(slug__in=["emails-single-count", "emails-bulk-count"])
+
+        QuotaUsage.objects.bulk_create(
+            [
+                QuotaUsage(user=request.user, quota_limit=quota_limits.get(slug="emails-single-count"), extra_data=status.id)
+                for status in SEND_STATUS_OBJECTS
+            ]
+            + [QuotaUsage(user=request.user, quota_limit=quota_limits.get(slug="emails-bulk-count"))]
+        )
+    except QuotaLimit.DoesNotExist:
+        ...
+
+    return render(request, "base/toast.html")
 
 
 def _send_bulk_email_view(request: WebRequest) -> HttpResponse:
@@ -120,7 +278,7 @@ def _send_bulk_email_view(request: WebRequest) -> HttpResponse:
                     "sender_id": request.user.id,
                     "subject": subject,
                 },
-            }
+            },
         )
         messages.success(request, f"Successfully emailed {len(email_list)} people.")
         return render(request, "base/toast.html")

@@ -25,6 +25,8 @@ class SingleEmailInput:
     ConfigurationSetName: str | None = None
     from_address: str | None = None
     from_address_name_prefix: str | None = None
+    cc: list[str] = field(default_factory=list)
+    bcc: list[str] = field(default_factory=list)
 
 
 @dataclass
