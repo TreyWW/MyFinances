@@ -3,7 +3,7 @@ on:
   push:
     tags:
       - 'v*'
-  workflow_dispatch: # Allows me to manually trigger
+  workflow_dispatch: 
     inputs:
       version:
         type: string
@@ -14,8 +14,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     permissions:
-      packages: write  # Required to publish Docker images to GitHub Packages
-      contents: read    # Required to access repository content
+      packages: write
+      contents: read
 
     steps:
       - name: Checkout repository
@@ -30,9 +30,6 @@ jobs:
             echo "::set-output name=version::${{ github.event.inputs.version }}"
           fi
 
-      #----------------------------------------------
-      #       build Frontend files
-      #----------------------------------------------
       - name: Build frontend
         run: |
           npm ci
@@ -52,17 +49,23 @@ jobs:
             exit 1
           fi
           if [ -f webpack-stats.json ]; then
-            echo "webpack has built webpack-stats to work with chunks"
+            echo "webpack-stats was built successfully"
           else
-            echo "webpack-stats was not built so cannot work with chunks"
+            echo "webpack-stats was not built"
             exit 1
           fi
+
+      - name: Set up Docker Buildx
+        run: |
+          docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+          docker buildx create --name multiarch-builder --use
+          docker buildx inspect --bootstrap
 
       - name: Log in to GitHub Docker Registry
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-      - name: Build, tag, and push image to GitHub Packages
+      - name: Build, tag, and push multi-arch image to GitHub Packages
         id: build-image
         env:
           IMAGE_NAME: ghcr.io/treyww/myfinances
@@ -71,13 +74,15 @@ jobs:
           cp infrastructure/backend/Dockerfile ./Dockerfile
           echo "VERSION IS: ${{ steps.set_version.outputs.version }} or $IMAGE_TAG"
           
-          # Build and push versioned image
-          docker build -t $IMAGE_NAME:$IMAGE_TAG .
-          docker push $IMAGE_NAME:$IMAGE_TAG
+          # Use buildx to build for multiple platforms (arm64 and amd64)
+          docker buildx build --platform linux/amd64,linux/arm64 \
+            -t $IMAGE_NAME:$IMAGE_TAG . \
+            --push
 
-          # Optionally build and push 'latest' tag
-          docker build -t $IMAGE_NAME:latest .
-          docker push $IMAGE_NAME:latest
+          # Optionally push the 'latest' tag for both platforms
+          docker buildx build --platform linux/amd64,linux/arm64 \
+            -t $IMAGE_NAME:latest . \
+            --push
 
           echo "::set-output name=image::$IMAGE_NAME:$IMAGE_TAG"
           echo "::set-output name=latest_image::$IMAGE_NAME:latest"
