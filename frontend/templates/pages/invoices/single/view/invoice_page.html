@@ -7,6 +7,13 @@
         <div class="flex h-screen w-full">
             <main class="h-full w-full overflow-y-auto pb-16">
                 <div class="max-w-4xl mx-auto p-8 bg-white shadow-lg">
+                    {% if is_history_preview %}
+                        <!-- Warning that this is a preview only -->
+                        <div class="mb-6 p-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700">
+                            <p class="font-semibold text-center">This is not a legally valid invoice. This is only a preview of a previous version.</p>
+                            <p class="text-center mt-2">Created on: {{ history_entry.timestamp|date:"d/m/Y h:i A" }}</p>
+                        </div>
+                    {% endif %}
                     <div class="flex justify-between items-center mb-8 print:hidden">
                         {% if request.user.is_authenticated %}
                             <a href="{% url 'finance:invoices:single:overview' invoice_id=invoice.id %}"

@@ -32,7 +32,6 @@ class BotoSchedule(models.Model):
     received = models.BooleanField(default=False)
     boto_schedule_status = models.CharField(max_length=100, choices=BotoStatusTypes.choices, default=BotoStatusTypes.PENDING)
 
-
     class Meta:
         abstract = True
 
@@ -137,6 +136,7 @@ class InvoiceBase(OwnerBase):
     def get_currency_symbol(self):
         return UserSettings.CURRENCIES.get(self.currency, {}).get("symbol", "$")
 
+
 class Invoice(InvoiceBase):
     # objects = InvoiceManager()
 
@@ -227,7 +227,6 @@ class Invoice(InvoiceBase):
         if self.pk:
             InvoiceHistory.save_history(self)
         super().save(*args, **kwargs)
-
 
 
 class InvoiceRecurringProfile(InvoiceBase, BotoSchedule):
@@ -402,6 +401,7 @@ class ReceiptDownloadToken(models.Model):
     file = models.ForeignKey(Receipt, on_delete=models.CASCADE)
     token = models.UUIDField(default=uuid4, editable=False, unique=True)
 
+
 class InvoiceHistory(models.Model):
     invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE, related_name="history")
     timestamp = models.DateTimeField(auto_now_add=True)
@@ -422,7 +422,7 @@ class InvoiceHistory(models.Model):
                 "client_city": invoice_instance.client_city,
                 "client_county": invoice_instance.client_county,
                 "client_country": invoice_instance.client_country,
-                "client_is_representative": invoice_instance.client_is_representative
+                "client_is_representative": invoice_instance.client_is_representative,
             },
             "self_details": {
                 "self_name": invoice_instance.self_name,
@@ -430,7 +430,7 @@ class InvoiceHistory(models.Model):
                 "self_address": invoice_instance.self_address,
                 "self_city": invoice_instance.self_city,
                 "self_county": invoice_instance.self_county,
-                "self_country": invoice_instance.self_country
+                "self_country": invoice_instance.self_country,
             },
             "financial_details": {
                 "sort_code": invoice_instance.sort_code,
@@ -441,15 +441,22 @@ class InvoiceHistory(models.Model):
                 "vat_number": invoice_instance.vat_number,
                 "currency": invoice_instance.currency,
                 "discount_amount": decimal_to_float(invoice_instance.discount_amount),
-                "discount_percentage": decimal_to_float(invoice_instance.discount_percentage)
+                "discount_percentage": decimal_to_float(invoice_instance.discount_percentage),
             },
             "dates": {
-                "date_created": invoice_instance.date_created.isoformat() if isinstance(invoice_instance.date_created,
-                                                                                        date) else invoice_instance.date_created,
-                "date_issued": invoice_instance.date_issued.isoformat() if isinstance(invoice_instance.date_issued,
-                                                                                      date) else invoice_instance.date_issued,
-                "date_due": invoice_instance.date_due.isoformat() if isinstance(invoice_instance.date_due,
-                                                                                date) else invoice_instance.date_due
+                "date_created": (
+                    invoice_instance.date_created.isoformat()
+                    if isinstance(invoice_instance.date_created, date)
+                    else invoice_instance.date_created
+                ),
+                "date_issued": (
+                    invoice_instance.date_issued.isoformat()
+                    if isinstance(invoice_instance.date_issued, date)
+                    else invoice_instance.date_issued
+                ),
+                "date_due": (
+                    invoice_instance.date_due.isoformat() if isinstance(invoice_instance.date_due, date) else invoice_instance.date_due
+                ),
             },
             "status": invoice_instance.status,
             "items": [
@@ -459,28 +466,24 @@ class InvoiceHistory(models.Model):
                     "is_service": item.is_service,
                     "hours": decimal_to_float(item.hours) if item.is_service else None,
                     "price_per_hour": decimal_to_float(item.price_per_hour) if item.is_service else None,
-                    "price": decimal_to_float(item.price)
+                    "price": decimal_to_float(item.price),
                 }
                 for item in invoice_instance.items.all()
             ],
             "totals": {
                 "subtotal": decimal_to_float(invoice_instance.get_subtotal()),
                 "tax": decimal_to_float(invoice_instance.get_tax()),
-                "total": decimal_to_float(invoice_instance.get_total_price())
+                "total": decimal_to_float(invoice_instance.get_total_price()),
             },
             "logo": invoice_instance.logo.url if invoice_instance.logo else None,
-            "notes": invoice_instance.notes
+            "notes": invoice_instance.notes,
         }
 
-        history_entry = InvoiceHistory(
-            invoice=invoice_instance,
-            version=invoice_instance.history.count() + 1,
-            changes=history_data
-        )
+        history_entry = InvoiceHistory(invoice=invoice_instance, version=invoice_instance.history.count() + 1, changes=history_data)
         history_entry.save()
 
     @staticmethod
-    def restore_version(invoice_instance, version):
+    def restore_version(invoice_instance, version, save=True):
         # Load version from history
         history = InvoiceHistory.objects.filter(invoice=invoice_instance, version=version).first()
         if history:
@@ -495,8 +498,9 @@ class InvoiceHistory(models.Model):
             invoice_instance.client_city = client_details.get("client_city", invoice_instance.client_city)
             invoice_instance.client_county = client_details.get("client_county", invoice_instance.client_county)
             invoice_instance.client_country = client_details.get("client_country", invoice_instance.client_country)
-            invoice_instance.client_is_representative = client_details.get("client_is_representative",
-                                                                           invoice_instance.client_is_representative)
+            invoice_instance.client_is_representative = client_details.get(
+                "client_is_representative", invoice_instance.client_is_representative
+            )
 
             # Restore self_details
             self_details = changes.get("self_details", {})
@@ -510,17 +514,16 @@ class InvoiceHistory(models.Model):
             # Restore financial_details
             financial_details = changes.get("financial_details", {})
             invoice_instance.sort_code = financial_details.get("sort_code", invoice_instance.sort_code)
-            invoice_instance.account_holder_name = financial_details.get("account_holder_name",
-                                                                         invoice_instance.account_holder_name)
+            invoice_instance.account_holder_name = financial_details.get("account_holder_name", invoice_instance.account_holder_name)
             invoice_instance.account_number = financial_details.get("account_number", invoice_instance.account_number)
             invoice_instance.reference = financial_details.get("reference", invoice_instance.reference)
             invoice_instance.invoice_number = financial_details.get("invoice_number", invoice_instance.invoice_number)
             invoice_instance.vat_number = financial_details.get("vat_number", invoice_instance.vat_number)
             invoice_instance.currency = financial_details.get("currency", invoice_instance.currency)
-            invoice_instance.discount_amount = Decimal(
-                financial_details.get("discount_amount", invoice_instance.discount_amount))
+            invoice_instance.discount_amount = Decimal(financial_details.get("discount_amount", invoice_instance.discount_amount))
             invoice_instance.discount_percentage = Decimal(
-                financial_details.get("discount_percentage", invoice_instance.discount_percentage))
+                financial_details.get("discount_percentage", invoice_instance.discount_percentage)
+            )
 
             # Restore dates
             dates = changes.get("dates", {})
@@ -539,19 +542,19 @@ class InvoiceHistory(models.Model):
                     name=item_data.get("name"),
                     description=item_data.get("description"),
                     is_service=item_data.get("is_service"),
-                    hours=Decimal(item_data.get("hours")) if item_data.get("is_service") and item_data.get(
-                        "hours") is not None else None,
-                    price_per_hour=Decimal(item_data.get("price_per_hour")) if item_data.get(
-                        "is_service") and item_data.get("price_per_hour") is not None else None,
-                    price=Decimal(item_data.get("price")) if item_data.get("price") is not None else None
+                    hours=Decimal(item_data["hours"]) if item_data.get("is_service") and item_data.get("hours") else None,
+                    price_per_hour=(
+                        Decimal(item_data["price_per_hour"]) if item_data.get("is_service") and item_data.get("price_per_hour") else None
+                    ),
+                    price=Decimal(item_data["price"]) if item_data.get("price") else None,
                 )
                 item.save()
                 invoice_instance.items.add(item)
-
 
             # Restore logo a notes
             invoice_instance.logo = changes.get("logo", invoice_instance.logo)
             invoice_instance.notes = changes.get("notes", invoice_instance.notes)
 
             # Save restore invoice
-            invoice_instance.save()
+            if save:
+                invoice_instance.save()

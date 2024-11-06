@@ -110,6 +110,7 @@
                     <th class="text-left">Version</th>
                     <th class="text-left">Date and Time</th>
                     <th class="text-left">Action</th>
+                    <th class="text-left">Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -124,6 +125,11 @@
                                     Restore
                                 </button>
                             </form>
+                        </td>
+                        <td>
+                            <a href="{% url 'finance:invoices:single:preview_invoice_version' invoice_id=invoice.id version=history.version %}" class="btn btn-sm btn-outline btn-secondary">
+                                Preview
+                            </a>
                         </td>
                     </tr>
                 {% empty %}
