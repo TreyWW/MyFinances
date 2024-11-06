@@ -234,7 +234,7 @@ MIDDLEWARE = [
     "tz_detect.middleware.TimezoneMiddleware",
     "backend.middleware.HTMXPartialLoadMiddleware",
     # "backend.core.api.public.middleware.AttachTokenMiddleware",
-    "backend.core.api.public.middleware.HandleTeamContextMiddleware",
+    # "backend.core.api.public.middleware.HandleTeamContextMiddleware",
 ]
 
 if DEBUG:
@@ -305,11 +305,9 @@ ANALYTICS = get_var("ANALYTICS_SCRIPT")
 BILLING_ENABLED = get_var("BILLING_ENABLED", "").lower() == "true"
 
 if BILLING_ENABLED or TYPE_CHECKING:
-    print("BILLING MODULE IS ENABLED")
+    print("[BACKEND] BILLING MODULE IS ENABLED")
     INSTALLED_APPS.append("billing")
     MIDDLEWARE.extend(["billing.middleware.CheckUserSubScriptionMiddleware"])
-    # TEMPLATES[0]["DIRS"].append(BASE_DIR / "billing/templates")
-    print(TEMPLATES)
 
 # endregion "Billing"
 
@@ -414,7 +412,7 @@ class CustomPrivateMediaStorage(S3Storage):
 AWS_STATIC_ENABLED = get_var("AWS_STATIC_ENABLED", default="False").lower() == "true"
 AWS_STATIC_CDN_TYPE = get_var("AWS_STATIC_CDN_TYPE")
 
-logging.info(f"{AWS_STATIC_ENABLED=} | {AWS_STATIC_CDN_TYPE=}")
+logging.debug(f"{AWS_STATIC_ENABLED=} | {AWS_STATIC_CDN_TYPE=}")
 
 if AWS_STATIC_ENABLED or AWS_STATIC_CDN_TYPE.lower() == "aws":
     STATICFILES_STORAGE = "settings.settings.CustomStaticStorage"
@@ -422,12 +420,12 @@ if AWS_STATIC_ENABLED or AWS_STATIC_CDN_TYPE.lower() == "aws":
     STORAGES["staticfiles"] = {
         "BACKEND": "settings.settings.CustomStaticStorage",
     }
-    logging.info(f"{STATIC_LOCATION=} | {STATICFILES_STORAGE=}")
+    logging.debug(f"{STATIC_LOCATION=} | {STATICFILES_STORAGE=}")
 else:
     STATIC_URL = f"/static/"
     STATIC_ROOT = os.path.join(BASE_DIR, "static")
     STATICFILES_STORAGE = "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
-    logging.info(f"{STATIC_URL=} | {STATIC_ROOT=} | {STATICFILES_STORAGE=}")
+    logging.debug(f"{STATIC_URL=} | {STATIC_ROOT=} | {STATICFILES_STORAGE=}")
 
 AWS_MEDIA_PUBLIC_ENABLED = get_var("AWS_MEDIA_PUBLIC_ENABLED", default="False").lower() == "true"
 

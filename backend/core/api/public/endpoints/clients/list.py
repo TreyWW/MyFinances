@@ -44,13 +44,9 @@ def list_clients_endpoint(request: APIRequest):
 
     search_text = request.data.get("search")
 
-    if not request.team and isinstance(request.auth.owner, Organization):
-        return APIResponse(False, "When using a team API Key the team_id field must be provided.")
-
     clients: FetchClientServiceResponse = fetch_clients(request, search_text=search_text, team=request.team)
 
     # queryset = paginator.paginate_queryset(clients, request)
 
     serializer = ClientSerializer(clients.response, many=True)
-
     return APIResponse(True, {"clients": serializer.data})
