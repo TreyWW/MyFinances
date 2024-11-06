@@ -65,7 +65,7 @@ def view_invoice_with_uuid_endpoint(request, uuid):
 def restore_invoice_version(request, invoice_id, version):
     if request.method == "POST":
         invoice = get_object_or_404(Invoice, id=invoice_id)
-        # Skontroluje, či má používateľ prístup k faktúre
+        # check if user access to invoice
         if not invoice.has_access(request.user):
             messages.error(request, "You don't have permission to restore this invoice.")
             return redirect("finance:invoices:single:overview", invoice_id=invoice.id)
@@ -95,7 +95,7 @@ def preview_invoice_version(request, invoice_id, version):
             context = {
                 "invoice": invoice,
                 "is_history_preview": True,
-                "history_entry": history_entry,  # Aby sme mali prístup k timestampu
+                "history_entry": history_entry,
             }
 
             # render with temporary items
