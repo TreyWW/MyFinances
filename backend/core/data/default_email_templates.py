@@ -69,3 +69,59 @@ def email_footer() -> str:
         """
         ).strip()
     )
+
+
+def invoice_state_pending_template() -> str:
+    return dedent(
+        """
+        Hi $first_name,
+
+        Your invoice #$invoice_id is now available and is due by $due_date. Please make your payment at your earliest convenience.
+
+        Balance Due: $currency_symbol$amount_due $currency
+        View or Pay Online: $invoice_link
+        If you are paying by standing order, no further action is required. Should you have any questions or concerns, feel free to reach out to us.
+
+        Thank you for your prompt attention to this matter.
+
+        Best regards,
+        $company_name
+    """
+    ).strip()
+
+
+def invoice_state_paid_template() -> str:
+    return dedent(
+        """
+    Hi $first_name,
+
+    The invoice #$invoice_id has just been paid.
+
+    If you have any questions or concerns, please feel free to contact us.
+
+    Many thanks,
+    $company_name
+    """
+    ).strip()
+
+
+def invoice_state_overdue_template() -> str:
+    return dedent(
+        """
+    Hi $first_name,
+
+    We wanted to remind you that invoice #$invoice_id is now overdue. Please arrange payment as soon as possible to ensure there’s no interruption in your service. If you’ve already made the payment, kindly disregard this message—our apologies for any confusion.
+
+    Here are the details for your convenience:
+
+    Balance Due: $currency_symbol$amount_due $currency
+    Due Date: $due_date
+
+    If you have any questions or concerns, we’re happy to help. Please don’t hesitate to reach out.
+
+    Thank you for your prompt attention to this matter.
+
+    Warm regards,
+    $company_name
+    """
+    ).strip()

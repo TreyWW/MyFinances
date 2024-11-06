@@ -87,7 +87,9 @@ def _send_invoice_email_view(request: WebRequest, uuid) -> HttpResponse:
     bcc_emails = request.POST.get("bcc_emails", "").split(",") if request.POST.get("bcc_emails") else []
     invoiceurl_uuid = uuid
     invoice_id = InvoiceURL.objects.filter(uuid=invoiceurl_uuid).values_list("invoice_id", flat=True).first()
-    invoice = Invoice.objects.filter(id=invoice_id).first()
+
+    if invoice_id is not None:
+        invoice = Invoice.objects.filter(id=invoice_id).first()
 
     if request.user.logged_in_as_team:
         clients = Client.objects.filter(organization=request.user.logged_in_as_team, email__in=emails)
@@ -120,6 +122,8 @@ def _send_invoice_email_view(request: WebRequest, uuid) -> HttpResponse:
             "company_name": invoice.self_company or invoice.self_name or "MyFinances Customer",
             "invoice_link": get_var("SITE_URL") + "/invoice/" + invoiceurl_uuid,
         }
+
+        print(email_data)
 
         email_list.append(
             BulkEmailEmailItem(
@@ -164,13 +168,12 @@ def _send_invoice_email_view(request: WebRequest, uuid) -> HttpResponse:
         },
         from_address=request.user.email,
         cc=cc_emails,
-        bcc=bcc_emails
+        bcc=bcc_emails,
     )
 
     if EMAIL_SENT.failed:
         messages.error(request, EMAIL_SENT.error)
         return render(request, "base/toast.html")
-
 
     # todo - fix
 

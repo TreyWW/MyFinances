@@ -17,7 +17,7 @@ default_feature_flags: list[FeatureFlag] = [
         description="Invoice Scheduling allows for clients to create invoice schedules that send and invoice at a specific date.",
         default=False,
     ),
-    FeatureFlag(name="areUserEmailsAllowed", description="Are users allowed to send emails from YOUR DOMAIN to customers", default=True),
+    FeatureFlag(name="areUserEmailsAllowed", description="Are users allowed to send emails from YOUR DOMAIN to customers", default=False),
     FeatureFlag(
         name="areInvoiceRemindersEnabled",
         description="Invoice Reminders allow for clients to be reminded to pay an invoice.",
