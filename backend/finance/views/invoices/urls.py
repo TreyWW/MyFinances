@@ -11,6 +11,7 @@ from backend.finance.views.invoices.single.edit import edit_invoice_page
 from backend.finance.views.invoices.single import manage_access
 from backend.finance.views.invoices.single.overview import manage_invoice
 from backend.finance.views.invoices.single.view import preview
+from backend.finance.views.invoices.single.view import preview_invoice_version
 
 SINGLE_INVOICE_URLS = [
     # path(
@@ -55,6 +56,7 @@ SINGLE_INVOICE_URLS = [
         manage_invoice,
         name="overview",
     ),
+    path("<int:invoice_id>/preview_version/<int:version>/", preview_invoice_version, name="preview_invoice_version"),
 ]
 
 RECURRING_INVOICE_URLS = [

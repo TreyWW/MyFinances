@@ -9,6 +9,7 @@ from .recurring.fetch import fetch_all_recurring_invoices_endpoint
 from .recurring.generate_next_invoice_now import generate_next_invoice_now_endpoint
 from .recurring.poll import poll_recurring_schedule_update_endpoint
 from .recurring.update_status import recurring_profile_change_status_endpoint
+from backend.finance.views.invoices.single.view import restore_invoice_version
 
 SINGLE_INVOICE_URLS = [
     path(
@@ -24,6 +25,7 @@ SINGLE_INVOICE_URLS = [
     path("edit/<int:invoice_id>/set_status/<str:status>/", edit.change_status, name="edit status"),
     path("edit/<str:invoice_id>/discount/", edit.edit_discount, name="edit discount"),
     path("fetch/", fetch.fetch_all_invoices, name="fetch"),
+    path("single/<int:invoice_id>/restore/<int:version>/", restore_invoice_version, name="restore_invoice_version"),
     # path("", include("backend.finance.api.invoices.reminders.urls")),
 ]
 
