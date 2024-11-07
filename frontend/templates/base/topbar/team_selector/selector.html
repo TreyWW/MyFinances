@@ -28,7 +28,7 @@
                 hx-swap="none">
             <div class="items-center flex flex-row">
                 {% component "profile_picture" image_type="small" extra_classes="p-1 h-6 w-6 object-contain" url=request.user.user_profile.profile_picture_url %}
-                <a>{{ request.user.first_name|default_if_none:"You" }}</a>
+                <a>{{ request.user.first_name|default:"You" }}</a>
             </div>
             {% if not request.actor.is_org %}<i class="fa fa-check"></i>{% endif %}
         </button>
