@@ -1,4 +1,6 @@
 from datetime import datetime
+from typing import Literal
+
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -72,7 +74,7 @@ def edit_invoice_endpoint(request: APIRequest):
 
 @api_view(["POST"])
 def change_status_endpoint(request, invoice_id: int, invoice_status: str):
-    invoice_status = invoice_status.lower() if invoice_status else ""
+    invoice_status: Literal["paid", "draft", "pending"] = invoice_status.lower() if invoice_status else ""
 
     try:
         invoice = Invoice.objects.get(id=invoice_id)
