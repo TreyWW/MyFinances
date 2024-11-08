@@ -2,7 +2,7 @@
 {% fill "content" %}
 <form class="py-4"
       id="modal_generate_report-form"
-      hx-post="{% url 'api:reports:generate' %}"
+      hx-post="{% url 'api:finance:reports:generate' %}"
       hx-swap="none">
     {% csrf_token %}
     <div class="form-control w-full">

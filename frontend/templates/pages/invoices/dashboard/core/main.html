@@ -1,8 +1,5 @@
 {% extends base|default:"base/base.html" %}
 {% block content %}
-    {% if not notoggler %}
-        {% include "pages/invoices/structure/toggler.html" %}
-    {% endif %}
     <div data-hx-swap="content">
         {% if page_template %}
             {% include page_template %}
