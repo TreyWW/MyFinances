@@ -15,6 +15,8 @@ from backend.core.types.htmx import HtmxHttpRequest
 @web_require_scopes("invoices:read", False, False, "dashboard")
 def preview(request: HtmxHttpRequest, invoice_id: str) -> HttpResponse:
     invoice: Invoice | None = Invoice.objects.filter(id=invoice_id).prefetch_related("items").first()
+    iframed = bool(request.GET.get("iframe"))
+    show_refresh_btn = bool(request.GET.get("show_refresh"))
 
     if not invoice:
         messages.error(request, "Invoice not found")
@@ -29,7 +31,7 @@ def preview(request: HtmxHttpRequest, invoice_id: str) -> HttpResponse:
     return render(
         request,
         "pages/invoices/single/view/invoice_page.html",
-        {"invoice": invoice},
+        {"invoice": invoice, "iframed": iframed, "show_refresh_btn": show_refresh_btn},
     )
 
 

@@ -88,8 +88,7 @@ def change_status_endpoint(request, invoice_id: int, invoice_status: str):
     if invoice.status == invoice_status:
         return Response({"error": f"Invoice status is already {invoice_status}"}, status=status.HTTP_400_BAD_REQUEST)
 
-    invoice.status = invoice_status
-    invoice.save()
+    invoice.set_status(invoice_status)
 
     return Response({"message": f"Invoice status been changed to <strong>{invoice_status}</strong>"}, status=status.HTTP_200_OK)
 

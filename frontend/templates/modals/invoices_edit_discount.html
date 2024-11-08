@@ -65,6 +65,7 @@
         <button type="submit"
                 id="modal_invoices_edit_discount-submit"
                 class="btn btn-primary"
+                onclick='document.querySelector(`iframe[data-frame="invoice_preview"]`).contentWindow.window.location.reload()'
                 _="on click if #modal_invoices_edit_discount-form.checkValidity() call #modal_invoices_edit_discount.close() end">
             Save
         </button>
