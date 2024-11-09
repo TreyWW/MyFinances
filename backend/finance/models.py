@@ -537,8 +537,10 @@ class InvoiceHistory(models.Model):
         # Restore dates
         dates = changes.get("dates", {})
         invoice_instance.date_created = dates.get("date_created", invoice_instance.date_created)
-        invoice_instance.date_issued = dates.get("date_issued", invoice_instance.date_issued)
-        invoice_instance.date_due = dates.get("date_due", invoice_instance.date_due)
+        date_issued_str = changes.get("dates", {}).get("date_issued")
+        date_due_str = changes.get("dates", {}).get("date_due")
+        invoice_instance.date_issued = datetime.strptime(date_issued_str,"%Y-%m-%d").date() if date_issued_str else None
+        invoice_instance.date_due = datetime.strptime(date_due_str, "%Y-%m-%d").date() if date_due_str else None
 
         # Restore status
         invoice_instance.status = changes.get("status", invoice_instance.status)
