@@ -482,7 +482,8 @@ class InvoiceHistory(models.Model):
                     "tax": decimal_to_float(invoice_instance.get_tax()),
                     "total": decimal_to_float(invoice_instance.get_total_price()),
                 },
-                "logo": invoice_instance.logo.url if invoice_instance.logo else None,
+                "logo": f"invoice_logos/{invoice_instance.logo.name}" if invoice_instance.logo and not invoice_instance.logo.name.startswith(
+                    "invoice_logos/") else invoice_instance.logo.name if invoice_instance.logo else None,
                 "notes": invoice_instance.notes,
             }
 

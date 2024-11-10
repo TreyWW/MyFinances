@@ -4,7 +4,9 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
+from django.db import models
 
+from backend.core.models import _private_storage
 from backend.decorators import web_require_scopes
 from backend.finance.models import Invoice, Client, InvoiceItem
 from backend.core.types.htmx import HtmxHttpRequest
@@ -131,6 +133,9 @@ def edit_invoice(request: HtmxHttpRequest, invoice_id):
 
     for column_name, new_value in attributes_to_updates.items():
         setattr(invoice, column_name, new_value)
+
+    if "logo" in request.FILES:
+        invoice.logo = request.FILES["logo"]
 
     invoice_items = [
         InvoiceItem.objects.create(name=row[0], description=row[1], hours=row[2], price_per_hour=row[3])
