@@ -88,8 +88,14 @@ def _send_invoice_email_view(request: WebRequest, uuid) -> HttpResponse:
     invoiceurl_uuid = uuid
     invoice_id = InvoiceURL.objects.filter(uuid=invoiceurl_uuid).values_list("invoice_id", flat=True).first()
 
-    if invoice_id is not None:
-        invoice = Invoice.objects.filter(id=invoice_id).first()
+    if invoice_id is None:
+        messages.error(request, "Invalid Invoice")
+        return render(request, "base/toast.html")
+
+    invoice = Invoice.objects.filter(id=invoice_id).first()
+
+    item_names = invoice.items.values_list("name", flat=True)
+    item_names_list = list(item_names)
 
     if request.user.logged_in_as_team:
         clients = Client.objects.filter(organization=request.user.logged_in_as_team, email__in=emails)
@@ -118,12 +124,10 @@ def _send_invoice_email_view(request: WebRequest, uuid) -> HttpResponse:
             "amount_due": invoice.get_total_price(),
             "currency": invoice.currency,
             "currency_symbol": invoice.get_currency_symbol(),
-            "product_list": [],  # todo
+            "product_list": "\n".join(f"- {item_name}" for item_name in item_names_list),
             "company_name": invoice.self_company or invoice.self_name or "MyFinances Customer",
             "invoice_link": get_var("SITE_URL") + "/invoice/" + invoiceurl_uuid,
         }
-
-        print(email_data)
 
         email_list.append(
             BulkEmailEmailItem(
