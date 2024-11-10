@@ -2,12 +2,12 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.decorators import api_view
-from rest_framework.response import Response
 
 from backend.core.api.public.decorators import require_scopes
 from backend.core.api.public.serializers.invoices import InvoiceSerializer
 from backend.core.api.public.swagger_ui import TEAM_PARAMETER
 from backend.core.api.public.types import APIRequest
+from backend.core.api.public.helpers.response import APIResponse
 from backend.finance.models import Invoice
 
 
@@ -45,15 +45,15 @@ from backend.finance.models import Invoice
 )
 @api_view(["GET"])
 @require_scopes(["invoices:read"])
-def get_invoices_endpoint(request: APIRequest, id: str) -> Response:
+def get_invoices_endpoint(request: APIRequest, id: str) -> APIResponse:
     try:
         if request.team:
             invoices = Invoice.objects.filter(organization=request.team, id=id)
         else:
             invoices = Invoice.objects.filter(user=request.user, id=id)
     except Invoice.DoesNotExist:
-        return Response({"success": False, "message": "Invoice not found"}, status=status.HTTP_400_BAD_REQUEST)
+        return APIResponse(False, {"message": "Invoice not found"}, status=status.HTTP_400_BAD_REQUEST)
 
     serializer = InvoiceSerializer(invoices, many=True)
 
-    return Response({"success": True, "invoice": serializer.data}, status=status.HTTP_200_OK)
+    return APIResponse(True, {"invoice": serializer.data}, status=status.HTTP_200_OK)
