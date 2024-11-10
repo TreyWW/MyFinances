@@ -4,9 +4,9 @@ from django.db import connection, OperationalError
 from django.core.cache import cache
 
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.response import Response
 
 from backend.core.api.public.permissions import IsSuperuser
+from backend.core.api.public.helpers.response import APIResponse
 
 
 @swagger_auto_schema(
@@ -46,7 +46,7 @@ from backend.core.api.public.permissions import IsSuperuser
 @permission_classes([IsSuperuser])
 def system_health_endpoint(request):
     if not request.user or not request.user.is_superuser:
-        return Response({"success": False, "message": "User is not permitted to view internal information"}, status=403)
+        return APIResponse(False, "User is not permitted to view internal information", status=403)
 
     problems = []
 
@@ -60,4 +60,4 @@ def system_health_endpoint(request):
     except ConnectionError:
         problems.append({"id": "redis", "message": "redis failed to connect"})
 
-    return Response({"problems": problems, "healthy": not bool(problems)})
+    return APIResponse({"problems": problems, "healthy": not bool(problems)})
