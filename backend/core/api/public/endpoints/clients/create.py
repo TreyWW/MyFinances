@@ -5,6 +5,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from backend.core.api.public.decorators import require_scopes
+from backend.core.api.public.helpers.response import APIResponse
 from backend.core.api.public.serializers.clients import ClientSerializer
 from backend.core.api.public.swagger_ui import TEAM_PARAMETER
 from backend.core.api.public.types import APIRequest
@@ -57,4 +58,4 @@ def client_create_endpoint(request: APIRequest):
     else:
         client = serializer.save(user=request.user)
 
-    return Response({"client_id": client.id, "success": True}, status=status.HTTP_201_CREATED)
+    return APIResponse(True, {"client_id": client.id}, status=status.HTTP_201_CREATED)

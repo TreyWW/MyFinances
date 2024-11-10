@@ -383,6 +383,10 @@ class OwnerBase(models.Model):
         else:
             raise ValueError("Owner must be either a User or an Organization")
 
+    @property
+    def is_team(self):
+        return isinstance(self.owner, Organization)
+
 
 class PasswordSecret(ExpiresBase):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="password_secrets")

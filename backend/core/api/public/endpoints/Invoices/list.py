@@ -8,6 +8,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from backend.core.api.public.decorators import require_scopes
+from backend.core.api.public.helpers.response import APIResponse
 from backend.core.api.public.serializers.invoices import InvoiceSerializer
 from backend.core.api.public.swagger_ui import TEAM_PARAMETER
 from backend.core.api.public.types import APIRequest
@@ -82,4 +83,4 @@ def list_invoices_endpoint(request: APIRequest) -> Response:
 
     serializer = InvoiceSerializer(invoices, many=True)
 
-    return Response({"success": True, "invoices": serializer.data}, status=status.HTTP_200_OK)
+    return APIResponse(True, {"invoices": serializer.data}, status=status.HTTP_200_OK)
