@@ -71,7 +71,7 @@ def edit_invoice_endpoint(request: APIRequest):
 
     invoice.save()
 
-    return APIResponse(False, {"message": "Invoice successfully edited"}, status=status.HTTP_200_OK)
+    return APIResponse(True, {"message": "Invoice successfully edited"}, status=status.HTTP_200_OK)
 
 
 @api_view(["POST"])
@@ -94,7 +94,7 @@ def change_status_endpoint(request, invoice_id: int, invoice_status: str):
 
     invoice.set_status(invoice_status)
 
-    return APIResponse(False, {"message": f"Invoice status been changed to <strong>{invoice_status}</strong>"}, status=status.HTTP_200_OK)
+    return APIResponse(True, {"message": f"Invoice status been changed to <strong>{invoice_status}</strong>"}, status=status.HTTP_200_OK)
 
 
 @api_view(["POST"])
@@ -132,4 +132,4 @@ def edit_discount_endpoint(request, invoice_id: str):
 
     invoice.save()
 
-    return APIResponse(False, {"message": "Discount was applied successfully"}, status=status.HTTP_200_OK)
+    return APIResponse(True, {"message": "Discount was applied successfully"}, status=status.HTTP_200_OK)
