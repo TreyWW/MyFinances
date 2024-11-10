@@ -26,4 +26,4 @@ def delete_invoice_endpoint(request: APIRequest):
 
     invoice.delete()
 
-    return APIResponse(False, {"message": "Invoice successfully deleted"}, status=status.HTTP_200_OK)
+    return APIResponse(True, {"message": "Invoice successfully deleted"}, status=status.HTTP_200_OK)
