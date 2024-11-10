@@ -5,6 +5,7 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 from backend.core.api.public.decorators import require_scopes
 from backend.core.api.public.helpers.deprecate import deprecated
@@ -61,7 +62,7 @@ from backend.core.api.public.helpers.response import APIResponse
 @api_view(["GET"])
 @deprecated(datetime(2024, 7, 16), datetime(2024, 7, 16))
 @require_scopes(["invoices:read"])
-def download(request: APIRequest, id: str) -> HttpResponse | APIResponse:
+def download(request: APIRequest, id: str) -> HttpResponse | Response:
     try:
         if request.team:
             invoice = Invoice.objects.get(organization=request.team, id=id)
