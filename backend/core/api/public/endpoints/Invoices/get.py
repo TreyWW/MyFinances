@@ -2,6 +2,7 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 from backend.core.api.public.decorators import require_scopes
 from backend.core.api.public.serializers.invoices import InvoiceSerializer
@@ -45,7 +46,7 @@ from backend.finance.models import Invoice
 )
 @api_view(["GET"])
 @require_scopes(["invoices:read"])
-def get_invoices_endpoint(request: APIRequest, id: str) -> APIResponse:
+def get_invoices_endpoint(request: APIRequest, id: str) -> Response:
     try:
         if request.team:
             invoices = Invoice.objects.filter(organization=request.team, id=id)
