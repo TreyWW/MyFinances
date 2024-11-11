@@ -3,13 +3,13 @@ from typing import Literal
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import api_view
-from rest_framework.response import Response
 
 from backend.core.api.public.decorators import require_scopes
 from backend.core.api.public.swagger_ui import TEAM_PARAMETER
 from backend.core.api.public.types import APIRequest
 
 from backend.core.service.clients.delete import delete_client, DeleteClientServiceResponse
+from backend.core.api.public.helpers.response import APIResponse
 
 
 @swagger_auto_schema(
@@ -64,5 +64,5 @@ def client_delete_endpoint(request: APIRequest, id: str):
     response: DeleteClientServiceResponse = delete_client(request, id)
 
     if response.failed:
-        return Response({"success": False, "message": response.error}, status=403 if "do not have permission" in response.error else 404)
-    return Response({"success": True, "client_id": id}, status=200)
+        return APIResponse(False, response.error, status=403 if "do not have permission" in response.error else 404)
+    return APIResponse(True, {"client_id": id}, status=200)

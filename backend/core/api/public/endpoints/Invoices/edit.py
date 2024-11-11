@@ -3,10 +3,10 @@ from typing import Literal
 
 from rest_framework import status
 from rest_framework.decorators import api_view
-from rest_framework.response import Response
 
 from backend.core.api.public.decorators import require_scopes
 from backend.core.api.public.types import APIRequest
+from backend.core.api.public.helpers.response import APIResponse
 from backend.finance.models import Invoice
 
 
@@ -15,20 +15,22 @@ from backend.finance.models import Invoice
 def edit_invoice_endpoint(request: APIRequest):
     invoice_id = request.data.get("invoice_id", "")
     if not invoice_id:
-        return Response({"error": "Invoice ID is required"}, status=status.HTTP_400_BAD_REQUEST)
+        return APIResponse(False, {"error": "Invoice ID is required"}, status=status.HTTP_400_BAD_REQUEST)
 
     try:
         invoice = Invoice.objects.get(id=invoice_id)
     except Invoice.DoesNotExist:
-        return Response({"error": "Invoice Not Found"}, status=status.HTTP_404_NOT_FOUND)
+        return APIResponse(False, {"error": "Invoice Not Found"}, status=status.HTTP_404_NOT_FOUND)
 
     if request.user.logged_in_as_team and request.user.logged_in_as_team != invoice.organization:
-        return Response(
+        return APIResponse(
+            False,
             {"error": "You do not have permission to edit this invoice"},
             status=status.HTTP_403_FORBIDDEN,
         )
     elif request.user != invoice.user:
-        return Response(
+        return APIResponse(
+            False,
             {"error": "You do not have permission to edit this invoice"},
             status=status.HTTP_403_FORBIDDEN,
         )
@@ -64,12 +66,12 @@ def edit_invoice_endpoint(request: APIRequest):
                 try:
                     new_value = datetime.strptime(new_value, "%Y-%m-%d").date()  # type: ignore[assignment]
                 except ValueError:
-                    return Response({"error": "Invalid date format for date_due"}, status=status.HTTP_400_BAD_REQUEST)
+                    return APIResponse(False, {"error": "Invalid date format for date_due"}, status=status.HTTP_400_BAD_REQUEST)
             setattr(invoice, column_name, new_value)
 
     invoice.save()
 
-    return Response({"message": "Invoice successfully edited"}, status=status.HTTP_200_OK)
+    return APIResponse(True, {"message": "Invoice successfully edited"}, status=status.HTTP_200_OK)
 
 
 @api_view(["POST"])
@@ -79,20 +81,20 @@ def change_status_endpoint(request, invoice_id: int, invoice_status: str):
     try:
         invoice = Invoice.objects.get(id=invoice_id)
     except Invoice.DoesNotExist:
-        return Response({"error": "Invoice Not Found"}, status=status.HTTP_404_NOT_FOUND)
+        return APIResponse(False, {"error": "Invoice Not Found"}, status=status.HTTP_404_NOT_FOUND)
 
     if request.user.logged_in_as_team and request.user.logged_in_as_team != invoice.organization or request.user != invoice.user:
-        return Response({"error": "You do not have permission to edit this invoice"}, status=status.HTTP_403_FORBIDDEN)
+        return APIResponse(False, {"error": "You do not have permission to edit this invoice"}, status=status.HTTP_403_FORBIDDEN)
 
     if invoice_status not in ["paid", "draft", "pending"]:
-        return Response({"error": "Invalid status. Please choose from: pending, paid, draft"}, status=status.HTTP_400_BAD_REQUEST)
+        return APIResponse(False, {"error": "Invalid status. Please choose from: pending, paid, draft"}, status=status.HTTP_400_BAD_REQUEST)
 
     if invoice.status == invoice_status:
-        return Response({"error": f"Invoice status is already {invoice_status}"}, status=status.HTTP_400_BAD_REQUEST)
+        return APIResponse(False, {"error": f"Invoice status is already {invoice_status}"}, status=status.HTTP_400_BAD_REQUEST)
 
     invoice.set_status(invoice_status)
 
-    return Response({"message": f"Invoice status been changed to <strong>{invoice_status}</strong>"}, status=status.HTTP_200_OK)
+    return APIResponse(True, {"message": f"Invoice status been changed to <strong>{invoice_status}</strong>"}, status=status.HTTP_200_OK)
 
 
 @api_view(["POST"])
@@ -104,10 +106,10 @@ def edit_discount_endpoint(request, invoice_id: str):
     try:
         invoice: Invoice = Invoice.objects.get(id=invoice_id)
     except Invoice.DoesNotExist:
-        return Response({"error": "Invoice not found"}, status=status.HTTP_404_NOT_FOUND)
+        return APIResponse(False, {"error": "Invoice not found"}, status=status.HTTP_404_NOT_FOUND)
 
     if not invoice.has_access(request.user):
-        return Response({"error": "You don't have permission to make changes to this invoice."}, status=status.HTTP_403_FORBIDDEN)
+        return APIResponse(False, {"error": "You don't have permission to make changes to this invoice."}, status=status.HTTP_403_FORBIDDEN)
 
     if discount_type == "percentage":
         try:
@@ -115,7 +117,9 @@ def edit_discount_endpoint(request, invoice_id: str):
             if percentage_amount < 0 or percentage_amount > 100:
                 raise ValueError
         except ValueError:
-            return Response({"error": "Please enter a valid percentage amount (between 0 and 100)"}, status=status.HTTP_400_BAD_REQUEST)
+            return APIResponse(
+                False, {"error": "Please enter a valid percentage amount (between 0 and 100)"}, status=status.HTTP_400_BAD_REQUEST
+            )
         invoice.discount_percentage = percentage_amount
     else:
         try:
@@ -123,9 +127,9 @@ def edit_discount_endpoint(request, invoice_id: str):
             if discount_amount < 0:
                 raise ValueError
         except ValueError:
-            return Response({"error": "Please enter a valid discount amount"}, status=status.HTTP_400_BAD_REQUEST)
+            return APIResponse(False, {"error": "Please enter a valid discount amount"}, status=status.HTTP_400_BAD_REQUEST)
         invoice.discount_amount = discount_amount
 
     invoice.save()
 
-    return Response({"message": "Discount was applied successfully"}, status=status.HTTP_200_OK)
+    return APIResponse(True, {"message": "Discount was applied successfully"}, status=status.HTTP_200_OK)

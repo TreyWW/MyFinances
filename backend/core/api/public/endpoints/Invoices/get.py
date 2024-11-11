@@ -8,6 +8,7 @@ from backend.core.api.public.decorators import require_scopes
 from backend.core.api.public.serializers.invoices import InvoiceSerializer
 from backend.core.api.public.swagger_ui import TEAM_PARAMETER
 from backend.core.api.public.types import APIRequest
+from backend.core.api.public.helpers.response import APIResponse
 from backend.finance.models import Invoice
 
 
@@ -52,8 +53,8 @@ def get_invoices_endpoint(request: APIRequest, id: str) -> Response:
         else:
             invoices = Invoice.objects.filter(user=request.user, id=id)
     except Invoice.DoesNotExist:
-        return Response({"success": False, "message": "Invoice not found"}, status=status.HTTP_400_BAD_REQUEST)
+        return APIResponse(False, {"message": "Invoice not found"}, status=status.HTTP_400_BAD_REQUEST)
 
     serializer = InvoiceSerializer(invoices, many=True)
 
-    return Response({"success": True, "invoice": serializer.data}, status=status.HTTP_200_OK)
+    return APIResponse(True, {"invoice": serializer.data}, status=status.HTTP_200_OK)
