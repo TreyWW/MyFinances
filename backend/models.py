@@ -35,3 +35,5 @@ from backend.finance.models import (
 )
 
 from backend.clients.models import Client, DefaultValues
+
+from backend.post_webhooks.models import WebhookSubscription, WebhookEventLog, WebhookDeliverySendLog
