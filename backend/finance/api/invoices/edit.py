@@ -77,7 +77,7 @@ def edit_invoice(request: HtmxHttpRequest):
 @require_POST
 @web_require_scopes("invoices:write", True, True)
 def change_status(request: HtmxHttpRequest, invoice_id: int, status: str) -> HttpResponse:
-    status: Literal["paid", "draft", "pending"] = status.lower() if status else ""
+    status = status.lower() if status else ""
 
     if not request.htmx:
         return redirect("finance:invoices:single:dashboard")

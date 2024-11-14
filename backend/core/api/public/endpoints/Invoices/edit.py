@@ -76,7 +76,7 @@ def edit_invoice_endpoint(request: APIRequest):
 
 @api_view(["POST"])
 def change_status_endpoint(request, invoice_id: int, invoice_status: str):
-    invoice_status: Literal["paid", "draft", "pending"] = invoice_status.lower() if invoice_status else ""
+    new_status = invoice_status.lower() if invoice_status else ""
 
     try:
         invoice = Invoice.objects.get(id=invoice_id)
@@ -86,15 +86,13 @@ def change_status_endpoint(request, invoice_id: int, invoice_status: str):
     if request.user.logged_in_as_team and request.user.logged_in_as_team != invoice.organization or request.user != invoice.user:
         return APIResponse(False, {"error": "You do not have permission to edit this invoice"}, status=status.HTTP_403_FORBIDDEN)
 
-    if invoice_status not in ["paid", "draft", "pending"]:
+    if invoice.status == new_status:
+        return APIResponse(False, {"error": f"Invoice status is already {new_status}"}, status=status.HTTP_400_BAD_REQUEST)
+
+    if not invoice.set_status(new_status, save=True):
         return APIResponse(False, {"error": "Invalid status. Please choose from: pending, paid, draft"}, status=status.HTTP_400_BAD_REQUEST)
 
-    if invoice.status == invoice_status:
-        return APIResponse(False, {"error": f"Invoice status is already {invoice_status}"}, status=status.HTTP_400_BAD_REQUEST)
-
-    invoice.set_status(invoice_status)
-
-    return APIResponse(True, {"message": f"Invoice status been changed to <strong>{invoice_status}</strong>"}, status=status.HTTP_200_OK)
+    return APIResponse(True, {"message": f"Invoice status been changed to <strong>{new_status}</strong>"}, status=status.HTTP_200_OK)
 
 
 @api_view(["POST"])

@@ -169,7 +169,9 @@ class Invoice(InvoiceBase):
 
         return f"Invoice #{invoice_id} for {client}"
 
-    def set_status(self, status: Literal["draft", "pending", "paid"], save=True):
+    def set_status(self, status: str, save=True):
+        if status not in ["draft", "pending", "paid"]:
+            return False
         self.status = status
         self.status_updated_at = timezone.now()
         if save:
