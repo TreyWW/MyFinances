@@ -410,7 +410,7 @@ class Notification(models.Model):
 
 
 class AuditLog(OwnerBase):
-    action = models.CharField(max_length=100)
+    action = models.CharField(max_length=300)
     date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
