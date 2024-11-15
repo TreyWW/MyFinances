@@ -106,7 +106,7 @@ def edit_invoice(request: WebRequest, invoice_id):
         "reference": request.POST.get("reference"),
         "sort_code": request.POST.get("sort_code"),
         "account_number": request.POST.get("account_number"),
-        "account_holder_name": request.POST.get("account_holder_name")
+        "account_holder_name": request.POST.get("account_holder_name"),
     }
 
     client_to_id = request.POST.get("selected_client")
@@ -127,7 +127,7 @@ def edit_invoice(request: WebRequest, invoice_id):
 
     if client_to_obj:
         invoice.client_to = client_to_obj
-        
+
         for att in client_attrs.keys():
             setattr(invoice, att, None)
     else:
@@ -140,8 +140,8 @@ def edit_invoice(request: WebRequest, invoice_id):
                 "client_city": request.POST.get("to_city"),
                 "client_county": request.POST.get("to_county"),
                 "client_country": request.POST.get("to_country"),
-                "client_is_representative": True if request.POST.get("is_representative") == "on" else False,
-                "client_to": None
+                "client_is_representative": True if request.POST.get("is_representative") == "on" else False,  # type: ignore[dict-item]
+                "client_to": None,
             }
         )
 
@@ -174,7 +174,7 @@ def edit_invoice(request: WebRequest, invoice_id):
 # decorator & view function for rendering page and updating invoice items in the backend
 @require_http_methods(["GET", "POST"])
 @web_require_scopes("invoices:write", False, False, "finance:invoices:single:dashboard")
-def edit_invoice_page(request: HtmxHttpRequest, invoice_id):
+def edit_invoice_page(request: WebRequest, invoice_id):
     if request.method == "POST":
         return edit_invoice(request, invoice_id)
     return invoice_edit_page_get(request, invoice_id)
