@@ -19,7 +19,12 @@ def set_destination_to(request: HtmxHttpRequest):
 
     if selected_client:
         try:
-            client = Client.objects.get(user=request.user, id=selected_client)
+            if request.team:
+                client = Client.objects.filter(organization=request.team)
+            else:
+                client = Client.objects.filter(user=request.user)
+
+            client = client.get(id=selected_client)
             context["existing_client"] = client
         except Client.DoesNotExist:
             messages.error(request, "Client not found")

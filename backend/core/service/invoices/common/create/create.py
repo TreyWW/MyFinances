@@ -26,7 +26,7 @@ def save_invoice_common(request: WebRequest, invoice_items, invoice: Invoice | I
 
     if request.POST.get("selected_client"):
         try:
-            client = Client.objects.get(user=request.user, id=request.POST.get("selected_client", ""))
+            client = Client.filter_by_owner(request.actor).get(id=request.POST.get("selected_client"))
             invoice.client_to = client
         except Client.DoesNotExist:
             messages.error(request, "Client not found")

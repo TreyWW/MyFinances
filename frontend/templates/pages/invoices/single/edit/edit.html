@@ -4,6 +4,13 @@
 {% block content %}
     <form method="post" class="card bg-base-100 p-6 group">
         {% csrf_token %}
+        <div class="flex flex-row flex-wrap gap-4">
+            <a class="btn btn-outline btn-primary btn-sm w-36 justify-self-end"
+               href="{% url 'finance:invoices:single:overview' invoice_id=invoice_object.id %}">
+                Back to overview
+            </a>
+            <h2 class="text-xl">Editing recurring invoice #{{ invoice_object.id }}</h2>
+        </div>
         <div class="divider">STEP 1 - DESTINATIONS</div>
         <div class="my-4 flex w-full flex-col">
             <div class="mb-2 grid grid-cols-2">

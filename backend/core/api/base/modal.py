@@ -15,12 +15,6 @@ from backend.core.utils.feature_flags import get_feature_status
 from backend.core.service.defaults.get import get_account_defaults
 
 
-# from backend.utils.quota_limit_ops import quota_usage_check_under
-
-
-# Still working on
-
-
 def open_modal(request: WebRequest, modal_name, context_type=None, context_value=None):
     try:
         context = {}
@@ -58,7 +52,7 @@ def open_modal(request: WebRequest, modal_name, context_type=None, context_value
             elif context_type == "edit_invoice_to":
                 invoice = context_value
                 try:
-                    invoice = Invoice.objects.get(user=request.user, id=invoice)
+                    invoice = Invoice.filter_by_owner(request.actor).get(id=invoice)
                 except Invoice.DoesNotExist:
                     return render(request, template_name, context)
 
@@ -74,13 +68,14 @@ def open_modal(request: WebRequest, modal_name, context_type=None, context_value
                     context["to_name"] = invoice.client_name
                     context["to_company"] = invoice.client_company
                     context["to_email"] = invoice.client_email
+                    context["is_representative"] = invoice.client_is_representative
                     context["to_address"] = (
                         invoice.client_address
                     )  # context["to_city"] = invoice.client_city  # context["to_county"] = invoice.client_county  # context["to_country"] = invoice.client_country
             elif context_type == "edit_invoice_from":
                 invoice = context_value
                 try:
-                    invoice = Invoice.objects.get(user=request.user, id=invoice)
+                    invoice = Invoice.filter_by_owner(request.actor).get(id=invoice)
                 except Invoice.DoesNotExist:
                     return render(request, template_name, context)
 

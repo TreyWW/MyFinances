@@ -9,10 +9,7 @@ def add(request: APIRequest | HtmxHttpRequest):
     context: dict = {}
     existing_service = request.POST.get("existing_service", 0)
 
-    try:
-        existing_service_obj = InvoiceProduct.objects.get(user=request.user, id=existing_service)
-    except InvoiceProduct.DoesNotExist:
-        existing_service_obj = None
+    existing_service_obj = InvoiceProduct.filter_by_owner(request.actor).filter(id=existing_service).first()
 
     list_hours = request.POST.getlist("hours[]")
     list_service_name = request.POST.getlist("service_name[]")
