@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
 
+from backend.core.types.requests import WebRequest
 from backend.decorators import web_require_scopes
 from backend.finance.models import Invoice, Client, InvoiceItem
 from backend.core.types.htmx import HtmxHttpRequest
@@ -78,7 +79,7 @@ def invoice_edit_page_get(request, invoice_id):
 
 # when user changes/modifies any of the fields with new information (during edit invoice)
 @require_http_methods(["POST"])
-def edit_invoice(request: HtmxHttpRequest, invoice_id):
+def edit_invoice(request: WebRequest, invoice_id):
     try:
         invoice = Invoice.objects.get(id=invoice_id)
     except Invoice.DoesNotExist:
@@ -90,7 +91,7 @@ def edit_invoice(request: HtmxHttpRequest, invoice_id):
             status=403,
         )
 
-    attributes_to_updates = {
+    attributes_to_update = {
         "date_due": datetime.strptime(request.POST.get("date_due"), "%Y-%m-%d").date(),  # type: ignore[arg-type]
         "date_issued": request.POST.get("date_issued"),
         "self_name": request.POST.get("from_name"),
@@ -110,14 +111,27 @@ def edit_invoice(request: HtmxHttpRequest, invoice_id):
 
     client_to_id = request.POST.get("selected_client")
     try:
-        client_to_obj = Client.objects.get(id=client_to_id, user=request.user)  # type: ignore[misc]
+        client_to_obj = Client.filter_by_owner(request.actor).get(id=client_to_id)
     except (Client.DoesNotExist, ValueError):
         client_to_obj = None
 
+    client_attrs = {
+        "client_name": request.POST.get("to_name"),
+        "client_company": request.POST.get("to_company"),
+        "client_email": request.POST.get("to_email"),
+        "client_address": request.POST.get("to_address"),
+        "client_city": request.POST.get("to_city"),
+        "client_county": request.POST.get("to_county"),
+        "client_country": request.POST.get("to_country"),
+    }
+
     if client_to_obj:
         invoice.client_to = client_to_obj
+
+        for att in client_attrs.keys():
+            setattr(invoice, att, None)
     else:
-        attributes_to_updates.update(
+        attributes_to_update.update(
             {
                 "client_name": request.POST.get("to_name"),
                 "client_company": request.POST.get("to_company"),
@@ -126,10 +140,12 @@ def edit_invoice(request: HtmxHttpRequest, invoice_id):
                 "client_city": request.POST.get("to_city"),
                 "client_county": request.POST.get("to_county"),
                 "client_country": request.POST.get("to_country"),
+                "client_is_representative": True if request.POST.get("is_representative") == "on" else False,  # type: ignore[dict-item]
+                "client_to": None,
             }
         )
 
-    for column_name, new_value in attributes_to_updates.items():
+    for column_name, new_value in attributes_to_update.items():
         setattr(invoice, column_name, new_value)
 
     invoice_items = [
@@ -158,7 +174,7 @@ def edit_invoice(request: HtmxHttpRequest, invoice_id):
 # decorator & view function for rendering page and updating invoice items in the backend
 @require_http_methods(["GET", "POST"])
 @web_require_scopes("invoices:write", False, False, "finance:invoices:single:dashboard")
-def edit_invoice_page(request: HtmxHttpRequest, invoice_id):
+def edit_invoice_page(request: WebRequest, invoice_id):
     if request.method == "POST":
         return edit_invoice(request, invoice_id)
     return invoice_edit_page_get(request, invoice_id)

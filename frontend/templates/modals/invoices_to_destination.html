@@ -29,7 +29,8 @@
             Single
             <input type="checkbox"
                    name="is_representative"
-                   class="toggle toggle-primary" />
+                   class="toggle toggle-primary"
+                   {% if is_representative %}checked{% endif %} />
             Representative
         </label>
     </div>
@@ -38,7 +39,7 @@
         <input type="text"
                name="name"
                placeholder="John Smith"
-               value="{{ to_name }}"
+               value="{{ to_name | default_if_none:"" }}"
                class="input input-bordered max-w-full">
     </div>
     <div class="form-control">
@@ -46,7 +47,7 @@
         <input type="text"
                name="company"
                placeholder="Google"
-               value="{{ to_company }}"
+               value="{{ to_company | default_if_none:"" }}"
                class="input input-bordered max-w-full">
     </div>
     <div class="form-control">
@@ -54,7 +55,7 @@
         <input type="email"
                name="email"
                placeholder="j.smith@example.com"
-               value="{{ to_email }}"
+               value="{{ to_email | default_if_none:"" }}"
                class="input input-bordered max-w-full">
     </div>
     <div class="form-control">
@@ -62,7 +63,7 @@
         <input type="text"
                name="address"
                placeholder="128 Road"
-               value="{{ to_address }}"
+               value="{{ to_address | default_if_none:"" }}"
                class="input input-bordered max-w-full">
     </div>
     <div class="form-control">
@@ -70,7 +71,7 @@
         <input type="text"
                name="city"
                placeholder="Oxford"
-               value="{{ to_city }}"
+               value="{{ to_city | default_if_none:"" }}"
                class="input input-bordered max-w-full">
     </div>
     <div class="form-control">
@@ -78,7 +79,7 @@
         <input type="text"
                name="county"
                placeholder="Oxfordshire"
-               value="{{ to_county }}"
+               value="{{ to_county | default_if_none:"" }}"
                class="input input-bordered max-w-full">
     </div>
     <div class="form-control">
@@ -86,7 +87,7 @@
         <input type="text"
                name="country"
                placeholder="England"
-               value="{{ to_country }}"
+               value="{{ to_country | default_if_none:"" }}"
                class="input input-bordered max-w-full">
     </div>
     <div class="modal-action">
@@ -99,24 +100,26 @@
                 hx-target="#to_destination">Save</button>
         <button type="reset" class="btn btn-error">Reset</button>
         <button type="button"
-                onclick="document.getElementById ('modal_invoices_to_destination').close();"
+                onclick="document.getElementById('modal_invoices_to_destination').close();"
                 class="btn">Close</button>
     </div>
 </form>
 <script>
-            var existing_button = document.querySelector('button[data-button="existing_Client"]')
-            var client_dropdown = document.querySelector('select[data-selection="client"]')
+    var existing_button = document.querySelector('button[data-button="existing_Client"]')
+    var client_dropdown = document.querySelector('select[data-selection="client"]')
 
-            function check_selected_client() {
-                if (client_dropdown.value !== 'View Clients' && client_dropdown.value !== 'Loading clients...') {
-                    existing_button.disabled = false
-                } else {
-                    existing_button.disabled = true
-                }
-            }
+    function check_selected_client() {
+        console.log(`check running: ${client_dropdown.value}`)
+        if (client_dropdown.value !== 'View Clients' && client_dropdown.value !== 'Loading clients...') {
+            existing_button.disabled = false
+        } else {
+            existing_button.disabled = true
+        }
+    }
 
-            client_dropdown.addEventListener('change', check_selected_client);
-            check_selected_client()
+    client_dropdown.addEventListener('change', check_selected_client);
+    client_dropdown.addEventListener('htmx:afterProcessNode', check_selected_client);
+    check_selected_client()
 </script>
 {% endfill %}
 {% endcomponent_block %}

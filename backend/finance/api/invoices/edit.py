@@ -1,6 +1,5 @@
 from datetime import datetime
-from string import Template
-
+from string import Template, Literal
 from django.contrib import messages
 from django.http import HttpRequest, JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
@@ -89,7 +88,7 @@ def change_status(request: HtmxHttpRequest, invoice_id: int, status: str) -> Htt
     except Invoice.DoesNotExist:
         return return_message(request, "Invoice not found")
 
-    if request.user.logged_in_as_team and request.user.logged_in_as_team != invoice.organization or request.user != invoice.user:
+    if not invoice.has_access(request.user):
         return return_message(request, "You don't have permission to make changes to this invoice.")
 
     if status not in ["paid", "draft", "pending"]:
@@ -98,8 +97,7 @@ def change_status(request: HtmxHttpRequest, invoice_id: int, status: str) -> Htt
     if invoice.status == status:
         return return_message(request, f"Invoice status is already {status}")
 
-    invoice.status = status
-    invoice.save()
+    invoice.set_status(status)
 
     if status in ["pending", "paid"] and invoice.dynamic_status != "overdue":
         client_email = invoice.client_to.email if invoice.client_to else invoice.client_email

@@ -1,28 +1,47 @@
 {% load feature_enabled %}
 {% feature_enabled "isInvoiceSchedulingEnabled" as schedule_invoices_enabled %}
-<style></style>
-<div class="card p-6 shadow-xl bg-base-100 mb-4">
-    <div class=" text-3xl w-full grid grid-cols-4">
-        <div hx-boost="true">
-            <a href="{% url "finance:invoices:single:dashboard" %}"
-               class="btn btn-sm btn-outline btn-secondary me-3 float-left">Back to list</a>
-        </div>
-        <h1 class="text-center col-span-2">Invoice #{{ invoice.id }}</h1>
-        <div>
-            <button hx-delete="{% url 'api:finance:invoices:single:delete' %}"
-                    hx-swap="none"
-                    hx-confirm="Are you sure you would like to delete invoice #{{ invoice.id }}?"
-                    hx-vals='{"invoice": "{{ invoice.id }}", "redirect": "/dashboard/invoices/"}'
-                    class="btn btn-sm btn-outline btn-error me-3 float-right">
-                <i class="fa-solid fa-trash"></i>
-                Delete
-            </button>
+<div class="flex flex-col w-full lg:w-5/6 mx-auto">
+    <div class="flex flex-col md:flex-row justify-between md:gap-3">
+        <div class="flex items-start gap-3">
+            <div>
+                <a class="text-3xl text-neutral-800 dark:text-white break-words hover:link hover:link-secondary"
+                   href="{% url 'finance:invoices:single:preview' invoice_id=invoice.id %}">
+                    Invoice #{{ invoice.id }}
+                </a>
+                <div class="mt-[2px]">
+                    {% if invoice.status == "paid" %}
+                        <span class="text-success">
+                            <i class="fa fa-check"></i> Paid
+                        </span>
+                    {% elif invoice.status == "draft" %}
+                        <span class="text-neutral-content">
+                            <i class="fa fa-sticky-note"></i> Draft
+                        </span>
+                    {% else %}
+                        {# pending or something else #}
+                        <span class="text-neutral-content">
+                            <i class="fa fa-hourglass-2"></i> {{ invoice.status | title }}
+                        </span>
+                    {% endif %}
+                    &nbsp;·&nbsp;
+                    Status last changed on
+                    {{ invoice.status_updated_at | date:"F" | slice:":3" }}{{ invoice.status_updated_at | date:" jS, Y" }}
+                    at
+                    {{ invoice.status_updated_at | date:"g:i A" }}
+                </div>
+            </div>
         </div>
     </div>
-</div>
-<div class="card bg-base-100 shadow-xl w-full p-6 flex-col gap-y-4">
-    <div class="flex flex-wrap gap-2 items-center flex-start">
-        <a class="btn btn-md btn-outline btn-default grow loading-htmx"
+    <div class="flex flex-row gap-2 mt-8 items-center flex-start flex-wrap">
+        <button hx-delete="{% url 'api:finance:invoices:single:delete' %}"
+                hx-swap="none"
+                hx-confirm="Are you sure you would like to delete invoice #{{ invoice.id }}?"
+                hx-vals='{"invoice": "{{ invoice.id }}", "redirect": "/dashboard/invoices/"}'
+                class="btn btn-sm btn-outline btn-error float-right">
+            <i class="fa-solid fa-trash"></i>
+            Delete
+        </button>
+        <a class="btn btn-sm btn-outline btn-default loading-htmx"
            target="_blank"
            rel="noopener noreferrer"
            href="{% url 'finance:invoices:single:preview' invoice_id=invoice.id %}">
@@ -33,29 +52,24 @@
             <span class="loading loading-spinner loading-htmx-loader"></span>
         </a>
         <a href="{% url "finance:invoices:single:edit" invoice_id=invoice.id %}"
-           class="btn btn-md btn-outline btn-default grow">
+           class="btn btn-sm btn-outline btn-default">
             <i class="fa-solid fa-edit"></i>
             Edit Invoice
         </a>
         <a href="{% url "finance:invoices:single:manage_access" invoice_id=invoice.id %}"
-           class="btn btn-md btn-outline btn-default grow">
+           class="btn btn-sm btn-outline btn-default">
             <i class="fa-solid fa-share-nodes"></i>
             Send Invoice
         </a>
         {% if schedule_invoices_enabled %}
-            <a class="btn btn-outline btn-default grow mr-4">
+            <a class="btn btn-outline btn-default btn-sm mr-4">
                 <i class="fa-solid fa-clock"></i>
                 Schedule Invoice
             </a>
         {% endif %}
         <div class="basis-[100%] h-0"></div>
-        <!-- Icon and Text for Current Status -->
-        <div data-oob="status">
-            {% component "pages:invoices:dashboard:payment_status_badge" status=invoice.dynamic_status inv_id=invoice_id design="default" %}
-        </div>
-        <!-- Mark As Button -->
-        <div class="dropdown dropdown-right dropdown-hover grow flex">
-            <div class="btn btn-primary btn-outline grow" tabindex="0" role="button">
+        <div class="dropdown dropdown-right dropdown-hover flex">
+            <div class="btn btn-primary btn-sm btn-outline" tabindex="0" role="button">
                 <i class="fa-solid fa-flag"></i>
                 Mark As
             </div>
@@ -84,7 +98,7 @@
                 </li>
             </ul>
         </div>
-        <button class="btn btn-secondary btn-outline grow"
+        <button class="btn btn-secondary btn-outline btn-sm"
                 hx-trigger="click once"
                 hx-swap="beforeend"
                 hx-target="#modal_container"
@@ -93,15 +107,17 @@
             <i class="fa fa-solid fa-pound-sign mr-2"></i>
             Edit Discount
         </button>
-        <a class="btn btn-outline grow" href="{{ clone_as_recurring_url }}">
+        <a class="btn btn-outline btn-sm" href="{{ clone_as_recurring_url }}">
             <i class="fa fa-clone"></i>
             Clone to Recurring Profile
         </a>
     </div>
+    <div class="divider my-8"></div>
+    <div class="w-full h-screen flex flex-row items-center justify-center">
+        <iframe width="100%"
+                class="h-full bg-transparent rounded-lg w-full"
+                data-frame="invoice_preview"
+                src="{% url 'finance:invoices:single:preview' invoice_id=invoice.id %}?iframe=true&show_refresh=true"
+                allowtransparency="true"></iframe>
+    </div>
 </div>
-{#    <div class="collapse collapse-arrow card bg-base-100 shadow-xl w-full p-6 flex-row gap-x-4 mt-4">#}
-{#        <input type="checkbox" checked />#}
-{#        <div class="collapse-title text-xl font-medium">Manage Invoice Content</div>#}
-{#        <div id="container" class="collapse-content"></div>#}
-{#    </div>#}
-{% component "messages_list" %}

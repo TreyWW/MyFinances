@@ -1,9 +1,9 @@
-from rest_framework.response import Response
 import logging
 from backend.core.api.public import APIAuthToken
 from rest_framework.decorators import api_view
 
 from backend.core.service.asyn_tasks.tasks import Task
+from backend.core.api.public.helpers.response import APIResponse
 
 
 @api_view(["POST"])
@@ -11,10 +11,10 @@ def webhook_task_queue_handler_view_endpoint(request):
     token: APIAuthToken | None = request.auth
 
     if not token:
-        return Response({"status": "error", "message": "No token found"}, status=500)
+        return APIResponse(False, {"status": "error", "message": "No token found"}, status=500)
 
     if not token.administrator_service_type == token.AdministratorServiceTypes.AWS_WEBHOOK_CALLBACK:
-        return Response({"status": "error", "message": "Invalid API key for this service"}, status=500)
+        return APIResponse(False, {"status": "error", "message": "Invalid API key for this service"}, status=500)
 
     try:
         data: dict = request.data
@@ -39,8 +39,8 @@ def webhook_task_queue_handler_view_endpoint(request):
         # Handle the result (e.g., store it or log it)
         print(f"Webhook executed: {func_name} with result: {result}")
 
-        return Response({"status": "success", "result": result})
+        return APIResponse(True, {"status": "success", "result": result})
 
     except Exception as e:
         logging.error(f"Error executing webhook task: {str(e)}")
-        return Response({"status": "error", "message": "An internal error has occurred."}, status=500)
+        return APIResponse(False, {"status": "error", "message": "An internal error has occurred."}, status=500)

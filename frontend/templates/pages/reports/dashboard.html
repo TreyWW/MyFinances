@@ -21,7 +21,7 @@
                        placeholder="🔎 Search"
                        hx-swap="outerHTML"
                        hx-target="#table_body"
-                       hx-get="{% url 'api:reports:fetch' %}"
+                       hx-get="{% url 'api:finance:reports:fetch' %}"
                        hx-trigger="keyup changed delay:500ms"
                        hx-indicator="#search_loading">
                 <span id="search_loading"
@@ -36,7 +36,7 @@
                    hx-swap="outerHTML"
                    hx-trigger="load, refresh_reports_table from:body"
                    hx-target="#table_body"
-                   hx-get="{% url 'api:reports:fetch' %}">
+                   hx-get="{% url 'api:finance:reports:fetch' %}">
                 <thead>
                     <tr>
                         <th>Name</th>
