@@ -1,5 +1,5 @@
 from datetime import datetime
-from string import Template, Literal
+from string import Template
 from django.contrib import messages
 from django.http import HttpRequest, JsonResponse, HttpResponse
 from django.shortcuts import render, redirect

@@ -158,8 +158,7 @@ def open_modal(request: WebRequest, modal_name, context_type=None, context_value
                     if value is not None
                 ]
 
-                context["email_list"] = list(context["email_list"]) + context["selected_clients"]
-
+                context["email_list"] = list(filter(lambda i: i is not "", list(context["email_list"]) + context["selected_clients"]))
         elif modal_name == "invoices_to_destination":
             if existing_client := request.GET.get("client"):
                 context["existing_client_id"] = existing_client

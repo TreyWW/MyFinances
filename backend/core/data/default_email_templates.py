@@ -64,8 +64,7 @@ def email_footer() -> str:
             """
         Note: This is an automated email sent by MyFinances on behalf of '$company_name'.
 
-        If you believe this email is spam or fraudulent, please do not pay the invoice and report it to us immediately at report@myfinances.cloud.
-        Once reported, we will open a case for investigation. In some cases, eligible reports may qualify for a reward, determined on a case-by-case basis.
+        If you suspect this email is spam or fraudulent, please let us know immediately to report@myfinances.cloud and avoid making payments.
         """
         ).strip()
     )
