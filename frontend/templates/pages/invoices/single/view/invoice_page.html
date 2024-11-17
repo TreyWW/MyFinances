@@ -39,7 +39,7 @@
                         <section class="text-right space-y-4 invoice-details">
                             <div>
                                 <p class="text-sm text-gray-500 uppercase tracking-wide">Invoice Ref</p>
-                                <p>{{ invoice.invoice_id|default:invoice.id }}</p>
+                                <p>{{ invoice.reference|default:invoice.id }}</p>
                             </div>
                             <div>
                                 <p class="text-sm text-gray-500 uppercase tracking-wide">Date Sent</p>

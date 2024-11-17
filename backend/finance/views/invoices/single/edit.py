@@ -33,6 +33,7 @@ def invoice_get_existing_data(invoice_obj):
         "account_holder_name": invoice_obj.account_holder_name,
         "sort_code": invoice_obj.sort_code,
         "account_number": invoice_obj.account_number,
+        "reference": invoice_obj.reference,
         "logo": invoice_obj.logo,
     }
     if invoice_obj.client_to:
@@ -101,7 +102,6 @@ def edit_invoice(request: WebRequest, invoice_id):
         "self_county": request.POST.get("from_county"),
         "self_country": request.POST.get("from_country"),
         "notes": request.POST.get("notes"),
-        "invoice_number": request.POST.get("invoice_number"),
         "vat_number": request.POST.get("vat_number"),
         "reference": request.POST.get("reference"),
         "sort_code": request.POST.get("sort_code"),

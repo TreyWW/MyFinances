@@ -61,9 +61,8 @@ class InvoicesCreateTestCase(ViewTestCase):
             "from_county": "Self County",
             "from_country": "Self Country",
             "notes": "Invoice Notes",
-            "invoice_number": "INV-001",
             "vat_number": "VAT-001",
-            "reference": "Reference",
+            "reference": "INV-001",
             "sort_code": "123456",
             "account_number": "12345678",
             "account_holder_name": "Account Holder Name",
@@ -117,9 +116,8 @@ class InvoicesCreateTestCase(ViewTestCase):
         self.assertEqual(invoice.self_county, "Self County")
         self.assertEqual(invoice.self_country, "Self Country")
         self.assertEqual(invoice.notes, "Invoice Notes")
-        self.assertEqual(invoice.invoice_number, "INV-001")
         self.assertEqual(invoice.vat_number, "VAT-001")
-        self.assertEqual(invoice.reference, "Reference")
+        self.assertEqual(invoice.reference, "INV-001")
         self.assertEqual(invoice.sort_code, "123456")
         self.assertEqual(invoice.account_number, "12345678")
         self.assertEqual(invoice.account_holder_name, "Account Holder Name")

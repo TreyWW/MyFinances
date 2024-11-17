@@ -85,7 +85,10 @@
             STEP 5 - CUSTOM DESIGNS
             <i class="text-neutral-content">[OPTIONAL]</i>
         </div>
-        {% include "pages/invoices/create/custom_designs/logo.html" %}
+        <div class="my-4 flex w-full flex-row">
+            {% include "pages/invoices/create/custom_designs/logo.html" %}
+            {% include "pages/invoices/create/custom_designs/reference.html" %}
+        </div>
         <div class="group-invalid:tooltip mt-4"
              data-tip="Fill out all required details to save the invoice.">
             <button class="btn btn-primary group-invalid:btn-disabled btn-block">Save Invoice</button>
