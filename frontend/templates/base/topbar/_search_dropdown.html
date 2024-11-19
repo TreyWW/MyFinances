@@ -1,0 +1,66 @@
+<div class="bg-base-100 shadow flex flex-col rounded-box p-6 overflow-y-auto max-h-[60vh]">
+    <div class="text-sm">Results for {{ search }}</div>
+    {% if services %}
+        <div class="text-lg font-semibold mb-4">
+            Services ({{ services | length }})
+        </div>
+        <hr class="mb-4">
+        <div class="space-y-4">
+            {% for service_name, service in services.items %}
+                <div
+                    class="group flex flex-row gap-4 p-4 border border-base-300 rounded-lg transition-all duration-300 hover:shadow-md overflow-hidden">
+                    <div class="flex items-center justify-center w-14 h-14 bg-base-200 rounded-lg text-primary">
+                        <i class="fa {{ service.icon }} text-3xl"></i>
+                    </div>
+                    <div class="flex-1">
+                        <a class="text-lg font-medium link link-primary link-hover"
+                           href="{{ service.url }}">{{ service_name | title }}</a>
+                        <div class="text-md">{{ service.description }}</div>
+                        <div class="max-h-0 overflow-hidden transition-all duration-300 group-hover:max-h-20">
+                            <hr class="my-2">
+                            <span class="text-md font-bold">Features</span>
+                            <div class="flex items-center gap-2 text-sm">
+                                {% for feature_name, url in service.features.items %}
+                                    <a class="link link-primary link-hover" href="{{ url }}">{{ feature_name }}</a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% if resource_count %}
+        <div class="text-lg font-semibold mb-4">
+            Resources ({{ resource_count }})
+        </div>
+        <hr class="mb-4">
+        <div class="space-y-4">
+            {% for resource_type, resource_list in resources.items %}
+                {% for resource in resource_list %}
+                    <div class="group flex flex-row gap-4 p-4 border border-base-300 rounded-lg transition-all duration-300
+                            hover:shadow-md overflow-hidden">
+                        <div class="flex items-center justify-center w-14 h-14 bg-base-200 rounded-lg text-primary">
+                            <i class="fa fa-file-invoice text-3xl"></i>
+                        </div>
+                        <div class="flex-1">
+                            <a class="text-lg font-medium link link-primary link-hover" href="">{{ resource.name }}</a>
+                            <div class="text-xl">{{ resource_type | title }}</div>
+                            <div class="max-h-0 overflow-hidden transition-all duration-300 group-hover:max-h-20">
+                                <hr class="my-2">
+                                <div class="flex flex-row gap-2">
+                                    {% for detail_name, resource_detail in resource.details.items %}
+                                        <div class="flex items-center gap-2 text-sm">
+                                            <div class="w-2 h-2 bg-primary rounded-full"></div>
+                                            <span>{{ detail_name }}: {{ resource_detail }}</span>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
