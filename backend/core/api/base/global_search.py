@@ -30,6 +30,7 @@ def global_search_endpoint(request: WebRequest):
         "invoice": [
             {
                 "name": "#23",
+                "url": reverse("finance:invoices:single:overview", args=["23"]),
                 "details": {
                     "Due Date": "12/11/2024",
                     "Total Amount": "£1,333"
