@@ -11,7 +11,8 @@ from shortuuid.django_fields import ShortUUIDField
 from backend.clients.models import Client, DefaultValues
 from backend.managers import InvoiceRecurringProfile_WithItemsManager
 
-from backend.core.models import OwnerBase, UserSettings, _private_storage, USER_OR_ORGANIZATION_CONSTRAINT, User, ExpiresBase, Organization
+from backend.core.models import OwnerBase, UserSettings, _private_storage, USER_OR_ORGANIZATION_CONSTRAINT, User, ExpiresBase, Organization, \
+    BaseModel, BaseManager
 
 
 class BotoSchedule(models.Model):
@@ -75,7 +76,7 @@ class InvoiceItem(models.Model):
         return self.description
 
 
-class InvoiceBase(OwnerBase):
+class InvoiceBase(BaseModel, OwnerBase):
     client_to = models.ForeignKey(Client, on_delete=models.SET_NULL, blank=True, null=True)
 
     client_name = models.CharField(max_length=100, blank=True, null=True)
@@ -140,6 +141,7 @@ class InvoiceBase(OwnerBase):
 
 class Invoice(InvoiceBase):
     # objects = InvoiceManager()
+    resource_prefix = 'inv_'
 
     STATUS_CHOICES = (
         ("draft", "Draft"),
@@ -165,6 +167,11 @@ class Invoice(InvoiceBase):
             client = "Unknown Client"
 
         return f"Invoice #{self.id} for {client}"
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['resource_id_raw'])
+        ]
 
     def set_status(self, status: str, save=True):
         if status not in ["draft", "pending", "paid"]:
@@ -235,6 +242,7 @@ class Invoice(InvoiceBase):
 
 
 class InvoiceRecurringProfile(InvoiceBase, BotoSchedule):
+    resource_prefix = 'rec_'
     with_items = InvoiceRecurringProfile_WithItemsManager()
 
     class Frequencies(models.TextChoices):
@@ -258,6 +266,11 @@ class InvoiceRecurringProfile(InvoiceBase, BotoSchedule):
     day_of_week = models.PositiveSmallIntegerField(null=True, blank=True)
     day_of_month = models.PositiveSmallIntegerField(null=True, blank=True)
     month_of_year = models.PositiveSmallIntegerField(null=True, blank=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['resource_id_raw'])
+        ]
 
     def get_total_price(self) -> Decimal:
         total = Decimal(0)
@@ -300,7 +313,9 @@ class InvoiceRecurringProfile(InvoiceBase, BotoSchedule):
                 return from_date + timedelta(days=7)
 
 
-class InvoiceURL(ExpiresBase):
+class InvoiceURL(BaseModel, ExpiresBase):
+    resource_prefix = 'iu_'
+
     uuid = ShortUUIDField(length=8, primary_key=True)
     invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE, related_name="invoice_urls")
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
@@ -323,6 +338,10 @@ class InvoiceURL(ExpiresBase):
     class Meta:
         verbose_name = "Invoice URL"
         verbose_name_plural = "Invoice URLs"
+
+        indexes = [
+            models.Index(fields=['resource_id_raw'])
+        ]
 
 
 class InvoiceReminder(BotoSchedule):
@@ -356,7 +375,9 @@ class MonthlyReportRow(models.Model):
     paid_out = models.DecimalField(max_digits=15, decimal_places=2, default=0)
 
 
-class MonthlyReport(OwnerBase):
+class MonthlyReport(BaseModel, OwnerBase):
+    resource_prefix = 'mr_'
+
     uuid = models.UUIDField(default=uuid4, editable=False, unique=True)
     name = models.CharField(max_length=100, blank=True, null=True)
     items = models.ManyToManyField(MonthlyReportRow, blank=True)
@@ -380,11 +401,22 @@ class MonthlyReport(OwnerBase):
     def __str__(self):
         return self.name or str(self.uuid)[:8]
 
+    class Meta:
+        constraints = [
+            USER_OR_ORGANIZATION_CONSTRAINT(),
+        ]
+
+        indexes = [
+            models.Index(fields=['resource_id_raw'])
+        ]
+
     def get_currency_symbol(self):
         return UserSettings.CURRENCIES.get(self.currency, {}).get("symbol", "$")
 
 
-class Receipt(OwnerBase):
+class Receipt(BaseModel, OwnerBase):
+    resource_prefix = 'rpt_'
+
     name = models.CharField(max_length=100)
     image = models.ImageField(upload_to="receipts", storage=_private_storage)
     total_price = models.FloatField(null=True, blank=True)
@@ -397,11 +429,27 @@ class Receipt(OwnerBase):
     def __str__(self):
         return f"{self.name} - {self.date} ({self.total_price})"
 
+    class Meta:
+        constraints = [
+            USER_OR_ORGANIZATION_CONSTRAINT(),
+        ]
+
+        indexes = [
+            models.Index(fields=['resource_id_raw'])
+        ]
+
     def has_access(self, actor: User | Organization) -> bool:
         return self.owner == actor
 
 
-class ReceiptDownloadToken(models.Model):
+class ReceiptDownloadToken(BaseModel):
+    resource_prefix = 'rdt_'
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     file = models.ForeignKey(Receipt, on_delete=models.CASCADE)
     token = models.UUIDField(default=uuid4, editable=False, unique=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['resource_id_raw'])
+        ]

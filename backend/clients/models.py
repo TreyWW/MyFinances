@@ -7,10 +7,12 @@ from backend.core.data.default_email_templates import (
     recurring_invoices_invoice_overdue_default_email_template,
     recurring_invoices_invoice_cancelled_default_email_template,
 )
-from backend.core.models import OwnerBase, User, UserSettings, _private_storage
+from backend.core.models import OwnerBase, User, UserSettings, _private_storage, BaseModel, USER_OR_ORGANIZATION_CONSTRAINT
 
 
-class Client(OwnerBase):
+class Client(BaseModel, OwnerBase):
+    resource_prefix = 'cli_'
+
     active = models.BooleanField(default=True)
     name = models.CharField(max_length=64)
     phone_number = models.CharField(max_length=100, blank=True, null=True)
@@ -26,6 +28,15 @@ class Client(OwnerBase):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        constraints = [
+            USER_OR_ORGANIZATION_CONSTRAINT(),
+        ]
+
+        indexes = [
+            models.Index(fields=['resource_id_raw'])
+        ]
 
     def has_access(self, user: User) -> bool:
         if not user.is_authenticated:

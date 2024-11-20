@@ -61,6 +61,48 @@ def USER_OR_ORGANIZATION_CONSTRAINT():
 M = typing.TypeVar("M", bound=models.Model)
 
 
+class HasResourcePrefix(typing.Protocol):
+    resource_prefix: str
+
+
+class BaseManager(models.Manager):
+    use_in_migrations = True
+
+    def filter(self, *args, **kwargs):
+        if 'resource_id' in kwargs:
+            resource_id = kwargs.pop('resource_id')
+            if '_' in resource_id:
+                resource_id = resource_id.split('_')[-1]
+            kwargs['resource_id_raw'] = resource_id
+        elif 'rid' in kwargs:
+            resource_id = kwargs.pop('rid')
+            if '_' in resource_id:
+                resource_id = resource_id.split('_')[-1]
+            kwargs['resource_id_raw'] = resource_id
+        return super().filter(*args, **kwargs)
+
+
+class BaseModel(models.Model):
+    resource_id_raw = models.UUIDField(default=uuid4, unique=True, editable=False)
+
+    objects = BaseManager()
+
+    class Meta:
+        abstract = True
+
+        indexes = [
+            models.Index(fields=['resource_id_raw'])
+        ]
+
+    @property
+    def resource_id(self) -> str:
+        return f"{typing.cast(HasResourcePrefix, self).resource_prefix}{self.resource_id_raw}"
+
+    @property
+    def rid(self) -> str:
+        return self.resource_id
+
+
 class CustomUserManager(UserManager):
     def get_queryset(self):
         return (
@@ -243,7 +285,7 @@ class UserSettings(models.Model):
         verbose_name_plural = "User Settings"
 
 
-class Organization(models.Model):
+class Organization(BaseModel):
     name = models.CharField(max_length=100, unique=True)
     leader = models.ForeignKey(User, on_delete=models.CASCADE, related_name="teams_leader_of")
     members = models.ManyToManyField(User, related_name="teams_joined")
@@ -280,7 +322,7 @@ class TeamMemberPermission(models.Model):
         unique_together = ("team", "user")
 
 
-class TeamInvitation(ExpiresBase):
+class TeamInvitation(BaseModel, ExpiresBase):
     code = models.CharField(max_length=10)
     team = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name="team_invitations")
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="team_invitations")
@@ -304,6 +346,10 @@ class TeamInvitation(ExpiresBase):
     class Meta:
         verbose_name = "Team Invitation"
         verbose_name_plural = "Team Invitations"
+
+        indexes = [
+            models.Index(fields=['resource_id_raw'])
+        ]
 
 
 class OwnerBaseManager(models.Manager):
@@ -430,7 +476,7 @@ class LoginLog(models.Model):
     date = models.DateTimeField(auto_now_add=True)
 
 
-class Error(models.Model):
+class Error(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     error = models.CharField(max_length=250, null=True)
     error_code = models.CharField(max_length=100, null=True)
@@ -663,7 +709,9 @@ class QuotaIncreaseRequest(OwnerBase):
         return f"{self.owner}"
 
 
-class EmailSendStatus(OwnerBase):
+class EmailSendStatus(BaseModel, OwnerBase):
+    resource_prefix = 'eml_'
+
     STATUS_CHOICES = [
         (status, status.title())
         for status in [
@@ -694,6 +742,10 @@ class EmailSendStatus(OwnerBase):
 
     class Meta:
         constraints = [USER_OR_ORGANIZATION_CONSTRAINT()]
+
+        indexes = [
+            models.Index(fields=['resource_id_raw'])
+        ]
 
 
 class FileStorageFile(OwnerBase):
