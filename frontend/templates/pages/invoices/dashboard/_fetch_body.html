@@ -17,9 +17,9 @@
                     {% if invoice.reference %}
                         {{ invoice.reference }}
                         <span class="tooltip text-neutral-content"
-                              data-tip="This is the actual invoice ID">({{ invoice.id }})</span>
+                              data-tip="This is the actual invoice ID">({{ invoice.rid }})</span>
                     {% else %}
-                        {{ invoice.id }}
+                        {{ invoice.rid }}
                     {% endif %}
                 </a>
             </td>

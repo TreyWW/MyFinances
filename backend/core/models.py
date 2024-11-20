@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import itertools
+import random
 import typing
 from datetime import datetime, timedelta
 from typing import Literal, Union
@@ -27,6 +28,8 @@ def _private_storage() -> FileSystemStorage | S3Storage:
 def RandomCode(length=6):
     return get_random_string(length=length).upper()
 
+def generate_random_resource_id():
+    return get_random_string(length=random.randrange(8, 12))
 
 def RandomAPICode(length=89):
     return get_random_string(length=length).lower()
@@ -83,8 +86,7 @@ class BaseManager(models.Manager):
 
 
 class BaseModel(models.Model):
-    resource_id_raw = models.UUIDField(default=uuid4, unique=True, editable=False)
-
+    resource_id_raw = models.CharField(default=generate_random_resource_id, max_length=20, unique=True, editable=False)
     objects = BaseManager()
 
     class Meta:
