@@ -48,7 +48,6 @@ def edit_invoice(request: HtmxHttpRequest):
         "self_county": request.POST.get("from_county"),
         "self_country": request.POST.get("from_country"),
         "notes": request.POST.get("notes"),
-        "invoice_number": request.POST.get("invoice_number"),
         "vat_number": request.POST.get("vat_number"),
         "reference": request.POST.get("reference"),
         "sort_code": request.POST.get("sort_code"),

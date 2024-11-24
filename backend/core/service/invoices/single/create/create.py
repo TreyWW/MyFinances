@@ -83,6 +83,7 @@ def save_invoice(request: WebRequest, invoice_items):
         date_due=datetime.strptime(date_due, "%Y-%m-%d").date(),
         date_issued=request.POST.get("date_issued"),
         currency=currency,
+        reference=request.POST.get("reference"),
     )
 
     save_invoice_common(request, invoice_items, invoice)

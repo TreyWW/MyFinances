@@ -23,7 +23,7 @@ def generate_report(
     for invoice in all_invoices:
         row = MonthlyReportRow(
             date=invoice.date_issued or invoice.date_created,
-            reference_number=invoice.invoice_number or invoice.id,
+            reference_number=invoice.reference or invoice.id,
             item_type="invoice",
             paid_in=invoice.get_total_price(),
         )

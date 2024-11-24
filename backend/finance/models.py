@@ -97,8 +97,6 @@ class InvoiceBase(OwnerBase):
     sort_code = models.CharField(max_length=8, blank=True, null=True)  # 12-34-56
     account_holder_name = models.CharField(max_length=100, blank=True, null=True)
     account_number = models.CharField(max_length=100, blank=True, null=True)
-    reference = models.CharField(max_length=100, blank=True, null=True)
-    invoice_number = models.CharField(max_length=100, blank=True, null=True)
     vat_number = models.CharField(max_length=100, blank=True, null=True)
     logo = models.ImageField(
         upload_to="invoice_logos",
@@ -150,7 +148,7 @@ class Invoice(InvoiceBase):
         ("paid", "Paid"),
     )
 
-    invoice_id = models.IntegerField(unique=True, blank=True, null=True)  # todo: add
+    reference = models.CharField(max_length=16, blank=True, null=True)
     date_due = models.DateField()
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="draft")
     status_updated_at = models.DateTimeField(auto_now_add=True)
@@ -159,7 +157,6 @@ class Invoice(InvoiceBase):
     )
 
     def __str__(self):
-        invoice_id = self.invoice_id or self.id
         if self.client_name:
             client = self.client_name
         elif self.client_to:
@@ -167,7 +164,7 @@ class Invoice(InvoiceBase):
         else:
             client = "Unknown Client"
 
-        return f"Invoice #{invoice_id} for {client}"
+        return f"Invoice #{self.id} for {client}"
 
     def set_status(self, status: str, save=True):
         if status not in ["draft", "pending", "paid"]:

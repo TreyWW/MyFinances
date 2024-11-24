@@ -52,5 +52,5 @@
     <input type="hidden" name="selected_client" value="{{ existing_client.id }}">
     <input type="hidden"
            name="is_representative"
-           value="{{ is_representative | default:to_is_representative }}">
+           value="{% if to_is_representative %}{{ is_representative | default:to_is_representative }}{% else %}{{ is_representative }}{% endif %}">
     {% if not swapping %}</button>{% endif %}

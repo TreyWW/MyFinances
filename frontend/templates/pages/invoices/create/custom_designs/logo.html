@@ -1,17 +1,13 @@
 {# TODO: show the logo preview on the left #}
-<div class="my-4 flex w-full flex-col">
-    <div class="w-full gap-4 grid grid-cols-1 lg:grid-cols-2">
-        <div class="input_card">
-            <div class="card-body">
-                <div class="form-control w-full">
-                    <label class="label justify-start">Use custom logo</label>
-                    <input type="file"
-                        name="logo"
-                        value="{% if logo %}{{ logo.url }}{% endif %}" {# doesn't auto-fill #}
-                        class="file-input file-input-bordered max-w-full"
-                        accept="image/jpeg,image/png,image/jpg">
-                    </div>
-                </div>
+<div class="input_card">
+    <div class="card-body">
+        <div class="form-control w-full">
+            <label class="label justify-start">Use custom logo</label>
+            <input type="file"
+                name="logo"
+                value="{% if logo %}{{ logo.url }}{% endif %}" {# doesn't auto-fill #}
+                class="file-input file-input-bordered max-w-full"
+                accept="image/jpeg,image/png,image/jpg">
             </div>
         </div>
     </div>
