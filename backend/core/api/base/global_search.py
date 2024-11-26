@@ -109,116 +109,138 @@ def global_search_endpoint(request):
             return Invoice.objects.none()
 
     # Fetch resources only if search_text is present
-    if search_text:
-        # Track added IDs to avoid duplicates (duplicates appeared when I searched for exact client or Invoice)
-        added_invoice_ids = set()
-        added_client_ids = set()
 
-        matched_filter = None  # To allow invoices to be searched by multiple queries
-        # Fetch exact matches for Clients
-        permitted_clients = get_permitted_clients(request)
-        exact_client = permitted_clients.filter(name__iexact=search_text).first()
-        if exact_client:
+    if not search_text:
+        return render(
+            request,
+            "base/topbar/_search_dropdown.html",
+            {
+                "services": filtered_services,
+            },
+        )
+
+    # Track added IDs to avoid duplicates (duplicates appeared when I searched for exact client or Invoice)
+    added_invoice_ids = set()
+    added_client_ids = set()
+
+    matched_filter = None  # To allow invoices to be searched by multiple queries
+
+    # Fetch exact matches for Clients
+    permitted_clients = get_permitted_clients(request)
+    exact_client = permitted_clients.filter(name__iexact=search_text).first()
+    if exact_client:
+        resources["client"].append(
+            {
+                "name": f"{exact_client.name} (#{exact_client.id})",
+                "url": f"{page_mappings['clients']}{exact_client.id}/",
+                "details": {
+                    "Phone Number": f"{exact_client.phone_number}" if exact_client.phone_number else "N/A",
+                    "Email": f"{exact_client.email}" if exact_client.email else "N/A",
+                },
+            }
+        )
+        added_client_ids.add(exact_client.id)  # To avoid duplicates
+
+    # Fetch partial matches for Clients
+    partial_clients = permitted_clients.filter(name__icontains=search_text)
+    for client in partial_clients:
+        if client.id not in added_client_ids:  # If current ID is not in already found ID's
             resources["client"].append(
                 {
-                    "name": f"{exact_client.name} (#{exact_client.id})",
-                    "url": f"{page_mappings['clients']}{exact_client.id}/",
+                    "name": f"{client.name} (#{client.id})",
+                    "url": f"{page_mappings['clients']}{client.id}/",
                     "details": {
-                        "Phone Number": f"{exact_client.phone_number}" if exact_client.phone_number else "N/A",
-                        "Email": f"{exact_client.email}" if exact_client.email else "N/A",
+                        "Phone Number": f"{client.phone_number}" if client.phone_number else "N/A",
+                        "Email": f"{client.email}" if client.email else "N/A",
                     },
                 }
             )
-            added_client_ids.add(exact_client.id)  # To avoid duplicates
+            added_client_ids.add(client.id)  # To avoid duplicates
 
-        # Fetch partial matches for Clients
-        partial_clients = permitted_clients.filter(name__icontains=search_text)
-        for client in partial_clients:
-            if client.id not in added_client_ids:  #  If current ID is not in already found ID's
-                resources["client"].append(
-                    {
-                        "name": f"{client.name} (#{client.id})",
-                        "url": f"{page_mappings['clients']}{client.id}/",
-                        "details": {
-                            "Phone Number": f"{client.phone_number}" if client.phone_number else "N/A",
-                            "Email": f"{client.email}" if client.email else "N/A",
-                        },
-                    }
-                )
-                added_client_ids.add(client.id)  # To avoid duplicates
+    # Save permitted invoices to variable
+    permitted_invoices = get_permitted_invoices(request)
 
-        # Save permitted invoices to variable
-        permitted_invoices = get_permitted_invoices(request)
-
-        if search_text.isdigit():
-            # Fetch by ID if it's valid ID
-            exact_invoice = permitted_invoices.filter(id=int(search_text)).first()
-            if exact_invoice:
-                resources["invoice"].append(
-                    {
-                        "name": f"{exact_invoice.client_company} (#{exact_invoice.id})",
-                        "url": f"{page_mappings['invoices single']}{exact_invoice.id}",
-                        "details": {
+    if search_text.isdigit():
+        # Fetch by ID if it's valid ID
+        exact_invoice = permitted_invoices.filter(id=int(search_text)).first()
+        if exact_invoice:
+            resources["invoice"].append(
+                {
+                    "name": f"{exact_invoice.client_company} (#{exact_invoice.id})",
+                    "url": f"{page_mappings['invoices single']}{exact_invoice.id}",
+                    "details": {
+                        k: v
+                        for k, v in {
                             "Due Date": exact_invoice.date_due.strftime("%d/%m/%Y") if exact_invoice.date_due else "N/A",
                             "Total Amount": (
                                 f"{exact_invoice.get_total_price()} {exact_invoice.currency}" if exact_invoice.get_total_price() else "N/A"
                             ),
                             "Client Name": exact_invoice.client_name,
-                        },
-                    }
-                )
+                        }.items()
+                        if v not in [None, ""]
+                    },
+                }
+            )
 
+    else:
+        # Fetch exact matches for Invoices
+        exact_invoice = permitted_invoices.filter(client_name__iexact=search_text)
+        if exact_invoice:
+            matched_filter = "client_name"  # Save used filter
         else:
-            # Fetch exact matches for Invoices
-            exact_invoice = permitted_invoices.filter(client_name__iexact=search_text)
+            # If no match for client_name, try client_company
+            exact_invoice = permitted_invoices.filter(client_company__iexact=search_text)
             if exact_invoice:
-                matched_filter = "client_name"  # Save used filter
-            else:
-                # If no match for client_name, try client_company
-                exact_invoice = permitted_invoices.filter(client_company__iexact=search_text)
-                if exact_invoice:
-                    matched_filter = "client_company"
-            for invoice in exact_invoice:
-                resources["invoice"].append(
-                    {
-                        "name": f"{invoice.client_name if matched_filter == 'client_name' else invoice.client_company} (#{invoice.id})",
-                        "url": f"{page_mappings['invoices single']}{invoice.id}",
-                        "details": {
+                matched_filter = "client_company"
+        for invoice in exact_invoice:
+            resources["invoice"].append(
+                {
+                    "name": f"{invoice.client_name if matched_filter == 'client_name' else invoice.client_company} (#{invoice.id})",
+                    "url": f"{page_mappings['invoices single']}{invoice.id}",
+                    "details": {
+                        k: v
+                        for k, v in {
                             "Due Date": invoice.date_due.strftime("%d/%m/%Y") if invoice.date_due else "N/A",
                             "Total Amount": f"{invoice.get_total_price()} {invoice.currency}" if invoice.get_total_price() else "N/A",
                             "Company" if matched_filter == "client_name" else "Client": (
                                 invoice.client_company if matched_filter == "client_name" else invoice.client_name
                             ),
-                        },
-                    }
-                )
-                added_invoice_ids.add(invoice.id)  # To avoid duplicates
+                        }.items()
+                        if v is not None
+                    },
+                }
+            )
+            added_invoice_ids.add(invoice.id)  # To avoid duplicates
 
-            # Fetch partial matches for Invoices
-            partial_invoices = permitted_invoices.filter(client_name__icontains=search_text)
+        # Fetch partial matches for Invoices
+        partial_invoices = permitted_invoices.filter(client_name__icontains=search_text)
+        if partial_invoices:
+            matched_filter = "client_name"  # Save used filter
+        else:
+            # If no match for client_name, try client_company
+            partial_invoices = permitted_invoices.filter(client_company__icontains=search_text)
             if partial_invoices:
-                matched_filter = "client_name"  # Save used filter
-            else:
-                # If no match for client_name, try client_company
-                partial_invoices = permitted_invoices.filter(client_company__icontains=search_text)
-                if partial_invoices:
-                    matched_filter = "client_company"
-            for invoice in partial_invoices:
-                if invoice.id not in added_invoice_ids:  #  If current ID is not in already found ID's
-                    resources["invoice"].append(
-                        {
-                            "name": f"{invoice.client_name if matched_filter == 'client_name' else invoice.client_company} (#{invoice.id})",
-                            "url": f"{page_mappings['invoices single']}{invoice.id}",
-                            "details": {
+                matched_filter = "client_company"
+        for invoice in partial_invoices:
+            if invoice.id not in added_invoice_ids:  # If current ID is not in already found ID's
+                resources["invoice"].append(
+                    {
+                        "name": f"{invoice.client_name if matched_filter == 'client_name' else invoice.client_company} (#{invoice.id})",
+                        "url": f"{page_mappings['invoices single']}{invoice.id}",
+                        "details": {
+                            k: v
+                            for k, v in {
                                 "Due Date": invoice.date_due.strftime("%d/%m/%Y") if invoice.date_due else "N/A",
                                 "Total Amount": f"{invoice.get_total_price()} {invoice.currency}" if invoice.get_total_price() else "N/A",
                                 "Company" if matched_filter == "client_name" else "Client": (
                                     invoice.client_company if matched_filter == "client_name" else invoice.client_name
                                 ),
-                            },
-                        }
-                    )
-                    added_invoice_ids.add(invoice.id)  # To avoid duplicates
+                            }.items()
+                            if v not in [None, ""]
+                        },
+                    }
+                )
+                added_invoice_ids.add(invoice.id)  # To avoid duplicates
 
     return render(
         request,
