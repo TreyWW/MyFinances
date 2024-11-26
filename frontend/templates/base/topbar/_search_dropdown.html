@@ -39,7 +39,11 @@
                 {% for resource in resource_list %}
                     <div class="group flex flex-row gap-4 p-4 border border-base-300 rounded-lg transition-all duration-300 hover:shadow-md overflow-hidden">
                         <div class="flex items-center justify-center w-14 h-14 bg-base-200 rounded-lg text-primary">
-                            <i class="fa fa-file-invoice text-3xl"></i>
+                            {% if resource_type == "client" %}
+                                <i class="fa fa-user text-3xl"></i>
+                            {% elif resource_type == "invoice" %}
+                                <i class="fa fa-file-invoice text-3xl"></i>
+                            {% endif %}
                         </div>
                         <div class="flex-1">
                             <a class="text-lg font-medium link link-primary link-hover"
