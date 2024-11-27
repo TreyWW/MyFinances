@@ -119,7 +119,7 @@ def _send_invoice_email_view(request: WebRequest, uuid) -> HttpResponse:
         email_data = {
             "first_name": invoice.client_name if invoice.client_name else "User",
             "invoice_id": invoice.id,
-            "invoice_ref": invoice.reference or invoice.invoice_number or invoice.id,
+            "invoice_ref": invoice.reference or invoice.id,
             "due_date": invoice.date_due.strftime("%A, %B %d, %Y"),
             "amount_due": invoice.get_total_price(),
             "currency": invoice.currency,
