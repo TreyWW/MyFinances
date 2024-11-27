@@ -180,14 +180,17 @@ def _send_invoice_email_view(request: WebRequest, uuid) -> HttpResponse:
         return render(request, "base/toast.html")
 
     EMAIL_RESPONSES: Iterator[tuple[str, SendEmailResponseTypeDef]] = (
-        (email_item.destination, send_email(
-            destination=email_item.destination,
-            subject=subject,
-            content=email_item.template_data["content_text"],
-            from_address=request.user.email,
-            cc=email_item.cc,
-            bcc=email_item.bcc,
-        ).response)
+        (
+            email_item.destination,
+            send_email(
+                destination=email_item.destination,
+                subject=subject,
+                content=email_item.template_data["content_text"],
+                from_address=request.user.email,
+                cc=email_item.cc,
+                bcc=email_item.bcc,
+            ).response,
+        )
         for email_item in email_list
     )
 
@@ -201,7 +204,8 @@ def _send_invoice_email_view(request: WebRequest, uuid) -> HttpResponse:
                     aws_message_id=response.get("MessageId"),
                     status="pending",
                 )
-                for email_address, response in EMAIL_RESPONSES if response
+                for email_address, response in EMAIL_RESPONSES
+                if response
             ]
         )
     else:
@@ -214,7 +218,8 @@ def _send_invoice_email_view(request: WebRequest, uuid) -> HttpResponse:
                     aws_message_id=response.get("MessageId"),
                     status="pending",
                 )
-                for email_address, response in EMAIL_RESPONSES if response
+                for email_address, response in EMAIL_RESPONSES
+                if response
             ]
         )
 

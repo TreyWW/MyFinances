@@ -19,7 +19,7 @@
             {% if email_list %}<option value="" disabled selected>Select a client email below</option>{% endif %}
             {% for email in email_list %}
                 <option value="{{ email }}"
-                    {% if email in selected_clients %}selected{% endif %}>{{ email }}</option>
+                        {% if email in selected_clients %}selected{% endif %}>{{ email }}</option>
             {% empty %}
                 <option value="" disabled selected>There are currently no client emails stored.</option>
             {% endfor %}
@@ -44,18 +44,17 @@
     </div>
     <div class="flex flex-col justify-start gap-2">
         <div class="flex flex-col w-full">
-            <label class="label">CC
+            <label class="label">
+                CC
                 <span class="label-text-alt select-text">
                     Note: In case of multiple emails, please separate them by a comma (<kbd class='kbd'>,</kbd>).
                 </span>
             </label>
-            <input class="peer input input-bordered"
-                   name="cc_emails">
+            <input class="peer input input-bordered" name="cc_emails">
         </div>
         <div class="flex flex-col w-full">
             <label class="label">BCC</label>
-            <input class="peer input input-bordered"
-                   name="bcc_emails">
+            <input class="peer input input-bordered" name="bcc_emails">
         </div>
     </div>
     <div class="form-control">
