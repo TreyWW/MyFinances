@@ -185,7 +185,7 @@ def _send_invoice_email_view(request: WebRequest, uuid) -> HttpResponse:
             send_email(
                 destination=email_item.destination,
                 subject=subject,
-                content=email_item.template_data["content_text"],
+                content=email_item.template_data["content_text"],  # type: ignore[index]
                 from_address=request.user.email,
                 cc=email_item.cc,
                 bcc=email_item.bcc,
