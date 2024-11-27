@@ -2,6 +2,7 @@
 <div class="card bg-base-100 p-3 mb-2">
     <div class="flex items-center justify-between">
         <div class="flex items-start flex-row justify-start gap-x-2">
+            <!-- Sorting Dropdown -->
             <div class="dropdown dropdown-right">
                 <div tabindex="0"
                      role="button"
@@ -39,6 +40,7 @@
                     </li>
                 </ul>
             </div>
+            <!-- Refresh Button -->
             <button class="btn btn-square btn-outline btn-sm loading-htmx"
                     id="refresh_btn"
                     hx-swap="outerHTML"
@@ -52,41 +54,95 @@
                 <span class="loading loading-spinner loading-htmx-loader"></span>
             </button>
         </div>
+        <!-- Header Title -->
         <h2 class="text-xl" data-oob="invoices-title">Invoices</h2>
-        <a class="btn btn-primary btn-sm"
-           href="{% url 'finance:invoices:single:create' %}"
-           hx-boost="true">
-            <i class="fa-solid fa-file-invoice"></i>
-            Create Invoice
-        </a>
+        <div class="flex gap-2">
+            <!-- Create Invoice Button -->
+            <a class="btn btn-primary btn-sm"
+               href="{% url 'finance:invoices:single:create' %}"
+               hx-boost="true">
+                <i class="fa-solid fa-file-invoice"></i>
+                Create Invoice
+            </a>
+            <!-- Edit Invoice Button (Static) Removed -->
+        </div>
     </div>
 </div>
+
 <div class="card bg-base-100 p-6 h-screen">
     <div class="flex w-full h-full overflow-x-auto overflow-y-auto">
-        <table class="table h-fit"
-               id="single_invoices_list_table"
-               hx-swap="outerHTML"
-               hx-trigger="load,single_invoices_refresh"
-               hx-target="#table_body"
-               hx-indicator="#refresh_btn"
-               hx-get="{% url 'api:finance:invoices:single:fetch' %}">
+        <table class="table h-fit" id="single_invoices_list_table" hx-swap="outerHTML" hx-trigger="load,single_invoices_refresh" hx-target="#table_body" hx-indicator="#refresh_btn" hx-get="{% url 'api:finance:invoices:single:fetch' %}">
             <thead>
                 <tr>
                     <th mft-col-name="invoice-id" mft-filter-type="searchable-amount">Invoice ID</th>
                     <th mft-col-name="due_date" mft-filter-type="searchable">Due Date</th>
                     <th mft-col-name="client_name" mft-filter-type="searchable">Client Name</th>
                     <th mft-col-name="amount" mft-filter-type="searchable-amount">Amount</th>
-                    <th mft-col-name="status"
-                        mft-filter-type="normal"
-                        mft-filters="draft,pending,overdue,paid">Status</th>
+                    <th mft-col-name="status" mft-filter-type="normal" mft-filters="draft,pending,overdue,paid">Status</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody id="table_body">
                 {% include 'components/table/skeleton_rows.html' with rows=3 cols=6 %}
+                {% for invoice in invoices %}
+                    <tr>
+                        <td>{{ invoice.id }}</td>
+                        <td>{{ invoice.due_date }}</td>
+                        <td>{{ invoice.client_name }}</td>
+                        <td>{{ invoice.amount }}</td>
+                        <td>{{ invoice.status }}</td>
+                        <td>
+                            <!-- Row-Specific Edit Button -->
+                            <a href="{% url 'finance:invoices:single :edit' invoice.id %}" class="btn btn-sm btn-outline btn-primary">
+                                <i class="fa-solid fa-edit"></i> Edit
+                            </a>
+                        </td>
+                    </tr>
+
+                    <!-- Services Table -->
+                    <tr>
+                        <td colspan="6">
+                            <div class="card bg-base-100 p-3 mt-2">
+                                <table class="table table-zebra w-full">
+                                    <thead>
+                                        <tr>
+                                            <th>Service ID</th>
+                                            <th>Service Name</th>
+                                            <th>Description</th>
+                                            <th>Amount</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for service in invoice.services %}
+                                            <tr>
+                                                <td>{{ service.id }}</td>
+                                                <td>{{ service.name }}</td>
+                                                <td>{{ service.description }}</td>
+                                                <td>{{ service.amount }}</td>
+                                                <td>
+                                                    <!-- Row-Specific Edit Button for Service -->
+                                                    <a href="{% url 'finance:services:edit' service.id %}" class="btn btn-sm btn-outline btn-primary" title="Edit Service {{ service.name }}">
+                                                        <i class="fa-solid fa-edit"></i> Edit
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        {% empty %}
+                                            <tr>
+                                                <td colspan="5">No services available.</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>
 </div>
+
 <script>new Tableify('#single_invoices_list_table');</script>
+
 {% component "messages_list" %}

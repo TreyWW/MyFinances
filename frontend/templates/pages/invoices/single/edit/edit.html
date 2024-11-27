@@ -10,6 +10,7 @@
                 Back to overview
             </a>
             <h2 class="text-xl">Editing recurring invoice #{{ invoice_object.id }}</h2>
+
         </div>
         <div class="divider">STEP 1 - DESTINATIONS</div>
         <div class="my-4 flex w-full flex-col">
@@ -39,8 +40,8 @@
                                    placeholder=""
                                    value="{{ issue_date | date:"Y-m-d" }}"
                                    type="date"
-                                   class="peer input input-bordered input-block">
-                            <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden ">
+                                   class="peer input input-bordered input-block" disabled>
+                            <label class="label peer-[&amp;:not(:placeholder-shown):not:focus):invalid]:block hidden ">
                                 <span class="label-text-alt text-error">Please enter a valid date.</span>
                             </label>
                         </div>
@@ -59,7 +60,7 @@
                                    placeholder=""
                                    type="date"
                                    class="peer input-bordered input input-block"
-                                   value="{{ due_date | date:"Y-m-d" }}">
+                                   value="{{ due_date | date:"Y-m-d" }}" disabled>
                             <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden ">
                                 <span class="label-text-alt text-error">Please enter a valid date.</span>
                             </label>
@@ -68,8 +69,69 @@
                 </div>
             </div>
         </div>
+
+        <!-- STEP 3 - SERVICES -->
         <div class="divider my-4">STEP 3 - SERVICES</div>
-        {% component_block "pages:invoices:create:services:services_table" %}{% endcomponent_block %}
+        <div class="input_card max-w-full min-w-full">
+            <div class="card-body" data-card="services_card_body">
+                <div class="flex py-4 gap-x-3">
+                    <div class="dropdown w-1/3">
+                        <div tabindex="0" role="button" class="btn btn-primary w-full">Existing Service</div>
+                        <ul tabindex="0"
+                            class="dropdown-content z-[1] menu p-8 shadow bg-base-200 rounded-box w-full min-w-full">
+                            <div class="flex flex-row gap-2">
+                                <input placeholder="🔎 Search"
+                                       type="text"
+                                       name="search_existing_service"
+                                       class="input input-bordered w-full flex-1"
+                                       hx-get="{% url 'api:finance:products:fetch' %}"
+                                       hx-target="#search_existing_products_items"
+                                       hx-trigger="keyup changed delay:500ms,load"
+                                       hx-indicator="#search_loading ">
+                                <button onclick="modal_create_invoice_product.showModal();"
+                                        class="btn btn-primary w-12.25"
+                                        hx-trigger="click once"
+                                        hx-swap="beforeend"
+                                        hx-target="#modal_container"
+                                        hx-get="{% url 'api:base:modal retrieve' modal_name='create_invoice_product' %}">
+                                    <i class="fa-solid fa-plus"></i>
+                                </button>
+                            </div>
+                            <div class="divider">ITEMS (search for > 5)</div>
+                            <span id="search_loading"
+                                  class="loading loading-spinner loading-htmx-loader-individual"></span>
+                            <div id="search_existing_products_items"></div>
+                        </ul>
+                    </div>
+                    <button onclick="modal_invoices_add_service.showModal();"
+                            class="btn btn-primary w-2/3"
+                            hx-trigger="click once"
+                            hx-swap="beforeend"
+                            hx-target="#modal_container"
+                            hx-get="{% url 'api:base:modal retrieve' modal_name='invoices_add_service' %}">
+                        Add New Service
+                    </button>
+                </div>
+                <div class="flex w-full overflow-x-auto">
+                    <table class="table table-zebra max-w-full" id="services_table">
+                        <thead>
+                            <tr>
+                                <th>Service</th>
+                                <th>Quantity</th>
+                                <th>Rate</th>
+                                <th>Total Price</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="services_table_body"
+                               _="on every htmx:afterRequest in closest .card-body log 'hi'">
+                            {% include 'pages/invoices/create/services/_services_table_body.html' %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
         <div class="divider my-4">
             STEP 4 - BANK DETAILS
             <i class="text-neutral-content">[OPTIONAL]</i>
@@ -94,4 +156,71 @@
             <button class="btn btn-primary group-invalid:btn-disabled btn-block">Save Invoice</button>
         </div>
     </form>
+
+    <script>
+        function toggleInvoiceEditMode(button) {
+            const isEditing = button.innerText === 'Edit Invoice';
+            const inputs = document.querySelectorAll('input:not([disabled])');
+            const serviceRows = document.querySelectorAll('.service-row');
+
+            // Toggle edit mode for invoice fields
+            document.querySelectorAll('input').forEach(input => {
+                input.disabled = !isEditing;
+            });
+
+            // Toggle edit mode for service rows
+            serviceRows.forEach(row => {
+                const serviceInputs = row.querySelectorAll('input');
+                serviceInputs.forEach(input => {
+                    input.disabled = !isEditing;
+                });
+            });
+
+            button.innerText = isEditing ? 'Cancel Edit' : 'Edit Invoice';
+        }
+
+        function toggleEdit(button) {
+            const serviceRow = button.closest('.service-row');
+            const inputs = serviceRow.querySelectorAll('input');
+
+            if (button.innerText === 'Edit') {
+                // Enable inputs for editing
+                inputs.forEach(input => input.disabled = false);
+                button.innerText = 'Save';
+            } else {
+                // Save logic here
+                const serviceId = serviceRow.getAttribute('data-service-id');
+                const updatedName = serviceRow.querySelector('.service-name').value;
+                const updatedPrice = serviceRow.querySelector('.service-price').value;
+
+                // Example AJAX request to save changes
+                fetch(`/update-service/${serviceId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({
+                        name: updatedName,
+                        price: updatedPrice
+                    })
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // Optionally, show a success message
+                        alert('Service updated successfully!');
+                    } else {
+                        alert('Failed to update service.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+
+                // Disable inputs after saving
+                inputs.forEach(input => input.disabled = true);
+                button.innerText = 'Edit';
+            }
+        }
+    </script>
 {% endblock content %}
