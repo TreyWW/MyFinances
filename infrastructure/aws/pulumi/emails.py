@@ -38,17 +38,15 @@ default_email_templates = {
 default_reminder_template_name = "Hi {{client_name}}"
 default_reminder_template_failure_to_pay = "Failure to pay the invoice may come with an added late fee depending on the merchant"
 default_reminder_template_footer = """
-Note: This is an automated email sent out by MyFinances on behalf of '{{company}}'. If you
-believe this is spam or fraudulent please report it to us and DO NOT pay the invoice. Once a report has been made you will
-have a case opened.
+Note: This email was automatically send  by MyFinances on behalf of '{{company}}'. If you suspect this email is spam or fraudulent, please let us know immediately and avoid making payments.
 """
 
 default_reminder_overdue_content = "This is an automated email to let you know that your invoice #{{invoice_id}} is due TODAY."
 default_reminder_before_due_content = (
-    "This is an automated email to let you know that your invoice #{{invoice_id}} is due in {{days}} " "days."
+    "This is an automated email to let you know that your invoice #{{invoice_id}} is due in {{days}} days."
 )
 default_reminder_after_due_content = (
-    "This is an automated email to let you know that your invoice #{{invoice_id}} is past due by {{" "days}} " "days."
+    "This is an automated email to let you know that your invoice #{{invoice_id}} is past due by {{days}} days."
 )
 
 default_reminder_subject = "REMINDER | Invoice #{{invoice_id}}"

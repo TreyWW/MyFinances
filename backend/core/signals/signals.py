@@ -1,7 +1,12 @@
 from __future__ import annotations
 
+from string import Template
+
 from django.core.cache import cache
 from django.core.cache.backends.redis import RedisCacheClient
+
+from backend.core.data.default_email_templates import email_footer, invoice_state_overdue_template
+from backend.finance.models import Invoice
 
 cache: RedisCacheClient = cache
 from django.core.files.storage import default_storage
@@ -96,3 +101,29 @@ def send_welcome_email(sender, instance: User, created, **kwargs):
         email = send_email(destination=instance.email, subject="Welcome to MyFinances", content=email_message)
 
         #     User.send_welcome_email(instance)
+
+
+@receiver(post_save, sender=Invoice)
+def send_overdue_invoice_email(sender, instance: Invoice, **kwargs):
+    if instance.dynamic_status == "overdue":
+        client_email = instance.client_to.email if instance.client_to else instance.client_email
+        if client_email:
+            message: str = invoice_state_overdue_template() + email_footer()
+
+            user_data = {
+                "first_name": instance.client_to.name.split(" ")[0] if instance.client_to else instance.client_name,
+                "invoice_id": instance.id,
+                "due_date": instance.date_due.strftime("%A, %B %d, %Y"),
+                "amount_due": instance.get_total_price(),
+                "currency": instance.currency,
+                "currency_symbol": instance.get_currency_symbol(),
+                "company_name": instance.self_company or instance.self_name or "MyFinances Customer",
+            }
+
+            output: str = Template(message).safe_substitute(user_data)
+
+            send_email(
+                destination=client_email,
+                subject=f"Invoice #{instance.id} from {instance.self_company or instance.self_name} is overdue",
+                content=output,
+            )

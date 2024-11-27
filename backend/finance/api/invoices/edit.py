@@ -1,14 +1,15 @@
 from datetime import datetime
-from typing import Literal
-
+from string import Template
 from django.contrib import messages
 from django.http import HttpRequest, JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods, require_POST
 
+from backend.core.data.default_email_templates import invoice_state_paid_template, invoice_state_pending_template, email_footer
 from backend.decorators import web_require_scopes
 from backend.finance.models import Invoice
 from backend.core.types.htmx import HtmxHttpRequest
+from settings.helpers import send_email
 
 
 @require_http_methods(["POST"])
@@ -96,6 +97,35 @@ def change_status(request: HtmxHttpRequest, invoice_id: int, status: str) -> Htt
         return return_message(request, f"Invoice status is already {status}")
 
     invoice.set_status(status)
+
+    if status in ["pending", "paid"] and invoice.dynamic_status != "overdue":
+        client_email = invoice.client_to.email if invoice.client_to else invoice.client_email
+        if client_email:
+            message_template = invoice_state_pending_template()
+            subject = f"Invoice #{invoice.id} is now available"
+
+            if status == "paid":
+                message_template = invoice_state_paid_template()
+                subject = f"Invoice #{invoice.id} has been paid"
+
+            message_template += email_footer()
+
+            email_data = {
+                "first_name": invoice.client_to.name.split(" ")[0] if invoice.client_to else invoice.client_name,
+                "invoice_id": invoice.id,
+                "status": status.capitalize(),
+                "amount_due": invoice.get_total_price(),
+                "currency_symbol": invoice.get_currency_symbol(),
+                "due_date": invoice.date_due.strftime("%A, %B %d, %Y"),
+                "company_name": invoice.self_company or invoice.self_name or "MyFinances Customer",
+            }
+            message = Template(message_template).safe_substitute(email_data)
+
+            send_email(
+                destination=client_email,
+                subject=subject,
+                content=message,
+            )
 
     send_message(request, f"Invoice status been changed to <strong>{status}</strong>", success=True)
 
