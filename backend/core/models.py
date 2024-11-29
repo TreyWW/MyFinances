@@ -101,6 +101,9 @@ class User(AbstractUser):
     def is_org(self):
         return False
 
+    def get_prefixed_id(self):
+        return f"user-{self.id}"  # Example for user prefix
+
 
 def add_3hrs_from_now():
     return timezone.now() + timezone.timedelta(hours=3)
@@ -186,6 +189,9 @@ class VerificationCodes(ExpiresBase):
         self.save()
         return True
 
+    def get_prefixed_id(self):
+        return f"ver-{self.uuid}"  # Example for verification code prefix
+
     class Meta:
         verbose_name = "Verification Code"
         verbose_name_plural = "Verification Codes"
@@ -269,6 +275,9 @@ class Organization(models.Model):
     @property
     def is_org(self):
         return True
+
+    def get_prefixed_id(self):
+        return f"org-{self.id}"  # Example for organization prefix
 
 
 class TeamMemberPermission(models.Model):
