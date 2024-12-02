@@ -721,3 +721,9 @@ class MultiFileUpload(OwnerBase):
 
     def is_finished(self):
         return self.finished_at is not None
+
+
+user_handler = UserHandler(
+    use_identity_service=settings.USE_IDENTITY_SERVICE,
+    identity_creds=settings.IDENTITY_SERVICE_CREDS,
+)

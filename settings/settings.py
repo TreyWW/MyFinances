@@ -31,6 +31,11 @@ CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_TIMEZONE = "UTC"
 
+IDENTITY_SERVICE_CREDENTIALS = {
+    "api_key": os.environ.get("IDENTITY_SERVICE_API_KEY"),
+    "base_url": os.environ.get("IDENTITY_SERVICE_BASE_URL"),
+}
+
 if not SITE_URL.startswith("http"):
     exit("[BACKEND] SITE_URL must start with http:// or https://")
 
