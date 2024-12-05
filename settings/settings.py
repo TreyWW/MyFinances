@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     "drf_yasg",
     "tz_detect",
     "webpack_loader",
+    "core",
     # "django_minify_html",
 ]
 
