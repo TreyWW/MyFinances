@@ -12,8 +12,6 @@ from backend.core.service.permissions.scopes import get_permissions_from_request
 from backend.core.types.requests import WebRequest
 from backend.decorators import web_require_scopes
 
-from uuid import uuid4
-
 
 @require_http_methods(["POST"])
 @web_require_scopes("api_keys:write")
