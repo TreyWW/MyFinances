@@ -5,10 +5,10 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
 
-from backend.core.types.requests import WebRequest
+from core.types.requests import WebRequest
 from backend.decorators import web_require_scopes
 from backend.finance.models import Invoice, Client, InvoiceItem
-from backend.core.types.htmx import HtmxHttpRequest
+from core.types.htmx import HtmxHttpRequest
 
 
 # RELATED PATH FILES : \frontend\templates\pages\invoices\dashboard\_fetch_body.html, \backend\urls.py

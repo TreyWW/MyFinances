@@ -4,9 +4,9 @@ from django.views.decorators.http import require_POST
 
 from backend.decorators import web_require_scopes, htmx_only
 from backend.finance.models import InvoiceRecurringProfile
-from backend.core.service.defaults.get import get_account_defaults
-from backend.core.service.invoices.recurring.generation.next_invoice import safe_generate_next_invoice_service
-from backend.core.types.requests import WebRequest
+from backend.finance.service.defaults.get import get_account_defaults
+from backend.finance.service.invoices.recurring.generation.next_invoice import safe_generate_next_invoice_service
+from core.types.requests import WebRequest
 
 import logging
 

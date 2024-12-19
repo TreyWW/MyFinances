@@ -1,7 +1,7 @@
 from django.contrib import messages
 
-from backend.core.service.reports.get import get_report
-from backend.core.types.requests import WebRequest
+from backend.finance.service.reports.get import get_report
+from core.types.requests import WebRequest
 from django.shortcuts import render, redirect
 
 

@@ -3,7 +3,7 @@
 import backend.models
 from django.db import migrations, models
 
-from backend.core.models import _private_storage
+from backend.models import _private_storage
 
 
 class Migration(migrations.Migration):

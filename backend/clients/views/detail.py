@@ -5,9 +5,9 @@ from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
 
 from backend.decorators import web_require_scopes
-from backend.core.service.clients.delete import delete_client, DeleteClientServiceResponse
-from backend.core.service.clients.validate import validate_client
-from backend.core.types.requests import WebRequest
+from backend.finance.service.clients.delete import delete_client, DeleteClientServiceResponse
+from backend.finance.service.clients.validate import validate_client
+from core.types.requests import WebRequest
 from backend.clients.models import Client
 
 

@@ -7,9 +7,9 @@ from django.views.decorators.http import require_http_methods
 
 from backend.decorators import web_require_scopes
 from backend.finance.models import InvoiceRecurringProfile
-from backend.core.service.asyn_tasks.tasks import Task
-from backend.core.service.boto3.scheduler.delete_schedule import delete_boto_schedule
-from backend.core.types.requests import WebRequest
+from backend.boto3.async_tasks.tasks import Task
+from backend.boto3.scheduler.delete_schedule import delete_boto_schedule
+from core.types.requests import WebRequest
 
 
 @require_http_methods(["DELETE"])

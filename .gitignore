@@ -166,4 +166,4 @@ Pulumi.*.yaml.bak
 
 
 # Closed Source features
-./billing
+../core/billing

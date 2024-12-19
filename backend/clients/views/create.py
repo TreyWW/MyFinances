@@ -2,8 +2,8 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 
 from backend.decorators import web_require_scopes
-from backend.core.service.clients.create import create_client, CreateClientServiceResponse
-from backend.core.types.requests import WebRequest
+from backend.finance.service.clients.create import create_client, CreateClientServiceResponse
+from core.types.requests import WebRequest
 
 
 @web_require_scopes("clients:write", False, False, "clients:dashboard")

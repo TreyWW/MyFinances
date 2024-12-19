@@ -8,11 +8,11 @@ from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods
 
-from backend.core.types.requests import WebRequest
+from core.types.requests import WebRequest
 from backend.models import FileStorageFile, MultiFileUpload
-from backend.core.models import _private_storage, upload_to_user_separate_folder
+from backend.models import _private_storage, upload_to_user_separate_folder
 
-from backend.core.service.file_storage.create import parse_files_for_creation
+from backend.storage.service.create import parse_files_for_creation
 
 from django.urls import reverse
 

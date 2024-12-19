@@ -20,11 +20,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="verificationcodes",
             name="expiry",
-            field=models.DateTimeField(default=backend.core.models.add_3hrs_from_now),
+            field=models.DateTimeField(default=backend.models.add_3hrs_from_now),
         ),
         migrations.AlterField(
             model_name="verificationcodes",
             name="token",
-            field=models.TextField(default=backend.core.models.RandomCode, editable=False),
+            field=models.TextField(default=backend.models.RandomCode, editable=False),
         ),
     ]

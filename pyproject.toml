@@ -6,7 +6,6 @@ authors = ["TreyWW"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-strelix-core = { path = "../core/", develop = true }
 python = ">=3.10,<4.0"
 bleach = "6.1.0"  # used for HTML sanitation
 boto3 = "1.34.76"  # AWS
@@ -24,6 +23,7 @@ drf-yasg = "^1.21.7"
 setuptools = "^70.1.1"
 xhtml2pdf = "^0.2.16"
 stripe = "^10.8.0"
+strelix-core = {path = "E:/WebDev/core", develop = true}
 [tool.poetry.group.mypy.dependencies]
 mypy = "1.7.1"
 django-stubs = { version = "4.2.7" }

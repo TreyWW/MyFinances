@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
-from backend.core.service.invoices.common.create.services.add import add
-from backend.core.types.requests import WebRequest
+from backend.finance.service.invoices.common.create.services.add import add
+from core.types.requests import WebRequest
 
 
 @require_http_methods(["POST"])

@@ -4,7 +4,7 @@ from django.views.decorators.http import require_http_methods
 
 from backend.decorators import web_require_scopes, has_entitlements
 from backend.finance.models import InvoiceRecurringProfile
-from backend.core.service.invoices.recurring.get import get_invoice_profile
+from backend.finance.service.invoices.recurring.get import get_invoice_profile
 from backend.finance.views.invoices.handler import invoices_core_handler
 
 

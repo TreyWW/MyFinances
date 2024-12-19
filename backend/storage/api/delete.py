@@ -6,7 +6,7 @@ from django.views.decorators.http import require_http_methods
 
 from backend.decorators import htmx_only
 from backend.models import FileStorageFile
-from backend.core.types.requests import WebRequest
+from core.types.requests import WebRequest
 
 
 @require_http_methods(["DELETE"])

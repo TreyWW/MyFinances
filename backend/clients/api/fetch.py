@@ -3,9 +3,9 @@ from django.views.decorators.http import require_http_methods
 
 from backend.decorators import web_require_scopes
 from backend.clients.models import Client
-from backend.core.service.clients.get import fetch_clients, FetchClientServiceResponse
-from backend.core.types.htmx import HtmxHttpRequest
-from backend.core.types.requests import WebRequest
+from backend.finance.service.clients.get import fetch_clients, FetchClientServiceResponse
+from core.types.htmx import HtmxHttpRequest
+from core.types.requests import WebRequest
 
 
 @require_http_methods(["GET"])

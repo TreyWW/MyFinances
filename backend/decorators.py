@@ -11,9 +11,9 @@ from django.shortcuts import redirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from backend.core.models import QuotaLimit, TeamMemberPermission
-from backend.core.types.requests import WebRequest
-from backend.core.utils.feature_flags import get_feature_status
+from backend.models import TeamMemberPermission
+from core.types.requests import WebRequest
+from core.utils.feature_flags import get_feature_status
 
 logger = logging.getLogger(__name__)
 
@@ -138,36 +138,36 @@ def feature_flag_check_multi(flag_list: list[FlagItem], api=False, htmx=False):
     return decorator
 
 
-def quota_usage_check(limit: str | QuotaLimit, extra_data: str | int | None = None, api=False, htmx=False):
-    def decorator(view_func):
-        @wraps(view_func)
-        def wrapper(request, *args, **kwargs):
-            try:
-                quota_limit = QuotaLimit.objects.get(slug=limit) if isinstance(limit, str) else limit
-            except QuotaLimit.DoesNotExist:
-                return view_func(request, *args, **kwargs)
-
-            if not quota_limit.strict_goes_above_limit(request.user, extra=extra_data):
-                return view_func(request, *args, **kwargs)
-
-            if api and htmx:
-                messages.error(request, f"You have reached the quota limit for this service '{quota_limit.slug}'")
-                return render(request, "partials/messages_list.html", {"autohide": False})
-            elif api:
-                return HttpResponse(status=403, content=f"You have reached the quota limit for this service '{quota_limit.slug}'")
-            messages.error(request, f"You have reached the quota limit for this service '{quota_limit.slug}'")
-            try:
-                last_visited_url = request.session["last_visited"]
-                current_url = request.build_absolute_uri()
-                if last_visited_url != current_url:
-                    return HttpResponseRedirect(last_visited_url)
-            except KeyError:
-                pass
-            return HttpResponseRedirect(reverse("dashboard"))
-
-        return wrapper
-
-    return decorator
+# def quota_usage_check(limit: str | QuotaLimit, extra_data: str | int | None = None, api=False, htmx=False):
+#     def decorator(view_func):
+#         @wraps(view_func)
+#         def wrapper(request, *args, **kwargs):
+#             try:
+#                 quota_limit = QuotaLimit.objects.get(slug=limit) if isinstance(limit, str) else limit
+#             except QuotaLimit.DoesNotExist:
+#                 return view_func(request, *args, **kwargs)
+#
+#             if not quota_limit.strict_goes_above_limit(request.user, extra=extra_data):
+#                 return view_func(request, *args, **kwargs)
+#
+#             if api and htmx:
+#                 messages.error(request, f"You have reached the quota limit for this service '{quota_limit.slug}'")
+#                 return render(request, "partials/messages_list.html", {"autohide": False})
+#             elif api:
+#                 return HttpResponse(status=403, content=f"You have reached the quota limit for this service '{quota_limit.slug}'")
+#             messages.error(request, f"You have reached the quota limit for this service '{quota_limit.slug}'")
+#             try:
+#                 last_visited_url = request.session["last_visited"]
+#                 current_url = request.build_absolute_uri()
+#                 if last_visited_url != current_url:
+#                     return HttpResponseRedirect(last_visited_url)
+#             except KeyError:
+#                 pass
+#             return HttpResponseRedirect(reverse("dashboard"))
+#
+#         return wrapper
+#
+#     return decorator
 
 
 not_logged_in = not_authenticated

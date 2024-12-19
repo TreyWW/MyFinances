@@ -3,7 +3,7 @@ from django.contrib import messages
 from backend.finance.api.products.fetch import fetch_products
 from backend.decorators import web_require_scopes
 from backend.finance.models import InvoiceProduct
-from backend.core.types.htmx import HtmxHttpRequest
+from core.types.htmx import HtmxHttpRequest
 
 
 @web_require_scopes("invoices:write", True, True)

@@ -6,7 +6,7 @@ from django.views.decorators.http import require_http_methods
 
 from backend.decorators import web_require_scopes
 from backend.models import Receipt
-from backend.core.types.requests import WebRequest
+from core.types.requests import WebRequest
 
 
 @require_http_methods(["DELETE"])

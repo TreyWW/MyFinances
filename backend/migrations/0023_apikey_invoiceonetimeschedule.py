@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
             fields=[
                 ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
                 ("service", models.CharField(choices=[("aws_api_destination", "Aws Api Destination")], max_length=20, null=True)),
-                ("key", models.CharField(default=backend.core.models.RandomAPICode, max_length=100)),
+                ("key", models.CharField(default=backend.models.RandomAPICode, max_length=100)),
                 ("last_used", models.DateTimeField(auto_now_add=True)),
             ],
             options={

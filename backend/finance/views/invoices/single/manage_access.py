@@ -4,9 +4,9 @@ from django.shortcuts import redirect, render
 
 from backend.decorators import web_require_scopes
 from backend.finance.models import Invoice, InvoiceURL
-from backend.core.service.invoices.single.get_invoice import get_invoice_by_actor
-from backend.core.types.htmx import HtmxHttpRequest
-from backend.core.types.requests import WebRequest
+from backend.finance.service.invoices.single.get_invoice import get_invoice_by_actor
+from core.types.htmx import HtmxHttpRequest
+from core.types.requests import WebRequest
 
 
 @web_require_scopes("invoices:write", False, False, "finance:invoices:single:dashboard")

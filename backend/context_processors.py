@@ -1,16 +1,15 @@
 from typing import List, Optional, Dict, Any
 
+from core.service.base.breadcrumbs import get_breadcrumbs
 from django.http import HttpRequest
 from django.urls import reverse
 
 import calendar
 
-from backend.core.service.base.breadcrumbs import get_breadcrumbs
-
-from settings.helpers import get_var
+from settings.helpers import get_var, BASE_DIR
 
 from backend import __version__
-from settings.settings import BASE_DIR, DEBUG
+from settings.settings import DEBUG
 
 
 ## Context processors need to be put in SETTINGS TEMPLATES to be recognized
@@ -64,7 +63,7 @@ def extras(request: HttpRequest):
     data["day_names_monday_first"] = [day for day in calendar.day_name]
 
     if hasattr(request, "htmx") and request.htmx.boosted:
-        data["base"] = "core/htmx.html"
+        data["base"] = "core/base/htmx.html"
 
     return data
 

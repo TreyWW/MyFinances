@@ -36,13 +36,14 @@ if DB_TYPE == "mysql" or DB_TYPE == "postgres":
     print(f"[BACKEND] Using {DB_TYPE} database: {os.environ.get('DATABASE_NAME')}")
 
 else:
+    SQLITE_PATH = os.environ.get("SQLITE_PATH", BASE_DIR / "db.sqlite3")
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
+            "NAME": SQLITE_PATH,
         }
     }
-    print("[BACKEND] Using sqlite3 database", flush=True)
+    print(f"[BACKEND] Using sqlite3 database with path {SQLITE_PATH}", flush=True)
 
 local_allowed_host = os.environ.get("LOCAL_ALLOWED_HOST")
 local_allowed_hosts = [host for host in [local_allowed_host] if host is not None]

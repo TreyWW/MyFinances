@@ -2,8 +2,8 @@ from django.contrib import messages
 from django.shortcuts import render
 
 from backend.decorators import web_require_scopes
-from backend.core.service.reports.generate import generate_report
-from backend.core.types.requests import WebRequest
+from backend.finance.service.reports.generate import generate_report
+from core.types.requests import WebRequest
 
 
 @web_require_scopes("invoices:write", True, True)

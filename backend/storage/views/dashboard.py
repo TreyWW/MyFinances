@@ -1,9 +1,9 @@
 from django.shortcuts import render
 from django.utils.html import escape
 
-from backend.core.models import FileStorageFile
-from backend.core.service.file_storage.utils import format_file_size
-from backend.core.types.requests import WebRequest
+from backend.models import FileStorageFile
+from backend.storage.service.utils import format_file_size
+from core.types.requests import WebRequest
 
 
 def file_storage_dashboard_endpoint(request: WebRequest):

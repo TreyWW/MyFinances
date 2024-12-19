@@ -3,7 +3,7 @@ import logging
 from django.db.models.signals import pre_delete, post_save
 from django.dispatch import receiver
 
-from backend.core.models import _private_storage
+from backend.models import _private_storage
 from backend.models import FileStorageFile
 
 logger = logging.getLogger(__name__)

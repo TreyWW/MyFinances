@@ -5,8 +5,8 @@ from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
 
 from backend.decorators import web_require_scopes, has_entitlements
-from backend.models import Receipt, QuotaUsage
-from backend.core.types.requests import WebRequest
+from backend.models import Receipt
+from core.types.requests import WebRequest
 
 
 @require_http_methods(["POST"])
@@ -50,7 +50,7 @@ def receipt_create(request: WebRequest):
     receipts = Receipt.filter_by_owner(owner=request.actor).order_by("-date")
 
     receipt = Receipt(**receipt_data)
-    QuotaUsage.create_str(request.user, "receipts-count", receipt.id)
+    # QuotaUsage.create_str(request.user, "receipts-count", receipt.id)
     receipt.save()
     # r = requests.post(
     #     "https://ocr.asprise.com/api/receipt",

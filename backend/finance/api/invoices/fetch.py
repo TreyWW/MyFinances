@@ -3,8 +3,8 @@ from django.views.decorators.http import require_http_methods
 
 from backend.decorators import web_require_scopes
 from backend.finance.models import Invoice
-from backend.core.types.htmx import HtmxHttpRequest
-from backend.core.service.invoices.common.fetch import get_context
+from core.types.htmx import HtmxHttpRequest
+from backend.finance.service.invoices.common.fetch import get_context
 
 
 @require_http_methods(["GET"])

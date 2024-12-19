@@ -6,7 +6,7 @@ from django_ratelimit.core import is_ratelimited
 
 from backend.decorators import feature_flag_check, web_require_scopes
 from backend.finance.models import Invoice
-from backend.core.types.htmx import HtmxHttpRequest
+from core.types.htmx import HtmxHttpRequest
 
 
 @require_GET

@@ -15,7 +15,7 @@ from mypy_boto3_sesv2.type_defs import (
     SendBulkEmailResponseTypeDef,
 )
 
-from backend.core.types.emails import (
+from core.types.emails import (
     SingleEmailInput,
     BulkTemplatedEmailInput,
     SingleTemplatedEmailContent,

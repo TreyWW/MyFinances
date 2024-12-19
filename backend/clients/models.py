@@ -2,12 +2,12 @@ from __future__ import annotations
 
 from datetime import date, timedelta
 from django.db import models
-from backend.core.data.default_email_templates import (
+from backend.data.default_email_templates import (
     recurring_invoices_invoice_created_default_email_template,
     recurring_invoices_invoice_overdue_default_email_template,
     recurring_invoices_invoice_cancelled_default_email_template,
 )
-from backend.core.models import OwnerBase, User, UserSettings, _private_storage
+from backend.models import OwnerBase, User, UserSettings, _private_storage
 
 
 class Client(OwnerBase):

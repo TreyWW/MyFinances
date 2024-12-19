@@ -11,7 +11,7 @@ from shortuuid.django_fields import ShortUUIDField
 from backend.clients.models import Client, DefaultValues
 from backend.managers import InvoiceRecurringProfile_WithItemsManager
 
-from backend.core.models import OwnerBase, UserSettings, _private_storage, USER_OR_ORGANIZATION_CONSTRAINT, User, ExpiresBase, Organization
+from backend.models import OwnerBase, UserSettings, _private_storage, USER_OR_ORGANIZATION_CONSTRAINT, User, ExpiresBase, Organization
 
 
 class BotoSchedule(models.Model):

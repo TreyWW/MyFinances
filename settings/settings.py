@@ -75,7 +75,7 @@ if DEBUG:
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         # "rest_framework.authentication.TokenAuthentication",
-        "backend.core.api.public.authentication.CustomBearerAuthentication"  # also adds custom model
+        "core.api.public.authentication.CustomBearerAuthentication"  # also adds custom model
     ],
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
@@ -89,7 +89,7 @@ REST_FRAMEWORK = {
 
 SWAGGER_SETTINGS = {
     "USE_SESSION_AUTH": False,
-    "DEFAULT_INFO": "backend.core.api.public.swagger_ui.INFO",
+    "DEFAULT_INFO": "core.api.public.swagger_ui.INFO",
     "SECURITY_DEFINITIONS": {"Bearer": {"type": "apiKey", "name": "Authorization", "in": "header"}},
 }
 
@@ -287,7 +287,7 @@ MARKDOWNIFY = {
     }
 }
 
-AUTH_USER_MODEL = "backend.User"
+AUTH_USER_MODEL = "core.User"
 
 LANGUAGE_CODE = "en-us"
 
@@ -323,7 +323,7 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_ENABLED = True if SOCIAL_AUTH_GOOGLE_OAUTH2_KEY and SO
 # SOCIAL_AUTH_LOGIN_URL = "/login/external/"
 # SOCIAL_AUTH_NEW_USER_REDIRECT_URL = "/login/external/new_user/"
 # SOCIAL_AUTH_LOGIN_REDIRECT_URL = "/"
-SOCIAL_AUTH_USER_MODEL = "backend.User"
+SOCIAL_AUTH_USER_MODEL = "core.User"
 
 AWS_TAGS_APP_NAME = get_var("AWS_TAGS_APP_NAME", default="myfinances")
 

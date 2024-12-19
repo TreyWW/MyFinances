@@ -1,6 +1,6 @@
 from backend.decorators import *
 from backend.models import *
-from backend.core.service.defaults.get import get_account_defaults
+from backend.finance.service.defaults.get import get_account_defaults
 from backend.finance.views.invoices.handler import invoices_core_handler
 
 
