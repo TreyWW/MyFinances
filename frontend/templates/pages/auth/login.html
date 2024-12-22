@@ -25,7 +25,7 @@
     <div class="divider mt-8">OR</div>
     {% if magic_links_enabled %}
         <button type="button"
-                hx-post="{% url 'auth:login magic_link request' %}"
+                hx-post="{% url 'core:auth:login magic_link request' %}"
                 hx-vals='{"email": "{{ email }}", "next": "{{ next }}"}'
                 class="btn-large-card flex flex-col items-center">
             <span>Login with email magic link</span>

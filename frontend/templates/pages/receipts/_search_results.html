@@ -2,135 +2,132 @@
 <div class="flex w-full h-full overflow-x-auto overflow-y-auto" id="items">
     <table class="table h-fit">
         <thead>
-        <tr hx-swap="outerHTML"
-            hx-target="#items"
-            hx-indicator=""
-            hx-include="#filter_list_storage">
-            <th>ID</th>
-            <th>Date</th>
-            <th>Name</th>
-            <th>Merchant/Store</th>
-            <th>Category</th>
-            <th>
-                <div class="dropdown"
-                     data-filter-type="amount"
-                     hx-vals='{"filter_type": "amount"}'>
-                    <label tabindex="0" class="border-none">
-                        Amount
-                        <i class="fa-solid fa-caret-down border-none pt-1 pl-1/2"></i>
-                    </label>
-                    <ul class="dropdown-content">
-                        <h2 class="menu-title">Amount</h2>
-                        <div class="divider -mt-2 -mb-1"></div>
-                        <li data-filter-by="20+">
-                            <button class="dropdown-item text-sm border-none"
-                                    hx-get="{% url "api:finance:receipts:fetch" %}"
-                                    name="filter"
-                                    value="20">20+
-                            </button>
-                        </li>
-                        <li data-filter-by="50+">
-                            <button class="dropdown-item text-sm border-none"
-                                    hx-get="{% url "api:finance:receipts:fetch" %}"
-                                    name="filter"
-                                    value="50">50+
-                            </button>
-                        </li>
-                        <li data-filter-by="100+">
-                            <button class="dropdown-item text-sm border-none"
-                                    hx-get="{% url "api:finance:receipts:fetch" %}"
-                                    name="filter"
-                                    value="100">100+
-                            </button>
-                        </li>
-                    </ul>
-                </div>
-            </th>
-            <th>Actions</th>
-        </tr>
+            <tr hx-swap="outerHTML"
+                hx-target="#items"
+                hx-indicator=""
+                hx-include="#filter_list_storage">
+                <th>ID</th>
+                <th>Date</th>
+                <th>Name</th>
+                <th>Merchant/Store</th>
+                <th>Category</th>
+                <th>
+                    <div class="dropdown"
+                         data-filter-type="amount"
+                         hx-vals='{"filter_type": "amount"}'>
+                        <label tabindex="0" class="border-none">
+                            Amount
+                            <i class="fa-solid fa-caret-down border-none pt-1 pl-1/2"></i>
+                        </label>
+                        <ul class="dropdown-content">
+                            <h2 class="menu-title">Amount</h2>
+                            <div class="divider -mt-2 -mb-1"></div>
+                            <li data-filter-by="20+">
+                                <button class="dropdown-item text-sm border-none"
+                                        hx-get="{% url "api:finance:receipts:fetch" %}"
+                                        name="filter"
+                                        value="20">20+</button>
+                            </li>
+                            <li data-filter-by="50+">
+                                <button class="dropdown-item text-sm border-none"
+                                        hx-get="{% url "api:finance:receipts:fetch" %}"
+                                        name="filter"
+                                        value="50">50+</button>
+                            </li>
+                            <li data-filter-by="100+">
+                                <button class="dropdown-item text-sm border-none"
+                                        hx-get="{% url "api:finance:receipts:fetch" %}"
+                                        name="filter"
+                                        value="100">100+</button>
+                            </li>
+                        </ul>
+                    </div>
+                </th>
+                <th>Actions</th>
+            </tr>
         </thead>
         <tbody>
-        {% for row in receipts %}
-            <tr id="row-{{ row.id }}">
-                <td>
-                    <button onclick="modal_receipt_{{ row.id }}.showModal();"
-                            class="link link-primary">{{ row.id }}</button>
-                </td>
-                <td>{{ row.date }}</td>
-                <td>{{ row.name }}</td>
-                <td>{{ row.merchant_store }}</td>
-                <td>{{ row.purchase_category }}</td>
-                <td>{{ currency_symbol }}{{ row.total_price | default:"0.00" }}</td>
-                <td>
-                    <form method="post">
-                        <button type="button"
-                                onclick="modal_receipt_{{ row.id }}.showModal();"
-                                data-tip="Preview receipt in modal"
-                                class="btn btn-outline btn-primary btn-sm tooltip">
-                            <i class="fa fa-eye"></i>
-                        </button>
-                        <button onclick="modal_{{ row.id }}_receipts_upload.showModal();"
-                                id="edit_receipt_button"
-                                class="btn btn-outline btn-warning btn-sm tooltip"
-                                for="edit_receipt"
-                                data-tip="Edit receipt details"
-                                hx-trigger="click once"
-                                hx-swap="beforeend"
-                                hx-target="#modal_container"
-                                hx-get="{% url "api:base:modal retrieve" modal_name="edit_receipt" %}?receipt_id={{ row.id }}">
-                            <i class="fa-solid fa-edit"></i>
-                        </button>
-                        <button type="button"
-                                class="btn btn-outline btn-success btn-sm tooltip"
-                                data-tip="Download Receipt"
-                                onclick="download_file('{% url 'api:finance:receipts:generate_download_link' receipt_id=row.id %}')">
-                            <i class="fa fa-download"></i>
-                        </button>
-                        <button class="btn btn-error btn-sm tooltip"
-                                data-tip="Delete receipt"
-                                hx-delete="{% url 'api:finance:receipts:delete' id=row.id %}"
-                                hx-target="#items"
-                                hx-confirm="Are you sure you would like to delete the receipt?">
-                            <i class="fa fa-trash"></i>
-                        </button>
-                    </form>
-                </td>
-            </tr>
-            <dialog class="modal modal-responsive" id="modal_receipt_{{ row.id }}">
-                <div class="modal-box">
-                    <h2 class="text-xl">
-                        {{ row.name | title }}
-                        <span class="text-xs">{{ row.date }}  Uploaded on {{ row.date_uploaded | date:"d/m/Y" }}</span>
-                    </h2>
-                    {% if row.image %}
-                        <div class="w-full my-3">
-                            {% if row.image.url|slice:"-3:" == 'pdf' %}
-                                <embed class="w-full"
-                                       src="{{ row.image.url }}"
-                                       type="application/pdf"
-                                       width="100%"
-                                       height="600px">
-                            {% else %}
-                                <img class="w-full" src="{{ row.image.url }}" alt="Receipt">
-                            {% endif %}
+            {% for row in receipts %}
+                <tr id="row-{{ row.id }}">
+                    <td>
+                        <button onclick="modal_receipt_{{ row.id }}.showModal();"
+                                class="link link-primary">{{ row.id }}</button>
+                    </td>
+                    <td>{{ row.date }}</td>
+                    <td>{{ row.name }}</td>
+                    <td>{{ row.merchant_store }}</td>
+                    <td>{{ row.purchase_category }}</td>
+                    <td>{{ currency_symbol }}{{ row.total_price | default:"0.00" }}</td>
+                    <td>
+                        <form method="post">
+                            <button type="button"
+                                    onclick="modal_receipt_{{ row.id }}.showModal();"
+                                    data-tip="Preview receipt in modal"
+                                    class="btn btn-outline btn-primary btn-sm tooltip">
+                                <i class="fa fa-eye"></i>
+                            </button>
+                            <button onclick="modal_{{ row.id }}_receipts_upload.showModal();"
+                                    id="edit_receipt_button"
+                                    class="btn btn-outline btn-warning btn-sm tooltip"
+                                    for="edit_receipt"
+                                    data-tip="Edit receipt details"
+                                    hx-trigger="click once"
+                                    hx-swap="beforeend"
+                                    hx-target="#modal_container"
+                                    hx-get="{% url "core:api:base:modal retrieve" modal_name="edit_receipt" %}?receipt_id={{ row.id }}">
+                                <i class="fa-solid fa-edit"></i>
+                            </button>
+                            <button type="button"
+                                    class="btn btn-outline btn-success btn-sm tooltip"
+                                    data-tip="Download Receipt"
+                                    onclick="download_file('{% url 'api:finance:receipts:generate_download_link' receipt_id=row.id %}')">
+                                <i class="fa fa-download"></i>
+                            </button>
+                            <button class="btn btn-error btn-sm tooltip"
+                                    data-tip="Delete receipt"
+                                    hx-delete="{% url 'api:finance:receipts:delete' id=row.id %}"
+                                    hx-target="#items"
+                                    hx-confirm="Are you sure you would like to delete the receipt?">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                <dialog class="modal modal-responsive" id="modal_receipt_{{ row.id }}">
+                    <div class="modal-box">
+                        <h2 class="text-xl">
+                            {{ row.name | title }}
+                            <span class="text-xs">{{ row.date }}  Uploaded on {{ row.date_uploaded | date:"d/m/Y" }}</span>
+                        </h2>
+                        {% if row.image %}
+                            <div class="w-full my-3">
+                                {% if row.image.url|slice:"-3:" == 'pdf' %}
+                                    <embed class="w-full"
+                                           src="{{ row.image.url }}"
+                                           type="application/pdf"
+                                           width="100%"
+                                           height="600px">
+                                {% else %}
+                                    <img class="w-full" src="{{ row.image.url }}" alt="Receipt">
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                        <div class="flex gap-3">
+                            <button type="button"
+                                    class="btn btn-primary"
+                                    onclick="download_file('{% url 'api:finance:receipts:generate_download_link' receipt_id=row.id %}')">
+                                Download
+                            </button>
+                            <button class="btn" onclick="modal_receipt_{{ row.id }}.close();">Cancel</button>
                         </div>
-                    {% endif %}
-                    <div class="flex gap-3">
-                        <button type="button"
-                                class="btn btn-primary"
-                                onclick="download_file('{% url 'api:finance:receipts:generate_download_link' receipt_id=row.id %}')">
-                            Download
-                        </button>
-                        <button class="btn" onclick="modal_receipt_{{ row.id }}.close();">Cancel</button>
                     </div>
-                </div>
-                <div class="modal-backdrop">
-                    <button onclick="modal_receipt_{{ row.id }}.close();">close</button>
-                </div>
-            </dialog>
-        {% empty %}
-            <td colspan="100%" class="text-center">No receipts found.</td>
-        {% endfor %}
+                    <div class="modal-backdrop">
+                        <button onclick="modal_receipt_{{ row.id }}.close();">close</button>
+                    </div>
+                </dialog>
+            {% empty %}
+                <td colspan="100%" class="text-center">No receipts found.</td>
+            {% endfor %}
         </tbody>
     </table>
     {% for filter_type, inner_filters in all_filters.items %}

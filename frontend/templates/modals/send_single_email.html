@@ -2,7 +2,7 @@
 {% fill "content" %}
 <form class="py-4"
       id="modal_send_single_email-form"
-      hx-post="{% url 'api:emails:send single' %}"
+      hx-post="{% url 'core:api:emails:send single' %}"
       hx-swap="none">
     {% csrf_token %}
     <div class="form-control w-full">

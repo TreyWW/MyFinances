@@ -9,7 +9,7 @@ class CurrencyAPIChange(ViewTestCase):
     def setUp(self):
         super().setUp()
         self.url_path = "/api/settings/account_preferences/"
-        self.url_name = "api:settings:account_preferences"
+        self.url_name = "core:api:settings:account_preferences"
         self.view_function_path = "core.api.settings.preferences.update_account_preferences"
 
     # Test that the URL resolves to the correct view function
@@ -69,7 +69,7 @@ class AccountNameChange(ViewTestCase):
     def setUp(self):
         super().setUp()
         self.url_path = "/api/settings/change_name/"
-        self.url_name = "api:settings:change_name"
+        self.url_name = "core:api:settings:change_name"
         self.view_function_path = "settings.change_name.change_name"
 
     def test_405_for_non_htmx_requests(self):

@@ -32,11 +32,11 @@
                         <td>
                             <button hx-target="closest tr"
                                     hx-confirm="Are you sure you'd like to ACCEPT request #{{ request.id }}"
-                                    hx-delete="{% url "api:quotas:approve request" request_id=request.id %}"
+                                    hx-delete="{% url "core:api:quotas:approve request" request_id=request.id %}"
                                     class="btn btn-success btn-sm">Approve</button>
                             <button hx-target="closest tr"
                                     hx-confirm="Are you sure you'd like to DECLINE request #{{ request.id }}"
-                                    hx-delete="{% url "api:quotas:decline request" request_id=request.id %}"
+                                    hx-delete="{% url "core:api:quotas:decline request" request_id=request.id %}"
                                     class="btn btn-error btn-sm">Decline</button>
                         </td>
                     </tr>

@@ -2,7 +2,7 @@
     <div class="breadcrumbs text-sm mb-4 -mt-4"
          data-layout="breadcrumbs"
          hx-boost="true"
-         hx-get="{% url 'api:base:breadcrumbs refetch' %}"
+         hx-get="{% url 'core:api:base:breadcrumbs refetch' %}"
          hx-vals='javascript:{"url": window.location.pathname}'
          hx-trigger="update_breadcrumbs from:body"
          hx-swap="innerHTML"

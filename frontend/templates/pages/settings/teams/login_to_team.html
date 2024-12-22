@@ -6,7 +6,7 @@
         {% if can_create_teams %}
             <button onclick="modal_create_team.showModal();"
                     class="btn btn-primary w-40"
-                    hx-get="{% url "api:base:modal retrieve" modal_name="create_team" %}"
+                    hx-get="{% url "core:api:base:modal retrieve" modal_name="create_team" %}"
                     hx-trigger="click once"
                     hx-swap="beforeend"
                     hx-target="#modal_container">
@@ -29,7 +29,7 @@
             </h2>
             <br>
             <form id="modal_create_reminder-form"
-                hx-post="{% url 'api:teams:switch_team input' %}"
+                hx-post="{% url 'core:api:teams:switch_team input' %}"
                 {#                  hx-include='input[name="invoice_id"]'#}
                 {#                  hx-target='tbody[data-hx-swap="reminders"]'#}
                 {#                  hx-swap="beforeend">#}

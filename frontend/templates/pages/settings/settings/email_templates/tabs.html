@@ -32,7 +32,7 @@
             {% for template in 'invoice_created,invoice_overdue,invoice_cancelled'|split:"," %}
                 <form class="m-0 flex grow flex-col gap-y-2"
                       hx-swap="none"
-                      hx-post="{% url 'api:settings:email_template save' template=template %}"
+                      hx-post="{% url 'core:api:settings:email_template save' template=template %}"
                       :class="{ 'hidden': activeTab !== '{{ template }}'}">
                     <p>{{ template|split:"_"|join:" "|title }}</p>
                     {% with text=email_templates.recurring_invoices|dict_get:template %}

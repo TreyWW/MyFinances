@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from core.views.other.index import dashboard
+from core.views.other.index import index, pricing
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
@@ -11,8 +13,6 @@ from django.views.static import serve
 
 from backend.finance.views.invoices.single.view import view_invoice_with_uuid_endpoint
 from backend.finance.views.receipts.dashboard import receipts_dashboard
-from core.views.other.index import dashboard
-from core.views.other.index import index, pricing
 
 # from core.views.quotas.view import quotas_list
 # from core.views.quotas.view import view_quota_increase_requests
@@ -26,7 +26,7 @@ url(
 api_patterns = [path("finance/", include("backend.finance.api"))]
 
 urlpatterns = [
-    path("", include("core.urls")),
+    path("", include(("core.urls", "core"), namespace="core")),
     path("webhooks/", include("backend.webhooks.urls")),
     path("", index, name="index"),
     path("pricing", pricing, name="pricing"),
@@ -51,7 +51,12 @@ urlpatterns = [
         name="invoices view invoice",
     ),
     path("api/", include("backend.api.urls", namespace="api")),
+    # path("api/", include("core.api.urls", namespace="api"))
+    path("admin/", admin.site.urls),
 ] + static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
+
+if getattr(settings, "BILLING_ENABLED"):
+    urlpatterns.append(path("", include(("billing.urls", "billing"), namespace="billing")))
 
 handler500 = "core.views.other.errors.universal"
 handler404 = "core.views.other.errors.universal"

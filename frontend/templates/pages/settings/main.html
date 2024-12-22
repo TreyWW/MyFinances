@@ -8,15 +8,15 @@
                 hx-swap="innerHTML"
                 hx-vals='{"on_main": "True"}'>
                 <li>
-                    <a href="{% url 'settings:dashboard with page' page='profile' %}"
-                       hx-replace-url="{% url 'settings:dashboard with page' page='profile' %}">
+                    <a href="{% url 'core:settings:dashboard with page' page='profile' %}"
+                       hx-replace-url="{% url 'core:settings:dashboard with page' page='profile' %}">
                         <i class="fa fa-solid fa-user"></i>
                         Public Profile
                     </a>
                 </li>
                 <li>
-                    <a href="{% url 'settings:dashboard with page' page='account' %}"
-                       hx-replace-url="{% url 'settings:dashboard with page' page='account' %}">
+                    <a href="{% url 'core:settings:dashboard with page' page='account' %}"
+                       hx-replace-url="{% url 'core:settings:dashboard with page' page='account' %}">
                         <i class="fa fa-solid fa-gear"></i>
                         Account
                     </a>
@@ -24,15 +24,15 @@
                 <div class="divider"></div>
                 <h2 class="pl-3 text-neutral-content">Invoice Preferences</h2>
                 <li>
-                    <a href="{% url 'settings:dashboard with page' page='email_templates' %}"
-                       hx-replace-url="{% url 'settings:dashboard with page' page='email_templates' %}">
+                    <a href="{% url 'core:settings:dashboard with page' page='email_templates' %}"
+                       hx-replace-url="{% url 'core:settings:dashboard with page' page='email_templates' %}">
                         <i class="fa fa-solid fa-envelope"></i>
                         Email Templates
                     </a>
                 </li>
                 <li>
-                    <a href="{% url 'settings:dashboard with page' page='account_defaults' %}"
-                       hx-replace-url="{% url 'settings:dashboard with page' page='account_defaults' %}">
+                    <a href="{% url 'core:settings:dashboard with page' page='account_defaults' %}"
+                       hx-replace-url="{% url 'core:settings:dashboard with page' page='account_defaults' %}">
                         <i class="fa fa-solid fa-toolbox"></i>
                         Account defaults
                     </a>
@@ -40,15 +40,15 @@
                 <div class="divider"></div>
                 <h2 class="pl-3 text-neutral-content">Access</h2>
                 <li>
-                    <a href="{% url 'settings:dashboard with page' page='api_keys' %}"
-                       hx-replace-url="{% url 'settings:dashboard with page' page='api_keys' %}">
+                    <a href="{% url 'core:settings:dashboard with page' page='api_keys' %}"
+                       hx-replace-url="{% url 'core:settings:dashboard with page' page='api_keys' %}">
                         <i class="fa fa-solid fa-code"></i>
                         API Keys
                     </a>
                 </li>
                 <li>
-                    <a href="{% url 'settings:dashboard with page' page='account_security' %}"
-                       hx-replace-url="{% url 'settings:dashboard with page' page='account_security' %}">
+                    <a href="{% url 'core:settings:dashboard with page' page='account_security' %}"
+                       hx-replace-url="{% url 'core:settings:dashboard with page' page='account_security' %}">
                         <i class="fa fa-solid fa-shield"></i>
                         Account Security
                     </a>

@@ -5,27 +5,29 @@
             <p class="text-content2">{% lorem 10 w %}</p>
             <div class="divide-y divide-gray-200 dark:divide-gray-700">
                 {# Profile Name #}
-                <form hx-post="{% url "api:settings:change_name" %}"
+                <form hx-post="{% url "core:api:settings:change_name" %}"
                       hx-swap="none"
                       hx-indicator="#save_account_name"
                       class="flex gap-2 flex-col justify-between py-4 md:flex-row">
                     {% csrf_token %}
                     <div class="flex flex-col flex-grow">
                         <p class="text-lg font-semibold text-gray-900 dark:text-white">Account Name</p>
-                        <p class="text-base font-normal text-gray-500 dark:text-gray-400">This will be displayed on your
-                            account</p>
+                        <p class="text-base font-normal text-gray-500 dark:text-gray-400">
+                            This will be displayed on your
+                            account
+                        </p>
                     </div>
-                    <input type="hidden" name="section" value="name"/>
+                    <input type="hidden" name="section" value="name" />
                     <input type="text"
                            name="first_name"
                            class="input input-bordered md:max-w-[20%]"
                            placeholder="John"
-                           value="{{ request.user.first_name }}"/>
+                           value="{{ request.user.first_name }}" />
                     <input type="text"
                            name="last_name"
                            class="input input-bordered md:max-w-[20%]"
                            placeholder="Doe"
-                           value="{{ request.user.last_name }}"/>
+                           value="{{ request.user.last_name }}" />
                     <button id="save_account_name"
                             type="submit"
                             class="btn btn-outline btn-primary loading-htmx">
@@ -48,7 +50,7 @@
                             hx-trigger="click once"
                             hx-swap="beforeend"
                             hx-target="#modal_container"
-                            hx-get="{% url "api:base:modal retrieve" modal_name="change_profile_picture" %}">
+                            hx-get="{% url "core:api:base:modal retrieve" modal_name="change_profile_picture" %}">
                         Change
                     </button>
                 </div>

@@ -1,7 +1,7 @@
 {% load render_bundle from webpack_loader %}
 <form class="py-4"
       method="POST"
-      {% if client %} hx-post="{% url 'api:settings:client_defaults' client_id=client.id %}" {% else %} hx-post="{% url 'api:settings:client_defaults without client' %}" {% endif %}
+      {% if client %} hx-post="{% url 'core:api:settings:client_defaults' client_id=client.id %}" {% else %} hx-post="{% url 'core:api:settings:client_defaults without client' %}" {% endif %}
       hx-target="this"
       hx-indicator='button[data-hx-loading="save"]'
       hx-swap="none"
@@ -122,7 +122,7 @@
                         {% if defaults.default_invoice_logo %}
                             <button class="btn btn-error w-48"
                                     hx-swap="none"
-                                    {% if client %} hx-delete="{% url 'api:settings:client_defaults remove logo' client_id=client.id %}" {% else %} hx-delete="{% url 'api:settings:client_defaults remove logo without client' %}" {% endif %}>
+                                    {% if client %} hx-delete="{% url 'core:api:settings:client_defaults remove logo' client_id=client.id %}" {% else %} hx-delete="{% url 'core:api:settings:client_defaults remove logo without client' %}" {% endif %}>
                                 Remove current image
                             </button>
                         {% endif %}

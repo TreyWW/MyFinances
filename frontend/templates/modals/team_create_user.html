@@ -2,7 +2,7 @@
 {% fill "content" %}
 <form class="py-4"
       id="modal_team_create_user-form"
-      hx-post="{% url 'api:teams:create_user' %}"
+      hx-post="{% url 'core:api:teams:create_user' %}"
       hx-swap="none">
     {% csrf_token %}
     <div class="form-control w-full">
@@ -49,7 +49,8 @@
     <div class="w-full align-content-start align-items-center gap-1 text-start border-2 rounded-lg border-info p-3 mt-3">
         <mark class="rounded pb-1 bg-info pt-0.5 px-1">Note:</mark>
         this will send the user instructions on how to login, and they will be granted the permissions above in
-        your organization <strong>right away</strong>. Double-check the permissions, you can modify them at any point.
+        your organization <strong>right away</strong>. Double-check the permissions, you can modify them at any
+        point.
     </div>
     <div class="modal-action">
         <button type="submit"

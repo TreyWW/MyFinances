@@ -5,7 +5,7 @@
             <button tabindex="0"
                     role="button"
                     class="tooltip tooltip-right btn btn-square btn-outline loading-htmx"
-                    hx-post="{% url 'api:emails:refresh statuses' %}"
+                    hx-post="{% url 'core:api:emails:refresh statuses' %}"
                     data-tip="Refresh the status of all emails. This will show you the most recent email event"
                     hx-swap="none"
                     id="sort-indicator">
@@ -22,7 +22,7 @@
                         hx-trigger="click once"
                         hx-swap="beforeend"
                         hx-target="#modal_container"
-                        hx-get="{% url "api:base:modal retrieve" modal_name="send_single_email" %}">
+                        hx-get="{% url "core:api:base:modal retrieve" modal_name="send_single_email" %}">
                     <i class="fa-solid fa-paper-plane"></i>
                     Send Email
                 </button>
@@ -37,7 +37,7 @@
                                     hx-trigger="from:#single_send_button, click once"
                                     hx-swap="beforeend"
                                     hx-target="#modal_container"
-                                    hx-get="{% url "api:base:modal retrieve" modal_name="send_single_email" %}">
+                                    hx-get="{% url "core:api:base:modal retrieve" modal_name="send_single_email" %}">
                                 <i class="fa-solid fa-user"></i> Send single email
                             </button>
                         </li>
@@ -46,7 +46,7 @@
                                     hx-trigger="click once"
                                     hx-swap="beforeend"
                                     hx-target="#modal_container"
-                                    hx-get="{% url "api:base:modal retrieve" modal_name="send_bulk_email" %}">
+                                    hx-get="{% url "core:api:base:modal retrieve" modal_name="send_bulk_email" %}">
                                 <i class="fa-solid fa-users"></i> Send bulk email
                             </button>
                         </li>
@@ -68,7 +68,7 @@
                 <tbody id="table_body"
                        hx-swap="outerHTML"
                        hx-trigger="load, retry"
-                       hx-get="{% url 'api:emails:fetch' %}">
+                       hx-get="{% url 'core:api:emails:fetch' %}">
                     {% include 'components/table/skeleton_rows.html' with rows=3 cols=5 %}
                 </tbody>
                 {#                <script>#}

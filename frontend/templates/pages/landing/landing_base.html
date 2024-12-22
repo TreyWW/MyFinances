@@ -25,11 +25,12 @@
                 <div class="text-center sm:text-left flex sm:justify-end sm:items-center gap-x-3 md:gap-x-4">
                     {% if request.user.is_authenticated %}
                         <a class="btn btn-primary rounded-full" href="{% url "dashboard" %}">Dashboard</a>
-                        <a class="btn btn-outline rounded-full" href="{% url 'auth:logout' %}">Logout</a>
+                        <a class="btn btn-outline rounded-full"
+                           href="{% url 'core:auth:logout' %}">Logout</a>
                     {% else %}
-                        <a class="link link-hover" href="{% url 'auth:login' %}">Login</a>
+                        <a class="link link-hover" href="{% url 'core:auth:login' %}">Login</a>
                         <a class="btn btn-primary rounded-full"
-                           href="{% url 'auth:login create_account' %}">Get started</a>
+                           href="{% url 'core:auth:login create_account' %}">Get started</a>
                     {% endif %}
                 </div>
             </div>

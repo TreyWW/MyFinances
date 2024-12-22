@@ -24,7 +24,7 @@
         data-hx-container="dropdown_items">
         <div class="font-bold p-2">Personal Account</div>
         <button class="font-semibold flex flex-row hover:bg-base-100 rounded items-center py-1 pe-4 justify-between {% if not request.actor.is_org %}bg-base-100{% endif %}"
-                hx-post="{% url 'api:teams:switch_team' team_id=0 %}"
+                hx-post="{% url 'core:api:teams:switch_team' team_id=0 %}"
                 hx-swap="none">
             <div class="items-center flex flex-row">
                 {% component "profile_picture" image_type="small" extra_classes="p-1 h-6 w-6 object-contain" url=request.user.user_profile.profile_picture_url %}
@@ -35,7 +35,7 @@
         <div class="font-bold mt-2 p-2">Teams</div>
         {% for team in request.user.teams_apart_of %}
             <button class="flex flex-row hover:bg-base-100 rounded items-center py-1 pe-4 justify-between {% if request.actor.is_org and team.id == request.actor.id %}bg-base-100{% endif %}"
-                    hx-post="{% url 'api:teams:switch_team' team_id=team.id %}"
+                    hx-post="{% url 'core:api:teams:switch_team' team_id=team.id %}"
                     hx-swap="none">
                 <div class="items-center flex flex-row">
                     <img class="p-1 h-6 w-6 object-contain"

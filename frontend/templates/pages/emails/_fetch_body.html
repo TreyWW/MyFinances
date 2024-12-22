@@ -1,5 +1,5 @@
 {% for email in emails %}
-    <tr {% if forloop.last and emails.has_next %} hx-swap="afterend" hx-trigger="revealed" hx-get="{% url 'api:emails:fetch' %}?page={{ emails.next_page_number }}"{% endif %}>
+    <tr {% if forloop.last and emails.has_next %} hx-swap="afterend" hx-trigger="revealed" hx-get="{% url 'core:api:emails:fetch' %}?page={{ emails.next_page_number }}"{% endif %}>
         <td>{{ email.id }}</td>
         <td>{{ email.created_at }}</td>
         <td>{{ email.recipient }}</td>

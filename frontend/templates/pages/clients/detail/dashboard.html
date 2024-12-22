@@ -36,7 +36,7 @@
         hx-trigger="load" {# click once #}
         hx-target='find  div[data-htmx="details_container"]'
         hx-swap="innerHTML"
-        hx-get="{% url 'api:settings:client_defaults' client_id=client.id %}">
+        hx-get="{% url 'core:api:settings:client_defaults' client_id=client.id %}">
         <input type="checkbox" checked />
         <div class="collapse-title text-xl font-medium">Customer Defaults</div>
         <div data-htmx="details_container" class="collapse-content">

@@ -14,7 +14,7 @@
                  hx-trigger="load"
                  hx-target='find  div[data-htmx="details_container"]'
                  hx-swap="innerHTML"
-                 hx-get="{% url 'api:settings:client_defaults without client' %}">
+                 hx-get="{% url 'core:api:settings:client_defaults without client' %}">
                 <div data-htmx="details_container">
                     <span class="loading loading-spinner loading-htmx-loader mt-4"></span>
                 </div>

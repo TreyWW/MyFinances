@@ -2,8 +2,8 @@
 {% has_module "billing" as billing_enabled %}
 <div data-layout="icon_dropdown_items">
     <li hx-boost="true">
-        <a {% if request.resolver_match.view_name == "settings:dashboard" %}class="active btn-disabled"{% endif %}
-           href="{% url 'settings:dashboard' %}">
+        <a {% if request.resolver_match.view_name == "core:settings:dashboard" %}class="active btn-disabled"{% endif %}
+           href="{% url 'core:settings:dashboard' %}">
             <i class="fa fa-solid fa-cog"></i>
             Settings
         </a>

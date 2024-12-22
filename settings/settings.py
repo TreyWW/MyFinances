@@ -95,7 +95,7 @@ SWAGGER_SETTINGS = {
 
 LOGIN_REQUIRED_IGNORE_VIEW_NAMES = [
     "index",
-    "auth:login forgot_password",
+    "core:auth:login forgot_password",
     "user set password reset",
     "user set password",
     "user set password set",

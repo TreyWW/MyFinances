@@ -16,8 +16,8 @@
                 <p class="mb-3">Join the early access club for free!</p>
                 <div class="w-full flex items-start">
                     {#                    <a class="btn btn-primary"#}
-                    {#                       href="{% url 'auth:login create_account manual' %}">Start Today – Free for 30 Days</a>#}
-                    <form hx-post="{% url 'api:landing_page:join_waitlist' %}"
+                    {#                       href="{% url 'core:auth:login create_account manual' %}">Start Today – Free for 30 Days</a>#}
+                    <form hx-post="{% url 'core:api:landing_page:join_waitlist' %}"
                           class="w-full flex flex-row gap-2 flex-wrap">
                         {% csrf_token %}
                         <input type="text"
@@ -195,7 +195,10 @@
                 </div>
                 <!-- Customer Onboarding Process -->
                 <div class="p-6 bg-white rounded-lg shadow-lg">
-                    <h3 class="text-2xl font-semibold text-base-content mb-4 text-center">Streamlined Customer Onboarding</h3>
+                    <h3 class="text-2xl font-semibold text-base-content mb-4 text-center">
+                        Streamlined Customer
+                        Onboarding
+                    </h3>
                     <blockquote class="italic text-base-content mb-4 text-center">
                         "MyFinances <span class="underline">transformed</span> the way we onboard customers!"
                     </blockquote>

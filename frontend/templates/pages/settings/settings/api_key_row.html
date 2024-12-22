@@ -5,7 +5,7 @@
     <td>{{ key.created | date:"d M, Y H:iA" }}</td>
     <td>
         <button class="btn btn-error btn-sm"
-                hx-delete="{% url 'api:settings:api_keys revoke' key_id=key.id %}"
+                hx-delete="{% url 'core:api:settings:api_keys revoke' key_id=key.id %}"
                 hx-target="closest tr"
                 hx-swap="outerHTML">Revoke</button>
     </td>

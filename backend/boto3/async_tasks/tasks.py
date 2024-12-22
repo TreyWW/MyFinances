@@ -14,7 +14,7 @@ class Task:
         self.region_name = os.environ.get("AWS_REGION_NAME")
         self.aws_access_key_id = os.environ.get("AWS_ACCESS_KEY_ID")
         self.aws_secret_access_key = os.environ.get("AWS_ACCESS_KEY")
-        self.WEBHOOK_URL = os.environ.get("SITE_URL", default="http://127.0.0.1:8000") + reverse("api:public:webhooks:receive_global")
+        self.WEBHOOK_URL = os.environ.get("SITE_URL", default="http://127.0.0.1:8000") + reverse("core:api:public:webhooks:receive_global")
 
         if self.queue_url:
             self.sqs_client = boto3.client(
