@@ -28,17 +28,40 @@
                 You are in <strong>{{ team_list.count }}</strong> team{{ team_list.count | pluralize }}.
             </h2>
             <br>
-            <form id="modal_create_reminder-form"
-                hx-post="{% url 'core:api:teams:switch_team input' %}"
-                {#                  hx-include='input[name="invoice_id"]'#}
-                {#                  hx-target='tbody[data-hx-swap="reminders"]'#}
-                {#                  hx-swap="beforeend">#}
+
+            {% if team_list %}
+                <form id="modal_create_reminder-form"
+                      hx-post="{% url 'core:api:teams:switch_team input' %}"
+                    {#                  hx-include='input[name="invoice_id"]'#}
+                    {#                  hx-target='tbody[data-hx-swap="reminders"]'#}
+                    {#                  hx-swap="beforeend">#}
                 >
-                <select class="select select-bordered" name="join_team">
-                    {% for team in team_list %}<option value="{{ team.id }}">{{ team.name }}</option>{% endfor %}
-                </select>
-                <button class="btn btn-secondary">Switch to team</button>
-            </form>
+                    <select class="select select-bordered" name="join_team">
+                        {% for team in team_list %}
+                            <option value="{{ team.id }}">{{ team.name }}</option>{% endfor %}
+                    </select>
+                    <button class="btn btn-secondary">Switch to team</button>
+                </form>
+            {% else %}
+                {% if can_create_teams %}
+                    <button onclick="modal_create_team.showModal();"
+                            class="btn btn-primary w-40"
+                            hx-get="{% url "core:api:base:modal retrieve" modal_name="create_team" %}"
+                            hx-trigger="click once"
+                            hx-swap="beforeend"
+                            hx-target="#modal_container">
+                        <i class="fa-solid fa-plus pe-2"></i>
+                        Create Team
+                    </button>
+                {% else %}
+                    <div>
+                        <div class="tooltip tooltip-primary tooltip-right"
+                             data-tip="Your plan currently doesn't support creating organizations. Add the package as an addon or speak to our support team!">
+                            <button class="btn btn-primary w-40 btn-outline btn-disabled">Create team</button>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endif %}
         </div>
     </div>
 {% endblock content %}

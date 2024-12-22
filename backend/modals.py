@@ -90,6 +90,7 @@ class EditReceiptModal(Modal):
 
 class UploadReceiptModal(Modal):
     modal_name = "upload_receipt"
+    template_name = "modals/receipts_upload.html"
 
     def get(self, request: WebRequest):
         context = self.get_context(request)

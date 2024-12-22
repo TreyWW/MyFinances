@@ -33,11 +33,11 @@
         </div>
     </div>
     <div class="collapse collapse-arrow card bg-base-100 shadow-xl w-full p-6 flex-row gap-x-4 mt-4"
-        hx-trigger="load" {# click once #}
-        hx-target='find  div[data-htmx="details_container"]'
-        hx-swap="innerHTML"
-        hx-get="{% url 'core:api:settings:client_defaults' client_id=client.id %}">
-        <input type="checkbox" checked />
+         hx-trigger="load" {# click once #}
+         hx-target='find  div[data-htmx="details_container"]'
+         hx-swap="innerHTML"
+         hx-get="{% url 'api:settings:client_defaults' client_id=client.id %}">
+        <input type="checkbox" checked/>
         <div class="collapse-title text-xl font-medium">Customer Defaults</div>
         <div data-htmx="details_container" class="collapse-content">
             <span class="loading loading-spinner loading-htmx-loader"></span>

@@ -1,7 +1,8 @@
 {% load render_bundle from webpack_loader %}
 <form class="py-4"
       method="POST"
-      {% if client %} hx-post="{% url 'core:api:settings:client_defaults' client_id=client.id %}" {% else %} hx-post="{% url 'core:api:settings:client_defaults without client' %}" {% endif %}
+    {% if client %} hx-post="{% url 'api:settings:client_defaults' client_id=client.id %}" {% else %}
+      hx-post="{% url 'api:settings:client_defaults without client' %}" {% endif %}
       hx-target="this"
       hx-indicator='button[data-hx-loading="save"]'
       hx-swap="none"
@@ -13,7 +14,7 @@
                name="my_tabs_2"
                role="tab"
                class="tab"
-               aria-label="Dates" />
+               aria-label="Dates"/>
         <div role="tabpanel"
              class="tab-content bg-base-100 border-base-300 rounded-box p-6">
             <div class="form-control mb-4">
@@ -95,7 +96,7 @@
                role="tab"
                class="tab"
                aria-label="Design"
-               checked="checked" />
+               checked="checked"/>
         <div role="tabpanel"
              class="tab-content bg-base-100 border-base-300 rounded-box p-6">
             <div class="mb-4">
@@ -118,11 +119,13 @@
                                hx-encoding="multipart/form-data"
                                class="file-input file-input-bordered"
                                accept="image/jpeg,image/png,image/jpg"
-                               value="{{ defaults.default_invoice_logo }}" />
+                               value="{{ defaults.default_invoice_logo }}"/>
                         {% if defaults.default_invoice_logo %}
                             <button class="btn btn-error w-48"
                                     hx-swap="none"
-                                    {% if client %} hx-delete="{% url 'core:api:settings:client_defaults remove logo' client_id=client.id %}" {% else %} hx-delete="{% url 'core:api:settings:client_defaults remove logo without client' %}" {% endif %}>
+                                {% if client %}
+                                    hx-delete="{% url 'api:settings:client_defaults remove logo' client_id=client.id %}" {% else %}
+                                    hx-delete="{% url 'api:settings:client_defaults remove logo without client' %}" {% endif %}>
                                 Remove current image
                             </button>
                         {% endif %}
@@ -134,7 +137,7 @@
                name="my_tabs_2"
                role="tab"
                class="tab"
-               aria-label="Details" />
+               aria-label="Details"/>
         <div role="tabpanel"
              class="tab-content bg-base-100 border-base-300 rounded-box p-6">
             <h2 class="text-xl font-semibold">FROM Details</h2>
