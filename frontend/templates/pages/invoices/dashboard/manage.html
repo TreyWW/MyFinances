@@ -104,7 +104,7 @@
                 hx-swap="beforeend"
                 hx-target="#modal_container"
                 _="on click call modal_invoices_edit_discount.showModal()"
-                hx-get="{% url "api:base:modal retrieve with context" context_type="invoice" context_value=invoice.id modal_name="invoices_edit_discount" %}">
+                hx-get="{% url "api:base:modal retrieve" modal_name="invoices_edit_discount" %}?invoice_id={{ invoice.id }}">
             <i class="fa fa-solid fa-pound-sign mr-2"></i>
             Edit Discount
         </button>

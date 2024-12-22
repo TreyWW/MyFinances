@@ -4,7 +4,7 @@ from django.urls import include
 from django.urls import path
 
 urlpatterns = [
-    path("finance/", include("backend.finance.api.urls")),
+    path("clients/", include("backend.clients.api.urls")),
 ]
 
 app_name = "api"
