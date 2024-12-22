@@ -47,11 +47,11 @@ except ImportError:
 INSTALLED_APPS = [
     "django_extensions",
     "django.contrib.admin",
+    "backend",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
-    "backend",
     "mathfilters",
     "django.contrib.humanize",
     "django_htmx",

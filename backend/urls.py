@@ -50,7 +50,7 @@ urlpatterns = [
         view_invoice_with_uuid_endpoint,
         name="invoices view invoice",
     ),
-    path("api/", include("backend.api.urls")),
+    path("api/", include("backend.api.urls", namespace="api")),
 ] + static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
 
 handler500 = "core.views.other.errors.universal"

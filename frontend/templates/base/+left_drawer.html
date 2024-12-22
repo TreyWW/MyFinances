@@ -1,35 +1,26 @@
+{% extends "core/base/+left_drawer.html" %}
 {% load feature_enabled %}
 {% feature_enabled "areUserEmailsAllowed" as are_user_emails_allowed %}
-{#{% personal_feature_enabled request.user "invoices" as feature_enabled_invoices %}#}
-{#{% personal_feature_enabled request.user "receipts" as feature_enabled_receipts %}#}
-{#{% personal_feature_enabled request.user "email_sending" as feature_enabled_emails %}#}
-<div class="drawer-side sm:z-[60] lg:z-[55]"
-     data-layout="left_sliding_sidebar"
-     {% if swap %}hx-swap-oob='innerHTML:div[data-layout="left_sliding_sidebar"]'{% endif %}>
-    <label for="service_list_drawer"
-           aria-label="close sidebar"
-           class="drawer-overlay"></label>
-    <ul class="menu p-4 w-80 min-h-full bg-base-200 text-base-content z-10 gap-y-1"
-        hx-boost="true">
-        <label class="btn btn-square btn-outline btn-block top-5 right-5 mb-3"
-               for="service_list_drawer">
-            <i class="fa fa-solid fa-x"></i>
-            Close
-        </label>
-        <li>
-            {% with i_url="dashboard" %}
-                <a href="{% url i_url %}"
-                   {% if  request.resolver_match.view_name == i_url %}class="active{% endif %}
-                   ">My Dashboard</a>
-            {% endwith %}
-        </li>
-        <li>
-            {% with i_url="clients:dashboard" %}
-                <a href="{% url i_url %}"
-                   {% if request.resolver_match.view_name == i_url %}class="active"{% endif %}>Clients</a>
-            {% endwith %}
-        </li>
-        {#        {% if feature_enabled_invoices %}#}
+{% personal_feature_enabled request.user "invoices" as feature_enabled_invoices %}
+{% personal_feature_enabled request.user "receipts" as feature_enabled_receipts %}
+{% personal_feature_enabled request.user "email_sending" as feature_enabled_emails %}
+{% block drawer_items %}
+    <li>
+        {% with i_url="dashboard" %}
+            <a href="{% url i_url %}"
+               {% if  request.resolver_match.view_name == i_url %}class="active{% endif %}
+           ">My Dashboard
+            </a>
+        {% endwith %}
+    </li>
+    <li>
+        {% with i_url="clients:dashboard" %}
+            <a href="{% url i_url %}"
+               {% if request.resolver_match.view_name == i_url %}class="active"{% endif %}>Clients
+            </a>
+        {% endwith %}
+    </li>
+    {% if feature_enabled_invoices %}
         <li>
             {% with i_url="finance:invoices:single:dashboard" %}
                 <a href="{% url i_url %}"
@@ -46,36 +37,36 @@
                 </a>
             {% endwith %}
         </li>
-        {#        {% endif %}#}
-        {#        {% if feature_enabled_receipts %}#}
+    {% endif %}
+    {% if feature_enabled_receipts %}
         <li>
             {% with i_url="receipts dashboard" %}
                 <a href="{% url i_url %}"
-                   {% if request.resolver_match.view_name == i_url %}class="active"{% endif %}>Receipts</a>
+                   {% if request.resolver_match.view_name == i_url %}class="active"{% endif %}>Receipts
+                </a>
             {% endwith %}
         </li>
-        {#        {% endif %}#}
-        {#        <li>#}
-        {#            {% with i_url="quotas" %}#}
-        {#                <a href="{% url i_url %}"#}
-        {#                   {% if request.resolver_match.view_name == i_url %}class="active"{% endif %}>#}
-        {#                    Service Quotas#}
-        {#                </a>#}
-        {#            {% endwith %}#}
-        {#        </li>#}
-        {% if are_user_emails_allowed %}
-            {# and feature_enabled_emails %} #}
-            <li>
-                {% with i_url="emails:dashboard" %}
-                    <a href="{% url i_url %}"
-                       {% if request.resolver_match.view_name == "emails:dashboard" %}class="active"{% endif %}>
-                        Email Sending
-                    </a>
-                {% endwith %}
-            </li>
-        {% endif %}
+    {% endif %}
+    <li>
+        {% with i_url="quotas" %}
+            <a href="{% url i_url %}"
+               {% if request.resolver_match.view_name == i_url %}class="active"{% endif %}>
+                Service Quotas
+            </a>
+        {% endwith %}
+    </li>
+    {% if are_user_emails_allowed %}
+        {# and feature_enabled_emails %} #}
         <li>
-            <a href="{% url 'file_storage:dashboard' %}">File Storage</a>
+            {% with i_url="emails:dashboard" %}
+                <a href="{% url i_url %}"
+                   {% if request.resolver_match.view_name == "emails:dashboard" %}class="active"{% endif %}>
+                    Email Sending
+                </a>
+            {% endwith %}
         </li>
-    </ul>
-</div>
+    {% endif %}
+    {#        <li>#}
+    {#            <a href="{% url 'file_storage:dashboard' %}">File Storage</a>#}
+    {#        </li>#}
+{% endblock drawer_items %}

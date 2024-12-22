@@ -63,7 +63,9 @@ def extras(request: HttpRequest):
     data["day_names_monday_first"] = [day for day in calendar.day_name]
 
     if hasattr(request, "htmx") and request.htmx.boosted:
-        data["base"] = "core/base/htmx.html"
+        data["base"] = "base/htmx.html"
+    else:
+        data["base"] = "base/base.html"
 
     return data
 

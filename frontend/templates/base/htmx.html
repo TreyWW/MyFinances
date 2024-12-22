@@ -1,11 +1,6 @@
-<div hx-swap="innerHTML" class="w-full">
-    {% block content %}
-    {% endblock content %}
-</div>
-{# Profile Picture dropdown item #}
-<div hx-swap-oob='outerHTML:div[data-layout="icon_dropdown_items"]'>
-    {% component "base:topbar:icon_dropdown" %}
-</div>
-{% include "base/+left_drawer.html" with swap=True %}
-{% include "base/breadcrumbs.html" with swap=True %}
-{% include "base/toasts.html" %}
+{% extends "core/base/htmx.html" %}
+{##}
+{% block left_drawer %}{% include "base/+left_drawer.html" with swap=True %}{% endblock %}
+
+{#{% include "base/breadcrumbs.html" with swap=True %}#}
+{#{% include "base/toasts.html" %}#}
