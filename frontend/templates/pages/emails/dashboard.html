@@ -5,7 +5,7 @@
             <button tabindex="0"
                     role="button"
                     class="tooltip tooltip-right btn btn-square btn-outline loading-htmx"
-                    hx-post="{% url 'core:api:emails:refresh statuses' %}"
+                    hx-post="{% url 'api:emails:refresh statuses' %}"
                     data-tip="Refresh the status of all emails. This will show you the most recent email event"
                     hx-swap="none"
                     id="sort-indicator">
@@ -68,7 +68,7 @@
                 <tbody id="table_body"
                        hx-swap="outerHTML"
                        hx-trigger="load, retry"
-                       hx-get="{% url 'core:api:emails:fetch' %}">
+                       hx-get="{% url 'api:emails:fetch' %}">
                     {% include 'components/table/skeleton_rows.html' with rows=3 cols=5 %}
                 </tbody>
                 {#                <script>#}

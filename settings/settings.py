@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING
 from unittest.mock import MagicMock
 
 import stripe
+from core.config import CoreConfig
 from django.contrib.messages import constants as messages
 from django.contrib.staticfiles.storage import FileSystemStorage  # type: ignore
 from storages.backends.s3 import S3Storage
@@ -457,6 +458,10 @@ else:
         ...
 
     PRIVATE_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
+
+# CORE SETTINGS
+
+EXPIRY_MODELS = CoreConfig().CORE_EXPIRY_MODELS + ["backend.InvoiceURL"]
 
 # SENDGRID_SANDBOX_MODE_IN_DEBUG = True
 if "test" in sys.argv[1:]:

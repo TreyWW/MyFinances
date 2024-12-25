@@ -2,7 +2,7 @@
 {% fill "content" %}
 <form class="py-4"
       id="modal_send_bulk_email-form"
-      hx-post="{% url 'core:api:emails:send bulk' %}"
+      hx-post="{% url 'api:emails:send bulk' %}"
       hx-swap="none">
     {% csrf_token %}
     <div class="form-control w-full">

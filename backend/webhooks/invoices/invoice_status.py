@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from core.service.webhooks.auth import authenticate_api_key
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
@@ -7,7 +8,6 @@ from login_required import login_not_required
 
 from backend.finance.models import InvoiceRecurringProfile
 from backend.finance.service.invoices.recurring.generation.next_invoice import safe_generate_next_invoice_service
-from backend.finance.service.invoices.recurring.webhooks.webhook_apikey_auth import authenticate_api_key
 
 import logging
 
@@ -20,7 +20,6 @@ logger = logging.getLogger(__name__)
 @csrf_exempt
 @login_not_required
 def handle_invoice_now_webhook_endpoint(request: WebRequest):
-
     invoice_profile_id = request.POST.get("invoice_profile_id", "")
 
     logger.info("Received Scheduled Invoice. Now authenticating...")

@@ -31,6 +31,8 @@ urlpatterns = [
             namespace="settings",
         ),
     ),
+    path("public/", include("backend.api.public.urls")),
+    path("emails/", include("backend.api.emails.urls")),
 ]
 
 app_name = "api"
