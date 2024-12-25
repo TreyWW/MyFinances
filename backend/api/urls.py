@@ -7,7 +7,7 @@ from backend.api.settings.defaults import handle_client_defaults_endpoints, remo
 
 urlpatterns = [
     path("clients/", include("backend.clients.api.urls", namespace="clients")),
-    path("finance/", include("backend.finance.api.urls", namespace="finance")),
+    path("", include("backend.finance.api.urls", namespace="finance")),
     path(
         "settings/",
         include(

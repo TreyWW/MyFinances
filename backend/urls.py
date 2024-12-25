@@ -23,9 +23,8 @@ url(
     {"document_root": settings.STATICFILES_DIRS[0]},
 )
 
-api_patterns = [path("finance/", include("backend.finance.api"))]
-
 urlpatterns = [
+    path("tz_detect/", include("tz_detect.urls")),
     path("", include(("core.urls", "core"), namespace="core")),
     path("webhooks/", include("backend.webhooks.urls")),
     path("", index, name="index"),

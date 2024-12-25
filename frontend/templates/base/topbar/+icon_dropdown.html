@@ -9,8 +9,8 @@
         </a>
     </li>
     <li hx-boost="true">
-        <a {% if request.resolver_match.view_name == "teams:dashboard" %}class="active btn-disabled"{% endif %}
-           href="{% url "teams:dashboard" %}">
+        <a {% if request.resolver_match.view_name == "core:teams:dashboard" %}class="active btn-disabled"{% endif %}
+           href="{% url "core:teams:dashboard" %}">
             <i class="fa fa-solid fa-users"></i>
             Manage Team
         </a>

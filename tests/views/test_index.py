@@ -16,4 +16,4 @@ class IndexViewTestCase(ViewTestCase):
         func = resolve("/").func
         func_name = f"{func.__module__}.{func.__name__}"
         self.assertEqual("/", reverse("index"))
-        self.assertEqual("backend.core.views.other.index.index", func_name)
+        self.assertEqual("core.views.other.index.index", func_name)

@@ -19,4 +19,4 @@ class UserSettingsViewTestCase(ViewTestCase):
         func = resolve("/dashboard/settings/").func
         func_name = f"{func.__module__}.{func.__name__}"
         self.assertEqual("/dashboard/settings/profile/", reverse("core:settings:dashboard with page", args=("profile",)))
-        self.assertEqual("backend.core.views.settings.view.view_settings_page_endpoint", func_name)
+        self.assertEqual("core.views.settings.view.view_settings_page_endpoint", func_name)

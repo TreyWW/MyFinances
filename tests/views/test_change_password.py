@@ -145,4 +145,4 @@ class ChangePasswordViewTestCase(ViewTestCase):
             "/dashboard/settings/profile/change_password/",
             reverse("core:settings:change_password"),
         )
-        self.assertEqual("backend.core.views.settings.view.change_password", func_name)
+        self.assertEqual("core.views.settings.view.change_password", func_name)
