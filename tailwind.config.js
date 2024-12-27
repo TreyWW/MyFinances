@@ -1,4 +1,24 @@
 /** @type {import('tailwindcss').Config} */
+
+const {execSync} = require('child_process');
+
+function getDjangoTemplatesPath(appName, packageName = appName) {
+  try {
+    // Use Python to dynamically resolve the app's templates path
+    const result = execSync(
+      `python -c "import importlib.util, os; app_path = importlib.util.find_spec('${packageName}').origin; print(os.path.join(os.path.dirname(app_path), 'templates'))"`
+    ).toString().trim();
+    return result;
+  } catch (error) {
+    console.error(`Could not resolve templates path for ${packageName}:`, error);
+    return null;
+  }
+}
+
+const externalAppTemplates = getDjangoTemplatesPath('core', 'strelix-core');
+
+console.log(externalAppTemplates)
+
 module.exports = {
   mode: 'jit',
   content: [
@@ -8,7 +28,8 @@ module.exports = {
     './frontend/templates/base/base.html',
     './backend/**/views/*.py',
     './backend/views/core/**/*.py',
-    './assets/scripts/tableify.js'
+    './assets/scripts/tableify.js',
+    externalAppTemplates ? `${externalAppTemplates}/**/*.html` : ''
   ],
   safelist: [
     'alert',
