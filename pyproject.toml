@@ -22,7 +22,7 @@ drf-yasg = "^1.21.7"
 setuptools = "^70.1.1"
 xhtml2pdf = "^0.2.16"
 stripe = "^10.8.0"
-strelix-core = { path = "../core", develop = true } # todo: add published version
+strelix-core = "^0.0.2"
 [tool.poetry.group.mypy.dependencies]
 mypy = "1.7.1"
 django-stubs = { version = "4.2.7" }
@@ -54,7 +54,6 @@ types-six = "^1.16.21.20240513"
 [tool.poetry.group.django.dependencies]
 Django = "^5.0.7"
 gunicorn = "22.0.0"
-social-auth-app-django = "5.4.1"
 django-environ = "0.11.2"
 django-extensions = "3.2.3"
 python-dateutil = "2.9.0"
