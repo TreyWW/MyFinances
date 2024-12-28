@@ -2,22 +2,26 @@
 
 const {execSync} = require('child_process');
 
-function getDjangoTemplatesPath(appName, packageName = appName) {
+function getDjangoTemplates(appName) {
   try {
-    // Use Python to dynamically resolve the app's templates path
+    // Get the path of the app's templates directory in the pip-installed package
     const result = execSync(
-      `python -c "import importlib.util, os; app_path = importlib.util.find_spec('${packageName}').origin; print(os.path.join(os.path.dirname(app_path), 'templates'))"`
+      `python -c "import importlib.util, os; app_spec = importlib.util.find_spec('${appName}'); print(os.path.join(os.path.dirname(app_spec.origin), 'templates'))"`
     ).toString().trim();
-    return result;
+
+    return result || '';
   } catch (error) {
-    console.error(`Could not resolve templates path for ${packageName}:`, error);
-    return null;
+    console.error(`Failed to get templates for ${appName}:`, error);
+    return '';
   }
 }
 
-const externalAppTemplates = getDjangoTemplatesPath('core', 'strelix-core');
+const coreTemplatesPath = getDjangoTemplates('core');
+const billingTemplatesPath = getDjangoTemplates('billing');
 
-console.log(externalAppTemplates)
+
+console.log('Resolved core templates path:', coreTemplatesPath);
+console.log('Resolved billing templates path:', billingTemplatesPath);
 
 module.exports = {
   mode: 'jit',
@@ -29,7 +33,8 @@ module.exports = {
     './backend/**/views/*.py',
     './backend/views/core/**/*.py',
     './assets/scripts/tableify.js',
-    externalAppTemplates ? `${externalAppTemplates}/**/*.html` : ''
+    coreTemplatesPath ? `${coreTemplatesPath}/**/*.html` : '',
+    billingTemplatesPath ? `${billingTemplatesPath}/**/*.html` : '',
   ],
   safelist: [
     'alert',
