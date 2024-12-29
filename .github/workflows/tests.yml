@@ -35,14 +35,12 @@ jobs:
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: poetry install --no-interaction --no-root
-      - name: Install latest setuptools
+      - name: Debug Python Environment
         run: |
           source .venv/bin/activate
-          pip install setuptools
-      - name: Install latest Django
-        run: |
-          source .venv/bin/activate
-          pip install Django
+          python -c "import pkgutil; print([module.name for module in pkgutil.iter_modules()])"
+          python -c "import core; print(core.__file__)"
+          python -c "import billing; print(billing.__file__)"
       - name: Install dependencies and build frontend
         run: |
           npm ci
