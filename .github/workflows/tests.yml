@@ -36,12 +36,30 @@ jobs:
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: poetry install --no-interaction --no-root
       - name: Debug Python Environment
+        env:
+          SECRET_KEY: "some!random!secret!key!use!online!generator!to!get"
+          URL: "127.0.0.1"
+          PROXY_IP: "localhost"
+          BRANCH: "debug"
+          DEBUG: "true"
+          DATABASE_TYPE: "sqlite3"
+          SITE_URL: "http://myfinances.example.com"
+          SITE_NAME: "myfinances"
         run: |
           source .venv/bin/activate
           python -c "import pkgutil; print([module.name for module in pkgutil.iter_modules()])"
           python -c "import core; print(core.__file__)"
           python -c "import billing; print(billing.__file__)"
       - name: Install dependencies and build frontend
+        env:
+          SECRET_KEY: "some!random!secret!key!use!online!generator!to!get"
+          URL: "127.0.0.1"
+          PROXY_IP: "localhost"
+          BRANCH: "debug"
+          DEBUG: "true"
+          DATABASE_TYPE: "sqlite3"
+          SITE_URL: "http://myfinances.example.com"
+          SITE_NAME: "myfinances"
         run: |
           npm ci
           npm run tailwind-build
