@@ -61,6 +61,7 @@ jobs:
           SITE_URL: "http://myfinances.example.com"
           SITE_NAME: "myfinances"
         run: |
+          source .venv/bin/activate
           npm ci
           npm run tailwind-build
           npm run webpack-build
