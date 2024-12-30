@@ -22,7 +22,7 @@ drf-yasg = "^1.21.7"
 setuptools = "^70.1.1"
 xhtml2pdf = "^0.2.16"
 stripe = "^10.8.0"
-strelix-core = "^0.0.2"
+strelix-core = { version = "0.0.4" }
 [tool.poetry.group.mypy.dependencies]
 mypy = "1.7.1"
 django-stubs = { version = "4.2.7" }

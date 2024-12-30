@@ -1,27 +1,45 @@
 /** @type {import('tailwindcss').Config} */
 
-const {execSync} = require('child_process');
+const {spawnSync} = require('child_process');
+const path = require('path');
+const projectRoot = path.resolve(__dirname, '.');
 
-function getDjangoTemplates(appName) {
-  try {
-    // Get the path of the app's templates directory in the pip-installed package
-    const result = execSync(
-      `python -c "import importlib.util, os; app_spec = importlib.util.find_spec('${appName}'); print(os.path.join(os.path.dirname(app_spec.origin), 'templates'))"`
-    ).toString().trim();
+const getCoreTemplateFiles = () => {
+  const command = 'python'; // Requires virtualenv to be activated.
+  const args = ['manage.py', 'list_core_templates']; // Requires cwd to be set.
+  const options = {cwd: projectRoot};
+  const result = spawnSync(command, args, options);
 
-    return result || '';
-  } catch (error) {
-    console.error(`Failed to get templates for ${appName}:`, error);
-    return '';
+  if (result.error) {
+    throw result.error;
   }
+
+  if (result.status !== 0) {
+    console.log(result.stdout.toString(), result.stderr.toString());
+    throw new Error(`Django management command exited with code ${result.status}`);
+  }
+
+  const covert_to_template = (value) => {
+    new_value = value.trim()
+
+    if (!new_value.startsWith("TMPL:")) {
+      return ""
+    }
+
+    // new_value = value.replace(/\\/g, "/").replace("\\", "/").replace("\r", "") + "/**/*.html"
+
+    return new_value.slice(5) + "/**/*.html"
+  }
+
+  const templateFiles = result.stdout.toString()
+    .split('\n')
+    .map((path) => covert_to_template(path))
+    .filter(function (e) {
+      return e
+    });  // Remove empty strings, including last empty line.
+  console.log(templateFiles)
+  return templateFiles;
 }
-
-const coreTemplatesPath = getDjangoTemplates('core');
-const billingTemplatesPath = getDjangoTemplates('billing');
-
-
-console.log('Resolved core templates path:', coreTemplatesPath);
-console.log('Resolved billing templates path:', billingTemplatesPath);
 
 module.exports = {
   mode: 'jit',
@@ -29,12 +47,10 @@ module.exports = {
     './frontend/templates/**/*.html',
     './billing/templates/**/*.html',
     './components/**/*.html',
-    './frontend/templates/base/base.html',
     './backend/**/views/*.py',
     './backend/views/core/**/*.py',
     './assets/scripts/tableify.js',
-    coreTemplatesPath ? `${coreTemplatesPath}/**/*.html` : '',
-    billingTemplatesPath ? `${billingTemplatesPath}/**/*.html` : '',
+    ...getCoreTemplateFiles()
   ],
   safelist: [
     'alert',

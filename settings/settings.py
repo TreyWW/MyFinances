@@ -10,11 +10,14 @@ from unittest.mock import MagicMock
 
 import stripe
 from core.config import CoreConfig
+from django.conf import settings
 from django.contrib.messages import constants as messages
 from django.contrib.staticfiles.storage import FileSystemStorage  # type: ignore
 from storages.backends.s3 import S3Storage
 
 from .helpers import get_var
+
+core_config = CoreConfig()
 
 # from backend.utils import appconfig
 
@@ -130,6 +133,8 @@ AUTHENTICATION_BACKENDS = [
     "social_core.backends.github.GithubOAuth2",
     "social_core.backends.google.GoogleOAuth2",
 ]
+
+AUTH_USER_MODEL = "core.User"
 
 SECRET_KEY = get_var("SECRET_KEY", default="secret_key")
 
@@ -288,8 +293,6 @@ MARKDOWNIFY = {
     }
 }
 
-AUTH_USER_MODEL = "core.User"
-
 LANGUAGE_CODE = "en-us"
 
 TIME_ZONE = "UTC"
@@ -344,6 +347,7 @@ LOGGING = {
     },
     "handlers": {
         "console": {
+            "level": "DEBUG",
             "class": "logging.StreamHandler",
             "formatter": "simple",
         },
@@ -352,20 +356,26 @@ LOGGING = {
         "django": {
             "handlers": ["console"],
             "level": "INFO",
-            "propagate": True,
+            "propagate": False,  # Ensure propagation is False to avoid duplicates
         },
         "django.db.backends": {
             "handlers": ["console"],
-            "level": get_var("DJANGO_LOG_LEVEL", default="INFO"),
-            "propagate": False,
+            "level": "INFO",  # Set your desired logging level
+            "propagate": False,  # Prevent propagation for database logs
+        },
+        "django.request": {
+            "handlers": ["console"],
+            "level": "ERROR",
+            "propagate": False,  # Only log errors for requests
         },
     },
     "root": {
         "handlers": ["console"],
-        "level": get_var("DJANGO_LOG_LEVEL", default="INFO"),
+        "level": "INFO",  # Root logger level
     },
 }
 
+# Apply the configuration to the Django logging system
 logging.config.dictConfig(LOGGING)
 
 
@@ -461,7 +471,11 @@ else:
 
 # CORE SETTINGS
 
-EXPIRY_MODELS = CoreConfig().CORE_EXPIRY_MODELS + ["backend.InvoiceURL"]
+core_config.EXPIRY_MODELS += ["backend.InvoiceURL"]
+core_config.SETTINGS_PAGE_CONTEXT_HANDLERS.update(
+    {"email_templates": "backend.core.service.settings.view.email_templates.email_templates_context"}
+)
+# EXPIRY_MODELS = CoreConfig().EXPIRY_MODELS
 
 # SENDGRID_SANDBOX_MODE_IN_DEBUG = True
 if "test" in sys.argv[1:]:

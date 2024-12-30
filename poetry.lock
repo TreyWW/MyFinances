@@ -1828,13 +1828,13 @@ lxml = ["lxml"]
 
 [[package]]
 name = "identify"
-version = "2.6.3"
+version = "2.6.4"
 description = "File identification library for Python"
 optional = false
 python-versions = ">=3.9"
 files = [
-    {file = "identify-2.6.3-py2.py3-none-any.whl", hash = "sha256:9edba65473324c2ea9684b1f944fe3191db3345e50b6d04571d10ed164f8d7bd"},
-    {file = "identify-2.6.3.tar.gz", hash = "sha256:62f5dae9b5fef52c84cc188514e9ea4f3f636b1d8799ab5ebc475471f9e47a02"},
+    {file = "identify-2.6.4-py2.py3-none-any.whl", hash = "sha256:993b0f01b97e0568c179bb9196391ff391bfb88a99099dbf5ce392b68f42d0af"},
+    {file = "identify-2.6.4.tar.gz", hash = "sha256:285a7d27e397652e8cafe537a6cc97dd470a970f48fb2e9d979aa38eae5513ac"},
 ]
 
 [package.extras]
@@ -2728,13 +2728,13 @@ virtualenv = ">=20.10.0"
 
 [[package]]
 name = "prompt-toolkit"
-version = "3.0.36"
+version = "3.0.48"
 description = "Library for building powerful interactive command lines in Python"
 optional = false
-python-versions = ">=3.6.2"
+python-versions = ">=3.7.0"
 files = [
-    {file = "prompt_toolkit-3.0.36-py3-none-any.whl", hash = "sha256:aa64ad242a462c5ff0363a7b9cfe696c20d55d9fc60c11fd8e632d064804d305"},
-    {file = "prompt_toolkit-3.0.36.tar.gz", hash = "sha256:3e163f254bef5a03b146397d7c1963bd3e2812f0964bb9a24e6ec761fd28db63"},
+    {file = "prompt_toolkit-3.0.48-py3-none-any.whl", hash = "sha256:f49a827f90062e411f1ce1f854f2aedb3c23353244f8108b89283587397ac10e"},
+    {file = "prompt_toolkit-3.0.48.tar.gz", hash = "sha256:d6623ab0477a80df74e646bdbc93621143f5caf104206aa29294d53de1a03d90"},
 ]
 
 [package.dependencies]
@@ -3419,17 +3419,17 @@ png = ["pypng"]
 
 [[package]]
 name = "questionary"
-version = "2.0.1"
+version = "2.1.0"
 description = "Python library to build pretty command line user prompts ⭐️"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "questionary-2.0.1-py3-none-any.whl", hash = "sha256:8ab9a01d0b91b68444dff7f6652c1e754105533f083cbe27597c8110ecc230a2"},
-    {file = "questionary-2.0.1.tar.gz", hash = "sha256:bcce898bf3dbb446ff62830c86c5c6fb9a22a54146f0f5597d3da43b10d8fc8b"},
+    {file = "questionary-2.1.0-py3-none-any.whl", hash = "sha256:44174d237b68bc828e4878c763a9ad6790ee61990e0ae72927694ead57bab8ec"},
+    {file = "questionary-2.1.0.tar.gz", hash = "sha256:6302cdd645b19667d8f6e6634774e9538bfcd1aad9be287e743d96cacaf95587"},
 ]
 
 [package.dependencies]
-prompt_toolkit = ">=2.0,<=3.0.36"
+prompt_toolkit = ">=2.0,<4.0"
 
 [[package]]
 name = "redis"
@@ -3785,13 +3785,13 @@ doc = ["sphinx"]
 
 [[package]]
 name = "strelix-core"
-version = "0.0.2"
+version = "0.0.4"
 description = "github.com/Strelix/core"
 optional = false
 python-versions = "<4.0,>=3.10"
 files = [
-    {file = "strelix_core-0.0.2-py3-none-any.whl", hash = "sha256:6db40dbce91df8ed0288a807fad06fdc1cd738b81303c036f5b469e3e929bc11"},
-    {file = "strelix_core-0.0.2.tar.gz", hash = "sha256:0f1e5965643f87e8e03713b7c8de12d673574b0b802f95dbbc7c614a36d296ec"},
+    {file = "strelix_core-0.0.4-py3-none-any.whl", hash = "sha256:35cde3c2f602d7ead25b516d955596c74f56765c7ce8534e7281a7f713fc22e3"},
+    {file = "strelix_core-0.0.4.tar.gz", hash = "sha256:bb3a07ab0307d26bdaafb1813f85efe0c596444f8b41841b196fb9a8682dd138"},
 ]
 
 [package.dependencies]
@@ -4068,13 +4068,13 @@ files = [
 
 [[package]]
 name = "types-pyyaml"
-version = "6.0.12.20241221"
+version = "6.0.12.20241230"
 description = "Typing stubs for PyYAML"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "types_PyYAML-6.0.12.20241221-py3-none-any.whl", hash = "sha256:0657a4ff8411a030a2116a196e8e008ea679696b5b1a8e1a6aa8ebb737b34688"},
-    {file = "types_pyyaml-6.0.12.20241221.tar.gz", hash = "sha256:4f149aa893ff6a46889a30af4c794b23833014c469cc57cbc3ad77498a58996f"},
+    {file = "types_PyYAML-6.0.12.20241230-py3-none-any.whl", hash = "sha256:fa4d32565219b68e6dee5f67534c722e53c00d1cfc09c435ef04d7353e1e96e6"},
+    {file = "types_pyyaml-6.0.12.20241230.tar.gz", hash = "sha256:7f07622dbd34bb9c8b264fe860a17e0efcad00d50b5f27e93984909d9363498c"},
 ]
 
 [[package]]
@@ -4337,4 +4337,4 @@ test = ["coverage (>=5.3)", "tomli (>=2.0.1)", "tox"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<4.0"
-content-hash = "c50d378c288aef708607d576653b329d64d314489d84b7bd732a0a5d52a9e2d8"
+content-hash = "dc5f07be020a9e0e5ff847c130041a91ff8c709799483b57d6633d7d42a18974"
