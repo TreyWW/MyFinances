@@ -4,7 +4,7 @@
         <h2 class="text-xl">Reports</h2>
         <div class="divider"></div>
         <div class="mb-4">
-            <button onclick="modal_generate_report.showModal();"
+            <button onclick="c.showModal();"
                     class="btn btn-primary mb-4 float-right"
                     hx-trigger="click once"
                     hx-swap="beforeend"
@@ -38,19 +38,19 @@
                    hx-target="#table_body"
                    hx-get="{% url 'api:finance:reports:fetch' %}">
                 <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Start Date</th>
-                        <th>End Date</th>
-                        <th>Profit</th>
-                        <th>Invoices Sent</th>
-                        <th>Payments In</th>
-                        <th>Payments Out</th>
-                        <th>Actions</th>
-                    </tr>
+                <tr>
+                    <th>Name</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Profit</th>
+                    <th>Invoices Sent</th>
+                    <th>Payments In</th>
+                    <th>Payments Out</th>
+                    <th>Actions</th>
+                </tr>
                 </thead>
                 <tbody id="table_body">
-                    {% include 'components/table/skeleton_rows.html' with rows=3 cols=8 %}
+                {% include 'components/table/skeleton_rows.html' with rows=3 cols=8 %}
                 </tbody>
             </table>
         </div>

@@ -271,3 +271,7 @@ class InvoiceCodeSendModal(Modal, SendEmailContext):
         context["email_list"] = list(context["email_list"]) + context["selected_clients"]
 
         return self.Response(request, context)
+
+
+class GenerateReportModal(Modal):
+    modal_name = "generate_report"
