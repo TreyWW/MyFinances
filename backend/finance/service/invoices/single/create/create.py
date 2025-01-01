@@ -3,7 +3,7 @@ from datetime import datetime, date
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied, ValidationError
 
-from backend.finance.models import Invoice, InvoiceItem, Client, InvoiceProduct, DefaultValues
+from backend.models import Invoice, InvoiceItem, Client, InvoiceProduct, FinanceDefaultValues
 
 # from backend.models import QuotaUsage
 from backend.finance.service.clients.validate import validate_client
@@ -18,7 +18,7 @@ def get_invoice_context(request: WebRequest) -> dict:
         "existing_products": InvoiceProduct.objects.filter(user=request.user),
     }
 
-    defaults: DefaultValues
+    defaults: FinanceDefaultValues
 
     if client_id := request.GET.get("client"):
         try:

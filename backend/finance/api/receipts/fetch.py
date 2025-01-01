@@ -1,7 +1,7 @@
 from django.db.models import Q, QuerySet
 from django.shortcuts import render, redirect
 
-from backend.decorators import web_require_scopes
+from core.decorators import web_require_scopes
 from backend.models import Receipt
 from core.types.htmx import HtmxHttpRequest
 

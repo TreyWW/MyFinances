@@ -1,12 +1,12 @@
 from backend.models import User, Organization
-from backend.clients.models import DefaultValues, Client
+from backend.models import FinanceDefaultValues, Client
 
 
-def get_account_defaults(actor: User | Organization, client: Client | None = None) -> DefaultValues:
+def get_account_defaults(actor: User | Organization, client: Client | None = None) -> FinanceDefaultValues:
     if not client:
-        account_defaults = DefaultValues.filter_by_owner(owner=actor).filter(client__isnull=True).first()
+        account_defaults = FinanceDefaultValues.filter_by_owner(owner=actor).filter(client__isnull=True).first()
 
         if account_defaults:
             return account_defaults
-        return DefaultValues.objects.create(owner=actor, client=None)  # type: ignore[misc]
-    return DefaultValues.filter_by_owner(owner=actor).get(client=client)
+        return FinanceDefaultValues.objects.create(owner=actor, client=None)  # type: ignore[misc]
+    return FinanceDefaultValues.filter_by_owner(owner=actor).get(client=client)

@@ -16,8 +16,8 @@ from django.shortcuts import render
 from django.views.decorators.http import require_POST
 from mypy_boto3_sesv2.type_defs import BulkEmailEntryResultTypeDef
 
-from backend.decorators import feature_flag_check, web_require_scopes
-from backend.decorators import htmx_only
+from core.decorators import feature_flag_check, web_require_scopes
+from core.decorators import htmx_only
 from backend.models import Client
 from backend.models import EmailSendStatus
 
@@ -82,7 +82,7 @@ def _send_bulk_email_view(request: WebRequest) -> HttpResponse:
 
     if validated_bulk:
         messages.error(request, validated_bulk)
-        return render(request, "base/toast.html")
+        return render(request, "core/base/toast.html")
 
     message += email_footer()
     message_single_line_html = message.replace("\r\n", "<br>").replace("\n", "<br>")
@@ -124,7 +124,7 @@ def _send_bulk_email_view(request: WebRequest) -> HttpResponse:
             }
         )
         messages.success(request, f"Successfully emailed {len(email_list)} people.")
-        return render(request, "base/toast.html")
+        return render(request, "core/base/toast.html")
 
     EMAIL_SENT = send_templated_bulk_email(
         email_list=email_list,
@@ -138,7 +138,7 @@ def _send_bulk_email_view(request: WebRequest) -> HttpResponse:
 
     if EMAIL_SENT.failed:
         messages.error(request, EMAIL_SENT.error)
-        return render(request, "base/toast.html")
+        return render(request, "core/base/toast.html")
 
     # todo - fix
 
@@ -188,7 +188,7 @@ def _send_bulk_email_view(request: WebRequest) -> HttpResponse:
     # except QuotaLimit.DoesNotExist:
     #     ...
 
-    return render(request, "base/toast.html")
+    return render(request, "core/base/toast.html")
 
 
 def _send_single_email_view(request: WebRequest) -> HttpResponse:
@@ -205,7 +205,7 @@ def _send_single_email_view(request: WebRequest) -> HttpResponse:
 
     if validated_single:
         messages.error(request, validated_single)
-        return render(request, "base/toast.html")
+        return render(request, "core/base/toast.html")
 
     message += email_footer()
     message_single_line_html = message.replace("\r\n", "<br>").replace("\n", "<br>")
@@ -249,7 +249,7 @@ def _send_single_email_view(request: WebRequest) -> HttpResponse:
 
     # QuotaUsage.create_str(request.user, "emails-single-count", status_object.id)
 
-    return render(request, "base/toast.html")
+    return render(request, "core/base/toast.html")
 
 
 def validate_bulk_inputs(*, request, emails, clients, message, subject) -> str | None:

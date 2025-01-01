@@ -1,7 +1,7 @@
 from django.utils.html import escape
 from django.views.decorators.http import require_GET
 
-from backend.decorators import htmx_only
+from core.decorators import htmx_only
 from backend.models import FileStorageFile
 
 # from backend.core.service.billing.calculate.test import generate_monthly_billing_summary

@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
 
-from backend.decorators import web_require_scopes
-from backend.clients.models import Client
+from core.decorators import web_require_scopes
+from backend.models import Client
 from backend.finance.service.clients.get import fetch_clients, FetchClientServiceResponse
 from core.types.htmx import HtmxHttpRequest
 from core.types.requests import WebRequest

@@ -1,15 +1,14 @@
 from PIL import Image
 
-from backend.models import DefaultValues
+from backend.models import FinanceDefaultValues
 from core.types.requests import WebRequest
 from core.utils.dataclasses import BaseServiceResponse
 
 
-class ClientDefaultsServiceResponse(BaseServiceResponse[DefaultValues]): ...
+class ClientDefaultsServiceResponse(BaseServiceResponse[FinanceDefaultValues]): ...
 
 
-def change_client_defaults(request: WebRequest, defaults: DefaultValues) -> ClientDefaultsServiceResponse:
-
+def change_client_defaults(request: WebRequest, defaults: FinanceDefaultValues) -> ClientDefaultsServiceResponse:
     # put = QueryDict(request.body)
     invoice_due_date_option = request.POST.get("invoice_due_date_option", "")
     invoice_due_date_value = request.POST.get("invoice_due_date_value", "")

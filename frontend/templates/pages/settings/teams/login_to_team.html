@@ -1,4 +1,4 @@
-{% extends base|default:"base/base.html" %}
+{% extends base|default:"core/base/base.html" %}
 {% block content %}
     {% load has_entitlement from feature_enabled %}
     {% has_entitlement request.user "organizations" as can_create_teams %}
@@ -30,13 +30,14 @@
             <br>
             {% if team_list %}
                 <form id="modal_create_reminder-form"
-                    hx-post="{% url 'core:api:teams:switch_team input' %}"
+                      hx-post="{% url 'core:api:teams:switch_team input' %}"
                     {#                  hx-include='input[name="invoice_id"]'#}
                     {#                  hx-target='tbody[data-hx-swap="reminders"]'#}
                     {#                  hx-swap="beforeend">#}
-                    >
+                >
                     <select class="select select-bordered" name="join_team">
-                        {% for team in team_list %}<option value="{{ team.id }}">{{ team.name }}</option>{% endfor %}
+                        {% for team in team_list %}
+                            <option value="{{ team.id }}">{{ team.name }}</option>{% endfor %}
                     </select>
                     <button class="btn btn-secondary">Switch to team</button>
                 </form>

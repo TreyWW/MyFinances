@@ -3,7 +3,7 @@ from django.shortcuts import redirect
 from django.views.decorators.http import require_http_methods
 
 from backend.finance.models import InvoiceRecurringProfile
-from backend.decorators import web_require_scopes
+from core.decorators import web_require_scopes
 from backend.boto3.handler import BOTO3_HANDLER
 from backend.boto3.async_tasks.tasks import Task
 from backend.boto3.scheduler.create_schedule import create_boto_schedule

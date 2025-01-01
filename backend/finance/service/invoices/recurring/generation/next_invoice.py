@@ -2,7 +2,7 @@ from datetime import date
 
 from django.db import transaction, IntegrityError
 
-from backend.models import Invoice, InvoiceRecurringProfile, DefaultValues, AuditLog
+from backend.models import Invoice, InvoiceRecurringProfile, FinanceDefaultValues, AuditLog
 from backend.finance.service.defaults.get import get_account_defaults
 from backend.finance.service.invoices.common.emails.on_create import on_create_invoice_email_service
 from core.utils.dataclasses import BaseServiceResponse
@@ -19,7 +19,7 @@ class GenerateNextInvoiceServiceResponse(BaseServiceResponse[Invoice]): ...
 def generate_next_invoice_service(
     invoice_recurring_profile: InvoiceRecurringProfile,
     issue_date: date = date.today(),
-    account_defaults: DefaultValues | None = None,
+    account_defaults: FinanceDefaultValues | None = None,
 ) -> GenerateNextInvoiceServiceResponse:
     """
     This will generate the next single invoice based on the invoice recurring profile
@@ -114,7 +114,7 @@ def handle_invoice_generation_failure(invoice_recurring_profile, error_message):
 def safe_generate_next_invoice_service(
     invoice_recurring_profile: InvoiceRecurringProfile,
     issue_date: date = date.today(),
-    account_defaults: DefaultValues | None = None,
+    account_defaults: FinanceDefaultValues | None = None,
 ) -> GenerateNextInvoiceServiceResponse:
     """
     Safe wrapper to generate the next invoice with transaction rollback and error logging.

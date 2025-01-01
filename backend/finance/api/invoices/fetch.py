@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
 
-from backend.decorators import web_require_scopes
+from core.decorators import web_require_scopes
 from backend.finance.models import Invoice
 from core.types.htmx import HtmxHttpRequest
 from backend.finance.service.invoices.common.fetch import get_context

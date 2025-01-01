@@ -9,15 +9,13 @@ from backend.finance.models import (
     InvoiceProduct,
     Receipt,
     ReceiptDownloadToken,
+    FinanceDefaultValues,
 )
-
-from backend.clients.models import Client, DefaultValues
 
 # from django.contrib.auth.models imp/ort User
 # admin.register(Invoice)
 admin.site.register(
     [
-        Client,
         Invoice,
         InvoiceURL,
         InvoiceItem,
@@ -26,7 +24,7 @@ admin.site.register(
         ReceiptDownloadToken,
         InvoiceReminder,
         InvoiceRecurringProfile,
-        DefaultValues,
+        FinanceDefaultValues,
     ]
 )
 

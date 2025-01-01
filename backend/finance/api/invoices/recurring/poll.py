@@ -5,7 +5,7 @@ from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
-from backend.decorators import web_require_scopes, htmx_only
+from core.decorators import web_require_scopes, htmx_only
 from backend.finance.models import InvoiceRecurringProfile
 from backend.boto3.async_tasks.tasks import Task
 from backend.boto3.scheduler.create_schedule import create_boto_schedule

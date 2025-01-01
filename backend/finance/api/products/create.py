@@ -1,7 +1,7 @@
 from django.contrib import messages
 
 from backend.finance.api.products.fetch import fetch_products
-from backend.decorators import web_require_scopes
+from core.decorators import web_require_scopes
 from backend.finance.models import InvoiceProduct
 from core.types.htmx import HtmxHttpRequest
 

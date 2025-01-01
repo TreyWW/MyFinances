@@ -2,7 +2,7 @@
 # from django.http import HttpResponse
 # from django.shortcuts import render, redirect
 #
-# from backend.decorators import feature_flag_check, web_require_scopes
+# from core.decorators import feature_flag_check, web_require_scopes
 # from backend.finance.models import Invoice, QuotaLimit
 # from backend.types.htmx import HtmxHttpRequest
 #

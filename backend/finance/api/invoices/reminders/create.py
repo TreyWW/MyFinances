@@ -6,7 +6,7 @@
 # from django.shortcuts import render, redirect
 # from django.utils import timezone
 #
-# from backend.decorators import web_require_scopes
+# from core.decorators import web_require_scopes
 # from backend.finance.models import Invoice, InvoiceReminder, QuotaUsage
 # from backend.utils.quota_limit_ops import quota_usage_check_under
 # from infrastructure.aws.schedules.create_reminder import CreateReminderInputData, create_reminder_schedule
@@ -47,17 +47,17 @@
 #         invoice = Invoice.objects.get(id=invoice_id)
 #     except Invoice.DoesNotExist:
 #         messages.error(request, "Invoice not found")
-#         return render(request, "base/toast.html", {"autohide": False})
+#         return render(request, "core/base/toast.html", {"autohide": False})
 #
 #     # Check user permission
 #     if not invoice.has_access(user=request.user):
 #         messages.error(request, "You do not have permission to create schedules for this invoice")
-#         return render(request, "base/toasts.html")
+#         return render(request, "core/base/toasts.html")
 #
 #     # Check reminder type
 #     if reminder_type not in InvoiceReminder.ReminderTypes.values:
 #         messages.error(request, "Invalid reminder type")
-#         return render(request, "base/toasts.html")
+#         return render(request, "core/base/toasts.html")
 #
 #     # Ensure days is set for non-overdue reminders
 #     if reminder_type == "on_overdue":
@@ -70,7 +70,7 @@
 #             raise ValueError
 #     except ValueError:
 #         messages.error(request, "Invalid days value. Make sure it's an integer from 1-31")
-#         return render(request, "base/toasts.html")
+#         return render(request, "core/base/toasts.html")
 #
 #     # Create reminder object
 #     reminder = InvoiceReminder(invoice=invoice, reminder_type=reminder_type)
@@ -96,4 +96,4 @@
 #         return render(request, "pages/invoices/single/schedules/reminders/_table_row.html", {"reminder": REMINDER.reminder})
 #     else:
 #         messages.error(request, REMINDER.message)
-#         return render(request, "base/toasts.html")
+#         return render(request, "core/base/toasts.html")

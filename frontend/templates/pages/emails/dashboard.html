@@ -1,4 +1,4 @@
-{% extends base|default:"base/base.html" %}
+{% extends base|default:"core/base/base.html" %}
 {% block content %}
     <div class="card bg-base-100 p-6 mb-4">
         <div class="flex gap-3 justify-between mb-3">
@@ -58,18 +58,18 @@
         <div class="flex w-full h-full overflow-x-hidden overflow-y-auto mt-8">
             <table class="table">
                 <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Sent Date</th>
-                        <th>Recipient</th>
-                        <th>Status</th>
-                    </tr>
+                <tr>
+                    <th>ID</th>
+                    <th>Sent Date</th>
+                    <th>Recipient</th>
+                    <th>Status</th>
+                </tr>
                 </thead>
                 <tbody id="table_body"
                        hx-swap="outerHTML"
                        hx-trigger="load, retry"
                        hx-get="{% url 'api:emails:fetch' %}">
-                    {% include 'components/table/skeleton_rows.html' with rows=3 cols=5 %}
+                {% include 'components/table/skeleton_rows.html' with rows=3 cols=5 %}
                 </tbody>
                 {#                <script>#}
                 {#                    function htmx_resend(event) {#}

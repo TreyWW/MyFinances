@@ -5,7 +5,7 @@ from django.urls import resolve, reverse
 from django.urls.exceptions import Resolver404
 from django.views.decorators.http import require_http_methods
 
-from backend.decorators import web_require_scopes
+from core.decorators import web_require_scopes
 from backend.finance.models import InvoiceRecurringProfile
 from backend.boto3.async_tasks.tasks import Task
 from backend.boto3.scheduler.delete_schedule import delete_boto_schedule
@@ -23,11 +23,11 @@ def delete_invoice_recurring_profile_endpoint(request: WebRequest):
         invoice_profile = InvoiceRecurringProfile.objects.get(id=delete_items.get("invoice_profile", ""))
     except InvoiceRecurringProfile.DoesNotExist:
         messages.error(request, "Invoice recurring profile Not Found")
-        return render(request, "base/toasts.html")
+        return render(request, "core/base/toasts.html")
 
     if not invoice_profile.has_access(request.user):
         messages.error(request, "You do not have permission to delete this Invoice recurring profile")
-        return render(request, "base/toasts.html")
+        return render(request, "core/base/toasts.html")
 
     # QuotaLimit.delete_quota_usage("invoices-count", request.user, invoice.id, invoice.date_created)
 
@@ -39,7 +39,7 @@ def delete_invoice_recurring_profile_endpoint(request: WebRequest):
     if request.htmx:
         if not redirect:
             messages.success(request, "Invoice profile deleted")
-            return render(request, "base/toasts.html")
+            return render(request, "core/base/toasts.html")
 
         try:
             resolve(redirect)

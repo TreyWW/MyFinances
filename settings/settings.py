@@ -129,12 +129,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 EMAIL_WHITELIST: list[str] = []
 AUTHENTICATION_BACKENDS = [
     # "django.contrib.auth.backends.ModelBackend",
-    "backend.auth_backends.EmailInsteadOfUsernameBackend",
+    "core.auth_backends.EmailInsteadOfUsernameBackend",
     "social_core.backends.github.GithubOAuth2",
     "social_core.backends.google.GoogleOAuth2",
 ]
 
 AUTH_USER_MODEL = "core.User"
+SESSION_COOKIE_NAME = "strelix_session"
+SESSION_COOKIE_DOMAIN = get_var("COOKIE_DOMAIN", ".strelix.local")  # ".example.com" for multiple subdomains
+CSRF_COOKIE_DOMAIN = get_var("COOKIE_DOMAIN", ".strelix.local")  # ".example.com" for multiple subdomains
+CSRF_COOKIE_PATH = "/"
+CSRF_USE_SESSIONS = True
 
 SECRET_KEY = get_var("SECRET_KEY", default="secret_key")
 
@@ -188,8 +193,9 @@ TEMPLATES = [
                 "social_django.context_processors.backends",
                 "social_django.context_processors.login_redirect",
                 "backend.context_processors.extras",
-                "backend.context_processors.navbar",
-                "backend.context_processors.breadcrumbs",
+                "core.context_processors.extras",
+                "core.context_processors.navbar",
+                "core.context_processors.breadcrumbs",
             ],
             "loaders": [
                 (
@@ -226,20 +232,20 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 MIDDLEWARE = [
-    "backend.middleware.HealthCheckMiddleware",
+    "core.middleware.HealthCheckMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "backend.middleware.LastVisitedMiddleware",
+    "core.middleware.LastVisitedMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
-    "backend.middleware.CustomUserMiddleware",
+    "core.middleware.CustomUserMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django_htmx.middleware.HtmxMiddleware",
     "login_required.middleware.LoginRequiredMiddleware",
     "social_django.middleware.SocialAuthExceptionMiddleware",
     "tz_detect.middleware.TimezoneMiddleware",
-    "backend.middleware.HTMXPartialLoadMiddleware",
+    "core.middleware.HTMXPartialLoadMiddleware",
     # "backend.core.api.public.middleware.AttachTokenMiddleware",
     # "backend.core.api.public.middleware.HandleTeamContextMiddleware",
 ]

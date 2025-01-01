@@ -1,6 +1,6 @@
 from django.contrib import messages
 
-from backend.models import Invoice, InvoiceRecurringProfile, InvoiceItem, Client, DefaultValues
+from backend.models import Invoice, InvoiceRecurringProfile, InvoiceItem, Client, FinanceDefaultValues
 from backend.finance.service.defaults.get import get_account_defaults
 from core.types.requests import WebRequest
 
@@ -55,7 +55,7 @@ def save_invoice_common(request: WebRequest, invoice_items, invoice: Invoice | I
         if invoice.client_to is not None and invoice.client_to.default_values.default_invoice_logo:
             invoice.logo = invoice.client_to.default_values.default_invoice_logo
         else:
-            defaults: DefaultValues = get_account_defaults(request.actor)
+            defaults: FinanceDefaultValues = get_account_defaults(request.actor)
             if defaults:
                 invoice.logo = defaults.default_invoice_logo
     invoice.sort_code = request.POST.get("sort_code")

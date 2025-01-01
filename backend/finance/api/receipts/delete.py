@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
-from backend.decorators import web_require_scopes
+from core.decorators import web_require_scopes
 from backend.models import Receipt
 from core.types.requests import WebRequest
 

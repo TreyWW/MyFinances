@@ -4,7 +4,7 @@ from django.http import HttpResponse, QueryDict
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
-from backend.decorators import htmx_only
+from core.decorators import htmx_only
 from backend.models import FileStorageFile
 from core.types.requests import WebRequest
 
@@ -31,7 +31,7 @@ def recursive_file_delete_endpoint(request: WebRequest) -> HttpResponse:
 
     if failed_files:
         messages.error(request, f"Failed to delete: {', '.join([file for file in failed_files])}")
-        resp = render(request, "base/toast.html")
+        resp = render(request, "core/base/toast.html")
     else:
         resp = HttpResponse(status=200)
 

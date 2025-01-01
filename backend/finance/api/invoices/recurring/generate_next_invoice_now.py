@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.shortcuts import render
 from django.views.decorators.http import require_POST
 
-from backend.decorators import web_require_scopes, htmx_only
+from core.decorators import web_require_scopes, htmx_only
 from backend.finance.models import InvoiceRecurringProfile
 from backend.finance.service.defaults.get import get_account_defaults
 from backend.finance.service.invoices.recurring.generation.next_invoice import safe_generate_next_invoice_service
@@ -24,7 +24,7 @@ def generate_next_invoice_now_endpoint(request: WebRequest, invoice_profile_id):
 
     if not invoice_recurring_profile:
         messages.error(request, "Failed to fetch next invoice; cannot find Invoice recurring profile.")
-        return render(request, "base/toast.html", {"autohide": False})
+        return render(request, "core/base/toast.html", {"autohide": False})
 
     if invoice_recurring_profile.client_to:
         account_defaults = get_account_defaults(invoice_recurring_profile.owner, invoice_recurring_profile.client_to)
@@ -33,7 +33,7 @@ def generate_next_invoice_now_endpoint(request: WebRequest, invoice_profile_id):
 
     if not invoice_recurring_profile.has_access(request.user):
         messages.error(request, "You do not have permission to modify this invoice recurring profile.")
-        return render(request, "base/toast.html", {"autohide": False})
+        return render(request, "core/base/toast.html", {"autohide": False})
 
     next_invoice_issue_date = invoice_recurring_profile.next_invoice_issue_date()
 
@@ -59,4 +59,4 @@ def generate_next_invoice_now_endpoint(request: WebRequest, invoice_profile_id):
     else:
         logger.info(svc_resp.error)
         messages.error(request, f"Failed to fetch next invoice; {svc_resp.error}")
-        return render(request, "base/toast.html", {"autohide": False})
+        return render(request, "core/base/toast.html", {"autohide": False})

@@ -45,8 +45,8 @@ else:
     }
     print(f"[BACKEND] Using sqlite3 database with path {SQLITE_PATH}", flush=True)
 
-local_allowed_host = os.environ.get("LOCAL_ALLOWED_HOST")
-local_allowed_hosts = [host for host in [local_allowed_host] if host is not None]
+local_allowed_hosts = os.environ.get("LOCAL_ALLOWED_HOST", "").split(";")
+# local_allowed_hosts = [host for host in local_allowed_host if host is not None]
 ALLOWED_HOSTS: list[str] = ["localhost", "127.0.0.1"] + local_allowed_hosts
 
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"  # THIS WILL ALLOW HTTP - NOT RECOMMENDED

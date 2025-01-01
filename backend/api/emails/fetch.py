@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django_ratelimit.core import is_ratelimited
 
-from backend.decorators import web_require_scopes
+from core.decorators import web_require_scopes
 from backend.models import EmailSendStatus
 from core.types.htmx import HtmxHttpRequest
 

@@ -6,7 +6,7 @@ from django.http import HttpRequest, JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods, require_POST
 
-from backend.decorators import web_require_scopes
+from core.decorators import web_require_scopes
 from backend.finance.models import Invoice
 from core.types.htmx import HtmxHttpRequest
 
@@ -61,14 +61,14 @@ def edit_invoice(request: HtmxHttpRequest):
                     new_value = datetime.strptime(new_value, "%Y-%m-%d").date()  # type: ignore[assignment]
                 except ValueError:
                     messages.error(request, "Invalid date format for date_due")
-                    return render(request, "base/toasts.html")
+                    return render(request, "core/base/toasts.html")
             setattr(invoice, column_name, new_value)
 
     invoice.save()
 
     if request.htmx:
         messages.success(request, "Invoice edited")
-        return render(request, "base/toasts.html")
+        return render(request, "core/base/toasts.html")
 
     return JsonResponse({"message": "Invoice successfully edited"}, status=200)
 
@@ -141,14 +141,14 @@ def edit_discount(request: HtmxHttpRequest, invoice_id: str):
 
     messages.success(request, "Discount was applied successfully")
 
-    response = render(request, "base/toasts.html")
+    response = render(request, "core/base/toasts.html")
     response["HX-Trigger"] = "update_invoice"
     return response
 
 
 def return_message(request: HttpRequest, message: str, success: bool = True) -> HttpResponse:
     send_message(request, message, success)
-    return render(request, "base/toasts.html")
+    return render(request, "core/base/toasts.html")
 
 
 def send_message(request: HttpRequest, message: str, success: bool = False) -> None:

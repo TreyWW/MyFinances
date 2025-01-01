@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
-from backend.decorators import web_require_scopes, has_entitlements
+from core.decorators import web_require_scopes, has_entitlements
 from backend.finance.models import InvoiceRecurringProfile
 from backend.finance.service.invoices.recurring.get import get_invoice_profile
 from backend.finance.views.invoices.handler import invoices_core_handler
@@ -71,7 +71,7 @@ def invoice_edit_page_endpoint(request, invoice_profile_id):
 
     if get_response.failed:
         messages.error(request, get_response.error_message)
-        return render(request, "base/toast.html")
+        return render(request, "core/base/toast.html")
 
     invoice_profile: InvoiceRecurringProfile = get_response.response
 

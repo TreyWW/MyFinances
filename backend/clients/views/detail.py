@@ -4,11 +4,11 @@ from django.http.response import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
 
-from backend.decorators import web_require_scopes
+from core.decorators import web_require_scopes
 from backend.finance.service.clients.delete import delete_client, DeleteClientServiceResponse
 from backend.finance.service.clients.validate import validate_client
 from core.types.requests import WebRequest
-from backend.clients.models import Client
+from backend.models import Client
 
 
 @require_http_methods(["GET"])

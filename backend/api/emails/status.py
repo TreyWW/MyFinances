@@ -8,7 +8,7 @@ from django.views.decorators.http import require_POST
 from django_ratelimit.core import is_ratelimited
 from mypy_boto3_sesv2.type_defs import GetMessageInsightsResponseTypeDef, InsightsEventTypeDef
 
-from backend.decorators import htmx_only, feature_flag_check, web_require_scopes
+from core.decorators import htmx_only, feature_flag_check, web_require_scopes
 from backend.models import EmailSendStatus
 from core.types.htmx import HtmxHttpRequest
 from settings.helpers import EMAIL_CLIENT
@@ -26,13 +26,13 @@ def get_status_view(request: HtmxHttpRequest, status_id: str) -> HttpResponse:
             EMAIL_STATUS = EmailSendStatus.objects.get(user=request.user, id=status_id)
     except EmailSendStatus.DoesNotExist:
         messages.error(request, "Status not found")
-        return render(request, "base/toast.html")
+        return render(request, "core/base/toast.html")
 
     message_insight = get_message_insights(message_id=EMAIL_STATUS.aws_message_id)  # type: ignore[arg-type]
 
     if isinstance(message_insight, str):
         messages.error(request, message_insight)
-        return render(request, "base/toast.html", {"autohide": False})
+        return render(request, "core/base/toast.html", {"autohide": False})
 
     important_info = get_important_info_from_response(message_insight)
 
@@ -41,7 +41,7 @@ def get_status_view(request: HtmxHttpRequest, status_id: str) -> HttpResponse:
     EMAIL_STATUS.save()
 
     messages.success(request, f"Status updated to {important_info['status']}")
-    return render(request, "base/toast.html", {"autohide": False})
+    return render(request, "core/base/toast.html", {"autohide": False})
 
 
 @require_POST
@@ -52,7 +52,7 @@ def refresh_all_statuses_view(request: HtmxHttpRequest) -> HttpResponse:
         request, group="email-refresh_all_statuses", key="user", rate="1/m", increment=True
     ):
         messages.error(request, "Woah, slow down! Refreshing the statuses takes a while, give us a break!")
-        return render(request, "base/toast.html")
+        return render(request, "core/base/toast.html")
     if request.user.logged_in_as_team:
         ALL_STATUSES = EmailSendStatus.objects.filter(organization=request.user.logged_in_as_team)
     else:

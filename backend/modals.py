@@ -36,7 +36,7 @@ class SendSingleEmailModal(Modal, EmailContext):
     def get(self, request: WebRequest):
         if not get_feature_status("areUserEmailsAllowed"):
             messages.error(request, "Emails are disabled")
-            return render(request, "base/toast.html")
+            return render(request, "core/base/toast.html")
 
         context = self.get_context(request)
 
@@ -45,7 +45,7 @@ class SendSingleEmailModal(Modal, EmailContext):
 
             if not invoice_url or not invoice_url.invoice.has_access(request.user):
                 messages.error(request, "You don't have access to this invoice")
-                return render(request, "base/toast.html", {"autohide": False})
+                return render(request, "core/base/toast.html", {"autohide": False})
 
             context["invoice"] = invoice_url.invoice
             context["selected_clients"] = [
@@ -224,7 +224,7 @@ class CreateInvoiceReminderModal(Modal):
                 context["invoice"] = invoice
             else:
                 messages.error(request, "You don't have access to this invoice")
-                return render(request, "base/toasts.html")
+                return render(request, "core/base/toasts.html")
         except Invoice.DoesNotExist:
             return self.Response(request, context)
 
@@ -235,7 +235,7 @@ class SendEmailContext:
     def get_context(self, request: WebRequest) -> dict:
         if not get_feature_status("areUserEmailsAllowed"):
             messages.error(request, "Emails are disabled")
-            return render(request, "base/toast.html")
+            return render(request, "core/base/toast.html")
 
         context = {}
 
@@ -259,7 +259,7 @@ class InvoiceCodeSendModal(Modal, SendEmailContext):
 
         if not invoice_url or not invoice_url.invoice.has_access(request.user):
             messages.error(request, "You don't have access to this invoice")
-            return render(request, "base/toast.html", {"autohide": False})
+            return render(request, "core/base/toast.html", {"autohide": False})
 
         context["invoice"] = invoice_url.invoice
         context["selected_clients"] = [

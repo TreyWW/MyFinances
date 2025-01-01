@@ -2,7 +2,7 @@ from datetime import date
 from typing import NamedTuple
 from django.core.exceptions import PermissionDenied, ValidationError
 
-from backend.models import Client, InvoiceProduct, DefaultValues
+from backend.models import Client, InvoiceProduct, FinanceDefaultValues
 from backend.finance.service.clients.validate import validate_client
 from backend.finance.service.defaults.get import get_account_defaults
 from core.types.requests import WebRequest
@@ -10,7 +10,7 @@ from core.utils.dataclasses import BaseServiceResponse
 
 
 class CreateInvoiceContextTuple(NamedTuple):
-    defaults: DefaultValues
+    defaults: FinanceDefaultValues
     context: dict
 
 
@@ -23,7 +23,7 @@ def global_get_invoice_context(request: WebRequest) -> CreateInvoiceContextServi
         "existing_products": InvoiceProduct.objects.filter(user=request.user),
     }
 
-    defaults: DefaultValues
+    defaults: FinanceDefaultValues
 
     if client_id := request.GET.get("client"):
         try:

@@ -3785,13 +3785,13 @@ doc = ["sphinx"]
 
 [[package]]
 name = "strelix-core"
-version = "0.0.4"
+version = "0.0.8"
 description = "github.com/Strelix/core"
 optional = false
 python-versions = "<4.0,>=3.10"
 files = [
-    {file = "strelix_core-0.0.4-py3-none-any.whl", hash = "sha256:35cde3c2f602d7ead25b516d955596c74f56765c7ce8534e7281a7f713fc22e3"},
-    {file = "strelix_core-0.0.4.tar.gz", hash = "sha256:bb3a07ab0307d26bdaafb1813f85efe0c596444f8b41841b196fb9a8682dd138"},
+    {file = "strelix_core-0.0.8-py3-none-any.whl", hash = "sha256:f339f48669030e0c3dbd66cd35c808a1e860f72f436d6115eb4f80f82d9da61d"},
+    {file = "strelix_core-0.0.8.tar.gz", hash = "sha256:22278ea419a4b9b910020c98e485178a15d68e9f95c3607c4326fbbd21e28cfc"},
 ]
 
 [package.dependencies]
@@ -3806,6 +3806,7 @@ django-ratelimit = "4.1.0"
 django-silk = ">=5.3.2,<6.0.0"
 django-storages = "1.14.2"
 djangorestframework = ">=3.14.0,<4.0.0"
+drf-yasg = ">=1.21.7,<2.0.0"
 mkdocs = ">=1.5.3,<2.0.0"
 mkdocs-git-committers-plugin-2 = ">=2.3.0,<3.0.0"
 mkdocs-material = ">=9.5.15,<10.0.0"
@@ -4337,4 +4338,4 @@ test = ["coverage (>=5.3)", "tomli (>=2.0.1)", "tox"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<4.0"
-content-hash = "dc5f07be020a9e0e5ff847c130041a91ff8c709799483b57d6633d7d42a18974"
+content-hash = "cca0db52f67148acf7d3090fcc31f33ccb86a415febbddb3a0ce32b5ce78a66d"

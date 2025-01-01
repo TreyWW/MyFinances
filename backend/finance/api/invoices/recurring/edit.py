@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
-from backend.decorators import web_require_scopes, has_entitlements
+from core.decorators import web_require_scopes, has_entitlements
 from backend.finance.models import InvoiceRecurringProfile
 from backend.finance.service.invoices.recurring.get import get_invoice_profile
 from backend.finance.service.invoices.recurring.validate.frequencies import validate_and_update_frequency
@@ -20,7 +20,7 @@ def edit_invoice_recurring_profile_endpoint(request: WebRequest, invoice_profile
 
     if invoice_profile_response.failed:
         messages.error(request, invoice_profile_response.error)
-        return render(request, "base/toasts.html", {"autohide": False})
+        return render(request, "core/base/toasts.html", {"autohide": False})
 
     invoice_profile: InvoiceRecurringProfile = invoice_profile_response.response
 
@@ -34,7 +34,7 @@ def edit_invoice_recurring_profile_endpoint(request: WebRequest, invoice_profile
 
     if frequency_update_response.failed:
         messages.error(request, frequency_update_response.error)
-        return render(request, "base/toasts.html")
+        return render(request, "core/base/toasts.html")
 
     attributes_to_update = {
         "date_due": request.POST.get("date_due"),
@@ -67,13 +67,13 @@ def edit_invoice_recurring_profile_endpoint(request: WebRequest, invoice_profile
                     new_value = datetime.strptime(new_value, "%Y-%m-%d").date()  # type: ignore[assignment]
                 except ValueError:
                     messages.error(request, "Invalid date format for date_due")
-                    return render(request, "base/toasts.html")
+                    return render(request, "core/base/toasts.html")
             setattr(invoice_profile, column_name, new_value)
 
     invoice_profile.save()
 
     if request.htmx:
         messages.success(request, "Successfully saved profile!")
-        return render(request, "base/toasts.html")
+        return render(request, "core/base/toasts.html")
 
     return JsonResponse({"message": "Invoice successfully edited"}, status=200)

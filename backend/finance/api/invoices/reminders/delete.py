@@ -4,7 +4,7 @@
 # from django.shortcuts import render
 # from django.views.decorators.http import require_http_methods
 #
-# from backend.decorators import feature_flag_check, web_require_scopes
+# from core.decorators import feature_flag_check, web_require_scopes
 # from backend.finance.models import InvoiceReminder
 #
 # from backend.types.htmx import HtmxHttpRequest
@@ -20,11 +20,11 @@
 #         reminder = InvoiceReminder.objects.get(id=reminder_id)
 #     except InvoiceReminder.DoesNotExist:
 #         messages.error(request, "Schedule not found!")
-#         return render(request, "base/toasts.html")
+#         return render(request, "core/base/toasts.html")
 #
 #     if not reminder.invoice.has_access(request.user):
 #         messages.error(request, "You do not have access to this invoice.")
-#         return render(request, "base/toasts.html")
+#         return render(request, "core/base/toasts.html")
 #
 #     original_status = reminder.status
 #     reminder.set_status("deleting")
@@ -40,7 +40,7 @@
 #         else:
 #             reminder.set_status(original_status)
 #             messages.error(request, f"Failed to delete schedule: {delete_status.message}")
-#             return render(request, "base/toasts.html")
+#             return render(request, "core/base/toasts.html")
 #
 #     reminder.set_status("cancelled")
 #

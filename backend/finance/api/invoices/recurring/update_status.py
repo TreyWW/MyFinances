@@ -4,7 +4,7 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_POST
 
-from backend.decorators import web_require_scopes
+from core.decorators import web_require_scopes
 from backend.boto3.async_tasks.tasks import Task
 from backend.boto3.scheduler.create_schedule import create_boto_schedule
 from backend.boto3.scheduler.get import get_boto_schedule
@@ -90,7 +90,7 @@ def recurring_profile_change_status_endpoint(request: WebRequest, invoice_profil
 
 def return_message(request: HttpRequest, message: str, success: bool = True) -> HttpResponse:
     send_message(request, message, success)
-    return render(request, "base/toasts.html")
+    return render(request, "core/base/toasts.html")
 
 
 def send_message(request: HttpRequest, message: str, success: bool = False) -> None:

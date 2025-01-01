@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from backend.clients.models import Client
+from backend.models import Client
 from core.api.public.decorators import require_scopes
 from core.api.public.helpers.response import APIResponse
 from backend.api.public.serializers.invoices import InvoiceSerializer

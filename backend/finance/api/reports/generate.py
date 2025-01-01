@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.shortcuts import render
 
-from backend.decorators import web_require_scopes
+from core.decorators import web_require_scopes
 from backend.finance.service.reports.generate import generate_report
 from core.types.requests import WebRequest
 
@@ -16,10 +16,10 @@ def generate_report_endpoint(request: WebRequest):
 
     if generated_report.failed:
         messages.error(request, generated_report.error)
-        return render(request, "base/toast.html")
+        return render(request, "core/base/toast.html")
 
     messages.success(request, f"Successfully generated report ({str(generated_report.response.uuid)[:4]})")
 
-    resp = render(request, "base/toast.html")
+    resp = render(request, "core/base/toast.html")
     resp["HX-Trigger"] = "refresh_reports_table"
     return resp

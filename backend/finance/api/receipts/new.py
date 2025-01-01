@@ -4,7 +4,7 @@ from django.http import HttpResponseBadRequest
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
 
-from backend.decorators import web_require_scopes, has_entitlements
+from core.decorators import web_require_scopes, has_entitlements
 from backend.models import Receipt
 from core.types.requests import WebRequest
 

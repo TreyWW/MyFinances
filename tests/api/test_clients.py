@@ -51,7 +51,7 @@ class ClientsAPIFetch(ViewTestCase):
 
         random_amount_of_clients = random.randrange(2, 10)
         # Use baker to create a random amount of clients
-        clients = baker.make("backend.Client", _quantity=random_amount_of_clients, user=self.log_in_user)
+        clients = baker.make("core.Client", _quantity=random_amount_of_clients, user=self.log_in_user)
 
         response = self.make_request()
         self.assertEqual(response.status_code, 200)
@@ -68,9 +68,9 @@ class ClientsAPIFetch(ViewTestCase):
         self.login_user()
 
         # Create some clients with different names, emails, and IDs
-        client1 = baker.make("backend.Client", name="John Doe", email="john@example.com", id=1, user=self.log_in_user)
-        client2 = baker.make("backend.Client", name="Trey", email="trey@example.com", id=2, user=self.log_in_user)
-        client3 = baker.make("backend.Client", name="Jacob Johnson", email="jacob@example.com", id=3, user=self.log_in_user)
+        client1 = baker.make("core.Client", name="John Doe", email="john@example.com", id=1, user=self.log_in_user)
+        client2 = baker.make("core.Client", name="Trey", email="trey@example.com", id=2, user=self.log_in_user)
+        client3 = baker.make("core.Client", name="Jacob Johnson", email="jacob@example.com", id=3, user=self.log_in_user)
 
         # Define the URL with the search query parameter
         url = reverse(self.url_name)
@@ -129,13 +129,13 @@ class ClientAPIDelete(ViewTestCase):
 
     def test_client_delete_view_200_for_authenticated_users(self):
         self.login_user()
-        client = baker.make("backend.Client", user=self.log_in_user)
+        client = baker.make("core.Client", user=self.log_in_user)
         response = self.client.delete(reverse(self.url_name, args=[client.id]))
         self.assertEqual(response.status_code, 200)
 
     def test_client_delete_view_deletes_client(self):
         self.login_user()
-        client = baker.make("backend.Client", user=self.log_in_user)
+        client = baker.make("core.Client", user=self.log_in_user)
         self.client.delete(reverse(self.url_name, args=[client.id]))
         with self.assertRaises(Client.DoesNotExist):
             Client.objects.get(id=client.id)

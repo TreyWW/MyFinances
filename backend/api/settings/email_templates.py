@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.views.decorators.http import require_POST
 
 from backend.finance.service.defaults.get import get_account_defaults
-from backend.decorators import web_require_scopes
+from core.decorators import web_require_scopes
 from core.types.requests import WebRequest
 
 
@@ -15,11 +15,11 @@ def save_email_template(request: WebRequest, template: str):
 
     if template not in ["invoice_created", "invoice_overdue", "invoice_cancelled"]:
         messages.error(request, f"Invalid template: {template}")
-        return render(request, "base/toast.html")
+        return render(request, "core/base/toast.html")
 
     if content is None:
         messages.error(request, f"Missing content for template: {template}")
-        return render(request, "base/toast.html")
+        return render(request, "core/base/toast.html")
 
     acc_defaults = get_account_defaults(request.actor)
 
@@ -29,4 +29,4 @@ def save_email_template(request: WebRequest, template: str):
 
     messages.success(request, f"Email template '{template}' saved successfully")
 
-    return render(request, "base/toast.html")
+    return render(request, "core/base/toast.html")

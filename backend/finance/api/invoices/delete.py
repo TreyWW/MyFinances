@@ -5,7 +5,7 @@ from django.urls import resolve, reverse
 from django.urls.exceptions import Resolver404
 from django.views.decorators.http import require_http_methods
 
-from backend.decorators import web_require_scopes
+from core.decorators import web_require_scopes
 from backend.models import Invoice
 from core.types.htmx import HtmxHttpRequest
 
@@ -21,11 +21,11 @@ def delete_invoice(request: HtmxHttpRequest):
         invoice = Invoice.objects.get(id=delete_items.get("invoice", ""))
     except Invoice.DoesNotExist:
         messages.error(request, "Invoice Not Found")
-        return render(request, "base/toasts.html")
+        return render(request, "core/base/toasts.html")
 
     if not invoice.has_access(request.user):
         messages.error(request, "You do not have permission to delete this invoice")
-        return render(request, "base/toasts.html")
+        return render(request, "core/base/toasts.html")
 
     QuotaLimit.delete_quota_usage("invoices-count", request.user, invoice.id, invoice.date_created)
 
@@ -34,7 +34,7 @@ def delete_invoice(request: HtmxHttpRequest):
     if request.htmx:
         if not redirect:
             messages.success(request, "Invoice deleted")
-            return render(request, "base/toasts.html")
+            return render(request, "core/base/toasts.html")
 
         try:
             resolve(redirect)

@@ -1,4 +1,4 @@
-{% extends base|default:"base/base.html" %}
+{% extends base|default:"core/base/base.html" %}
 {% load static %}
 {% block content %}
     <div class="card bg-base-100 p-6">
@@ -10,7 +10,7 @@
                     Single
                     <input type="checkbox"
                            name="is_representative"
-                           class="toggle toggle-primary" />
+                           class="toggle toggle-primary"/>
                     Representative
                 </label>
             </div>
@@ -29,7 +29,7 @@
                                    minlength="3"
                                    type="text"
                                    class="peer input input-bordered w-full"
-                                   placeholder="Bob Smith" />
+                                   placeholder="Bob Smith"/>
                             <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden">
                                 <span class="label-text-alt text-error">Please enter a valid client name</span>
                             </label>
@@ -49,7 +49,7 @@
                                    minlength="4"
                                    type="email"
                                    class="peer input input-bordered w-full"
-                                   placeholder="bsmith@example.com" />
+                                   placeholder="bsmith@example.com"/>
                             <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden">
                                 <span class="label-text-alt text-error">Please enter a valid client email address</span>
                             </label>
@@ -71,7 +71,7 @@
                                minlength="3"
                                type="text"
                                class="peer input input-bordered w-full"
-                               placeholder="Google" />
+                               placeholder="Google"/>
                         <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden">
                             <span class="label-text-alt text-error">Please enter a valid company name</span>
                         </label>
@@ -113,7 +113,7 @@
                             <input name="client_phone"
                                    type="tel"
                                    class="peer input input-bordered w-full"
-                                   placeholder="07000000000" />
+                                   placeholder="07000000000"/>
                             <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden">
                                 <span class="label-text-alt text-error">Please enter a valid phone number</span>
                             </label>
@@ -130,7 +130,7 @@
                             <input name="client_contact_method"
                                    type="text"
                                    class="peer input input-bordered w-full"
-                                   placeholder="Enter email, phone number, etc." />
+                                   placeholder="Enter email, phone number, etc."/>
                             <label class="label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden">
                                 <span class="label-text-alt text-error">Please enter a valid main contact method</span>
                             </label>

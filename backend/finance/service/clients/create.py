@@ -1,4 +1,4 @@
-from backend.clients.models import Client
+from backend.models import Client
 from backend.finance.service.clients.validate import validate_client_create
 from core.utils.dataclasses import BaseServiceResponse
 

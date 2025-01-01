@@ -23,6 +23,8 @@ from core.models import (
     _public_storage,
     upload_to_user_separate_folder,
     RandomAPICode,
+    Client,
+    DefaultValuesBase,
 )
 
 from backend.finance.models import (
@@ -36,8 +38,7 @@ from backend.finance.models import (
     ReceiptDownloadToken,
     MonthlyReport,
     MonthlyReportRow,
+    FinanceDefaultValues,
 )
-
-from backend.clients.models import Client, DefaultValues
 
 from backend.storage.models import FileStorageFile, MultiFileUpload

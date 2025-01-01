@@ -69,7 +69,7 @@ class ClientsViewTestCase(ViewTestCase):
             {"name": "Client5", "email": "client5@example.com", "id": 5},
             {"name": "Special_Client", "email": "special@example.com", "id": 6},
         ]
-        clients = [baker.make("backend.Client", user=self.log_in_user, **attrs) for attrs in client_attributes]
+        clients = [baker.make("core.Client", user=self.log_in_user, **attrs) for attrs in client_attributes]
 
         # Define the URL with the search query parameter
         url = reverse("api:clients:fetch")

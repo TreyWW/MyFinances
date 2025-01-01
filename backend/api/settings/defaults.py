@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
-from backend.clients.models import Client
+from backend.models import Client
 from backend.finance.service.clients.validate import validate_client
 from backend.finance.service.defaults.get import get_account_defaults
 from backend.finance.service.defaults.update import change_client_defaults
@@ -62,10 +62,10 @@ def change_client_defaults_endpoint(request: WebRequest, client_id: int | None =
 
     if response.failed:
         messages.error(request, response.error)
-        return render(request, "base/toast.html")
+        return render(request, "core/base/toast.html")
 
     messages.success(request, "Successfully updated client defaults")
-    return render(request, "base/toast.html")
+    return render(request, "core/base/toast.html")
 
 
 @require_http_methods(["DELETE"])
@@ -85,11 +85,11 @@ def remove_client_default_logo_endpoint(request: WebRequest, client_id: int | No
 
     if not defaults.default_invoice_logo:
         messages.error(request, "No default logo to remove")
-        return render(request, "base/toast.html")
+        return render(request, "core/base/toast.html")
 
     defaults.default_invoice_logo.delete()
 
     messages.success(request, "Successfully updated client defaults")
-    resp = render(request, "base/toast.html")
+    resp = render(request, "core/base/toast.html")
     resp["HX-Refresh"] = "true"
     return resp

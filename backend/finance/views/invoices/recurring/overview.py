@@ -1,4 +1,4 @@
-from backend.decorators import *
+from core.decorators import *
 from backend.models import *
 from backend.finance.service.defaults.get import get_account_defaults
 from backend.finance.views.invoices.handler import invoices_core_handler

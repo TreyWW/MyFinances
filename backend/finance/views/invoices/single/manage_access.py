@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 
-from backend.decorators import web_require_scopes
+from core.decorators import web_require_scopes
 from backend.finance.models import Invoice, InvoiceURL
 from backend.finance.service.invoices.single.get_invoice import get_invoice_by_actor
 from core.types.htmx import HtmxHttpRequest
@@ -65,7 +65,7 @@ def delete_code(request: HtmxHttpRequest, code):
             raise InvoiceURL.DoesNotExist
     except (Invoice.DoesNotExist, InvoiceURL.DoesNotExist):
         messages.error(request, "Invalid URL")
-        return render(request, "base/toasts.html")
+        return render(request, "core/base/toasts.html")
 
     # QuotaLimit.delete_quota_usage("invoices-access_codes", request.user, invoice.id, code_obj.created_on)
 
