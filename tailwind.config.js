@@ -1,14 +1,56 @@
 /** @type {import('tailwindcss').Config} */
+
+const {spawnSync} = require('child_process');
+const path = require('path');
+const projectRoot = path.resolve(__dirname, '.');
+
+const getCoreTemplateFiles = () => {
+  const command = 'python'; // Requires virtualenv to be activated.
+  const args = ['manage.py', 'list_core_templates']; // Requires cwd to be set.
+  const options = {cwd: projectRoot};
+  const result = spawnSync(command, args, options);
+
+  if (result.error) {
+    throw result.error;
+  }
+
+  if (result.status !== 0) {
+    console.log(result.stdout.toString(), result.stderr.toString());
+    throw new Error(`Django management command exited with code ${result.status}`);
+  }
+
+  const covert_to_template = (value) => {
+    new_value = value.trim()
+
+    if (!new_value.startsWith("TMPL:")) {
+      return ""
+    }
+
+    // new_value = value.replace(/\\/g, "/").replace("\\", "/").replace("\r", "") + "/**/*.html"
+
+    return new_value.slice(5) + "/**/*.html"
+  }
+
+  const templateFiles = result.stdout.toString()
+    .split('\n')
+    .map((path) => covert_to_template(path))
+    .filter(function (e) {
+      return e
+    });  // Remove empty strings, including last empty line.
+  console.log(templateFiles)
+  return templateFiles;
+}
+
 module.exports = {
   mode: 'jit',
   content: [
     './frontend/templates/**/*.html',
     './billing/templates/**/*.html',
     './components/**/*.html',
-    './frontend/templates/base/base.html',
     './backend/**/views/*.py',
     './backend/views/core/**/*.py',
-    './assets/scripts/tableify.js'
+    './assets/scripts/tableify.js',
+    ...getCoreTemplateFiles()
   ],
   safelist: [
     'alert',

@@ -16,4 +16,4 @@ class DashboardViewTestCase(ViewTestCase):
         func = resolve("/dashboard/").func
         func_name = f"{func.__module__}.{func.__name__}"
         self.assertEqual("/dashboard/", reverse("dashboard"))
-        self.assertEqual("backend.core.views.other.index.dashboard", func_name)
+        self.assertEqual("core.views.other.index.dashboard", func_name)

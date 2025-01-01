@@ -2,10 +2,10 @@ from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
 
-from backend.decorators import web_require_scopes
+from core.decorators import web_require_scopes
 from backend.finance.models import InvoiceRecurringProfile
-from backend.core.service.invoices.common.fetch import get_context
-from backend.core.types.requests import WebRequest
+from backend.finance.service.invoices.common.fetch import get_context
+from core.types.requests import WebRequest
 
 
 @require_http_methods(["GET"])

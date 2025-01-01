@@ -3,7 +3,7 @@ from typing import Dict, Any
 from django.http import HttpResponse
 from django.shortcuts import render
 
-from backend.core.types.requests import WebRequest
+from core.types.requests import WebRequest
 
 
 def invoices_core_handler(request: WebRequest, template_name: str, start_context: Dict[str, Any] | None = None, **kwargs) -> HttpResponse:

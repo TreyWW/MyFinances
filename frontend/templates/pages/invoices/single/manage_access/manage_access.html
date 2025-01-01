@@ -1,4 +1,4 @@
-{% extends base|default:"base/base.html" %}
+{% extends base|default:"core/base/base.html" %}
 {% block content %}
     <div class="card p-6 shadow-xl bg-base-100 mb-4">
         <div class=" text-3xl w-full grid grid-cols-3">
@@ -20,19 +20,19 @@
         </button>
         <table class="w-full table mt-3">
             <thead>
-                <tr>
-                    <th>Code</th>
-                    <th>Date Created</th>
-                    <th>Created By</th>
-                    <th>Actions</th>
-                </tr>
+            <tr>
+                <th>Code</th>
+                <th>Date Created</th>
+                <th>Created By</th>
+                <th>Actions</th>
+            </tr>
             </thead>
             <tbody id="tbody">
-                {% for url in invoice.invoice_urls.all %}
-                    {% with code=url.uuid created_on=url.created_on created_by=url.get_created_by %}
-                        {% include 'pages/invoices/single/manage_access/_table_row.html' %}
-                    {% endwith %}
-                {% endfor %}
+            {% for url in invoice.invoice_urls.all %}
+                {% with code=url.uuid created_on=url.created_on created_by=url.get_created_by %}
+                    {% include 'pages/invoices/single/manage_access/_table_row.html' %}
+                {% endwith %}
+            {% endfor %}
             </tbody>
         </table>
     </div>

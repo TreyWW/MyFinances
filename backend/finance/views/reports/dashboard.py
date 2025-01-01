@@ -1,4 +1,4 @@
-from backend.core.types.requests import WebRequest
+from core.types.requests import WebRequest
 from django.shortcuts import render
 
 

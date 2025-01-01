@@ -8,7 +8,7 @@
                         class="link link-primary"
                         title="{{ quota.quota_object.description }}"
                         _="on click call modal_view_quota_limit_info_{{ quota.quota_object.id }}.showModal()"
-                        hx-get="{% url "api:base:modal retrieve with context" context_type="quota" context_value=quota.quota_object.slug modal_name="view_quota_limit_info" %}">
+                        hx-get="{% url "core:api:base:modal retrieve" modal_name="view_quota_limit_info" %}?slug={{ quota.quota_object.slug }}">
                     {{ quota.quota_object.name }}
                 </button>
             </td>

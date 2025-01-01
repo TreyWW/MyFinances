@@ -1,4 +1,4 @@
-{% extends base|default:"base/base.html" %}
+{% extends base|default:"core/base/base.html" %}
 {% block content %}
     <div class="card bg-base-100 p-6 mb-4">
         <div class="flex gap-3 justify-between mb-3">
@@ -22,7 +22,7 @@
                         hx-trigger="click once"
                         hx-swap="beforeend"
                         hx-target="#modal_container"
-                        hx-get="{% url "api:base:modal retrieve" modal_name="send_single_email" %}">
+                        hx-get="{% url "core:api:base:modal retrieve" modal_name="send_single_email" %}">
                     <i class="fa-solid fa-paper-plane"></i>
                     Send Email
                 </button>
@@ -37,7 +37,7 @@
                                     hx-trigger="from:#single_send_button, click once"
                                     hx-swap="beforeend"
                                     hx-target="#modal_container"
-                                    hx-get="{% url "api:base:modal retrieve" modal_name="send_single_email" %}">
+                                    hx-get="{% url "core:api:base:modal retrieve" modal_name="send_single_email" %}">
                                 <i class="fa-solid fa-user"></i> Send single email
                             </button>
                         </li>
@@ -46,7 +46,7 @@
                                     hx-trigger="click once"
                                     hx-swap="beforeend"
                                     hx-target="#modal_container"
-                                    hx-get="{% url "api:base:modal retrieve" modal_name="send_bulk_email" %}">
+                                    hx-get="{% url "core:api:base:modal retrieve" modal_name="send_bulk_email" %}">
                                 <i class="fa-solid fa-users"></i> Send bulk email
                             </button>
                         </li>
@@ -58,18 +58,18 @@
         <div class="flex w-full h-full overflow-x-hidden overflow-y-auto mt-8">
             <table class="table">
                 <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Sent Date</th>
-                        <th>Recipient</th>
-                        <th>Status</th>
-                    </tr>
+                <tr>
+                    <th>ID</th>
+                    <th>Sent Date</th>
+                    <th>Recipient</th>
+                    <th>Status</th>
+                </tr>
                 </thead>
                 <tbody id="table_body"
                        hx-swap="outerHTML"
                        hx-trigger="load, retry"
                        hx-get="{% url 'api:emails:fetch' %}">
-                    {% include 'components/table/skeleton_rows.html' with rows=3 cols=5 %}
+                {% include 'components/table/skeleton_rows.html' with rows=3 cols=5 %}
                 </tbody>
                 {#                <script>#}
                 {#                    function htmx_resend(event) {#}

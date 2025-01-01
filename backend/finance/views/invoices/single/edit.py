@@ -5,10 +5,10 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
 
-from backend.core.types.requests import WebRequest
-from backend.decorators import web_require_scopes
+from core.types.requests import WebRequest
+from core.decorators import web_require_scopes
 from backend.finance.models import Invoice, Client, InvoiceItem
-from backend.core.types.htmx import HtmxHttpRequest
+from core.types.htmx import HtmxHttpRequest
 
 
 # RELATED PATH FILES : \frontend\templates\pages\invoices\dashboard\_fetch_body.html, \backend\urls.py
@@ -140,7 +140,8 @@ def edit_invoice(request: WebRequest, invoice_id):
                 "client_city": request.POST.get("to_city"),
                 "client_county": request.POST.get("to_county"),
                 "client_country": request.POST.get("to_country"),
-                "client_is_representative": True if request.POST.get("is_representative") == "on" else False,  # type: ignore[dict-item]
+                "client_is_representative": True if request.POST.get("is_representative") == "on" else False,
+                # type: ignore[dict-item]
                 "client_to": None,
             }
         )
@@ -166,7 +167,7 @@ def edit_invoice(request: WebRequest, invoice_id):
     messages.success(request, "Invoice edited")
 
     if request.htmx:
-        return render(request, "base/toasts.html")
+        return render(request, "core/base/toasts.html")
 
     return invoice_edit_page_get(request, invoice_id)
 

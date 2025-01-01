@@ -6,7 +6,7 @@
 {% fill "content" %}
 <form class="py-4 group"
       id="modal_view_quota_limit_info_{{ quota.id }}-form"
-      hx-post="{% url "api:quotas:submit_request" slug=quota.slug %}"
+      hx-post="{% url "core:api:quotas:submit_request" slug=quota.slug %}"
       hx-swap="none">
     {% csrf_token %}
     <div class="p-4">

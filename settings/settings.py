@@ -9,11 +9,15 @@ from typing import TYPE_CHECKING
 from unittest.mock import MagicMock
 
 import stripe
+from core.config import CoreConfig
+from django.conf import settings
 from django.contrib.messages import constants as messages
 from django.contrib.staticfiles.storage import FileSystemStorage  # type: ignore
 from storages.backends.s3 import S3Storage
 
 from .helpers import get_var
+
+core_config = CoreConfig()
 
 # from backend.utils import appconfig
 
@@ -47,11 +51,11 @@ except ImportError:
 INSTALLED_APPS = [
     "django_extensions",
     "django.contrib.admin",
+    "backend",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
-    "backend",
     "mathfilters",
     "django.contrib.humanize",
     "django_htmx",
@@ -64,6 +68,7 @@ INSTALLED_APPS = [
     "drf_yasg",
     "tz_detect",
     "webpack_loader",
+    "core",
     # "django_minify_html",
 ]
 
@@ -74,7 +79,7 @@ if DEBUG:
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         # "rest_framework.authentication.TokenAuthentication",
-        "backend.core.api.public.authentication.CustomBearerAuthentication"  # also adds custom model
+        "core.api.public.authentication.CustomBearerAuthentication"  # also adds custom model
     ],
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
@@ -88,13 +93,13 @@ REST_FRAMEWORK = {
 
 SWAGGER_SETTINGS = {
     "USE_SESSION_AUTH": False,
-    "DEFAULT_INFO": "backend.core.api.public.swagger_ui.INFO",
+    "DEFAULT_INFO": "core.api.public.swagger_ui.INFO",
     "SECURITY_DEFINITIONS": {"Bearer": {"type": "apiKey", "name": "Authorization", "in": "header"}},
 }
 
 LOGIN_REQUIRED_IGNORE_VIEW_NAMES = [
     "index",
-    "auth:login forgot_password",
+    "core:auth:login forgot_password",
     "user set password reset",
     "user set password",
     "user set password set",
@@ -124,10 +129,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 EMAIL_WHITELIST: list[str] = []
 AUTHENTICATION_BACKENDS = [
     # "django.contrib.auth.backends.ModelBackend",
-    "backend.auth_backends.EmailInsteadOfUsernameBackend",
+    "core.auth_backends.EmailInsteadOfUsernameBackend",
     "social_core.backends.github.GithubOAuth2",
     "social_core.backends.google.GoogleOAuth2",
 ]
+
+AUTH_USER_MODEL = "core.User"
+SESSION_COOKIE_NAME = "strelix_session"
+SESSION_COOKIE_DOMAIN = get_var("COOKIE_DOMAIN", ".strelix.local")  # ".example.com" for multiple subdomains
+CSRF_COOKIE_DOMAIN = get_var("COOKIE_DOMAIN", ".strelix.local")  # ".example.com" for multiple subdomains
+CSRF_COOKIE_PATH = "/"
+CSRF_USE_SESSIONS = True
 
 SECRET_KEY = get_var("SECRET_KEY", default="secret_key")
 
@@ -181,8 +193,9 @@ TEMPLATES = [
                 "social_django.context_processors.backends",
                 "social_django.context_processors.login_redirect",
                 "backend.context_processors.extras",
-                "backend.context_processors.navbar",
-                "backend.context_processors.breadcrumbs",
+                "core.context_processors.extras",
+                "core.context_processors.navbar",
+                "core.context_processors.breadcrumbs",
             ],
             "loaders": [
                 (
@@ -219,20 +232,20 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 MIDDLEWARE = [
-    "backend.middleware.HealthCheckMiddleware",
+    "core.middleware.HealthCheckMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "backend.middleware.LastVisitedMiddleware",
+    "core.middleware.LastVisitedMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
-    "backend.middleware.CustomUserMiddleware",
+    "core.middleware.CustomUserMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django_htmx.middleware.HtmxMiddleware",
     "login_required.middleware.LoginRequiredMiddleware",
     "social_django.middleware.SocialAuthExceptionMiddleware",
     "tz_detect.middleware.TimezoneMiddleware",
-    "backend.middleware.HTMXPartialLoadMiddleware",
+    "core.middleware.HTMXPartialLoadMiddleware",
     # "backend.core.api.public.middleware.AttachTokenMiddleware",
     # "backend.core.api.public.middleware.HandleTeamContextMiddleware",
 ]
@@ -286,8 +299,6 @@ MARKDOWNIFY = {
     }
 }
 
-AUTH_USER_MODEL = "backend.User"
-
 LANGUAGE_CODE = "en-us"
 
 TIME_ZONE = "UTC"
@@ -322,7 +333,7 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_ENABLED = True if SOCIAL_AUTH_GOOGLE_OAUTH2_KEY and SO
 # SOCIAL_AUTH_LOGIN_URL = "/login/external/"
 # SOCIAL_AUTH_NEW_USER_REDIRECT_URL = "/login/external/new_user/"
 # SOCIAL_AUTH_LOGIN_REDIRECT_URL = "/"
-SOCIAL_AUTH_USER_MODEL = "backend.User"
+SOCIAL_AUTH_USER_MODEL = "core.User"
 
 AWS_TAGS_APP_NAME = get_var("AWS_TAGS_APP_NAME", default="myfinances")
 
@@ -342,6 +353,7 @@ LOGGING = {
     },
     "handlers": {
         "console": {
+            "level": "DEBUG",
             "class": "logging.StreamHandler",
             "formatter": "simple",
         },
@@ -350,20 +362,26 @@ LOGGING = {
         "django": {
             "handlers": ["console"],
             "level": "INFO",
-            "propagate": True,
+            "propagate": False,  # Ensure propagation is False to avoid duplicates
         },
         "django.db.backends": {
             "handlers": ["console"],
-            "level": get_var("DJANGO_LOG_LEVEL", default="INFO"),
-            "propagate": False,
+            "level": "INFO",  # Set your desired logging level
+            "propagate": False,  # Prevent propagation for database logs
+        },
+        "django.request": {
+            "handlers": ["console"],
+            "level": "ERROR",
+            "propagate": False,  # Only log errors for requests
         },
     },
     "root": {
         "handlers": ["console"],
-        "level": get_var("DJANGO_LOG_LEVEL", default="INFO"),
+        "level": "INFO",  # Root logger level
     },
 }
 
+# Apply the configuration to the Django logging system
 logging.config.dictConfig(LOGGING)
 
 
@@ -456,6 +474,14 @@ else:
         ...
 
     PRIVATE_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
+
+# CORE SETTINGS
+
+core_config.EXPIRY_MODELS += ["backend.InvoiceURL"]
+core_config.SETTINGS_PAGE_CONTEXT_HANDLERS.update(
+    {"email_templates": "backend.core.service.settings.view.email_templates.email_templates_context"}
+)
+# EXPIRY_MODELS = CoreConfig().EXPIRY_MODELS
 
 # SENDGRID_SANDBOX_MODE_IN_DEBUG = True
 if "test" in sys.argv[1:]:

@@ -2,9 +2,9 @@ from django.contrib import messages
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
-from backend.core.types.requests import WebRequest
+from core.types.requests import WebRequest
 from backend.models import Client
-from backend.core.types.htmx import HtmxHttpRequest
+from core.types.htmx import HtmxHttpRequest
 
 to_get = ["name", "address", "city", "country", "company", "is_representative", "email"]
 

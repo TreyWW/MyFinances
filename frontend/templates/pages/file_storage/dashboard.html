@@ -1,4 +1,4 @@
-{% extends base|default:"base/base.html" %}
+{% extends base|default:"core/base/base.html" %}
 {% block content %}
     <div class="card bg-base-100 p-3 mb-2">
         <div class="flex items-center justify-between">
@@ -49,7 +49,8 @@
                 <button class="btn btn-neutral btn-sm btn-outline"
                         hx-include="#file-details"
                         hx-target='tbody[data-hx-swap="filestorage_files_table"]'
-                        hx-delete="{% url 'api:file_storage:delete' %}">Delete</button>
+                        hx-delete="{% url 'api:file_storage:delete' %}">Delete
+                </button>
                 <div class="dropdown">
                     <div tabindex="0"
                          role="button"
@@ -87,12 +88,12 @@
                        hx-indicator='button[data-hx-indicator="refresh"]'
                        hx-get="{% url "api:file_storage:fetch" %}">
                     <thead>
-                        <tr>
-                            <th>Select</th>
-                            <th>Name</th>
-                            <th>Size</th>
-                            <th>Last Modified</th>
-                        </tr>
+                    <tr>
+                        <th>Select</th>
+                        <th>Name</th>
+                        <th>Size</th>
+                        <th>Last Modified</th>
+                    </tr>
                     </thead>
                     <tbody data-hx-swap="filestorage_files_table">
                     </tbody>

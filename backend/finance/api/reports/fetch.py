@@ -2,7 +2,7 @@ from django.db.models import Q
 from django.shortcuts import render
 
 from backend.models import MonthlyReport
-from backend.core.types.requests import WebRequest
+from core.types.requests import WebRequest
 
 
 def fetch_reports_endpoint(request: WebRequest):

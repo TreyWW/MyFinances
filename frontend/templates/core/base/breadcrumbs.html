@@ -1,0 +1,14 @@
+{% if breadcrumb or swap or breadcrumb_first_load %}
+    <div class="breadcrumbs text-sm mb-4 -mt-4"
+         data-layout="breadcrumbs"
+         hx-boost="true"
+         hx-get="{% url 'core:api:base:breadcrumbs refetch' %}"
+         hx-vals='javascript:{"url": window.location.pathname}'
+         hx-trigger="update_breadcrumbs from:body"
+         hx-swap="innerHTML"
+         {% if swap %}hx-swap-oob='outerHTML:div[data-layout="breadcrumbs"]'{% endif %}>
+        {% if breadcrumb %}
+            {% include "core/base/breadcrumbs_ul.html" %}
+        {% endif %}
+    </div>
+{% endif %}

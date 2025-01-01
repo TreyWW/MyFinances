@@ -1,8 +1,8 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
-from backend.decorators import web_require_scopes
-from backend.core.types.htmx import HtmxHttpRequest
+from core.decorators import web_require_scopes
+from core.types.htmx import HtmxHttpRequest
 
 
 @login_required

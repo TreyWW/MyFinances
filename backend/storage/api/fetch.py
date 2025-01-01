@@ -1,12 +1,12 @@
 from django.utils.html import escape
 from django.views.decorators.http import require_GET
 
-from backend.decorators import htmx_only
+from core.decorators import htmx_only
 from backend.models import FileStorageFile
 
 # from backend.core.service.billing.calculate.test import generate_monthly_billing_summary
-from backend.core.service.file_storage.utils import format_file_size
-from backend.core.types.requests import WebRequest
+from backend.storage.service.utils import format_file_size
+from core.types.requests import WebRequest
 
 from django.shortcuts import render
 

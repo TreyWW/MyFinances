@@ -3,7 +3,7 @@ import logging
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 
-from backend.clients.models import Client, DefaultValues
+from backend.models import Client, FinanceDefaultValues
 
 logger = logging.getLogger(__name__)
 
@@ -16,11 +16,11 @@ def create_client_defaults(sender: Type[Client], instance: Client, created, **kw
     logger.info(f"Creating client defaults for client #{instance.id}")
 
     if instance.user:
-        account_defaults, _ = DefaultValues.objects.get_or_create(user=instance.owner, client=None)
+        account_defaults, _ = FinanceDefaultValues.objects.get_or_create(user=instance.owner, client=None)
     else:
-        account_defaults, _ = DefaultValues.objects.get_or_create(organization=instance.owner, client=None)
+        account_defaults, _ = FinanceDefaultValues.objects.get_or_create(organization=instance.owner, client=None)
 
-    defaults = DefaultValues.objects.create(client=instance, owner=instance.owner)  # type: ignore[misc]
+    defaults = FinanceDefaultValues.objects.create(client=instance, owner=instance.owner)  # type: ignore[misc]
 
     defaults.invoice_date_value = account_defaults.invoice_date_value
     defaults.invoice_date_type = account_defaults.invoice_date_type

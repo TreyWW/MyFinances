@@ -6,7 +6,7 @@
             hx-trigger="click once"
             hx-swap="beforeend"
             hx-target="#modal_container"
-            hx-get=" {% url "api:base:modal retrieve with context" modal_name="invoices_to_destination" context_type="edit_invoice_to" context_value=invoice_object.id %}">
+            hx-get=" {% url "core:api:base:modal retrieve" modal_name="edit_invoice_to" %}?invoice_id={{ invoice_object.id }}">
     {% endif %}
     <!-- PRE-POPULATE FIELDS WITH EXISTING DATA OF THE INVOICE-->
     <div class="card-body">

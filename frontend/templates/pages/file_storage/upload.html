@@ -1,4 +1,4 @@
-{% extends base|default:"base/base.html" %}
+{% extends base|default:"core/base/base.html" %}
 {% block content %}
     <div class="card bg-base-100 p-3 mb-2 py-4">
         <div class="flex items-center justify-between">
@@ -10,14 +10,14 @@
     </div>
     <!-- File Upload and Directory Upload Buttons -->
     <div class="flex justify-end space-x-4 my-4">
-        <input type="file" id="singleFileInput" class="hidden" />
+        <input type="file" id="singleFileInput" class="hidden"/>
         <button type="button" id="singleFileButton" class="btn btn-sm btn-outline">Upload File</button>
         <input type="file"
                id="directoryInput"
                class="hidden"
                multiple
                webkitdirectory
-               directory />
+               directory/>
         <button type="button" id="directoryButton" class="btn btn-sm btn-outline">Upload Folder</button>
     </div>
     <div id="dropZone"
@@ -31,12 +31,12 @@
             </h2>
             <table class="table w-full">
                 <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Directory</th>
-                        <th>Size</th>
-                        <th>Action</th>
-                    </tr>
+                <tr>
+                    <th>Name</th>
+                    <th>Directory</th>
+                    <th>Size</th>
+                    <th>Action</th>
+                </tr>
                 </thead>
                 <tbody id="fileList">
                 </tbody>
@@ -47,7 +47,8 @@
         <button type="button"
                 id="submitAllButton"
                 class="btn btn-primary btn-sm"
-                disabled>Submit All</button>
+                disabled>Submit All
+        </button>
     </div>
     <script>const dropZone = document.getElementById('dropZone');
     const fileList = document.getElementById('fileList');

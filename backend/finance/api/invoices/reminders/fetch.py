@@ -4,9 +4,9 @@ from django.shortcuts import render
 from django.views.decorators.http import require_GET
 from django_ratelimit.core import is_ratelimited
 
-from backend.decorators import feature_flag_check, web_require_scopes
+from core.decorators import feature_flag_check, web_require_scopes
 from backend.finance.models import Invoice
-from backend.core.types.htmx import HtmxHttpRequest
+from core.types.htmx import HtmxHttpRequest
 
 
 @require_GET
@@ -16,17 +16,17 @@ def fetch_reminders(request: HtmxHttpRequest, invoice_id: str):
     ratelimit = is_ratelimited(request, group="fetch_reminders", key="user", rate="20/30s", increment=True)
     if ratelimit:
         messages.error(request, "Too many requests")
-        return render(request, "base/toasts.html")
+        return render(request, "core/base/toasts.html")
 
     try:
         invoice = Invoice.objects.prefetch_related("invoice_reminders").get(id=invoice_id)
     except Invoice.DoesNotExist:
         messages.error(request, "Invoice not found")
-        return render(request, "base/toasts.html")
+        return render(request, "core/base/toasts.html")
 
     if not invoice.has_access(request.user):
         messages.error(request, "You do not have permission to view this invoice")
-        return render(request, "base/toasts.html")
+        return render(request, "core/base/toasts.html")
 
     context: dict = {}
 

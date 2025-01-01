@@ -7,7 +7,7 @@ from django.http import HttpRequest, JsonResponse, HttpResponse, HttpResponseBad
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods, require_POST
 
-from backend.decorators import web_require_scopes
+from core.decorators import web_require_scopes
 from backend.models import Receipt
 
 
@@ -23,7 +23,7 @@ def edit_receipt(request, receipt_id):
             raise Receipt.DoesNotExist
     except Receipt.DoesNotExist:
         messages.error(request, "Receipt not found")
-        return render(request, "base/toast.html")
+        return render(request, "core/base/toast.html")
 
     file: InMemoryUploadedFile | None = request.FILES.get("receipt_image")
     date = request.POST.get("receipt_date")

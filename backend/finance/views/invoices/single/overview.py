@@ -1,6 +1,6 @@
 from urllib.parse import urlencode
 
-from backend.decorators import *
+from core.decorators import *
 from backend.models import *
 from backend.finance.views.invoices.handler import invoices_core_handler
 

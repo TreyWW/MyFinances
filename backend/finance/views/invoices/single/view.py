@@ -7,9 +7,9 @@ from django.http import HttpResponse
 
 from login_required import login_not_required
 
-from backend.decorators import web_require_scopes
+from core.decorators import web_require_scopes
 from backend.finance.models import Invoice, InvoiceURL
-from backend.core.types.htmx import HtmxHttpRequest
+from core.types.htmx import HtmxHttpRequest
 
 
 @web_require_scopes("invoices:read", False, False, "dashboard")

@@ -1,0 +1,6 @@
+<p hx-trigger="refresh_notification_count from:body"
+   hx-swap-oob='innerHTML:[data-notifications="count"]'
+   data-notifications="count"
+   hx-target="this"
+   hx-get="{% url 'core:api:base:notifications get count' %}"
+   hx-swap="innerHTML">{{ notif_count | default:request.user.notification_count }}</p>

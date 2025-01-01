@@ -3,8 +3,8 @@ import logging
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 
-from backend.core.service.boto3.scheduler.create_schedule import create_boto_schedule
-from backend.core.service.boto3.scheduler.update_schedule import update_boto_schedule
+from backend.boto3.scheduler.create_schedule import create_boto_schedule
+from backend.boto3.scheduler.update_schedule import update_boto_schedule
 
 from backend.finance.models import InvoiceRecurringProfile
 

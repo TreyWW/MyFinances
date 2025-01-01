@@ -5,7 +5,7 @@
             Administration Settings
             <i class="fa fa-solid fa-user-tie ms-2"></i>
         </div>
-        <form hx-post="{% url "api:admin:api-keys generate" %}"
+        <form hx-post="{% url "core:api:admin:api-keys generate" %}"
               hx-indicator='button[data-indicator="generate_api_key"]'
               hx-swap="none"
               method="post"

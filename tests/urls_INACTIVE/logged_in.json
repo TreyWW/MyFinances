@@ -17,10 +17,10 @@
   "login forgot_password": [
     302
   ],
-  "settings:dashboard": [
+  "core:settings:dashboard": [
     200
   ],
-  "settings:change_password change_password": [
+  "core:settings:change_password change_password": [
     200
   ],
   "finance:invoices:single:dashboard": [
