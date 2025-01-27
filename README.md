@@ -17,13 +17,13 @@
 - **Emailing**: Email invoices and payment reminders directly from the platform.
 
 ### Table of Contents
-- [Getting Started] (#Getting-started)
-- [Contribution] (#Contribution)
-- Pull Requests / Merge Request] (#Pull-Requests/Merge-Requests)
-- [Code Style and Qualityl (#Code-Style-and-Quality)
-- [Development] (#Development)
-- [Credits] (#Credits)
-- [Star History] (#Star-History)
+- [Getting Started](#Getting-started)
+- [Contribution](#Contribution)
+- Pull Requests / Merge Request](#Pull-Requests/Merge-Requests)
+- [Code Style and Quality](#Code-Style-and-Quality)
+- [Development](#Development)
+- [Credits](#Credits)
+- [Star History](#Star-History)
 
 ## Getting Started
 
