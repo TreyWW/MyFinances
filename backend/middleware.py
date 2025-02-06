@@ -40,6 +40,10 @@ class HTMXPartialLoadMiddleware:
             response.headers["HX-Reswap"] = "innerHTML"
             # if 'data-layout="breadcrumbs"' not in str(response.content):
             response.headers["HX-Trigger"] = "update_breadcrumbs"
+
+        # fix issue with browser not rendering CSS when you use the back function issue #468
+        if "HX-Request" in request.headers:
+            response["Cache-Control"] = "no-store, max-age=0"
         return response
 
 
