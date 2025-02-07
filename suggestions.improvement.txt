@@ -1,0 +1,27 @@
+07-02-2025
+
+In the Installation manual, While I was Installing the project using pycharm on
+Windows 10, and using the terminal, following the instructions, I typed in
+1.   Create a virtual environment and activate it
+
+python -m venv ./venv/ -->  that worked
+
+I then followed instructions and typed in
+./venv/Scripts/activate
+
+I struggled for a while but when I accidentally used the \ rather than a /  and walla,
+everything worked fine in that I installed the directories and files as expected.
+
+It may be an idea to update the installation manual -> 07-02-2025
+Also the installation manual does not have a date on it
+Suggestions:
+==============
+2.  A requirements.txt doc for simplicity
+3.  Platform/Operating system  not listed anywhere
+4.  main.py???   -->  what and where  is the entry point of the program
+5.  External libraries - I seem to have found the requirements.txt - Please update me
+6.  I have spotted some dll's and no date on this project.  How long has this project
+been around and would you like some help refactoring and make project more accessible?
+
+I still don't know how to start up project.  And I have been through every single folder in project, read
+README.md, security.md, pyproject.toml ???.
