@@ -62,10 +62,9 @@ def email_footer() -> str:
         "\n\n"
         + dedent(
             """
-        Note: This is an automated email sent by MyFinances on behalf of '$company_name'.
+    Note: This is an automated email sent by Strelix MyFinances on behalf of '$company_name'.
 
-        If you believe this email is spam or fraudulent, please do not pay the invoice and report it to us immediately at report@myfinances.cloud.
-        Once reported, we will open a case for investigation. In some cases, eligible reports may qualify for a reward, determined on a case-by-case basis.
-        """
+    If you believe this email is spam or fraudulent, please do not pay the invoice and report it to us at abuse@strelix.org.
+    """
         ).strip()
     )
