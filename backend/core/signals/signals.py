@@ -76,7 +76,7 @@ def send_welcome_email(sender, instance: User, created, **kwargs):
 
             We're happy to have you join us. We are still in development and working on the core features.
 
-            In app we have a live chat, so please drop us a message or email support@myfinances.cloud if you have any queries.
+            In app we have a live chat, so please drop us a message or email support@strelix.org if you have any queries.
 
             Thank you for using MyFinances!
         """
