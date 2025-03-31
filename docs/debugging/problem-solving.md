@@ -7,7 +7,7 @@ To fix this:
 pip install django-login-required-middleware
 ```
 
-2. To fix several **boto3** "extension name here" **not found errors** 
+2. To fix several **boto3** "extension name here" **not found errors**
 
 Do the following:
 ```shell

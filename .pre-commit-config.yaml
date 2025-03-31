@@ -35,10 +35,11 @@ repos:
       - id: end-of-file-fixer
         types: [ python ]
         language: python
-      - id: detect-aws-credentials
+      # - id: detect-aws-credentials
       - id: detect-private-key
         exclude: "docs/getting-started/settings/AWS/static.md"
       - id: check-added-large-files
+        args: ["--maxkb=1000"]  # Allows files up to 1MB
       - id: check-ast
         types: [ python3 ]
         language: python

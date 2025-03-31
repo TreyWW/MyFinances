@@ -3,7 +3,7 @@ on:
   push:
     tags:
       - 'v*'
-  workflow_dispatch: 
+  workflow_dispatch:
     inputs:
       version:
         type: string
@@ -73,7 +73,7 @@ jobs:
         run: |
           cp infrastructure/backend/Dockerfile ./Dockerfile
           echo "VERSION IS: ${{ steps.set_version.outputs.version }} or $IMAGE_TAG"
-          
+
           # Use buildx to build for multiple platforms (arm64 and amd64)
           docker buildx build --platform linux/amd64,linux/arm64 \
             -t $IMAGE_NAME:$IMAGE_TAG . \
