@@ -3,6 +3,7 @@ from __future__ import annotations
 from django.contrib import messages
 from django.http import HttpResponseBadRequest
 from django.shortcuts import render
+from django.db.models import Q
 
 from backend.core.api.public import APIAuthToken
 from backend.core.api.public.permissions import SCOPE_DESCRIPTIONS
@@ -52,7 +53,7 @@ def open_modal(request: WebRequest, modal_name, context_type=None, context_value
             elif context_type == "edit_invoice_to":
                 invoice = context_value
                 try:
-                    invoice = Invoice.filter_by_owner(request.actor).get(id=invoice)
+                    invoice = Invoice.filter_by_owner(request.actor).get(Q(id=invoice) | Q(public_id=invoice))
                 except Invoice.DoesNotExist:
                     return render(request, template_name, context)
 
@@ -75,7 +76,7 @@ def open_modal(request: WebRequest, modal_name, context_type=None, context_value
             elif context_type == "edit_invoice_from":
                 invoice = context_value
                 try:
-                    invoice = Invoice.filter_by_owner(request.actor).get(id=invoice)
+                    invoice = Invoice.filter_by_owner(request.actor).get(Q(id=invoice) | Q(public_id=invoice))
                 except Invoice.DoesNotExist:
                     return render(request, template_name, context)
 
@@ -96,7 +97,7 @@ def open_modal(request: WebRequest, modal_name, context_type=None, context_value
                 context["from_country"] = getattr(defaults, f"invoice_from_country")
             elif context_type == "invoice":
                 try:
-                    invoice = Invoice.objects.get(id=context_value)
+                    invoice = Invoice.objects.get(Q(id=context_value) | Q(public_id=context_value))
                     if invoice.has_access(request.user):
                         context["invoice"] = invoice
                 except Invoice.DoesNotExist:
@@ -114,7 +115,9 @@ def open_modal(request: WebRequest, modal_name, context_type=None, context_value
             elif context_type == "invoice_reminder":
                 try:
                     invoice = (
-                        Invoice.objects.only("id", "client_email", "client_to__email").select_related("client_to").get(id=context_value)
+                        Invoice.objects.only("id", "client_email", "client_to__email") \
+                        .select_related("client_to") \
+                        .get(Q(id=context_value) | Q(public_id=context_value))
                     )
                 except Invoice.DoesNotExist:
                     return render(request, template_name, context)

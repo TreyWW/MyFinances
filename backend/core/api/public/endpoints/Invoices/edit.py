@@ -1,5 +1,6 @@
 from datetime import datetime
 from typing import Literal
+from django.db.models import Q
 
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -14,11 +15,15 @@ from backend.finance.models import Invoice
 @require_scopes(["invoices:write"])
 def edit_invoice_endpoint(request: APIRequest):
     invoice_id = request.data.get("invoice_id", "")
+
     if not invoice_id:
         return APIResponse(False, {"error": "Invoice ID is required"}, status=status.HTTP_400_BAD_REQUEST)
 
     try:
-        invoice = Invoice.objects.get(id=invoice_id)
+        invoice = Invoice.objects.filter(
+                     Q(id=invoice_id) | Q(public_id=invoice_id)
+                    ).first()
+        
     except Invoice.DoesNotExist:
         return APIResponse(False, {"error": "Invoice Not Found"}, status=status.HTTP_404_NOT_FOUND)
 
@@ -78,7 +83,7 @@ def change_status_endpoint(request, invoice_id: int, invoice_status: str):
     new_status = invoice_status.lower() if invoice_status else ""
 
     try:
-        invoice = Invoice.objects.get(id=invoice_id)
+        invoice = Invoice.objects.filter(Q(id=invoice_id) | Q(public_id=invoice_id)).first()
     except Invoice.DoesNotExist:
         return APIResponse(False, {"error": "Invoice Not Found"}, status=status.HTTP_404_NOT_FOUND)
 
@@ -101,7 +106,7 @@ def edit_discount_endpoint(request, invoice_id: str):
     percentage_amount_str: str = request.data.get("percentage_amount", "")
 
     try:
-        invoice: Invoice = Invoice.objects.get(id=invoice_id)
+        invoice: Invoice = Invoice.objects.filter(Q(id=invoice_id) | Q(public_id=invoice_id)).first()
     except Invoice.DoesNotExist:
         return APIResponse(False, {"error": "Invoice not found"}, status=status.HTTP_404_NOT_FOUND)
 

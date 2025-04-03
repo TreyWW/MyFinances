@@ -123,4 +123,4 @@ def create_invoice_endpoint(request: APIRequest) -> Response:
     else:
         invoice = serializer.save(user=request.user)
 
-    return APIResponse(True, {"invoice_id": invoice.id}, status=status.HTTP_201_CREATED)
+    return APIResponse(True, {"invoice_id": invoice.public_id if invoice.public_id else invoice.id}, status=status.HTTP_201_CREATED)

@@ -23,7 +23,9 @@ def invoices_dashboard_id(request: WebRequest, invoice_id):
         return redirect("finance:invoices:single:dashboard")
 
     try:
-        Invoice.objects.get(id=invoice_id)
+        Invoice.objects.filter(
+                     Q(id=invoice_id) | Q(public_id=invoice_id)
+                    ).first()
     except Invoice.DoesNotExist:
         return redirect("finance:invoices:single:dashboard")
     return render(request, "pages/invoices/single/dashboard/dashboard.html")

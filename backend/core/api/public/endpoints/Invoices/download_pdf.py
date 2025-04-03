@@ -6,6 +6,7 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from django.db.models import Q
 
 from backend.core.api.public.decorators import require_scopes
 from backend.core.api.public.helpers.deprecate import deprecated
@@ -65,9 +66,9 @@ from backend.core.api.public.helpers.response import APIResponse
 def download(request: APIRequest, id: str) -> HttpResponse | Response:
     try:
         if request.team:
-            invoice = Invoice.objects.get(organization=request.team, id=id)
+            invoice = Invoice.objects.filter(organization=request.team).filter(Q(id=id) | Q(public_id=id))
         else:
-            invoice = Invoice.objects.get(user=request.user, id=id)
+            invoice = Invoice.objects.filter(user=request.user).filter(Q(id=id) | Q(public_id=id))
     except Invoice.DoesNotExist:
         return APIResponse(False, {"message": "Invoice not found"}, status=status.HTTP_400_BAD_REQUEST)
 

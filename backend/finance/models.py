@@ -76,6 +76,7 @@ class InvoiceItem(models.Model):
 
 
 class InvoiceBase(OwnerBase):
+    public_id = models.CharField(max_length=100, blank=True, null=True)
     client_to = models.ForeignKey(Client, on_delete=models.SET_NULL, blank=True, null=True)
 
     client_name = models.CharField(max_length=100, blank=True, null=True)

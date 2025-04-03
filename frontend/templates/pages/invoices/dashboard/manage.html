@@ -6,7 +6,7 @@
             <div>
                 <a class="text-3xl text-neutral-800 dark:text-white break-words hover:link hover:link-secondary"
                    href="{% url 'finance:invoices:single:preview' invoice_id=invoice.id %}">
-                    Invoice #{{ invoice.id }}
+                    Invoice #{{ invoice.public_id|default:invoice.id }}
                     {% if invoice.reference %}({{ invoice.reference }}){% endif %}
                 </a>
                 <div class="mt-[2px]">

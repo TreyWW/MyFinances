@@ -1,4 +1,5 @@
 from rest_framework import serializers
+import uuid
 
 from backend.finance.models import InvoiceItem, Invoice
 
@@ -21,7 +22,9 @@ class InvoiceSerializer(serializers.ModelSerializer):
         # fields = "__all__"
 
     def create(self, validated_data):
+        validated_data['public_id'] = 'INV' + str(uuid.uuid4()).replace('-', '')
         items_data = validated_data.pop("items", [])
+
         invoice = Invoice.objects.create(**validated_data)
 
         for item_data in items_data:

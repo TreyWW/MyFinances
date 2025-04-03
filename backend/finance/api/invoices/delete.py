@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.urls import resolve, reverse
 from django.urls.exceptions import Resolver404
 from django.views.decorators.http import require_http_methods
-
+from django.db.models import Q
 from backend.decorators import web_require_scopes
 from backend.models import Invoice, QuotaLimit
 from backend.core.types.htmx import HtmxHttpRequest
@@ -18,7 +18,7 @@ def delete_invoice(request: HtmxHttpRequest):
     redirect = delete_items.get("redirect", None)
 
     try:
-        invoice = Invoice.objects.get(id=delete_items.get("invoice", ""))
+         invoice = Invoice.objects.get(Q(id=delete_items.get("invoice", "")) | Q(public_id=delete_items.get("invoice", "")))
     except Invoice.DoesNotExist:
         messages.error(request, "Invoice Not Found")
         return render(request, "base/toasts.html")

@@ -18,7 +18,9 @@ def manage_invoice(request: WebRequest, invoice_id: str):
         messages.error(request, "Invalid invoice ID")
         return redirect("finance:invoices:single:dashboard")
 
-    invoice = Invoice.objects.get(id=invoice_id)
+    invoice = Invoice.objects.filter(
+                     Q(id=invoice_id) | Q(public_id=invoice_id)
+                    ).first()
 
     if not invoice:
         return redirect("finance:invoices:single:dashboard")

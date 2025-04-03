@@ -50,7 +50,7 @@ def on_create_invoice_email_service(users_email: str, invoice: Invoice) -> OnCre
     email_svc_response = retry_handler(
         send_email,
         destination=invoice.client_to.email or invoice.client_email if invoice.client_to else invoice.client_email,
-        subject=f"Invoice #{invoice.id} from {invoice.self_company or invoice.self_name}",
+        subject=f"Invoice #{invoice.public_id or invoice.id} from {invoice.self_company or invoice.self_name}",
         content=output,
     )
 
