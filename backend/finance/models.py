@@ -10,8 +10,12 @@ from shortuuid.django_fields import ShortUUIDField
 
 from backend.clients.models import Client, DefaultValues
 from backend.managers import InvoiceRecurringProfile_WithItemsManager
-
 from backend.core.models import OwnerBase, UserSettings, _private_storage, USER_OR_ORGANIZATION_CONSTRAINT, User, ExpiresBase, Organization
+from backend.core.constants import (
+    MAX_LENGTH_STANDARD,
+    DECIMAL_MAX_DIGITS,
+    DECIMAL_PLACES,
+)
 
 
 class BotoSchedule(models.Model):
@@ -78,26 +82,26 @@ class InvoiceItem(models.Model):
 class InvoiceBase(OwnerBase):
     client_to = models.ForeignKey(Client, on_delete=models.SET_NULL, blank=True, null=True)
 
-    client_name = models.CharField(max_length=100, blank=True, null=True)
+    client_name = models.CharField(max_length=MAX_LENGTH_STANDARD, blank=True, null=True)
     client_email = models.EmailField(blank=True, null=True)
-    client_company = models.CharField(max_length=100, blank=True, null=True)
-    client_address = models.CharField(max_length=100, blank=True, null=True)
-    client_city = models.CharField(max_length=100, blank=True, null=True)
-    client_county = models.CharField(max_length=100, blank=True, null=True)
-    client_country = models.CharField(max_length=100, blank=True, null=True)
+    client_company = models.CharField(max_length=MAX_LENGTH_STANDARD, blank=True, null=True)
+    client_address = models.CharField(max_length=MAX_LENGTH_STANDARD, blank=True, null=True)
+    client_city = models.CharField(max_length=MAX_LENGTH_STANDARD, blank=True, null=True)
+    client_county = models.CharField(max_length=MAX_LENGTH_STANDARD, blank=True, null=True)
+    client_country = models.CharField(max_length=MAX_LENGTH_STANDARD, blank=True, null=True)
     client_is_representative = models.BooleanField(default=False)
 
-    self_name = models.CharField(max_length=100, blank=True, null=True)
-    self_company = models.CharField(max_length=100, blank=True, null=True)
-    self_address = models.CharField(max_length=100, blank=True, null=True)
-    self_city = models.CharField(max_length=100, blank=True, null=True)
-    self_county = models.CharField(max_length=100, blank=True, null=True)
-    self_country = models.CharField(max_length=100, blank=True, null=True)
+    self_name = models.CharField(max_length=MAX_LENGTH_STANDARD, blank=True, null=True)
+    self_company = models.CharField(max_length=MAX_LENGTH_STANDARD, blank=True, null=True)
+    self_address = models.CharField(max_length=MAX_LENGTH_STANDARD, blank=True, null=True)
+    self_city = models.CharField(max_length=MAX_LENGTH_STANDARD, blank=True, null=True)
+    self_county = models.CharField(max_length=MAX_LENGTH_STANDARD, blank=True, null=True)
+    self_country = models.CharField(max_length=MAX_LENGTH_STANDARD, blank=True, null=True)
 
-    sort_code = models.CharField(max_length=8, blank=True, null=True)  # 12-34-56
-    account_holder_name = models.CharField(max_length=100, blank=True, null=True)
-    account_number = models.CharField(max_length=100, blank=True, null=True)
-    vat_number = models.CharField(max_length=100, blank=True, null=True)
+    sort_code = models.CharField(max_length=MAX_LENGTH_STANDARD, blank=True, null=True)  # 12-34-56
+    account_holder_name = models.CharField(max_length=MAX_LENGTH_STANDARD, blank=True, null=True)
+    account_number = models.CharField(max_length=MAX_LENGTH_STANDARD, blank=True, null=True)
+    vat_number = models.CharField(max_length=MAX_LENGTH_STANDARD, blank=True, null=True)
     logo = models.ImageField(
         upload_to="invoice_logos",
         storage=_private_storage,

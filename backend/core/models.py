@@ -3,7 +3,7 @@ from __future__ import annotations
 import itertools
 import typing
 from datetime import datetime, timedelta
-from typing import Literal, Union
+from typing import Literal, Union, Optional
 from uuid import uuid4
 
 from django.contrib.auth.hashers import make_password
@@ -508,15 +508,18 @@ class QuotaLimit(models.Model):
         except QuotaOverrides.DoesNotExist:
             return self.value
 
-    def get_period_usage(self, user: User):
-        if self.limit_type == "forever":
-            return self.quota_usage.filter(user=user, quota_limit=self).count()
-        elif self.limit_type == "per_month":
-            return self.quota_usage.filter(user=user, quota_limit=self, created_at__month=datetime.now().month).count()
-        elif self.limit_type == "per_day":
-            return self.quota_usage.filter(user=user, quota_limit=self, created_at__day=datetime.now().day).count()
-        else:
-            return "Not available"
+    def get_period_usage(self, user: User) -> Optional[int]:
+        base_query = self.quota_usage.filter(user=user, quota_limit=self)
+
+        period_filters = {
+            "forever": {},
+            "per_month": {"created_at__month": timezone.now().month},
+            "per_day": {"created_at__day": timezone.now().day},
+        }
+
+        if filters := period_filters.get(self.limit_type):
+            return base_query.filter(**filters).count()
+        return "Not available"
 
     def strict_goes_above_limit(self, user: User, extra: str | int | None = None, add: int = 0) -> bool:
         current: Union[int, None, QuerySet[QuotaUsage], Literal["Not Available"]]
