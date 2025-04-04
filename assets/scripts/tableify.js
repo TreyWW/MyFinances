@@ -1,9 +1,9 @@
 window.Tableify = class Tableify {
   constructor(selector) {
-    window.addEventListener("pageshow", this.handlePageShow.bind(this));
+    window.addEventListener("pageshow", this.handlePageShow.bind(this, selector));
   }
 
-  handlePageShow(event) {
+  handlePageShow(event, selector) {
     // If page is loaded from cache, return. To avoid multiple initialization
     if (event.persisted) {
       return;
