@@ -1,5 +1,13 @@
 window.Tableify = class Tableify {
   constructor(selector) {
+    window.addEventListener("pageshow", this.handlePageShow.bind(this));
+  }
+
+  handlePageShow(event) {
+    // If page is loaded from cache, return. To avoid multiple initialization
+    if (event.persisted) {
+      return;
+    }
     this.table = $(selector);
     this.filters = {};
     this.currentSort = null;
