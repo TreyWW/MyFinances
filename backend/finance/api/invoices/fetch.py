@@ -31,12 +31,11 @@ def fetch_all_invoices(request: HtmxHttpRequest):
         query &= Q(discount_amount__icontains=amount)
     if status:
         query &= Q(status=status)
-    # If the time range filtering function is enabled, use this function to perform a time range search
-    # if due_date:
-    #     date_range = due_date.split(',')
-    #     date_start = datetime.strptime(date_range[0], "%d/%m/%Y")
-    #     date_end = datetime.strptime(date_range[1], "%d/%m/%Y")
-    #     query &= Q(date_due__range=[date_start, date_end])
+    if due_date:
+        date_range = due_date.split(',')
+        date_start = datetime.strptime(date_range[0], "%d/%m/%Y")
+        date_end = datetime.strptime(date_range[1], "%d/%m/%Y")
+        query &= Q(date_due__range=[date_start, date_end])
 
     if request.user.logged_in_as_team:
         invoices = Invoice.objects.filter(organization=request.user.logged_in_as_team).filter(query)

@@ -74,7 +74,7 @@ window.Tableify = class Tableify {
   // Refresh data by triggering a GET request with the current filters
   refreshData() {
     const params = this.getFilterParams();
-    const url = "/api/invoices/single/fetch";
+    const url = "/api/invoices/single/fetch/";
     const queryString = new URLSearchParams(params).toString();
     const fullUrl = `${url}?${queryString}` ;
 
