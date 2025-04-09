@@ -4,6 +4,7 @@ from backend.decorators import *
 from backend.models import *
 from backend.finance.views.invoices.handler import invoices_core_handler
 
+from django.db.models import Q
 
 @web_require_scopes("invoices:read", False, False, "dashboard")
 def invoices_dashboard(request: WebRequest):
