@@ -1,3 +1,4 @@
+import uuid
 from django.contrib import messages
 
 from backend.models import Invoice, InvoiceRecurringProfile, InvoiceItem, Client, QuotaUsage, DefaultValues
@@ -61,7 +62,7 @@ def save_invoice_common(request: WebRequest, invoice_items, invoice: Invoice | I
     invoice.sort_code = request.POST.get("sort_code")
     invoice.account_number = request.POST.get("account_number")
     invoice.account_holder_name = request.POST.get("account_holder_name")
-
+    invoice.public_id = "INV" + str(uuid.uuid4()).replace("-", "")
     invoice.save()
     invoice.items.set(invoice_items)
 
