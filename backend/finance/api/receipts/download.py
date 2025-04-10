@@ -1,7 +1,7 @@
 from django.http import FileResponse, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
-from django.db.models import Q 
+from django.db.models import Q
 from backend.decorators import web_require_scopes
 from backend.models import Receipt, ReceiptDownloadToken
 
