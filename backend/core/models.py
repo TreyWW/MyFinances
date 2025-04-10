@@ -3,7 +3,7 @@ from __future__ import annotations
 import itertools
 import typing
 from datetime import datetime, timedelta
-from typing import Literal, Union, Optional
+from typing import Literal, Union
 from uuid import uuid4
 
 from django.contrib.auth.hashers import make_password
@@ -506,7 +506,7 @@ class QuotaLimit(models.Model):
         except QuotaOverrides.DoesNotExist:
             return self.value
 
-    def get_period_usage(self, user: User) -> Optional[int]:
+    def get_period_usage(self, user: User):
         base_query = self.quota_usage.filter(user=user, quota_limit=self)
 
         period_filters = {
