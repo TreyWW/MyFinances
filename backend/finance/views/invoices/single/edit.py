@@ -65,9 +65,7 @@ def invoice_get_existing_data(invoice_obj):
 # gets invoice object from invoice id, convert obj to dict, and renders edit.html while passing the stored invoice values to frontend
 def invoice_edit_page_get(request, invoice_id):
     try:
-        invoice = Invoice.objects.filter(
-                     Q(id=invoice_id) | Q(public_id=invoice_id)
-                    ).first()
+        invoice = Invoice.objects.filter(Q(id=invoice_id) | Q(public_id=invoice_id)).first()
 
         if not invoice.has_access(request.user):
             messages.error(request, "You are not permitted to edit this invoice")
@@ -85,9 +83,7 @@ def invoice_edit_page_get(request, invoice_id):
 @require_http_methods(["POST"])
 def edit_invoice(request: WebRequest, invoice_id):
     try:
-        invoice = Invoice.objects.filter(
-                     Q(id=invoice_id) | Q(public_id=invoice_id)
-                    ).first()
+        invoice = Invoice.objects.filter(Q(id=invoice_id) | Q(public_id=invoice_id)).first()
     except Invoice.DoesNotExist:
         return JsonResponse({"message": "Invoice not found"}, status=404)
 

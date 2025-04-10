@@ -22,7 +22,7 @@ class InvoiceSerializer(serializers.ModelSerializer):
         # fields = "__all__"
 
     def create(self, validated_data):
-        validated_data['public_id'] = 'INV' + str(uuid.uuid4()).replace('-', '')
+        validated_data["public_id"] = "INV" + str(uuid.uuid4()).replace("-", "")
         items_data = validated_data.pop("items", [])
 
         invoice = Invoice.objects.create(**validated_data)

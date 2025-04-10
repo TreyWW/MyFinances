@@ -6,6 +6,7 @@ from backend.finance.views.invoices.handler import invoices_core_handler
 
 from django.db.models import Q
 
+
 @web_require_scopes("invoices:read", False, False, "dashboard")
 def invoices_dashboard(request: WebRequest):
     return render(request, "pages/invoices/single/dashboard/dashboard.html")
@@ -19,9 +20,7 @@ def manage_invoice(request: WebRequest, invoice_id: str):
         messages.error(request, "Invalid invoice ID")
         return redirect("finance:invoices:single:dashboard")
 
-    invoice = Invoice.objects.filter(
-                     Q(id=invoice_id) | Q(public_id=invoice_id)
-                    ).first()
+    invoice = Invoice.objects.filter(Q(id=invoice_id) | Q(public_id=invoice_id)).first()
 
     if not invoice:
         return redirect("finance:invoices:single:dashboard")

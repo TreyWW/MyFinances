@@ -115,8 +115,8 @@ def open_modal(request: WebRequest, modal_name, context_type=None, context_value
             elif context_type == "invoice_reminder":
                 try:
                     invoice = (
-                        Invoice.objects.only("id", "client_email", "client_to__email") \
-                        .select_related("client_to") \
+                        Invoice.objects.only("id", "client_email", "client_to__email")
+                        .select_related("client_to")
                         .get(Q(id=context_value) | Q(public_id=context_value))
                     )
                 except Invoice.DoesNotExist:

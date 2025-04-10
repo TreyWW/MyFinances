@@ -18,7 +18,7 @@ def delete_invoice(request: HtmxHttpRequest):
     redirect = delete_items.get("redirect", None)
 
     try:
-         invoice = Invoice.objects.get(Q(id=delete_items.get("invoice", "")) | Q(public_id=delete_items.get("invoice", "")))
+        invoice = Invoice.objects.get(Q(id=delete_items.get("invoice", "")) | Q(public_id=delete_items.get("invoice", "")))
     except Invoice.DoesNotExist:
         messages.error(request, "Invoice Not Found")
         return render(request, "base/toasts.html")

@@ -20,10 +20,8 @@ def edit_invoice_endpoint(request: APIRequest):
         return APIResponse(False, {"error": "Invoice ID is required"}, status=status.HTTP_400_BAD_REQUEST)
 
     try:
-        invoice = Invoice.objects.filter(
-                     Q(id=invoice_id) | Q(public_id=invoice_id)
-                    ).first()
-        
+        invoice = Invoice.objects.filter(Q(id=invoice_id) | Q(public_id=invoice_id)).first()
+
     except Invoice.DoesNotExist:
         return APIResponse(False, {"error": "Invoice Not Found"}, status=status.HTTP_404_NOT_FOUND)
 

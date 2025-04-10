@@ -15,11 +15,9 @@ from backend.core.types.htmx import HtmxHttpRequest
 @require_http_methods(["POST"])
 @web_require_scopes("invoices:write", True, True)
 def edit_invoice(request: HtmxHttpRequest):
-    invoice_id = request.data.get("invoice_id", "")
+    invoice_id = request.POST.get("invoice_id", "")
     try:
-        invoice = Invoice.objects.filter(
-                     Q(id=invoice_id) | Q(public_id=invoice_id)
-                    ).first()
+        invoice = Invoice.objects.filter(Q(id=invoice_id) | Q(public_id=invoice_id)).first()
     except Invoice.DoesNotExist:
         return JsonResponse({"message": "Invoice not found"}, status=404)
 
@@ -86,9 +84,7 @@ def change_status(request: HtmxHttpRequest, invoice_id: int, status: str) -> Htt
         return redirect("finance:invoices:single:dashboard")
 
     try:
-        invoice = Invoice.objects.filter(
-                     Q(id=invoice_id) | Q(public_id=invoice_id)
-                    ).first()
+        invoice = Invoice.objects.filter(Q(id=invoice_id) | Q(public_id=invoice_id)).first()
     except Invoice.DoesNotExist:
         return return_message(request, "Invoice not found")
 
@@ -119,9 +115,7 @@ def edit_discount(request: HtmxHttpRequest, invoice_id: str):
         return redirect("finance:invoices:single:dashboard")
 
     try:
-       invoice = Invoice.objects.filter(
-                     Q(id=invoice_id) | Q(public_id=invoice_id)
-                    ).first()
+        invoice = Invoice.objects.filter(Q(id=invoice_id) | Q(public_id=invoice_id)).first()
     except Invoice.DoesNotExist:
         return return_message(request, "Invoice not found", False)
 
