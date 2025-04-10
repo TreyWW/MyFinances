@@ -7,6 +7,7 @@
                 hx-indicator=""
                 hx-include="#filter_list_storage">
                 <th>ID</th>
+                <th>Public ID</th>
                 <th>Date</th>
                 <th>Name</th>
                 <th>Merchant/Store</th>
@@ -52,6 +53,10 @@
                     <td>
                         <button onclick="modal_receipt_{{ row.id }}.showModal();"
                                 class="link link-primary">{{ row.id }}</button>
+                    </td>
+                    <td>
+                        <button onclick="modal_receipt_{{ row.id }}.showModal();"
+                                class="link link-primary">{{ row.public_id }}</button>
                     </td>
                     <td>{{ row.date }}</td>
                     <td>{{ row.name }}</td>
