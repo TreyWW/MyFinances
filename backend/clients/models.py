@@ -8,12 +8,7 @@ from backend.core.data.default_email_templates import (
     recurring_invoices_invoice_cancelled_default_email_template,
 )
 from backend.core.models import OwnerBase, User, UserSettings, _private_storage
-from backend.core.constants import (
-    MAX_LENGTH_STANDARD,
-    MAX_LENGTH_NAME,
-    MAX_LENGTH_CHOICE_FIELD,
-    MAX_LENGTH_CURRENCY,
-)
+from backend.core.constants import MAX_LENGTH_STANDARD, MAX_LENGTH_NAME
 
 
 class Client(OwnerBase):
@@ -56,20 +51,16 @@ class DefaultValues(OwnerBase):
     client = models.OneToOneField(Client, on_delete=models.CASCADE, related_name="default_values", null=True, blank=True)
 
     currency = models.CharField(
-        max_length=MAX_LENGTH_CURRENCY,
+        max_length=3,
         default="GBP",
         choices=[(code, info["name"]) for code, info in UserSettings.CURRENCIES.items()],
     )
 
     invoice_due_date_value = models.PositiveSmallIntegerField(default=7, null=False, blank=False)
-    invoice_due_date_type = models.CharField(
-        max_length=MAX_LENGTH_CHOICE_FIELD, choices=InvoiceDueDateType.choices, default=InvoiceDueDateType.days_after
-    )
+    invoice_due_date_type = models.CharField(max_length=20, choices=InvoiceDueDateType.choices, default=InvoiceDueDateType.days_after)
 
     invoice_date_value = models.PositiveSmallIntegerField(default=15, null=False, blank=False)
-    invoice_date_type = models.CharField(
-        max_length=MAX_LENGTH_CHOICE_FIELD, choices=InvoiceDateType.choices, default=InvoiceDateType.day_of_month
-    )
+    invoice_date_type = models.CharField(max_length=20, choices=InvoiceDateType.choices, default=InvoiceDateType.day_of_month)
 
     # Invoice sender information
     invoice_from_name = models.CharField(max_length=MAX_LENGTH_STANDARD, null=True, blank=True)

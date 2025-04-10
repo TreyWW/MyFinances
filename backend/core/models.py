@@ -16,11 +16,11 @@ from django.utils.crypto import get_random_string
 from storages.backends.s3 import S3Storage
 
 
-def _public_storage():
+def get_public_storage():
     return storages["public_media"]
 
 
-def _private_storage() -> FileSystemStorage | S3Storage:
+def get_private_storage() -> FileSystemStorage | S3Storage:
     return storages["private_media"]
 
 
@@ -32,10 +32,8 @@ def generate_api_key(length=89):
     return get_random_string(length=length).lower()
 
 
-def upload_to_user_separate_folder(instance, filename, optional_actor=None) -> str:
+def get_file_upload_path(instance, filename: str, optional_actor=None) -> str:
     instance_name = instance._meta.verbose_name.replace(" ", "-")
-
-    print(instance, filename)
 
     if optional_actor:
         if isinstance(optional_actor, User):
@@ -81,7 +79,7 @@ class User(AbstractUser):
     require_change_password = models.BooleanField(default=False)  # does user need to change password upon next login
 
     class Role(models.TextChoices):
-        #        NAME     DJANGO ADMIN NAME
+        # NAME DJANGO ADMIN NAME
         DEV = "DEV", "Developer"
         STAFF = "STAFF", "Staff"
         USER = "USER", "User"
@@ -216,7 +214,7 @@ class UserSettings(models.Model):
     )
     profile_picture = models.ImageField(
         upload_to="profile_pictures/",
-        storage=_public_storage,
+        storage=get_public_storage,
         blank=True,
         null=True,
     )
@@ -294,7 +292,7 @@ class TeamInvitation(ExpiresBase):
 
     def save(self, *args, **kwargs):
         if not self.code:
-            self.code = RandomCode(10)
+            self.code = generate_verification_code(10)
             self.set_expires()
         super().save()
 
@@ -700,7 +698,7 @@ class EmailSendStatus(OwnerBase):
 
 
 class FileStorageFile(OwnerBase):
-    file = models.FileField(upload_to=upload_to_user_separate_folder, storage=_private_storage)
+    file = models.FileField(upload_to=get_file_upload_path, storage=get_private_storage)
     file_uri_path = models.CharField(max_length=500)  # relative path not including user folder/media
     last_edited_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, editable=False, related_name="files_edited")
     created_at = models.DateTimeField(auto_now_add=True)

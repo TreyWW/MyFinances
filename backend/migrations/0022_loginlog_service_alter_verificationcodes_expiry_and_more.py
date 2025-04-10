@@ -25,6 +25,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="verificationcodes",
             name="token",
-            field=models.TextField(default=backend.core.models.RandomCode, editable=False),
+            field=models.TextField(default=backend.core.models.generate_verification_code, editable=False),
         ),
     ]
