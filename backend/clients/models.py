@@ -7,7 +7,7 @@ from backend.core.data.default_email_templates import (
     recurring_invoices_invoice_overdue_default_email_template,
     recurring_invoices_invoice_cancelled_default_email_template,
 )
-from backend.core.models import OwnerBase, User, UserSettings, _private_storage
+from backend.core.models import OwnerBase, User, UserSettings, get_private_storage
 from backend.core.constants import MAX_LENGTH_STANDARD, MAX_LENGTH_NAME
 
 
@@ -104,7 +104,7 @@ class DefaultValues(OwnerBase):
 
     default_invoice_logo = models.ImageField(
         upload_to="invoice_logos/",
-        storage=_private_storage,
+        storage=get_private_storage,
         blank=True,
         null=True,
     )

@@ -10,7 +10,15 @@ from shortuuid.django_fields import ShortUUIDField
 
 from backend.clients.models import Client, DefaultValues
 from backend.managers import InvoiceRecurringProfile_WithItemsManager
-from backend.core.models import OwnerBase, UserSettings, _private_storage, USER_OR_ORGANIZATION_CONSTRAINT, User, ExpiresBase, Organization
+from backend.core.models import (
+    OwnerBase,
+    UserSettings,
+    get_private_storage,
+    USER_OR_ORGANIZATION_CONSTRAINT,
+    User,
+    ExpiresBase,
+    Organization,
+)
 from backend.core.constants import (
     MAX_LENGTH_STANDARD,
     DECIMAL_MAX_DIGITS,
@@ -104,7 +112,7 @@ class InvoiceBase(OwnerBase):
     vat_number = models.CharField(max_length=MAX_LENGTH_STANDARD, blank=True, null=True)
     logo = models.ImageField(
         upload_to="invoice_logos",
-        storage=_private_storage,
+        storage=get_private_storage,
         blank=True,
         null=True,
     )
@@ -390,7 +398,7 @@ class MonthlyReport(OwnerBase):
 
 class Receipt(OwnerBase):
     name = models.CharField(max_length=100)
-    image = models.ImageField(upload_to="receipts", storage=_private_storage)
+    image = models.ImageField(upload_to="receipts", storage=get_private_storage)
     total_price = models.FloatField(null=True, blank=True)
     date = models.DateField(null=True, blank=True)
     date_uploaded = models.DateTimeField(auto_now_add=True)
