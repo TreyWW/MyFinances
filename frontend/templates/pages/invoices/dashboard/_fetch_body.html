@@ -14,13 +14,18 @@
             hx-get="{% url "finance:invoices:single:overview" invoice_id=invoice.id %}">
             <td class="link link-primary no-underline" td-value="{{ invoice.id }}">
                 <a href="{% url "finance:invoices:single:overview" invoice_id=invoice.id %}">
-                    {% if invoice.reference %}
+                     {% if invoice.reference %}
                         {{ invoice.reference }}
                         <span class="tooltip text-neutral-content"
                               data-tip="This is the actual invoice ID">({{ invoice.id }})</span>
                     {% else %}
                         {{ invoice.id }}
                     {% endif %}
+                </a>
+            </td>
+            <td class="link link-primary no-underline" td-value="{{ invoice.public_id }}">
+                <a href="{% url "finance:invoices:single:overview" invoice_id=invoice.public_id %}">
+                        {{ invoice.public_id }}
                 </a>
             </td>
             <td>{{ invoice.date_due | date:"d/m/Y" }}</td>
