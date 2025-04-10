@@ -53,7 +53,7 @@ types-six = "^1.16.21.20240513"
 
 [tool.poetry.group.django.dependencies]
 Django = "^5.1.8"
-gunicorn = "22.0.0"
+gunicorn = "23.0.0"
 social-auth-app-django = "5.4.1"
 django-environ = "0.11.2"
 django-extensions = "3.2.3"
