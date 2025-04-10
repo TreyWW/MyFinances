@@ -386,6 +386,7 @@ class MonthlyReport(OwnerBase):
 
 
 class Receipt(OwnerBase):
+    public_id = models.CharField(max_length=100, blank=True, null=True)
     name = models.CharField(max_length=100)
     image = models.ImageField(upload_to="receipts", storage=_private_storage)
     total_price = models.FloatField(null=True, blank=True)
