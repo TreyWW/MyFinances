@@ -11,15 +11,24 @@ from backend.core.api.public.serializers.invoices import InvoiceSerializer
 from backend.core.api.public.swagger_ui import TEAM_PARAMETER
 from backend.core.api.public.types import APIRequest
 from backend.finance.models import InvoiceProduct
+from django.db.models import Q
 
 
 def get_client(request: APIRequest) -> Client | None:
-    if request.team:
-        client = Client.objects.get(organization=request.team, id=request.data.get("client_id"))  # type: ignore[misc]
-        return client
-    elif request.user:
-        client = Client.objects.get(user=request.user, id=request.data.get("client_id"))  # type: ignore[misc]
-        return client
+    client_id = request.data.get("client_id")
+    if not client_id:
+        return None
+
+    try:
+        if request.team:
+            client = Client.objects.get(Q(organization=request.team), Q(id=client_id) | Q(public_id=client_id))  # type: ignore[misc]
+            return client
+        elif request.user:
+            client = Client.objects.get(Q(user=request.user), Q(id=client_id) | Q(public_id=client_id))  # type: ignore[misc]
+            return client
+    except Client.DoesNotExist:
+        return None
+
     return None
 
 

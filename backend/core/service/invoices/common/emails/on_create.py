@@ -34,7 +34,7 @@ def on_create_invoice_email_service(users_email: str, invoice: Invoice) -> OnCre
 
     user_data = {
         "first_name": invoice.client_to.name.split(" ")[0] if invoice.client_to else invoice.client_name,
-        "invoice_id": invoice.id,
+        "invoice_id": invoice.public_id or invoice.id,
         "invoice_ref": invoice.reference or invoice.id,
         "due_date": invoice.date_due.strftime("%A, %B %d, %Y"),
         "amount_due": invoice.get_total_price(),

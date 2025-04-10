@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
-
+from django.db.models import Q
 from backend.decorators import web_require_scopes
 from backend.finance.models import Invoice
 from backend.core.types.requests import WebRequest
@@ -23,9 +23,7 @@ def invoices_dashboard_id(request: WebRequest, invoice_id):
         return redirect("finance:invoices:single:dashboard")
 
     try:
-        Invoice.objects.filter(
-                     Q(id=invoice_id) | Q(public_id=invoice_id)
-                    ).first()
+        Invoice.objects.filter(Q(id=invoice_id) | Q(public_id=invoice_id)).first()
     except Invoice.DoesNotExist:
         return redirect("finance:invoices:single:dashboard")
     return render(request, "pages/invoices/single/dashboard/dashboard.html")

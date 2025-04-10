@@ -6,6 +6,10 @@
             <a class="link link-primary no-underline"
                href="{% url 'clients:detail' id=client.id %}">{{ client.id }}</a>
         </td>
+        <td>
+            <a class="link link-primary no-underline"
+               href="{% url 'clients:detail' id=client.id %}">{{ client.public_id }}</a>
+        </td>
         <td colspan="2">{{ client.name }}</td>
         <td colspan="2">
             <div class="flex flex-wrap gap-2">
