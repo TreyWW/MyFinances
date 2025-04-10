@@ -1,3 +1,4 @@
+import uuid
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseBadRequest
@@ -51,6 +52,7 @@ def receipt_create(request: WebRequest):
 
     receipt = Receipt(**receipt_data)
     QuotaUsage.create_str(request.user, "receipts-count", receipt.id)
+    receipt.public_id = "INV" + str(uuid.uuid4()).replace("-", "")
     receipt.save()
     # r = requests.post(
     #     "https://ocr.asprise.com/api/receipt",

@@ -1,7 +1,7 @@
 from django.http import FileResponse, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
-
+from django.db.models import Q 
 from backend.decorators import web_require_scopes
 from backend.models import Receipt, ReceiptDownloadToken
 
@@ -52,9 +52,9 @@ def generate_download_link(request, receipt_id):
     """
     try:
         if request.user.logged_in_as_team:
-            receipt = Receipt.objects.get(id=receipt_id, user=request.user)
+            receipt = Receipt.objects.get(Q(id=receipt_id) | Q(public_id=receipt_id), user=request.user)
         else:
-            receipt = Receipt.objects.get(id=receipt_id, organization=request.user.logged_in_as_team)
+            receipt = Receipt.objects.get(Q(id=receipt_id) | Q(public_id=receipt_id), organization=request.user.logged_in_as_team)
     except Receipt.DoesNotExist:
         return HttpResponse("Receipt not found", status=404)
     token = ReceiptDownloadToken.objects.create(user=request.user, file=receipt)

@@ -2,7 +2,7 @@
 {% fill "content" %}
 <form class="py-4"
       id="{{ modal_id }}-form"
-      hx-post=" {% if edit_flag %}{% url 'api:finance:receipts:edit' receipt_id=receipt_id %}{% else %}{% url 'api:finance:receipts:new' %}{% endif %}"
+      hx-post=" {% if edit_flag %}{% url 'api:finance:receipts:edit' receipt.public_id = receipt.public_id %}{% else %}{% url 'api:finance:receipts:new' %}{% endif %}"
       hx-swap="innerHTML"
       enctype="multipart/form-data"
       hx-encoding="multipart/form-data"
