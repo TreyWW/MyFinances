@@ -34,7 +34,7 @@ def on_create_invoice_email_service(users_email: str, invoice: Invoice) -> OnCre
 
     user_data = {
         "first_name": invoice.client_to.name.split(" ")[0] if invoice.client_to else invoice.client_name,
-        "invoice_id": invoice.id,
+        "invoice_id": invoice.public_id or invoice.id,
         "invoice_ref": invoice.reference or invoice.id,
         "due_date": invoice.date_due.strftime("%A, %B %d, %Y"),
         "amount_due": invoice.get_total_price(),
@@ -50,7 +50,7 @@ def on_create_invoice_email_service(users_email: str, invoice: Invoice) -> OnCre
     email_svc_response = retry_handler(
         send_email,
         destination=invoice.client_to.email or invoice.client_email if invoice.client_to else invoice.client_email,
-        subject=f"Invoice #{invoice.id} from {invoice.self_company or invoice.self_name}",
+        subject=f"Invoice #{invoice.public_id or invoice.id} from {invoice.self_company or invoice.self_name}",
         content=output,
     )
 

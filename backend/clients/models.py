@@ -11,6 +11,7 @@ from backend.core.models import OwnerBase, User, UserSettings, _private_storage
 
 
 class Client(OwnerBase):
+    public_id = models.CharField(max_length=100, blank=True, null=True)
     active = models.BooleanField(default=True)
     name = models.CharField(max_length=64)
     phone_number = models.CharField(max_length=100, blank=True, null=True)

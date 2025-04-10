@@ -3,6 +3,7 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from django.db.models import Q
 
 from backend.core.api.public.decorators import require_scopes
 from backend.core.api.public.serializers.invoices import InvoiceSerializer
@@ -49,9 +50,9 @@ from backend.finance.models import Invoice
 def get_invoices_endpoint(request: APIRequest, id: str) -> Response:
     try:
         if request.team:
-            invoices = Invoice.objects.filter(organization=request.team, id=id)
+            invoices = Invoice.objects.filter(organization=request.team).filter(Q(id=id) | Q(public_id=id))
         else:
-            invoices = Invoice.objects.filter(user=request.user, id=id)
+            invoices = Invoice.objects.filter(user=request.user).filter(Q(id=id) | Q(public_id=id))
     except Invoice.DoesNotExist:
         return APIResponse(False, {"message": "Invoice not found"}, status=status.HTTP_400_BAD_REQUEST)
 

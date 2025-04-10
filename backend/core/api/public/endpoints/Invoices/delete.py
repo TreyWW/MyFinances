@@ -1,6 +1,7 @@
 from django.http import QueryDict
 from rest_framework import status
 from rest_framework.decorators import api_view
+from django.db.models import Q
 
 from backend.core.api.public.decorators import require_scopes
 from backend.core.api.public.types import APIRequest
@@ -15,7 +16,7 @@ def delete_invoice_endpoint(request: APIRequest):
     delete_items = QueryDict(request.body)
 
     try:
-        invoice = Invoice.objects.get(id=delete_items.get("invoice", ""))
+        invoice = Invoice.objects.get(Q(id=delete_items.get("invoice", "")) | Q(public_id=delete_items.get("invoice", "")))
     except Invoice.DoesNotExist:
         return APIResponse(False, {"error": "Invoice Not Found"}, status=status.HTTP_404_NOT_FOUND)
 

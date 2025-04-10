@@ -1,3 +1,4 @@
+import uuid
 from backend.clients.models import Client
 from backend.core.service.clients.validate import validate_client_create
 from backend.core.utils.dataclasses import BaseServiceResponse
@@ -34,5 +35,6 @@ def create_client(request, client_details_default: dict | None = None) -> Create
     for model_field, new_value in client_details.items():
         setattr(client, model_field, new_value)
 
+    client.public_id = "CLI" + str(uuid.uuid4()).replace("-", "")
     client.save()
     return CreateClientServiceResponse(True, client)

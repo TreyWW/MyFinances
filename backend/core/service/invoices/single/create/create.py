@@ -1,4 +1,5 @@
 from datetime import datetime, date
+import uuid
 
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied, ValidationError
@@ -96,6 +97,7 @@ def save_invoice(request: WebRequest, invoice_items):
                 messages.error(request, f"{field}: {e.messages[0]}")
         return None
 
+    invoice.public_id = "INV" + str(uuid.uuid4()).replace("-", "")
     invoice.save()
     invoice.items.set(invoice_items)
 
