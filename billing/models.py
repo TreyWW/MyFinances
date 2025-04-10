@@ -64,7 +64,7 @@ class UserSubscription(OwnerBase):
 
 
 class PlanFeatureGroup(models.Model):
-    name = models.CharField(max_length=MAX_LENGTH_NAME)  # E.g. 'invoices'
+    name = models.CharField(max_length=MAX_LENGTH_NAME, blank=False)  # E.g. 'invoices'
 
 
 class PlanFeature(models.Model):
@@ -107,9 +107,9 @@ class BillingUsage(OwnerBase):
         # ("storage", "Storage"),
     )
 
-    event_name = models.CharField(max_length=100)  # e.g. 'invoices-created'
-    event_type = models.CharField(max_length=20, choices=EVENT_TYPES, default="usage")
-    quantity = models.PositiveSmallIntegerField(default=1)  # e.g. 1
+    event_name = models.CharField(max_length=100, blank=False)  # e.g. 'invoices-created'
+    event_type = models.CharField(max_length=20, choices=EVENT_TYPES, default="usage", blank=False)
+    quantity = models.PositiveSmallIntegerField(default=1, blank=False)  # e.g. 1
 
     created_at = models.DateTimeField(auto_now_add=True)
 
