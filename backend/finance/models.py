@@ -61,8 +61,8 @@ class BotoSchedule(models.Model):
 
 
 class InvoiceProduct(OwnerBase):
-    name = models.CharField(max_length=50)
-    description = models.CharField(max_length=100)
+    name = models.CharField(max_length=50, blank=False)
+    description = models.CharField(max_length=100, blank=False)
     quantity = models.IntegerField()
     rate = models.DecimalField(max_digits=15, decimal_places=2, blank=True, null=True)
 
@@ -70,8 +70,8 @@ class InvoiceProduct(OwnerBase):
 class InvoiceItem(models.Model):
     # objects = InvoiceItemManager()
 
-    name = models.CharField(max_length=50)
-    description = models.CharField(max_length=100)
+    name = models.CharField(max_length=50, blank=False)
+    description = models.CharField(max_length=100, blank=False)
     is_service = models.BooleanField(default=True)
     # from
     # if service
@@ -397,7 +397,7 @@ class MonthlyReport(OwnerBase):
 
 
 class Receipt(OwnerBase):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, blank=False)
     image = models.ImageField(upload_to="receipts", storage=get_private_storage)
     total_price = models.FloatField(null=True, blank=True)
     date = models.DateField(null=True, blank=True)

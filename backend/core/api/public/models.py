@@ -14,7 +14,7 @@ class APIAuthToken(OwnerBase, ExpiresBase):
 
     hashed_key = models.CharField("Key", max_length=128, unique=True)
 
-    name = models.CharField("Key Name", max_length=64)
+    name = models.CharField("Key Name", max_length=64, blank=False)
     description = models.TextField("Description", blank=True, null=True)
     created = models.DateTimeField("Created", auto_now_add=True)
     last_used = models.DateTimeField("Last Used", null=True, blank=True)

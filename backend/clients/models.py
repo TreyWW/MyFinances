@@ -13,7 +13,7 @@ from backend.core.constants import MAX_LENGTH_STANDARD, MAX_LENGTH_NAME
 
 class Client(OwnerBase):
     active = models.BooleanField(default=True)
-    name = models.CharField(max_length=MAX_LENGTH_NAME)
+    name = models.CharField(max_length=MAX_LENGTH_NAME, blank=False)
     phone_number = models.CharField(max_length=MAX_LENGTH_STANDARD, blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
     email_verified = models.BooleanField(default=False)
