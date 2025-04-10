@@ -33,7 +33,11 @@ def generate_pdf(invoice: Invoice, content_type: str) -> HttpResponse | None:
 
     if pdf:
         response = HttpResponse(pdf, content_type="application/pdf")
-        content = f"{content_type}; filename=invoice_{invoice.id}.pdf"
+        if invoice.public_id != None:
+            filename = invoice.reference if invoice.reference else invoice.public_id
+            content = f"{content_type}; filename=invoice_{filename}.pdf"        
+        else:
+            content = f"{content_type}; filename=invoice_{invoice.id}.pdf"
         response["Content-Disposition"] = content
         return response
     return None

@@ -28,14 +28,14 @@
     {% if status == "paid" %}
         <span class="rounded p-3 badge badge-outline badge-success"
               data-status="paid"
-              data-invoice-id="{{ inv_id }}">Paid</span>
+              data-invoice-id="{{ invoice.public_id }}">Paid</span> <!-- Here is the change -->
     {% elif status == "overdue" %}
         <span class="rounded p-3 badge badge-outline badge-error drop-shadow-glow_red"
               data-status="overdue"
-              data-invoice-id="{{ inv_id }}">Overdue</span>
+              data-invoice-id="{{ invoice.public_id }}">Overdue</span> <!-- Here is the change -->
     {% else %}
         <span class="rounded p-3 badge badge-outline badge-info"
               data-status="{{ invoice.status | lower }}"
-              data-invoice-id="{{ inv_id }}">{{ status | default:"draft" | title }}</span>
+              data-invoice-id="{{ invoice.public_id }}">{{ status | default:"draft" | title }}</span> <!-- Here is the change -->
     {% endif %}
 {% endif %}
