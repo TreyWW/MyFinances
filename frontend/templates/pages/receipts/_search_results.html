@@ -7,6 +7,7 @@
                 hx-indicator=""
                 hx-include="#filter_list_storage">
                 <th>ID</th>
+                <th>Public ID</th>
                 <th>Date</th>
                 <th>Name</th>
                 <th>Merchant/Store</th>
@@ -53,6 +54,10 @@
                         <button onclick="modal_receipt_{{ row.id }}.showModal();"
                                 class="link link-primary">{{ row.id }}</button>
                     </td>
+                    <td>
+                        <button onclick="modal_receipt_{{ row.id }}.showModal();"
+                                class="link link-primary">{{ row.public_id }}</button>
+                    </td>
                     <td>{{ row.date }}</td>
                     <td>{{ row.name }}</td>
                     <td>{{ row.merchant_store }}</td>
@@ -80,7 +85,7 @@
                             <button type="button"
                                     class="btn btn-outline btn-success btn-sm tooltip"
                                     data-tip="Download Receipt"
-                                    onclick="download_file('{% url 'api:finance:receipts:generate_download_link' receipt.public_id=row.id %}')">
+                                    onclick="download_file('{% url 'api:finance:receipts:generate_download_link' receipt_id=row.id %}')">
                                 <i class="fa fa-download"></i>
                             </button>
                             <button class="btn btn-error btn-sm tooltip"
@@ -115,7 +120,7 @@
                         <div class="flex gap-3">
                             <button type="button"
                                     class="btn btn-primary"
-                                    onclick="download_file('{% url 'api:finance:receipts:generate_download_link' receipt.public_id=row.id %}')">
+                                    onclick="download_file('{% url 'api:finance:receipts:generate_download_link' receipt_id=row.id %}')">
                                 Download
                             </button>
                             <button class="btn" onclick="modal_receipt_{{ row.id }}.close();">Cancel</button>

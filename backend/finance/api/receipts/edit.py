@@ -69,7 +69,7 @@ def edit_receipt(request, receipt_id):
             receipt.purchase_category = purchase_category
         if total_price:
             receipt.total_price = total_price
-        receipt.public_id = "INV" + str(uuid.uuid4()).replace("-", "")
+        receipt.public_id = "REC" + str(uuid.uuid4()).replace("-", "")
         receipt.save()
 
         messages.success(request, f"Receipt {receipt.name} (#{receipt.id}) updated successfully.")
