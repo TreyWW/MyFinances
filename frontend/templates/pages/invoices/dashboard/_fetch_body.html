@@ -12,14 +12,14 @@
             hx-vals='{"invoice_structure_main": "True"}'
             hx-push-url="{% url "finance:invoices:single:overview" invoice_id=invoice.id %}"
             hx-get="{% url "finance:invoices:single:overview" invoice_id=invoice.id %}">
-            <td class="link link-primary no-underline" td-value="{{ invoice.id }}">
+            <td class="link link-primary no-underline" td-value="{{ invoice.public_id }}">
                 <a href="{% url "finance:invoices:single:overview" invoice_id=invoice.id %}">
                     {% if invoice.reference %}
-                        {{ invoice.reference }}
-                        <span class="tooltip text-neutral-content"
-                              data-tip="This is the actual invoice ID">({{ invoice.id }})</span>
+                    {{ invoice.reference }}
+                    <span class="tooltip text-neutral-content"
+                        data-tip="Invoice ID: {{ invoice.id }}">({{ invoice.public_id }})</span>
                     {% else %}
-                        {{ invoice.id }}
+                        {{ invoice.public_id }}
                     {% endif %}
                 </a>
             </td>
@@ -118,7 +118,7 @@
                             <button hx-delete="{% url 'api:finance:invoices:single:delete' %}"
                                     hx-target="closest tr"
                                     hx-swap="delete"
-                                    hx-confirm="Are you sure you would like to delete invoice #{{ invoice.id }}?"
+                                    hx-confirm="Are you sure you would like to delete invoice #{{ invoice.public_id }}?"
                                     hx-vals='{"invoice": "{{ invoice.id }}" }'>
                                 <i class="fa-solid fa-trash"></i>
                                 Delete
