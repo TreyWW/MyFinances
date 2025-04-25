@@ -11,7 +11,7 @@ from backend.core.utils.service_retry import retry_handler
 from settings.helpers import send_email, get_var
 
 """
-DOCS: https://docs.myfinances.cloud/user-guide/emails/templates/
+DOCS: https://strelix.link/mfd/user-guide/emails/templates/
 (please update if any variables are changed)
 """
 

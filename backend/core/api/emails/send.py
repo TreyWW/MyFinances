@@ -95,7 +95,7 @@ def _send_bulk_email_view(request: WebRequest) -> HttpResponse:
             "users_name": client.name.split()[0] if client else "User",
             "first_name": client.name.split()[0] if client else "User",
             "company_name": request.actor.name,
-        }  # todo: add all variables from https://docs.myfinances.cloud/user-guide/emails/templates/
+        }  # todo: add all variables from https://strelix.link/mfd/user-guide/emails/templates/
 
         email_list.append(
             BulkEmailEmailItem(

@@ -44,6 +44,6 @@ As stated above, invoice profiles hold individual invoices and can be set to cre
 A single Invoice will be created every (period defined) and set to draft, you will be emailed automatically.
 
 Invoices are created at `7am UTC` (`8am BST`) of each period, this is currently not customisable. Please contact us at
-[enquiry@myfinances.cloud](mailto:enquiry@myfinances.cloud) if you require the flexibility.
+[enquiry@strelix.org](mailto:enquiry@strelix.org) if you require the flexibility.
 
 The `end date` is when the automatic invoice creation will finish.
