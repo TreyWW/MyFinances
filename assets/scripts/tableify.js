@@ -15,7 +15,7 @@ window.Tableify = class Tableify {
       const filterType = $(th).attr("mft-filter-type");
 
       // Add filter icon if filters are defined
-      if (colFilters || filterType === "searchable" || filterType === "searchable-amount" || filterType === "normal") {
+      if (colFilters || filterType === "searchable" || filterType === "searchable-amount" || filterType === "normal" || filterType === "searchable-dateRange") {
         const filterIcon = $('<i class="fa fa-filter ml-2 cursor-pointer"></i>');
         const countBadge = $('<span class="filter-count hidden ml-1 badge badge-primary"></span>');
         $(th).append(filterIcon).append(countBadge);
@@ -33,6 +33,11 @@ window.Tableify = class Tableify {
         const colName = $(button).attr("mft-sort-by");
         this.handleSortButtonClick(colName);
       });
+    });
+
+    // Handle the refresh button click event
+    document.getElementById('refresh_btn').addEventListener('click', () => {
+      this.refreshData();
     });
   }
 
@@ -53,6 +58,27 @@ window.Tableify = class Tableify {
     this.sortDirection = newSortDirection;
 
     this.redraw(); // Redraw the table with updated sorting
+  }
+
+  getFilterParams() {
+    let params = {};
+
+    // Add filters to params from the filters object
+    for (const [colName, filterValues] of Object.entries(this.filters)) {
+        params[colName] = filterValues.join(',');
+    }
+
+    return params;
+  }
+
+  // Refresh data by triggering a GET request with the current filters
+  refreshData() {
+    const params = this.getFilterParams();
+    const url = "/api/invoices/single/fetch/";
+    const queryString = new URLSearchParams(params).toString();
+    const fullUrl = `${url}?${queryString}` ;
+
+    htmx.ajax('GET', fullUrl, { target: '#table_body', swap: 'outerHTML' });
   }
 
   redraw() {
@@ -79,7 +105,15 @@ window.Tableify = class Tableify {
             return parsedValue >= maxFilter;
           } else if (filterType === "searchable") {
             return cellText.toLowerCase().includes(this.filters[colName][0].toLowerCase());
-          } else if (filterType === "searchable-amount") {
+          }  else if (filterType === "searchable-dateRange") {
+            const [startStr, endStr] = this.filters[colName];
+            const startDate = parseDDMMYYYY(startStr);
+            const endDate = parseDDMMYYYY(endStr);
+            const cellDate = parseDDMMYYYY(cellValue);
+            if (startDate !== null && cellDate < startDate) return false;
+            if (endDate !== null && cellDate > endDate) return false;
+            return cellText;
+          }else if (filterType === "searchable-amount") {
             const inputValue = this.filters[colName][0];
 
             // Handle both exact match and greater than
@@ -99,6 +133,13 @@ window.Tableify = class Tableify {
           $(row).hide();
         }
       });
+    }
+
+
+    function parseDDMMYYYY(str) {
+      if (!str) return null;
+      const [day, month, year] = str.split('/');
+      return new Date(`${year}-${month}-${day}`);
     }
 
     // Handle sorting if a column is selected for sorting
@@ -127,7 +168,7 @@ window.Tableify = class Tableify {
     const filterType = $(element).attr("mft-filter-type");
 
     // Do nothing if there are no filters or search options defined
-    if (!colFilters && (filterType !== "searchable" && filterType !== "searchable-amount" && filterType !== "normal")) {
+    if (!colFilters && (filterType !== "searchable" && filterType !== "searchable-amount" && filterType !== "normal" && filterType !== "searchable-dateRange")) {
       return;
     }
 
@@ -163,6 +204,45 @@ window.Tableify = class Tableify {
           this.redraw();
         });
         dropdown.append(searchInput);
+      } else if (filterType === "searchable-dateRange") {
+        const startInput = $(`<input type="date" class="input input-bordered w-3/7 input-sm"/>`);
+        const separator = $(`<span class="mx-2 text-sm text-gray-500 self-center">~</span>`);
+        const endInput = $(`<input type="date" class="input input-bordered w-3/7 input-sm"/>`);
+        const dateRangeWrapper = $('<div class="flex items-center justify-between gap-2" />');
+        dateRangeWrapper.append(startInput, separator, endInput);
+        const updateDateFilter = () => {
+          const startDate = startInput.val(); // yyyy-MM-dd
+          const endDate = endInput.val();
+
+          if (startDate || endDate) {
+            const formatToDDMMYYYY = (dateStr) => {
+              if (!dateStr) return null;
+              const [yyyy, mm, dd] = dateStr.split("-");
+              return `${dd}/${mm}/${yyyy}`; // dd-MM-yyyy
+            };
+
+            this.filters[colName] = [
+              formatToDDMMYYYY(startDate),
+              formatToDDMMYYYY(endDate),
+            ];
+          } else {
+            delete this.filters[colName];
+          }
+
+          this.redraw();
+        };
+
+        startInput.on("change", (e) => {
+          e.stopPropagation();
+          updateDateFilter();
+        });
+
+        endInput.on("change", (e) => {
+          e.stopPropagation();
+          updateDateFilter();
+        });
+
+        dropdown.append(dateRangeWrapper);
       } else if (filterType === "searchable-amount") {
         // Create numeric input for searchable-amount columns
         const amountInput = $(`<input type="text" class="input input-bordered w-full input-sm" placeholder="Enter amount or amount+ for greater..." />`);
