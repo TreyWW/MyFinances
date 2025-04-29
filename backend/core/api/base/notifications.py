@@ -36,6 +36,4 @@ def delete_notification(request: HtmxHttpRequest, id: int):
 
     notif.delete()
 
-    response = HttpResponse(status=200)
-    response["HX-Trigger"] = "refresh_notification_count"
-    return response
+    return get_notification_html(request)
