@@ -1,0 +1,37 @@
+<h1>RSS Feeds</h1>
+<ul>
+  {% if entries %}
+      {% for entry in entries %}
+          <li>
+              <a href="{{ entry.link }}" target="_blank">{{ entry.title }}</a>
+              <p>{{ entry.summary }}</p>
+              <small>Published: {{ entry.published }}</small>
+          </li>
+      {% endfor %}
+  {% else %}
+      <li>No RSS feed entries available.</li>
+  {% endif %}
+</ul>
+
+<script>
+const socket = new WebSocket('ws://127.0.0.1:8001/ws/feeds/');
+socket.onmessage = function(event) {
+    const data = JSON.parse(event.data);
+    const feedList = document.querySelector('ul');
+    const newItem = document.createElement('li');
+    newItem.innerHTML = `
+        <a href="${data.link}" target="_blank">${data.title}</a>
+        <p>${data.summary}</p>
+        <small>Published: ${data.published}</small>
+    `;
+    feedList.prepend(newItem);
+};
+
+socket.onerror = function(error) {
+    console.error("WebSocket Error:", error);
+};
+
+socket.onclose = function() {
+    console.warn("WebSocket connection closed.");
+};
+</script>

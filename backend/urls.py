@@ -24,6 +24,8 @@ url(
     {"document_root": settings.STATICFILES_DIRS[0]},
 )
 urlpatterns = [
+    path("feeds/", include("feeds.urls")),
+
     path("tz_detect/", include("tz_detect.urls")),
     path("webhooks/", include("backend.core.webhooks.urls")),
     path("", index, name="index"),
