@@ -1,5 +1,6 @@
 from django.db import migrations
 
+
 def create_feed_sources(apps, schema_editor):
     FeedSource = apps.get_model("feeds", "FeedSource")
     sources = [
@@ -9,14 +10,16 @@ def create_feed_sources(apps, schema_editor):
         ("CNBC – Finance", "https://www.cnbc.com/id/10000664/device/rss/rss.html", "cnbc-finance"),
         ("Seeking Alpha – Market Currents", "https://seekingalpha.com/market_currents.xml", "seeking-alpha"),
         ("Investing.com – News", "https://www.investing.com/rss/news.rss", "investing-news"),
-        ("Investopedia – Headline News", "https://www.investopedia.com/feedbuilder/feed/getfeed/?feedName=rss_headline", "investopedia-headline"),
+        (
+            "Investopedia – Headline News",
+            "https://www.investopedia.com/feedbuilder/feed/getfeed/?feedName=rss_headline",
+            "investopedia-headline",
+        ),
         ("Financial Times – Home", "https://www.ft.com/?format=rss", "financial-times"),
     ]
     for name, url, slug in sources:
-        FeedSource.objects.update_or_create(
-            slug=slug,
-            defaults={"name": name, "url": url, "is_active": True}
-        )
+        FeedSource.objects.update_or_create(slug=slug, defaults={"name": name, "url": url, "is_active": True})
+
 
 def delete_feed_sources(apps, schema_editor):
     FeedSource = apps.get_model("feeds", "FeedSource")
@@ -31,6 +34,7 @@ def delete_feed_sources(apps, schema_editor):
         "financial-times",
     ]
     FeedSource.objects.filter(slug__in=slugs).delete()
+
 
 class Migration(migrations.Migration):
     dependencies = [

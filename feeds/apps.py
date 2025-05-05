@@ -1,7 +1,8 @@
 from django.apps import AppConfig
 
+
 class FeedsConfig(AppConfig):
-    name = "feeds"           # Must match your app folder name exactly
+    name = "feeds"  # Must match your app folder name exactly
     verbose_name = "RSS Feeds"
 
     def ready(self):

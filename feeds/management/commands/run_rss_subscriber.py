@@ -5,6 +5,7 @@ from django.utils.dateparse import parse_datetime
 
 from feeds.models import FeedSource, FeedEntry
 
+
 class Command(BaseCommand):
     help = "Subscribe to RSS pub/sub channels and save FeedEntry records"
 

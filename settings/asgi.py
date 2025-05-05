@@ -5,7 +5,9 @@ import feeds.routing
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings.settings")
 
-application = ProtocolTypeRouter({
-    "http": get_asgi_application(),
-    "websocket": URLRouter(feeds.routing.websocket_urlpatterns),
-})
+application = ProtocolTypeRouter(
+    {
+        "http": get_asgi_application(),
+        "websocket": URLRouter(feeds.routing.websocket_urlpatterns),
+    }
+)

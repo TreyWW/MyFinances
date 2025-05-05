@@ -6,6 +6,7 @@ import json
 
 from .models import FeedEntry
 
+
 @receiver(post_save, sender=FeedEntry)
 def announce_new_entry(sender, instance, created, **kwargs):
     if not created:
@@ -17,7 +18,4 @@ def announce_new_entry(sender, instance, created, **kwargs):
         "link": instance.link,
         "published": instance.published.isoformat(),
     }
-    async_to_sync(layer.group_send)(
-        "feeds_updates",
-        {"type": "new_feed_entry", "text": json.dumps(payload)}
-    )
+    async_to_sync(layer.group_send)("feeds_updates", {"type": "new_feed_entry", "text": json.dumps(payload)})

@@ -25,7 +25,6 @@ url(
 )
 urlpatterns = [
     path("feeds/", include("feeds.urls")),
-
     path("tz_detect/", include("tz_detect.urls")),
     path("webhooks/", include("backend.core.webhooks.urls")),
     path("", index, name="index"),

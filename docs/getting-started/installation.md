@@ -126,3 +126,7 @@ npm run webpack-watch # this does the same as above, but listens for updates
 
 ### Problem Solving Errors
 If you are having trouble with the installation process, we have some possible fixes. Check out our [debugging](../../debugging/python/poetry/) section.
+
+
+### Required packages to run the RSS feed(can be added to pyproject.toml if approved)
+pip install celery daphne feedparser channels_redis

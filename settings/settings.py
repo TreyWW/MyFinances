@@ -65,7 +65,6 @@ INSTALLED_APPS = [
     "tz_detect",
     "webpack_loader",
     # "django_minify_html",
-
     "feeds.apps.FeedsConfig",
     "channels",
 ]
@@ -74,6 +73,7 @@ INSTALLED_APPS = [
 CELERY_BROKER_URL = "redis://localhost:6379/0"
 # Celery beat schedule
 from celery.schedules import crontab
+
 CELERY_BEAT_SCHEDULE = {
     "fetch_all_feeds_every_1_min": {
         "task": "feeds.tasks.fetch_all_feeds",
@@ -85,7 +85,7 @@ CELERY_BEAT_SCHEDULE = {
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": { "hosts": [("localhost", 6379)] },
+        "CONFIG": {"hosts": [("localhost", 6379)]},
     },
 }
 
