@@ -20,7 +20,7 @@ django-silk = "^5.1.0"
 djangorestframework = "^3.15.1"
 drf-yasg = "^1.21.7"
 
-setuptools = "^70.1.1"
+setuptools = "^78.1.1"
 xhtml2pdf = "^0.2.16"
 stripe = "^10.8.0"
 [tool.poetry.group.mypy.dependencies]
