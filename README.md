@@ -122,7 +122,7 @@ Make sure you have the necessary prerequisites for development. These are detail
 
 #### Getting Started
 
-View our documentation for further instruction [https://docs.strelix.org/MyFinances](https://docs.strelix.org/MyFinances)
+View our documentation for further instruction [strelix.link/myfinances-docs](strelix.link/myfinances-docs)
 
 Thank you for your contributions!
 
