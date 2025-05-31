@@ -9,7 +9,7 @@ from backend.core.api.public.permissions import SCOPE_DESCRIPTIONS
 
 from backend.clients.models import Client
 from backend.finance.models import InvoiceURL, Invoice, Receipt
-from backend.models import QuotaLimit, Organization, UserSettings
+from backend.models import QuotaLimit, Organization, UserSettings, User
 from backend.core.types.requests import WebRequest
 from backend.core.utils.feature_flags import get_feature_status
 from backend.core.service.defaults.get import get_account_defaults
@@ -30,6 +30,14 @@ def open_modal(request: WebRequest, modal_name, context_type=None, context_value
             elif context_type == "leave_team":
                 if request.user.teams_joined.filter(id=context_value).exists():
                     context["team"] = Organization.objects.filter(id=context_value).first()
+            elif context_type == "delete_team_id":
+                team = Organization.objects.filter(id=context_value).first()
+                if team:
+                    context["team"] = team
+            elif context_type == "user_id":
+                user = User.objects.filter(id=context_value).first()
+                if user:
+                    context["user"] = user
             elif context_type == "edit_receipt":
                 try:
                     receipt = Receipt.objects.get(pk=context_value)
