@@ -12,7 +12,7 @@ boto3 = "1.34.76"  # AWS
 django-storages = "1.14.2"  # AWS S3
 pillow = "10.3.0"  # Images
 tblib = "^3.0.0"  # Exceptions and Tracebacks
-django = "^5.1.8"
+django = "^5.1.10"
 django-mathfilters = "^1.0.0"
 redis = { extras = ["hiredis"], version = "^5.0.1" }
 django-webpack-loader = "^3.1.0"
@@ -52,7 +52,7 @@ types-pycurl = "^7.45.3.20240421"
 types-six = "^1.16.21.20240513"
 
 [tool.poetry.group.django.dependencies]
-Django = "^5.1.8"
+Django = "^5.1.10"
 gunicorn = "23.0.0"
 social-auth-app-django = "5.4.1"
 django-environ = "0.11.2"
