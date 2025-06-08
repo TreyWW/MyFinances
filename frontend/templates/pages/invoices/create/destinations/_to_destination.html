@@ -10,12 +10,12 @@
     {% endif %}
     <div class="card-body">
         {% if existing_client %}
-            <p class="text-md">{{ existing_client.name | default:"No Name" }}</p>
-            <p class="text-sm">{{ existing_client.company | default:"No Company" }}</p>
-            <p class="text-sm">{{ existing_client.address | default:"No address" }}</p>
-            {#        <p class="text-sm">{{ existing_client.city | default:"Oxford" }}</p>#}
-            {#        <p class="text-sm">{{ existing_client.county | default:"Oxfordshire" }}</p>#}
-            <p class="text-sm">{{ existing_client.country | default:"No country" }}</p>
+            <p class="text-md">{{ prefill.existing_client.name | default:"No Name" }}</p>
+            <p class="text-sm">{{ prefill.existing_client.company | default:"No Company" }}</p>
+            <p class="text-sm">{{ prefill.existing_client.address | default:"No address" }}</p>
+            {#        <p class="text-sm">{{ prefill.existing_client.city | default:"Oxford" }}</p>#}
+            {#        <p class="text-sm">{{ prefill.existing_client.county | default:"Oxfordshire" }}</p>#}
+            <p class="text-sm">{{ prefill.existing_client.country | default:"No country" }}</p>
             <p class="text-sm">
                 {% if existing_client.is_representative %}
                     Is a
@@ -25,15 +25,15 @@
                 representative
             </p>
         {% else %}
-            <p class="text-md">{{ to_name | default:"No Name" }}</p>
-            <p class="text-sm">{{ to_company | default:"No Company" }}</p>
-            <p class="text-sm">{{ to_email | default:"No Email Associated" }}</p>
-            <p class="text-sm">{{ to_address | default:"No address" }}</p>
-            <p class="text-sm">{{ to_city | default:"No city" }}</p>
-            <p class="text-sm">{{ to_county | default:"No county" }}</p>
-            <p class="text-sm">{{ to_country | default:"No country" }}</p>
+            <p class="text-md">{{ prefill.to_name | default:"No Name" }}</p>
+            <p class="text-sm">{{ prefill.to_company | default:"No Company" }}</p>
+            <p class="text-sm">{{ prefill.to_email | default:"No Email Associated" }}</p>
+            <p class="text-sm">{{ prefill.to_address | default:"No address" }}</p>
+            <p class="text-sm">{{ prefill.to_city | default:"No city" }}</p>
+            <p class="text-sm">{{ prefill.to_county | default:"No county" }}</p>
+            <p class="text-sm">{{ prefill.to_country | default:"No country" }}</p>
             <p class="text-sm">
-                {% if is_representative == "on" or to_is_representative == "on" %}
+                {% if prefill.is_representative == "on" or to_is_representative == "on" %}
                     Is a
                 {% else %}
                     Is not a
@@ -42,15 +42,15 @@
             </p>
         {% endif %}
     </div>
-    <input type="hidden" name="to_name" value="{{ to_name | default:"" }}">
-    <input type="hidden" name="to_company" value="{{ to_company | default:"" }}">
-    <input type="hidden" name="to_email" value="{{ to_email | default:"" }}">
-    <input type="hidden" name="to_address" value="{{ to_address | default:"" }}">
-    <input type="hidden" name="to_city" value="{{ to_city | default:"" }}">
-    <input type="hidden" name="to_county" value="{{ to_county | default:"" }}">
-    <input type="hidden" name="to_country" value="{{ to_country | default:"" }}">
+    <input type="hidden" name="to_name" value="{{ prefill.to_name | default:"" }}">
+    <input type="hidden" name="to_company" value="{{ prefill.to_company | default:"" }}">
+    <input type="hidden" name="to_email" value="{{ prefill.to_email | default:"" }}">
+    <input type="hidden" name="to_address" value="{{ prefill.to_address | default:"" }}">
+    <input type="hidden" name="to_city" value="{{ prefill.to_city | default:"" }}">
+    <input type="hidden" name="to_county" value="{{ prefill.to_county | default:"" }}">
+    <input type="hidden" name="to_country" value="{{ prefill.to_country | default:"" }}">
     <input type="hidden" name="selected_client" value="{{ existing_client.id }}">
     <input type="hidden"
            name="is_representative"
-           value="{% if to_is_representative %}{{ is_representative | default:to_is_representative }}{% else %}{{ is_representative }}{% endif %}">
-    {% if not swapping %}</button>{% endif %}
+           value="{{ prefill.to_is_representative|default:'off' }}">
+

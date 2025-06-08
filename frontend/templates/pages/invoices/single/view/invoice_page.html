@@ -15,6 +15,7 @@
                         {% if show_refresh_btn %}
                             <button onclick="window.location.reload()" class="btn btn-info btn-sm">Reload</button>
                         {% endif %}
+                        <a href="{% url 'finance:invoices:single:create' %}?clone_from={{ invoice.id }}" class="btn btn-outline-primary btn-sm">Clone Invoice</a>
                         <button onclick="window.print()" class="btn btn-primary btn-sm">Print Invoice</button>
                     </div>
                     <nav class="flex justify-between items-start mb-8 print:mb-0">

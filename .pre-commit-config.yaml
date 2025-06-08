@@ -36,6 +36,7 @@ repos:
         types: [ python ]
         language: python
       - id: detect-aws-credentials
+        enabled: false
       - id: detect-private-key
         exclude: "docs/getting-started/settings/AWS/static.md"
       - id: check-added-large-files

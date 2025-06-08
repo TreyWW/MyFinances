@@ -8,7 +8,7 @@
             <input required
                    name="date_due"
                    id="dueDate"
-                   value="{{ due_date }}"
+                   value="{{ prefill.due_date|default:'' }}"
                    type="date"
                    onchange="checkDueDate();"
                    class="peer input-bordered input input-block">
