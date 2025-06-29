@@ -23,6 +23,17 @@ def create_single_invoice_endpoint_handler(request: WebRequest):
 @has_entitlements("invoices")
 @web_require_scopes("invoices:read", False, False, "finance:invoices:single:dashboard")
 def create_invoice_page_endpoint(request: WebRequest):
+    """
+    Renders the create invoice  page (for single invoice).
+    If `clone_from` is provided and there is access to a referenced invoice:
+            - It will load existing invoice data using `invoice_get_existing_data`.
+            - Sets the `reference` to a "-COPY" variant and updates issue dates to today.
+            - Uses prefill key to add the prefilled data
+    If the invoice is not found, add error message "Invoice to clone not found"
+
+    Returns:
+        HttpResponse: Rendered invoice creation page (`create_single.html`) with context data.
+    """
     context = get_invoice_context(request)
 
     clone_id = request.GET.get("clone_from")
@@ -38,6 +49,7 @@ def create_invoice_page_endpoint(request: WebRequest):
                 cloned_data["issue_date"] = datetime.today().date()
 
                 context.update({"prefill": cloned_data})
+
         except Invoice.DoesNotExist:
             messages.error(request, "Invoice to clone not found")
 
