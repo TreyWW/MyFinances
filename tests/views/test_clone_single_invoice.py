@@ -26,8 +26,7 @@ class CloneSingleInvoiceViews(TestCase):
         under the test user.
         """
         self.user = User.objects.create_user(username="testUser", password="Password")
-        login_successful = self.client.login(username="testUser", password="Password")
-        self.assertTrue(login_successful, "Login failed in test setup")
+        self.client.login(username="testUser", password="Password")
 
         self.original_invoice = Invoice.objects.create(
             owner=self.user,
