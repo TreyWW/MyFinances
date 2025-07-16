@@ -62,6 +62,11 @@
             <i class="fa-solid fa-share-nodes"></i>
             Send Invoice
         </a>
+        <a href="{% url 'finance:invoices:single:create' %}?clone_from={{ invoice.id }}"
+           class="btn btn-sm btn-outline btn-default">
+            <i class="fa fa-clone"></i>
+            Clone Invoice
+        </a>
         {% if schedule_invoices_enabled %}
             <a class="btn btn-outline btn-default btn-sm mr-4">
                 <i class="fa-solid fa-clock"></i>

@@ -8,7 +8,7 @@
             <input required
                    id="dateIssued"
                    name="date_issued"
-                   value="{{ issue_date }}"
+                   value="{{ prefill.issue_date|date:"Y-m-d"|default:'' }}"
                    type="date"
                    onchange="checkDueDate()"
                    class="peer input input-bordered input-block">
