@@ -110,7 +110,10 @@
                                         <tr>
                                             <th class="py-3 px-4"></th>
                                             <th class="py-3 px-4"></th>
-                                            <th class="py-3 font-semibold px-4 text-right">Discount ({{ invoice.discount_percentage }}%):</th>
+                                            <th class="py-3 font-semibold px-4 text-right">
+                                                Discount
+                                                ({{ invoice.discount_percentage }}%):
+                                            </th>
                                             <th class="py-3 font-semibold px-4 text-right">
                                                 -{{ invoice.get_currency_symbol }}{{ invoice.get_percentage_amount }}
                                             </th>
