@@ -15,10 +15,22 @@
         <p class="text-sm">{{ prefill.from_county | default:"No county" }}</p>
         <p class="text-sm">{{ prefill.from_country | default:"No country" }}</p>
     </div>
-    <input type="hidden" name="from_name" value="{{ prefill.from_name | default:"" }}">
-    <input type="hidden" name="from_company" value="{{ prefill.from_company | default:"" }}">
-    <input type="hidden" name="from_address" value="{{ prefill.from_address | default:"" }}">
-    <input type="hidden" name="from_city" value="{{ prefill.from_city | default:"" }}">
-    <input type="hidden" name="from_county" value="{{ prefill.from_county | default:"" }}">
-    <input type="hidden" name="from_country" value="{{ prefill.from_country | default:"" }}">
+    <input type="hidden"
+           name="from_name"
+           value="{{ prefill.from_name | default:"" }}">
+    <input type="hidden"
+           name="from_company"
+           value="{{ prefill.from_company | default:"" }}">
+    <input type="hidden"
+           name="from_address"
+           value="{{ prefill.from_address | default:"" }}">
+    <input type="hidden"
+           name="from_city"
+           value="{{ prefill.from_city | default:"" }}">
+    <input type="hidden"
+           name="from_county"
+           value="{{ prefill.from_county | default:"" }}">
+    <input type="hidden"
+           name="from_country"
+           value="{{ prefill.from_country | default:"" }}">
     {% if not swapping %}</button>{% endif %}

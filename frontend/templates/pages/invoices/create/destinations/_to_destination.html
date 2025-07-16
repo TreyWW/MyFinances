@@ -42,15 +42,28 @@
             </p>
         {% endif %}
     </div>
-    <input type="hidden" name="to_name" value="{{ prefill.to_name | default:"" }}">
-    <input type="hidden" name="to_company" value="{{ prefill.to_company | default:"" }}">
-    <input type="hidden" name="to_email" value="{{ prefill.to_email | default:"" }}">
-    <input type="hidden" name="to_address" value="{{ prefill.to_address | default:"" }}">
-    <input type="hidden" name="to_city" value="{{ prefill.to_city | default:"" }}">
-    <input type="hidden" name="to_county" value="{{ prefill.to_county | default:"" }}">
-    <input type="hidden" name="to_country" value="{{ prefill.to_country | default:"" }}">
+    <input type="hidden"
+           name="to_name"
+           value="{{ prefill.to_name | default:"" }}">
+    <input type="hidden"
+           name="to_company"
+           value="{{ prefill.to_company | default:"" }}">
+    <input type="hidden"
+           name="to_email"
+           value="{{ prefill.to_email | default:"" }}">
+    <input type="hidden"
+           name="to_address"
+           value="{{ prefill.to_address | default:"" }}">
+    <input type="hidden"
+           name="to_city"
+           value="{{ prefill.to_city | default:"" }}">
+    <input type="hidden"
+           name="to_county"
+           value="{{ prefill.to_county | default:"" }}">
+    <input type="hidden"
+           name="to_country"
+           value="{{ prefill.to_country | default:"" }}">
     <input type="hidden" name="selected_client" value="{{ existing_client.id }}">
     <input type="hidden"
            name="is_representative"
            value="{{ prefill.to_is_representative|default:'off' }}">
-
