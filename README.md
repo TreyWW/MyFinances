@@ -37,7 +37,7 @@ usual hosting platform, we have a docker setup.
 
 ### Installation
 
-For detailed setup instructions please refer to our documentation: [https://docs.strelix.org/MyFinances](https://docs.strelix.org/MyFinances)
+For detailed setup instructions please refer to our documentation: [https://docs.strelix.org/MyFinances](https://myfinances-docs.strelix.cloud/)
 
 ## Contributing
 
