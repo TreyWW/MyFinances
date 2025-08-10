@@ -1,11 +1,25 @@
 window.Tableify = class Tableify {
   constructor(selector) {
-    this.table = $(selector);
+    this.selector = selector;
     this.filters = {};
     this.currentSort = null;
     this.sortDirection = 0; // 0 for no sort, 1 for ascending, -1 for descending
 
-    this.initialize();
+    // Prüfen, ob es ein "frischer" Seitenbesuch ist
+    if (!sessionStorage.getItem("initialized")) {
+      window.addEventListener("DOMContentLoaded", () => {
+        this.table = $(this.selector);
+        this.initialize();
+        sessionStorage.setItem("initialized", "true");
+      });
+    } else {
+      console.log("Zurückgekehrt – Initialisierung übersprungen");
+    }
+
+    // Optional: Reset bei Verlassen der Seite
+    window.addEventListener("beforeunload", () => {
+      sessionStorage.removeItem("initialized");
+    });
   }
 
   initialize() {
