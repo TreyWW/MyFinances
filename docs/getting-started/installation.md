@@ -25,49 +25,55 @@ git clone [copied fork url]
     ```shell
     cp .env.sample .env
     ```
+
 2. Edit the template environment variables to your needs, e.g. with nano
     ```shell
-   nano .env
+    nano .env
     ```
 
 ## Setup the backend (Django)
 
 !!! warning "Make sure you have done the previous steps first!"
 
-
 1. Create a virtual environment and activate it
-
 	```shell
 	python -m venv ./venv/
-
- 	./venv/Scripts/activate
+	
+	./venv/Scripts/activate
 	```
-    OR if you are running in a POSIX system such as: bash/zsh, fish, csh/tcsh, or PowerShell, the command to activate the virtual environment is:
 
+    OR if you are running in a POSIX system such as: bash/zsh, fish, csh/tcsh, or PowerShell, the command to activate the virtual environment is:
     ```shell
-    ./venv/bin/activate
+    source ./venv/bin/activate
     ```
-    More information [here](https://docs.python.org/3/library/venv.html)  
+    
+    !!! note "Linux Note"
+        On Linux systems, the activate script typically doesn't have execution permissions by default, so it must be sourced rather than executed directly.
+    
+    More information [here](https://docs.python.org/3/library/venv.html)
 
 2. Install our dependencies using [python poetry](https://python-poetry.org/docs/#installing-manually)
-   ```shell
-   pip install poetry
 
-   poetry install --no-root --with mypy,django,dev
-   ```
-   If the installation of poetry gives error messages check out our [debugging section on poetry](../debugging/python/poetry.md).  
+    ```shell
+    pip install poetry
+    
+    poetry install --no-root --with mypy,django,dev
+    ```
 
-3. Setup a database (we suggest using sqlite so there's no installation!)
-   To do this you can use one of our database guides, we currently only support 3 databases:
-   	- [SQlite3 (recommended for dev)](./databases/sqlite.md)
-   	- [Postgres3 (recommended for prod)](./databases/postgres.md)
-   	- [Mysql](./databases/mysql.md)
+    If the installation of poetry gives error messages check out our [debugging section on poetry](../../debugging/python/poetry.md).
+
+3. Setup a database (we suggest using sqlite so there's no installation!) To do this you can use one of our database guides, we currently only support 3 databases:
+
+    - [SQlite3 (recommended for dev)](../databases/sqlite.md)
+    - [Postgres3 (recommended for prod)](../databases/postgres.md)
+    - [Mysql](../databases/mysql.md)
 
 4. Migrate the database
     ```shell
     python manage.py migrate
     ```
-5.  Create an administrator account
+
+5. Create an administrator account
     ```shell
     python manage.py createsuperuser
     ```
@@ -84,15 +90,15 @@ git clone [copied fork url]
 ### Tailwind CSS
 
 1. Install NPM (follow a guide like [this](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm))
-   2. Run npm install
-       ```shell
-       npm install
-       ```
+   
+2. Run npm install
+    ```shell
+    npm install
+    ```
 
 #### Tailwind Watch
 
-You can run tailwind watch to update the CSS files as you use tailwind classes. This will auto-build every time you make
-changes, providing you still have the terminal open.
+You can run tailwind watch to update the CSS files as you use tailwind classes. This will auto-build every time you make changes, providing you still have the terminal open.
 
 ```shell
 npm run tailwind-watch
@@ -102,9 +108,7 @@ npm run tailwind-watch
 
 #### Tailwind Build
 
-To be honest, tailwind watch is nice, but especially on my windows computer it is very CPU and Memory intesive, every single change,
-even 1 character causes a re-watch, and this is a lot... Instead of that, you can use `tailwind-build` to only do a one-time
-build. You need to remember to run the command after a major update though, incase you add new classes.
+To be honest, tailwind watch is nice, but especially on my windows computer it is very CPU and Memory intesive, every single change, even 1 character causes a re-watch, and this is a lot... Instead of that, you can use `tailwind-build` to only do a one-time build. You need to remember to run the command after a major update though, incase you add new classes.
 
 ```shell
 npm run tailwind-build
@@ -112,9 +116,7 @@ npm run tailwind-build
 
 ### Webpack for JS
 
-Webpack is used to bundle our javascript into one file to make development easier and speed up builds. The project now uses
-chunks to load javascript, so you should see a few files with ids such as `937`. Django will automatically pick these up. Check below for details on how to run webpack.
-
+Webpack is used to bundle our javascript into one file to make development easier and speed up builds. The project now uses chunks to load javascript, so you should see a few files with ids such as `937`. Django will automatically pick these up. Check below for details on how to run webpack.
 
 #### Run webpack dev
 
@@ -125,4 +127,5 @@ npm run webpack-watch # this does the same as above, but listens for updates
 ```
 
 ### Problem Solving Errors
+
 If you are having trouble with the installation process, we have some possible fixes. Check out our [debugging](../../debugging/python/poetry/) section.
