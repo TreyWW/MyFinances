@@ -51,8 +51,8 @@
                 </a>
                 <button class="btn btn-outline btn-square btn-sm btn-error mt-1"
                         hx-delete="/api/base/notifications/delete/{{ notification.id }}"
-                        hx-target="closest li"
-                        hx-swap="outerHTML">
+                        hx-target="ul[data-notifications='container']"
+                        hx-swap="innerHTML">
                     <i class="fa fa-trash"></i>
                 </button>
             </div>
