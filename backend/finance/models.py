@@ -35,7 +35,7 @@ class BotoSchedule(models.Model):
     class Meta:
         abstract = True
 
-    def set_status(self, status, save=True):
+    def set_status(self, status: str, save=True):
         self.status = status
         if save:
             self.save()
@@ -166,7 +166,7 @@ class Invoice(InvoiceBase):
 
         return f"Invoice #{self.id} for {client}"
 
-    def set_status(self, status: str, save=True):
+    def set_status(self, status: str, save: bool = True):
         if status not in ["draft", "pending", "paid"]:
             return False
         self.status = status
@@ -176,14 +176,14 @@ class Invoice(InvoiceBase):
         return self
 
     @property
-    def dynamic_status(self):
+    def dynamic_status(self) -> str:
         if self.status == "pending" and self.is_overdue:
             return "overdue"
         else:
             return self.status
 
     @property
-    def is_overdue(self):
+    def is_overdue(self) -> bool:
         return self.date_due and timezone.now().date() > self.date_due
 
     @property
