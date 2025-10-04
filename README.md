@@ -526,7 +526,7 @@ manually edit with the details below.
 
 ### How to edit the contributors table?
 
-- Updated any info using `python3 manage.py contriubtors`
+- Updated any info using `python3 manage.py contributors`
 - Run `python3 manage.py contributors sync`
 - Make a PR to request these changes in
 - Done :)
