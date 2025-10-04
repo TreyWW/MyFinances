@@ -1,7 +1,6 @@
-from typing import List, Optional, Dict, Any
+from typing import Dict, Any
 
 from django.http import HttpRequest
-from django.urls import reverse
 
 import calendar
 

@@ -1,3 +1,4 @@
+from datetime import datetime
 from uuid import uuid4
 
 from django.db import models
@@ -43,7 +44,7 @@ class UserSubscription(OwnerBase):
         return f"{self.owner} - {self.subscription_plan.name} ({self.start_date} to {self.end_date or 'ongoing'})"
 
     @property
-    def has_ended(self):
+    def has_ended(self) -> bool:
         return bool(self.end_date)
 
     @property
@@ -110,7 +111,7 @@ class BillingUsage(OwnerBase):
     processed = models.BooleanField(default=False)
     stripe_unique_usage_identifier = models.CharField(max_length=100, null=True, blank=True)
 
-    def set_processed(self, processed_time):
+    def set_processed(self, processed_time: datetime):
         self.processed = True
         self.processed_at = processed_time or timezone_now()
         self.save()
