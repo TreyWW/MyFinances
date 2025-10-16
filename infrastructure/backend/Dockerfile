@@ -28,9 +28,9 @@ RUN if [ "${TESTING}" != "true" ] || [ "${DATABASE_TYPE}" = "postgres" ]; then \
         poetry install --only postgres; \
     fi
 
-RUN apk del .build-deps
+RUN poetry install --without dev,mysql,postgres --no-root 
 
-RUN poetry install --without dev,mysql,postgres --no-root && rm -rf $POETRY_CACHE_DIR
+RUN apk del .build-deps && rm -rf $POETRY_CACHE_DIR
 
 COPY . .
 

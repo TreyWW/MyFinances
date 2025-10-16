@@ -15,20 +15,23 @@ services:
       - myfinances_network
     env_file:
       - ../../.env
+
   nginx:
     restart: always
-    image: nginx:latest
+    build:
+      context: ../../
+      dockerfile: infrastructure/frontend/Dockerfile
     ports:
       - '10012:10012'
     depends_on:
       - myfinances_django
     networks:
       - myfinances_network
+    environment:
+      ENV : "dev"
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - myfinances_static_volume:/srv/http/static/
-      - ../nginx/default.conf:/etc/nginx/conf.d/myfinances.conf
-    command: /bin/bash -c "nginx -g 'daemon off;'"
 volumes:
   myfinances_static_volume:
 networks:
