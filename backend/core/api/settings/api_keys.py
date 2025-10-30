@@ -56,6 +56,35 @@ def generate_api_key_endpoint(request: WebRequest) -> HttpResponse:
     return http_response
 
 
+@require_http_methods(["POST"])
+@web_require_scopes("api_keys:write")
+def regenerate_api_key_endpoint(request: WebRequest, key_id: str) -> HttpResponse:
+    key: APIAuthToken | None = get_api_key_by_id(request.user.logged_in_as_team or request.user, key_id)
+
+    if not key:
+        messages.error(request, "API key not found")
+        return render(request, "base/toast.html")
+
+    raw_key = key.generate_key()
+    key.save()
+
+    messages.success(request, "API key regenerated successfully")
+
+    http_response = render(
+        request,
+        "pages/settings/settings/api_key_generated_response.html",
+        {
+            "raw_key": raw_key,
+            "name": key.name,
+        },
+    )
+
+    http_response.headers["HX-Reswap"] = "beforebegin"
+    http_response.headers["HX-Retarget"] = 'div[data-hx-container="api_keys"]'
+
+    return http_response
+
+
 @require_http_methods(["DELETE"])
 def revoke_api_key_endpoint(request: WebRequest, key_id: str) -> HttpResponse:
     key: APIAuthToken | None = get_api_key_by_id(request.user.logged_in_as_team or request.user, key_id)
