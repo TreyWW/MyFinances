@@ -1,5 +1,9 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+
+import { tailwindcss } from 'tailwindcss';
+import { compat } from 'tailwindcss/compat';
+
+export default {
   mode: 'jit',
   content: [
     './frontend/templates/**/*.html',
@@ -122,5 +126,6 @@ module.exports = {
       ,
       // placeholderColor: {'custom': '#0051ff'}
     }
-  }
+  },
+  presets: [compat()]
 }

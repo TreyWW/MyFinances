@@ -25,7 +25,6 @@
     "daisyui": "^4.7.3",
     "htmx.org": "^1.9.12",
     "hyperscript.org": "^0.9.12",
-    "jquery": "^3.7.1",
-    "tailwindcss": "^4.1.17"
+    "jquery": "^3.7.1"
   }
 }
