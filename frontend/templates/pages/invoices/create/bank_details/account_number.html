@@ -6,7 +6,7 @@
                    pattern="[0-9]{8}"
                    maxlength="8"
                    name="account_number"
-                   value="{{ prefill.account_number | default_if_none:"" }}"
+                   value="{{ account_number | default_if_none:"" }}"
                    placeholder="12345678"
                    type="text"
                    class="peer input input-bordered input-block">

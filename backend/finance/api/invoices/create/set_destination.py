@@ -21,14 +21,16 @@ def set_destination_to(request: WebRequest):
     if selected_client:
         try:
             if request.team:
-                client = Client.objects.filter(organization=request.team)
+                clients = Client.objects.filter(organization=request.team)
             else:
-                client = Client.objects.filter(user=request.user)
+                clients = Client.objects.filter(user=request.user)
 
-            client = client.get(id=selected_client)
+            client = clients.get(id=selected_client)
             context["existing_client"] = client
         except Client.DoesNotExist:
             messages.error(request, "Client not found")
+
+    print(context)
 
     return render(request, "pages/invoices/create/destinations/_to_destination.html", context)
 

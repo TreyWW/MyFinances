@@ -70,7 +70,6 @@ class CloneSingleInvoiceViews(TestCase):
         create_invoice_page_endpoint(request)
 
         # check prefill is added to context & match values
-        self.assertIn("prefill", mock_context)
-        self.assertEqual(mock_context["prefill"]["reference"], "INV-001-COPY")
-        self.assertEqual(mock_context["prefill"]["account_number"], "12345678")
-        self.assertEqual(mock_context["prefill"]["sort_code"], "12-34-56")
+        self.assertEqual(mock_context["reference"], "INV-001-COPY")
+        self.assertEqual(mock_context["account_number"], "12345678")
+        self.assertEqual(mock_context["sort_code"], "12-34-56")

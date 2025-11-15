@@ -10,9 +10,11 @@
             </label>
             <input type="text"
                    name="reference"
-                   value="{{ prefill.reference|default:'' }}"
+                   value="{{ reference|default:'' }}"
                    placeholder="INV0012"
-                   class="input input-bordered max-w-full">
+                   maxlength="16"
+                   class="input input-bordered max-w-full validator">
+            <div class="invalid:block hidden text-error">Max 16 chars</div>
         </div>
     </div>
 </div>
