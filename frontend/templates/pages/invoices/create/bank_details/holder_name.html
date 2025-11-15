@@ -3,7 +3,7 @@
         <div class="form-control w-full">
             <label class="label">Account Holder Name</label>
             <input name="account_holder_name"
-                   value="{{ prefill.account_holder_name | default_if_none:'' }}"
+                   value="{{ account_holder_name | default_if_none:'' }}"
                    placeholder="Mr John Doe"
                    type="text"
                    maxlength="70"

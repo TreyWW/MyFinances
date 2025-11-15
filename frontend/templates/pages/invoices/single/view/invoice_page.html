@@ -27,12 +27,12 @@
                                      class="h-28">
                             {% endif %}
                             <div>
-                                <h1 class="text-2xl font-semibold">{{ invoice.self_company|default_if_none:invoice.self_name }}</h1>
-                                <p>{{ invoice.self_phone|default_if_none:"" }}</p>
-                                <p>{{ invoice.self_address|default_if_none:"" }}</p>
-                                <p>{{ invoice.self_city|default_if_none:"" }}</p>
-                                <p>{{ invoice.self_county|default_if_none:"" }}</p>
-                                <p>{{ invoice.self_country|default_if_none:"" }}</p>
+                                <h1 class="text-2xl font-semibold">{{ invoice.self_company|default:invoice.self_name }}</h1>
+                                <p>{{ invoice.self_phone|default:"" }}</p>
+                                <p>{{ invoice.self_address|default:"" }}</p>
+                                <p>{{ invoice.self_city|default:"" }}</p>
+                                <p>{{ invoice.self_county|default:"" }}</p>
+                                <p>{{ invoice.self_country|default:"" }}</p>
                                 {% if invoice.vat_number %}<p>VAT: {{ invoice.vat_number }}</p>{% endif %}
                             </div>
                         </aside>
