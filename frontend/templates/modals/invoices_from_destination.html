@@ -11,7 +11,7 @@
         <input type="text"
                name="name"
                placeholder="John Smith"
-               value="{{ from_name }}"
+               value="{{ from_name | default:'' }}"
                class="input input-bordered max-w-full">
     </div>
     <div class="form-control">
@@ -19,7 +19,7 @@
         <input type="text"
                name="company"
                placeholder="Google"
-               value="{{ from_company }}"
+               value="{{ from_company | default:'' }}"
                class="input input-bordered max-w-full">
     </div>
     <div class="form-control">
@@ -27,7 +27,7 @@
         <input type="text"
                name="address"
                placeholder="128 Road"
-               value="{{ from_address }}"
+               value="{{ from_address | default:'' }}"
                class="input input-bordered max-w-full">
     </div>
     <div class="form-control">
@@ -35,7 +35,7 @@
         <input type="text"
                name="city"
                placeholder="Oxford"
-               value="{{ from_city }}"
+               value="{{ from_city | default:'' }}"
                class="input input-bordered max-w-full">
     </div>
     <div class="form-control">
@@ -43,7 +43,7 @@
         <input type="text"
                name="county"
                placeholder="Oxfordshire"
-               value="{{ from_county }}"
+               value="{{ from_county | default:'' }}"
                class="input input-bordered max-w-full">
     </div>
     <div class="form-control">
@@ -51,7 +51,7 @@
         <input type="text"
                name="country"
                placeholder="England"
-               value="{{ from_country }}"
+               value="{{ from_country | default:'' }}"
                class="input input-bordered max-w-full">
     </div>
     <div class="modal-action">

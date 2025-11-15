@@ -48,11 +48,13 @@ def create_invoice_page_endpoint(request: WebRequest):
                 cloned_data["from_date_issued"] = datetime.today().date()
                 cloned_data["issue_date"] = datetime.today().date()
 
-                context.update({"prefill": cloned_data})
+                context.update(cloned_data)
                 context.update({"rows": cloned_data.get("rows", [])})
 
         except Invoice.DoesNotExist:
             messages.error(request, "Invoice to clone not found")
+
+    print(context)
 
     return invoices_core_handler(request, "pages/invoices/create/create_single.html", context)
 

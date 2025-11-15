@@ -1,5 +1,6 @@
 from django.contrib import messages
 
+from backend.clients.service.defaults import get_user_defaults
 from backend.models import Invoice, InvoiceRecurringProfile, InvoiceItem, Client, QuotaUsage, DefaultValues
 from backend.core.service.defaults.get import get_account_defaults
 from backend.core.types.requests import WebRequest
@@ -24,8 +25,13 @@ def save_invoice_common(request: WebRequest, invoice_items, invoice: Invoice | I
         invoice.user = request.user
 
     if request.POST.get("selected_client"):
+        if not (client_id := request.POST.get("selected_client")):
+            messages.error(request, "Client not found")
+            invoice.delete()
+            return None
+
         try:
-            client = Client.filter_by_owner(request.actor).get(id=request.POST.get("selected_client"))
+            client = Client.filter_by_owner(request.actor).get(id=client_id)
             invoice.client_to = client
         except Client.DoesNotExist:
             messages.error(request, "Client not found")
@@ -52,8 +58,9 @@ def save_invoice_common(request: WebRequest, invoice_items, invoice: Invoice | I
     if request.FILES.get("logo") is not None:
         invoice.logo = request.FILES.get("logo")
     else:
-        if invoice.client_to is not None and invoice.client_to.default_values.default_invoice_logo:
-            invoice.logo = invoice.client_to.default_values.default_invoice_logo
+        client_defaults = get_user_defaults(invoice.client_to) if invoice.client_to else None
+        if invoice.client_to is not None and client_defaults.default_invoice_logo:  # type: ignore
+            invoice.logo = client_defaults.default_invoice_logo  # type: ignore
         else:
             defaults: DefaultValues = get_account_defaults(request.actor)
             if defaults:
