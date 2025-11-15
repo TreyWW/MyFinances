@@ -4,7 +4,7 @@ import { tailwindcss } from 'tailwindcss';
 import { compat } from 'tailwindcss/compat';
 
 export default {
-  mode: 'jit',
+  presets: [compat()],
   content: [
     './frontend/templates/**/*.html',
     './billing/templates/**/*.html',
@@ -74,14 +74,6 @@ export default {
     darkTheme:
       "dark",
   },
-  variants:
-    {
-      extend: {
-        display: ['group-hover'],
-      }
-      ,
-    }
-  ,
   theme: {
     extend: {
       zIndex: {
@@ -127,5 +119,4 @@ export default {
       // placeholderColor: {'custom': '#0051ff'}
     }
   },
-  presets: [compat()]
 }
