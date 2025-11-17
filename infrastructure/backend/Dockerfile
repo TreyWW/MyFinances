@@ -11,6 +11,7 @@ RUN --mount=type=cache,target=/var/cache/apt \
         curl \
         gcc \
         g++ \
+        apt-utils \
     && rm -rf /var/lib/apt/lists/*
 
 FROM base AS python-builder
