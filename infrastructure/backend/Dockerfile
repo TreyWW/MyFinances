@@ -3,8 +3,7 @@ FROM python:3.12-slim AS base
 ENV PYTHONBUFFERED=1 \
     PIP_NO_CACHE_DIR=1
 
-RUN --mount=type=cache,target=/var/cache/apt \
-    apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update && apt-get install -y --no-install-recommends \
         build-essential \
         libssl-dev \
         libffi-dev \
