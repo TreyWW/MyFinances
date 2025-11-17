@@ -8,12 +8,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libssl-dev \
         libffi-dev \
         curl \
+        gcc \
+        g++ \
         && rm -rf /var/lib/apt/lists/*
 
 FROM base AS builder
 
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
-    && apt-get install -y nodejs
+    && apt-get install -y nodejs \
+    && rm -rf /var/lib/apt/lists/*
 
 ENV POETRY_NO_INTERACTION=1 \
     POETRY_VIRTUALENVS_IN_PROJECT=1 \
@@ -24,10 +27,15 @@ RUN pip install poetry==2.2.1
 
 WORKDIR /MyFinances
 
+ARG DATABASE_TYPE=sqlite
+
+RUN if [ "$DATABASE_TYPE" = "mysql" ]; then \
+        apt-get update && apt-get install -y default-libmysqlclient-dev && rm -rf /var/lib/apt/lists/*; \
+    fi
+
+
 COPY pyproject.toml poetry.lock ./
 COPY package.json package-lock.json ./
-
-ARG DATABASE_TYPE
 
 RUN if [ "$DATABASE_TYPE" = "postgres" ]; then \
         poetry install --no-root --with postgres --without dev; \
@@ -37,11 +45,13 @@ RUN if [ "$DATABASE_TYPE" = "postgres" ]; then \
         poetry install --no-root --without dev; \
     fi
 
+RUN npm ci
+
 COPY ./frontend ./frontend
 COPY ./assets ./assets
 COPY webpack* .
 
-RUN npm ci && npm run webpack-build
+RUN npm run webpack-build
 
 COPY . .
 
