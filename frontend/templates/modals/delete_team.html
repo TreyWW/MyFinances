@@ -1,0 +1,32 @@
+{% component_block "modal" id="modal_delete_team" start_open="true" title="Delete Team" %}
+{% fill "content" %}
+<div class="p-4">
+    <p class="text-error font-medium mb-4">
+        Are you sure you want to delete the team "{{ team.name }}"?
+    </p>
+    <p class="text-sm text-gray-600 mb-4">
+        This action cannot be undone. All team data including invoices, receipts, and files will be permanently deleted.
+    </p>
+    
+    {% if team.members.count > 0 %}
+        <div class="alert alert-error mb-4">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span>You must remove all team members ({{ team.members.count }} members) before deleting the team.</span>
+        </div>
+    {% endif %}
+    
+    <div class="flex justify-end gap-2 mt-4">
+        <button class="btn" _="on click call #modal_delete_team.close()">Cancel</button>
+        <button 
+            class="btn btn-error {% if team.members.count > 0 %}btn-disabled{% endif %}"
+            id="confirm-delete-team"
+            {% if not team.members.count > 0 %}
+            hx-post="{% url 'api:teams:delete' team_id=team.id %}"
+            hx-swap="none"
+            {% endif %}>
+            Delete Team
+        </button>
+    </div>
+</div>
+{% endfill %}
+{% endcomponent_block %}
