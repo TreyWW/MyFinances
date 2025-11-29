@@ -45,11 +45,15 @@ git clone [copied fork url]
     OR if you are running in a POSIX system such as: bash/zsh, fish, csh/tcsh, or PowerShell, the command to activate the virtual environment is:
 
     ```shell
-    ./venv/bin/activate
+    source ./venv/bin/activate
     ```
-    More information [here](https://docs.python.org/3/library/venv.html)  
+    
+   !!! note "Linux Note"
+		On Linux systems, the activate script typically doesn't have execution permissions by default, so it must be sourced rather than executed directly.
+    
+    More information [here](https://docs.python.org/3/library/venv.html)
 
-2. Install our dependencies using [python poetry](https://python-poetry.org/docs/#installing-manually)
+3. Install our dependencies using [python poetry](https://python-poetry.org/docs/#installing-manually)
    ```shell
    pip install poetry
 
@@ -57,22 +61,22 @@ git clone [copied fork url]
    ```
    If the installation of poetry gives error messages check out our [debugging section on poetry](../debugging/python/poetry.md).  
 
-3. Setup a database (we suggest using sqlite so there's no installation!)
+4. Setup a database (we suggest using sqlite so there's no installation!)
    To do this you can use one of our database guides, we currently only support 3 databases:
    	- [SQlite3 (recommended for dev)](./databases/sqlite.md)
    	- [Postgres3 (recommended for prod)](./databases/postgres.md)
    	- [Mysql](./databases/mysql.md)
 
-4. Migrate the database
+5. Migrate the database
     ```shell
     python manage.py migrate
     ```
-5.  Create an administrator account
+6.  Create an administrator account
     ```shell
     python manage.py createsuperuser
     ```
 
-6. Run the application
+7. Run the application
     ```shell
     python manage.py runserver
     ```
