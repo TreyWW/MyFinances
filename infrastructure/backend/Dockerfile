@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         curl \
         gcc \
         g++ \
+        bash \
         && rm -rf /var/lib/apt/lists/*
 
 FROM base AS builder
