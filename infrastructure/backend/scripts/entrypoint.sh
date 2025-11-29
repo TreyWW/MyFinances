@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 echo "[SYSTEM] [DJANGO] About to migrate"
 python3 manage.py migrate --no-input

@@ -40,7 +40,13 @@ COPY package.json package-lock.json ./
 RUN if [ "$DATABASE_TYPE" = "postgres" ]; then \
         poetry install --no-root --with postgres --without dev; \
     elif [ "$DATABASE_TYPE" = "mysql" ]; then \
-        poetry install --no-root --with mysql --without dev; \
+        apt-get update && apt-get install -y \
+         default-libmysqlclient-dev \
+         libmariadb-dev-compat \
+         libmariadb-dev \
+         pkg-config \
+      && rm -rf /var/lib/apt/lists/*; \
+      poetry install --no-root --with mysql --without dev; \
     else \
         poetry install --no-root --without dev; \
     fi
