@@ -83,7 +83,7 @@ mariadb = "1.1.8"
 optional = true
 
 [tool.poetry.group.postgres.dependencies]
-psycopg-binary = "2.9.11"
+psycopg2-binary = "2.9.11"
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.3.0"
