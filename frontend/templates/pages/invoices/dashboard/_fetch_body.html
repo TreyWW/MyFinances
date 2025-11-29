@@ -77,6 +77,12 @@
                                 Manage Access
                             </a>
                         </li>
+                        <li hx-push-url="{% url 'finance:invoices:single:create' %}?clone_from={{ invoice.id }}">
+                            <a href="{% url 'finance:invoices:single:create' %}?clone_from={{ invoice.id }}">
+                                <i class="fa-solid fa-clone"></i>
+                                Clone Invoice
+                            </a>
+                        </li>
                         <li hx-push-url="{% url 'finance:invoices:single:edit' invoice_id=invoice.id %}">
                             <a href="{% url 'finance:invoices:single:edit' invoice_id=invoice.id %}">
                                 <i class="fa-solid fa-pencil"></i>

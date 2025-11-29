@@ -3,7 +3,7 @@ on:
   push:
     tags:
       - 'v*'
-  workflow_dispatch: 
+  workflow_dispatch:
     inputs:
       version:
         type: string
@@ -13,6 +13,10 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        db: [postgres, mysql, sqlite]
+      fail-fast: false
     permissions:
       packages: write
       contents: read
@@ -25,40 +29,15 @@ jobs:
         id: set_version
         run: |
           if [ "${{ github.event_name }}" == "push" ]; then
-            echo "::set-output name=version::${GITHUB_REF#refs/tags/}"
+            echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
           elif [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            echo "::set-output name=version::${{ github.event.inputs.version }}"
-          fi
-
-      - name: Build frontend
-        run: |
-          npm ci
-          npm run tailwind-minify
-          npm run webpack-build
-
-          if [ -f frontend/static/src/output.css ]; then
-            echo "output.css is created"
-          else
-            echo "output.css is not created"
-            exit 1
-          fi
-          if [ -d frontend/static/js/c/ ]; then
-            echo "webpack has been built"
-          else
-            echo "frontend/static/js/c/ was not created from webpack build"
-            exit 1
-          fi
-          if [ -f webpack-stats.json ]; then
-            echo "webpack-stats was built successfully"
-          else
-            echo "webpack-stats was not built"
-            exit 1
+            echo "version=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
           fi
 
       - name: Set up Docker Buildx
         run: |
           docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
-          docker buildx create --name multiarch-builder --use
+          docker buildx create --name multiarch-builder --use || docker buildx use multiarch-builder
           docker buildx inspect --bootstrap
 
       - name: Log in to GitHub Docker Registry
@@ -71,18 +50,21 @@ jobs:
           IMAGE_NAME: ghcr.io/treyww/myfinances
           IMAGE_TAG: ${{ steps.set_version.outputs.version }}
         run: |
-          cp infrastructure/backend/Dockerfile ./Dockerfile
           echo "VERSION IS: ${{ steps.set_version.outputs.version }} or $IMAGE_TAG"
-          
-          # Use buildx to build for multiple platforms (arm64 and amd64)
-          docker buildx build --platform linux/amd64,linux/arm64 \
-            -t $IMAGE_NAME:$IMAGE_TAG . \
-            --push
 
-          # Optionally push the 'latest' tag for both platforms
           docker buildx build --platform linux/amd64,linux/arm64 \
-            -t $IMAGE_NAME:latest . \
-            --push
+            -f ./infrastructure/backend/Dockerfile \
+            -t $IMAGE_NAME:$IMAGE_TAG-${{ matrix.db }} \
+            -t $IMAGE_NAME:latest-${{ matrix.db }} \
+            --build-arg DATABASE_TYPE=${{ matrix.db }} \
+            . --push
 
-          echo "::set-output name=image::$IMAGE_NAME:$IMAGE_TAG"
-          echo "::set-output name=latest_image::$IMAGE_NAME:latest"
+          if [ "${{ matrix.db }}" = "sqlite" ]; then
+              # default tags
+              docker buildx build --platform linux/amd64,linux/arm64 \
+                -f ./infrastructure/backend/Dockerfile \
+                -t $IMAGE_NAME:$IMAGE_TAG \
+                -t $IMAGE_NAME:latest \
+                --build-arg DATABASE_TYPE=sqlite \
+                . --push
+            fi
