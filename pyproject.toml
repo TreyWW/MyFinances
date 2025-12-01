@@ -19,6 +19,7 @@ django-webpack-loader = "^3.1.0"
 django-silk = "^5.1.0"
 djangorestframework = "^3.15.1"
 drf-yasg = "^1.21.7"
+pycryptodome = "^3.23.0"
 
 setuptools = "^78.1.1"
 stripe = "^10.8.0"
