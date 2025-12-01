@@ -31,6 +31,12 @@ class SecureUUIDTestCase(SimpleTestCase):
 
         self.assertEqual(recovered_id, original_id)
 
+    def test_uuid_is_deterministic_for_same_model_name(self):
+        u1 = get_uuid(100, "Invoice")
+        u2 = get_uuid(100, "Invoice")
+
+        self.assertEqual(u1, u2)
+
     def test_negative_id_raises_value_error(self):
         with self.assertRaises(ValueError):
             get_uuid(-1, "Transaction")
