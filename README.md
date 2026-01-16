@@ -48,7 +48,7 @@ For detailed setup instructions please refer to our documentation: https://strel
 ## Contributing
 
 We love contributions! Whether you're fixing bugs, adding features, or improving documentation, your help is welcome. Take a look at the [contributing docs](https://strelix.link/myfinances-docs/contributing/) for more info.
-
+the link is not working right now because we are not in production yet. 
 ### Quick Contributing Guide
 
 1. **Fork** this repository
