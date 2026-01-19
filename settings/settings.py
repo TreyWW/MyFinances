@@ -470,3 +470,5 @@ if "test" in sys.argv[1:]:
     sys.modules["billing"] = MagicMock()
     sys.modules["billing.signals"] = MagicMock()
     sys.modules["billing.models"] = MagicMock()
+
+UUID_AES_KEY = get_var("UUID_AES_KEY", b"your-16-or-24-or-32-byte-key")
