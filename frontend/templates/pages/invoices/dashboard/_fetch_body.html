@@ -46,11 +46,15 @@
             <td colspan="2"
                 onclick="const e = arguments[0] || window.event; e.stopPropagation();"
                 class="cursor-default">
-                {# The if statement for dropdown top goes as follows #}
-                {# Use dropdown on top if these: #}
-                {# - is last item           (and not first item) (and more than 4 items) #}
-                <!-- Only last two invoices need a dropup -->
-                <div class="dropdown dropdown-left {% if forloop.counter0 > 3 %}dropdown-top{% endif %}">
+                <div class="dropdown dropdown-left" x-data="{ openUp: false }" x-init="() => {
+                    const checkDropdownPosition = () => {
+                        const rect = $el.getBoundingClientRect();
+                        const dropdownHeight = $el.querySelector('.dropdown-content').offsetHeight;
+                        openUp = (rect.bottom + dropdownHeight) > window.innerHeight || (rect.top - dropdownHeight) < 0;
+                    };
+                    checkDropdownPosition();
+                    window.addEventListener('scroll', checkDropdownPosition);
+                }" :class="{ 'dropdown-top': openUp }">
                     <label tabindex="0" class="btn btn-primary btn-outline btn-sm">
                         <i class="fa-solid fa-ellipsis-vertical"></i>
                     </label>
