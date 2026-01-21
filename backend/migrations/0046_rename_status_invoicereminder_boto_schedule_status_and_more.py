@@ -46,12 +46,12 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="invoice",
             name="logo",
-            field=models.ImageField(blank=True, null=True, storage=backend.core.models._private_storage, upload_to="invoice_logos"),
+            field=models.ImageField(blank=True, null=True, storage=backend.core.models.get_private_storage, upload_to="invoice_logos"),
         ),
         migrations.AlterField(
             model_name="receipt",
             name="image",
-            field=models.ImageField(storage=backend.core.models._private_storage, upload_to="receipts"),
+            field=models.ImageField(storage=backend.core.models.get_private_storage, upload_to="receipts"),
         ),
         migrations.AlterField(
             model_name="teammemberpermission",
@@ -63,7 +63,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="usersettings",
             name="profile_picture",
-            field=models.ImageField(blank=True, null=True, storage=backend.core.models._public_storage, upload_to="profile_pictures/"),
+            field=models.ImageField(blank=True, null=True, storage=backend.core.models.get_public_storage, upload_to="profile_pictures/"),
         ),
         migrations.CreateModel(
             name="InvoiceRecurringProfile",
@@ -109,7 +109,10 @@ class Migration(migrations.Migration):
                 ("reference", models.CharField(blank=True, max_length=100, null=True)),
                 ("invoice_number", models.CharField(blank=True, max_length=100, null=True)),
                 ("vat_number", models.CharField(blank=True, max_length=100, null=True)),
-                ("logo", models.ImageField(blank=True, null=True, storage=backend.core.models._private_storage, upload_to="invoice_logos")),
+                (
+                    "logo",
+                    models.ImageField(blank=True, null=True, storage=backend.core.models.get_private_storage, upload_to="invoice_logos"),
+                ),
                 ("notes", models.TextField(blank=True, null=True)),
                 (
                     "currency",
