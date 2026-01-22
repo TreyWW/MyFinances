@@ -96,10 +96,11 @@ def change_status(request: HtmxHttpRequest, invoice_id: int, status: str) -> Htt
         return return_message(request, f"Invoice status is already {status}")
 
     invoice.set_status(status)
+    invoice.refresh_from_db()
 
     send_message(request, f"Invoice status been changed to <strong>{status}</strong>", success=True)
 
-    return render(request, "pages/invoices/dashboard/_modify_payment_status.html", {"status": status, "invoice_id": invoice_id})
+    return render(request, "pages/invoices/dashboard/_modify_payment_status.html", {"status": status, "invoice_id": invoice_id, "invoice":invoice})
 
 
 @require_POST

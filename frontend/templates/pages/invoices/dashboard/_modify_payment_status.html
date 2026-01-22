@@ -1,7 +1,33 @@
 <div id="messages_list">{% component "messages_list" with_js=True %}</div>
+
 <div hx-swap-oob='outerHTML:span[data-invoice-id="{{ invoice_id }}"]'>
     {% component "pages:invoices:dashboard:payment_status_badge" status=status inv_id=invoice_id %}
 </div>
+
 <div hx-swap-oob='innerHTML:div[data-oob="status"]'>
     {% component "pages:invoices:dashboard:payment_status_badge" status=status inv_id=invoice_id design="default" %}
+</div>
+
+{# STATUS LINE ispod "Invoice #..." #}
+<div hx-swap-oob="outerHTML:#invoice_status_line_{{ invoice_id }}">
+    <div class="mt-[2px]" id="invoice_status_line_{{ invoice_id }}"> 
+        {% if invoice.status == "paid" %}
+            <span class="text-success">
+                <i class="fa fa-check"></i> Paid
+            </span>
+        {% elif invoice.status == "draft" %}
+            <span class="text-neutral-content">
+                <i class="fa fa-sticky-note"></i> Draft
+            </span>
+        {% else %}
+            <span class="text-neutral-content">
+                <i class="fa fa-hourglass-2"></i> {{ invoice.status|title }}
+            </span>
+        {% endif %}
+        &nbsp;·&nbsp;
+        Status last changed on
+        {{ invoice.status_updated_at | date:"F" | slice:":3" }}{{ invoice.status_updated_at | date:" jS, Y" }}
+        at
+        {{ invoice.status_updated_at | date:"g:i A" }}
+    </div>
 </div>
