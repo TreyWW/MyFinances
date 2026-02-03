@@ -23,7 +23,7 @@
                     {% endif %}
                 </a>
             </td>
-            <td>{{ invoice.date_due | date:"d/m/Y" }}</td>
+            <td td-value="{{ invoice.date_due|date:'Y-m-d' }}">{{ invoice.date_due|date:"d/m/Y" }}</td>
             {% with cli_name=invoice.client_to.name|default:invoice.client_name %}
                 <td td-value="{{ cli_name|default_if_none:"No Client" }}">
                     <div class="flex items-center text-sm">

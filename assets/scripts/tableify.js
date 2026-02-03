@@ -15,12 +15,12 @@ window.Tableify = class Tableify {
       const filterType = $(th).attr("mft-filter-type");
 
       // Add filter icon if filters are defined
-      if (colFilters || filterType === "searchable" || filterType === "searchable-amount" || filterType === "normal") {
+      if (colFilters || filterType === "searchable" || filterType === "searchable-amount" || filterType === "normal" || filterType === "date-range") {
         const filterIcon = $('<i class="fa fa-filter ml-2 cursor-pointer"></i>');
         const countBadge = $('<span class="filter-count hidden ml-1 badge badge-primary"></span>');
         $(th).append(filterIcon).append(countBadge);
 
-        $(th).addClass('cursor-pointer').on("click", () => {
+        $(th).addClass('cursor-pointer relative').on("click", () => {
           this.toggleFilter(th, colName);
         });
       }
@@ -90,6 +90,16 @@ window.Tableify = class Tableify {
               const numericValue = parseFloat(inputValue); // Exact number
               return parsedValue === numericValue; // Exact match
             }
+          } else if (filterType === "date-range") {
+            const fromVal = this.filters[colName][0] || "";
+            const toVal = this.filters[colName][1] || "";
+            const iso = (cell.attr("td-value") || "").trim();
+
+            if (!iso) return true;
+
+            if (fromVal && iso < fromVal) return false;
+            if (toVal && iso > toVal) return false;
+            return true;
           } else {
             return this.filters[colName].some(filterValue => cellValue.includes(filterValue));
           }
@@ -127,7 +137,7 @@ window.Tableify = class Tableify {
     const filterType = $(element).attr("mft-filter-type");
 
     // Do nothing if there are no filters or search options defined
-    if (!colFilters && (filterType !== "searchable" && filterType !== "searchable-amount" && filterType !== "normal")) {
+    if (!colFilters && (filterType !== "searchable" && filterType !== "searchable-amount" && filterType !== "normal" && filterType !== "date-range")) {
       return;
     }
 
@@ -179,6 +189,28 @@ window.Tableify = class Tableify {
           this.redraw();
         });
         dropdown.append(amountInput);
+      } else if (filterType === "date-range") {
+        const fromLabel = $(`<div class="text-xs opacity-70 mb-1">From</div>`);
+        const fromInput = $(`<input type="date" class="input input-bordered w-full input-sm mb-3" />`);
+        const toLabel   = $(`<div class="text-xs opacity-70 mb-1">To</div>`);
+        const toInput   = $(`<input type="date" class="input input-bordered w-full input-sm" />`);
+
+        const apply = () => {
+          const fromVal = fromInput.val();
+          const toVal = toInput.val();
+
+          if (fromVal || toVal) {
+            this.filters[colName] = [fromVal || "", toVal || ""];
+          } else {
+            delete this.filters[colName];
+          }
+          this.redraw();
+        };
+
+        fromInput.on("input", (e) => { e.stopPropagation(); apply(); });
+        toInput.on("input", (e) => { e.stopPropagation(); apply(); });
+
+        dropdown.append(fromLabel).append(fromInput).append(toLabel).append(toInput);
       }
 
       $(element).append(dropdown); // Append the new dropdown to the column header
