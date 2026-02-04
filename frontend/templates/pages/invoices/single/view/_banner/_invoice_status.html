@@ -1,5 +1,5 @@
 <div class="flex items-center mx-auto status-btn">
-    <p class="flex text-sm font-normal me-8">
+    <p class="flex text-sm font-normal me-8" id="single-invoice-status-{{ invoice.id }}">
         {% with ps=invoice.status %}
             {% if ps == "paid" %}
                 <span class="circle-tick bg-success text-neutral">
