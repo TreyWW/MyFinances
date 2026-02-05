@@ -24,13 +24,10 @@ from backend.core.types.emails import (
     BulkEmailEmailItem,
 )
 
-# NEEDS REFACTOR
 
 env = environ.Env(DEBUG=(bool, False))
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
-env = environ.Env()
-environ.Env.read_env()
 
 
 def get_var(key, default=None, required=False):

@@ -7,22 +7,23 @@ from backend.core.data.default_email_templates import (
     recurring_invoices_invoice_overdue_default_email_template,
     recurring_invoices_invoice_cancelled_default_email_template,
 )
-from backend.core.models import OwnerBase, User, UserSettings, _private_storage
+from backend.core.models import OwnerBase, User, UserSettings, get_private_storage
+from backend.core.constants import MAX_LENGTH_STANDARD, MAX_LENGTH_NAME
 
 
 class Client(OwnerBase):
     active = models.BooleanField(default=True)
-    name = models.CharField(max_length=64)
-    phone_number = models.CharField(max_length=100, blank=True, null=True)
+    name = models.CharField(max_length=MAX_LENGTH_NAME, blank=False)
+    phone_number = models.CharField(max_length=MAX_LENGTH_STANDARD, blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
     email_verified = models.BooleanField(default=False)
-    company = models.CharField(max_length=100, blank=True, null=True)
-    contact_method = models.CharField(max_length=100, blank=True, null=True)
+    company = models.CharField(max_length=MAX_LENGTH_STANDARD, blank=True, null=True)
+    contact_method = models.CharField(max_length=MAX_LENGTH_STANDARD, blank=True, null=True)
     is_representative = models.BooleanField(default=False)
 
-    address = models.TextField(max_length=100, blank=True, null=True)
-    city = models.CharField(max_length=100, blank=True, null=True)
-    country = models.CharField(max_length=100, blank=True, null=True)
+    address = models.TextField(max_length=MAX_LENGTH_STANDARD, blank=True, null=True)
+    city = models.CharField(max_length=MAX_LENGTH_STANDARD, blank=True, null=True)
+    country = models.CharField(max_length=MAX_LENGTH_STANDARD, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -61,17 +62,19 @@ class DefaultValues(OwnerBase):
     invoice_date_value = models.PositiveSmallIntegerField(default=15, null=False, blank=False)
     invoice_date_type = models.CharField(max_length=20, choices=InvoiceDateType.choices, default=InvoiceDateType.day_of_month)
 
-    invoice_from_name = models.CharField(max_length=100, null=True, blank=True)
-    invoice_from_company = models.CharField(max_length=100, null=True, blank=True)
-    invoice_from_address = models.CharField(max_length=100, null=True, blank=True)
-    invoice_from_city = models.CharField(max_length=100, null=True, blank=True)
-    invoice_from_county = models.CharField(max_length=100, null=True, blank=True)
-    invoice_from_country = models.CharField(max_length=100, null=True, blank=True)
-    invoice_from_email = models.CharField(max_length=100, null=True, blank=True)
+    # Invoice sender information
+    invoice_from_name = models.CharField(max_length=MAX_LENGTH_STANDARD, null=True, blank=True)
+    invoice_from_company = models.CharField(max_length=MAX_LENGTH_STANDARD, null=True, blank=True)
+    invoice_from_address = models.CharField(max_length=MAX_LENGTH_STANDARD, null=True, blank=True)
+    invoice_from_city = models.CharField(max_length=MAX_LENGTH_STANDARD, null=True, blank=True)
+    invoice_from_county = models.CharField(max_length=MAX_LENGTH_STANDARD, null=True, blank=True)
+    invoice_from_country = models.CharField(max_length=MAX_LENGTH_STANDARD, null=True, blank=True)
+    invoice_from_email = models.CharField(max_length=MAX_LENGTH_STANDARD, null=True, blank=True)
 
-    invoice_account_number = models.CharField(max_length=100, null=True, blank=True)
-    invoice_sort_code = models.CharField(max_length=100, null=True, blank=True)
-    invoice_account_holder_name = models.CharField(max_length=100, null=True, blank=True)
+    # Banking information
+    invoice_account_number = models.CharField(max_length=MAX_LENGTH_STANDARD, null=True, blank=True)
+    invoice_sort_code = models.CharField(max_length=MAX_LENGTH_STANDARD, null=True, blank=True)
+    invoice_account_holder_name = models.CharField(max_length=MAX_LENGTH_STANDARD, null=True, blank=True)
 
     email_template_recurring_invoices_invoice_created = models.TextField(default=recurring_invoices_invoice_created_default_email_template)
     email_template_recurring_invoices_invoice_overdue = models.TextField(default=recurring_invoices_invoice_overdue_default_email_template)
@@ -101,7 +104,7 @@ class DefaultValues(OwnerBase):
 
     default_invoice_logo = models.ImageField(
         upload_to="invoice_logos/",
-        storage=_private_storage,
+        storage=get_private_storage,
         blank=True,
         null=True,
     )

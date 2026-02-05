@@ -19,9 +19,7 @@ class Migration(migrations.Migration):
                 ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
                 (
                     "file",
-                    models.FileField(
-                        storage=backend.core.models._private_storage, upload_to=backend.core.models.upload_to_user_separate_folder
-                    ),
+                    models.FileField(storage=backend.core.models.get_private_storage, upload_to=backend.core.models.get_file_upload_path),
                 ),
                 ("created_at", models.DateTimeField(auto_now_add=True)),
                 ("updated_at", models.DateTimeField(auto_now=True)),

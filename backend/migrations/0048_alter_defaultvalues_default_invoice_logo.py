@@ -3,7 +3,7 @@
 import backend.models
 from django.db import migrations, models
 
-from backend.core.models import _private_storage
+from backend.core.models import get_private_storage
 
 
 class Migration(migrations.Migration):
@@ -16,6 +16,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="defaultvalues",
             name="default_invoice_logo",
-            field=models.ImageField(blank=True, null=True, storage=_private_storage, upload_to="invoice_logos/"),
+            field=models.ImageField(blank=True, null=True, storage=get_private_storage, upload_to="invoice_logos/"),
         ),
     ]
