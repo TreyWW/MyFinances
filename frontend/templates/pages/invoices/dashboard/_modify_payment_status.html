@@ -1,7 +1,15 @@
 <div id="messages_list">{% component "messages_list" with_js=True %}</div>
+
 <div hx-swap-oob='outerHTML:span[data-invoice-id="{{ invoice_id }}"]'>
     {% component "pages:invoices:dashboard:payment_status_badge" status=status inv_id=invoice_id %}
 </div>
+
 <div hx-swap-oob='innerHTML:div[data-oob="status"]'>
     {% component "pages:invoices:dashboard:payment_status_badge" status=status inv_id=invoice_id design="default" %}
 </div>
+
+{# Status line below "Invoice #..." #}
+<div hx-swap-oob="outerHTML:#invoice_status_line_{{ invoice_id }}">
+    {% include "pages/invoices/dashboard/_invoice_status_line.html" with invoice=invoice %}
+</div>
+
