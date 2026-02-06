@@ -1,11 +1,11 @@
 import Alpine from "alpinejs";
 import $ from "jquery";
 
-// jQuery global
+// Expose jQuery globally (some pages rely on it)
 window.jQuery = $;
 window.$ = $;
 
-// Alpine global + start ONCE, posle DOM-a
+// Expose Alpine globally and start it once
 window.Alpine = Alpine;
 
 function startAlpineOnce() {
@@ -15,33 +15,37 @@ function startAlpineOnce() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  // Alpine tek kad DOM postoji
   startAlpineOnce();
 
-  // Drawer elementi (ne postoje na svim stranicama / iframe-u)
+  // Drawer elements are not present on every page (e.g. invoice preview iframe)
   const drawer = document.getElementById("service_list_drawer");
-  const service_list_toggler = document.getElementById("service_list_toggler");
-  const logo_single_service_list_toggler = document.getElementById("logo_single_service_list_toggler");
+  const serviceListToggler = document.getElementById("service_list_toggler");
+  const logoSingleServiceListToggler = document.getElementById(
+    "logo_single_service_list_toggler"
+  );
+
+  // Note: querySelectorAll returns an empty NodeList if none exist
   const togglers = document.querySelectorAll("#service_list_togglers");
 
-  // Ako nema drawer UI na toj stranici (npr. iframe preview) -> ne radi ništa
-  if (!drawer || !service_list_toggler || !logo_single_service_list_toggler) return;
+  // If the drawer UI isn't on this page, exit silently
+  if (!drawer || !serviceListToggler || !logoSingleServiceListToggler) return;
 
   window.toggleDrawerSurrounds = function toggleDrawerSurrounds(state) {
-    service_list_toggler.checked = state;
-    logo_single_service_list_toggler.checked = state;
+    serviceListToggler.checked = state;
+    logoSingleServiceListToggler.checked = state;
 
-    for (let i = 0; i < togglers.length; i++) {
-      togglers[i].checked = state;
-    }
+    togglers.forEach((t) => {
+      t.checked = state;
+    });
   };
 
-  window.toggleDrawer = function toggleDrawer(value, with_drawer = false) {
+  window.toggleDrawer = function toggleDrawer(value, withDrawer = false) {
     window.toggleDrawerSurrounds(value);
-    if (with_drawer) drawer.checked = value;
+    if (withDrawer) drawer.checked = value;
   };
 
   drawer.addEventListener("change", function () {
     window.toggleDrawerSurrounds(drawer.checked);
   });
 });
+
