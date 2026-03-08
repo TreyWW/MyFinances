@@ -17,6 +17,8 @@ def get_invoice_context(request: WebRequest) -> dict:
         except ValueError:
             ...
 
+    _, tmp_due_date = defaults.get_issue_and_due_dates(context["issue_date"])
+
     if not due_date:
-        context["issue_date"], context["due_date"] = defaults.get_issue_and_due_dates(context["issue_date"])
+        context["due_date"] = tmp_due_date
     return context

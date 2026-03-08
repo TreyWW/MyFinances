@@ -11,8 +11,6 @@ from backend.core.api.public.decorators import require_scopes
 from backend.core.api.public.helpers.deprecate import deprecated
 from backend.core.api.public.swagger_ui import TEAM_PARAMETER
 from backend.core.api.public.types import APIRequest
-from backend.finance.models import Invoice
-from backend.core.service.invoices.single.create_pdf import generate_pdf
 from backend.core.api.public.helpers.response import APIResponse
 
 
@@ -63,14 +61,4 @@ from backend.core.api.public.helpers.response import APIResponse
 @deprecated(datetime(2024, 7, 16), datetime(2024, 7, 16))
 @require_scopes(["invoices:read"])
 def download(request: APIRequest, id: str) -> HttpResponse | Response:
-    try:
-        if request.team:
-            invoice = Invoice.objects.get(organization=request.team, id=id)
-        else:
-            invoice = Invoice.objects.get(user=request.user, id=id)
-    except Invoice.DoesNotExist:
-        return APIResponse(False, {"message": "Invoice not found"}, status=status.HTTP_400_BAD_REQUEST)
-
-    if response := generate_pdf(invoice, "attachment"):
-        return response
-    return APIResponse(False, {"message": "Error generating PDF"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    return APIResponse(False, {"message": "This endpoint is no longer available."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

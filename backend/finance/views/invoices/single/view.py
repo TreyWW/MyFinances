@@ -26,8 +26,6 @@ def preview(request: HtmxHttpRequest, invoice_id: str) -> HttpResponse:
         messages.error(request, "You don't have access to this invoice")
         return redirect("finance:invoices:single:dashboard")
 
-    # if response := generate_pdf(invoice, "inline"):
-    #     return response
     return render(
         request,
         "pages/invoices/single/view/invoice_page.html",

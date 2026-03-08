@@ -1,5 +1,3 @@
-from django.contrib.contenttypes.fields import GenericForeignKey
-from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.contrib.auth.hashers import check_password, make_password
 import binascii
@@ -9,7 +7,7 @@ from django.utils import timezone
 from backend.core.models import OwnerBase, ExpiresBase
 
 
-class APIAuthToken(OwnerBase, ExpiresBase):
+class APIAuthToken(OwnerBase, ExpiresBase):  # type: ignore
     id = models.AutoField(primary_key=True)
 
     hashed_key = models.CharField("Key", max_length=128, unique=True)

@@ -5,14 +5,11 @@
 
 # Checklist
 
-- [ ] Ran the [Black Formatter](https://docs.strelix.org/MyFinances/#/how-to-contribute?id=test-and-lint) and
-  [djLint-er](https://docs.strelix.org/MyFinances/#/how-to-contribute?id=test-and-lint) on any new code
-  (checks
-  will
-  fail without)
+- [ ] Ran the [Black Formatter](http://strelix.link/myfinances-docs/contributing/setup/#test-and-lint) and
+  [djLint-er](http://strelix.link/myfinances-docs/contributing/setup/#test-and-lint) on any new code
 - [ ] Made any changes or additions to the documentation _where required_
 - [ ] Changes generate no new warnings/errors
-- [ ] New and existing [unit tests](https://docs.strelix.org/MyFinances/#/how-to-contribute?id=test-and-lint) pass locally with my
+- [ ] New and existing [unit tests](http://strelix.link/myfinances-docs/contributing/setup/#test-and-lint) pass locally with my
   changes
 
 

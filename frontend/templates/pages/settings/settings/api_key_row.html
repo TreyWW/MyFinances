@@ -4,8 +4,14 @@
     <td>{{ key.expires | date:"d M, Y" | default:"Never" }}</td>
     <td>{{ key.created | date:"d M, Y H:iA" }}</td>
     <td>
+        <button class="btn btn-warning btn-sm"
+                hx-post="{% url 'api:settings:api_keys regenerate' key_id=key.id %}"
+                hx-confirm="Are you sure you would like to regenerate this key? The old token will no longer work."
+                hx-target="closest tr"
+                hx-swap="outerHTML">Regenerate</button>
         <button class="btn btn-error btn-sm"
                 hx-delete="{% url 'api:settings:api_keys revoke' key_id=key.id %}"
+                hx-confirm="Are you sure you would like to delete this key? The token will no longer work."
                 hx-target="closest tr"
                 hx-swap="outerHTML">Revoke</button>
     </td>

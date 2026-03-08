@@ -11,11 +11,11 @@
     <!-- PRE-POPULATE FIELDS WITH EXISTING DATA OF THE INVOICE-->
     <div class="card-body">
         <p class="text-md">{{ to_name | default:"No name" }}</p>
-        <p class="text-sm">{{ to_company | default:"No company" }}</p>
-        <p class="text-sm">{{ to_email | default:"No email" }}</p>
+        <p class="text-sm">{{ to_company | default:"No Company" }}</p>
+        {#        <p class="text-sm">{{ to_email | default:"No email" }}</p>#}
         <p class="text-sm">{{ to_address | default:"No address" }}</p>
-        <p class="text-sm">{{ to_city | default:"No city" }}</p>
-        <p class="text-sm">{{ to_county | default:"No county" }}</p>
+        {#        <p class="text-sm">{{ to_city | default:"No city" }}</p>#}
+        {#        <p class="text-sm">{{ to_county | default:"No county" }}</p>#}
         <p class="text-sm">{{ to_country | default:"No country" }}</p>
         <p class="text-sm">
             {% if is_representative %}
@@ -27,15 +27,20 @@
         </p>
     </div>
     <!-- REPLACE DEFAULT VALUES WITH WHATEVER IS ALREADY STORED FOR THE INVOICE - if user does not change field, keep whats there-->
-    <input type="hidden" name="to_name" value="{{ to_name | default:"" }}">
-    <input type="hidden" name="to_company" value="{{ to_company | default:"" }}">
-    <input type="hidden" name="to_email" value="{{ to_email | default:"" }}">
-    <input type="hidden" name="to_address" value="{{ to_address | default:"" }}">
-    <input type="hidden" name="to_city" value="{{ to_city | default:"" }}">
-    <input type="hidden" name="to_county" value="{{ to_county | default:"" }}">
-    <input type="hidden" name="to_country" value="{{ to_country | default:"" }}">
-    <input type="hidden" name="selected_client" value="{{ existing_client.id }}">
-    <input type="hidden"
-           name="is_representative"
-           value="{{ is_representative }}">
+    {% if not existing_client %}
+        <input type="hidden" name="to_name" value="{{ to_name | default:"" }}">
+        <input type="hidden" name="to_company" value="{{ to_company | default:"" }}">
+        <input type="hidden" name="to_email" value="{{ to_email | default:"" }}">
+        <input type="hidden" name="to_address" value="{{ to_address | default:"" }}">
+        <input type="hidden" name="to_city" value="{{ to_city | default:"" }}">
+        <input type="hidden" name="to_county" value="{{ to_county | default:"" }}">
+        <input type="hidden" name="to_country" value="{{ to_country | default:"" }}">
+        <input type="hidden"
+               name="is_representative"
+               value="{{ is_representative }}">
+    {% else %}
+        <input type="hidden"
+               name="selected_client"
+               value="{{ existing_client.id | default:'' }}">
+    {% endif %}
     {% if not swapping %}</button>{% endif %}

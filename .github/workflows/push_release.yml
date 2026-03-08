@@ -13,6 +13,10 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        db: [ postgres, mysql, sqlite ]
+      fail-fast: false
     # These permissions are needed to interact with GitHub's OIDC Token endpoint.
     permissions:
       id-token: write
@@ -28,37 +32,9 @@ jobs:
         id: set_version
         run: |
           if [ "${{ github.event_name }}" == "push" ]; then
-            echo "::set-output name=version::${GITHUB_REF#refs/tags/}"
+            echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
           elif [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            echo "::set-output name=version::${{ github.event.inputs.version }}"
-          fi
-
-      #----------------------------------------------
-      #       build Frontend files
-      #----------------------------------------------
-      - name: Build frontend
-        run: |
-          npm ci
-          npm run tailwind-minify
-          npm run webpack-build
-
-          if [ -f frontend/static/src/output.css ]; then
-            echo "output.css is created"
-          else
-            echo "output.css is not created"
-            exit 1
-          fi
-          if [ -d frontend/static/js/c/ ]; then
-            echo "webpack has been built"
-          else
-            echo "frontend/static/js/c/ was not created from webpack build"
-            exit 1
-          fi
-          if [ -f webpack-stats.json ]; then
-            echo "webpack has built webpack-stats to work with chunks"
-          else
-            echo "webpack-stats was not built so cannot work with chunks"
-            exit 1
+            echo "version=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
           fi
 
       - name: Configure AWS credentials
@@ -76,18 +52,33 @@ jobs:
         with:
           registry-type: public
 
+      - name: Set up Docker Buildx
+        run: |
+          docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+          docker buildx create --name multiarch-builder --use || docker buildx use multiarch-builder
+          docker buildx inspect --bootstrap
+
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
         env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+          IMAGE_NAME: "${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPOSITORY }}"
           IMAGE_TAG: ${{ steps.set_version.outputs.version }} #${{ github.sha }}
         run: |
-          cp infrastructure/backend/Dockerfile ./Dockerfile
           echo "VERSION IS: ${{ steps.set_version.outputs.version }} or $IMAGE_TAG"
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
-          echo "::set-output name=latest_image::$ECR_REGISTRY/$ECR_REPOSITORY:latest"
+
+          docker buildx build --platform linux/amd64,linux/arm64 \
+            -f ./infrastructure/backend/Dockerfile \
+            -t $IMAGE_NAME:$IMAGE_TAG-${{ matrix.db }} \
+            -t $IMAGE_NAME:latest-${{ matrix.db }} \
+            --build-arg DATABASE_TYPE=${{ matrix.db }} \
+            . --push
+
+          if [ "${{ matrix.db }}" = "sqlite" ]; then
+              # default tags
+              docker buildx build --platform linux/amd64,linux/arm64 \
+                -f ./infrastructure/backend/Dockerfile \
+                -t $IMAGE_NAME:$IMAGE_TAG \
+                -t $IMAGE_NAME:latest \
+                --build-arg DATABASE_TYPE=sqlite \
+                . --push
+            fi

@@ -61,9 +61,10 @@ def open_modal(request: WebRequest, modal_name, context_type=None, context_value
                     context["to_company"] = invoice.client_to.company
                     context["to_email"] = invoice.client_to.email
                     context["to_address"] = invoice.client_to.address
-                    context["existing_client_id"] = (
-                        invoice.client_to.id
-                    )  # context["to_city"] = invoice.client_to.city  # context["to_county"] = invoice.client_to.county  # context["to_country"] = invoice.client_to.country
+                    context["existing_client_id"] = invoice.client_to.id
+                    context["existing_client"] = invoice.client_to
+
+                    # context["to_city"] = invoice.client_to.city  # context["to_county"] = invoice.client_to.county  # context["to_country"] = invoice.client_to.country
                 else:
                     context["to_name"] = invoice.client_name
                     context["to_company"] = invoice.client_company
@@ -72,6 +73,7 @@ def open_modal(request: WebRequest, modal_name, context_type=None, context_value
                     context["to_address"] = (
                         invoice.client_address
                     )  # context["to_city"] = invoice.client_city  # context["to_county"] = invoice.client_county  # context["to_country"] = invoice.client_country
+                print(context)
             elif context_type == "edit_invoice_from":
                 invoice = context_value
                 try:

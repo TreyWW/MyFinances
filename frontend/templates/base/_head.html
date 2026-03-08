@@ -34,9 +34,8 @@
         {#    <script src="{% static 'js/c/init-alpine.js' %}"></script>#}
         <!-- SimpleMDE -->
         {#        <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>#}
-        {#
-        <link rel="stylesheet"
-              href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">#}
+        {#                <link rel="stylesheet"#}
+        {#              href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">#}
         <!-- Markdown -->
         {#        <script type="module" src="https://md-block.verou.me/md-block.js"></script>#}
         {# Not in use at the moment MAY USE LATER ^^ #}
@@ -52,14 +51,14 @@
         {#        <script defer type="text/javascript" src="{% static "js/c/htmx.js" %}"></script>#}
         {#        <script defer type="text/javascript" src="{% static "js/c/font_awesome.js" %}"></script>#}
         {#        {% render_bundle 'all' 'js' %}#}
-        {% render_bundle 'init' 'js' %}
-        {% render_bundle 'tableify' 'js' %}
-        {% render_bundle 'htmx' 'js' %}
-        {% render_bundle 'font_awesome' 'js' %}
+        {% render_bundle 'init' 'js' attrs='defer' %}
+        {% render_bundle 'tableify' 'js' attrs='defer' %}
+        {% render_bundle 'htmx' 'js' attrs='defer' %}
+        {% render_bundle 'font_awesome' 'js' attrs='defer' %}
         <!-- Tailwind & DaisyUI -->
         <link rel="stylesheet" href="{% static 'src/output.css' %}?v={{ version }}">
     {% endif %}
-    {% render_bundle 'receipt_downloads' 'js' %}
+    {% render_bundle 'receipt_downloads' 'js' attrs='defer' %}
     {{ analytics|safe }}
     {% tz_detect %}
     {#    <script>#}

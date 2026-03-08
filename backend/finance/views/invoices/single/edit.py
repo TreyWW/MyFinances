@@ -37,11 +37,14 @@ def invoice_get_existing_data(invoice_obj):
         "logo": invoice_obj.logo,
     }
     if invoice_obj.client_to:
+        ...
+        stored_data["existing_client_id"] = invoice_obj.client_to.id
+        stored_data["existing_client"] = invoice_obj.client_to
         stored_data["to_name"] = invoice_obj.client_to.name
         stored_data["to_company"] = invoice_obj.client_to.company
         stored_data["to_email"] = invoice_obj.client_to.email
         stored_data["is_representative"] = invoice_obj.client_to.is_representative
-        # stored_data["to_address"] = invoice_obj.client_to.address
+        stored_data["to_address"] = invoice_obj.client_to.address
         # stored_data["to_city"] = invoice_obj.client_to.city
         # stored_data["to_county"] = invoice_obj.client_to.county
         # stored_data["to_country"] = invoice_obj.client_to.country
@@ -55,8 +58,10 @@ def invoice_get_existing_data(invoice_obj):
         stored_data["to_country"] = invoice_obj.client_country
         stored_data["is_representative"] = invoice_obj.client_is_representative
 
-    if invoice_obj.client_to:
-        stored_data["existing_client"] = invoice_obj.client_to
+    # if invoice_obj.client_to:
+    #     stored_data["existing_client_id"] = invoice_obj.client_to.id
+    #     stored_data["selected_client"] = invoice_obj.client_to.id
+    #     stored_data["existing_client"] = invoice_obj.client_to
 
     return stored_data
 
@@ -111,7 +116,7 @@ def edit_invoice(request: WebRequest, invoice_id):
 
     client_to_id = request.POST.get("selected_client")
     try:
-        client_to_obj = Client.filter_by_owner(request.actor).get(id=client_to_id)
+        client_to_obj = Client.filter_by_owner(request.actor).get(id=client_to_id)  # type: ignore
     except (Client.DoesNotExist, ValueError):
         client_to_obj = None
 
