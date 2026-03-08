@@ -39,8 +39,23 @@ git clone [copied fork url]
 
 	```shell
 	python -m venv ./venv/
+	```
 
- 	./venv/Scripts/activate
+	### Activate the virtual environment
+
+	**Windows (PowerShell):**
+	```shell
+	.\venv\Scripts\Activate.ps1
+	```
+
+	**Windows (cmd.exe):**
+	```shell
+	venv\Scripts\activate.bat
+	```
+
+	**Windows (Git Bash):**
+	```shell
+	source venv/Scripts/activate
 	```
     OR if you are running in a POSIX system such as: bash/zsh, fish, csh/tcsh, or PowerShell, the command to activate the virtual environment is:
 
