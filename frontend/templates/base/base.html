@@ -50,8 +50,8 @@
                     </div>
                 </div>
             </div>
-        </div> 
-	<script>
+        </div>
+        <script>
     		document.body.addEventListener("htmx:afterRequest", function (evt) {
         	if (evt.detail.successful) {
             		const iframe = document.querySelector('iframe[data-frame="invoice_preview"]');
@@ -60,6 +60,6 @@
             		}
         	}
     		});
-	</script>
+        </script>
     </body>
 </html>
