@@ -5,20 +5,20 @@ window.Tableify = class Tableify {
     this.currentSort = null;
     this.sortDirection = 0; // 0 for no sort, 1 for ascending, -1 for descending
 
-    // Prüfen, ob es ein "frischer" Seitenbesuch ist
-    if (!sessionStorage.getItem("initialized")) {
+    // Check if it's a "fresh" page visit
+    if (!sessionStorage.getItem("tableify-initialized")) {
       window.addEventListener("DOMContentLoaded", () => {
         this.table = $(this.selector);
         this.initialize();
-        sessionStorage.setItem("initialized", "true");
+        sessionStorage.setItem("tableify-initialized", "true");
       });
     } else {
-      console.log("Zurückgekehrt – Initialisierung übersprungen");
+      console.log("Skipping initializaiton for tableify");
     }
 
-    // Optional: Reset bei Verlassen der Seite
+    // Reset on leaving the page
     window.addEventListener("beforeunload", () => {
-      sessionStorage.removeItem("initialized");
+      sessionStorage.removeItem("tableify-initialized");
     });
   }
 
