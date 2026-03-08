@@ -13,7 +13,7 @@ window.Tableify = class Tableify {
         sessionStorage.setItem("tableify-initialized", "true");
       });
     } else {
-      console.log("Skipping initializaiton for tableify");
+      console.log("Skipping initialization for tableify");
     }
 
     // Reset on leaving the page
