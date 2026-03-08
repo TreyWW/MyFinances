@@ -1,11 +1,25 @@
 window.Tableify = class Tableify {
   constructor(selector) {
-    this.table = $(selector);
+    this.selector = selector;
     this.filters = {};
     this.currentSort = null;
     this.sortDirection = 0; // 0 for no sort, 1 for ascending, -1 for descending
 
-    this.initialize();
+    // Check if it's a "fresh" page visit
+    if (!sessionStorage.getItem("tableify-initialized")) {
+      window.addEventListener("DOMContentLoaded", () => {
+        this.table = $(this.selector);
+        this.initialize();
+        sessionStorage.setItem("tableify-initialized", "true");
+      });
+    } else {
+      console.log("Skipping initialization for tableify");
+    }
+
+    // Reset on leaving the page
+    window.addEventListener("beforeunload", () => {
+      sessionStorage.removeItem("tableify-initialized");
+    });
   }
 
   initialize() {
