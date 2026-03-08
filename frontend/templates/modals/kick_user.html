@@ -1,0 +1,20 @@
+{% component_block "modal" id="modal_kick_user"%}
+{% fill "content" %}
+    <h3 class="font-bold text-lg">Remove User from Team</h3>
+    <p class="py-4">
+        Are you sure you want to remove {{ user.first_name }} {{ user.last_name }} from the team?
+    </p>
+    <div class="modal-action">
+        <form method="dialog">
+            <button class="btn btn-ghost">Cancel</button>
+        </form>
+        <button class="btn btn-error"
+                hx-post="{% url 'api:teams:kick' user_id=user.id %}"
+                hx-swap="none"
+                _="on htmx:afterRequest call #modal_kick_user.close()"
+        >
+            Remove User
+        </button>
+    </div>
+{% endfill %}
+{% endcomponent_block %}
