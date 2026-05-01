@@ -10,22 +10,22 @@
     "webpack-build": "webpack --config webpack.prod.js"
   },
   "devDependencies": {
-    "@fortawesome/fontawesome-free": "^6.5.1",
-    "daisyui": "^4.9.0",
-    "npm-check-updates": "^19.1.2",
-    "tailwindcss": "^3.4.1",
-    "webpack": "^5.105.0",
-    "webpack-bundle-tracker": "^3.1.0",
-    "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^5.0.3",
-    "webpack-merge": "^5.10.0"
+    "@fortawesome/fontawesome-free": "^7.2.0",
+    "daisyui": "^5.5.19",
+    "npm-check-updates": "^22.0.1",
+    "tailwindcss": "^4.2.4",
+    "webpack": "^5.106.2",
+    "webpack-bundle-tracker": "^3.2.3",
+    "webpack-cli": "^7.0.2",
+    "webpack-dev-server": "^5.2.3",
+    "webpack-merge": "^6.0.1"
   },
   "dependencies": {
-    "alpinejs": "^3.13.7",
-    "daisyui": "^4.7.3",
-    "htmx.org": "^1.9.12",
-    "hyperscript.org": "^0.9.12",
-    "jquery": "^3.7.1",
-    "tailwindcss": "^3.4.1"
+    "alpinejs": "^3.15.12",
+    "daisyui": "^5.5.19",
+    "htmx.org": "^2.0.10",
+    "hyperscript.org": "^0.9.91",
+    "jquery": "^4.0.0",
+    "tailwindcss": "^4.2.4"
   }
 }
