@@ -10,7 +10,7 @@ from django.utils import timezone
 from django.utils.http import url_has_allowed_host_and_scheme
 
 from backend.models import User, PasswordSecret
-from backend.core.models import RandomCode
+from backend.core.models import generate_verification_code
 from backend.core.types.htmx import HtmxHttpRequest
 from settings import settings
 
@@ -38,7 +38,7 @@ def set_password_generate(request: HtmxHttpRequest):
     if not USER_OBJ:
         messages.error(request, f"User not found")
         return redirect("dashboard")
-    CODE = RandomCode(40)
+    CODE = generate_verification_code(40)
     HASHED_CODE = make_password(CODE, salt=settings.SECRET_KEY)
 
     PWD_SECRET, created = PasswordSecret.objects.update_or_create(
@@ -85,7 +85,7 @@ def password_reset(request: HtmxHttpRequest):
 
     PasswordSecret.objects.filter(user=USER).all().delete()
 
-    CODE = RandomCode(40)
+    CODE = generate_verification_code(40)
     HASHED_CODE = make_password(CODE)
     expires_date = date.today() + timedelta(days=3)
     expires_datetime = timezone.make_aware(datetime.combine(expires_date, datetime.min.time()))

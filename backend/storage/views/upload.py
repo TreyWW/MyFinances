@@ -10,7 +10,7 @@ from django.views.decorators.http import require_http_methods
 
 from backend.core.types.requests import WebRequest
 from backend.models import FileStorageFile, MultiFileUpload
-from backend.core.models import _private_storage, upload_to_user_separate_folder
+from backend.core.models import get_private_storage, get_file_upload_path
 
 from backend.core.service.file_storage.create import parse_files_for_creation
 
@@ -99,10 +99,10 @@ def upload_file_via_batch_endpoint(request: WebRequest):
 
     if file_dir:
         relative_path = os.path.join(file_dir, file.name)
-        full_file_path = upload_to_user_separate_folder(FileStorageFile, relative_path, optional_actor=request.actor)
+        full_file_path = get_file_upload_path(FileStorageFile, relative_path, optional_actor=request.actor)
     else:
         relative_path = file.name
-        full_file_path = upload_to_user_separate_folder(FileStorageFile, relative_path, optional_actor=request.actor)
+        full_file_path = get_file_upload_path(FileStorageFile, relative_path, optional_actor=request.actor)
 
     existing_file_under_path: FileStorageFile | None = (
         FileStorageFile.filter_by_owner(request.actor).filter(file_uri_path=relative_path).first()
@@ -112,11 +112,11 @@ def upload_file_via_batch_endpoint(request: WebRequest):
         # existing_usage = existing_file_under_path.find_existing_usage("storage")
         # if existing_usage:
         #     existing_usage.end_now().save(update_fields=["end_at"])
-        _private_storage().delete(full_file_path)  # WILL OVERRIDE IT RATHER THAN USE NEW NAME
+        get_private_storage().delete(full_file_path)  # WILL OVERRIDE IT RATHER THAN USE NEW NAME
         existing_file_under_path.delete()
         # todo add an option to not override
 
-    saved_path = _private_storage().save(full_file_path, ContentFile(file.read()))
+    saved_path = get_private_storage().save(full_file_path, ContentFile(file.read()))
 
     saved_file = FileStorageFile.objects.create(file=saved_path, owner=request.actor, file_uri_path=relative_path)
 

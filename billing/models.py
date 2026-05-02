@@ -3,6 +3,13 @@ from uuid import uuid4
 from django.db import models
 
 from backend.core.models import OwnerBase
+from backend.core.constants import (
+    MAX_LENGTH_STANDARD,
+    MAX_LENGTH_NAME,
+    MAX_LENGTH_DESCRIPTION,
+    DECIMAL_MAX_DIGITS,
+    DECIMAL_PLACES,
+)
 
 from django.utils import timezone
 
@@ -14,11 +21,11 @@ class SubscriptionPlan(models.Model):
     Subscription plans available for users.
     """
 
-    name = models.CharField(max_length=50, unique=True)
-    price_per_month = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    description = models.TextField(max_length=500, null=True, blank=True)
-    stripe_product_id = models.CharField(max_length=100, null=True, blank=True)
-    stripe_price_id = models.CharField(max_length=100, null=True, blank=True)
+    name = models.CharField(max_length=MAX_LENGTH_NAME, unique=True)
+    price_per_month = models.DecimalField(max_digits=DECIMAL_MAX_DIGITS, decimal_places=DECIMAL_PLACES, null=True, blank=True)
+    description = models.TextField(max_length=MAX_LENGTH_DESCRIPTION, null=True, blank=True)
+    stripe_product_id = models.CharField(max_length=MAX_LENGTH_STANDARD, null=True, blank=True)
+    stripe_price_id = models.CharField(max_length=MAX_LENGTH_STANDARD, null=True, blank=True)
 
 
 def __str__(self):
@@ -57,7 +64,7 @@ class UserSubscription(OwnerBase):
 
 
 class PlanFeatureGroup(models.Model):
-    name = models.CharField(max_length=50)  # E.g. 'invoices'
+    name = models.CharField(max_length=MAX_LENGTH_NAME, blank=False)  # E.g. 'invoices'
 
 
 class PlanFeature(models.Model):
@@ -66,9 +73,9 @@ class PlanFeature(models.Model):
     billing
     """
 
-    slug = models.CharField(max_length=100)
-    stripe_price_id = models.CharField(max_length=100, null=True, blank=True)
-    description = models.TextField(max_length=500, null=True, blank=True)
+    slug = models.CharField(max_length=MAX_LENGTH_STANDARD)
+    stripe_price_id = models.CharField(max_length=MAX_LENGTH_STANDARD, null=True, blank=True)
+    description = models.TextField(max_length=MAX_LENGTH_DESCRIPTION, null=True, blank=True)
 
     max_limit_per_month = models.IntegerField(null=True, blank=True)
 
@@ -100,9 +107,9 @@ class BillingUsage(OwnerBase):
         # ("storage", "Storage"),
     )
 
-    event_name = models.CharField(max_length=100)  # e.g. 'invoices-created'
-    event_type = models.CharField(max_length=20, choices=EVENT_TYPES, default="usage")
-    quantity = models.PositiveSmallIntegerField(default=1)  # e.g. 1
+    event_name = models.CharField(max_length=100, blank=False)  # e.g. 'invoices-created'
+    event_type = models.CharField(max_length=20, choices=EVENT_TYPES, default="usage", blank=False)
+    quantity = models.PositiveSmallIntegerField(default=1, blank=False)  # e.g. 1
 
     created_at = models.DateTimeField(auto_now_add=True)
 
