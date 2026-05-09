@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import itertools
+import logging
 import typing
 from datetime import datetime, timedelta
 from typing import Literal, Union
@@ -14,6 +15,8 @@ from django.db.models import Count, QuerySet
 from django.utils import timezone
 from django.utils.crypto import get_random_string
 from storages.backends.s3 import S3Storage
+
+logger = logging.getLogger(__name__)
 
 
 def _public_storage():
@@ -35,7 +38,7 @@ def RandomAPICode(length=89):
 def upload_to_user_separate_folder(instance, filename, optional_actor=None) -> str:
     instance_name = instance._meta.verbose_name.replace(" ", "-")
 
-    print(instance, filename)
+    logger.info(f"In upload_to_user_separate_folder Function instance:{instance}, filename:{filename}")
 
     if optional_actor:
         if isinstance(optional_actor, User):
