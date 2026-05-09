@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 from django.contrib import messages
 from django.core.files.base import ContentFile
@@ -16,15 +17,16 @@ from backend.core.service.file_storage.create import parse_files_for_creation
 
 from django.urls import reverse
 
+logger = logging.getLogger(__name__)
+
 
 def upload_file_post(request: WebRequest):
     django_bulk_files: list[FileStorageFile]
 
     files = request.FILES.getlist("files")  # Retrieve all uploaded files
-    print(files)
+    logger.info(f"upload_file_post: Files to upload: %s", files)
     for file in files:
-        print(type(file))
-        print(file.name)
+        logger.info(f"upload_file_post: File type: %s, File name: %s", type(file), file.name)
 
     should_override = request.POST.get("should_override", False)
 
