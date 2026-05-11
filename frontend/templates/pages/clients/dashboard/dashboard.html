@@ -1,15 +1,17 @@
 {% extends base|default:"base/base.html" %}
 {% block content %}
-    <div class="card w-full p-6 bg-base-100 shadow-xl mt-2">
-        <h2 class="text-xl">Clients</h2>
-        <div class="divider"></div>
-        <div class="mb-4">
-            <a class="btn btn-primary mb-4 float-right"
+    <div class="card w-full p-6 bg-base-100 shadow-xl mt-2 h-[calc(100vh-8rem)] flex flex-col overflow-hidden">
+        <div class="flex flex-wrap items-center justify-between gap-4 shrink-0">
+            <h2 class="text-xl">Clients</h2>
+            <a class="btn btn-primary"
                href="{% url "clients:create" %}"
                hx-boost="true">
                 <i class="fa-solid fa-plus pe-1"></i>
                 Create Client
             </a>
+        </div>
+        <div class="divider shrink-0"></div>
+        <div class="mb-4 shrink-0">
             <form method="post" onsubmit="return false">
                 {% csrf_token %}
                 <input class="input input-bordered input-block my-3 loading-htmx"
@@ -24,11 +26,13 @@
                       class="loading loading-spinner loading-htmx-loader-individual"></span>
             </form>
         </div>
-        <div hx-swap="outerHTML"
-             hx-trigger="load"
-             id="items"
-             hx-get="{% url 'api:clients:fetch' %}">
-            {% include 'components/table/skeleton_table.html' %}
+        <div class="rounded-box border border-base-300 bg-base-100 min-h-0 flex-1 overflow-hidden">
+            <div hx-swap="outerHTML"
+                 hx-trigger="load"
+                 id="items"
+                 hx-get="{% url 'api:clients:fetch' %}">
+                {% include 'components/table/skeleton_table.html' %}
+            </div>
         </div>
     </div>
 {% endblock content %}
