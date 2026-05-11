@@ -52,5 +52,5 @@ def handle_recurring_invoice_webhook_endpoint(request: WebRequest):
         logger.info("Successfully generated next invoice")
         return JsonResponse({"message": "Invoice generated", "success": True})
     else:
-        logger.info(f"svc_resp.error:%s",svc_resp.error)
+        logger.info("svc_resp.error:%s", svc_resp.error)
         return JsonResponse({"message": svc_resp.error, "success": False}, status=400)

@@ -54,7 +54,7 @@ def generate_next_invoice_service(
 
     INVOICE_DUE = invoice_recurring_profile.next_invoice_due_date(account_defaults, from_date=issue_date)
 
-    logger.info(f"Invoice due date calculated: %s",INVOICE_DUE)
+    logger.info("Invoice due date calculated: %s", INVOICE_DUE)
 
     generated_invoice.date_due = INVOICE_DUE
     generated_invoice.date_issued = issue_date
@@ -79,7 +79,7 @@ def generate_next_invoice_service(
 
     generated_invoice.save(update_fields=["invoice_recurring_profile"])
 
-    logger.info(f"Invoice generated with the ID of %s",generated_invoice.pk)
+    logger.info(f"Invoice generated with the ID of %s", generated_invoice.pk)
 
     users_email: str = (
         invoice_recurring_profile.client_to.email if invoice_recurring_profile.client_to else invoice_recurring_profile.client_email
@@ -108,7 +108,7 @@ def handle_invoice_generation_failure(invoice_recurring_profile, error_message):
     AuditLog.objects.create(
         action=f"[SYSTEM] Failed to generate invoice for recurring profile #{invoice_recurring_profile.pk}. Error: {error_message}",
     )
-    logger.error(f"Failed to generate invoice for profile {invoice_recurring_profile.pk}: {error_message}")
+    logger.error("Failed to generate invoice for profile %s: %s", invoice_recurring_profile.pk, error_message)
 
 
 def safe_generate_next_invoice_service(
