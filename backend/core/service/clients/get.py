@@ -14,6 +14,7 @@ def fetch_clients(request, *, search_text: str | None = None, team: Organization
         clients = Client.objects.filter(user=request.user, active=True)
 
     if search_text:
-        clients = clients.filter(Q(name__icontains=search_text) | Q(email__icontains=search_text) | Q(id__icontains=search_text))
+        #修改
+        clients = clients.filter(Q(name__icontains=search_text))
 
     return FetchClientServiceResponse(True, clients)

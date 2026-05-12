@@ -12,18 +12,24 @@
         </div>
         <div class="divider shrink-0"></div>
         <div class="mb-4 shrink-0">
-            <form method="post" onsubmit="return false">
-                {% csrf_token %}
-                <input class="input input-bordered input-block my-3 loading-htmx"
-                       type="text"
-                       name="search"
-                       placeholder="🔎 Search"
-                       hx-target="#items"
-                       hx-get="/api/clients/fetch"
-                       hx-trigger="keyup changed delay:500ms"
-                       hx-indicator="#search_loading">
-                <span id="search_loading"
-                      class="loading loading-spinner loading-htmx-loader-individual"></span>
+            #修改
+            <form method="get"
+                  hx-target="#items"
+                  hx-get="{% url 'api:clients:fetch' %}"
+                  hx-swap="outerHTML"
+                  hx-indicator="#search_loading">
+                <div class="flex flex-wrap items-center gap-3">
+                    <input class="input input-bordered input-block loading-htmx flex-1 min-w-64"
+                           type="text"
+                           name="search"
+                           placeholder="🔎 Search by client name"
+                           autocomplete="off">
+                    <button class="btn btn-primary" type="submit">
+                        Search
+                    </button>
+                    <span id="search_loading"
+                          class="loading loading-spinner loading-htmx-loader-individual"></span>
+                </div>
             </form>
         </div>
         <div class="rounded-box border border-base-300 bg-base-100 min-h-0 flex-1 overflow-hidden">
