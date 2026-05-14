@@ -7,26 +7,26 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.10,<4.0"
-bleach = "6.1.0"  # used for HTML sanitation
-boto3 = "1.34.76"  # AWS
-django-storages = "1.14.2"  # AWS S3
-pillow = ">=10.4.0"  # Images
+bleach = "6.3.0"  # used for HTML sanitation
+boto3 = "1.43.8"  # AWS
+django-storages = "1.14.6"  # AWS S3
+pillow = ">=12.2.0"  # Images
 tblib = "^3.0.0"  # Exceptions and Tracebacks
-django = "^5.2.11"
+django = "^5.2.14"
 django-mathfilters = "^1.0.0"
 redis = { extras = ["hiredis"], version = "^5.0.1" }
-django-webpack-loader = "^3.1.0"
+django-webpack-loader = "^3.2.4"
 django-silk = "^5.1.0"
-djangorestframework = "^3.15.1"
+djangorestframework = "^3.17.1"
 drf-yasg = "^1.21.7"
 
 setuptools = "^78.1.1"
 stripe = "^10.8.0"
 [tool.poetry.group.mypy.dependencies]
-mypy = "1.18.2"
+mypy = "1.19.1"
 django-stubs = { version = "^5.2.7" }
 django-stubs-ext = { version = "^5.2.7" }
-djangorestframework-stubs = { extras = ["compatible-mypy"], version = "^3.16.5" }#
+djangorestframework-stubs = { extras = ["compatible-mypy"], version = "^3.16.9" }#
 boto3-stubs = { extras = [
     "sesv2",
     "events",
@@ -35,62 +35,62 @@ boto3-stubs = { extras = [
     "iam",
     "stepfunctions",
 ], version = "^1.34.76" }
-grpcio = "^1.62.0"
-djangorestframework = "^3.14.0"
+grpcio = "^1.80.0"
+djangorestframework = "^3.17.1"
 django-tz-detect = "^0.5.0"
-typos = "^1.20.3"
+typos = "^1.46.1"
 pre-commit = "^3.7.0"
-pulumi-aws = "^6.29.0"
-types-python-dateutil = "^2.9.0.20240906"
-types-markdown = "^3.7.0.20240822"
-types-pygments = "^2.18.0.20240506"
+pulumi-aws = "^6.83.3"
+types-python-dateutil = "^2.9.0.20260508"
+types-markdown = "^3.10.2.20260508"
+types-pygments = "^2.20.0.20260508"
 types-cffi = "^1.16.0.20240331"
 types-protobuf = "^5.27.0.20240907"
-types-psycopg2 = "^2.9.21.20240819"
-types-pycurl = "^7.45.3.20240421"
-types-six = "^1.16.21.20240513"
+types-psycopg2 = "^2.9.21.20260509"
+types-pycurl = "^7.46.0.20260509"
+types-six = "^1.17.0.20260408"
 
 [tool.poetry.group.django.dependencies]
-Django = "^5.2.11"
+Django = "^5.2.14"
 gunicorn = "23.0.0"
-social-auth-app-django = "5.6.0"
-django-environ = "0.11.2"
+social-auth-app-django = "5.9.0"
+django-environ = "0.13.0"
 django-extensions = "3.2.3"
-python-dateutil = "2.9.0"
+python-dateutil = "2.9.0.post0"
 django-mathfilters = "1.0.0"
 django-ratelimit = "4.1.0"
 python-memcached = "1.62"
-django-htmx = "1.17.3"
+django-htmx = "1.27.0"
 django-login-required-middleware = "0.9.0"
 django-components = "0.37"
-django-markdownify = "0.9.3"
+django-markdownify = "0.9.6"
 shortuuid = "1.0.13"
-model-bakery = "1.17.0"
+model-bakery = "1.23.4"
 
 [tool.poetry.group.docs.dependencies]
 mkdocs = "^1.5.3"
-mkdocs-material = "^9.5.15"
+mkdocs-material = "^9.7.6"
 mkdocs-git-committers-plugin-2 = "^2.3.0"
 
 [tool.poetry.group.mysql]
 optional = true
 
 [tool.poetry.group.mysql.dependencies]
-mysqlclient = "2.2.0"
-mariadb = "1.1.8"
+mysqlclient = "2.2.8"
+mariadb = "1.1.14"
 
 [tool.poetry.group.postgres]
 optional = true
 
 [tool.poetry.group.postgres.dependencies]
-psycopg2-binary = "2.9.11"
+psycopg2-binary = "2.9.12"
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.3.0"
 djlint = "^1.34.1"
-coverage = "^7.4.4"
+coverage = "^7.14.0"
 pre-commit = "^3.7.0"
-bump-my-version = "^0.19.3"
+bump-my-version = "^0.33.0"
 
 [tool.djlint]
 profile = "django"
