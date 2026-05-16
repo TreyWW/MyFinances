@@ -16,27 +16,35 @@ CSRF_TRUSTED_ORIGINS = [f'https://{os.environ.get("PROXY_IP")}', f'https://{os.e
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 DB_TYPE = os.environ.get("DATABASE_TYPE")
-DB_TYPE = DB_TYPE.lower() if DB_TYPE else ""  # sqlite is disabled for production
+DB_TYPE = DB_TYPE.lower() if DB_TYPE else ""
 
 DB_TYPE = "mysql" if DB_TYPE in ["mysql", "mariadb"] else DB_TYPE
 
-DATABASES = {
-    "default": {
-        "ENGINE": ("django.db.backends.postgresql_psycopg2" if DB_TYPE == "mysql" else "django.db.backends.postgresql"),
-        "NAME": os.environ.get("DATABASE_NAME") or "myfinances_development",
-        "USER": os.environ.get("DATABASE_USER") or "root",
-        "PASSWORD": os.environ.get("DATABASE_PASS") or "",
-        "HOST": os.environ.get("DATABASE_HOST") or "localhost",
-        "PORT": os.environ.get("DATABASE_PORT") or (3306 if DB_TYPE == "mysql" else 5432),
-        "OPTIONS": (
-            {
-                "sql_mode": "traditional",
-            }
-            if DB_TYPE == "mysql"
-            else {}
-        ),
+if DB_TYPE != "sqlite":
+    DATABASES = {
+        "default": {
+            "ENGINE": ("django.db.backends.postgresql_psycopg2" if DB_TYPE == "mysql" else "django.db.backends.postgresql"),
+            "NAME": os.environ.get("DATABASE_NAME") or "myfinances_development",
+            "USER": os.environ.get("DATABASE_USER") or "root",
+            "PASSWORD": os.environ.get("DATABASE_PASS") or "",
+            "HOST": os.environ.get("DATABASE_HOST") or "localhost",
+            "PORT": os.environ.get("DATABASE_PORT") or (3306 if DB_TYPE == "mysql" else 5432),
+            "OPTIONS": (
+                {
+                    "sql_mode": "traditional",
+                }
+                if DB_TYPE == "mysql"
+                else {}
+            ),
+        }
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
 
 print(f"[BACKEND] Using {DB_TYPE} database: {os.environ.get('DATABASE_NAME')}")
 
