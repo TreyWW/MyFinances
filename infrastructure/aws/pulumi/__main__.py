@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import json
-from contextlib import closing
+from typing import Optional
 
 import pulumi
 
@@ -18,13 +18,19 @@ from step_functions import get_state_machine
 
 config = pulumi.Config()
 
+
+def _config_get(key: str, default: str) -> str:
+    val: Optional[str] = config.get(key)
+    return val if val is not None else default
+
+
 site_name: str = pulumi.get_project()
 stage: str = config.require("stage")
 env_name: str = site_name + "-" + stage
 
 tags = {"app": site_name, "stage": stage}
 
-if not config.get("api_destination-api_key"):
+if not _config_get("api_destination-api_key", ""):
     pulumi.log.warn(
         """
         You have not set api_destinations api_key. To do this please use \"python manage.py generate_aws_scheduler_apikey\" and paste the
@@ -38,7 +44,7 @@ if not config.get("api_destination-api_key"):
 
 vpc = ec2.Vpc(
     resource_name="main_vpc",
-    cidr_block=config.get("vpc_cidr", "10.0.0.0/16"),
+    cidr_block=_config_get("vpc_cidr", "10.0.0.0/16"),
     enable_dns_hostnames=True,
     # enable_dns_support=True,
     instance_tenancy="default",
@@ -50,8 +56,8 @@ vpc = ec2.Vpc(
 vpc_public_subnet = ec2.Subnet(
     "main_subnet",
     vpc_id=vpc.id,
-    cidr_block=config.get("public_subnet_cidr", "10.0.1.0/24"),
-    availability_zone=config.get("public_subnet_az", "eu-west-2a"),
+    cidr_block=_config_get("public_subnet_cidr", "10.0.1.0/24"),
+    availability_zone=_config_get("public_subnet_az", "eu-west-2a"),
     map_public_ip_on_launch=True,
     tags={"Name": "main_subnet"},
 )
@@ -61,68 +67,120 @@ vpc_public_subnet = ec2.Subnet(
 vpc_private_subnet = ec2.Subnet(
     "private_subnet",
     vpc_id=vpc.id,
-    cidr_block=config.get("private_subnet_cidr", "10.0.2.0/24"),
-    availability_zone=config.get("private_subnet_az", "eu-west-2a"),
+    cidr_block=_config_get("private_subnet_cidr", "10.0.2.0/24"),
+    availability_zone=_config_get("private_subnet_az", "eu-west-2a"),
     tags={"Name": "private-subnet"},
 )
 
 # Email Users
 
-ses_user = iam.User("ses_user", name=f"{env_name}-ses-user", path=f"/{site_name}/{stage}/", tags=tags)
+ses_user = iam.User(
+    "ses_user", name=f"{env_name}-ses-user", path=f"/{site_name}/{stage}/", tags=tags
+)
 
 send_emails_policy = iam.get_policy_document(
     statements=[
         {
             "effect": "Allow",
-            "actions": ["ses:SendRawEmail", "ses:SendTemplatedEmail", "ses:SendBulkEmail", "ses:SendBulkTemplatedEmail"],
+            "actions": [
+                "ses:SendRawEmail",
+                "ses:SendTemplatedEmail",
+                "ses:SendBulkEmail",
+                "ses:SendBulkTemplatedEmail",
+            ],
             "resources": ["*"],
         }
     ],
 )
 
-get_messages_policy = iam.get_policy_document(statements=[{"effect": "Allow", "actions": ["ses:GetMessageInsights"], "resources": ["*"]}])
+get_messages_policy = iam.get_policy_document(
+    statements=[
+        {"effect": "Allow", "actions": ["ses:GetMessageInsights"], "resources": ["*"]}
+    ]
+)
 
-ses_user_send_policy = iam.UserPolicy("ses_user_send_policy", policy=send_emails_policy.json, user=ses_user.name)
-ses_user_get_messages_policy = iam.UserPolicy("ses_user_get_messages_policy", policy=get_messages_policy.json, user=ses_user.name)
+ses_user_send_policy = iam.UserPolicy(
+    "ses_user_send_policy", policy=send_emails_policy.json, user=ses_user.name
+)
+ses_user_get_messages_policy = iam.UserPolicy(
+    "ses_user_get_messages_policy", policy=get_messages_policy.json, user=ses_user.name
+)
 
 # Email Templates
 
 ses_template_user_send_client_email = ses.Template(
     "ses_template_user_send_client_email",
     name="user_send_client_email",
-    subject=config.get("ses_template_user_send_client_email-subject", default_email_templates["user_send_email"]["subject"]),
-    html=config.get("ses_template_user_send_client_email-content_html", default_email_templates["user_send_email"]["content_html"]),
-    text=config.get("ses_template_user_send_client_email-content_text", default_email_templates["user_send_email"]["content_text"]),
+    subject=_config_get(
+        "ses_template_user_send_client_email-subject",
+        default_email_templates["user_send_email"]["subject"],
+    ),
+    html=_config_get(
+        "ses_template_user_send_client_email-content_html",
+        default_email_templates["user_send_email"]["content_html"],
+    ),
+    text=_config_get(
+        "ses_template_user_send_client_email-content_text",
+        default_email_templates["user_send_email"]["content_text"],
+    ),
 )
 
 ses_template_reminders_overdue = ses.Template(
     "ses_template_reminder_overdue",
     name=f"{env_name}-reminders-overdue",
-    subject=config.get("ses_template_reminders_overdue-subject", default_reminders["subject"]),
-    html=config.get("ses_template_reminders_overdue-content_html", default_reminders["overdue"]["html"]),
-    text=config.get("ses_template_reminders_overdue-content_text", default_reminders["overdue"]["text"]),
+    subject=_config_get(
+        "ses_template_reminders_overdue-subject", default_reminders["subject"]
+    ),
+    html=_config_get(
+        "ses_template_reminders_overdue-content_html",
+        default_reminders["overdue"]["html"],
+    ),
+    text=_config_get(
+        "ses_template_reminders_overdue-content_text",
+        default_reminders["overdue"]["text"],
+    ),
 )
 
 ses_template_reminders_before_due = ses.Template(
     "ses_template_reminder_before_due",
     name=f"{env_name}-reminders-before_due",
-    subject=config.get("ses_template_reminders_before_due-subject", default_reminders["subject"]),
-    html=config.get("ses_template_reminders_before_due-content_html", default_reminders["before_due"]["html"]),
-    text=config.get("ses_template_reminders_before_due-content_text", default_reminders["before_due"]["text"]),
+    subject=_config_get(
+        "ses_template_reminders_before_due-subject", default_reminders["subject"]
+    ),
+    html=_config_get(
+        "ses_template_reminders_before_due-content_html",
+        default_reminders["before_due"]["html"],
+    ),
+    text=_config_get(
+        "ses_template_reminders_before_due-content_text",
+        default_reminders["before_due"]["text"],
+    ),
 )
 
 ses_template_reminders_after_due = ses.Template(
     "ses_template_reminder_after_due",
     name=f"{env_name}-reminders-after_due",
-    subject=config.get("ses_template_reminders_after_due-subject", default_reminders["subject"]),
-    html=config.get("ses_template_reminders_after_due-content_html", default_reminders["after_due"]["html"]),
-    text=config.get("ses_template_reminders_after_due-content_text", default_reminders["after_due"]["text"]),
+    subject=_config_get(
+        "ses_template_reminders_after_due-subject", default_reminders["subject"]
+    ),
+    html=_config_get(
+        "ses_template_reminders_after_due-content_html",
+        default_reminders["after_due"]["html"],
+    ),
+    text=_config_get(
+        "ses_template_reminders_after_due-content_text",
+        default_reminders["after_due"]["text"],
+    ),
 )
 
 # Invoice Schedules
 
-invoice_schedules_group = scheduler.ScheduleGroup("invoice_schedules_group", name=f"{env_name}-invoice-schedules")
-invoice_reminders_group = scheduler.ScheduleGroup("invoice_reminders_group", name=f"{env_name}-invoice-reminders")
+invoice_schedules_group = scheduler.ScheduleGroup(
+    "invoice_schedules_group", name=f"{env_name}-invoice-schedules"
+)
+invoice_reminders_group = scheduler.ScheduleGroup(
+    "invoice_reminders_group", name=f"{env_name}-invoice-reminders"
+)
 
 
 # API Destination
@@ -161,8 +219,16 @@ scheduler_execution_role = iam.Role(
         {
             "Version": "2012-10-17",
             "Statement": [
-                {"Effect": "Allow", "Principal": {"Service": "scheduler.amazonaws.com"}, "Action": "sts:AssumeRole"},
-                {"Effect": "Allow", "Principal": {"Service": "states.amazonaws.com"}, "Action": "sts:AssumeRole"},
+                {
+                    "Effect": "Allow",
+                    "Principal": {"Service": "scheduler.amazonaws.com"},
+                    "Action": "sts:AssumeRole",
+                },
+                {
+                    "Effect": "Allow",
+                    "Principal": {"Service": "states.amazonaws.com"},
+                    "Action": "sts:AssumeRole",
+                },
             ],
         }
     ),
@@ -184,7 +250,11 @@ scheduler_execution_policy = iam.Policy(
                 {
                     "Sid": "AccessSecrets",
                     "Effect": "Allow",
-                    "Action": ["events:RetrieveConnectionCredentials", "secretsmanager:GetSecretValue", "secretsmanager:DescribeSecret"],
+                    "Action": [
+                        "events:RetrieveConnectionCredentials",
+                        "secretsmanager:GetSecretValue",
+                        "secretsmanager:DescribeSecret",
+                    ],
                     "Resource": "*",
                 },
                 {
@@ -204,7 +274,12 @@ scheduler_execution_policy = iam.Policy(
                     ],
                     "Resource": "*",
                 },
-                {"Sid": "AllowEventbridgeScheduler", "Effect": "Allow", "Action": ["scheduler:*"], "Resource": "*"},
+                {
+                    "Sid": "AllowEventbridgeScheduler",
+                    "Effect": "Allow",
+                    "Action": ["scheduler:*"],
+                    "Resource": "*",
+                },
             ],
         }
     ),
@@ -215,10 +290,14 @@ scheduler_execution_policy_attachment = iam.RolePolicyAttachment(
     "scheduler-execution-policy",
     policy_arn=scheduler_execution_policy.arn,
     role=scheduler_execution_role.name,
-    opts=pulumi.ResourceOptions(depends_on=[scheduler_execution_policy, scheduler_execution_role]),
+    opts=pulumi.ResourceOptions(
+        depends_on=[scheduler_execution_policy, scheduler_execution_role]
+    ),
 )
 
-scheduled_invoices_state_machine = get_state_machine(env_name, scheduled_invoices_api_connection, scheduler_execution_role)
+scheduled_invoices_state_machine = get_state_machine(
+    env_name, scheduled_invoices_api_connection, scheduler_execution_role
+)
 
 
 pulumi.export("ses_user", ses_user.id)
