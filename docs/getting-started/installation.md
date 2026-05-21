@@ -55,12 +55,12 @@ git clone [copied fork url]
 
 	**Windows (Git Bash):**
 	```shell
-	source venv/Scripts/activate
+	source venv\Scripts\activate (Windows)
 	```
     OR if you are running in a POSIX system such as: bash/zsh, fish, csh/tcsh, or PowerShell, the command to activate the virtual environment is:
 
     ```shell
-    source ./venv/bin/activate
+    source venv/bin/activate (Linux/Mac)
     ```
     
    !!! note "Linux Note"
