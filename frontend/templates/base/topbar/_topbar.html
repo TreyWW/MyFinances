@@ -105,7 +105,11 @@
             {% include "base/topbar/_notification_count.html" %}
         </summary>
         <ul class="border menu menu-sm dropdown-content border-primary"
-            data-notifications="container">
+            data-notifications="container"
+            hx-trigger="update_notifications from:body"
+            hx-get="{% url "api:base:notifications get" %}"
+            hx-target="this"
+            hx-swap="innerHTML">
             {% include "base/topbar/_notification_dropdown_items.html" with initial_load=True %}
         </ul>
     </details>
