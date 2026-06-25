@@ -74,7 +74,11 @@
                 {% include 'components/table/skeleton_rows.html' with rows=3 cols=6 %}
             </tbody>
         </table>
-        <script>new Tableify('#recurring_invoices_list_table');</script>
+        <script>
+          document.addEventListener("DOMContentLoaded", function () {
+            new Tableify('#recurring_invoices_list_table');
+          });
+        </script>
     </div>
 </div>
 {% component "messages_list" %}
