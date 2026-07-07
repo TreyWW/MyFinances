@@ -102,17 +102,14 @@ class InvoicesAPIDelete(ViewTestCase):
             self.view_function_path,
         )
 
-    # def test_delete_works(self):
-    #     self.login_user()
-    #     invoices = baker.make("backend.Invoice", _quantity=1, user=self.log_in_user)
-    #     response = self.make_request(
-    #         method="delete", data={"invoice": 1}, format="json"
-    #     )
-    #     self.assertEqual(response.status_code, 200)
-
-    #
-    # response_content = json.loads(response.content.decode("utf-8"))
-    # self.assertEqual(response_content.get("message"), "Invoice not found")
+    def test_delete_works(self):
+        self.login_user()
+        invoice = baker.make("backend.Invoice", user=self.log_in_user)
+        response = self.make_request(
+            method="delete", data={"invoice": invoice.id}
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(Invoice.objects.filter(id=invoice.id).exists())
 
 
 class InvoicesEditDiscount(ViewTestCase):
