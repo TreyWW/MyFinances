@@ -55,7 +55,7 @@
                         <i class="fa-solid fa-ellipsis-vertical"></i>
                     </label>
                     <ul tabindex="0"
-                        class="dropdown-content z-[1] menu wp-2 shadow-2xl bg-base-200 rounded-box w-52">
+                        class="dropdown-content z-50 menu w-52 shadow-2xl bg-base-200 rounded-box">
                         <li hx-boost="true"
                             hx-push-url="{% url 'finance:invoices:single:overview' invoice_id=invoice.id %}">
                             <a href="{% url 'finance:invoices:single:overview' invoice_id=invoice.id %}">
