@@ -36,7 +36,7 @@ class BotoSchedule(models.Model):
         abstract = True
 
     def set_status(self, status, save=True):
-        self.status = status
+        self.boto_schedule_status = status
         if save:
             self.save()
         return self
