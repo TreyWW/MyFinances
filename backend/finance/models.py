@@ -3,6 +3,7 @@ from datetime import datetime, date, timedelta
 from decimal import Decimal
 from typing import Literal
 from uuid import uuid4
+from dateutil.relativedelta import relativedelta
 from django.core.validators import MaxValueValidator
 from django.db import models
 from django.utils import timezone
@@ -282,7 +283,7 @@ class InvoiceRecurringProfile(InvoiceBase, BotoSchedule):
             case "weekly":
                 return last_invoice_date_issued + timedelta(days=7)
             case "monthly":
-                return date(year=last_invoice_date_issued.year, month=last_invoice_date_issued.month + 1, day=last_invoice_date_issued.day)
+                return last_invoice_date_issued + relativedelta(months=1)
             case "yearly":
                 return date(year=last_invoice_date_issued.year + 1, month=last_invoice_date_issued.month, day=last_invoice_date_issued.day)
             case _:
@@ -293,7 +294,7 @@ class InvoiceRecurringProfile(InvoiceBase, BotoSchedule):
             case account_defaults.InvoiceDueDateType.days_after:
                 return from_date + timedelta(days=account_defaults.invoice_due_date_value)
             case account_defaults.InvoiceDueDateType.date_following:
-                return datetime(from_date.year, from_date.month + 1, account_defaults.invoice_due_date_value)
+                return (from_date + relativedelta(months=1)).replace(day=account_defaults.invoice_due_date_value)
             case account_defaults.InvoiceDueDateType.date_current:
                 return datetime(from_date.year, from_date.month, account_defaults.invoice_due_date_value)
             case _:
