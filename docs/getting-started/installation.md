@@ -121,7 +121,7 @@ npm run tailwind-watch
 
 #### Tailwind Build
 
-To be honest, tailwind watch is nice, but especially on my windows computer it is very CPU and Memory intesive, every single change,
+To be honest, tailwind watch is nice, but especially on my windows computer it is very CPU and Memory intensive, every single change,
 even 1 character causes a re-watch, and this is a lot... Instead of that, you can use `tailwind-build` to only do a one-time
 build. You need to remember to run the command after a major update though, incase you add new classes.
 
