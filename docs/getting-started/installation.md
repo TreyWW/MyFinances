@@ -62,10 +62,10 @@ git clone [copied fork url]
     ```shell
     source ./venv/bin/activate
     ```
-    
+
    !!! note "Linux Note"
 		On Linux systems, the activate script typically doesn't have execution permissions by default, so it must be sourced rather than executed directly.
-    
+
     More information [here](https://docs.python.org/3/library/venv.html)
 
 3. Install our dependencies using [python poetry](https://python-poetry.org/docs/#installing-manually)
@@ -74,7 +74,7 @@ git clone [copied fork url]
 
    poetry install --no-root --with mypy,django,dev
    ```
-   If the installation of poetry gives error messages check out our [debugging section on poetry](../debugging/python/poetry.md).  
+   If the installation of poetry gives error messages check out our [debugging section on poetry](../debugging/python/poetry.md).
 
 4. Setup a database (we suggest using sqlite so there's no installation!)
    To do this you can use one of our database guides, we currently only support 3 databases:

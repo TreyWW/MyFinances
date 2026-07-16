@@ -346,12 +346,10 @@ class OwnerBase(models.Model):
     @property
     def owner(self) -> User | Organization:
         """
-        Property to dynamically get the owner (either User or Team)
+        Property to dynamically get the owner (either User or Organization)
         """
         if hasattr(self, "user") and self.user:
             return self.user
-        elif hasattr(self, "team") and self.team:
-            return self.team
         return self.organization  # type: ignore[return-value]
         # all responses WILL have either a user or org so this will handle all
 
