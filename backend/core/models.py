@@ -27,7 +27,7 @@ def _private_storage() -> FileSystemStorage | S3Storage:
     return storages["private_media"]
 
 
-def RandomCode(length=6):
+def random_code(length=6):
     return get_random_string(length=length).upper()
 
 
@@ -175,7 +175,7 @@ class VerificationCodes(ExpiresBase):
         RESET_PASSWORD = "reset_password", "Reset Password"
 
     uuid = models.UUIDField(default=uuid4, editable=False, unique=True)  # This is the public identifier
-    token = models.TextField(default=RandomCode, editable=False)  # This is the private token (should be hashed)
+    token = models.TextField(default=random_code, editable=False)  # This is the private token (should be hashed)
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
@@ -297,7 +297,7 @@ class TeamInvitation(ExpiresBase):
 
     def save(self, *args, **kwargs):
         if not self.code:
-            self.code = RandomCode(10)
+            self.code = random_code(10)
             self.set_expires()
         super().save()
 
@@ -346,12 +346,10 @@ class OwnerBase(models.Model):
     @property
     def owner(self) -> User | Organization:
         """
-        Property to dynamically get the owner (either User or Team)
+        Property to dynamically get the owner (either User or Organization)
         """
         if hasattr(self, "user") and self.user:
             return self.user
-        elif hasattr(self, "team") and self.team:
-            return self.team
         return self.organization  # type: ignore[return-value]
         # all responses WILL have either a user or org so this will handle all
 
