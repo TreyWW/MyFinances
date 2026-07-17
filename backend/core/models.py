@@ -27,7 +27,7 @@ def _private_storage() -> FileSystemStorage | S3Storage:
     return storages["private_media"]
 
 
-def RandomCode(length=6):
+def random_code(length=6):
     return get_random_string(length=length).upper()
 
 
@@ -175,7 +175,7 @@ class VerificationCodes(ExpiresBase):
         RESET_PASSWORD = "reset_password", "Reset Password"
 
     uuid = models.UUIDField(default=uuid4, editable=False, unique=True)  # This is the public identifier
-    token = models.TextField(default=RandomCode, editable=False)  # This is the private token (should be hashed)
+    token = models.TextField(default=random_code, editable=False)  # This is the private token (should be hashed)
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
@@ -297,7 +297,7 @@ class TeamInvitation(ExpiresBase):
 
     def save(self, *args, **kwargs):
         if not self.code:
-            self.code = RandomCode(10)
+            self.code = random_code(10)
             self.set_expires()
         super().save()
 
