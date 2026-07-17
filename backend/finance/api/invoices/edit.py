@@ -19,12 +19,7 @@ def edit_invoice(request: HtmxHttpRequest):
     except Invoice.DoesNotExist:
         return JsonResponse({"message": "Invoice not found"}, status=404)
 
-    if request.user.logged_in_as_team and request.user.logged_in_as_team != invoice.organization:
-        return JsonResponse(
-            {"message": "You do not have permission to edit this invoice"},
-            status=403,
-        )
-    elif request.user != invoice.user:
+    if not invoice.has_access(request.user):
         return JsonResponse(
             {"message": "You do not have permission to edit this invoice"},
             status=403,

@@ -115,6 +115,66 @@ class InvoicesAPIDelete(ViewTestCase):
     # self.assertEqual(response_content.get("message"), "Invoice not found")
 
 
+class InvoicesAPIEdit(ViewTestCase):
+    def setUp(self):
+        super().setUp()
+        self.url_path = "/api/invoices/single/edit/"
+        self.url_name = "api:finance:invoices:single:edit"
+        self.view_function_path = "backend.finance.api.invoices.edit.edit_invoice"
+
+    def test_matches_with_urls_view(self):
+        assert_url_matches_view(
+            self.url_path,
+            self.url_name,
+            self.view_function_path,
+        )
+
+    def test_user_cannot_edit_team_owned_invoice_without_team_context(self):
+        self.login_user()
+
+        invoice: Invoice = baker.make(
+            "backend.Invoice",
+            organization=self.created_team,
+            user=None,
+            self_name="Before edit",
+        )
+
+        response = self.client.post(
+            reverse(self.url_name),
+            {"invoice_id": invoice.id, "from_name": "After edit"},
+            **self.htmx_headers,
+        )
+
+        self.assertEqual(response.status_code, 403)
+
+        invoice.refresh_from_db()
+        self.assertEqual(invoice.self_name, "Before edit")
+
+    def test_team_member_can_edit_team_owned_invoice(self):
+        self.login_to_team()
+        invoice: Invoice = baker.make(
+            "backend.Invoice",
+            organization=self.created_team,
+            user=None,
+            self_name="Before edit",
+        )
+
+        response = self.client.post(
+            reverse(self.url_name),
+            {"invoice_id": invoice.id, "from_name": "After edit"},
+            **self.htmx_headers,
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+        invoice.refresh_from_db()
+        self.assertEqual(invoice.self_name, "After edit")
+
+        messages = self.get_all_messages(response)
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), "Invoice edited")
+
+
 class InvoicesEditDiscount(ViewTestCase):
     def setUp(self):
         super().setUp()
