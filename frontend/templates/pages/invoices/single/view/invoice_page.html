@@ -211,6 +211,26 @@
                 }
             }
                 </style>
+                <script>
+                    (function () {
+                        const printFilename = "MyFinances-invoice-{{ invoice.reference|default:invoice.id|escapejs }}.pdf";
+                        let originalTitle = document.title;
+                        let originalWindowTitle = window.parent.document.title;
+
+                        window.addEventListener("beforeprint", function () {
+                            originalTitle = document.title;
+                            originalWindowTitle = window.parent.document.title;
+
+                            window.parent.document.title = printFilename;
+                            document.title = printFilename;
+                        });
+
+                        window.addEventListener("afterprint", function () {
+                            document.title = originalTitle;
+                            window.parent.document.title = originalWindowTitle;
+                        });
+                    })();
+                </script>
             </main>
         </div>
     </body>
