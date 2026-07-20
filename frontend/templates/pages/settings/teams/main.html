@@ -85,7 +85,11 @@
                                         </div>
                                         <div class="tooltip" data-tip="Kick User">
                                             <button class="btn btn-error btn-outline btn-sm"
-                                                    onclick="team_kick_user_{{ user.id }} .showModal ();">
+                                                    x-on:click="modal_kick_user.showModal();"
+                                                    hx-get="{% url "api:base:modal retrieve with context" modal_name="kick_user" context_type="user_id" context_value=user.id %}"
+                                                    hx-trigger="click once"
+                                                    hx-swap="beforeend"
+                                                    hx-target="#modal_container">
                                                 <i class="fa-solid fa-ban"></i>
                                             </button>
                                         </div>
@@ -96,6 +100,32 @@
                     {% endfor %}
                 </tbody>
             </table>
+        </div>
+    {% endif %}
+    {% if team and team.is_leader %}
+        <div class="card w-full p-6 bg-base-100 shadow-xl mt-6">
+            <div class="text-xl font-semibold text-error mb-4">Danger Zone</div>
+            <div class="bg-error/10 rounded-lg p-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="text-lg font-medium text-error">Delete Team</h3>
+                        <p class="text-sm text-error/80">
+                            Once you delete a team, there is no going back. This action cannot be undone.
+                            All members must be removed before deletion.
+                        </p>
+                    </div>
+                    <button 
+                        id="delete-team-btn"
+                        class="btn btn-error"
+                        x-on:click="modal_delete_team.showModal();"
+                        hx-get="{% url "api:base:modal retrieve with context" modal_name="delete_team" context_type="delete_team_id" context_value=team.id %}"
+                        hx-trigger="click once"
+                        hx-swap="beforeend"
+                        hx-target="#modal_container">
+                        Delete Team
+                    </button>
+                </div>
+            </div>
         </div>
     {% endif %}
 {% endblock content %}

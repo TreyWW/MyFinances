@@ -1,12 +1,12 @@
 from django.urls import path
 
-from . import kick, switch_team, invites, leave, create, edit_permissions
+from . import kick, switch_team, invites, leave, create, edit_permissions, delete
 from .create_user import create_user_endpoint
 
 urlpatterns = [
     path("edit_permissions/", edit_permissions.edit_user_permissions_endpoint, name="edit_permissions"),
     path(
-        "kick/<int:user_id>",
+        "kick/<int:user_id>/",
         kick.kick_user,
         name="kick",
     ),
@@ -52,6 +52,7 @@ urlpatterns = [
         create.create_team,
         name="create",
     ),
+    path("delete/<int:team_id>/", delete.delete_team, name="delete"),
     path("get_dropdown/", switch_team.get_dropdown, name="get_dropdown"),
 ]
 
