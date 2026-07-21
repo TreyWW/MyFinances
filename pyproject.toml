@@ -10,7 +10,7 @@ python = ">=3.10,<4.0"
 bleach = "6.4.0"  # used for HTML sanitation
 boto3 = "1.43.24"  # AWS
 django-storages = "1.14.6"  # AWS S3
-pillow = ">=12.2.0"  # Images
+pillow = ">=12.3.0"  # Images
 tblib = "^3.0.0"  # Exceptions and Tracebacks
 django = "^5.2.15"
 django-mathfilters = "^1.0.0"
