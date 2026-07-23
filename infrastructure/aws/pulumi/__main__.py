@@ -74,9 +74,7 @@ vpc_private_subnet = ec2.Subnet(
 
 # Email Users
 
-ses_user = iam.User(
-    "ses_user", name=f"{env_name}-ses-user", path=f"/{site_name}/{stage}/", tags=tags
-)
+ses_user = iam.User("ses_user", name=f"{env_name}-ses-user", path=f"/{site_name}/{stage}/", tags=tags)
 
 send_emails_policy = iam.get_policy_document(
     statements=[
@@ -93,18 +91,10 @@ send_emails_policy = iam.get_policy_document(
     ],
 )
 
-get_messages_policy = iam.get_policy_document(
-    statements=[
-        {"effect": "Allow", "actions": ["ses:GetMessageInsights"], "resources": ["*"]}
-    ]
-)
+get_messages_policy = iam.get_policy_document(statements=[{"effect": "Allow", "actions": ["ses:GetMessageInsights"], "resources": ["*"]}])
 
-ses_user_send_policy = iam.UserPolicy(
-    "ses_user_send_policy", policy=send_emails_policy.json, user=ses_user.name
-)
-ses_user_get_messages_policy = iam.UserPolicy(
-    "ses_user_get_messages_policy", policy=get_messages_policy.json, user=ses_user.name
-)
+ses_user_send_policy = iam.UserPolicy("ses_user_send_policy", policy=send_emails_policy.json, user=ses_user.name)
+ses_user_get_messages_policy = iam.UserPolicy("ses_user_get_messages_policy", policy=get_messages_policy.json, user=ses_user.name)
 
 # Email Templates
 
@@ -128,9 +118,7 @@ ses_template_user_send_client_email = ses.Template(
 ses_template_reminders_overdue = ses.Template(
     "ses_template_reminder_overdue",
     name=f"{env_name}-reminders-overdue",
-    subject=_config_get(
-        "ses_template_reminders_overdue-subject", default_reminders["subject"]
-    ),
+    subject=_config_get("ses_template_reminders_overdue-subject", default_reminders["subject"]),
     html=_config_get(
         "ses_template_reminders_overdue-content_html",
         default_reminders["overdue"]["html"],
@@ -144,9 +132,7 @@ ses_template_reminders_overdue = ses.Template(
 ses_template_reminders_before_due = ses.Template(
     "ses_template_reminder_before_due",
     name=f"{env_name}-reminders-before_due",
-    subject=_config_get(
-        "ses_template_reminders_before_due-subject", default_reminders["subject"]
-    ),
+    subject=_config_get("ses_template_reminders_before_due-subject", default_reminders["subject"]),
     html=_config_get(
         "ses_template_reminders_before_due-content_html",
         default_reminders["before_due"]["html"],
@@ -160,9 +146,7 @@ ses_template_reminders_before_due = ses.Template(
 ses_template_reminders_after_due = ses.Template(
     "ses_template_reminder_after_due",
     name=f"{env_name}-reminders-after_due",
-    subject=_config_get(
-        "ses_template_reminders_after_due-subject", default_reminders["subject"]
-    ),
+    subject=_config_get("ses_template_reminders_after_due-subject", default_reminders["subject"]),
     html=_config_get(
         "ses_template_reminders_after_due-content_html",
         default_reminders["after_due"]["html"],
@@ -175,12 +159,8 @@ ses_template_reminders_after_due = ses.Template(
 
 # Invoice Schedules
 
-invoice_schedules_group = scheduler.ScheduleGroup(
-    "invoice_schedules_group", name=f"{env_name}-invoice-schedules"
-)
-invoice_reminders_group = scheduler.ScheduleGroup(
-    "invoice_reminders_group", name=f"{env_name}-invoice-reminders"
-)
+invoice_schedules_group = scheduler.ScheduleGroup("invoice_schedules_group", name=f"{env_name}-invoice-schedules")
+invoice_reminders_group = scheduler.ScheduleGroup("invoice_reminders_group", name=f"{env_name}-invoice-reminders")
 
 
 # API Destination
@@ -290,14 +270,10 @@ scheduler_execution_policy_attachment = iam.RolePolicyAttachment(
     "scheduler-execution-policy",
     policy_arn=scheduler_execution_policy.arn,
     role=scheduler_execution_role.name,
-    opts=pulumi.ResourceOptions(
-        depends_on=[scheduler_execution_policy, scheduler_execution_role]
-    ),
+    opts=pulumi.ResourceOptions(depends_on=[scheduler_execution_policy, scheduler_execution_role]),
 )
 
-scheduled_invoices_state_machine = get_state_machine(
-    env_name, scheduled_invoices_api_connection, scheduler_execution_role
-)
+scheduled_invoices_state_machine = get_state_machine(env_name, scheduled_invoices_api_connection, scheduler_execution_role)
 
 
 pulumi.export("ses_user", ses_user.id)
