@@ -13,7 +13,7 @@ def create_client_defaults(sender: Type[Client], instance: Client, created, **kw
     if not created:
         return
 
-    logger.info(f"Creating client defaults for client #{instance.id}")
+    logger.info("Creating client defaults for client # %s", instance.id)
 
     if instance.user:
         account_defaults, _ = DefaultValues.objects.get_or_create(user=instance.owner, client=None)

@@ -1,4 +1,5 @@
 from __future__ import annotations
+import logging
 
 from django.contrib import messages
 from django.http import HttpResponseBadRequest
@@ -13,6 +14,8 @@ from backend.models import QuotaLimit, Organization, UserSettings
 from backend.core.types.requests import WebRequest
 from backend.core.utils.feature_flags import get_feature_status
 from backend.core.service.defaults.get import get_account_defaults
+
+logger = logging.getLogger(__name__)
 
 
 def open_modal(request: WebRequest, modal_name, context_type=None, context_value=None):
@@ -73,7 +76,7 @@ def open_modal(request: WebRequest, modal_name, context_type=None, context_value
                     context["to_address"] = (
                         invoice.client_address
                     )  # context["to_city"] = invoice.client_city  # context["to_county"] = invoice.client_county  # context["to_country"] = invoice.client_country
-                print(context)
+                logger.info("open_modal context: %s", context)
             elif context_type == "edit_invoice_from":
                 invoice = context_value
                 try:
@@ -110,7 +113,7 @@ def open_modal(request: WebRequest, modal_name, context_type=None, context_value
                     context["current_limit"] = quota.get_quota_limit(user=request.user, quota_limit=quota)
                     usage = quota.strict_get_quotas(user=request.user, quota_limit=quota)
                     context["quota_usage"] = usage.count() if usage != "Not Available" else "Not available"
-                    print(context["quota_usage"])
+                    logger.info(f"open_modal context[quota_usage]: %s", context["quota_usage"])
                 except QuotaLimit.DoesNotExist:
                     ...
             elif context_type == "invoice_reminder":
@@ -187,5 +190,5 @@ def open_modal(request: WebRequest, modal_name, context_type=None, context_value
 
         return render(request, template_name, context)
     except ValueError as e:
-        print(f"Something went wrong with loading modal {modal_name}. Error: {e}")
+        logger.error("Something went wrong with loading modal %s. Error: %s", modal_name, e)
         return HttpResponseBadRequest("Something went wrong")

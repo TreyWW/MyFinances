@@ -22,7 +22,7 @@ def handle_maintenance_now_endpoint(request: WebRequest):
     api_auth_response = authenticate_api_key(request)
 
     if api_auth_response.failed:
-        logger.info(f"Maintenance auth failed: {api_auth_response.error}")
+        logger.info("Maintenance auth failed: %s", api_auth_response.error)
         return JsonResponse({"message": api_auth_response.error, "success": False}, status=api_auth_response.status_code or 400)
 
     cleanup_str = expire_and_cleanup_objects()
