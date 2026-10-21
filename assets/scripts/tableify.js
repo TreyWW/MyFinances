@@ -40,6 +40,8 @@ window.Tableify = class Tableify {
       }
     });
 
+    this.createFilterMenu();
+
     // Initialize sorting buttons
     $('[mft-sort-by]').each((index, button) => {
       $(button).on("click", (e) => {
@@ -47,6 +49,27 @@ window.Tableify = class Tableify {
         const colName = $(button).attr("mft-sort-by");
         this.handleSortButtonClick(colName);
       });
+    });
+  }
+
+  createFilterMenu() {
+    // Optional "Filter by" dropdown above the table, e.g.
+    // <ul class="dropdown-content menu" mft-filter-menu="my_table_id"></ul>
+    this.filterMenu = $(`[mft-filter-menu="${this.table.attr("id")}"]`);
+    if (this.filterMenu.length === 0) return;
+
+    this.table.find("thead th").each((index, th) => {
+      const colName = $(th).attr("mft-col-name");
+      const body = $('<div class="flex flex-col gap-1 px-4 py-2"></div>');
+      this.appendFilterControls(body, th, colName);
+
+      // Skip columns that have nothing to filter by
+      if (body.children().length === 0) return;
+
+      const section = $('<li><details><summary></summary></details></li>');
+      section.find("summary").text($(th).text().trim());
+      section.find("details").append(body);
+      this.filterMenu.append(section);
     });
   }
 
@@ -143,6 +166,7 @@ window.Tableify = class Tableify {
       this.table.find("tbody").html(sortedRows);
     }
 
+    this.syncFilterInputs();
     this.updateFilterCounts();
   }
 
@@ -158,76 +182,10 @@ window.Tableify = class Tableify {
     let dropdown = $(element).find('.filter-dropdown');
     if (dropdown.length === 0) {
       dropdown = $('<div class="filter-dropdown absolute bg-base-300 shadow-md rounded-md p-2 mt-1 hidden z-50"></div>');
-
-      // Handle different filter types
-      if (filterType === "normal" && colFilters) {
-        const filters = colFilters.split(",");
-        filters.forEach((filter) => {
-          const checkbox = $(`<label class="flex items-center">
-                              <input type="checkbox" value="${filter}" class="mr-2" />
-                              ${filter}
-                            </label>`);
-          checkbox.on("change", (e) => {
-            e.stopPropagation(); // Prevent closing on checkbox interaction
-            this.updateFilter(colName, filter, checkbox.find('input').is(":checked"));
-          });
-          dropdown.append(checkbox);
-        });
-      } else if (filterType === "searchable") {
-        // Create search input for searchable columns
-        const searchInput = $(`<input type="text" class="input input-bordered w-full input-sm" placeholder="Search..." />`);
-        searchInput.on("input", (e) => {
-          e.stopPropagation(); // Prevent closing on typing
-          const searchValue = searchInput.val();
-          if (searchValue) {
-            this.filters[colName] = [searchValue];
-          } else {
-            delete this.filters[colName];
-          }
-          this.redraw();
-        });
-        dropdown.append(searchInput);
-      } else if (filterType === "searchable-amount") {
-        // Create numeric input for searchable-amount columns
-        const amountInput = $(`<input type="text" class="input input-bordered w-full input-sm" placeholder="Enter amount or amount+ for greater..." />`);
-        amountInput.on("input", (e) => {
-          e.stopPropagation(); // Prevent closing on typing
-          const amountValue = amountInput.val();
-
-          if (amountValue) {
-            this.filters[colName] = [amountValue]; // Store as is
-          } else {
-            delete this.filters[colName]; // Remove if empty
-          }
-
-          this.redraw();
-        });
-        dropdown.append(amountInput);
-      } else if (filterType === "date-range") {
-        const fromLabel = $(`<div class="text-xs opacity-70 mb-1">From</div>`);
-        const fromInput = $(`<input type="date" class="input input-bordered w-full input-sm mb-3" />`);
-        const toLabel   = $(`<div class="text-xs opacity-70 mb-1">To</div>`);
-        const toInput   = $(`<input type="date" class="input input-bordered w-full input-sm" />`);
-
-        const apply = () => {
-          const fromVal = fromInput.val();
-          const toVal = toInput.val();
-
-          if (fromVal || toVal) {
-            this.filters[colName] = [fromVal || "", toVal || ""];
-          } else {
-            delete this.filters[colName];
-          }
-          this.redraw();
-        };
-
-        fromInput.on("input", (e) => { e.stopPropagation(); apply(); });
-        toInput.on("input", (e) => { e.stopPropagation(); apply(); });
-
-        dropdown.append(fromLabel).append(fromInput).append(toLabel).append(toInput);
-      }
+      this.appendFilterControls(dropdown, element, colName);
 
       $(element).append(dropdown); // Append the new dropdown to the column header
+      this.syncFilterInputs(); // Show filters that were already set from the filter menu
 
       // Prevent dropdown from closing when clicking inside
       dropdown.on("click", (e) => {
@@ -247,6 +205,93 @@ window.Tableify = class Tableify {
     };
 
     $(document).on('click', handleClickOutside); // Attach event listener to close dropdown when clicking outside
+  }
+
+  appendFilterControls(container, element, colName) {
+    const colFilters = $(element).attr("mft-filters");
+    const filterType = $(element).attr("mft-filter-type");
+
+    // Handle different filter types
+    if (filterType === "normal" && colFilters) {
+      const filters = colFilters.split(",");
+      filters.forEach((filter) => {
+        const checkbox = $(`<label class="flex items-center">
+                            <input type="checkbox" value="${filter}" class="mr-2" mft-filter-col="${colName}" />
+                            ${filter}
+                          </label>`);
+        checkbox.on("change", (e) => {
+          e.stopPropagation(); // Prevent closing on checkbox interaction
+          this.updateFilter(colName, filter, checkbox.find('input').is(":checked"));
+        });
+        container.append(checkbox);
+      });
+    } else if (filterType === "searchable") {
+      // Create search input for searchable columns
+      const searchInput = $(`<input type="text" class="input input-bordered w-full input-sm" placeholder="Search..." mft-filter-col="${colName}" />`);
+      searchInput.on("input", (e) => {
+        e.stopPropagation(); // Prevent closing on typing
+        const searchValue = searchInput.val();
+        if (searchValue) {
+          this.filters[colName] = [searchValue];
+        } else {
+          delete this.filters[colName];
+        }
+        this.redraw();
+      });
+      container.append(searchInput);
+    } else if (filterType === "searchable-amount") {
+      // Create numeric input for searchable-amount columns
+      const amountInput = $(`<input type="text" class="input input-bordered w-full input-sm" placeholder="Enter amount or amount+ for greater..." mft-filter-col="${colName}" />`);
+      amountInput.on("input", (e) => {
+        e.stopPropagation(); // Prevent closing on typing
+        const amountValue = amountInput.val();
+
+        if (amountValue) {
+          this.filters[colName] = [amountValue]; // Store as is
+        } else {
+          delete this.filters[colName]; // Remove if empty
+        }
+
+        this.redraw();
+      });
+      container.append(amountInput);
+    } else if (filterType === "date-range") {
+      const fromLabel = $(`<div class="text-xs opacity-70 mb-1">From</div>`);
+      const fromInput = $(`<input type="date" class="input input-bordered w-full input-sm mb-3" mft-filter-col="${colName}" mft-filter-index="0" />`);
+      const toLabel   = $(`<div class="text-xs opacity-70 mb-1">To</div>`);
+      const toInput   = $(`<input type="date" class="input input-bordered w-full input-sm" mft-filter-col="${colName}" mft-filter-index="1" />`);
+
+      const apply = () => {
+        const fromVal = fromInput.val();
+        const toVal = toInput.val();
+
+        if (fromVal || toVal) {
+          this.filters[colName] = [fromVal || "", toVal || ""];
+        } else {
+          delete this.filters[colName];
+        }
+        this.redraw();
+      };
+
+      fromInput.on("input", (e) => { e.stopPropagation(); apply(); });
+      toInput.on("input", (e) => { e.stopPropagation(); apply(); });
+
+      container.append(fromLabel).append(fromInput).append(toLabel).append(toInput);
+    }
+  }
+
+  syncFilterInputs() {
+    // The same filter can be set from the column header or the filter menu, keep both showing the current value
+    this.table.find("thead").add(this.filterMenu).find("[mft-filter-col]").each((index, input) => {
+      const values = this.filters[$(input).attr("mft-filter-col")] || [];
+
+      if ($(input).is(":checkbox")) {
+        $(input).prop("checked", values.includes($(input).val()));
+      } else {
+        const value = values[$(input).attr("mft-filter-index") || 0] || "";
+        if ($(input).val() !== value) $(input).val(value);
+      }
+    });
   }
 
   updateFilter(colName, value, checked) {
