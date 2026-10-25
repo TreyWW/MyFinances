@@ -50,6 +50,7 @@
                     </tr>
                 </thead>
                 <tbody id="services_table_body"
+                        data-currency-symbol="{{ currency_symbol }}"
                        _="on every htmx:afterRequest in closest .card-body log 'hi'">
                     {% include 'pages/invoices/create/services/_services_table_body.html' %}
                 </tbody>
@@ -57,3 +58,136 @@
         </div>
     </div>
 </div>
+
+<script>
+(function () {
+    const tbody = document.getElementById("services_table_body");
+
+    if (!tbody || tbody.dataset.editHandlerInstalled) {
+        return;
+    }
+
+    tbody.dataset.editHandlerInstalled = "true";
+
+    function updateRow(row) {
+        const name = row.querySelector('[data-field="name"]');
+        const description = row.querySelector('[data-field="description"]');
+        const hours = row.querySelector('[data-field="hours"]');
+        const rate = row.querySelector('[data-field="rate"]');
+
+        row.querySelector('input[name="service_name[]"]').value = name.value;
+        row.querySelector('input[name="service_description[]"]').value = description.value;
+        row.querySelector('input[name="hours[]"]').value = hours.value;
+        row.querySelector('input[name="price_per_hour[]"]').value = rate.value;
+
+        row.querySelector(".service-name").textContent = name.value;
+        row.querySelector(".service-description").textContent = description.value;
+
+        const parsedHours = parseFloat(hours.value);
+        const parsedRate = parseFloat(rate.value);
+
+        const total =
+            (Number.isFinite(parsedHours) ? parsedHours : 0) *
+            (Number.isFinite(parsedRate) ? parsedRate : 0);
+
+        const currencySymbol = tbody.dataset.currencySymbol || "";
+
+        row.querySelector(".service-hours").textContent = hours.value;
+
+        row.querySelector(".service-rate").textContent =
+            currencySymbol + rate.value;
+
+        row.querySelector(".service-total").textContent =
+            currencySymbol + total.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+
+        row.querySelector('input[name="total_price[]"]').value =
+            total.toFixed(2);
+    }
+
+    function closeEditor(row) {
+        updateRow(row);
+
+        row.querySelectorAll(".service-editor").forEach(function (element) {
+            element.classList.add("hidden");
+        });
+
+        row.querySelectorAll(".service-display").forEach(function (element) {
+            element.classList.remove("hidden");
+        });
+
+        const button = row.querySelector(".service-edit-button");
+
+        button.innerHTML =
+            '<i class="fa-solid fa-pen-to-square pe-1"></i> Edit';
+
+        button.setAttribute("aria-label", "Edit service");
+        row.dataset.editing = "false";
+    }
+
+    function openEditor(row) {
+        row.querySelectorAll(".service-display").forEach(function (element) {
+            element.classList.add("hidden");
+        });
+
+        row.querySelectorAll(".service-editor").forEach(function (element) {
+            element.classList.remove("hidden");
+        });
+
+        const button = row.querySelector(".service-edit-button");
+
+        button.textContent = "Done";
+        button.setAttribute("aria-label", "Finish editing service");
+        row.dataset.editing = "true";
+    }
+
+    tbody.addEventListener("click", function (event) {
+        const button = event.target.closest(".service-edit-button");
+
+        if (!button) {
+            return;
+        }
+
+        const row = button.closest(".invoice-service-row");
+
+        if (!row) {
+            return;
+        }
+
+        if (row.dataset.editing === "true") {
+            closeEditor(row);
+            return;
+        }
+
+        const activeRow = tbody.querySelector(
+            '.invoice-service-row[data-editing="true"]'
+        );
+
+        if (activeRow && activeRow !== row) {
+            closeEditor(activeRow);
+        }
+
+        openEditor(row);
+    });
+
+    tbody.addEventListener("input", function (event) {
+        const row = event.target.closest(".invoice-service-row");
+
+        if (!row || row.dataset.editing !== "true") {
+            return;
+        }
+
+        updateRow(row);
+    });
+
+    const form = tbody.closest("form");
+
+    if (form) {
+        form.addEventListener("submit", function () {
+            tbody.querySelectorAll(".invoice-service-row").forEach(updateRow);
+        });
+    }
+})();
+</script>
