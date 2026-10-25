@@ -63,11 +63,15 @@
 (function () {
     const tbody = document.getElementById("services_table_body");
 
-    if (!tbody || tbody.dataset.editHandlerInstalled) {
+    if (!tbody || tbody.dataset.editHandlerInstalled === "true") {
         return;
     }
 
     tbody.dataset.editHandlerInstalled = "true";
+
+    function getCurrencySymbol() {
+        return tbody.dataset.currencySymbol || "";
+    }
 
     function updateRow(row) {
         const name = row.querySelector('[data-field="name"]');
@@ -75,10 +79,9 @@
         const hours = row.querySelector('[data-field="hours"]');
         const rate = row.querySelector('[data-field="rate"]');
 
-        row.querySelector('input[name="service_name[]"]').value = name.value;
-        row.querySelector('input[name="service_description[]"]').value = description.value;
-        row.querySelector('input[name="hours[]"]').value = hours.value;
-        row.querySelector('input[name="price_per_hour[]"]').value = rate.value;
+        if (!name || !description || !hours || !rate) {
+            return;
+        }
 
         row.querySelector(".service-name").textContent = name.value;
         row.querySelector(".service-description").textContent = description.value;
@@ -86,11 +89,11 @@
         const parsedHours = parseFloat(hours.value);
         const parsedRate = parseFloat(rate.value);
 
-        const total =
-            (Number.isFinite(parsedHours) ? parsedHours : 0) *
-            (Number.isFinite(parsedRate) ? parsedRate : 0);
+        const validHours = Number.isFinite(parsedHours) ? parsedHours : 0;
+        const validRate = Number.isFinite(parsedRate) ? parsedRate : 0;
 
-        const currencySymbol = tbody.dataset.currencySymbol || "";
+        const total = validHours * validRate;
+        const currencySymbol = getCurrencySymbol();
 
         row.querySelector(".service-hours").textContent = hours.value;
 
@@ -138,19 +141,33 @@
 
         const button = row.querySelector(".service-edit-button");
 
-        button.textContent = "Done";
+        button.innerHTML =
+            '<i class="fa-solid fa-check pe-1"></i> Done';
+
         button.setAttribute("aria-label", "Finish editing service");
         row.dataset.editing = "true";
     }
 
     tbody.addEventListener("click", function (event) {
-        const button = event.target.closest(".service-edit-button");
+        const editButton = event.target.closest(".service-edit-button");
+        const deleteButton = event.target.closest(".service-delete-button");
 
-        if (!button) {
+        if (deleteButton) {
+            const row = deleteButton.closest(".invoice-service-row");
+
+            if (row) {
+                row.remove();
+                updateEmptyMessage();
+            }
+
             return;
         }
 
-        const row = button.closest(".invoice-service-row");
+        if (!editButton) {
+            return;
+        }
+
+        const row = editButton.closest(".invoice-service-row");
 
         if (!row) {
             return;
@@ -181,6 +198,20 @@
 
         updateRow(row);
     });
+
+    function updateEmptyMessage() {
+        const rows = tbody.querySelectorAll(".invoice-service-row");
+        const emptyRow = tbody.querySelector(".services-empty-row");
+
+        if (rows.length === 0 && !emptyRow) {
+            tbody.innerHTML =
+                '<tr class="services-empty-row">' +
+                '<td colspan="5" class="text-center">No services added</td>' +
+                '</tr>';
+        } else if (rows.length > 0 && emptyRow) {
+            emptyRow.remove();
+        }
+    }
 
     const form = tbody.closest("form");
 
