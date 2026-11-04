@@ -1,58 +1,133 @@
 {% load humanize %}
 {% load markdownify %}
 {% load mathfilters %}
+
 {% for row in rows %}
-    <tr>
+    <tr class="invoice-service-row" data-editing="false">
         <td>
             {% if row.id %}
-                <input class="hidden" name="service_name[]" value="{{ row.name }}">
-                <input class="hidden"
-                       name="service_description[]"
-                       value="{{ row.description }}">
-                {{ row.name|markdownify }}
-                {{ row.description|markdownify }}
+                {% with name=row.name description=row.description %}
+                    <div class="service-display">
+                        <div class="service-name">{{ name|markdownify }}</div>
+                        <div class="service-description">{{ description|markdownify }}</div>
+                    </div>
+
+                    <div class="service-editor hidden space-y-2">
+                        <input
+                            type="text"
+                            name="service_name[]"
+                            data-field="name"
+                            class="input input-bordered input-sm w-full"
+                            value="{{ name }}">
+
+                        <textarea
+                            name="service_description[]"
+                            data-field="description"
+                            class="textarea textarea-bordered textarea-sm w-full"
+                            rows="2">{{ description }}</textarea>
+                    </div>
+                {% endwith %}
             {% else %}
-                <input class="hidden" name="service_name[]" value="{{ row.service_name }}">
-                <input class="hidden"
-                       name="service_description[]"
-                       value="{{ row.service_description }}">
-                {{ row.service_name|markdownify }}
-                {{ row.service_description|markdownify }}
+                <div class="service-display">
+                    <div class="service-name">{{ row.service_name|markdownify }}</div>
+                    <div class="service-description">{{ row.service_description|markdownify }}</div>
+                </div>
+
+                <div class="service-editor hidden space-y-2">
+                    <input
+                        type="text"
+                        name="service_name[]"
+                        data-field="name"
+                        class="input input-bordered input-sm w-full"
+                        value="{{ row.service_name }}">
+
+                    <textarea
+                        name="service_description[]"
+                        data-field="description"
+                        class="textarea textarea-bordered textarea-sm w-full"
+                        rows="2">{{ row.service_description }}</textarea>
+                </div>
             {% endif %}
         </td>
+
         <td>
-            <input class="hidden" name="hours[]" value="{{ row.hours }}">
-            {{ row.hours|intcomma }}
+            <span class="service-display service-hours">
+                {{ row.hours|intcomma }}
+            </span>
+
+            <input
+                type="number"
+                name="hours[]"
+                data-field="hours"
+                class="input input-bordered input-sm w-24 service-editor hidden"
+                value="{{ row.hours }}"
+                min="0.01"
+                step="any"
+                aria-label="Quantity">
         </td>
+
         <td>
-            <input class="hidden"
-                   name="price_per_hour[]"
-                   value="{{ row.price_per_hour }}">
-            {{ currency_symbol }}{{ row.price_per_hour }}
+            <span class="service-display service-rate">
+                {{ currency_symbol }}{{ row.price_per_hour }}
+            </span>
+
+            <input
+                type="number"
+                name="price_per_hour[]"
+                data-field="rate"
+                class="input input-bordered input-sm w-28 service-editor hidden"
+                value="{{ row.price_per_hour }}"
+                min="0"
+                step="0.01"
+                aria-label="Rate">
         </td>
+
         <td>
             {% if row.id %}
-                <input class="hidden"
-                       name="total_price[]"
-                       value="{{ row.hours|mul:row.price_per_hour|floatformat:2 }}">
-                {{ currency_symbol }}{{ row.hours|mul:row.price_per_hour|floatformat:2|intcomma }}
+                {% with total=row.hours|mul:row.price_per_hour %}
+                    <input
+                        type="hidden"
+                        name="total_price[]"
+                        value="{{ total|floatformat:2 }}">
+
+                    <span class="service-total">
+                        {{ currency_symbol }}{{ total|floatformat:2|intcomma }}
+                    </span>
+                {% endwith %}
             {% else %}
-                <input class="hidden" name="total_price[]" value="{{ row.total_price }}">
-                {{ currency_symbol }}{{ row.total_price|floatformat:2|intcomma }}
+                <input
+                    type="hidden"
+                    name="total_price[]"
+                    value="{{ row.total_price|floatformat:2 }}">
+
+                <span class="service-total">
+                    {{ currency_symbol }}{{ row.total_price|floatformat:2|intcomma }}
+                </span>
             {% endif %}
         </td>
+
         <td>
-            <button type="button"
-                    class="btn btn-outline btn-error btn-xs"
-                    _="on click remove closest <tr/>">
-                <i class="fa-solid fa-trash-can pe-2"></i>
-                Delete
-            </button>
+            <div class="flex gap-2">
+                <button
+                    type="button"
+                    class="btn btn-outline btn-primary btn-xs service-edit-button"
+                    aria-label="Edit service">
+                    <i class="fa-solid fa-pen-to-square pe-1"></i>
+                    Edit
+                </button>
+
+                <button
+                    type="button"
+                    class="btn btn-outline btn-error btn-xs service-delete-button">
+                    <i class="fa-solid fa-trash-can pe-1"></i>
+                    Delete
+                </button>
+            </div>
         </td>
     </tr>
 {% empty %}
-    <tr>
-        <td colspan="100%" class="text-center">No services added</td>
+    <tr class="services-empty-row">
+        <td colspan="5" class="text-center">No services added</td>
     </tr>
 {% endfor %}
 {##}
