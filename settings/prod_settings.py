@@ -21,7 +21,7 @@ DB_TYPE = DB_TYPE.lower() if DB_TYPE else ""
 DB_TYPE = "mysql" if DB_TYPE in ["mysql", "mariadb"] else DB_TYPE
 
 if DB_TYPE != "sqlite":
-    DATABASES = {
+    DATABASES: dict = {
         "default": {
             "ENGINE": ("django.db.backends.postgresql_psycopg2" if DB_TYPE == "mysql" else "django.db.backends.postgresql"),
             "NAME": os.environ.get("DATABASE_NAME") or "myfinances_development",

@@ -19,14 +19,6 @@ class Command(BaseCommand):
 
         Your API Key: {raw_key}
 
-        To use this API Key for development you can use:
-
-        pulumi config set api_destination-api_key {raw_key}
-        pulumi up
-
-        If you would like to use it for production use:
-        pulumi stack select production
-        pulumi config set api_destination-api_key {raw_key}
-        pulumi up
+        Set this on your EventBridge connection as the "Authorization" header with the value "Token {raw_key}"
         """
         )

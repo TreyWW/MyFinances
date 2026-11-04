@@ -3,7 +3,7 @@
 import django.db.models.deletion
 from django.db import migrations, models
 
-import backend.models
+import backend.core.models
 
 
 class Migration(migrations.Migration):

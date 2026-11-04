@@ -10,3 +10,4 @@ class APIRequest(Request):
     api_token: APIAuthToken
     team: Organization | None
     team_id: int | None
+    actor: User | Organization

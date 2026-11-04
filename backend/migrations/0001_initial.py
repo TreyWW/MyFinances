@@ -6,7 +6,7 @@ import shortuuid.django_fields
 from django.conf import settings
 from django.db import migrations, models
 
-import backend.models
+import backend.core.models
 
 
 class Migration(migrations.Migration):
