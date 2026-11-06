@@ -48,6 +48,11 @@ window.Tableify = class Tableify {
         this.handleSortButtonClick(colName);
       });
     });
+
+    // Handle the refresh button click event
+    document.getElementById('refresh_btn').addEventListener('click', () => {
+      this.refreshData();
+    });
   }
 
   handleSortButtonClick(colName, parentId) {
@@ -67,6 +72,27 @@ window.Tableify = class Tableify {
     this.sortDirection = newSortDirection;
 
     this.redraw(); // Redraw the table with updated sorting
+  }
+
+  getFilterParams() {
+    let params = {};
+
+    // Add filters to params from the filters object
+    for (const [colName, filterValues] of Object.entries(this.filters)) {
+        params[colName] = filterValues.join(',');
+    }
+
+    return params;
+  }
+
+  // Refresh data by triggering a GET request with the current filters
+  refreshData() {
+    const params = this.getFilterParams();
+    const url = "/api/invoices/single/fetch/";
+    const queryString = new URLSearchParams(params).toString();
+    const fullUrl = `${url}?${queryString}` ;
+
+    htmx.ajax('GET', fullUrl, { target: '#table_body', swap: 'outerHTML' });
   }
 
   redraw() {
