@@ -1,5 +1,5 @@
 from django.urls import path
-from . import modal, notifications, breadcrumbs
+from . import modal, notifications, breadcrumbs, global_search
 
 urlpatterns = [
     path(
@@ -24,6 +24,11 @@ urlpatterns = [
         name="notifications delete",
     ),
     path("breadcrumbs/refetch/", breadcrumbs.update_breadcrumbs_endpoint, name="breadcrumbs refetch"),
+    path(
+        "global_search",
+        global_search.global_search_endpoint,
+        name="global_search"
+    )
 ]
 
 app_name = "base"

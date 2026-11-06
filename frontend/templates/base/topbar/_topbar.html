@@ -95,6 +95,28 @@
     {# Right Icons #}
     {#        <div class="flex">#}
     {# Profile Picture  #}
+    <div class="dropdown dropdown-left dropdown-bottom">
+        <div class="relative w-full max-w-xs">
+            <input class="input input-sm input-bordered pr-8"
+                   name="search"
+                   type="text"
+                   placeholder="Search..."
+                   hx-get="{% url 'api:base:global_search' %}"
+                   hx-target="#global_search"
+                   hx-swap="innerHTML"
+                   hx-trigger="keyup changed delay:500ms, click once, load delay:500ms" />
+            <button type="button"
+                    onclick='document.querySelector(`input[name="search"]`).value=""'
+                    class="absolute right-2 top-1/2 transform -translate-y-1/2 !text-primary !hover:text-error focus:outline-none text-xs">
+                ✖
+            </button>
+        </div>
+        {#            <div tabindex="0" role="button" class="btn m-1">Click</div>#}
+        <ul tabindex="0"
+            class="dropdown-content bg-base-100 rounded-box z-[1] !w-[40rem] overflow-hidden p-4"
+            id="global_search">
+        </ul>
+    </div>
     <details class="mr-3 dropdown dropdown-end">
         <summary class="btn btn-ghost"
                  hx-get="{% url "api:base:notifications get" %}"
