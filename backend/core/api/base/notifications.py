@@ -6,6 +6,7 @@ from backend.models import Notification
 from backend.core.types.htmx import HtmxHttpRequest
 
 
+
 def get_notification_html(request: HtmxHttpRequest):
     user_notifications = Notification.objects.filter(user=request.user).order_by("-date")
     count = user_notifications.count()
@@ -22,7 +23,10 @@ def get_notification_html(request: HtmxHttpRequest):
 
 def get_notification_count_html(request: HtmxHttpRequest):
     user_notifications = Notification.objects.filter(user=request.user).count()
-    return HttpResponse(f"{user_notifications}")
+    response =  HttpResponse(f"{user_notifications}")
+    if user_notifications > 4 or user_notifications == 0:
+        response["HX-Trigger"] = "update_notifications"
+    return response
 
 
 def delete_notification(request: HtmxHttpRequest, id: int):

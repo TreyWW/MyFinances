@@ -37,6 +37,7 @@
             <a tabindex="-1"
                class="dropdown-item text-sm {% if not forloop.first %}mt-1{% endif %}"
                hx-delete="{% url 'api:base:notifications delete' id=notification.id %}"
+               hx-target="this"
                hx-swap="outerHTML">{{ notification.message }}</a>
         </li>
     {% elif notification.action == "redirect" %}
