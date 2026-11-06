@@ -38,7 +38,7 @@ def RandomAPICode(length=89):
 def upload_to_user_separate_folder(instance, filename, optional_actor=None) -> str:
     instance_name = instance._meta.verbose_name.replace(" ", "-")
 
-    logger.info(f"In upload_to_user_separate_folder Function instance:{instance}, filename:{filename}")
+    logger.info("In upload_to_user_separate_folder Function instance:%s, filename:%s", instance, filename)
 
     if optional_actor:
         if isinstance(optional_actor, User):

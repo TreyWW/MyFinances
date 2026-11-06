@@ -5,6 +5,8 @@ from rest_framework.decorators import api_view
 from backend.core.service.asyn_tasks.tasks import Task
 from backend.core.api.public.helpers.response import APIResponse
 
+logger = logging.getLogger(__name__)
+
 
 @api_view(["POST"])
 def webhook_task_queue_handler_view_endpoint(request):
@@ -22,9 +24,7 @@ def webhook_task_queue_handler_view_endpoint(request):
         args: list = data.get("args", [])
         kwargs: dict = data.get("kwargs", {})
 
-        print(f"Function Name: {func_name}")
-        print(f"Arguments: {args}")
-        print(f"Keyword Arguments: {kwargs}")
+        logger.info(f"Function Name: %s \n Arguments: %s \n Keyword Arguments: %s", func_name, args, kwargs)
 
         # Validate function name
         if not func_name:
@@ -36,11 +36,10 @@ def webhook_task_queue_handler_view_endpoint(request):
         # Attempt to execute the function
         result = task_helper.execute_now(func_name, *args, **kwargs)
 
-        # Handle the result (e.g., store it or log it)
-        print(f"Webhook executed: {func_name} with result: {result}")
+        logger.info("Webhook executed: %s with result: %s", func_name, result)
 
         return APIResponse(True, {"status": "success", "result": result})
 
     except Exception as e:
-        logging.error(f"Error executing webhook task: {str(e)}")
+        logger.error("Error executing webhook task: %s", str(e))
         return APIResponse(False, {"status": "error", "message": "An internal error has occurred."}, status=500)
