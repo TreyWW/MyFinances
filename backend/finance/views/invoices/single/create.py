@@ -54,8 +54,6 @@ def create_invoice_page_endpoint(request: WebRequest):
         except Invoice.DoesNotExist:
             messages.error(request, "Invoice to clone not found")
 
-    print(context)
-
     return invoices_core_handler(request, "pages/invoices/create/create_single.html", context)
 
 
