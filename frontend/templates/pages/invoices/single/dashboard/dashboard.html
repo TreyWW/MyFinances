@@ -88,5 +88,9 @@
         </table>
     </div>
 </div>
-<script>new Tableify('#single_invoices_list_table');</script>
+<script >
+  document.addEventListener("DOMContentLoaded", function () {
+    new Tableify('#single_invoices_list_table');
+  });
+</script>
 {% component "messages_list" %}

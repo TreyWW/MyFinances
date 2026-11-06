@@ -8,6 +8,70 @@ window.$ = $;
 // Expose Alpine globally and start it once
 window.Alpine = Alpine;
 
+function getThemeFromLocalStorage() {
+  // if user already changed the theme, use it
+  if (window.localStorage.getItem('dark')) {
+    return JSON.parse(window.localStorage.getItem('dark'))
+  }
+  // else return their preferences
+  return (
+    !!window.matchMedia &&
+    window.matchMedia('(prefers-color-scheme: dark)').matches
+  )
+}
+
+function setThemeToLocalStorage(value) {
+  window.localStorage.setItem('dark', value)
+}
+
+function data() {
+  return {
+    dark: getThemeFromLocalStorage(),
+    toggleTheme() {
+      this.dark = !this.dark;
+      setThemeToLocalStorage(this.dark);
+    },
+    isSideMenuOpen: false,
+    toggleSideMenu() {
+      this.isSideMenuOpen = !this.isSideMenuOpen
+    },
+    closeSideMenu() {
+      this.isSideMenuOpen = false
+    },
+    isNotificationsMenuOpen: false,
+    toggleNotificationsMenu() {
+      this.isNotificationsMenuOpen = !this.isNotificationsMenuOpen
+    },
+    closeNotificationsMenu() {
+      this.isNotificationsMenuOpen = false
+    },
+    isProfileMenuOpen: false,
+    toggleProfileMenu() {
+      this.isProfileMenuOpen = !this.isProfileMenuOpen
+    },
+    closeProfileMenu() {
+      this.isProfileMenuOpen = false
+    },
+    isPagesMenuOpen: false,
+    togglePagesMenu() {
+      this.isPagesMenuOpen = !this.isPagesMenuOpen
+    },
+    isModalOpen: false,
+    trapCleanup: null,
+    openModal() {
+      this.isModalOpen = true
+      this.trapCleanup = focusTrap(document.querySelector('#modal'))
+    },
+    closeModal() {
+      this.isModalOpen = false
+      this.trapCleanup()
+    },
+  }
+}
+
+// Expose data() globally so x-data="data()" works in templates
+window.data = data;
+
 function startAlpineOnce() {
   if (window.__alpine_started__) return;
   window.__alpine_started__ = true;
@@ -17,17 +81,14 @@ function startAlpineOnce() {
 document.addEventListener("DOMContentLoaded", function () {
   startAlpineOnce();
 
-  // Drawer elements are not present on every page (e.g. invoice preview iframe)
   const drawer = document.getElementById("service_list_drawer");
   const serviceListToggler = document.getElementById("service_list_toggler");
   const logoSingleServiceListToggler = document.getElementById(
     "logo_single_service_list_toggler"
   );
 
-  // Note: querySelectorAll returns an empty NodeList if none exist
   const togglers = document.querySelectorAll("#service_list_togglers");
 
-  // If the drawer UI isn't on this page, exit silently
   if (!drawer || !serviceListToggler || !logoSingleServiceListToggler) return;
 
   window.toggleDrawerSurrounds = function toggleDrawerSurrounds(state) {
@@ -48,4 +109,3 @@ document.addEventListener("DOMContentLoaded", function () {
     window.toggleDrawerSurrounds(drawer.checked);
   });
 });
-
