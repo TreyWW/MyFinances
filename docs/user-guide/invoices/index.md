@@ -6,7 +6,7 @@ the invoice via the dashboard, print out the invoice and pay the invoice.
 ## View an Invoice
 
 You can find an invoice from the "`Invoices`" -> "`Single`" tab, where every invoice under your [Logged in Profile](#) will be
-shown. Use the filters above each column to narrow down the list.
+shown. Use the filter button at the top of the table, or the filters above each column, to narrow down the list.
 
 You can view an overview of the invoice by either clicking anywhere in the row, or the "three dots" -> "overview".
 

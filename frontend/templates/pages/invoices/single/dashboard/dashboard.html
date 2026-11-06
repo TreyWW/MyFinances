@@ -2,6 +2,16 @@
 <div class="card bg-base-100 p-3 mb-2">
     <div class="flex items-center justify-between">
         <div class="flex items-start flex-row justify-start gap-x-2">
+            <div class="dropdown">
+                <div tabindex="0" role="button" class="btn btn-square btn-sm btn-outline">
+                    <i class="fa fa-filter"></i>
+                </div>
+                <ul class="dropdown-content menu z-[1] w-64 rounded-box bg-base-200 p-2 shadow"
+                    tabindex="0"
+                    mft-filter-menu="single_invoices_list_table">
+                    <h2 class="menu-title">Filter by</h2>
+                </ul>
+            </div>
             <div class="dropdown dropdown-right">
                 <div tabindex="0"
                      role="button"
