@@ -50,6 +50,7 @@
                     </tr>
                 </thead>
                 <tbody id="services_table_body"
+                        data-currency-symbol="{{ currency_symbol }}"
                        _="on every htmx:afterRequest in closest .card-body log 'hi'">
                     {% include 'pages/invoices/create/services/_services_table_body.html' %}
                 </tbody>
@@ -57,3 +58,167 @@
         </div>
     </div>
 </div>
+
+<script>
+(function () {
+    const tbody = document.getElementById("services_table_body");
+
+    if (!tbody || tbody.dataset.editHandlerInstalled === "true") {
+        return;
+    }
+
+    tbody.dataset.editHandlerInstalled = "true";
+
+    function getCurrencySymbol() {
+        return tbody.dataset.currencySymbol || "";
+    }
+
+    function updateRow(row) {
+        const name = row.querySelector('[data-field="name"]');
+        const description = row.querySelector('[data-field="description"]');
+        const hours = row.querySelector('[data-field="hours"]');
+        const rate = row.querySelector('[data-field="rate"]');
+
+        if (!name || !description || !hours || !rate) {
+            return;
+        }
+
+        row.querySelector(".service-name").textContent = name.value;
+        row.querySelector(".service-description").textContent = description.value;
+
+        const parsedHours = parseFloat(hours.value);
+        const parsedRate = parseFloat(rate.value);
+
+        const validHours = Number.isFinite(parsedHours) ? parsedHours : 0;
+        const validRate = Number.isFinite(parsedRate) ? parsedRate : 0;
+
+        const total = validHours * validRate;
+        const currencySymbol = getCurrencySymbol();
+
+        row.querySelector(".service-hours").textContent = hours.value;
+
+        row.querySelector(".service-rate").textContent =
+            currencySymbol + rate.value;
+
+        row.querySelector(".service-total").textContent =
+            currencySymbol + total.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+
+        row.querySelector('input[name="total_price[]"]').value =
+            total.toFixed(2);
+    }
+
+    function closeEditor(row) {
+        updateRow(row);
+
+        row.querySelectorAll(".service-editor").forEach(function (element) {
+            element.classList.add("hidden");
+        });
+
+        row.querySelectorAll(".service-display").forEach(function (element) {
+            element.classList.remove("hidden");
+        });
+
+        const button = row.querySelector(".service-edit-button");
+
+        button.innerHTML =
+            '<i class="fa-solid fa-pen-to-square pe-1"></i> Edit';
+
+        button.setAttribute("aria-label", "Edit service");
+        row.dataset.editing = "false";
+    }
+
+    function openEditor(row) {
+        row.querySelectorAll(".service-display").forEach(function (element) {
+            element.classList.add("hidden");
+        });
+
+        row.querySelectorAll(".service-editor").forEach(function (element) {
+            element.classList.remove("hidden");
+        });
+
+        const button = row.querySelector(".service-edit-button");
+
+        button.innerHTML =
+            '<i class="fa-solid fa-check pe-1"></i> Done';
+
+        button.setAttribute("aria-label", "Finish editing service");
+        row.dataset.editing = "true";
+    }
+
+    tbody.addEventListener("click", function (event) {
+        const editButton = event.target.closest(".service-edit-button");
+        const deleteButton = event.target.closest(".service-delete-button");
+
+        if (deleteButton) {
+            const row = deleteButton.closest(".invoice-service-row");
+
+            if (row) {
+                row.remove();
+                updateEmptyMessage();
+            }
+
+            return;
+        }
+
+        if (!editButton) {
+            return;
+        }
+
+        const row = editButton.closest(".invoice-service-row");
+
+        if (!row) {
+            return;
+        }
+
+        if (row.dataset.editing === "true") {
+            closeEditor(row);
+            return;
+        }
+
+        const activeRow = tbody.querySelector(
+            '.invoice-service-row[data-editing="true"]'
+        );
+
+        if (activeRow && activeRow !== row) {
+            closeEditor(activeRow);
+        }
+
+        openEditor(row);
+    });
+
+    tbody.addEventListener("input", function (event) {
+        const row = event.target.closest(".invoice-service-row");
+
+        if (!row || row.dataset.editing !== "true") {
+            return;
+        }
+
+        updateRow(row);
+    });
+
+    function updateEmptyMessage() {
+        const rows = tbody.querySelectorAll(".invoice-service-row");
+        const emptyRow = tbody.querySelector(".services-empty-row");
+
+        if (rows.length === 0 && !emptyRow) {
+            tbody.innerHTML =
+                '<tr class="services-empty-row">' +
+                '<td colspan="5" class="text-center">No services added</td>' +
+                '</tr>';
+        } else if (rows.length > 0 && emptyRow) {
+            emptyRow.remove();
+        }
+    }
+
+    const form = tbody.closest("form");
+
+    if (form) {
+        form.addEventListener("submit", function () {
+            tbody.querySelectorAll(".invoice-service-row").forEach(updateRow);
+        });
+    }
+})();
+</script>
